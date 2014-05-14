@@ -14,94 +14,68 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 
+import static net.dean.jraw.HttpVerb.*;
+
 @RunWith(JUnit4.class)
-public class RestfulHttpTest {
-	private static HttpClientHelper client;
+public class HttpTest {
+	private static HttpHelper client;
+	private static final String HOST = "httpbin.org";
 
 	@Rule
 	public ExpectedException exception = ExpectedException.none();
 
 	@BeforeClass
 	public static void init() {
-		client = new HttpClientHelper();
+		client = new HttpHelper();
 	}
 
 	@Test
 	public void get() {
-		try {
-			CloseableHttpResponse response = client.get("httpbin.org" , "/get");
-			EntityUtils.consume(response.getEntity());
-			response.close();
-		} catch (IOException | HttpException e) {
-			Assert.fail(e.getMessage());
-		}
-	}
-
-	@Test
-	public void getWithArguments() {
-		try {
-			Map<String, String> args = new TreeMap<>();
-			args.put("hello", "world");
-			RestResponse response = new RestResponse(client.get("httpbin.org", "/get", args));
-
-			JsonNode returnArgs = response.getRootNode().get("args");
-
-			// Add the arguments of the return JSON file to a map
-			Map<String, String> parsedArgs = new TreeMap<>();
-			for (Iterator<Map.Entry<String, JsonNode>> it = returnArgs.getFields(); it.hasNext();) {
-				Map.Entry<String, JsonNode> entry = it.next();
-				parsedArgs.put(entry.getKey(), entry.getValue().getTextValue());
-			}
-
-			if (!mapSame(args, parsedArgs)) {
-				Assert.fail("Sent arguments and returned arguments were not the same");
-			}
-		} catch (HttpException | IOException e) {
-			Assert.fail(e.getMessage());
-		}
+		request(GET);
 	}
 
 	@Test
 	public void post() {
-		httpFormDataRequest("POST");
+		request(POST);
+	}
+
+	@Test
+	public void put() {
+		request(PUT);
+	}
+
+	@Test
+	public void patch() {
+		request(PATCH);
+	}
+
+	@Test
+	public void delete() {
+		request(DELETE);
 	}
 
 	@Test
 	public void httpGetInvalidResponseCode() throws IOException, HttpException {
 		exception.expect(HttpException.class);
-		EntityUtils.consume(client.get("httpbin.org", "/status/418").getEntity());
+		EntityUtils.consume(client.execute(GET, HOST, "/status/418").getEntity());
 	}
 
 	/**
 	 * Conducts a test for HTTP methods that uses form data (POST, PATCH, PUT)
-	 * @param method The HTTP verb to use (POST, PATCH, or PUT)
+	 * @param verb The HTTP verb to use (POST, PATCH, or PUT)
 	 */
-	private void httpFormDataRequest(String method) {
+	private void request(HttpVerb verb) {
 		try {
 			Map<String, String> clientArgs = new TreeMap<>();
 			clientArgs.put("hello", "world");
 
-
-			CloseableHttpResponse response;
-			String host = "httpbin.org";
-
-			switch (method.toUpperCase()) {
-				case "POST":
-					response = client.post(host, "/post", clientArgs);
-					break;
-				case "PATCH":
-					response = client.patch(host, "/patch", clientArgs);
-					break;
-				case "PUT":
-					response = client.put(host, "/put", clientArgs);
-					break;
-				default:
-					throw new IllegalArgumentException("HTTP method not supported: " + method);
-			}
-
+			CloseableHttpResponse response = client.execute(verb, HOST, "/" + verb.name().toLowerCase(), clientArgs);
 
 			RestResponse rest = new RestResponse(response);
-			JsonNode returnArgs = rest.getRootNode().get("form");
+
+			// GET and DELETE use query string ("args"), the rest use form data ("form")
+			String key = (verb == GET || verb == DELETE) ? "args" : "form";
+			JsonNode returnArgs = rest.getRootNode().get(key);
 
 			// Add the arguments of the return JSON file to a map
 			Map<String, String> parsedArgs = new TreeMap<>();
@@ -124,7 +98,21 @@ public class RestfulHttpTest {
 		}
 	}
 
+	/**
+	 * Tests if two maps have the same keys and values
+	 *
+	 * @param map1 The first map
+	 * @param map2 The second map
+	 * @param <K> The key type of the two maps
+	 * @param <V> The value type of the two maps
+	 * @return True, if the two maps have the same keys and values, false if else
+	 */
 	private <K, V> boolean mapSame(Map<K, V> map1, Map<K, V> map2) {
+		if (map1.size() != map2.size()) {
+			// Not same size, impossible to be equal
+			return false;
+		}
+
 		map1 = new TreeMap<>(map1);
 		map2 = new TreeMap<>(map2);
 
