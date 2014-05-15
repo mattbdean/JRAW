@@ -5,7 +5,6 @@
 ```
 /api/clear_sessions
 /api/delete_user
-/api/login
 /api/me.json
 /api/register
 /api/update

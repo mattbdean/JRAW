@@ -3,3 +3,6 @@
 .gradle/
 build/
 out/
+
+src/test/resources/credentials.txt
+todo.txt
