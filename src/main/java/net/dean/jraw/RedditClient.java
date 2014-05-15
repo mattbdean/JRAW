@@ -19,6 +19,9 @@ public class RedditClient {
 	/** The RestClient that will be used to execute various HTTP requests */
 	private RestClient restClient;
 
+	/** Whether or not a user has been logged in or not */
+	private boolean loggedIn;
+
 	/**
 	 * Instantiates a new RedditClient and adds the given user agent to the default headers of the RestClient
 	 * @param userAgent The User-Agent header that will be sent with all the HTTP requests.
@@ -38,6 +41,7 @@ public class RedditClient {
 	 */
 	public RedditClient(String userAgent) {
 		this.restClient = new RestClient(HOST, userAgent);
+		this.loggedIn = false;
 	}
 
 	/**
@@ -57,13 +61,34 @@ public class RedditClient {
 				throw new RedditException(errorsNode.get(0).asText());
 			}
 
+			loggedIn = true;
+
+			return me();
+		} catch (IOException | HttpException e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	/**
+	 * Gets the currently logged in account
+	 * 
+	 * @return The currently logged in account
+	 * @throws RedditException If the user has not been logged in yet
+	 */
+	public Account me() throws RedditException {
+		if (!loggedIn) {
+			throw new RedditException("You are not logged in! Use RedditClient.login(user, pass)");
+		}
+
+		try {
 			return restClient.get("/api/me.json").to(Account.class);
 		} catch (IOException | HttpException e) {
 			e.printStackTrace();
 		}
 
 		return null;
-
 	}
 
 	/**

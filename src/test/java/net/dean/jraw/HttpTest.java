@@ -4,10 +4,9 @@ import org.apache.http.HttpException;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.codehaus.jackson.JsonNode;
-import org.junit.*;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.testng.Assert;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.util.Iterator;
@@ -16,15 +15,11 @@ import java.util.TreeMap;
 
 import static net.dean.jraw.HttpVerb.*;
 
-@RunWith(JUnit4.class)
 public class HttpTest {
 	private static HttpHelper client;
 	private static final String HOST = "httpbin.org";
 
-	@Rule
-	public ExpectedException exception = ExpectedException.none();
-
-	@BeforeClass
+	@BeforeTest
 	public static void init() {
 		client = new HttpHelper();
 	}
@@ -54,9 +49,8 @@ public class HttpTest {
 		request(DELETE);
 	}
 
-	@Test
+	@Test(expectedExceptions = HttpException.class)
 	public void httpGetInvalidResponseCode() throws IOException, HttpException {
-		exception.expect(HttpException.class);
 		EntityUtils.consume(client.execute(GET, HOST, "/status/418").getEntity());
 	}
 
@@ -85,7 +79,7 @@ public class HttpTest {
 			}
 
 			// Check that the two argument maps are the same size
-			Assert.assertEquals("Argument map sizes were not the same", clientArgs.size(), parsedArgs.size());
+			Assert.assertEquals(clientArgs.size(), parsedArgs.size(), "Argument map sizes were not the same");
 
 			// Compare the two maps
 			if (!mapSame(clientArgs, parsedArgs)) {
