@@ -7,7 +7,6 @@ import net.dean.jraw.models.core.Thing;
 import org.apache.http.HttpException;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.cookie.Cookie;
-import org.codehaus.jackson.JsonNode;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -64,11 +63,9 @@ public class RedditClient {
 			RedditResponse loginResponse = restClient.post("/api/login/" + username,
 					args("user", username, "passwd", password, "api_type", "json"));
 
-			JsonNode errorsNode = loginResponse.getRootNode().get("json").get("errors");
-			if (errorsNode.size() > 0) {
-				throw new RedditException(errorsNode.get(0).asText());
+			if (loginResponse.hasErrors()) {
+				throw new RedditException(loginResponse.getErrors()[0]);
 			}
-
 			return me();
 		} catch (IOException | HttpException e) {
 			throw new RedditException("Unable to login", e);
@@ -90,7 +87,7 @@ public class RedditClient {
 	}
 
 	public boolean isLoggedIn() {
-		for (Cookie cookie : restClient.getHttpHelper().getCookies()) {
+		for (Cookie cookie : restClient.getHttpHelper().getCookieStore().getCookies()) {
 			if (cookie.getName().equals("reddit_session") && cookie.getDomain().equals("reddit.com")) {
 				return true;
 			}

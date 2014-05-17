@@ -18,6 +18,5 @@ test {
 dependencies {
     compile     group: 'org.apache.httpcomponents', name: 'httpclient',         version: '4.3.3'
     compile     group: 'org.codehaus.jackson',      name: 'jackson-mapper-asl', version: '1.9.+'
-    compile     group: 'com.intellij',              name: 'annotations',        version: '12.0'
     testCompile group: 'org.testng',                name: 'testng',             version: '6.1.1'
 }

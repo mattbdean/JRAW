@@ -34,6 +34,8 @@ public class RedditResponse {
 	/** The raw data of the response's content */
 	private String raw;
 
+	private String[] errors;
+
 	/**
 	 * Instantiates a new RestResponse. This constructor also reads the contents of the input stream and parses it into
 	 * the root JsonNode, and then consumes the response's entity.
@@ -50,6 +52,26 @@ public class RedditResponse {
 			this.raw = s.hasNext() ? s.next() : "";
 
 			this.rootNode = OBJECT_MAPPER.readTree(raw);
+
+			JsonNode errorsNode = rootNode.get("json");
+			if (errorsNode != null) {
+				errorsNode = errorsNode.get("errors");
+			}
+
+			if (errorsNode != null) {
+				if (errorsNode.size() > 0) {
+					errors = new String[errorsNode.size()];
+
+					for (int i = 0; i < errorsNode.size(); i++) {
+						errors[i] = errorsNode.get(i).getTextValue();
+					}
+				}
+			}
+
+			if (errors == null) {
+				// We still have to initialize this
+				errors = new String[0];
+			}
 			EntityUtils.consume(response.getEntity());
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -73,6 +95,14 @@ public class RedditResponse {
 
 		// Normal Thing
 		return redditObjectParser.parse(rootNode, thingClass);
+	}
+
+	public boolean hasErrors() {
+		return errors.length != 0;
+	}
+
+	public String[] getErrors() {
+		return errors;
 	}
 
 	public int getRatelimitUsed() {
@@ -134,5 +164,9 @@ public class RedditResponse {
 	 */
 	public String getRaw() {
 		return raw;
+	}
+
+	public void throwError() throws RedditException {
+		throw new RedditException(errors[0]);
 	}
 }

@@ -8,7 +8,6 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.*;
 import org.apache.http.client.utils.URLEncodedUtils;
-import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicHeader;
@@ -129,7 +128,7 @@ public class HttpHelper {
 		return defaultHeaders;
 	}
 
-	public List<Cookie> getCookies() {
-		return cookieStore.getCookies();
+	public CookieStore getCookieStore() {
+		return cookieStore;
 	}
 }

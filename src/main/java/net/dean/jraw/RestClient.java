@@ -38,7 +38,7 @@ public class RestClient {
 	 * @throws IOException In case of a problem or the connection was aborted
 	 * @throws HttpException If the status code was not "200 OK"
 	 */
-	public RedditResponse get(String path) throws IOException, HttpException {
+	public RedditResponse get(String path) throws IOException, HttpException, RedditException {
 		return get(path, null);
 	}
 
@@ -63,7 +63,7 @@ public class RestClient {
 	 * @throws IOException In case of a problem or the connection was aborted
 	 * @throws HttpException If the status code was not "200 OK"
 	 */
-	public RedditResponse post(String path) throws IOException, HttpException {
+	public RedditResponse post(String path) throws IOException, HttpException, RedditException {
 		return post(path, null);
 	}
 
@@ -88,7 +88,7 @@ public class RestClient {
 	 * @throws IOException In case of a problem or the connection was aborted
 	 * @throws HttpException If the status code was not "200 OK"
 	 */
-	public RedditResponse put(String path) throws IOException, HttpException {
+	public RedditResponse put(String path) throws IOException, HttpException, RedditException {
 		return put(path, null);
 	}
 
@@ -113,7 +113,7 @@ public class RestClient {
 	 * @throws IOException In case of a problem or the connection was aborted
 	 * @throws HttpException If the status code was not "200 OK"
 	 */
-	public RedditResponse patch(String path) throws IOException, HttpException {
+	public RedditResponse patch(String path) throws IOException, HttpException, RedditException {
 		return patch(path, null);
 	}
 
@@ -138,7 +138,7 @@ public class RestClient {
 	 * @throws IOException In case of a problem or the connection was aborted
 	 * @throws HttpException If the status code was not "200 OK"
 	 */
-	public RedditResponse delete(String path) throws IOException, HttpException {
+	public RedditResponse delete(String path) throws IOException, HttpException, RedditException {
 		return new RedditResponse(http.execute(DELETE, host, path, null));
 	}
 
