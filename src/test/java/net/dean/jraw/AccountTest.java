@@ -8,12 +8,8 @@ import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class AccountTest {
-	private static final String USER_AGENT = "JRAW Test Case for Accounts (v" + Constants.VERSION + ")";
 	// Array length 2 where credentials[0] is the username and credentials[1] is the password
 	private static String[] credentials;
 	private RedditClient redditClient;
@@ -25,16 +21,15 @@ public class AccountTest {
 		}
 
 		try {
-			Path credPath = Paths.get(getClass().getResource("/credentials.txt").toURI());
-			credentials = new String(Files.readAllBytes(credPath), "UTF-8").split("\n");
+			credentials = TestUtils.getCredentials();
 		} catch (IOException | URISyntaxException e) {
 			Assert.fail(e.getMessage());
 		}
 	}
 
 	@BeforeTest
-	public void init() {
-		redditClient = new RedditClient(USER_AGENT);
+	public void setUp() {
+		redditClient = new RedditClient(TestUtils.getUserAgent(getClass()));
 	}
 
 	@Test
@@ -42,8 +37,18 @@ public class AccountTest {
 		try {
 			Account acc = redditClient.login(credentials[0], credentials[1]);
 			Assert.assertNotNull(acc, "The account was null");
-		} catch ( RedditException e) {
+		} catch (RedditException e) {
 			Assert.fail(e.getMessage());
+		}
+	}
+
+	@Test
+	public void getUserNotLoggedIn() {
+		try {
+			Account acc = redditClient.getUser("thatJavaNerd");
+			Assert.assertNotNull(acc, "The account was null");
+		} catch (RedditException e) {
+			e.printStackTrace();
 		}
 	}
 }

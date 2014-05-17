@@ -1,7 +1,7 @@
 #Java Reddit API Wrapper
 
 ###Contributing
-Want to contribute? Fantasitc! Follow these steps:
+Want to contribute? Fantastic! Follow these steps:
 
 1. Fork the repository
 2. Create a file called `credentials.txt` in `/src/test/java/resources/`. The first line should be your testing reddit account's username, and the second should be its password.
@@ -10,7 +10,7 @@ Want to contribute? Fantasitc! Follow these steps:
 5. Test your code by executing `./gradlew test`
 6. Send a pull request!
 
-###Methods that still have to be implemented
+###Methods that have to be implemented
 ####account
 ```
 /api/clear_sessions

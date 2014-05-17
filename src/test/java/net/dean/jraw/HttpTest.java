@@ -51,7 +51,10 @@ public class HttpTest {
 
 	@Test(expectedExceptions = HttpException.class)
 	public void httpGetInvalidResponseCode() throws IOException, HttpException {
-		EntityUtils.consume(client.execute(GET, HOST, "/status/418").getEntity());
+		CloseableHttpResponse response = client.execute(GET, HOST, "/status/418");
+		if (response != null) {
+			EntityUtils.consume(response.getEntity());
+		}
 	}
 
 	/**
@@ -65,7 +68,7 @@ public class HttpTest {
 
 			CloseableHttpResponse response = client.execute(verb, HOST, "/" + verb.name().toLowerCase(), clientArgs);
 
-			RestResponse rest = new RestResponse(response);
+			RedditResponse rest = new RedditResponse(response);
 
 			// GET and DELETE use query string ("args"), the rest use form data ("form")
 			String key = (verb == GET || verb == DELETE) ? "args" : "form";

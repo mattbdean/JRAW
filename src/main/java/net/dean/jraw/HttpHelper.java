@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * This class is responsible for the lowest level of networking found in this library. It conducts HTTP requests with
@@ -57,8 +58,6 @@ public class HttpHelper {
 	 * @param hostname The name of the URL's host. Do not include the scheme (ex: "http://")
 	 * @param path The path relative to the root directory of the host.
 	 * @return A CloseableHttpResponse formed in the execution of the HTTP request
-	 * @throws IOException In case the connection encountered a problem or was aborted
-	 * @throws HttpException If the request's status code was anything other than "200 OK"
 	 */
 	public CloseableHttpResponse execute(HttpVerb verb, String hostname, String path) throws IOException, HttpException {
 		return execute(verb, hostname, path, null);
@@ -73,8 +72,8 @@ public class HttpHelper {
 	 * @param args The arguments to use. If the verb uses form data (POST, PATCH, PUT), then these will be put into the
 	 *             request body. If the verb is "GET", then a query string will be appended to the path.
 	 * @return A CloseableHttpResponse formed in the execution of the HTTP request
-	 * @throws IOException In case the connection encountered a problem or was aborted
-	 * @throws HttpException If the request's status code was anything other than "200 OK"
+	 * @throws IOException In case of a problem or the connection was aborted
+	 * @throws HttpException If the status code was not "200 OK"
 	 */
 	public CloseableHttpResponse execute(HttpVerb verb, String hostname, String path, Map<String, String> args) throws IOException, HttpException {
 		if (!path.startsWith("/")) {
@@ -85,11 +84,9 @@ public class HttpHelper {
 
 
 		if (args != null) {
-			List<BasicNameValuePair> params = new ArrayList<>();
-
-			for (Map.Entry<String, String> entry : args.entrySet()) {
-				params.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
-			}
+			// Construct a List of BasicNameValue pairs from a Map
+			List<BasicNameValuePair> params = args.entrySet().stream().map(entry -> new BasicNameValuePair(entry.getKey(),
+					entry.getValue())).collect(Collectors.toList());
 
 			if (request instanceof HttpGet || request instanceof HttpDelete) {
 				// GET or DELETE

@@ -22,7 +22,11 @@ public enum ThingType {
 	/** Represents an award with the prefix "t6" */
 	AWARD(6),
 	/** Represents a promo campaign with the prefix "t8" */
-	PROMO_CAMPAIGN(8);
+	PROMO_CAMPAIGN(8),
+
+	LISTING("Listing"),
+
+	MORE("more");
 
 
 	/**
@@ -38,11 +42,25 @@ public enum ThingType {
 		this.prefix = "t" + id;
 	}
 
+	private ThingType(String custom) {
+		this.prefix = custom;
+	}
+
 	/**
 	 * Gets the prefix of this type (ex: "t1", "t2", etc.)
 	 * @return The prefix of this type
 	 */
 	public String getPrefix() {
 		return prefix;
+	}
+
+	public static ThingType getByPrefix(String prefix) {
+		for (ThingType type : values()) {
+			if (type.getPrefix().equals(prefix)) {
+				return type;
+			}
+		}
+
+		return null;
 	}
 }
