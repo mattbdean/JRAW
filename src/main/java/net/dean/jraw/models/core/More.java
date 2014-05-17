@@ -1,5 +1,8 @@
-package net.dean.jraw.models;
+package net.dean.jraw.models.core;
 
+import net.dean.jraw.models.JsonInteraction;
+import net.dean.jraw.models.RedditObject;
+import net.dean.jraw.models.ThingType;
 import org.codehaus.jackson.JsonNode;
 
 import java.util.ArrayList;

@@ -22,7 +22,7 @@ public abstract class RedditObject {
 
 	/**
 	 * Gets the type of this Thing. Will always be constant for every class. For example, every
-	 * ${@link net.dean.jraw.models.Account} class will always return ${@link net.dean.jraw.models.ThingType#ACCOUNT}.
+	 * ${@link net.dean.jraw.models.core.Account} class will always return ${@link net.dean.jraw.models.ThingType#ACCOUNT}.
 	 */
 	public abstract ThingType getType();
 

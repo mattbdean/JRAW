@@ -1,10 +1,10 @@
 package net.dean.jraw;
 
 import junit.framework.Assert;
-import net.dean.jraw.models.Account;
+import net.dean.jraw.models.core.Account;
 import net.dean.jraw.models.JsonInteraction;
-import net.dean.jraw.models.Link;
-import net.dean.jraw.models.Thing;
+import net.dean.jraw.models.core.Link;
+import net.dean.jraw.models.core.Thing;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
@@ -78,7 +78,7 @@ public class ThingFieldTest {
 
 	/**
 	 * Gets a list of fields that have the AttributeField annotation attached to them. Also searches the superclass up
-	 * until ${@link net.dean.jraw.models.Thing} for fields.
+	 * until ${@link net.dean.jraw.models.core.Thing} for fields.
 	 *
 	 * @param thingClass The class to search for
 	 * @return A list of fields that have the JsonAttribute annotation

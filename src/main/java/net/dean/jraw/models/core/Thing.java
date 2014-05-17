@@ -1,5 +1,6 @@
-package net.dean.jraw.models;
+package net.dean.jraw.models.core;
 
+import net.dean.jraw.models.RedditObject;
 import org.codehaus.jackson.JsonNode;
 
 /**

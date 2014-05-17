@@ -3,7 +3,7 @@ package net.dean.jraw.models;
 /**
  * An enumeration of types of objects in Reddit's API. Each type has a prefix of "t[0-6,8]". When this prefix, an
  * underscore, and the ID of the Thing are combined in that order, you get that Thing's full name
- * ({@link net.dean.jraw.models.Thing#getName()}). For example, the subreddit /r/funny has a prefix of "t5", an ID of
+ * ({@link net.dean.jraw.models.core.Thing#getName()}). For example, the subreddit /r/funny has a prefix of "t5", an ID of
  * "2qh33", and a full name of "t5_2qh33"
  *
  * @author Matthew Dean

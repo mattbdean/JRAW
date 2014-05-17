@@ -1,8 +1,8 @@
 package net.dean.jraw;
 
-import net.dean.jraw.models.Account;
-import net.dean.jraw.models.Link;
-import net.dean.jraw.models.Thing;
+import net.dean.jraw.models.core.Account;
+import net.dean.jraw.models.core.Link;
+import net.dean.jraw.models.core.Thing;
 import org.apache.http.HttpException;
 import org.codehaus.jackson.JsonNode;
 

@@ -1,6 +1,6 @@
 package net.dean.jraw;
 
-import net.dean.jraw.models.Account;
+import net.dean.jraw.models.core.Account;
 import org.testng.Assert;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.BeforeTest;

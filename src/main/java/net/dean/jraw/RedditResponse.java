@@ -1,9 +1,9 @@
 package net.dean.jraw;
 
-import net.dean.jraw.models.Comment;
-import net.dean.jraw.models.Link;
-import net.dean.jraw.models.Listing;
-import net.dean.jraw.models.Thing;
+import net.dean.jraw.models.core.Comment;
+import net.dean.jraw.models.core.Link;
+import net.dean.jraw.models.core.Listing;
+import net.dean.jraw.models.core.Thing;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
