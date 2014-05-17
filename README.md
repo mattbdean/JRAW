@@ -38,13 +38,6 @@ Want to contribute? Fantastic! Follow these steps:
 /api/updateapp
 ```
 
-####captcha
-```
-/api/needs_captcha.json
-/api/new_captcha
-/captcha/iden
-```
-
 ####flair
 ```
 /api/clearflairtemplates

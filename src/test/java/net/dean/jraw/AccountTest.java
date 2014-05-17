@@ -6,9 +6,6 @@ import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-
 public class AccountTest {
 	// Array length 2 where credentials[0] is the username and credentials[1] is the password
 	private static String[] credentials;
@@ -20,11 +17,7 @@ public class AccountTest {
 			Assert.fail("Credentials file missing (/src/main/resources/credentials.txt)");
 		}
 
-		try {
-			credentials = TestUtils.getCredentials();
-		} catch (IOException | URISyntaxException e) {
-			Assert.fail(e.getMessage());
-		}
+		credentials = TestUtils.getCredentials();
 	}
 
 	@BeforeTest
@@ -38,6 +31,7 @@ public class AccountTest {
 			Account acc = redditClient.login(credentials[0], credentials[1]);
 			Assert.assertNotNull(acc, "The account was null");
 		} catch (RedditException e) {
+			e.printStackTrace();
 			Assert.fail(e.getMessage());
 		}
 	}
@@ -49,6 +43,7 @@ public class AccountTest {
 			Assert.assertNotNull(acc, "The account was null");
 		} catch (RedditException e) {
 			e.printStackTrace();
+			Assert.fail(e.getMessage());
 		}
 	}
 }

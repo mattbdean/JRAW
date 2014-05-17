@@ -3,11 +3,14 @@ package net.dean.jraw;
 import org.apache.http.Header;
 import org.apache.http.HttpException;
 import org.apache.http.HttpHost;
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.*;
 import org.apache.http.client.utils.URLEncodedUtils;
-import org.apache.http.impl.client.HttpClients;
+import org.apache.http.cookie.Cookie;
+import org.apache.http.impl.client.BasicCookieStore;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
@@ -28,6 +31,8 @@ public class HttpHelper {
 	/** The HttpClient used to execute HTTP requests */
 	private HttpClient client;
 
+	private CookieStore cookieStore;
+
 	/** The list of headers that will be sent with every HTTP request */
 	private List<Header> defaultHeaders;
 
@@ -43,7 +48,8 @@ public class HttpHelper {
 	 * @param userAgent The User-Agent to use for the HTTP requests
 	 */
 	public HttpHelper(String userAgent) {
-		this.client = HttpClients.createDefault();
+		this.cookieStore = new BasicCookieStore();
+		this.client = HttpClientBuilder.create().setDefaultCookieStore(cookieStore).build();
 		this.defaultHeaders = new ArrayList<>();
 
 		if (userAgent != null) {
@@ -121,5 +127,9 @@ public class HttpHelper {
 	 */
 	public List<Header> getDefaultHeaders() {
 		return defaultHeaders;
+	}
+
+	public List<Cookie> getCookies() {
+		return cookieStore.getCookies();
 	}
 }

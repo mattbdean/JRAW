@@ -1,14 +1,18 @@
 package net.dean.jraw;
 
+import net.dean.jraw.models.Captcha;
 import net.dean.jraw.models.core.Account;
 import net.dean.jraw.models.core.Link;
 import net.dean.jraw.models.core.Thing;
 import org.apache.http.HttpException;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.cookie.Cookie;
 import org.codehaus.jackson.JsonNode;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 
 /**
  * This class provides access to the most basic Reddit features such as logging in.
@@ -24,11 +28,6 @@ public class RedditClient {
 	 * The RestClient that will be used to execute various HTTP requests
 	 */
 	private RestClient restClient;
-
-	/**
-	 * Whether or not a user has been logged in or not
-	 */
-	private boolean loggedIn;
 
 	/**
 	 * Instantiates a new RedditClient and adds the given user agent to the default headers of the RestClient
@@ -50,7 +49,6 @@ public class RedditClient {
 	 */
 	public RedditClient(String userAgent) {
 		this.restClient = new RestClient(HOST, userAgent);
-		this.loggedIn = false;
 	}
 
 	/**
@@ -71,14 +69,10 @@ public class RedditClient {
 				throw new RedditException(errorsNode.get(0).asText());
 			}
 
-			loggedIn = true;
-
 			return me();
 		} catch (IOException | HttpException e) {
-			e.printStackTrace();
+			throw new RedditException("Unable to login", e);
 		}
-
-		return null;
 	}
 
 	/**
@@ -88,11 +82,58 @@ public class RedditClient {
 	 * @throws RedditException If the user has not been logged in yet
 	 */
 	public Account me() throws RedditException {
-		if (!loggedIn) {
+		if (!isLoggedIn()) {
 			throw new RedditException("You are not logged in! Use RedditClient.login(user, pass)");
 		}
 
 		return genericGet("/api/me.json", Account.class);
+	}
+
+	public boolean isLoggedIn() {
+		for (Cookie cookie : restClient.getHttpHelper().getCookies()) {
+			if (cookie.getName().equals("reddit_session") && cookie.getDomain().equals("reddit.com")) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public boolean needsCaptcha() throws RedditException {
+		try {
+			// This endpoint does not return JSON, but rather just "true" or "false"
+			CloseableHttpResponse response = restClient.getHttpHelper().execute(HttpVerb.GET, HOST, "/api/needs_captcha.json");
+
+			// Read the contents of the response
+			Scanner s = new Scanner(response.getEntity().getContent()).useDelimiter("\\A");
+			String raw = s.hasNext() ? s.next() : "";
+
+			return Boolean.parseBoolean(raw);
+		} catch (HttpException | IOException e) {
+			throw new RedditException("Unable to make the request to /api/needs_captcha.json", e);
+		}
+	}
+
+	public Captcha getNewCaptcha() throws RedditException {
+		try {
+			RedditResponse response = restClient.post("/api/new_captcha");
+
+			// Some strange response here
+			String id = response.getRootNode().get("jquery").get(11).get(3).get(0).getTextValue();
+
+			return getCaptcha(id);
+		} catch (IOException | HttpException e) {
+			throw new RedditException("Unable to make the request to /api/new_captcha", e);
+		}
+	}
+
+	public Captcha getCaptcha(String id) throws RedditException {
+		try {
+			CloseableHttpResponse response = restClient.getHttpHelper().execute(HttpVerb.GET, HOST, "/captcha/" + id + ".png");
+
+			return new Captcha(id, response.getEntity().getContent());
+		} catch (IOException | HttpException e) {
+			throw new RedditException("Unable to get the captcha \"" + id + "\"", e);
+		}
 	}
 
 	/**
