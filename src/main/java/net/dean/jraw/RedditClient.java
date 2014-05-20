@@ -1,17 +1,19 @@
 package net.dean.jraw;
 
 import net.dean.jraw.models.Captcha;
+import net.dean.jraw.models.SubmissionType;
 import net.dean.jraw.models.core.Account;
 import net.dean.jraw.models.core.Link;
 import net.dean.jraw.models.core.Thing;
+import org.apache.http.Header;
 import org.apache.http.HttpException;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.cookie.Cookie;
+import org.apache.http.message.BasicHeader;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.net.URL;
+import java.util.*;
 
 /**
  * This class provides access to the most basic Reddit features such as logging in.
@@ -19,9 +21,19 @@ import java.util.Scanner;
 public class RedditClient {
 
 	/**
-	 * The host that will be used in all the HTTP requests.
+	 * The host that will be used to execute basic HTTP requests.
 	 */
 	public static final String HOST = "www.reddit.com";
+
+	/**
+	 * The host that will be used to execute secure HTTP requests
+	 */
+	public static final String HOST_SSL = "ssl.reddit.com";
+
+	/**
+	 * The name of the header that will be assigned upon a successful login
+	 */
+	private static final String HEADER_MODHASH = "X-Modhash";
 
 	/**
 	 * The RestClient that will be used to execute various HTTP requests
@@ -60,12 +72,31 @@ public class RedditClient {
 	 */
 	public Account login(String username, String password) throws RedditException {
 		try {
-			RedditResponse loginResponse = restClient.post("/api/login/" + username,
-					args("user", username, "passwd", password, "api_type", "json"));
+			RedditResponse loginResponse = new RedditResponse(restClient.getHttpHelper().execute(HttpVerb.POST, HOST_SSL, "/api/login",
+					args("user", username, "passwd", password, "api_type", "json")));
 
 			if (loginResponse.hasErrors()) {
-				throw new RedditException(loginResponse.getErrors()[0]);
+				loginResponse.throwError();
 			}
+
+			List<Header> headers = restClient.getHttpHelper().getDefaultHeaders();
+
+			Header h = new BasicHeader(HEADER_MODHASH,
+					loginResponse.getRootNode().get("json").get("data").get("modhash").getTextValue());
+
+			// Add the X-Modhash header, or update it if it already exists
+			Header modhashHeader = null;
+			for (Header header : headers) {
+				if (header.getName().equals(HEADER_MODHASH)) {
+					modhashHeader = header;
+				}
+			}
+
+			if (modhashHeader != null) {
+				headers.remove(modhashHeader);
+			}
+			headers.add(h);
+
 			return me();
 		} catch (IOException | HttpException e) {
 			throw new RedditException("Unable to login", e);
@@ -79,13 +110,15 @@ public class RedditClient {
 	 * @throws RedditException If the user has not been logged in yet
 	 */
 	public Account me() throws RedditException {
-		if (!isLoggedIn()) {
-			throw new RedditException("You are not logged in! Use RedditClient.login(user, pass)");
-		}
-
+		loginCheck();
 		return genericGet("/api/me.json", Account.class);
 	}
 
+	/**
+	 * Tests if the user is logged in by checking if a cookie is set called "reddit_session" and its domain is "reddit.com"
+	 *
+	 * @return True if the user is logged in
+	 */
 	public boolean isLoggedIn() {
 		for (Cookie cookie : restClient.getHttpHelper().getCookieStore().getCookies()) {
 			if (cookie.getName().equals("reddit_session") && cookie.getDomain().equals("reddit.com")) {
@@ -95,7 +128,18 @@ public class RedditClient {
 		return false;
 	}
 
+	/**
+	 * Checks if the current user needs a captcha to do specific actions such as submit links and compose private messages.
+	 * This will always be false if there is no logged in user. Usually, this method will return <code>true</code> if
+	 * the current logged in user has less than 10 link karma
+	 *
+	 * @return True if the user needs a captcha to do a specific action, else if not or not logged in.
+	 * @throws RedditException
+	 */
 	public boolean needsCaptcha() throws RedditException {
+		if (isLoggedIn()) {
+			return false;
+		}
 		try {
 			// This endpoint does not return JSON, but rather just "true" or "false"
 			CloseableHttpResponse response = restClient.getHttpHelper().execute(HttpVerb.GET, HOST, "/api/needs_captcha.json");
@@ -110,6 +154,12 @@ public class RedditClient {
 		}
 	}
 
+	/**
+	 * Fetches a new captcha from the API
+	 *
+	 * @return A new Captcha
+	 * @throws RedditException If there was a problem executing the HTTP request
+	 */
 	public Captcha getNewCaptcha() throws RedditException {
 		try {
 			RedditResponse response = restClient.post("/api/new_captcha");
@@ -123,6 +173,13 @@ public class RedditClient {
 		}
 	}
 
+	/**
+	 * Gets a Captcha by its ID
+	 *
+	 * @param id The ID of the wanted captcha
+	 * @return A new Captcha object
+	 * @throws RedditException If there was a problem executing the HTTP request
+	 */
 	public Captcha getCaptcha(String id) throws RedditException {
 		try {
 			CloseableHttpResponse response = restClient.getHttpHelper().execute(HttpVerb.GET, HOST, "/captcha/" + id + ".png");
@@ -135,6 +192,7 @@ public class RedditClient {
 
 	/**
 	 * Gets a user with a specific username
+	 *
 	 * @param username The name of the desired user
 	 * @return An Account whose name matches the given username
 	 * @throws RedditException If the user does not exist or there was a problem making the request
@@ -155,6 +213,101 @@ public class RedditClient {
 	}
 
 	/**
+	 * Submits a link
+	 *
+	 * @param type The type of submission, either ${@link net.dean.jraw.models.SubmissionType#LINK} or
+	 *             ${@link net.dean.jraw.models.SubmissionType#SELF}.
+	 * @param url The URL that this submission will link to. Not necessary if the submission type is
+	 *            ${@link net.dean.jraw.models.SubmissionType#SELF}
+	 * @param selfText The body text of the submission, formatted in Markdown. Not necessary if the submission type is
+	 *                 ${@link net.dean.jraw.models.SubmissionType#LINK}
+	 * @param subreddit The subreddit to submit the link to (e.g. "funny", "pics", etc.)
+	 * @param title The title of the submission
+	 * @param saveAfter Whether to save the submission right after posting
+	 * @param sendRepliesToInbox Whether to send all top level replies to the poster's inbox
+	 * @param resubmit Whether the Reddit API will return an error if the link's URL has already been posted
+	 * @return A representation of the newly submitted Link
+	 * @throws RedditException If there was a problem sending the HTTP request
+	 */
+	public Link submitLink(SubmissionType type, Optional<URL> url, Optional<String> selfText, String subreddit,
+	                                 String title, boolean saveAfter, boolean sendRepliesToInbox, boolean resubmit) throws RedditException {
+
+		return submitLink(type, url, selfText, subreddit, title, saveAfter, sendRepliesToInbox, resubmit, Optional.empty(), Optional.empty());
+	}
+
+	/**
+	 * Submits a link with a given captcha. Only really needed if the user has less than 10 link karma.
+	 *
+	 * @param type The type of submission, either ${@link net.dean.jraw.models.SubmissionType#LINK} or
+	 *             ${@link net.dean.jraw.models.SubmissionType#SELF}.
+	 * @param url The URL that this submission will link to. Not necessary if the submission type is
+	 *            ${@link net.dean.jraw.models.SubmissionType#SELF}
+	 * @param selfText The body text of the submission, formatted in Markdown. Not necessary if the submission type is
+	 *                 ${@link net.dean.jraw.models.SubmissionType#LINK}
+	 * @param subreddit The subreddit to submit the link to (e.g. "funny", "pics", etc.)
+	 * @param title The title of the submission
+	 * @param saveAfter Whether to save the submission right after posting
+	 * @param sendRepliesToInbox Whether to send all top level replies to the poster's inbox
+	 * @param resubmit Whether the Reddit API will return an error if the link's URL has already been posted
+	 * @param captcha The captcha the user is trying to answer
+	 * @param captchaAttempt The user's attempt at the captcha
+	 * @return A representation of the newly submitted Link
+	 * @throws RedditException If there was a problem sending the HTTP request
+	 */
+	public Link submitLink(SubmissionType type, Optional<URL> url, Optional<String> selfText, String subreddit,
+	                       String title, boolean saveAfter, boolean sendRepliesToInbox, boolean resubmit, Optional<Captcha> captcha,
+	                       Optional<String> captchaAttempt) throws RedditException {
+		loginCheck();
+
+		Map<String, String> args = args(
+				"api_type", "json",
+				"extension", "json",
+				"kind", type.name().toLowerCase(),
+				"resubmit", resubmit,
+				"save", saveAfter,
+				"sendreplies", sendRepliesToInbox,
+				"sr", subreddit,
+				"then", "comments",
+				"title", title
+		);
+
+		if (type == SubmissionType.LINK) {
+			args.put("url", url.get().toExternalForm());
+		} else if (type == SubmissionType.SELF) {
+			args.put("text", selfText.get());
+		} else {
+			throw new IllegalArgumentException("Unknown SubmissionType: " + type);
+		}
+
+		if (captcha.isPresent()) {
+			if (!captchaAttempt.isPresent()) {
+				throw new IllegalArgumentException("Captcha present but the attempt is not");
+			}
+
+			args.put("iden", captcha.get().getId());
+			args.put("captcha", captchaAttempt.get());
+		}
+
+		RedditResponse response = genericPost("/api/submit", args, true);
+		String jsonLink = response.getRootNode().get("json").get("data").get("url").getTextValue();
+		try {
+			return restClient.get(jsonLink).as(Link.class);
+		} catch (IOException | HttpException e) {
+			throw new RedditException("Could not submit the link", e);
+		}
+	}
+
+	/**
+	 * Checks a user is logged in. If not, throws a RedditException
+	 * @throws RedditException If there is no logged in user
+	 */
+	private void loginCheck() throws RedditException {
+		if (!isLoggedIn()) {
+			throw new RedditException("You are not logged in! Use RedditClient.login(user, pass)");
+		}
+	}
+
+	/**
 	 * Executes a generic GET request and returns a Thing. Used primarily for convenience and standardization of the
 	 * messages of the RedditExceptions that are thrown by the methods in this class
 	 *
@@ -168,7 +321,34 @@ public class RedditClient {
 		try {
 			return restClient.get(path).as(thingClass);
 		} catch (IOException | HttpException e) {
-			throw new RedditException("Unable to make the request to " + path);
+			throw new RedditException("Unable to make the request to " + path, e);
+		}
+	}
+
+	/**
+	 * Executes a generic POST request that returns a RedditResponse. Used primarily for convenience and standardization
+	 * of the messages of RedditExceptions that are thrown.
+	 *
+	 * @param path The path relative of the domain to send a request to
+	 * @param args The arguments to send in the POST body
+	 * @param needsLogin Whether or not to check for a logged in user
+	 * @return A representation of the response by the Reddit API
+	 * @throws RedditException If needsLogin is true and the user was not logged in, or there was an error making the
+	 *         HTTP request.
+	 */
+	private RedditResponse genericPost(String path, Map<String, String> args, boolean needsLogin) throws RedditException {
+		if (needsLogin) {
+			loginCheck();
+		}
+
+		try {
+			RedditResponse response = restClient.post(path, args);
+			if (response.hasErrors()) {
+				response.throwError();
+			}
+			return response;
+		} catch (IOException | HttpException e) {
+			throw new RedditException("Could not make the POST request to " + path, e);
 		}
 	}
 
@@ -188,18 +368,18 @@ public class RedditClient {
 	 * }
 	 * </pre>
 	 *
-	 * @param keysAndValues A list of strings to be condensed into a map. Must be of even length
+	 * @param keysAndValues A list of objects to be turned into strings and condensed into a map. Must be of even length
 	 * @return A map of the given keys and values array
 	 * @throws java.lang.IllegalArgumentException If the length of the string array is not even
 	 */
-	public Map<String, String> args(String... keysAndValues) {
+	public Map<String, String> args(Object... keysAndValues) {
 		if (keysAndValues.length % 2 != 0) {
 			throw new IllegalArgumentException("Keys and values length must be even");
 		}
 
 		Map<String, String> args = new HashMap<>();
 		for (int i = 0; i < keysAndValues.length; ) {
-			args.put(keysAndValues[i++], keysAndValues[i++]);
+			args.put(String.valueOf(keysAndValues[i++]), String.valueOf(keysAndValues[i++]));
 		}
 
 		return args;

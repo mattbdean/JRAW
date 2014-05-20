@@ -10,14 +10,10 @@ import org.apache.http.client.methods.*;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.protocol.HTTP;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -48,12 +44,11 @@ public class HttpHelper {
 	 */
 	public HttpHelper(String userAgent) {
 		this.cookieStore = new BasicCookieStore();
-		this.client = HttpClientBuilder.create().setDefaultCookieStore(cookieStore).build();
 		this.defaultHeaders = new ArrayList<>();
-
-		if (userAgent != null) {
-			defaultHeaders.add(new BasicHeader(HTTP.USER_AGENT, userAgent));
-		}
+		this.client = HttpClientBuilder.create()
+				.setDefaultCookieStore(cookieStore)
+				.setUserAgent(userAgent)
+				.build();
 	}
 
 	/**

@@ -8,9 +8,22 @@ import java.net.URI;
 import java.net.URL;
 import java.util.Date;
 
+/**
+ * Represents content that the user has submitted, whether that be a self post or a link. More information can be found
+ * <a href="https://github.com/reddit/reddit/wiki/JSON#link-implements-votable--created">here</a>.
+ */
 public class Link extends Thing implements Votable, Created, Distinguishable {
+	/**
+	 * The comments that belong to this link
+	 */
 	private Listing<Comment> comments;
 
+	/**
+	 * Instantiates a new Link
+	 *
+	 * @param dataNode The JsonNode that is used to look up JSON values
+	 * @param comments The comments that belong to this link
+	 */
 	public Link(JsonNode dataNode, Listing<Comment> comments) {
 		super(dataNode);
 		this.comments = comments;
@@ -48,8 +61,8 @@ public class Link extends Thing implements Votable, Created, Distinguishable {
 
 	/** True if this link is a self post */
 	@JsonInteraction
-	public Boolean isSelfPost() {
-		return data("is_self").getBooleanValue();
+	public SubmissionType getSubmissionType() {
+		return data("is_self").getBooleanValue() ? SubmissionType.SELF : SubmissionType.LINK;
 	}
 
 	/** True if the post is hidden by the logged in user, false if not logged in or not hidden */
@@ -176,6 +189,7 @@ public class Link extends Thing implements Votable, Created, Distinguishable {
 		return comments;
 	}
 
+	/** The privilege of the poster of this Thing */
 	@JsonInteraction
 	public DistinguishedState getDistinguishedState() {
 		return getDistinguishedState(data);
@@ -187,26 +201,31 @@ public class Link extends Thing implements Votable, Created, Distinguishable {
 		return data("stickied").getBooleanValue();
 	}
 
+	/** The way in which the logged in user voted */
 	@JsonInteraction
 	public VoteType getVote() {
 		return getVote(data);
 	}
 
+	/** Registration date in local time */
 	@JsonInteraction
 	public Date getCreated() {
 		return getCreated(data);
 	}
 
+	/** Registration date in UTC */
 	@JsonInteraction
 	public Date getCreatedUtc() {
 		return getCreatedUtc(data);
 	}
 
+	/** Gets the amount of upvotes the object has received */
 	@JsonInteraction
 	public Integer getUpvotes() {
 		return getUpvotes(data);
 	}
 
+	/** Gets the amount of downvotes the Thing has received */
 	@JsonInteraction
 	public Integer getDownvotes() {
 		return getDownvotes(data);

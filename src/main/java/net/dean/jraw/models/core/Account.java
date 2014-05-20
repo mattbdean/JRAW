@@ -8,7 +8,8 @@ import org.codehaus.jackson.JsonNode;
 import java.util.Date;
 
 /**
- * This class represents a redditor's account.
+ * This class represents a redditor's account. See
+ * <a href="https://github.com/reddit/reddit/wiki/JSON#account-implements-created">here</a> for more
  *
  * @author Matthew Dean
  */

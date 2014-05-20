@@ -192,13 +192,13 @@ public class Comment extends Thing implements Votable, Created, Distinguishable 
 		return ThingType.COMMENT;
 	}
 
-	/** The amount of upvotes this comment has recieved */
+	/** The amount of upvotes this comment has received */
 	@JsonInteraction
 	public Integer getUpvotes() {
 		return getUpvotes(data);
 	}
 
-	/** /** The amount of upvotes this comment has recieved */
+	/** The amount of upvotes this comment has received */
 	@JsonInteraction
 	public Integer getDownvotes() {
 		return getDownvotes(data);

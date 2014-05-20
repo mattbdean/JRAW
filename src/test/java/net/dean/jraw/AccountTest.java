@@ -1,18 +1,20 @@
 package net.dean.jraw;
 
+import net.dean.jraw.models.SubmissionType;
 import net.dean.jraw.models.core.Account;
+import net.dean.jraw.models.core.Link;
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeSuite;
-import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
-import java.util.Random;
+import java.net.URL;
+import java.util.Optional;
 
 public class AccountTest {
 	// Array length 2 where credentials[0] is the username and credentials[1] is the password
 	private static String[] credentials;
 	private RedditClient redditClient;
-	private Random random;
 
 	@BeforeSuite
 	public void getCredentials() {
@@ -21,10 +23,9 @@ public class AccountTest {
 		}
 
 		credentials = TestUtils.getCredentials();
-		random = new Random();
 	}
 
-	@BeforeTest
+	@BeforeClass
 	public void setUp() {
 		redditClient = new RedditClient(TestUtils.getUserAgent(getClass()));
 	}
@@ -39,12 +40,30 @@ public class AccountTest {
 		}
 	}
 
-	@Test
+	@Test(dependsOnMethods = "login")
 	public void getUserNotLoggedIn() {
 		try {
 			Account acc = redditClient.getUser("thatJavaNerd");
 			Assert.assertNotNull(acc, "The account was null");
 		} catch (RedditException e) {
+			Assert.fail(e.getMessage());
+		}
+	}
+
+	@Test(dependsOnMethods = "login")
+	public void testPostLink() {
+		try {
+			int number = TestUtils.randomInt();
+
+			Optional<URL> url = Optional.of(JrawUtils.newUrl("https://www.google.com/?q=" + number));
+			Optional<String> text = Optional.empty();
+
+			Link link = redditClient.submitLink(SubmissionType.LINK, url, text, "jraw_testing2", "Link post test (random:"+number+")",
+					false, false, false);
+			Assert.assertNotNull(link);
+			ThingFieldTest.fieldValidityCheck(link);
+		} catch (RedditException e) {
+			TestUtils.ignoreRatelimitQuotaFilled(e);
 			Assert.fail(e.getMessage());
 		}
 	}

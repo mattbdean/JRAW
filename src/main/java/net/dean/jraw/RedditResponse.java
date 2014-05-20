@@ -34,7 +34,7 @@ public class RedditResponse {
 	/** The raw data of the response's content */
 	private String raw;
 
-	private String[] errors;
+	private ApiError[] errors;
 
 	/**
 	 * Instantiates a new RestResponse. This constructor also reads the contents of the input stream and parses it into
@@ -59,18 +59,17 @@ public class RedditResponse {
 			}
 
 			if (errorsNode != null) {
+				errors = new ApiError[errorsNode.size()];
 				if (errorsNode.size() > 0) {
-					errors = new String[errorsNode.size()];
 
 					for (int i = 0; i < errorsNode.size(); i++) {
-						errors[i] = errorsNode.get(i).getTextValue();
+						JsonNode error = errorsNode.get(i);
+						errors[i] = new ApiError(error.get(0).asText(), error.get(1).asText(), error.get(2).asText());
 					}
 				}
-			}
-
-			if (errors == null) {
-				// We still have to initialize this
-				errors = new String[0];
+			} else {
+				// We still have to initialize it
+				errors = new ApiError[0];
 			}
 			EntityUtils.consume(response.getEntity());
 		} catch (IOException e) {
@@ -101,7 +100,7 @@ public class RedditResponse {
 		return errors.length != 0;
 	}
 
-	public String[] getErrors() {
+	public ApiError[] getErrors() {
 		return errors;
 	}
 
@@ -168,5 +167,29 @@ public class RedditResponse {
 
 	public void throwError() throws RedditException {
 		throw new RedditException(errors[0]);
+	}
+
+	public class ApiError {
+		private final String constant;
+		private final String humanReadable;
+		private final String third;
+
+		public ApiError(String constant, String humanReadable, String third) {
+			this.constant = constant;
+			this.humanReadable = humanReadable;
+			this.third = third;
+		}
+
+		public String getConstant() {
+			return constant;
+		}
+
+		public String getHumanReadable() {
+			return humanReadable;
+		}
+
+		public String getThird() {
+			return third;
+		}
 	}
 }
