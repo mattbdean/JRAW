@@ -5,8 +5,6 @@ import net.dean.jraw.models.JsonInteraction;
 import net.dean.jraw.models.ThingType;
 import org.codehaus.jackson.JsonNode;
 
-import java.util.Date;
-
 /**
  * This class represents a redditor's account. See
  * <a href="https://github.com/reddit/reddit/wiki/JSON#account-implements-created">here</a> for more
@@ -16,18 +14,6 @@ import java.util.Date;
 public class Account extends Thing implements Created {
 	public Account(JsonNode data) {
 		super(data);
-	}
-
-	/** Registration date in local time */
-	@JsonInteraction
-	public Date getCreated() {
-		return getCreated(data);
-	}
-
-	/** Registration date in UTC */
-	@JsonInteraction
-	public Date getCreatedUtc() {
-		return getCreatedUtc(data);
 	}
 
 	/** The user's comment karma */

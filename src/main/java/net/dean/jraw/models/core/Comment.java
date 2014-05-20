@@ -12,7 +12,7 @@ import java.util.Date;
  *
  * @author Matthew Dean
  */
-public class Comment extends Thing implements Votable, Created, Distinguishable {
+public class Comment extends Thing implements Created, Distinguishable, Votable {
 
 	/**
 	 * Instantiates a new Comment
@@ -175,18 +175,6 @@ public class Comment extends Thing implements Votable, Created, Distinguishable 
 		return data("subreddit_id").getTextValue();
 	}
 
-	/** The date this comment was posted in local time */
-	@JsonInteraction
-	public Date getCreated() {
-		return getCreated(data);
-	}
-
-	/** The date this comment was posted in UTC */
-	@JsonInteraction
-	public Date getCreatedUtc() {
-		return getCreatedUtc(data);
-	}
-
 	@Override
 	public ThingType getType() {
 		return ThingType.COMMENT;
@@ -202,17 +190,5 @@ public class Comment extends Thing implements Votable, Created, Distinguishable 
 	@JsonInteraction
 	public Integer getDownvotes() {
 		return getDownvotes(data);
-	}
-
-	/** The vote the user has cast on this comment */
-	@JsonInteraction
-	public VoteType getVote() {
-		return getVote(data);
-	}
-
-	/** The privilege of the poster of this comment */
-	@JsonInteraction
-	public DistinguishedState getDistinguishedState() {
-		return getDistinguishedState(data);
 	}
 }

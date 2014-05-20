@@ -14,12 +14,14 @@ public interface Votable {
 	}
 
 	/** The way in which the logged in user voted */
-	default VoteType getVote(JsonNode data) {
-		JsonNode likes = data.get("likes");
+	default VoteType getVote() {
+		JsonNode likes = getDataNode().get("likes");
 		if (likes.isNull()) {
 			return VoteType.NO_VOTE;
 		}
 
 		return likes.getBooleanValue() ? VoteType.UPVOTE : VoteType.DOWNVOTE;
 	}
+
+	public JsonNode getDataNode();
 }

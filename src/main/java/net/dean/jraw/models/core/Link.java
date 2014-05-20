@@ -12,7 +12,7 @@ import java.util.Date;
  * Represents content that the user has submitted, whether that be a self post or a link. More information can be found
  * <a href="https://github.com/reddit/reddit/wiki/JSON#link-implements-votable--created">here</a>.
  */
-public class Link extends Thing implements Votable, Created, Distinguishable {
+public class Link extends Thing implements Created, Distinguishable, Votable {
 	/**
 	 * The comments that belong to this link
 	 */
@@ -189,34 +189,10 @@ public class Link extends Thing implements Votable, Created, Distinguishable {
 		return comments;
 	}
 
-	/** The privilege of the poster of this Thing */
-	@JsonInteraction
-	public DistinguishedState getDistinguishedState() {
-		return getDistinguishedState(data);
-	}
-
 	/** True if the post is set as the sticky in its respective subreddit */
 	@JsonInteraction
 	public Boolean isStickied() {
 		return data("stickied").getBooleanValue();
-	}
-
-	/** The way in which the logged in user voted */
-	@JsonInteraction
-	public VoteType getVote() {
-		return getVote(data);
-	}
-
-	/** Registration date in local time */
-	@JsonInteraction
-	public Date getCreated() {
-		return getCreated(data);
-	}
-
-	/** Registration date in UTC */
-	@JsonInteraction
-	public Date getCreatedUtc() {
-		return getCreatedUtc(data);
 	}
 
 	/** Gets the amount of upvotes the object has received */

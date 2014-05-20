@@ -7,8 +7,8 @@ import org.codehaus.jackson.JsonNode;
  */
 public interface Distinguishable {
 	/** The privilege of the poster of this Thing */
-	default DistinguishedState getDistinguishedState(JsonNode dataNode) {
-		String distinguished = dataNode.get("distinguished").getTextValue();
+	default DistinguishedState getDistinguishedState() {
+		String distinguished = getDataNode().get("distinguished").getTextValue();
 
 		if (distinguished == null) {
 			return DistinguishedState.NORMAL;
@@ -16,4 +16,6 @@ public interface Distinguishable {
 
 		return DistinguishedState.getByJsonValue(distinguished);
 	}
+
+	public JsonNode getDataNode();
 }

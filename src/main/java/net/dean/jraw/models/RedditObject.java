@@ -41,4 +41,8 @@ public abstract class RedditObject {
 	public String getName() {
 		return data("name").getTextValue();
 	}
+
+	public JsonNode getDataNode() {
+		return data;
+	}
 }
