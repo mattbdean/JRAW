@@ -1,5 +1,7 @@
 language: java
 jdk:
   - oraclejdk8
-script:
-  - printf "jraw_test\nbIEJNVcD0PtRrg2uGJ3Xxx4IM" > src/test/resources/credentials.txt
+before_script:
+  - CREDS=src/test/resources/credentials.txt
+  - touch $CREDS
+  - printf "jraw_test\nbIEJNVcD0PtRrg2uGJ3Xxx4IM" > $CREDS
