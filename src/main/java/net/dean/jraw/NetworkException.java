@@ -7,6 +7,7 @@ public class NetworkException extends Exception {
 
 	/**
 	 * Instantiates a new RedditException
+	 *
 	 * @param message The message to print to the standard error
 	 */
 	public NetworkException(String message) {
@@ -15,8 +16,9 @@ public class NetworkException extends Exception {
 
 	/**
 	 * Instantiates a new RedditException
+	 *
 	 * @param message The message to print to the standard error
-	 * @param cause The cause of this exception
+	 * @param cause   The cause of this exception
 	 */
 	public NetworkException(String message, Throwable cause) {
 		super(message, cause);

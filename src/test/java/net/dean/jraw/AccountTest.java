@@ -58,7 +58,7 @@ public class AccountTest {
 			Optional<URL> url = Optional.of(JrawUtils.newUrl("https://www.google.com/?q=" + number));
 			Optional<String> text = Optional.empty();
 
-			Link link = redditClient.submitLink(SubmissionType.LINK, url, text, "jraw_testing2", "Link post test (random:"+number+")",
+			Link link = redditClient.submitLink(SubmissionType.LINK, url, text, "jraw_testing2", "Link post test (random:" + number + ")",
 					false, false, false);
 			Assert.assertNotNull(link);
 			ThingFieldTest.fieldValidityCheck(link);

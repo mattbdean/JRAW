@@ -29,13 +29,17 @@ public class More extends RedditObject {
 		return ThingType.MORE;
 	}
 
-	/** Gets the amount of IDs in this list */
+	/**
+	 * Gets the amount of IDs in this list
+	 */
 	@JsonInteraction
 	public Integer getCount() {
 		return data("count").getIntValue();
 	}
 
-	/** Gets a list of Thing IDs */
+	/**
+	 * Gets a list of Thing IDs
+	 */
 	@JsonInteraction
 	public List<String> getChildrenIds() {
 		List<String> ids = new ArrayList<>();

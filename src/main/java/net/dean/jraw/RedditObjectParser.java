@@ -14,10 +14,9 @@ public class RedditObjectParser {
 	/**
 	 * Parses a JsonNode into a Thing
 	 *
-	 * @param rootNode The root node of the Thing. Should only contain two elements: "kind", and "data".
+	 * @param rootNode   The root node of the Thing. Should only contain two elements: "kind", and "data".
 	 * @param thingClass The type of Thing this JsonNode should be turned into
-	 * @param <T> The return type
-	 *
+	 * @param <T>        The return type
 	 * @return A new RedditObject
 	 */
 	public <T extends RedditObject> T parse(JsonNode rootNode, Class<T> thingClass) {

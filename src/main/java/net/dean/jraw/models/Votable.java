@@ -3,17 +3,23 @@ package net.dean.jraw.models;
 import org.codehaus.jackson.JsonNode;
 
 public interface Votable {
-	/** Gets the amount of upvotes the object has received */
+	/**
+	 * Gets the amount of upvotes the object has received
+	 */
 	default Integer getUpvotes(JsonNode data) {
 		return data.get("ups").getIntValue();
 	}
 
-	/** Gets the amount of downvotes the object has received */
+	/**
+	 * Gets the amount of downvotes the object has received
+	 */
 	default Integer getDownvotes(JsonNode data) {
 		return data.get("downs").getIntValue();
 	}
 
-	/** The way in which the logged in user voted */
+	/**
+	 * The way in which the logged in user voted
+	 */
 	default VoteType getVote() {
 		JsonNode likes = getDataNode().get("likes");
 		if (likes.isNull()) {

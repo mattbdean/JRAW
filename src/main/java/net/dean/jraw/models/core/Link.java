@@ -34,38 +34,50 @@ public class Link extends Thing implements Created, Distinguishable, Votable {
 		return ThingType.LINK;
 	}
 
-	/** The name of the poster, or null if this is a promotional link */
+	/**
+	 * The name of the poster, or null if this is a promotional link
+	 */
 	@JsonInteraction
 	public String getAuthor() {
 		return data("author").getTextValue();
 	}
 
-	/** The flair used for the poster of the link (subreddit specific) */
+	/**
+	 * The flair used for the poster of the link (subreddit specific)
+	 */
 	@JsonInteraction
 	public Flair getAuthorFlair() {
 		return new Flair(data("author_flair_css_class").getTextValue(),
 				data("author_flair_text").getTextValue());
 	}
 
-	/** Whether the user has clicked this link. Most likely false unless the user has Reddit Gold */
+	/**
+	 * Whether the user has clicked this link. Most likely false unless the user has Reddit Gold
+	 */
 	@JsonInteraction
 	public Boolean isClicked() {
 		return data("clicked").getBooleanValue();
 	}
 
-	/** The domain of this link. Self posts will be "self.reddit.com". Other examples: "en.wikipedia.org" and "s3.amazon.com" */
+	/**
+	 * The domain of this link. Self posts will be "self.reddit.com". Other examples: "en.wikipedia.org" and "s3.amazon.com"
+	 */
 	@JsonInteraction
 	public String getDomain() {
 		return data("domain").getTextValue();
 	}
 
-	/** True if this link is a self post */
+	/**
+	 * True if this link is a self post
+	 */
 	@JsonInteraction
 	public SubmissionType getSubmissionType() {
 		return data("is_self").getBooleanValue() ? SubmissionType.SELF : SubmissionType.LINK;
 	}
 
-	/** True if the post is hidden by the logged in user, false if not logged in or not hidden */
+	/**
+	 * True if the post is hidden by the logged in user, false if not logged in or not hidden
+	 */
 	@JsonInteraction
 	public Boolean isHidden() {
 		return data("hidden").getBooleanValue();
@@ -80,7 +92,9 @@ public class Link extends Thing implements Created, Distinguishable, Votable {
 		return data("score").getIntValue();
 	}
 
-	/** Gets the flair used in this link */
+	/**
+	 * Gets the flair used in this link
+	 */
 	@JsonInteraction
 	public Flair getLinkFlair() {
 		return new Flair(data("link_flair_css_class").getTextValue(),
@@ -97,25 +111,33 @@ public class Link extends Thing implements Created, Distinguishable, Votable {
 //  @JsonInteraction
 //	public Object media_embed;
 
-	/** The number of comments that belong to this link. Includes removed comments. */
+	/**
+	 * The number of comments that belong to this link. Includes removed comments.
+	 */
 	@JsonInteraction
 	public Integer getCommentCount() {
 		return data("num_comments").getIntValue();
 	}
 
-	/** Whether or not the post is tagged as NSFW */
+	/**
+	 * Whether or not the post is tagged as NSFW
+	 */
 	@JsonInteraction
 	public Boolean isOver18() {
 		return data("over_18").getBooleanValue();
 	}
 
-	/** Relative URL (of reddit.com) of the permanent URL for this Link */
+	/**
+	 * Relative URL (of reddit.com) of the permanent URL for this Link
+	 */
 	@JsonInteraction
 	public URI getPermalink() {
 		return JrawUtils.newUri(data("permalink").getTextValue());
 	}
 
-	/** True if saved by the logged in user */
+	/**
+	 * True if saved by the logged in user
+	 */
 	@JsonInteraction
 	public Boolean isSaved() {
 		return data("saved").getBooleanValue();
@@ -130,25 +152,33 @@ public class Link extends Thing implements Created, Distinguishable, Votable {
 		return data("selftext").getTextValue();
 	}
 
-	/** The formatted, HTML version of ${@link #getSelftext()} */
+	/**
+	 * The formatted, HTML version of ${@link #getSelftext()}
+	 */
 	@JsonInteraction
 	public String getSelftextHtml() {
 		return data("selftext_html").getTextValue();
 	}
 
-	/** The subreddit that the link is posted in (ex: "pics", "funny") */
+	/**
+	 * The subreddit that the link is posted in (ex: "pics", "funny")
+	 */
 	@JsonInteraction
 	public String getSubredditName() {
 		return data("subreddit").getTextValue();
 	}
 
-	/** The full name of the subreddit which the link is posted in (ex: "t5_2s5oq" */
+	/**
+	 * The full name of the subreddit which the link is posted in (ex: "t5_2s5oq"
+	 */
 	@JsonInteraction
 	public String getSubredditId() {
 		return data("subreddit_id").getTextValue();
 	}
 
-	/** The full URL to the thumbnail for this link */
+	/**
+	 * The full URL to the thumbnail for this link
+	 */
 	@JsonInteraction(nullable = true)
 	public URL getThumbnail() {
 		String thumb = data("thumbnail").getTextValue();
@@ -159,19 +189,25 @@ public class Link extends Thing implements Created, Distinguishable, Votable {
 		return JrawUtils.newUrl(thumb);
 	}
 
-	/** The title of the link. May contain newlines (\n). */
+	/**
+	 * The title of the link. May contain newlines (\n).
+	 */
 	@JsonInteraction
 	public String getTitle() {
 		return data("title").getTextValue();
 	}
 
-	/** The URL of this post, or the permalink if this is a self post */
+	/**
+	 * The URL of this post, or the permalink if this is a self post
+	 */
 	@JsonInteraction
 	public URL getUrl() {
 		return JrawUtils.newUrl(data("url").getTextValue());
 	}
 
-	/** Indicates if the link has been edited. Null if it has not. */
+	/**
+	 * Indicates if the link has been edited. Null if it has not.
+	 */
 	@JsonInteraction
 	public Date getEdited() {
 		JsonNode node = data("edited");
@@ -184,24 +220,32 @@ public class Link extends Thing implements Created, Distinguishable, Votable {
 		return new Date(data("edited").getLongValue() * 1000);
 	}
 
-	/** Gets the comments of this Link */
+	/**
+	 * Gets the comments of this Link
+	 */
 	public Listing<Comment> getComments() {
 		return comments;
 	}
 
-	/** True if the post is set as the sticky in its respective subreddit */
+	/**
+	 * True if the post is set as the sticky in its respective subreddit
+	 */
 	@JsonInteraction
 	public Boolean isStickied() {
 		return data("stickied").getBooleanValue();
 	}
 
-	/** Gets the amount of upvotes the object has received */
+	/**
+	 * Gets the amount of upvotes the object has received
+	 */
 	@JsonInteraction
 	public Integer getUpvotes() {
 		return getUpvotes(data);
 	}
 
-	/** Gets the amount of downvotes the Thing has received */
+	/**
+	 * Gets the amount of downvotes the Thing has received
+	 */
 	@JsonInteraction
 	public Integer getDownvotes() {
 		return getDownvotes(data);

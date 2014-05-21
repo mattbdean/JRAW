@@ -13,6 +13,7 @@ public abstract class Thing extends RedditObject {
 
 	/**
 	 * Instantiates a new Thing
+	 *
 	 * @param dataNode The node to parse data from
 	 */
 	public Thing(JsonNode dataNode) {

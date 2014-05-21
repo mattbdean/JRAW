@@ -209,22 +209,22 @@ public class RedditClient {
 	/**
 	 * Submits a link
 	 *
-	 * @param type The type of submission, either ${@link net.dean.jraw.models.SubmissionType#LINK} or
-	 *             ${@link net.dean.jraw.models.SubmissionType#SELF}.
-	 * @param url The URL that this submission will link to. Not necessary if the submission type is
-	 *            ${@link net.dean.jraw.models.SubmissionType#SELF}
-	 * @param selfText The body text of the submission, formatted in Markdown. Not necessary if the submission type is
-	 *                 ${@link net.dean.jraw.models.SubmissionType#LINK}
-	 * @param subreddit The subreddit to submit the link to (e.g. "funny", "pics", etc.)
-	 * @param title The title of the submission
-	 * @param saveAfter Whether to save the submission right after posting
+	 * @param type               The type of submission, either ${@link net.dean.jraw.models.SubmissionType#LINK} or
+	 *                           ${@link net.dean.jraw.models.SubmissionType#SELF}.
+	 * @param url                The URL that this submission will link to. Not necessary if the submission type is
+	 *                           ${@link net.dean.jraw.models.SubmissionType#SELF}
+	 * @param selfText           The body text of the submission, formatted in Markdown. Not necessary if the submission type is
+	 *                           ${@link net.dean.jraw.models.SubmissionType#LINK}
+	 * @param subreddit          The subreddit to submit the link to (e.g. "funny", "pics", etc.)
+	 * @param title              The title of the submission
+	 * @param saveAfter          Whether to save the submission right after posting
 	 * @param sendRepliesToInbox Whether to send all top level replies to the poster's inbox
-	 * @param resubmit Whether the Reddit API will return an error if the link's URL has already been posted
+	 * @param resubmit           Whether the Reddit API will return an error if the link's URL has already been posted
 	 * @return A representation of the newly submitted Link
 	 * @throws NetworkException If there was a problem sending the HTTP request
 	 */
 	public Link submitLink(SubmissionType type, Optional<URL> url, Optional<String> selfText, String subreddit,
-	                                 String title, boolean saveAfter, boolean sendRepliesToInbox, boolean resubmit) throws NetworkException, ApiException {
+	                       String title, boolean saveAfter, boolean sendRepliesToInbox, boolean resubmit) throws NetworkException, ApiException {
 
 		return submitLink(type, url, selfText, subreddit, title, saveAfter, sendRepliesToInbox, resubmit, Optional.empty(), Optional.empty());
 	}
@@ -232,19 +232,19 @@ public class RedditClient {
 	/**
 	 * Submits a link with a given captcha. Only really needed if the user has less than 10 link karma.
 	 *
-	 * @param type The type of submission, either ${@link net.dean.jraw.models.SubmissionType#LINK} or
-	 *             ${@link net.dean.jraw.models.SubmissionType#SELF}.
-	 * @param url The URL that this submission will link to. Not necessary if the submission type is
-	 *            ${@link net.dean.jraw.models.SubmissionType#SELF}
-	 * @param selfText The body text of the submission, formatted in Markdown. Not necessary if the submission type is
-	 *                 ${@link net.dean.jraw.models.SubmissionType#LINK}
-	 * @param subreddit The subreddit to submit the link to (e.g. "funny", "pics", etc.)
-	 * @param title The title of the submission
-	 * @param saveAfter Whether to save the submission right after posting
+	 * @param type               The type of submission, either ${@link net.dean.jraw.models.SubmissionType#LINK} or
+	 *                           ${@link net.dean.jraw.models.SubmissionType#SELF}.
+	 * @param url                The URL that this submission will link to. Not necessary if the submission type is
+	 *                           ${@link net.dean.jraw.models.SubmissionType#SELF}
+	 * @param selfText           The body text of the submission, formatted in Markdown. Not necessary if the submission
+	 *                           type is ${@link net.dean.jraw.models.SubmissionType#LINK}
+	 * @param subreddit          The subreddit to submit the link to (e.g. "funny", "pics", etc.)
+	 * @param title              The title of the submission
+	 * @param saveAfter          Whether to save the submission right after posting
 	 * @param sendRepliesToInbox Whether to send all top level replies to the poster's inbox
-	 * @param resubmit Whether the Reddit API will return an error if the link's URL has already been posted
-	 * @param captcha The captcha the user is trying to answer
-	 * @param captchaAttempt The user's attempt at the captcha
+	 * @param resubmit           Whether the Reddit API will return an error if the link's URL has already been posted
+	 * @param captcha            The captcha the user is trying to answer
+	 * @param captchaAttempt     The user's attempt at the captcha
 	 * @return A representation of the newly submitted Link
 	 * @throws NetworkException If there was a problem sending the HTTP request
 	 */
@@ -291,6 +291,7 @@ public class RedditClient {
 
 	/**
 	 * Checks a user is logged in. If not, throws a RedditException
+	 *
 	 * @throws NetworkException If there is no logged in user
 	 */
 	private void loginCheck() throws NetworkException {
@@ -303,12 +304,12 @@ public class RedditClient {
 	 * Executes a generic POST request that returns a RedditResponse. Used primarily for convenience and standardization
 	 * of the messages of RedditExceptions that are thrown.
 	 *
-	 * @param path The path relative of the domain to send a request to
-	 * @param args The arguments to send in the POST body
+	 * @param path       The path relative of the domain to send a request to
+	 * @param args       The arguments to send in the POST body
 	 * @param needsLogin Whether or not to check for a logged in user
 	 * @return A representation of the response by the Reddit API
 	 * @throws NetworkException If needsLogin is true and the user was not logged in, or there was an error making the
-	 *         HTTP request.
+	 *                          HTTP request.
 	 */
 	private RedditResponse genericPost(String path, Map<String, String> args, boolean needsLogin) throws NetworkException, ApiException {
 		if (needsLogin) {

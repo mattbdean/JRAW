@@ -15,22 +15,26 @@ import java.util.List;
  * @param <T> The type of elements that will be in this listing
  * @author Matthew Dean
  */
-public class  Listing<T extends RedditObject> extends RedditObject {
+public class Listing<T extends RedditObject> extends RedditObject {
 	/**
 	 * The RedditObjectParser which will be used to parse JSON values into RedditObjects
 	 */
 	private static final RedditObjectParser PARSER = new RedditObjectParser();
 
-	/** The class of the contents of the listing */
+	/**
+	 * The class of the contents of the listing
+	 */
 	private Class<T> thingClass;
 
-	/** Whether this listing contains a "more" element in its children */
+	/**
+	 * Whether this listing contains a "more" element in its children
+	 */
 	private boolean hasChildren;
 
 	/**
 	 * Instantiates a new listing
 	 *
-	 * @param dataNode The node to get data from
+	 * @param dataNode   The node to get data from
 	 * @param thingClass The class which will be the type of the children in this listing
 	 */
 	public Listing(JsonNode dataNode, Class<T> thingClass) {
@@ -42,6 +46,7 @@ public class  Listing<T extends RedditObject> extends RedditObject {
 
 	/**
 	 * Gets a list of children RedditObjects
+	 *
 	 * @return A list of children
 	 */
 	public List<T> getChildren() {
@@ -91,7 +96,9 @@ public class  Listing<T extends RedditObject> extends RedditObject {
 		return new More(childrenNode);
 	}
 
-	/** The full name of the listing that follows before this page, or null if there is no previous page */
+	/**
+	 * The full name of the listing that follows before this page, or null if there is no previous page
+	 */
 	@JsonInteraction(nullable = true)
 	public String getBefore() {
 		JsonNode node = data("before");
@@ -103,7 +110,9 @@ public class  Listing<T extends RedditObject> extends RedditObject {
 		return null;
 	}
 
-	/** The full name of the listing that follows after this page, or null if there is no following page */
+	/**
+	 * The full name of the listing that follows after this page, or null if there is no following page
+	 */
 	@JsonInteraction(nullable = true)
 	public String getAfter() {
 		JsonNode node = data("after");
@@ -115,7 +124,9 @@ public class  Listing<T extends RedditObject> extends RedditObject {
 		return null;
 	}
 
-	/** Not the same modhash provided upon login. You can reuse the modhash given upon login */
+	/**
+	 * Not the same modhash provided upon login. You can reuse the modhash given upon login
+	 */
 	@JsonInteraction
 	public String getModhash() {
 		JsonNode node = data("modhash");

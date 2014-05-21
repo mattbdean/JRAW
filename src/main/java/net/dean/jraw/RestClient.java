@@ -20,7 +20,7 @@ public class RestClient {
 	/**
 	 * Instantiates a new RestClient
 	 *
-	 * @param host The host on which to operate
+	 * @param host      The host on which to operate
 	 * @param userAgent The User-Agent header which will be sent with all requests
 	 */
 	public RestClient(String host, String userAgent) {

@@ -20,18 +20,26 @@ import java.util.Scanner;
  * This class is used to show the result of a request to a RESTful web service, such as Reddit's JSON API.
  */
 public class RedditResponse {
-	/** The ObjectMapper used to map parse the response JSON */
+	/**
+	 * The ObjectMapper used to map parse the response JSON
+	 */
 	protected static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
 	private RedditObjectParser redditObjectParser;
 
-	/** A list of all thea headers received from the server */
+	/**
+	 * A list of all thea headers received from the server
+	 */
 	private List<Header> headers;
 
-	/** The root node of the JSON */
+	/**
+	 * The root node of the JSON
+	 */
 	private JsonNode rootNode;
 
-	/** The raw data of the response's content */
+	/**
+	 * The raw data of the response's content
+	 */
 	private String raw;
 
 	private ApiException[] apiExceptions;
@@ -128,6 +136,7 @@ public class RedditResponse {
 
 	/**
 	 * Gets a Header object by name from the list of headers
+	 *
 	 * @param name The name of the header, such as <code>Content-Length</code>
 	 * @return A Header object with a given name
 	 */
@@ -143,6 +152,7 @@ public class RedditResponse {
 
 	/**
 	 * Gets all the headers sent by the server
+	 *
 	 * @return A List of Header objects
 	 */
 	public List<Header> getHeaders() {
@@ -151,6 +161,7 @@ public class RedditResponse {
 
 	/**
 	 * Gets the root JsonNode
+	 *
 	 * @return The root JsonNode
 	 */
 	public JsonNode getRootNode() {
@@ -159,6 +170,7 @@ public class RedditResponse {
 
 	/**
 	 * Gets the raw data returned from the request
+	 *
 	 * @return The raw data of the request
 	 */
 	public String getRaw() {

@@ -16,13 +16,17 @@ public class Account extends Thing implements Created {
 		super(data);
 	}
 
-	/** The user's comment karma */
+	/**
+	 * The user's comment karma
+	 */
 	@JsonInteraction
 	public Integer getCommentKarma() {
 		return data("comment_karma").getIntValue();
 	}
 
-	/** User has unread mail? Null if not your account */
+	/**
+	 * User has unread mail? Null if not your account
+	 */
 	@JsonInteraction(nullable = true)
 	public Boolean hasMail() {
 		JsonNode node = data("has_mail");
@@ -32,7 +36,9 @@ public class Account extends Thing implements Created {
 		return null;
 	}
 
-	/** User has provided an email address and got it verified? Null if not logged in and your account */
+	/**
+	 * User has provided an email address and got it verified? Null if not logged in and your account
+	 */
 	@JsonInteraction(nullable = true)
 	public Boolean hasModMail() {
 		JsonNode node = data("has_mod_mail");
@@ -42,37 +48,49 @@ public class Account extends Thing implements Created {
 		return null;
 	}
 
-	/** User has provided an email address and got it verified? */
+	/**
+	 * User has provided an email address and got it verified?
+	 */
 	@JsonInteraction
 	public Boolean getHasVerifiedEmail() {
 		return data("has_verified_email").getBooleanValue();
 	}
 
-	/** Whether the logged-in user has this user set as a friend */
+	/**
+	 * Whether the logged-in user has this user set as a friend
+	 */
 	@JsonInteraction
 	public Boolean getIsFriend() {
 		return data("is_friend").getBooleanValue();
 	}
 
-	/** Reddit gold status */
+	/**
+	 * Reddit gold status
+	 */
 	@JsonInteraction
 	public Boolean hasGold() {
 		return data("is_gold").getBooleanValue();
 	}
 
-	/** Whether this account moderates any subreddits */
+	/**
+	 * Whether this account moderates any subreddits
+	 */
 	@JsonInteraction
 	public Boolean isMod() {
 		return data("is_mod").getBooleanValue();
 	}
 
-	/** User's link karma */
+	/**
+	 * User's link karma
+	 */
 	@JsonInteraction
 	public Integer getLinkKarma() {
 		return data("link_karma").getIntValue();
 	}
 
-	/** Current modhash. Null if not your account */
+	/**
+	 * Current modhash. Null if not your account
+	 */
 	@JsonInteraction(nullable = true)
 	public String getModHash() {
 		JsonNode node = data("modhash");
@@ -82,7 +100,9 @@ public class Account extends Thing implements Created {
 		return null;
 	}
 
-	/** Whether this account is set to be over 18 */
+	/**
+	 * Whether this account is set to be over 18
+	 */
 	@JsonInteraction(nullable = true)
 	public Boolean isOver18() {
 		JsonNode node = data("over_18");

@@ -5,7 +5,7 @@ import org.codehaus.jackson.JsonNode;
 /**
  * The class that all models implement. Contains values that all data types returned from the Reddit API have, including
  * "more" and "Listing".
- *
+ * <p>
  * However, in this particular project, a RedditObject is simply a carrier of a JsonNode. All classes that extend RedditObject
  * are simply interfaces to grab data from this JsonNode.
  */
@@ -14,6 +14,7 @@ public abstract class RedditObject {
 
 	/**
 	 * Instantiates a new RedditObject
+	 *
 	 * @param dataNode The node to parse data from
 	 */
 	public RedditObject(JsonNode dataNode) {
@@ -30,13 +31,17 @@ public abstract class RedditObject {
 		return data.get(name);
 	}
 
-	/** Gets this Thing's full identifier, e.g. "8xwlg" */
+	/**
+	 * Gets this Thing's full identifier, e.g. "8xwlg"
+	 */
 	@JsonInteraction
 	public String getId() {
 		return data("id").getTextValue();
 	}
 
-	/** Gets the fullname of this Thing, e.g. "t1_c3v7f8u" */
+	/**
+	 * Gets the fullname of this Thing, e.g. "t1_c3v7f8u"
+	 */
 	@JsonInteraction
 	public String getName() {
 		return data("name").getTextValue();

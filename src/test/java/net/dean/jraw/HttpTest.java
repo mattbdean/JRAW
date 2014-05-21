@@ -15,8 +15,8 @@ import java.util.TreeMap;
 import static net.dean.jraw.HttpVerb.*;
 
 public class HttpTest {
-	private static HttpHelper client;
 	private static final String HOST = "httpbin.org";
+	private static HttpHelper client;
 
 	@BeforeTest
 	public static void init() {
@@ -58,6 +58,7 @@ public class HttpTest {
 
 	/**
 	 * Conducts a test for HTTP methods that uses form data (POST, PATCH, PUT)
+	 *
 	 * @param verb The HTTP verb to use (POST, PATCH, or PUT)
 	 */
 	private void request(HttpVerb verb) {
@@ -75,7 +76,7 @@ public class HttpTest {
 
 			// Add the arguments of the return JSON file to a map
 			Map<String, String> parsedArgs = new TreeMap<>();
-			for (Iterator<Map.Entry<String, JsonNode>> it = returnArgs.getFields(); it.hasNext();) {
+			for (Iterator<Map.Entry<String, JsonNode>> it = returnArgs.getFields(); it.hasNext(); ) {
 				Map.Entry<String, JsonNode> entry = it.next();
 				parsedArgs.put(entry.getKey(), entry.getValue().getTextValue());
 			}
@@ -99,8 +100,8 @@ public class HttpTest {
 	 *
 	 * @param map1 The first map
 	 * @param map2 The second map
-	 * @param <K> The key type of the two maps
-	 * @param <V> The value type of the two maps
+	 * @param <K>  The key type of the two maps
+	 * @param <V>  The value type of the two maps
 	 * @return True, if the two maps have the same keys and values, false if else
 	 */
 	private <K, V> boolean mapSame(Map<K, V> map1, Map<K, V> map2) {

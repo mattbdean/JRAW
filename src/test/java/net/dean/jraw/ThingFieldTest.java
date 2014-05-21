@@ -1,8 +1,8 @@
 package net.dean.jraw;
 
 import junit.framework.Assert;
-import net.dean.jraw.models.core.Account;
 import net.dean.jraw.models.JsonInteraction;
+import net.dean.jraw.models.core.Account;
 import net.dean.jraw.models.core.Link;
 import net.dean.jraw.models.core.Thing;
 import org.testng.annotations.BeforeTest;
@@ -14,43 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ThingFieldTest {
-	private RedditClient reddit;
 	private static final String LINK_ID = "92dd8";
-
-	@BeforeTest
-	public void setUp() {
-		this.reddit = new RedditClient(TestUtils.getUserAgent(getClass()));
-	}
-
-	@Test
-	public void testAccount() {
-		try {
-			Account redditAccount = reddit.getUser("spladug");
-			fieldValidityCheck(redditAccount);
-		} catch (NetworkException e) {
-			Assert.fail(e.getMessage());
-		}
-	}
-
-	@Test
-	public void testLink() {
-		try {
-			Link link = reddit.getLink(LINK_ID);
-			fieldValidityCheck(link);
-		} catch (NetworkException e) {
-			Assert.fail(e.getMessage());
-		}
-	}
-
-	@Test(dependsOnMethods = "testLink")
-	public void testComment() {
-		try {
-			Link link = reddit.getLink(LINK_ID);
-			fieldValidityCheck(link.getComments().getChildren().get(0));
-		} catch (NetworkException e) {
-			Assert.fail(e.getMessage());
-		}
-	}
+	private RedditClient reddit;
 
 	static <T extends Thing> void fieldValidityCheck(T thing) {
 		List<Method> jsonInteractionMethods = getJsonInteractionMethods(thing.getClass());
@@ -105,6 +70,41 @@ public class ThingFieldTest {
 		}
 
 		return getterMethods;
+	}
+
+	@BeforeTest
+	public void setUp() {
+		this.reddit = new RedditClient(TestUtils.getUserAgent(getClass()));
+	}
+
+	@Test
+	public void testAccount() {
+		try {
+			Account redditAccount = reddit.getUser("spladug");
+			fieldValidityCheck(redditAccount);
+		} catch (NetworkException e) {
+			Assert.fail(e.getMessage());
+		}
+	}
+
+	@Test
+	public void testLink() {
+		try {
+			Link link = reddit.getLink(LINK_ID);
+			fieldValidityCheck(link);
+		} catch (NetworkException e) {
+			Assert.fail(e.getMessage());
+		}
+	}
+
+	@Test(dependsOnMethods = "testLink")
+	public void testComment() {
+		try {
+			Link link = reddit.getLink(LINK_ID);
+			fieldValidityCheck(link.getComments().getChildren().get(0));
+		} catch (NetworkException e) {
+			Assert.fail(e.getMessage());
+		}
 	}
 
 }

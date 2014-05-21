@@ -19,7 +19,7 @@ public class Captcha {
 	/**
 	 * Instantiates a new Captcha
 	 *
-	 * @param id The captcha's ID
+	 * @param id          The captcha's ID
 	 * @param imageStream The captcha's input stream that will download its image
 	 */
 	public Captcha(String id, InputStream imageStream) {
@@ -29,6 +29,7 @@ public class Captcha {
 
 	/**
 	 * Gets the captcha's ID
+	 *
 	 * @return The captcha's ID
 	 */
 	public String getId() {
@@ -37,6 +38,7 @@ public class Captcha {
 
 	/**
 	 * Gets the captcha's InputStream that will download an image
+	 *
 	 * @return The captcha's InputStream
 	 */
 	public InputStream getImageStream() {
