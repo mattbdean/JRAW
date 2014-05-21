@@ -34,7 +34,7 @@ public class RedditResponse {
 	/** The raw data of the response's content */
 	private String raw;
 
-	private ApiError[] errors;
+	private ApiException[] apiExceptions;
 
 	/**
 	 * Instantiates a new RestResponse. This constructor also reads the contents of the input stream and parses it into
@@ -59,17 +59,17 @@ public class RedditResponse {
 			}
 
 			if (errorsNode != null) {
-				errors = new ApiError[errorsNode.size()];
+				apiExceptions = new net.dean.jraw.ApiException[errorsNode.size()];
 				if (errorsNode.size() > 0) {
 
 					for (int i = 0; i < errorsNode.size(); i++) {
 						JsonNode error = errorsNode.get(i);
-						errors[i] = new ApiError(error.get(0).asText(), error.get(1).asText(), error.get(2).asText());
+						apiExceptions[i] = new ApiException(error.get(0).asText(), error.get(1).asText(), error.get(2).asText());
 					}
 				}
 			} else {
 				// We still have to initialize it
-				errors = new ApiError[0];
+				apiExceptions = new net.dean.jraw.ApiException[0];
 			}
 			EntityUtils.consume(response.getEntity());
 		} catch (IOException e) {
@@ -97,11 +97,11 @@ public class RedditResponse {
 	}
 
 	public boolean hasErrors() {
-		return errors.length != 0;
+		return apiExceptions.length != 0;
 	}
 
-	public ApiError[] getErrors() {
-		return errors;
+	public ApiException[] getApiExceptions() {
+		return apiExceptions;
 	}
 
 	public int getRatelimitUsed() {
@@ -163,33 +163,5 @@ public class RedditResponse {
 	 */
 	public String getRaw() {
 		return raw;
-	}
-
-	public void throwError() throws RedditException {
-		throw new RedditException(errors[0]);
-	}
-
-	public class ApiError {
-		private final String constant;
-		private final String humanReadable;
-		private final String third;
-
-		public ApiError(String constant, String humanReadable, String third) {
-			this.constant = constant;
-			this.humanReadable = humanReadable;
-			this.third = third;
-		}
-
-		public String getConstant() {
-			return constant;
-		}
-
-		public String getHumanReadable() {
-			return humanReadable;
-		}
-
-		public String getThird() {
-			return third;
-		}
 	}
 }

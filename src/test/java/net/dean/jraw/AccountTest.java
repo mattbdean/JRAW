@@ -35,7 +35,7 @@ public class AccountTest {
 		try {
 			Account acc = redditClient.login(credentials[0], credentials[1]);
 			Assert.assertNotNull(acc, "The account was null");
-		} catch (RedditException e) {
+		} catch (NetworkException | ApiException e) {
 			Assert.fail(e.getMessage());
 		}
 	}
@@ -45,7 +45,7 @@ public class AccountTest {
 		try {
 			Account acc = redditClient.getUser("thatJavaNerd");
 			Assert.assertNotNull(acc, "The account was null");
-		} catch (RedditException e) {
+		} catch (NetworkException e) {
 			Assert.fail(e.getMessage());
 		}
 	}
@@ -62,9 +62,11 @@ public class AccountTest {
 					false, false, false);
 			Assert.assertNotNull(link);
 			ThingFieldTest.fieldValidityCheck(link);
-		} catch (RedditException e) {
-			TestUtils.ignoreRatelimitQuotaFilled(e);
+		} catch (NetworkException e) {
+
 			Assert.fail(e.getMessage());
+		} catch (ApiException e) {
+			TestUtils.ignoreRatelimitQuotaFilled(e);
 		}
 	}
 }

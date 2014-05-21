@@ -27,7 +27,7 @@ public class ThingFieldTest {
 		try {
 			Account redditAccount = reddit.getUser("spladug");
 			fieldValidityCheck(redditAccount);
-		} catch (RedditException e) {
+		} catch (NetworkException e) {
 			Assert.fail(e.getMessage());
 		}
 	}
@@ -37,7 +37,7 @@ public class ThingFieldTest {
 		try {
 			Link link = reddit.getLink(LINK_ID);
 			fieldValidityCheck(link);
-		} catch (RedditException e) {
+		} catch (NetworkException e) {
 			Assert.fail(e.getMessage());
 		}
 	}
@@ -47,7 +47,7 @@ public class ThingFieldTest {
 		try {
 			Link link = reddit.getLink(LINK_ID);
 			fieldValidityCheck(link.getComments().getChildren().get(0));
-		} catch (RedditException e) {
+		} catch (NetworkException e) {
 			Assert.fail(e.getMessage());
 		}
 	}

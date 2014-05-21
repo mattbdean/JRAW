@@ -31,24 +31,22 @@ public final class TestUtils {
 		return random.nextInt(1_000_000_000);
 	}
 
-	public static void ignoreRatelimitQuotaFilled(RedditException e) {
-		if (e.getApiError().isPresent()) {
-			String constant = e.getApiError().get().getConstant();
+	public static void ignoreRatelimitQuotaFilled(ApiException e) {
 
-			String msg = null;
-			switch (constant) {
-				case "QUOTA_FILLED":
-					msg = String.format("Skipping %s(), link posting quota has been filled for this user", getCallingMethod());
-					break;
-				case "RATELIMIT":
-					msg = String.format("Skipping %s(), reached ratelimit", getCallingMethod());
-					break;
-			}
+		String msg = null;
+		// toUpperCase just in case (no pun intended)
+		switch (e.getConstant().toUpperCase()) {
+			case "QUOTA_FILLED":
+				msg = String.format("Skipping %s(), link posting quota has been filled for this user", getCallingMethod());
+				break;
+			case "RATELIMIT":
+				msg = String.format("Skipping %s(), reached ratelimit", getCallingMethod());
+				break;
+		}
 
-			if (msg != null) {
-				System.err.println(msg);
-				throw new SkipException(msg);
-			}
+		if (msg != null) {
+			System.err.println(msg);
+			throw new SkipException(msg);
 		}
 	}
 

@@ -1,6 +1,5 @@
 package net.dean.jraw;
 
-import org.apache.http.HttpException;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.codehaus.jackson.JsonNode;
@@ -49,8 +48,8 @@ public class HttpTest {
 		request(DELETE);
 	}
 
-	@Test(expectedExceptions = HttpException.class)
-	public void httpGetInvalidResponseCode() throws IOException, HttpException {
+	@Test(expectedExceptions = NetworkException.class)
+	public void httpGetInvalidResponseCode() throws IOException, NetworkException {
 		CloseableHttpResponse response = client.execute(GET, HOST, "/status/418");
 		if (response != null) {
 			EntityUtils.consume(response.getEntity());
@@ -90,7 +89,7 @@ public class HttpTest {
 			}
 
 			response.close();
-		} catch (IOException | HttpException e) {
+		} catch (IOException | NetworkException e) {
 			Assert.fail(e.getMessage());
 		}
 	}

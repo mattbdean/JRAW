@@ -4,9 +4,7 @@ import net.dean.jraw.models.Captcha;
 import net.dean.jraw.models.SubmissionType;
 import net.dean.jraw.models.core.Account;
 import net.dean.jraw.models.core.Link;
-import net.dean.jraw.models.core.Thing;
 import org.apache.http.Header;
-import org.apache.http.HttpException;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.message.BasicHeader;
@@ -68,50 +66,46 @@ public class RedditClient {
 	 * @param username The username to log in to
 	 * @param password The password of the username
 	 * @return An Account object that has the same username as the username parameter
-	 * @throws RedditException If there was an error returned in the JSON
+	 * @throws NetworkException If there was an error returned in the JSON
 	 */
-	public Account login(String username, String password) throws RedditException {
-		try {
-			RedditResponse loginResponse = new RedditResponse(restClient.getHttpHelper().execute(HttpVerb.POST, HOST_SSL, "/api/login",
-					args("user", username, "passwd", password, "api_type", "json")));
+	public Account login(String username, String password) throws NetworkException, ApiException {
+		RedditResponse loginResponse = new RedditResponse(restClient.getHttpHelper().execute(HttpVerb.POST, HOST_SSL, "/api/login",
+				args("user", username, "passwd", password, "api_type", "json")));
 
-			if (loginResponse.hasErrors()) {
-				loginResponse.throwError();
-			}
-
-			List<Header> headers = restClient.getHttpHelper().getDefaultHeaders();
-
-			Header h = new BasicHeader(HEADER_MODHASH,
-					loginResponse.getRootNode().get("json").get("data").get("modhash").getTextValue());
-
-			// Add the X-Modhash header, or update it if it already exists
-			Header modhashHeader = null;
-			for (Header header : headers) {
-				if (header.getName().equals(HEADER_MODHASH)) {
-					modhashHeader = header;
-				}
-			}
-
-			if (modhashHeader != null) {
-				headers.remove(modhashHeader);
-			}
-			headers.add(h);
-
-			return me();
-		} catch (IOException | HttpException e) {
-			throw new RedditException("Unable to login", e);
+		if (loginResponse.hasErrors()) {
+			throw loginResponse.getApiExceptions()[0];
 		}
+
+		List<Header> headers = restClient.getHttpHelper().getDefaultHeaders();
+
+		Header h = new BasicHeader(HEADER_MODHASH,
+				loginResponse.getRootNode().get("json").get("data").get("modhash").getTextValue());
+
+		// Add the X-Modhash header, or update it if it already exists
+		Header modhashHeader = null;
+		for (Header header : headers) {
+			if (header.getName().equals(HEADER_MODHASH)) {
+				modhashHeader = header;
+			}
+		}
+
+		if (modhashHeader != null) {
+			headers.remove(modhashHeader);
+		}
+		headers.add(h);
+
+		return me();
 	}
 
 	/**
 	 * Gets the currently logged in account
 	 *
 	 * @return The currently logged in account
-	 * @throws RedditException If the user has not been logged in yet
+	 * @throws NetworkException If the user has not been logged in yet
 	 */
-	public Account me() throws RedditException {
+	public Account me() throws NetworkException {
 		loginCheck();
-		return genericGet("/api/me.json", Account.class);
+		return restClient.get("/api/me.json").as(Account.class);
 	}
 
 	/**
@@ -134,9 +128,9 @@ public class RedditClient {
 	 * the current logged in user has less than 10 link karma
 	 *
 	 * @return True if the user needs a captcha to do a specific action, else if not or not logged in.
-	 * @throws RedditException
+	 * @throws NetworkException
 	 */
-	public boolean needsCaptcha() throws RedditException {
+	public boolean needsCaptcha() throws NetworkException {
 		if (isLoggedIn()) {
 			return false;
 		}
@@ -149,8 +143,8 @@ public class RedditClient {
 			String raw = s.hasNext() ? s.next() : "";
 
 			return Boolean.parseBoolean(raw);
-		} catch (HttpException | IOException e) {
-			throw new RedditException("Unable to make the request to /api/needs_captcha.json", e);
+		} catch (NetworkException | IOException e) {
+			throw new NetworkException("Unable to make the request to /api/needs_captcha.json", e);
 		}
 	}
 
@@ -158,9 +152,9 @@ public class RedditClient {
 	 * Fetches a new captcha from the API
 	 *
 	 * @return A new Captcha
-	 * @throws RedditException If there was a problem executing the HTTP request
+	 * @throws NetworkException If there was a problem executing the HTTP request
 	 */
-	public Captcha getNewCaptcha() throws RedditException {
+	public Captcha getNewCaptcha() throws NetworkException {
 		try {
 			RedditResponse response = restClient.post("/api/new_captcha");
 
@@ -168,8 +162,8 @@ public class RedditClient {
 			String id = response.getRootNode().get("jquery").get(11).get(3).get(0).getTextValue();
 
 			return getCaptcha(id);
-		} catch (IOException | HttpException e) {
-			throw new RedditException("Unable to make the request to /api/new_captcha", e);
+		} catch (NetworkException e) {
+			throw new NetworkException("Unable to make the request to /api/new_captcha", e);
 		}
 	}
 
@@ -178,15 +172,15 @@ public class RedditClient {
 	 *
 	 * @param id The ID of the wanted captcha
 	 * @return A new Captcha object
-	 * @throws RedditException If there was a problem executing the HTTP request
+	 * @throws NetworkException If there was a problem executing the HTTP request
 	 */
-	public Captcha getCaptcha(String id) throws RedditException {
+	public Captcha getCaptcha(String id) throws NetworkException {
 		try {
 			CloseableHttpResponse response = restClient.getHttpHelper().execute(HttpVerb.GET, HOST, "/captcha/" + id + ".png");
 
 			return new Captcha(id, response.getEntity().getContent());
-		} catch (IOException | HttpException e) {
-			throw new RedditException("Unable to get the captcha \"" + id + "\"", e);
+		} catch (IOException | NetworkException e) {
+			throw new NetworkException("Unable to get the captcha \"" + id + "\"", e);
 		}
 	}
 
@@ -195,10 +189,10 @@ public class RedditClient {
 	 *
 	 * @param username The name of the desired user
 	 * @return An Account whose name matches the given username
-	 * @throws RedditException If the user does not exist or there was a problem making the request
+	 * @throws NetworkException If the user does not exist or there was a problem making the request
 	 */
-	public Account getUser(String username) throws RedditException {
-		return genericGet("/user/" + username + "/about.json", Account.class);
+	public Account getUser(String username) throws NetworkException {
+		return restClient.get("/user/" + username + "/about.json").as(Account.class);
 	}
 
 	/**
@@ -206,10 +200,10 @@ public class RedditClient {
 	 *
 	 * @param id The link's ID, ex: "92dd8"
 	 * @return A new Link object
-	 * @throws RedditException If the link does not exist or there was a problem making the request
+	 * @throws NetworkException If the link does not exist or there was a problem making the request
 	 */
-	public Link getLink(String id) throws RedditException {
-		return genericGet("/" + id + ".json", Link.class);
+	public Link getLink(String id) throws NetworkException {
+		return restClient.get("/" + id + ".json").as(Link.class);
 	}
 
 	/**
@@ -227,10 +221,10 @@ public class RedditClient {
 	 * @param sendRepliesToInbox Whether to send all top level replies to the poster's inbox
 	 * @param resubmit Whether the Reddit API will return an error if the link's URL has already been posted
 	 * @return A representation of the newly submitted Link
-	 * @throws RedditException If there was a problem sending the HTTP request
+	 * @throws NetworkException If there was a problem sending the HTTP request
 	 */
 	public Link submitLink(SubmissionType type, Optional<URL> url, Optional<String> selfText, String subreddit,
-	                                 String title, boolean saveAfter, boolean sendRepliesToInbox, boolean resubmit) throws RedditException {
+	                                 String title, boolean saveAfter, boolean sendRepliesToInbox, boolean resubmit) throws NetworkException, ApiException {
 
 		return submitLink(type, url, selfText, subreddit, title, saveAfter, sendRepliesToInbox, resubmit, Optional.empty(), Optional.empty());
 	}
@@ -252,11 +246,11 @@ public class RedditClient {
 	 * @param captcha The captcha the user is trying to answer
 	 * @param captchaAttempt The user's attempt at the captcha
 	 * @return A representation of the newly submitted Link
-	 * @throws RedditException If there was a problem sending the HTTP request
+	 * @throws NetworkException If there was a problem sending the HTTP request
 	 */
 	public Link submitLink(SubmissionType type, Optional<URL> url, Optional<String> selfText, String subreddit,
 	                       String title, boolean saveAfter, boolean sendRepliesToInbox, boolean resubmit, Optional<Captcha> captcha,
-	                       Optional<String> captchaAttempt) throws RedditException {
+	                       Optional<String> captchaAttempt) throws NetworkException, ApiException {
 		loginCheck();
 
 		Map<String, String> args = args(
@@ -290,38 +284,18 @@ public class RedditClient {
 
 		RedditResponse response = genericPost("/api/submit", args, true);
 		String jsonLink = response.getRootNode().get("json").get("data").get("url").getTextValue();
-		try {
-			return restClient.get(jsonLink).as(Link.class);
-		} catch (IOException | HttpException e) {
-			throw new RedditException("Could not submit the link", e);
-		}
+
+		return restClient.get(jsonLink).as(Link.class);
+
 	}
 
 	/**
 	 * Checks a user is logged in. If not, throws a RedditException
-	 * @throws RedditException If there is no logged in user
+	 * @throws NetworkException If there is no logged in user
 	 */
-	private void loginCheck() throws RedditException {
+	private void loginCheck() throws NetworkException {
 		if (!isLoggedIn()) {
-			throw new RedditException("You are not logged in! Use RedditClient.login(user, pass)");
-		}
-	}
-
-	/**
-	 * Executes a generic GET request and returns a Thing. Used primarily for convenience and standardization of the
-	 * messages of the RedditExceptions that are thrown by the methods in this class
-	 *
-	 * @param path The path relative of the domain to send a request to
-	 * @param thingClass The class to turn the request into
-	 * @param <T> The return type of the request
-	 * @return A new Thing
-	 * @throws RedditException If there was a problem making the request
-	 */
-	private <T extends Thing> T genericGet(String path, Class<T> thingClass) throws RedditException{
-		try {
-			return restClient.get(path).as(thingClass);
-		} catch (IOException | HttpException e) {
-			throw new RedditException("Unable to make the request to " + path, e);
+			throw new NetworkException("You are not logged in! Use RedditClient.login(user, pass)");
 		}
 	}
 
@@ -333,23 +307,20 @@ public class RedditClient {
 	 * @param args The arguments to send in the POST body
 	 * @param needsLogin Whether or not to check for a logged in user
 	 * @return A representation of the response by the Reddit API
-	 * @throws RedditException If needsLogin is true and the user was not logged in, or there was an error making the
+	 * @throws NetworkException If needsLogin is true and the user was not logged in, or there was an error making the
 	 *         HTTP request.
 	 */
-	private RedditResponse genericPost(String path, Map<String, String> args, boolean needsLogin) throws RedditException {
+	private RedditResponse genericPost(String path, Map<String, String> args, boolean needsLogin) throws NetworkException, ApiException {
 		if (needsLogin) {
 			loginCheck();
 		}
 
-		try {
-			RedditResponse response = restClient.post(path, args);
-			if (response.hasErrors()) {
-				response.throwError();
-			}
-			return response;
-		} catch (IOException | HttpException e) {
-			throw new RedditException("Could not make the POST request to " + path, e);
+		RedditResponse response = restClient.post(path, args);
+		if (response.hasErrors()) {
+			throw response.getApiExceptions()[0];
 		}
+
+		return response;
 	}
 
 	/**

@@ -32,7 +32,7 @@ public class LinkTest {
 
 			Comment first = comments.getChildren().get(0);
 			ThingFieldTest.fieldValidityCheck(first);
-		} catch (RedditException e) {
+		} catch (NetworkException e) {
 			Assert.fail(e.getMessage());
 		}
 	}

@@ -1,7 +1,6 @@
 package net.dean.jraw;
 
 import org.apache.http.Header;
-import org.apache.http.HttpException;
 import org.apache.http.HttpHost;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
@@ -13,7 +12,9 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -23,12 +24,16 @@ import java.util.stream.Collectors;
  * @author Matthew Dean
  */
 public class HttpHelper {
-	/** The HttpClient used to execute HTTP requests */
+	/**
+	 * The HttpClient used to execute HTTP requests
+	 */
 	private HttpClient client;
 
 	private CookieStore cookieStore;
 
-	/** The list of headers that will be sent with every HTTP request */
+	/**
+	 * The list of headers that will be sent with every HTTP request
+	 */
 	private List<Header> defaultHeaders;
 
 	/**
@@ -40,6 +45,7 @@ public class HttpHelper {
 
 	/**
 	 * Instantiates a new HttpClientHelper and adds a given string as the value for the User-Agent header for every request
+	 *
 	 * @param userAgent The User-Agent to use for the HTTP requests
 	 */
 	public HttpHelper(String userAgent) {
@@ -54,64 +60,68 @@ public class HttpHelper {
 	/**
 	 * Conducts an HTTP request with no arguments
 	 *
-	 * @param verb The HTTP verb to use (GET, POST, etc)
+	 * @param verb     The HTTP verb to use (GET, POST, etc)
 	 * @param hostname The name of the URL's host. Do not include the scheme (ex: "http://")
-	 * @param path The path relative to the root directory of the host.
+	 * @param path     The path relative to the root directory of the host.
 	 * @return A CloseableHttpResponse formed in the execution of the HTTP request
 	 */
-	public CloseableHttpResponse execute(HttpVerb verb, String hostname, String path) throws IOException, HttpException {
+	public CloseableHttpResponse execute(HttpVerb verb, String hostname, String path) throws NetworkException {
 		return execute(verb, hostname, path, null);
 	}
 
 	/**
 	 * Conducts an HTTP request
 	 *
-	 * @param verb The HTTP verb to use (GET, POST, etc)
+	 * @param verb     The HTTP verb to use (GET, POST, etc)
 	 * @param hostname The name of the URL's host. Do not include the scheme (ex: the "http://")
-	 * @param path The path relative to the root directory of the host.
-	 * @param args The arguments to use. If the verb uses form data (POST, PATCH, PUT), then these will be put into the
-	 *             request body. If the verb is "GET", then a query string will be appended to the path.
+	 * @param path     The path relative to the root directory of the host.
+	 * @param args     The arguments to use. If the verb uses form data (POST, PATCH, PUT), then these will be put into the
+	 *                 request body. If the verb is "GET", then a query string will be appended to the path.
 	 * @return A CloseableHttpResponse formed in the execution of the HTTP request
-	 * @throws IOException In case of a problem or the connection was aborted
-	 * @throws HttpException If the status code was not "200 OK"
+	 * @throws NetworkException If the status code was not "200 OK"
 	 */
-	public CloseableHttpResponse execute(HttpVerb verb, String hostname, String path, Map<String, String> args) throws IOException, HttpException {
+	public CloseableHttpResponse execute(HttpVerb verb, String hostname, String path, Map<String, String> args) throws NetworkException {
 		if (!path.startsWith("/")) {
 			path = "/" + path;
 		}
 
 		HttpRequestBase request = verb.getRequestObject(path);
 
+		try {
 
-		if (args != null) {
-			// Construct a List of BasicNameValue pairs from a Map
-			List<BasicNameValuePair> params = args.entrySet().stream().map(entry -> new BasicNameValuePair(entry.getKey(),
-					entry.getValue())).collect(Collectors.toList());
+			if (args != null) {
+				// Construct a List of BasicNameValue pairs from a Map
+				List<BasicNameValuePair> params = args.entrySet().stream().map(entry -> new BasicNameValuePair(entry.getKey(),
+						entry.getValue())).collect(Collectors.toList());
 
-			if (request instanceof HttpGet || request instanceof HttpDelete) {
-				// GET or DELETE
-				path += "?" + URLEncodedUtils.format(params, "UTF-8");
+				if (request instanceof HttpGet || request instanceof HttpDelete) {
+					// GET or DELETE
+					path += "?" + URLEncodedUtils.format(params, "UTF-8");
 
-				if (request instanceof HttpGet)  request = new HttpGet(path);
-				if (request instanceof HttpDelete) request = new HttpDelete(path);
-			} else {
-				// POST, PATCH, or PUT
-				((HttpEntityEnclosingRequestBase) request).setEntity(new UrlEncodedFormEntity(params));
+					if (request instanceof HttpGet) request = new HttpGet(path);
+					if (request instanceof HttpDelete) request = new HttpDelete(path);
+				} else {
+					// POST, PATCH, or PUT
+					((HttpEntityEnclosingRequestBase) request).setEntity(new UrlEncodedFormEntity(params));
+				}
 			}
+
+			// Add the default headers to the request
+			for (Header h : defaultHeaders) {
+				request.addHeader(h);
+			}
+
+
+			CloseableHttpResponse response = (CloseableHttpResponse) client.execute(new HttpHost(hostname), request);
+			if (response.getStatusLine().getStatusCode() != 200) {
+				throw new NetworkException(200, response.getStatusLine().getStatusCode());
+			}
+
+			return response;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
 		}
-
-		// Add the default headers to the request
-		for (Header h : defaultHeaders) {
-			request.addHeader(h);
-		}
-
-
-		CloseableHttpResponse response = (CloseableHttpResponse) client.execute(new HttpHost(hostname), request);
-		if (response.getStatusLine().getStatusCode() != 200) {
-			throw new HttpException("Status code not 200 (was " + response.getStatusLine().getStatusCode() + ")");
-		}
-
-		return response;
 	}
 
 	/**

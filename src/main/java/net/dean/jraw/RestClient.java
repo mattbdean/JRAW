@@ -1,9 +1,7 @@
 package net.dean.jraw;
 
-import org.apache.http.HttpException;
-
-import java.io.IOException;
 import java.util.Map;
+
 import static net.dean.jraw.HttpVerb.*;
 
 /**
@@ -35,10 +33,9 @@ public class RestClient {
 	 *
 	 * @param path The path of the request
 	 * @return A RedditResponse from the resulting response
-	 * @throws IOException In case of a problem or the connection was aborted
-	 * @throws HttpException If the status code was not "200 OK"
+	 * @throws NetworkException If the status code was not "200 OK"
 	 */
-	public RedditResponse get(String path) throws IOException, HttpException, RedditException {
+	public RedditResponse get(String path) throws NetworkException {
 		return get(path, null);
 	}
 
@@ -48,10 +45,9 @@ public class RestClient {
 	 * @param path The path of the request
 	 * @param args The arguments to be sent with the request. Will be in the query string.
 	 * @return A RedditResponse from the resulting response
-	 * @throws IOException In case of a problem or the connection was aborted
-	 * @throws HttpException If the status code was not "200 OK"
+	 * @throws NetworkException If the status code was not "200 OK"
 	 */
-	public RedditResponse get(String path, Map<String, String> args) throws IOException, HttpException {
+	public RedditResponse get(String path, Map<String, String> args) throws NetworkException {
 		return new RedditResponse(http.execute(GET, host, path, args));
 	}
 
@@ -60,10 +56,9 @@ public class RestClient {
 	 *
 	 * @param path The path of the request
 	 * @return A RedditResponse from the resulting response
-	 * @throws IOException In case of a problem or the connection was aborted
-	 * @throws HttpException If the status code was not "200 OK"
+	 * @throws NetworkException If the status code was not "200 OK"
 	 */
-	public RedditResponse post(String path) throws IOException, HttpException, RedditException {
+	public RedditResponse post(String path) throws NetworkException {
 		return post(path, null);
 	}
 
@@ -73,10 +68,9 @@ public class RestClient {
 	 * @param path The path of the request
 	 * @param args The arguments to be sent with the request
 	 * @return A RedditResponse from the resulting response
-	 * @throws IOException In case of a problem or the connection was aborted
-	 * @throws HttpException If the status code was not "200 OK"
+	 * @throws NetworkException If the status code was not "200 OK"
 	 */
-	public RedditResponse post(String path, Map<String, String> args) throws IOException, HttpException {
+	public RedditResponse post(String path, Map<String, String> args) throws NetworkException {
 		return new RedditResponse(http.execute(POST, host, path, args));
 	}
 
@@ -85,10 +79,9 @@ public class RestClient {
 	 *
 	 * @param path The path of the request
 	 * @return A RedditResponse from the resulting response
-	 * @throws IOException In case of a problem or the connection was aborted
-	 * @throws HttpException If the status code was not "200 OK"
+	 * @throws NetworkException If the status code was not "200 OK"
 	 */
-	public RedditResponse put(String path) throws IOException, HttpException, RedditException {
+	public RedditResponse put(String path) throws NetworkException {
 		return put(path, null);
 	}
 
@@ -98,10 +91,9 @@ public class RestClient {
 	 * @param path The path of the request
 	 * @param args The arguments to be sent with the request
 	 * @return A RedditResponse from the resulting response
-	 * @throws IOException In case of a problem or the connection was aborted
-	 * @throws HttpException If the status code was not "200 OK"
+	 * @throws NetworkException If the status code was not "200 OK"
 	 */
-	public RedditResponse put(String path, Map<String, String> args) throws IOException, HttpException {
+	public RedditResponse put(String path, Map<String, String> args) throws NetworkException {
 		return new RedditResponse(http.execute(PUT, host, path, args));
 	}
 
@@ -110,10 +102,9 @@ public class RestClient {
 	 *
 	 * @param path The path of the request
 	 * @return A RedditResponse from the resulting response
-	 * @throws IOException In case of a problem or the connection was aborted
-	 * @throws HttpException If the status code was not "200 OK"
+	 * @throws NetworkException If the status code was not "200 OK"
 	 */
-	public RedditResponse patch(String path) throws IOException, HttpException, RedditException {
+	public RedditResponse patch(String path) throws NetworkException {
 		return patch(path, null);
 	}
 
@@ -123,10 +114,9 @@ public class RestClient {
 	 * @param path The path of the request
 	 * @param args The arguments to be sent with the request
 	 * @return A RedditResponse from the resulting response
-	 * @throws IOException In case of a problem or the connection was aborted
-	 * @throws HttpException If the status code was not "200 OK"
+	 * @throws NetworkException If the status code was not "200 OK"
 	 */
-	public RedditResponse patch(String path, Map<String, String> args) throws IOException, HttpException {
+	public RedditResponse patch(String path, Map<String, String> args) throws NetworkException {
 		return new RedditResponse(http.execute(PATCH, host, path, args));
 	}
 
@@ -135,10 +125,9 @@ public class RestClient {
 	 *
 	 * @param path The path of the request
 	 * @return A RedditResponse from the resulting response
-	 * @throws IOException In case of a problem or the connection was aborted
-	 * @throws HttpException If the status code was not "200 OK"
+	 * @throws NetworkException If the status code was not "200 OK"
 	 */
-	public RedditResponse delete(String path) throws IOException, HttpException, RedditException {
+	public RedditResponse delete(String path) throws NetworkException {
 		return new RedditResponse(http.execute(DELETE, host, path, null));
 	}
 
@@ -148,10 +137,9 @@ public class RestClient {
 	 * @param path The path of the request
 	 * @param args The arguments to be sent with the request. Will be in the query string.
 	 * @return A RedditResponse from the resulting response
-	 * @throws IOException In case of a problem or the connection was aborted
-	 * @throws HttpException If the status code was not "200 OK"
+	 * @throws NetworkException If the status code was not "200 OK"
 	 */
-	public RedditResponse delete(String path, Map<String, String> args) throws IOException, HttpException {
+	public RedditResponse delete(String path, Map<String, String> args) throws NetworkException {
 		return new RedditResponse(http.execute(DELETE, host, path, args));
 	}
 

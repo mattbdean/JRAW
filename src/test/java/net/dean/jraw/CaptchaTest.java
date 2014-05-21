@@ -19,8 +19,7 @@ public class CaptchaTest {
 			String[] credentials = TestUtils.getCredentials();
 			reddit.login(credentials[0], credentials[1]);
 			reddit.needsCaptcha();
-		} catch (RedditException e) {
-			e.printStackTrace();
+		} catch (NetworkException | ApiException e) {
 			Assert.fail(e.getMessage());
 		}
 	}
@@ -31,7 +30,7 @@ public class CaptchaTest {
 			Captcha c = reddit.getNewCaptcha();
 			Assert.assertNotNull(c.getId());
 			Assert.assertNotNull(c.getImageStream());
-		} catch (RedditException e) {
+		} catch (NetworkException e) {
 			Assert.fail(e.getMessage());
 		}
 	}
