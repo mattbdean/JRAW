@@ -39,7 +39,7 @@ public class Link extends Thing implements Created, Distinguishable, Votable {
 	 */
 	@JsonInteraction
 	public String getAuthor() {
-		return data("author").getTextValue();
+		return data("author", String.class);
 	}
 
 	/**
@@ -47,8 +47,8 @@ public class Link extends Thing implements Created, Distinguishable, Votable {
 	 */
 	@JsonInteraction
 	public Flair getAuthorFlair() {
-		return new Flair(data("author_flair_css_class").getTextValue(),
-				data("author_flair_text").getTextValue());
+		return new Flair(data("author_flair_css_class", String.class),
+				data("author_flair_text", String.class));
 	}
 
 	/**
@@ -56,7 +56,7 @@ public class Link extends Thing implements Created, Distinguishable, Votable {
 	 */
 	@JsonInteraction
 	public Boolean isClicked() {
-		return data("clicked").getBooleanValue();
+		return data("clicked", Boolean.class);
 	}
 
 	/**
@@ -64,7 +64,7 @@ public class Link extends Thing implements Created, Distinguishable, Votable {
 	 */
 	@JsonInteraction
 	public String getDomain() {
-		return data("domain").getTextValue();
+		return data("domain", String.class);
 	}
 
 	/**
@@ -72,7 +72,7 @@ public class Link extends Thing implements Created, Distinguishable, Votable {
 	 */
 	@JsonInteraction
 	public SubmissionType getSubmissionType() {
-		return data("is_self").getBooleanValue() ? SubmissionType.SELF : SubmissionType.LINK;
+		return data.get("is_self").getBooleanValue() ? SubmissionType.SELF : SubmissionType.LINK;
 	}
 
 	/**
@@ -80,7 +80,7 @@ public class Link extends Thing implements Created, Distinguishable, Votable {
 	 */
 	@JsonInteraction
 	public Boolean isHidden() {
-		return data("hidden").getBooleanValue();
+		return data("hidden", Boolean.class);
 	}
 
 	/**
@@ -89,7 +89,7 @@ public class Link extends Thing implements Created, Distinguishable, Votable {
 	 */
 	@JsonInteraction
 	public Integer getScore() {
-		return data("score").getIntValue();
+		return data("score", Integer.class);
 	}
 
 	/**
@@ -97,8 +97,8 @@ public class Link extends Thing implements Created, Distinguishable, Votable {
 	 */
 	@JsonInteraction
 	public Flair getLinkFlair() {
-		return new Flair(data("link_flair_css_class").getTextValue(),
-				data("link_flair_text").getTextValue());
+		return new Flair(data("link_flair_css_class", String.class),
+				data("link_flair_text", String.class));
 	}
 
 
@@ -116,7 +116,7 @@ public class Link extends Thing implements Created, Distinguishable, Votable {
 	 */
 	@JsonInteraction
 	public Integer getCommentCount() {
-		return data("num_comments").getIntValue();
+		return data("num_comments", Integer.class);
 	}
 
 	/**
@@ -124,7 +124,7 @@ public class Link extends Thing implements Created, Distinguishable, Votable {
 	 */
 	@JsonInteraction
 	public Boolean isOver18() {
-		return data("over_18").getBooleanValue();
+		return data("over_18", Boolean.class);
 	}
 
 	/**
@@ -132,7 +132,7 @@ public class Link extends Thing implements Created, Distinguishable, Votable {
 	 */
 	@JsonInteraction
 	public URI getPermalink() {
-		return JrawUtils.newUri(data("permalink").getTextValue());
+		return JrawUtils.newUri(data.get("permalink").getTextValue());
 	}
 
 	/**
@@ -140,7 +140,7 @@ public class Link extends Thing implements Created, Distinguishable, Votable {
 	 */
 	@JsonInteraction
 	public Boolean isSaved() {
-		return data("saved").getBooleanValue();
+		return data("saved", Boolean.class);
 	}
 
 	/**
@@ -149,7 +149,7 @@ public class Link extends Thing implements Created, Distinguishable, Votable {
 	 */
 	@JsonInteraction
 	public String getSelftext() {
-		return data("selftext").getTextValue();
+		return data("selftext", String.class);
 	}
 
 	/**
@@ -157,7 +157,7 @@ public class Link extends Thing implements Created, Distinguishable, Votable {
 	 */
 	@JsonInteraction
 	public String getSelftextHtml() {
-		return data("selftext_html").getTextValue();
+		return data("selftext_html", String.class);
 	}
 
 	/**
@@ -165,7 +165,7 @@ public class Link extends Thing implements Created, Distinguishable, Votable {
 	 */
 	@JsonInteraction
 	public String getSubredditName() {
-		return data("subreddit").getTextValue();
+		return data("subreddit", String.class);
 	}
 
 	/**
@@ -173,7 +173,7 @@ public class Link extends Thing implements Created, Distinguishable, Votable {
 	 */
 	@JsonInteraction
 	public String getSubredditId() {
-		return data("subreddit_id").getTextValue();
+		return data("subreddit_id", String.class);
 	}
 
 	/**
@@ -181,7 +181,7 @@ public class Link extends Thing implements Created, Distinguishable, Votable {
 	 */
 	@JsonInteraction(nullable = true)
 	public URL getThumbnail() {
-		String thumb = data("thumbnail").getTextValue();
+		String thumb = data.get("thumbnail").getTextValue();
 		if (thumb.equals("self")) {
 			return null;
 		}
@@ -194,7 +194,7 @@ public class Link extends Thing implements Created, Distinguishable, Votable {
 	 */
 	@JsonInteraction
 	public String getTitle() {
-		return data("title").getTextValue();
+		return data("title", String.class);
 	}
 
 	/**
@@ -202,7 +202,7 @@ public class Link extends Thing implements Created, Distinguishable, Votable {
 	 */
 	@JsonInteraction
 	public URL getUrl() {
-		return JrawUtils.newUrl(data("url").getTextValue());
+		return JrawUtils.newUrl(data.get("url").getTextValue());
 	}
 
 	/**
@@ -210,14 +210,14 @@ public class Link extends Thing implements Created, Distinguishable, Votable {
 	 */
 	@JsonInteraction
 	public Date getEdited() {
-		JsonNode node = data("edited");
+		JsonNode node = data.get("edited");
 
 		// "edited" is false if it hasn't been edited, so return null instead
 		if (node.isBoolean() && !node.getBooleanValue()) {
 			return null;
 		}
 
-		return new Date(data("edited").getLongValue() * 1000);
+		return new Date(node.getLongValue() * 1000);
 	}
 
 	/**
@@ -232,7 +232,7 @@ public class Link extends Thing implements Created, Distinguishable, Votable {
 	 */
 	@JsonInteraction
 	public Boolean isStickied() {
-		return data("stickied").getBooleanValue();
+		return data("stickied", Boolean.class);
 	}
 
 	/**

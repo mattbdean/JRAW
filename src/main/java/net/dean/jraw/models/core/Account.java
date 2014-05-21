@@ -21,7 +21,7 @@ public class Account extends Thing implements Created {
 	 */
 	@JsonInteraction
 	public Integer getCommentKarma() {
-		return data("comment_karma").getIntValue();
+		return data("comment_karma", Integer.class);
 	}
 
 	/**
@@ -29,11 +29,7 @@ public class Account extends Thing implements Created {
 	 */
 	@JsonInteraction(nullable = true)
 	public Boolean hasMail() {
-		JsonNode node = data("has_mail");
-		if (node != null) {
-			return node.getBooleanValue();
-		}
-		return null;
+		return data("has_mail", Boolean.class);
 	}
 
 	/**
@@ -41,11 +37,7 @@ public class Account extends Thing implements Created {
 	 */
 	@JsonInteraction(nullable = true)
 	public Boolean hasModMail() {
-		JsonNode node = data("has_mod_mail");
-		if (node != null) {
-			return node.getBooleanValue();
-		}
-		return null;
+		return data("has_mod_mail", Boolean.class);
 	}
 
 	/**
@@ -53,7 +45,7 @@ public class Account extends Thing implements Created {
 	 */
 	@JsonInteraction
 	public Boolean getHasVerifiedEmail() {
-		return data("has_verified_email").getBooleanValue();
+		return data("has_verified_email", Boolean.class);
 	}
 
 	/**
@@ -61,7 +53,7 @@ public class Account extends Thing implements Created {
 	 */
 	@JsonInteraction
 	public Boolean getIsFriend() {
-		return data("is_friend").getBooleanValue();
+		return data("is_friend", Boolean.class);
 	}
 
 	/**
@@ -69,7 +61,7 @@ public class Account extends Thing implements Created {
 	 */
 	@JsonInteraction
 	public Boolean hasGold() {
-		return data("is_gold").getBooleanValue();
+		return data("is_gold", Boolean.class);
 	}
 
 	/**
@@ -77,7 +69,7 @@ public class Account extends Thing implements Created {
 	 */
 	@JsonInteraction
 	public Boolean isMod() {
-		return data("is_mod").getBooleanValue();
+		return data("is_mod", Boolean.class);
 	}
 
 	/**
@@ -85,7 +77,7 @@ public class Account extends Thing implements Created {
 	 */
 	@JsonInteraction
 	public Integer getLinkKarma() {
-		return data("link_karma").getIntValue();
+		return data("link_karma", Integer.class);
 	}
 
 	/**
@@ -93,11 +85,7 @@ public class Account extends Thing implements Created {
 	 */
 	@JsonInteraction(nullable = true)
 	public String getModHash() {
-		JsonNode node = data("modhash");
-		if (node != null) {
-			return node.getTextValue();
-		}
-		return null;
+		return data("modhash", String.class);
 	}
 
 	/**
@@ -105,11 +93,7 @@ public class Account extends Thing implements Created {
 	 */
 	@JsonInteraction(nullable = true)
 	public Boolean isOver18() {
-		JsonNode node = data("over_18");
-		if (node != null) {
-			return node.getBooleanValue();
-		}
-		return null;
+		return data("over_18", Boolean.class);
 	}
 
 	@Override

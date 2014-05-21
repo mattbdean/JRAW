@@ -57,7 +57,7 @@ public class Listing<T extends RedditObject> extends RedditObject {
 		}
 
 		// rootNode is a JSON array
-		for (JsonNode childNode : data("children")) {
+		for (JsonNode childNode : data.get("children")) {
 			if (childNode.get("kind").getTextValue().equalsIgnoreCase("more")) {
 				// Ignore "more" objects, use getChildrenMore()
 				continue;
@@ -76,7 +76,7 @@ public class Listing<T extends RedditObject> extends RedditObject {
 			return false;
 		}
 
-		JsonNode childrenNode = data("children");
+		JsonNode childrenNode = data.get("children");
 		// Lookup data->children->last element->kind and check if it equals "more"
 		return childrenNode.get(childrenNode.size() - 1).get("kind").getTextValue().equals(ThingType.MORE.getPrefix());
 	}
@@ -92,8 +92,7 @@ public class Listing<T extends RedditObject> extends RedditObject {
 			return null;
 		}
 
-		JsonNode childrenNode = data("children");
-		return new More(childrenNode);
+		return new More(data.get("children"));
 	}
 
 	/**
@@ -101,13 +100,7 @@ public class Listing<T extends RedditObject> extends RedditObject {
 	 */
 	@JsonInteraction(nullable = true)
 	public String getBefore() {
-		JsonNode node = data("before");
-
-		if (node != null) {
-			return node.getTextValue();
-		}
-
-		return null;
+		return data("before", String.class);
 	}
 
 	/**
@@ -115,13 +108,7 @@ public class Listing<T extends RedditObject> extends RedditObject {
 	 */
 	@JsonInteraction(nullable = true)
 	public String getAfter() {
-		JsonNode node = data("after");
-
-		if (node != null) {
-			return node.getTextValue();
-		}
-
-		return null;
+		return data("after", String.class);
 	}
 
 	/**
@@ -129,13 +116,7 @@ public class Listing<T extends RedditObject> extends RedditObject {
 	 */
 	@JsonInteraction
 	public String getModhash() {
-		JsonNode node = data("modhash");
-
-		if (node != null) {
-			return node.getTextValue();
-		}
-
-		return null;
+		return data("modhash", String.class);
 	}
 
 	@Override

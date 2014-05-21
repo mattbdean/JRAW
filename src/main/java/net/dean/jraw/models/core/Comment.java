@@ -28,12 +28,7 @@ public class Comment extends Thing implements Created, Distinguishable, Votable 
 	 */
 	@JsonInteraction(nullable = true)
 	public String getApprovedBy() {
-		JsonNode node = data("approved_by");
-		if (node != null) {
-			return node.getTextValue();
-		}
-
-		return null;
+		return data("approved_by", String.class);
 	}
 
 	/**
@@ -41,7 +36,7 @@ public class Comment extends Thing implements Created, Distinguishable, Votable 
 	 */
 	@JsonInteraction
 	public String getAuthor() {
-		return data("author").getTextValue();
+		return data("author", String.class);
 	}
 
 	/**
@@ -49,8 +44,8 @@ public class Comment extends Thing implements Created, Distinguishable, Votable 
 	 */
 	@JsonInteraction
 	public Flair getAuthorFlair() {
-		return new Flair(data("author_flair_css_class").getTextValue(),
-				data("author_flair_text").getTextValue());
+		return new Flair(data("author_flair_css_class", String.class),
+				data("author_flair_text", String.class));
 	}
 
 	/**
@@ -58,12 +53,7 @@ public class Comment extends Thing implements Created, Distinguishable, Votable 
 	 */
 	@JsonInteraction(nullable = true)
 	public String getBannedBy() {
-		JsonNode node = data("banned_by");
-		if (node != null) {
-			return node.getTextValue();
-		}
-
-		return null;
+		return data("banned_by", String.class);
 	}
 
 	/**
@@ -71,7 +61,7 @@ public class Comment extends Thing implements Created, Distinguishable, Votable 
 	 */
 	@JsonInteraction
 	public String getBody() {
-		return data("body").getTextValue();
+		return data("body", String.class);
 	}
 
 	/**
@@ -79,7 +69,7 @@ public class Comment extends Thing implements Created, Distinguishable, Votable 
 	 */
 	@JsonInteraction
 	public String getBodyHtml() {
-		return data("body").getTextValue();
+		return data("body", String.class);
 	}
 
 	/**
@@ -87,7 +77,7 @@ public class Comment extends Thing implements Created, Distinguishable, Votable 
 	 */
 	@JsonInteraction
 	public Date getEditedDate() {
-		JsonNode edited = data("edited");
+		JsonNode edited = data.get("edited");
 		if (edited.isBoolean()) {
 			// value of false, but Date cannot be false
 			return null;
@@ -109,7 +99,7 @@ public class Comment extends Thing implements Created, Distinguishable, Votable 
 	 */
 	@JsonInteraction
 	public Integer getTimesGilded() {
-		return data("gilded").getIntValue();
+		return data("gilded", Integer.class);
 	}
 
 	/**
@@ -117,12 +107,7 @@ public class Comment extends Thing implements Created, Distinguishable, Votable 
 	 */
 	@JsonInteraction(nullable = true)
 	public String getLinkAuthor() {
-		JsonNode node = data("link_author");
-		if (node != null) {
-			return node.getTextValue();
-		}
-
-		return null;
+		return data("link_author", String.class);
 	}
 
 	/**
@@ -130,7 +115,7 @@ public class Comment extends Thing implements Created, Distinguishable, Votable 
 	 */
 	@JsonInteraction
 	public Listing<Comment> getReplies() {
-		return new Listing<>(data("replies"), Comment.class);
+		return new Listing<>(data.get("replies"), Comment.class);
 	}
 
 	/**
@@ -138,7 +123,7 @@ public class Comment extends Thing implements Created, Distinguishable, Votable 
 	 */
 	@JsonInteraction
 	public String getLinkId() {
-		return data("link_id").getTextValue();
+		return data("link_id", String.class);
 	}
 
 	/**
@@ -146,12 +131,7 @@ public class Comment extends Thing implements Created, Distinguishable, Votable 
 	 */
 	@JsonInteraction(nullable = true)
 	public String getLinkTitle() {
-		JsonNode node = data("link_title");
-		if (node != null) {
-			return node.getTextValue();
-		}
-
-		return null;
+		return data("link_title", String.class);
 	}
 
 	/**
@@ -159,9 +139,9 @@ public class Comment extends Thing implements Created, Distinguishable, Votable 
 	 */
 	@JsonInteraction(nullable = true)
 	public URL getUrl() {
-		JsonNode node = data("link_url");
-		if (node != null) {
-			return JrawUtils.newUrl(node.getTextValue());
+		String url = data("link_url", String.class);
+		if (url != null) {
+			return JrawUtils.newUrl(url);
 		}
 
 		return null;
@@ -172,7 +152,7 @@ public class Comment extends Thing implements Created, Distinguishable, Votable 
 	 */
 	@JsonInteraction(nullable = true)
 	public Integer getReportCount() {
-		return data("num_reports").getIntValue();
+		return data("num_reports", Integer.class);
 	}
 
 	/**
@@ -180,7 +160,7 @@ public class Comment extends Thing implements Created, Distinguishable, Votable 
 	 */
 	@JsonInteraction
 	public String getParentId() {
-		return data("parent_id").getTextValue();
+		return data("parent_id", String.class);
 	}
 
 	/**
@@ -188,7 +168,7 @@ public class Comment extends Thing implements Created, Distinguishable, Votable 
 	 */
 	@JsonInteraction
 	public Boolean isSaved() {
-		return data("saved").getBooleanValue();
+		return data("saved", Boolean.class);
 	}
 
 	/**
@@ -196,7 +176,7 @@ public class Comment extends Thing implements Created, Distinguishable, Votable 
 	 */
 	@JsonInteraction
 	public Boolean isScoreHidden() {
-		return data("score_hidden").getBooleanValue();
+		return data("score_hidden", Boolean.class);
 	}
 
 	/**
@@ -204,7 +184,7 @@ public class Comment extends Thing implements Created, Distinguishable, Votable 
 	 */
 	@JsonInteraction
 	public String getSubredditName() {
-		return data("subreddit").getTextValue();
+		return data("subreddit", String.class);
 	}
 
 	/**
@@ -212,7 +192,7 @@ public class Comment extends Thing implements Created, Distinguishable, Votable 
 	 */
 	@JsonInteraction
 	public String getSubredditId() {
-		return data("subreddit_id").getTextValue();
+		return data("subreddit_id", String.class);
 	}
 
 	@Override

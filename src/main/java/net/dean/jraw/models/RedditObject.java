@@ -2,6 +2,9 @@ package net.dean.jraw.models;
 
 import org.codehaus.jackson.JsonNode;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * The class that all models implement. Contains values that all data types returned from the Reddit API have, including
  * "more" and "Listing".
@@ -11,6 +14,7 @@ import org.codehaus.jackson.JsonNode;
  */
 public abstract class RedditObject {
 	protected JsonNode data;
+	private Map<String, Object> nodeCache;
 
 	/**
 	 * Instantiates a new RedditObject
@@ -19,6 +23,7 @@ public abstract class RedditObject {
 	 */
 	public RedditObject(JsonNode dataNode) {
 		this.data = dataNode;
+		this.nodeCache = new HashMap<>();
 	}
 
 	/**
@@ -27,8 +32,39 @@ public abstract class RedditObject {
 	 */
 	public abstract ThingType getType();
 
-	protected JsonNode data(String name) {
-		return data.get(name);
+	@SuppressWarnings("unchecked")
+	public <T> T data(String name, Class<T> type) {
+		if (nodeCache.containsKey(name)) {
+			Object cachedObject = nodeCache.get(name);
+			if (!cachedObject.getClass().equals(type)) {
+				System.err.printf("Cached object and return type did not match for \"%s\" (wanted %s, got %s)\n",
+						name, type, cachedObject.getClass());
+			}
+			return (T) nodeCache.get(name);
+		}
+
+		if (!data.has(name)) {
+			return null;
+		}
+
+		JsonNode node = data.get(name);
+
+		T returnVal = null;
+
+		if (type.equals(String.class))
+			returnVal = (T) node.asText();
+		else if (type.equals(Boolean.class))
+			returnVal = (T) Boolean.valueOf(node.asBoolean());
+		else if (type.equals(Double.class))
+			returnVal = (T) Double.valueOf(node.asDouble());
+		else if (type.equals(Integer.class))
+			returnVal = (T) Integer.valueOf(node.asInt());
+		else if (type.equals(Long.class))
+			returnVal = (T) Long.valueOf(node.asLong());
+
+		nodeCache.put(name, returnVal);
+
+		return returnVal;
 	}
 
 	/**
@@ -36,7 +72,7 @@ public abstract class RedditObject {
 	 */
 	@JsonInteraction
 	public String getId() {
-		return data("id").getTextValue();
+		return data("id", String.class);
 	}
 
 	/**
@@ -44,7 +80,7 @@ public abstract class RedditObject {
 	 */
 	@JsonInteraction
 	public String getName() {
-		return data("name").getTextValue();
+		return data("name", String.class);
 	}
 
 	public JsonNode getDataNode() {

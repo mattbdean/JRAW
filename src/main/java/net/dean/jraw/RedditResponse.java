@@ -8,6 +8,7 @@ import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.IOException;
@@ -59,7 +60,11 @@ public class RedditResponse {
 			Scanner s = new Scanner(response.getEntity().getContent()).useDelimiter("\\A");
 			this.raw = s.hasNext() ? s.next() : "";
 
-			this.rootNode = OBJECT_MAPPER.readTree(raw);
+			try {
+				this.rootNode = OBJECT_MAPPER.readTree(raw);
+			} catch (JsonParseException e) {
+				System.err.println("Unable to parse JSON: " + raw);
+			}
 
 			JsonNode errorsNode = rootNode.get("json");
 			if (errorsNode != null) {

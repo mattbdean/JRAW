@@ -34,7 +34,7 @@ public class More extends RedditObject {
 	 */
 	@JsonInteraction
 	public Integer getCount() {
-		return data("count").getIntValue();
+		return data("count", Integer.class);
 	}
 
 	/**
@@ -43,7 +43,7 @@ public class More extends RedditObject {
 	@JsonInteraction
 	public List<String> getChildrenIds() {
 		List<String> ids = new ArrayList<>();
-		for (JsonNode child : data("children")) {
+		for (JsonNode child : data.get("children")) {
 			ids.add(child.getTextValue());
 		}
 
