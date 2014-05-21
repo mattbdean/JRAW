@@ -18,7 +18,7 @@ public enum ThingType {
 	 */
 	ACCOUNT(2),
 	/**
-	 * Represents a link with the prefix "t3"
+	 * Represents a submission with the prefix "t3"
 	 */
 	LINK(3),
 	/**

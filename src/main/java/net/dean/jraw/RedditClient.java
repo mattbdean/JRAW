@@ -3,7 +3,7 @@ package net.dean.jraw;
 import net.dean.jraw.models.Captcha;
 import net.dean.jraw.models.SubmissionType;
 import net.dean.jraw.models.core.Account;
-import net.dean.jraw.models.core.Link;
+import net.dean.jraw.models.core.Submission;
 import org.apache.http.Header;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.cookie.Cookie;
@@ -202,8 +202,8 @@ public class RedditClient {
 	 * @return A new Link object
 	 * @throws NetworkException If the link does not exist or there was a problem making the request
 	 */
-	public Link getLink(String id) throws NetworkException {
-		return restClient.get("/" + id + ".json").as(Link.class);
+	public Submission getSubmission(String id) throws NetworkException {
+		return restClient.get("/" + id + ".json").as(Submission.class);
 	}
 
 	/**
@@ -223,10 +223,10 @@ public class RedditClient {
 	 * @return A representation of the newly submitted Link
 	 * @throws NetworkException If there was a problem sending the HTTP request
 	 */
-	public Link submitLink(SubmissionType type, Optional<URL> url, Optional<String> selfText, String subreddit,
-	                       String title, boolean saveAfter, boolean sendRepliesToInbox, boolean resubmit) throws NetworkException, ApiException {
+	public Submission submitContent(SubmissionType type, Optional<URL> url, Optional<String> selfText, String subreddit,
+	                                String title, boolean saveAfter, boolean sendRepliesToInbox, boolean resubmit) throws NetworkException, ApiException {
 
-		return submitLink(type, url, selfText, subreddit, title, saveAfter, sendRepliesToInbox, resubmit, Optional.empty(), Optional.empty());
+		return submitContent(type, url, selfText, subreddit, title, saveAfter, sendRepliesToInbox, resubmit, Optional.empty(), Optional.empty());
 	}
 
 	/**
@@ -248,9 +248,9 @@ public class RedditClient {
 	 * @return A representation of the newly submitted Link
 	 * @throws NetworkException If there was a problem sending the HTTP request
 	 */
-	public Link submitLink(SubmissionType type, Optional<URL> url, Optional<String> selfText, String subreddit,
-	                       String title, boolean saveAfter, boolean sendRepliesToInbox, boolean resubmit, Optional<Captcha> captcha,
-	                       Optional<String> captchaAttempt) throws NetworkException, ApiException {
+	public Submission submitContent(SubmissionType type, Optional<URL> url, Optional<String> selfText, String subreddit,
+	                                String title, boolean saveAfter, boolean sendRepliesToInbox, boolean resubmit, Optional<Captcha> captcha,
+	                                Optional<String> captchaAttempt) throws NetworkException, ApiException {
 		loginCheck();
 
 		Map<String, String> args = args(
@@ -283,9 +283,9 @@ public class RedditClient {
 		}
 
 		RedditResponse response = genericPost("/api/submit", args, true);
-		String jsonLink = response.getRootNode().get("json").get("data").get("url").getTextValue();
+		String jsonUrl = response.getRootNode().get("json").get("data").get("url").getTextValue();
 
-		return restClient.get(jsonLink).as(Link.class);
+		return restClient.get(jsonUrl).as(Submission.class);
 
 	}
 

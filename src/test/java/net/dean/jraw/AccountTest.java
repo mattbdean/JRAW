@@ -2,7 +2,7 @@ package net.dean.jraw;
 
 import net.dean.jraw.models.SubmissionType;
 import net.dean.jraw.models.core.Account;
-import net.dean.jraw.models.core.Link;
+import net.dean.jraw.models.core.Submission;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeSuite;
@@ -58,10 +58,10 @@ public class AccountTest {
 			Optional<URL> url = Optional.of(JrawUtils.newUrl("https://www.google.com/?q=" + number));
 			Optional<String> text = Optional.empty();
 
-			Link link = redditClient.submitLink(SubmissionType.LINK, url, text, "jraw_testing2", "Link post test (random:" + number + ")",
+			Submission submission = redditClient.submitContent(SubmissionType.LINK, url, text, "jraw_testing2", "Link post test (random:" + number + ")",
 					false, false, false);
-			Assert.assertNotNull(link);
-			ThingFieldTest.fieldValidityCheck(link);
+			Assert.assertNotNull(submission);
+			ThingFieldTest.fieldValidityCheck(submission);
 		} catch (NetworkException e) {
 
 			Assert.fail(e.getMessage());

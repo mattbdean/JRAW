@@ -106,7 +106,7 @@ public class Comment extends Thing implements Created, Distinguishable, Votable 
 	 * The author of the parent link, or null if this comment is not being displayed outside of its own thread
 	 */
 	@JsonInteraction(nullable = true)
-	public String getLinkAuthor() {
+	public String getSubmissionAuthor() {
 		return data("link_author", String.class);
 	}
 
@@ -122,7 +122,7 @@ public class Comment extends Thing implements Created, Distinguishable, Votable 
 	 * The ID of the link this comment is in
 	 */
 	@JsonInteraction
-	public String getLinkId() {
+	public String getSubmissionId() {
 		return data("link_id", String.class);
 	}
 
@@ -130,12 +130,12 @@ public class Comment extends Thing implements Created, Distinguishable, Votable 
 	 * The title of the parent link, or null if this comment is not being displayed outside of its own thread
 	 */
 	@JsonInteraction(nullable = true)
-	public String getLinkTitle() {
+	public String getSubmissionTitle() {
 		return data("link_title", String.class);
 	}
 
 	/**
-	 * The author of the parent link, or null if this comment is not being displayed outside of its own thread
+	 * The author of the parent submission, or null if this comment is not being displayed outside of its own thread
 	 */
 	@JsonInteraction(nullable = true)
 	public URL getUrl() {
@@ -156,7 +156,7 @@ public class Comment extends Thing implements Created, Distinguishable, Votable 
 	}
 
 	/**
-	 * The ID of the comment or link this comment is replying to
+	 * The ID of the comment or submission this comment is replying to
 	 */
 	@JsonInteraction
 	public String getParentId() {

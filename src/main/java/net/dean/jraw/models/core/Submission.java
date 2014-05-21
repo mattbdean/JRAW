@@ -19,7 +19,7 @@ public class Submission extends Thing implements Created, Distinguishable, Votab
 	private Listing<Comment> comments;
 
 	/**
-	 * Instantiates a new Link
+	 * Instantiates a new Submission
 	 *
 	 * @param dataNode The JsonNode that is used to look up JSON values
 	 * @param comments The comments that belong to this link
@@ -96,7 +96,7 @@ public class Submission extends Thing implements Created, Distinguishable, Votab
 	 * Gets the flair used in this link
 	 */
 	@JsonInteraction
-	public Flair getLinkFlair() {
+	public Flair getSubmissionFlair() {
 		return new Flair(data("link_flair_css_class", String.class),
 				data("link_flair_text", String.class));
 	}
@@ -128,7 +128,7 @@ public class Submission extends Thing implements Created, Distinguishable, Votab
 	}
 
 	/**
-	 * Relative URL (of reddit.com) of the permanent URL for this Link
+	 * Relative URL (of reddit.com) of the permanent URL for this Submission
 	 */
 	@JsonInteraction
 	public URI getPermalink() {
@@ -177,7 +177,7 @@ public class Submission extends Thing implements Created, Distinguishable, Votab
 	}
 
 	/**
-	 * The full URL to the thumbnail for this link
+	 * The full URL to the thumbnail for this submission
 	 */
 	@JsonInteraction(nullable = true)
 	public URL getThumbnail() {
@@ -190,7 +190,7 @@ public class Submission extends Thing implements Created, Distinguishable, Votab
 	}
 
 	/**
-	 * The title of the link. May contain newlines (\n).
+	 * The title of the submission. May contain newlines (\n).
 	 */
 	@JsonInteraction
 	public String getTitle() {
@@ -221,7 +221,7 @@ public class Submission extends Thing implements Created, Distinguishable, Votab
 	}
 
 	/**
-	 * Gets the comments of this Link
+	 * Gets the comments of this Submission
 	 */
 	public Listing<Comment> getComments() {
 		return comments;

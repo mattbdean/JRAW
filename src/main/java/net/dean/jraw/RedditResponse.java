@@ -1,7 +1,7 @@
 package net.dean.jraw;
 
 import net.dean.jraw.models.core.Comment;
-import net.dean.jraw.models.core.Link;
+import net.dean.jraw.models.core.Submission;
 import net.dean.jraw.models.core.Listing;
 import net.dean.jraw.models.core.Thing;
 import org.apache.http.Header;
@@ -92,17 +92,17 @@ public class RedditResponse {
 
 	@SuppressWarnings("unchecked")
 	public <T extends Thing> T as(Class<T> thingClass) {
-		if (thingClass.equals(Link.class)) {
-			// Special handling for links, not just link data being returned, also the link's comments.
+		if (thingClass.equals(Submission.class)) {
+			// Special handling for submissions, not just submission data being returned, also its comments.
 			// For example: http://www.reddit.com/92dd8.json
 
-			// rootNode is an array where the first is a listing which contains one element in its "children": the link.
+			// rootNode is an array where the first is a listing which contains one element in its "children": the submission.
 			// The second element in the array is a listing of comments
 
 			// Get the list of comments first
 			JsonNode commentListingDataNode = rootNode.get(1).get("data");
 			Listing<Comment> comments = new Listing<>(commentListingDataNode, Comment.class);
-			return (T) new Link(rootNode.get(0).get("data").get("children").get(0).get("data"), comments);
+			return (T) new Submission(rootNode.get(0).get("data").get("children").get(0).get("data"), comments);
 		}
 
 		// Normal Thing

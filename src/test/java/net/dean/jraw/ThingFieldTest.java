@@ -3,7 +3,7 @@ package net.dean.jraw;
 import junit.framework.Assert;
 import net.dean.jraw.models.JsonInteraction;
 import net.dean.jraw.models.core.Account;
-import net.dean.jraw.models.core.Link;
+import net.dean.jraw.models.core.Submission;
 import net.dean.jraw.models.core.Thing;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ThingFieldTest {
-	private static final String LINK_ID = "92dd8";
+	private static final String SUBMISSION_ID = "92dd8";
 	private RedditClient reddit;
 
 	static <T extends Thing> void fieldValidityCheck(T thing) {
@@ -90,8 +90,8 @@ public class ThingFieldTest {
 	@Test
 	public void testLink() {
 		try {
-			Link link = reddit.getLink(LINK_ID);
-			fieldValidityCheck(link);
+			Submission submission = reddit.getSubmission(SUBMISSION_ID);
+			fieldValidityCheck(submission);
 		} catch (NetworkException e) {
 			Assert.fail(e.getMessage());
 		}
@@ -100,8 +100,8 @@ public class ThingFieldTest {
 	@Test(dependsOnMethods = "testLink")
 	public void testComment() {
 		try {
-			Link link = reddit.getLink(LINK_ID);
-			fieldValidityCheck(link.getComments().getChildren().get(0));
+			Submission submission = reddit.getSubmission(SUBMISSION_ID);
+			fieldValidityCheck(submission.getComments().getChildren().get(0));
 		} catch (NetworkException e) {
 			Assert.fail(e.getMessage());
 		}

@@ -22,11 +22,11 @@ public class SubmissionTest {
 	@Test
 	public void testCommentsNotNull() {
 		try {
-			Submission submission = redditClient.getLink("92dd8");
+			Submission submission = redditClient.getSubmission("92dd8");
 			assertNotNull(submission);
 
 			Listing<Comment> comments = submission.getComments();
-			assertNotNull(comments, "Link comments was null");
+			assertNotNull(comments, "Submission comments was null");
 			// This is the most upvoted link in reddit history, there's bound to be more than one comment
 			assertFalse(comments.getChildren().isEmpty());
 
