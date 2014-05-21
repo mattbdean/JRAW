@@ -1,5 +1,7 @@
 #Java Reddit API Wrapper
 
+![travis-ci build status](https://travis-ci.org/thatJavaNerd/JRAW.svg?branch=master)
+
 ###Contributing
 Want to contribute? Fantastic! Follow these steps:
 
@@ -69,7 +71,6 @@ Want to contribute? Fantastic! Follow these steps:
 /api/set_contest_mode
 /api/set_subreddit_sticky
 /api/store_visits
-/api/submit
 /api/unhide
 /api/unmarknsfw
 /api/unsave
