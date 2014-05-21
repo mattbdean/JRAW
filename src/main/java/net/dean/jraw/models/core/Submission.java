@@ -12,7 +12,7 @@ import java.util.Date;
  * Represents content that the user has submitted, whether that be a self post or a link. More information can be found
  * <a href="https://github.com/reddit/reddit/wiki/JSON#link-implements-votable--created">here</a>.
  */
-public class Link extends Thing implements Created, Distinguishable, Votable {
+public class Submission extends Thing implements Created, Distinguishable, Votable {
 	/**
 	 * The comments that belong to this link
 	 */
@@ -24,7 +24,7 @@ public class Link extends Thing implements Created, Distinguishable, Votable {
 	 * @param dataNode The JsonNode that is used to look up JSON values
 	 * @param comments The comments that belong to this link
 	 */
-	public Link(JsonNode dataNode, Listing<Comment> comments) {
+	public Submission(JsonNode dataNode, Listing<Comment> comments) {
 		super(dataNode);
 		this.comments = comments;
 	}

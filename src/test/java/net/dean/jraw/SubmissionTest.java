@@ -2,7 +2,7 @@ package net.dean.jraw;
 
 import junit.framework.Assert;
 import net.dean.jraw.models.core.Comment;
-import net.dean.jraw.models.core.Link;
+import net.dean.jraw.models.core.Submission;
 import net.dean.jraw.models.core.Listing;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
@@ -10,7 +10,7 @@ import org.testng.annotations.Test;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 
-public class LinkTest {
+public class SubmissionTest {
 
 	private RedditClient redditClient;
 
@@ -22,10 +22,10 @@ public class LinkTest {
 	@Test
 	public void testCommentsNotNull() {
 		try {
-			Link link = redditClient.getLink("92dd8");
-			assertNotNull(link);
+			Submission submission = redditClient.getLink("92dd8");
+			assertNotNull(submission);
 
-			Listing<Comment> comments = link.getComments();
+			Listing<Comment> comments = submission.getComments();
 			assertNotNull(comments, "Link comments was null");
 			// This is the most upvoted link in reddit history, there's bound to be more than one comment
 			assertFalse(comments.getChildren().isEmpty());
