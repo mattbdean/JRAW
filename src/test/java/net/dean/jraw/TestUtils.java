@@ -52,6 +52,10 @@ public final class TestUtils {
 
 	private static String getCallingMethod() {
 		StackTraceElement[] elements = Thread.currentThread().getStackTrace();
+		// [0] = Thread.getStackTrace()
+		// [1] = this method
+		// [2] = ignoreRatelimitQuotaFilled
+		// [3] = Caller of ignoreRatelimitQuotaFilled
 		return elements[3].getMethodName();
 	}
 }

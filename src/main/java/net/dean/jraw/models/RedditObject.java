@@ -86,4 +86,29 @@ public abstract class RedditObject {
 	public JsonNode getDataNode() {
 		return data;
 	}
+
+	@Override
+	public String toString() {
+		return "RedditObject {" +
+				"getType()=" + getType() +
+				", getId()=" + getId() +
+				", getName()=" + getName() +
+				'}';
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		RedditObject that = (RedditObject) o;
+
+		return data.equals(that.data);
+
+	}
+
+	@Override
+	public int hashCode() {
+		return data.hashCode();
+	}
 }
