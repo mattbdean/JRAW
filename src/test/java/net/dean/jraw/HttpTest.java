@@ -68,7 +68,7 @@ public class HttpTest {
 
 			CloseableHttpResponse response = client.execute(verb, HOST, "/" + verb.name().toLowerCase(), clientArgs);
 
-			RedditResponse rest = new RedditResponse(response);
+			RestResponse rest = new RestResponse(response);
 
 			// GET and DELETE use query string ("args"), the rest use form data ("form")
 			String key = (verb == GET || verb == DELETE) ? "args" : "form";

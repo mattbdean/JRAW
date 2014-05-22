@@ -28,8 +28,6 @@ public class RestResponse {
 
 	private RedditObjectParser redditObjectParser;
 
-	private RestClient creator;
-
 	/**
 	 * A list of all thea headers received from the server
 	 */
@@ -53,8 +51,7 @@ public class RestResponse {
 	 *
 	 * @param response The HttpResponse used to get the information
 	 */
-	public RestResponse(HttpResponse response, RestClient creator) {
-		this.creator = creator;
+	public RestResponse(HttpResponse response) {
 		this.headers = new ArrayList<>(Arrays.asList(response.getAllHeaders()));
 		this.redditObjectParser = new RedditObjectParser();
 
@@ -104,12 +101,12 @@ public class RestResponse {
 
 			// Get the list of comments first
 			JsonNode commentListingDataNode = rootNode.get(1).get("data");
-			Listing<Comment> comments = new Listing<>(commentListingDataNode, creator, Comment.class);
-			return (T) new Submission(rootNode.get(0).get("data").get("children").get(0).get("data"), creator, comments);
+			Listing<Comment> comments = new Listing<>(commentListingDataNode, Comment.class);
+			return (T) new Submission(rootNode.get(0).get("data").get("children").get(0).get("data"), comments);
 		}
 
 		// Normal Thing
-		return redditObjectParser.parse(rootNode, creator, thingClass);
+		return redditObjectParser.parse(rootNode, thingClass);
 	}
 
 	public boolean hasErrors() {
