@@ -1,7 +1,6 @@
 language: java
 jdk:
   - oraclejdk8
-  - openjdk8
 script:
 # Don't use the gradle wrapper to speed up builds
   - gradle check
