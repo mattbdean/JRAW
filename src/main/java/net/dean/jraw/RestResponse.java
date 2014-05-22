@@ -20,13 +20,15 @@ import java.util.Scanner;
 /**
  * This class is used to show the result of a request to a RESTful web service, such as Reddit's JSON API.
  */
-public class RedditResponse {
+public class RestResponse {
 	/**
 	 * The ObjectMapper used to map parse the response JSON
 	 */
 	protected static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
 	private RedditObjectParser redditObjectParser;
+
+	private RestClient creator;
 
 	/**
 	 * A list of all thea headers received from the server
@@ -51,7 +53,8 @@ public class RedditResponse {
 	 *
 	 * @param response The HttpResponse used to get the information
 	 */
-	public RedditResponse(HttpResponse response) {
+	public RestResponse(HttpResponse response, RestClient creator) {
+		this.creator = creator;
 		this.headers = new ArrayList<>(Arrays.asList(response.getAllHeaders()));
 		this.redditObjectParser = new RedditObjectParser();
 
@@ -101,12 +104,12 @@ public class RedditResponse {
 
 			// Get the list of comments first
 			JsonNode commentListingDataNode = rootNode.get(1).get("data");
-			Listing<Comment> comments = new Listing<>(commentListingDataNode, Comment.class);
-			return (T) new Submission(rootNode.get(0).get("data").get("children").get(0).get("data"), comments);
+			Listing<Comment> comments = new Listing<>(commentListingDataNode, creator, Comment.class);
+			return (T) new Submission(rootNode.get(0).get("data").get("children").get(0).get("data"), creator, comments);
 		}
 
 		// Normal Thing
-		return redditObjectParser.parse(rootNode, thingClass);
+		return redditObjectParser.parse(rootNode, creator, thingClass);
 	}
 
 	public boolean hasErrors() {
