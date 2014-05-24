@@ -95,7 +95,7 @@ public class LoggedInAccount extends Account {
 		}
 
 		RestResponse response = genericPost("/api/submit", args);
-		String jsonUrl = response.getRootNode().get("json").get("data").get("url").getTextValue();
+		String jsonUrl = response.getJson().get("json").get("data").get("url").getTextValue();
 
 		return creator.execute(new RestRequest(HttpVerb.GET, jsonUrl)).as(Submission.class);
 	}

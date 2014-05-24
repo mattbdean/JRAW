@@ -141,7 +141,7 @@ public class RedditClient extends RestClient {
 		List<Header> headers = http.getDefaultHeaders();
 
 		Header h = new BasicHeader(HEADER_MODHASH,
-				loginResponse.getRootNode().get("json").get("data").get("modhash").getTextValue());
+				loginResponse.getJson().get("json").get("data").get("modhash").getTextValue());
 
 		// Add the X-Modhash header, or update it if it already exists
 		Header modhashHeader = null;
@@ -156,7 +156,7 @@ public class RedditClient extends RestClient {
 		}
 		headers.add(h);
 
-		return new LoggedInAccount(execute(new RestRequest(HttpVerb.GET, "/api/me.json")).getRootNode().get("data"), this);
+		return new LoggedInAccount(execute(new RestRequest(HttpVerb.GET, "/api/me.json")).getJson().get("data"), this);
 	}
 
 	/**
@@ -221,7 +221,7 @@ public class RedditClient extends RestClient {
 			RestResponse response = execute(new RestRequest(HttpVerb.POST, "/api/new_captcha"));
 
 			// Some strange response you got there, reddit...
-			String id = response.getRootNode().get("jquery").get(11).get(3).get(0).getTextValue();
+			String id = response.getJson().get("jquery").get(11).get(3).get(0).getTextValue();
 
 			return getCaptcha(id);
 		} catch (NetworkException e) {

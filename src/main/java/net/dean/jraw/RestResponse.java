@@ -173,7 +173,7 @@ public class RestResponse {
 	 *
 	 * @return The root JsonNode
 	 */
-	public JsonNode getRootNode() {
+	public JsonNode getJson() {
 		return rootNode;
 	}
 

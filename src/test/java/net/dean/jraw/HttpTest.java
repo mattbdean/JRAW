@@ -72,7 +72,7 @@ public class HttpTest {
 
 			// GET and DELETE use query string ("args"), the rest use form data ("form")
 			String key = (verb == GET || verb == DELETE) ? "args" : "form";
-			JsonNode returnArgs = rest.getRootNode().get(key);
+			JsonNode returnArgs = rest.getJson().get(key);
 
 			// Add the arguments of the return JSON file to a map
 			Map<String, String> parsedArgs = new TreeMap<>();
