@@ -1,9 +1,6 @@
 package net.dean.jraw.models;
 
-import net.dean.jraw.ApiException;
-import net.dean.jraw.NetworkException;
-import net.dean.jraw.RedditClient;
-import net.dean.jraw.RestResponse;
+import net.dean.jraw.*;
 import net.dean.jraw.models.core.Account;
 import net.dean.jraw.models.core.Submission;
 import org.codehaus.jackson.JsonNode;
@@ -68,7 +65,7 @@ public class LoggedInAccount extends Account {
 	                                String title, boolean saveAfter, boolean sendRepliesToInbox, boolean resubmit, Optional<Captcha> captcha,
 	                                Optional<String> captchaAttempt) throws NetworkException, ApiException {
 
-		Map<String, String> args = creator.args(
+		Map<String, String> args = RestRequest.args(
 				"api_type", "json",
 				"extension", "json",
 				"kind", type.name().toLowerCase(),
@@ -100,7 +97,7 @@ public class LoggedInAccount extends Account {
 		RestResponse response = genericPost("/api/submit", args);
 		String jsonUrl = response.getRootNode().get("json").get("data").get("url").getTextValue();
 
-		return creator.get(jsonUrl).as(Submission.class);
+		return creator.execute(new RestRequest(HttpVerb.GET, jsonUrl)).as(Submission.class);
 	}
 
 
@@ -115,7 +112,7 @@ public class LoggedInAccount extends Account {
 	 *                          HTTP request.
 	 */
 	private RestResponse genericPost(String path, Map<String, String> args) throws NetworkException, ApiException {
-		RestResponse response = creator.post(path, args);
+		RestResponse response = creator.execute(new RestRequest(HttpVerb.POST, path, args));
 		if (response.hasErrors()) {
 			throw response.getApiExceptions()[0];
 		}

@@ -1,8 +1,8 @@
 package net.dean.jraw;
 
-import java.util.Map;
-
-import static net.dean.jraw.HttpVerb.*;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Responsible for the simplification of the HttpHelper class' methods and returning RedditResponses
@@ -18,6 +18,8 @@ public class RestClient {
 	 */
 	protected HttpHelper http;
 
+	protected List<RestRequest> history;
+
 	/**
 	 * Instantiates a new RestClient
 	 *
@@ -27,121 +29,21 @@ public class RestClient {
 	public RestClient(String host, String userAgent) {
 		this.http = new HttpHelper(userAgent);
 		this.host = host;
+		this.history = new ArrayList<>();
 	}
 
-	/**
-	 * Executes a GET request
-	 *
-	 * @param path The path of the request
-	 * @return A RedditResponse from the resulting response
-	 * @throws NetworkException If the status code was not "200 OK"
-	 */
-	public RestResponse get(String path) throws NetworkException {
-		return get(path, null);
-	}
 
 	/**
-	 * Executes a GET request
+	 * Executes a RESTful HTTP request
 	 *
-	 * @param path The path of the request
-	 * @param args The arguments to be sent with the request. Will be in the query string.
-	 * @return A RedditResponse from the resulting response
+	 * @param request The request to execute
+	 * @return A RestResponse from the resulting response
 	 * @throws NetworkException If the status code was not "200 OK"
 	 */
-	public RestResponse get(String path, Map<String, String> args) throws NetworkException {
-		return new RestResponse(http.execute(GET, host, path, args));
-	}
-
-	/**
-	 * Executes a POST request
-	 *
-	 * @param path The path of the request
-	 * @return A RedditResponse from the resulting response
-	 * @throws NetworkException If the status code was not "200 OK"
-	 */
-	public RestResponse post(String path) throws NetworkException {
-		return post(path, null);
-	}
-
-	/**
-	 * Executes a POST request
-	 *
-	 * @param path The path of the request
-	 * @param args The arguments to be sent with the request
-	 * @return A RedditResponse from the resulting response
-	 * @throws NetworkException If the status code was not "200 OK"
-	 */
-	public RestResponse post(String path, Map<String, String> args) throws NetworkException {
-		return new RestResponse(http.execute(POST, host, path, args));
-	}
-
-	/**
-	 * Executes a PUT request
-	 *
-	 * @param path The path of the request
-	 * @return A RedditResponse from the resulting response
-	 * @throws NetworkException If the status code was not "200 OK"
-	 */
-	public RestResponse put(String path) throws NetworkException {
-		return put(path, null);
-	}
-
-	/**
-	 * Executes a PUT request
-	 *
-	 * @param path The path of the request
-	 * @param args The arguments to be sent with the request
-	 * @return A RedditResponse from the resulting response
-	 * @throws NetworkException If the status code was not "200 OK"
-	 */
-	public RestResponse put(String path, Map<String, String> args) throws NetworkException {
-		return new RestResponse(http.execute(PUT, host, path, args));
-	}
-
-	/**
-	 * Executes a PATCH request
-	 *
-	 * @param path The path of the request
-	 * @return A RedditResponse from the resulting response
-	 * @throws NetworkException If the status code was not "200 OK"
-	 */
-	public RestResponse patch(String path) throws NetworkException {
-		return patch(path, null);
-	}
-
-	/**
-	 * Executes a PATCH request
-	 *
-	 * @param path The path of the request
-	 * @param args The arguments to be sent with the request
-	 * @return A RedditResponse from the resulting response
-	 * @throws NetworkException If the status code was not "200 OK"
-	 */
-	public RestResponse patch(String path, Map<String, String> args) throws NetworkException {
-		return new RestResponse(http.execute(PATCH, host, path, args));
-	}
-
-	/**
-	 * Executes a DELETE request
-	 *
-	 * @param path The path of the request
-	 * @return A RedditResponse from the resulting response
-	 * @throws NetworkException If the status code was not "200 OK"
-	 */
-	public RestResponse delete(String path) throws NetworkException {
-		return new RestResponse(http.execute(DELETE, host, path, null));
-	}
-
-	/**
-	 * Executes a DELETE request
-	 *
-	 * @param path The path of the request
-	 * @param args The arguments to be sent with the request. Will be in the query string.
-	 * @return A RedditResponse from the resulting response
-	 * @throws NetworkException If the status code was not "200 OK"
-	 */
-	public RestResponse delete(String path, Map<String, String> args) throws NetworkException {
-		return new RestResponse(http.execute(DELETE, host, path, args));
+	public RestResponse execute(RestRequest request) throws NetworkException {
+		request.setExecuted(LocalDateTime.now());
+		history.add(request);
+		return new RestResponse(http.execute(request.getVerb(), host, request.getPath(), request.getArgs()));
 	}
 
 	/**

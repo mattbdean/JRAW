@@ -10,9 +10,10 @@ import org.apache.http.cookie.Cookie;
 import org.apache.http.message.BasicHeader;
 
 import java.io.IOException;
-import java.util.HashMap;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 
 /**
@@ -36,6 +37,17 @@ public class RedditClient extends RestClient {
 	private static final String HEADER_MODHASH = "X-Modhash";
 
 	/**
+	 * The amount of requests allowed per minute without using OAuth
+	 */
+	private static final int REQUESTS_PER_MINUTE = 30;
+
+	/**
+	 * Whether to stall the requests to make sure that no more than ${@value #REQUESTS_PER_MINUTE} requests have been made
+	 * in the past minute
+	 */
+	private boolean requestManagement;
+
+	/**
 	 * Instantiates a new RedditClient and adds the given user agent to the default headers of the RestClient
 	 *
 	 * @param userAgent The User-Agent header that will be sent with all the HTTP requests.
@@ -55,7 +67,60 @@ public class RedditClient extends RestClient {
 	 */
 	public RedditClient(String userAgent) {
 		super(HOST, userAgent);
+		this.requestManagement = true;
 	}
+
+	/**
+	 * Whether to automatically manage the execution of HTTP requests based on time (enabled by default). If there has
+	 * been more than 30 requests in the last minute, this class will wait to execute the next request in order to
+	 * minimize the chance of getting IP banned by Reddit, or simply having the API return a 403.
+	 *
+	 * @param enabled Whether to enable request management
+	 */
+	public void setRequestManagementEnabled(boolean enabled) {
+		this.requestManagement = enabled;
+	}
+
+	@Override
+	public RestResponse execute(RestRequest request) throws NetworkException {
+		if (!requestManagement) {
+			// All in your hands, buddy
+			return super.execute(request);
+		}
+
+		// No history, safe to assume that there were no recent requests
+		if (history.size() == 0) {
+			return super.execute(request);
+		}
+
+		// Transverse the history backwards and look for the latest request executed just after one minute
+		LocalDateTime now = LocalDateTime.now();
+		LocalDateTime executed;
+		int execAmount = 0; // Amount of times executed in the last minute
+		for (int i = history.size() - 1; i >= 0; i--) {
+			executed = history.get(i).getExecuted();
+			// Request was executed before 60 seconds ago or has there been over 30 requests executed already?
+			if (executed.isBefore(now.minus(60, ChronoUnit.SECONDS)) || ++execAmount >= REQUESTS_PER_MINUTE) {
+				if (i >= 0) {
+					// Make sure that we leave enough time to make sure we have 30 requests max in the last minute
+					LocalDateTime before = history.get(i - 1).getExecuted();
+					Duration timeToWait = Duration.between(executed, before);
+					try {
+						// Wait the time between the two times
+						Thread.sleep(timeToWait.toMillis());
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+
+				// We've waited our time
+				break;
+			}
+		}
+
+		return super.execute(request);
+	}
+
 
 	/**
 	 * Logs in to an account and returns the data associated with it
@@ -67,7 +132,7 @@ public class RedditClient extends RestClient {
 	 */
 	public LoggedInAccount login(String username, String password) throws NetworkException, ApiException {
 		RestResponse loginResponse = new RestResponse(http.execute(HttpVerb.POST, HOST_SSL, "/api/login",
-				args("user", username, "passwd", password, "api_type", "json")));
+				RestRequest.args("user", username, "passwd", password, "api_type", "json")));
 
 		if (loginResponse.hasErrors()) {
 			throw loginResponse.getApiExceptions()[0];
@@ -91,7 +156,7 @@ public class RedditClient extends RestClient {
 		}
 		headers.add(h);
 
-		return new LoggedInAccount(get("/api/me.json").getRootNode().get("data"), this);
+		return new LoggedInAccount(execute(new RestRequest(HttpVerb.GET, "/api/me.json")).getRootNode().get("data"), this);
 	}
 
 	/**
@@ -102,7 +167,7 @@ public class RedditClient extends RestClient {
 	 */
 	public Account me() throws NetworkException {
 		loginCheck();
-		return get("/api/me.json").as(Account.class);
+		return execute(new RestRequest(HttpVerb.GET, "/api/me.json")).as(Account.class);
 	}
 
 	/**
@@ -153,9 +218,9 @@ public class RedditClient extends RestClient {
 	 */
 	public Captcha getNewCaptcha() throws NetworkException {
 		try {
-			RestResponse response = post("/api/new_captcha");
+			RestResponse response = execute(new RestRequest(HttpVerb.POST, "/api/new_captcha"));
 
-			// Some strange response here
+			// Some strange response you got there, reddit...
 			String id = response.getRootNode().get("jquery").get(11).get(3).get(0).getTextValue();
 
 			return getCaptcha(id);
@@ -189,7 +254,7 @@ public class RedditClient extends RestClient {
 	 * @throws NetworkException If the user does not exist or there was a problem making the request
 	 */
 	public Account getUser(String username) throws NetworkException {
-		return get("/user/" + username + "/about.json").as(Account.class);
+		return execute(new RestRequest(HttpVerb.GET, "/user/" + username + "/about.json")).as(Account.class);
 	}
 
 	/**
@@ -200,7 +265,7 @@ public class RedditClient extends RestClient {
 	 * @throws NetworkException If the link does not exist or there was a problem making the request
 	 */
 	public Submission getSubmission(String id) throws NetworkException {
-		return get("/" + id + ".json").as(Submission.class);
+		return execute(new RestRequest(HttpVerb.GET, "/" + id + ".json")).as(Submission.class);
 	}
 
 	/**
@@ -212,38 +277,5 @@ public class RedditClient extends RestClient {
 		if (!isLoggedIn()) {
 			throw new NetworkException("You are not logged in! Use RedditClient.login(user, pass)");
 		}
-	}
-
-	/**
-	 * Convenience method to combine a list of strings into a map. Sample usage:<br>
-	 * <br>
-	 * <code>
-	 * Map&lt;String, String&gt; mapOfArguments = args("key1", "value1", "key2", "value2");
-	 * </code><br><br>
-	 * would result in this:
-	 * <pre>
-	 * {@code
-	 * {
-	 *     "key1" => "value1",
-	 *     "key2" => "value2"
-	 * }
-	 * }
-	 * </pre>
-	 *
-	 * @param keysAndValues A list of objects to be turned into strings and condensed into a map. Must be of even length
-	 * @return A map of the given keys and values array
-	 * @throws java.lang.IllegalArgumentException If the length of the string array is not even
-	 */
-	public Map<String, String> args(Object... keysAndValues) {
-		if (keysAndValues.length % 2 != 0) {
-			throw new IllegalArgumentException("Keys and values length must be even");
-		}
-
-		Map<String, String> args = new HashMap<>();
-		for (int i = 0; i < keysAndValues.length; ) {
-			args.put(String.valueOf(keysAndValues[i++]), String.valueOf(keysAndValues[i++]));
-		}
-
-		return args;
 	}
 }
