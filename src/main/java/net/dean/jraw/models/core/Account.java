@@ -52,7 +52,7 @@ public class Account extends Thing implements Created {
 	 * Whether the logged-in user has this user set as a friend
 	 */
 	@JsonInteraction
-	public Boolean getIsFriend() {
+	public Boolean isFriend() {
 		return data("is_friend", Boolean.class);
 	}
 

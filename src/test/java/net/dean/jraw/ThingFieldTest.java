@@ -2,22 +2,23 @@ package net.dean.jraw;
 
 import junit.framework.Assert;
 import net.dean.jraw.models.JsonInteraction;
+import net.dean.jraw.models.RedditObject;
 import net.dean.jraw.models.core.Account;
 import net.dean.jraw.models.core.Submission;
-import net.dean.jraw.models.core.Thing;
-import org.testng.annotations.BeforeTest;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ThingFieldTest {
 	private static final String SUBMISSION_ID = "92dd8";
-	private RedditClient reddit;
+	private static RedditClient reddit;
 
-	static <T extends Thing> void fieldValidityCheck(T thing) {
+	static <T extends RedditObject> void fieldValidityCheck(T thing) {
 		List<Method> jsonInteractionMethods = getJsonInteractionMethods(thing.getClass());
 
 		try {
@@ -32,12 +33,12 @@ public class ThingFieldTest {
 						Assert.fail("Non-nullable JsonInteraction method returned null: " + thing.getClass().getName() + "." + method.getName() + "()");
 					} else {
 						// Other reason for InvocationTargetException
-						e.getCause().printStackTrace();
+						Assert.fail(e.getCause().getMessage());
 					}
 				}
 			}
 		} catch (IllegalAccessException e) {
-			e.printStackTrace();
+			Assert.fail(e.getMessage());
 		}
 	}
 
@@ -48,19 +49,19 @@ public class ThingFieldTest {
 	 * @param thingClass The class to search for
 	 * @return A list of fields that have the JsonAttribute annotation
 	 */
-	private static List<Method> getJsonInteractionMethods(Class<? extends Thing> thingClass) {
-		List<Method> getterMethods = new ArrayList<>();
+	private static List<Method> getJsonInteractionMethods(Class<? extends RedditObject> thingClass) {
+		List<Method> methods = new ArrayList<>();
 
 		Class clazz = thingClass;
+		List<Method> toObserve = new ArrayList<>();
 
 		while (clazz != null) {
-			for (Method m : clazz.getDeclaredMethods()) {
-				if (m.isAnnotationPresent(JsonInteraction.class)) {
-					getterMethods.add(m);
-				}
+			toObserve.addAll(Arrays.asList(clazz.getDeclaredMethods()));
+			for (Class<?> interf : clazz.getInterfaces()) {
+				toObserve.addAll(Arrays.asList(interf.getDeclaredMethods()));
 			}
 
-			if (clazz.equals(Thing.class)) {
+			if (clazz.equals(RedditObject.class)) {
 				// Already at the highest level and we don't need to scan Object
 				break;
 			}
@@ -69,12 +70,18 @@ public class ThingFieldTest {
 			clazz = clazz.getSuperclass();
 		}
 
-		return getterMethods;
+		for (Method m : toObserve) {
+			if (m.isAnnotationPresent(JsonInteraction.class)) {
+				methods.add(m);
+			}
+		}
+
+		return methods;
 	}
 
-	@BeforeTest
-	public void setUp() {
-		this.reddit = new RedditClient(TestUtils.getUserAgent(getClass()));
+	@BeforeClass
+	public static void setUp() {
+		reddit = new RedditClient(TestUtils.getUserAgent(ThingFieldTest.class));
 	}
 
 	@Test

@@ -33,6 +33,7 @@ public class AccountTest {
 		try {
 			account = redditClient.login(credentials[0], credentials[1]);
 			Assert.assertNotNull(account, "The account was null");
+			ThingFieldTest.fieldValidityCheck(account);
 		} catch (NetworkException | ApiException e) {
 			Assert.fail(e.getMessage());
 		}
@@ -56,7 +57,7 @@ public class AccountTest {
 			Optional<URL> url = Optional.of(JrawUtils.newUrl("https://www.google.com/?q=" + number));
 			Optional<String> text = Optional.empty();
 
-			Submission submission = account.submitContent(SubmissionType.LINK, url, text, "jraw_testing2", "Link post test (random:" + number + ")",
+			Submission submission = account.submitContent(SubmissionType.LINK, url, text, "jraw_testing2", "Link post test (random=" + number + ")",
 					false, false, false);
 			Assert.assertNotNull(submission);
 			ThingFieldTest.fieldValidityCheck(submission);

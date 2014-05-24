@@ -63,7 +63,11 @@ public class RestResponse {
 			try {
 				this.rootNode = OBJECT_MAPPER.readTree(raw);
 			} catch (JsonParseException e) {
-				System.err.println("Unable to parse JSON: " + raw);
+				System.err.println("Unable to parse JSON: " + raw.replace("\n", "").replace("\r", ""));
+				if (raw.substring(0, 20).contains("<html>")) {
+					System.err.println("Received HTML from Reddit API instead of JSON. Have you been making more than 30 requests per minute?");
+				}
+				throw e;
 			}
 
 			JsonNode errorsNode = rootNode.get("json");

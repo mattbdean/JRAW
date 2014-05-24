@@ -91,7 +91,7 @@ public class RedditClient extends RestClient {
 		}
 		headers.add(h);
 
-		return new LoggedInAccount(get("/api/me.json").getRootNode(), this);
+		return new LoggedInAccount(get("/api/me.json").getRootNode().get("data"), this);
 	}
 
 	/**
