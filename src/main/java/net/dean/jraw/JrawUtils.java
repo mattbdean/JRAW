@@ -1,5 +1,8 @@
 package net.dean.jraw;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -11,6 +14,12 @@ import java.net.URL;
 public final class JrawUtils {
 	private JrawUtils() {
 		// no instances
+	}
+
+	private static Logger logger = LoggerFactory.getLogger("JRAW");
+
+	public static Logger logger() {
+		return logger;
 	}
 
 	/**

@@ -13,6 +13,7 @@ dependencies {
     compile fileTree(dir: 'libs/', include: '*.jar')
     compile     group: 'org.apache.httpcomponents', name: 'httpclient',         version: '4.3.3'
     compile     group: 'org.codehaus.jackson',      name: 'jackson-mapper-asl', version: '1.9.+'
+    compile     group: 'org.slf4j',                 name: 'slf4j-api',          version: '1.7.+'
     testCompile group: 'org.testng',                name: 'testng',             version: '6.1.1'
 }
 

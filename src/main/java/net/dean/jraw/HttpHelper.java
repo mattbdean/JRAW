@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
  * @author Matthew Dean
  */
 public class HttpHelper {
+
 	/**
 	 * The HttpClient used to execute HTTP requests
 	 */
@@ -106,7 +107,7 @@ public class HttpHelper {
 				request.addHeader(h);
 			}
 
-
+			JrawUtils.logger().info("{} {}{} {}", new Object[] {verb.name(), hostname, path, request.getProtocolVersion()});
 			CloseableHttpResponse response = (CloseableHttpResponse) client.execute(new HttpHost(hostname), request);
 			if (response.getStatusLine().getStatusCode() != 200) {
 				throw new NetworkException(200, response.getStatusLine().getStatusCode());
