@@ -1,9 +1,7 @@
 apply plugin: 'java'
-apply plugin: 'application'
 
 sourceCompatibility = 1.8
 version = '1.0'
-mainClassName = "net.dean.jraw.endpointgen.EndpointAnalysis"
 
 repositories {
     mavenCentral()
@@ -17,6 +15,11 @@ dependencies {
     testCompile group: 'org.testng',                name: 'testng',             version: '6.1.1'
 }
 
+task(updateEndpoints, type: JavaExec, dependsOn: build) {
+    main = "net.dean.jraw.endpointgen.EndpointAnalysis"
+    classpath = sourceSets.main.runtimeClasspath
+}
+
 test {
     // TestNG instead of default JUnit
     useTestNG()
@@ -25,3 +28,4 @@ test {
     testLogging.showStandardStreams = true
 }
 
+defaultTasks "test"

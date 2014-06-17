@@ -10,7 +10,7 @@ Want to contribute? Fantastic! Follow these steps:
 3. Add your code. Implement an API endpoint, make the code prettier, or even just fix up some whitespace or documentation.
 4. Add TestNG tests that implement your code
 5. Test your code by executing `./gradlew test`
-6. Update [`ENDPOINTS.md`](https://github.com/thatJavaNerd/JRAW/blob/master/ENDPOINTS.md) by running `./gradlew run`
+6. Update [`ENDPOINTS.md`](https://github.com/thatJavaNerd/JRAW/blob/master/ENDPOINTS.md) by running `./gradlew updateEndpoints`
 6. Send a pull request!
 
 ###API Endpoints
