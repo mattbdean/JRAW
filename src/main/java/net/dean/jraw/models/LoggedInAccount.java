@@ -12,7 +12,6 @@ import java.util.Map;
 import java.util.Optional;
 
 public class LoggedInAccount extends Account {
-
 	private RedditClient creator;
 
 	public LoggedInAccount(JsonNode data, RedditClient creator) {
@@ -143,6 +142,36 @@ public class LoggedInAccount extends Account {
 		genericPost("/api/vote", JrawUtils.args(
 				"dir", voteType.getValue(),
 				"id", fullName
+		));
+	}
+
+	/**
+	 * Saves a submission.
+	 *
+	 * @param s The submission to save
+	 * @return The JSON response from the API
+	 * @throws NetworkException If there was a problem sending the HTTP request
+	 * @throws ApiException If the API returned an error
+	 */
+	@EndpointImplementation(uris = "/api/save")
+	public RestResponse save(Submission s) throws NetworkException, ApiException {
+		return genericPost("/api/save", JrawUtils.args(
+				"id", ThingType.LINK.getPrefix() + "_" + s.getId()
+		));
+	}
+
+	/**
+	 * Unsaves a submission
+	 *
+	 * @param s The sumbission to unsave
+	 * @return The JSON response from the API
+	 * @throws NetworkException If there was a problem sending the HTTP request
+	 * @throws ApiException If the API returned an error
+	 */
+	@EndpointImplementation(uris = "/api/unsave")
+	public RestResponse unsave(Submission s) throws NetworkException, ApiException {
+		return genericPost("/api/unsave", JrawUtils.args(
+				"id", ThingType.LINK.getPrefix() + "_" + s.getId()
 		));
 	}
 

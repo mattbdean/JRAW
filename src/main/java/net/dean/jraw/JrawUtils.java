@@ -81,6 +81,12 @@ public final class JrawUtils {
 			throw new IllegalArgumentException("Keys and values length must be even");
 		}
 
+		for (int i = 0; i < keysAndValues.length; i++) {
+			Object o = keysAndValues[i];
+			if (o == null)
+				throw new NullPointerException("Object at index " + i + " was null");
+		}
+
 		Map<String, String> args = new HashMap<>();
 		for (int i = 0; i < keysAndValues.length; ) {
 			args.put(String.valueOf(keysAndValues[i++]), String.valueOf(keysAndValues[i++]));

@@ -1,66 +1,67 @@
-package net.dean.jraw;
+package net.dean.jraw.pagination;
 
-import net.dean.jraw.endpointgen.EndpointImplementation;
+import net.dean.jraw.*;
 import net.dean.jraw.models.Sorting;
 import net.dean.jraw.models.core.Listing;
-import net.dean.jraw.models.core.Submission;
+import net.dean.jraw.models.core.Thing;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * This class is used to paginate through the front page or a subreddit with different time periods or sortings.
+ * Represents the basic concept of a paginator
+ *
+ * @param <T> The type that the listing will contain
  */
-public class Paginator {
-	private static final int LIMIT_MAX = 100;
-	private static final int LIMIT_DEFAULT = 25;
+public abstract class AbstractPaginator<T extends Thing> {
+	/** Maximum number of things returned by the Reddit API */
+	public static final int LIMIT_MAX = 100;
+	/** Default number of things returned by the Reddit API */
+	public static final int LIMIT_DEFAULT = 25;
 
-	private String subreddit;
-	private RedditClient creator;
-	private Listing<Submission> current;
-	private Sorting sorting;
-	private TimePeriod timePeriod;
-	private int limit;
+	protected Sorting sorting;
+	protected TimePeriod timePeriod;
+	/** From 1 to {@value #LIMIT_MAX} */
+	protected int limit;
+	/** Current listing. Will get the next listing based on this one's "after" value */
+	protected Listing<T> current;
 
-	static Paginator ofFrontPage(RedditClient creator) {
-		return new Paginator(creator, null);
-	}
+	/** The client that created this */
+	protected RedditClient creator;
 
-	static Paginator ofSubreddit(RedditClient creator, String subreddit) {
-		return new Paginator(creator, subreddit);
-	}
+	private Class<T> thingType;
 
-	private Paginator(RedditClient creator, String subreddit) {
-		this.subreddit = subreddit;
+	/**
+	 * Instantiates a new AbstractPaginator
+	 *
+	 * @param creator The client that created this
+	 * @param thingType The type of thing that will be created
+	 */
+	protected AbstractPaginator(RedditClient creator, Class<T> thingType) {
 		this.creator = creator;
-		this.limit = LIMIT_DEFAULT;
+		this.thingType = thingType;
 
 		// Reddit API default settings
+		this.limit = LIMIT_DEFAULT;
 		this.sorting = Sorting.HOT;
 		this.timePeriod = TimePeriod.DAY;
 	}
 
 	/**
-	 * Gets a listing of submissions from a given subreddit or the front page.
+	 * Gets a listing of things
 	 *
 	 * @param forwards If true, this method will return the next listing. If false, it will return the first listing.
 	 * @return
-	 * @throws NetworkException
+	 * @throws net.dean.jraw.NetworkException
 	 */
-	@EndpointImplementation(uris = { "/controversial", "/hot", "/new", "/top", "/sort"})
-	private Listing<Submission> getListing(boolean forwards) throws NetworkException {
-		String path = "/" + sorting.name().toLowerCase() + ".json";
-		// "/new.json"
-		if (subreddit != null) {
-			path = "/r/" + subreddit + path;
-			// "/r/pics/new.json"
-		}
+	protected Listing<T> getListing(boolean forwards) throws NetworkException {
+		String path = getBaseUri();
 
-        Map<String, String> args = new HashMap<>();
+		Map<String, String> args = new HashMap<>();
 		args.put("limit", Integer.toString(limit));
 		if (current != null) {
 			if (forwards && current.getAfter() != null)
-					args.put("after", current.getBefore());
+				args.put("after", current.getBefore());
 		}
 
 		if (timePeriod != null && (sorting == Sorting.CONTROVERSIAL || sorting == Sorting.TOP)) {
@@ -68,10 +69,10 @@ public class Paginator {
 			args.put("t", timePeriod.name().toLowerCase());
 		}
 
-		Listing<Submission> submissionListing = creator.execute(new RestRequest(HttpVerb.GET, path, args)).asListing(Submission.class);
-		this.current = submissionListing;
+		Listing<T> listing = creator.execute(new RestRequest(HttpVerb.GET, path, args)).asListing(thingType);
+		this.current = listing;
 
-		return submissionListing;
+		return listing;
 	}
 
 	/**
@@ -81,7 +82,7 @@ public class Paginator {
 	 * @return The next listing of submissions
 	 * @throws NetworkException
 	 */
-	public Listing<Submission> next() throws NetworkException {
+	public Listing<T> next() throws NetworkException {
 		return getListing(true);
 	}
 
@@ -91,22 +92,21 @@ public class Paginator {
 	 * @return The first listing
 	 * @throws NetworkException
 	 */
-	public Listing<Submission> first() throws NetworkException {
+	public Listing<T> first() throws NetworkException {
 		return getListing(false);
 	}
 
-	public String getSubreddit() {
-		return subreddit;
-	}
-
-	public void setSubreddit(String subreddit) {
-		this.subreddit = subreddit;
-	}
+	/**
+	 * Generates the base URI. Parameters will be stacked after this URI to form a query. For example, SimplePaginator
+	 * will return something like "/r/pics/new.json"
+	 *
+	 * @return The base URI that will be used in queries
+	 */
+	protected abstract String getBaseUri();
 
 	/**
 	 * How the Reddit API will choose to return the listing. If the sorting is ${@link net.dean.jraw.models.Sorting#TOP},
 	 * then the time period will default to the last requested time period. If there was none, Reddit will use DAY.
-	 *
 	 */
 	public Sorting getSorting() {
 		return sorting;
@@ -119,7 +119,7 @@ public class Paginator {
 	 */
 	public void setSorting(Sorting sorting) {
 		this.sorting = sorting;
-		this.current = null;
+		invalidate();
 	}
 
 	/**
@@ -138,7 +138,7 @@ public class Paginator {
 	 */
 	public void setTimePeriod(TimePeriod timePeriod) {
 		this.timePeriod = timePeriod;
-		this.current = null;
+		invalidate();
 	}
 
 	/**
@@ -152,7 +152,7 @@ public class Paginator {
 	}
 
 	/**
-	 * Sets the limit
+	 * Sets the amount of posts returned by the Reddit API. Must be at least 1 and no greater than {@value #LIMIT_MAX}
 	 *
 	 * @param limit The new limit
 	 */
@@ -161,5 +161,14 @@ public class Paginator {
 			throw new IllegalArgumentException("Limit cannot be over " + LIMIT_MAX);
 		}
 		this.limit = limit;
+	}
+
+	/**
+	 * Notifies {@link #getListing(boolean)} that some piece of data (such as sorting or time period) has changed, so we
+	 * need to start over
+	 */
+	protected void invalidate() {
+		if (current != null)
+			current = null;
 	}
 }

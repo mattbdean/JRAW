@@ -5,6 +5,9 @@ import net.dean.jraw.models.Captcha;
 import net.dean.jraw.models.LoggedInAccount;
 import net.dean.jraw.models.core.Account;
 import net.dean.jraw.models.core.Submission;
+import net.dean.jraw.pagination.SimplePaginator;
+import net.dean.jraw.pagination.UserPaginatorSubmission;
+import net.dean.jraw.pagination.Where;
 import org.apache.http.Header;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.cookie.Cookie;
@@ -283,11 +286,33 @@ public class RedditClient extends RestClient {
 		}
 	}
 
-	public Paginator getFrontPage() {
-		return Paginator.ofFrontPage(this);
+	/**
+	 * Gets a Paginator to browse the front page of Reddit
+	 *
+	 * @return A new SimplePaginator for the front page
+	 */
+	public SimplePaginator getFrontPage() {
+		return SimplePaginator.ofFrontPage(this);
 	}
 
-	public Paginator getSubreddit(String subreddit) {
-		return Paginator.ofSubreddit(this, subreddit);
+	/**
+	 * Gets a Paginator to browse a particular subreddit
+	 *
+	 * @param subreddit The subreddit to browse
+	 * @return A new SimplePaginator for a particular subreddit
+	 */
+	public SimplePaginator getSubreddit(String subreddit) {
+		return SimplePaginator.ofSubreddit(this, subreddit);
+	}
+
+	/**
+	 * Gets a Paginator to interact with /user/&lt;username&gt;/&lt;where&gt; API endpoints
+	 *
+	 * @param username The username to use
+	 * @param where Where to browse
+	 * @return A new UserPaginatorSubmission to browse submissions
+	 */
+	public UserPaginatorSubmission getUserPaginator(String username, Where where) {
+		return new UserPaginatorSubmission(this, username, where);
 	}
 }

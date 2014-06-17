@@ -54,7 +54,7 @@ public class Listing<T extends RedditObject> extends RedditObject {
 	 */
 	@JsonInteraction
 	public List<T> getChildren() {
-		if (!(hasChildren && children.size() == 0)) {
+		if (hasChildren && children.size() > 0) {
 			// Already been populated
 			return children;
 		}
@@ -74,6 +74,8 @@ public class Listing<T extends RedditObject> extends RedditObject {
 			}
 			things.add(PARSER.parse(childNode, thingClass));
 		}
+
+		this.children = things;
 		return things;
 	}
 

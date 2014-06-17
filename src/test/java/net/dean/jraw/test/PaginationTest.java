@@ -1,42 +1,51 @@
 package net.dean.jraw.test;
 
 import net.dean.jraw.NetworkException;
-import net.dean.jraw.Paginator;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.models.core.Listing;
-import net.dean.jraw.models.core.Submission;
+import net.dean.jraw.models.core.Thing;
+import net.dean.jraw.pagination.AbstractPaginator;
+import net.dean.jraw.pagination.SimplePaginator;
+import net.dean.jraw.pagination.UserPaginatorSubmission;
+import net.dean.jraw.pagination.Where;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-public class ListingsTest {
+public class PaginationTest {
 	private static RedditClient client;
 
 	@BeforeClass
 	public static void setUp() {
-		client = TestUtils.client(ListingsTest.class);
+		client = TestUtils.client(PaginationTest.class);
 	}
 
 	@Test
 	public void testFrontPage() throws NetworkException {
-		Paginator frontPage = client.getFrontPage();
+		SimplePaginator frontPage = client.getFrontPage();
 		commonTest(frontPage);
 	}
 
 	@Test
 	public void testSubreddit() throws NetworkException {
-		Paginator pics = client.getSubreddit("pics");
+		SimplePaginator pics = client.getSubreddit("pics");
 		commonTest(pics);
 	}
 
-	private void commonTest(Paginator p) throws NetworkException {
+	@Test
+	public void testSubmitted() throws NetworkException {
+		UserPaginatorSubmission paginator = client.getUserPaginator("Unidan", Where.SUBMITTED);
+		commonTest(paginator);
+	}
+
+	private <T extends Thing> void commonTest(AbstractPaginator<T> p) throws NetworkException {
 		// Test that the paginator can retrieve the data
-		Listing<Submission> firstPage = p.first();
+		Listing<T> firstPage = p.first();
 		ThingFieldTest.fieldValidityCheck(firstPage);
 		ThingFieldTest.fieldValidityCheck(firstPage.getChildren().get(0));
 
 		// Test if the second page is valid
-		Listing<Submission> secondPage = p.next();
+		Listing<T> secondPage = p.next();
 		ThingFieldTest.fieldValidityCheck(secondPage);
 
 		// Check if the pagination functionality is working

@@ -6,11 +6,14 @@ import net.dean.jraw.models.SubmissionType;
 import net.dean.jraw.models.VoteType;
 import net.dean.jraw.models.core.Account;
 import net.dean.jraw.models.core.Submission;
+import net.dean.jraw.pagination.UserPaginatorSubmission;
+import net.dean.jraw.pagination.Where;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.net.URL;
+import java.util.List;
 import java.util.Optional;
 
 public class AccountTest {
@@ -75,6 +78,45 @@ public class AccountTest {
 		try {
 			Submission submission = redditClient.getSubmission("28d6vv");
 			account.vote(submission, VoteType.NO_VOTE);
+		} catch (NetworkException | ApiException e) {
+			Assert.fail(e.getMessage());
+		}
+	}
+
+	@Test(dependsOnMethods = "login")
+	public void testSaveSubmission() {
+		try {
+			Submission submission = redditClient.getSubmission("28d6vv");
+			account.save(submission);
+
+			UserPaginatorSubmission paginator = redditClient.getUserPaginator(account.getName(), Where.SAVED);
+			List<Submission> saved = paginator.first().getChildren();
+
+			for (Submission s : saved) {
+				if (s.getId().equals(submission.getId())) {
+					return;
+				}
+			}
+
+			Assert.fail("Did not find saved submission");
+
+		} catch (NetworkException | ApiException e) {
+			Assert.fail(e.getMessage());
+		}
+	}
+
+	@Test(dependsOnMethods = "testSaveSubmission")
+	public void testUnsaveSubmission() {
+		try {
+			Submission submission = redditClient.getSubmission("28d6vv");
+			account.unsave(submission);
+
+			UserPaginatorSubmission paginator = redditClient.getUserPaginator(account.getName(), Where.SAVED);
+			List<Submission> saved = paginator.first().getChildren();
+
+			// Search for the submission in the saved list
+			saved.stream().filter(s -> s.getId().equals(submission.getId())).forEach(s -> Assert.fail("Found the submission after it was unsaved"));
+
 		} catch (NetworkException | ApiException e) {
 			Assert.fail(e.getMessage());
 		}

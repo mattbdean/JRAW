@@ -1,4 +1,4 @@
-<!--- Generated 2014-06-17 at 13:34:48 EDT. Do ./gradlew run to update. DO NOT MODIFY DIRECTLY -->
+<!--- Generated 2014-06-17 at 19:03:28 EDT. Do ./gradlew run to update. DO NOT MODIFY DIRECTLY -->
 #Unimplemented
 ####account
 ~~~
@@ -54,7 +54,6 @@
 /api/marknsfw
 /api/morechildren
 /api/report
-/api/save
 /api/saved_categories.json
 /api/sendreplies
 /api/set_contest_mode
@@ -62,7 +61,6 @@
 /api/store_visits
 /api/unhide
 /api/unmarknsfw
-/api/unsave
 ~~~
 
 ####listings
@@ -158,13 +156,8 @@
 /api/v1/me/friends/username
 /api/v1/user/username/trophies
 /user/username/comments
-/user/username/disliked
 /user/username/gilded
-/user/username/hidden
-/user/username/liked
 /user/username/overview
-/user/username/saved
-/user/username/submitted
 /user/username/where
 ~~~
 
@@ -200,7 +193,9 @@
 
 ####links & comments
 ~~~
+/api/unsave
 /api/vote
+/api/save
 /api/submit
 ~~~
 
@@ -216,5 +211,10 @@
 ####users
 ~~~
 /user/username/about.json
+/user/username/disliked
+/user/username/hidden
+/user/username/liked
+/user/username/saved
+/user/username/submitted
 ~~~
 
