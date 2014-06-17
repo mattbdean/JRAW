@@ -1,5 +1,8 @@
-package net.dean.jraw;
+package net.dean.jraw.test;
 
+import net.dean.jraw.NetworkException;
+import net.dean.jraw.Paginator;
+import net.dean.jraw.RedditClient;
 import net.dean.jraw.models.core.Listing;
 import net.dean.jraw.models.core.Submission;
 import org.testng.Assert;

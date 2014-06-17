@@ -1,5 +1,6 @@
 package net.dean.jraw;
 
+import net.dean.jraw.endpointgen.EndpointImplementation;
 import net.dean.jraw.models.Sorting;
 import net.dean.jraw.models.core.Listing;
 import net.dean.jraw.models.core.Submission;
@@ -46,6 +47,7 @@ public class Paginator {
 	 * @return
 	 * @throws NetworkException
 	 */
+	@EndpointImplementation(uris = { "/controversial", "/hot", "/new", "/top", "/sort"})
 	private Listing<Submission> getListing(boolean forwards) throws NetworkException {
 		String path = "/" + sorting.name().toLowerCase() + ".json";
 		// "/new.json"

@@ -1,6 +1,8 @@
-package net.dean.jraw;
+package net.dean.jraw.test;
 
 import junit.framework.Assert;
+import net.dean.jraw.NetworkException;
+import net.dean.jraw.RedditClient;
 import net.dean.jraw.models.JsonInteraction;
 import net.dean.jraw.models.RedditObject;
 import net.dean.jraw.models.core.Account;

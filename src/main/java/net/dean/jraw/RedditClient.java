@@ -1,5 +1,6 @@
 package net.dean.jraw;
 
+import net.dean.jraw.endpointgen.EndpointImplementation;
 import net.dean.jraw.models.Captcha;
 import net.dean.jraw.models.LoggedInAccount;
 import net.dean.jraw.models.core.Account;
@@ -130,6 +131,7 @@ public class RedditClient extends RestClient {
 	 * @return An Account object that has the same username as the username parameter
 	 * @throws NetworkException If there was an error returned in the JSON
 	 */
+	@EndpointImplementation(uris = "/api/login")
 	public LoggedInAccount login(String username, String password) throws NetworkException, ApiException {
 		RestResponse loginResponse = new RestResponse(http.execute(HttpVerb.POST, HOST_SSL, "/api/login",
 				RestRequest.args("user", username, "passwd", password, "api_type", "json")));
@@ -165,6 +167,7 @@ public class RedditClient extends RestClient {
 	 * @return The currently logged in account
 	 * @throws NetworkException If the user has not been logged in yet
 	 */
+	@EndpointImplementation(uris = "/api/me.json")
 	public Account me() throws NetworkException {
 		loginCheck();
 		return execute(new RestRequest(HttpVerb.GET, "/api/me.json")).as(Account.class);
@@ -192,10 +195,8 @@ public class RedditClient extends RestClient {
 	 * @return True if the user needs a captcha to do a specific action, else if not or not logged in.
 	 * @throws NetworkException
 	 */
+	@EndpointImplementation(uris = "/api/needs_captcha.json")
 	public boolean needsCaptcha() throws NetworkException {
-		if (isLoggedIn()) {
-			return false;
-		}
 		try {
 			// This endpoint does not return JSON, but rather just "true" or "false"
 			CloseableHttpResponse response = http.execute(HttpVerb.GET, HOST, "/api/needs_captcha.json");
@@ -216,6 +217,7 @@ public class RedditClient extends RestClient {
 	 * @return A new Captcha
 	 * @throws NetworkException If there was a problem executing the HTTP request
 	 */
+	@EndpointImplementation(uris = "/api/new_captcha")
 	public Captcha getNewCaptcha() throws NetworkException {
 		try {
 			RestResponse response = execute(new RestRequest(HttpVerb.POST, "/api/new_captcha"));
@@ -236,6 +238,7 @@ public class RedditClient extends RestClient {
 	 * @return A new Captcha object
 	 * @throws NetworkException If there was a problem executing the HTTP request
 	 */
+	@EndpointImplementation(uris = "/captcha/iden")
 	public Captcha getCaptcha(String id) throws NetworkException {
 		try {
 			CloseableHttpResponse response = http.execute(HttpVerb.GET, HOST, "/captcha/" + id + ".png");
@@ -253,6 +256,7 @@ public class RedditClient extends RestClient {
 	 * @return An Account whose name matches the given username
 	 * @throws NetworkException If the user does not exist or there was a problem making the request
 	 */
+	@EndpointImplementation(uris = "/user/username/about.json")
 	public Account getUser(String username) throws NetworkException {
 		return execute(new RestRequest(HttpVerb.GET, "/user/" + username + "/about.json")).as(Account.class);
 	}

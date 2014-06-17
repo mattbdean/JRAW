@@ -1,11 +1,12 @@
-package net.dean.jraw;
+package net.dean.jraw.test;
 
 import junit.framework.Assert;
+import net.dean.jraw.NetworkException;
+import net.dean.jraw.RedditClient;
 import net.dean.jraw.models.core.Comment;
 import net.dean.jraw.models.core.Submission;
 import net.dean.jraw.models.core.Listing;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertFalse;

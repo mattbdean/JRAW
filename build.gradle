@@ -1,10 +1,19 @@
 apply plugin: 'java'
+apply plugin: 'application'
 
 sourceCompatibility = 1.8
 version = '1.0'
+mainClassName = "net.dean.jraw.endpointgen.EndpointAnalysis"
 
 repositories {
     mavenCentral()
+}
+
+dependencies {
+    compile fileTree(dir: 'libs/', include: '*.jar')
+    compile     group: 'org.apache.httpcomponents', name: 'httpclient',         version: '4.3.3'
+    compile     group: 'org.codehaus.jackson',      name: 'jackson-mapper-asl', version: '1.9.+'
+    testCompile group: 'org.testng',                name: 'testng',             version: '6.1.1'
 }
 
 test {
@@ -15,12 +24,3 @@ test {
     testLogging.showStandardStreams = true
 }
 
-javadoc {
-    destinationDir = new File("doc/");
-}
-
-dependencies {
-    compile     group: 'org.apache.httpcomponents', name: 'httpclient',         version: '4.3.3'
-    compile     group: 'org.codehaus.jackson',      name: 'jackson-mapper-asl', version: '1.9.+'
-    testCompile group: 'org.testng',                name: 'testng',             version: '6.1.1'
-}

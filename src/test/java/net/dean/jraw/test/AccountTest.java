@@ -1,5 +1,9 @@
-package net.dean.jraw;
+package net.dean.jraw.test;
 
+import net.dean.jraw.ApiException;
+import net.dean.jraw.JrawUtils;
+import net.dean.jraw.NetworkException;
+import net.dean.jraw.RedditClient;
 import net.dean.jraw.models.LoggedInAccount;
 import net.dean.jraw.models.SubmissionType;
 import net.dean.jraw.models.core.Account;

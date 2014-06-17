@@ -1,5 +1,9 @@
-package net.dean.jraw;
+package net.dean.jraw.test;
 
+import net.dean.jraw.HttpHelper;
+import net.dean.jraw.HttpVerb;
+import net.dean.jraw.NetworkException;
+import net.dean.jraw.RestResponse;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.codehaus.jackson.JsonNode;

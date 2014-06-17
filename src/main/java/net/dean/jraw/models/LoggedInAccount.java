@@ -1,6 +1,7 @@
 package net.dean.jraw.models;
 
 import net.dean.jraw.*;
+import net.dean.jraw.endpointgen.EndpointImplementation;
 import net.dean.jraw.models.core.Account;
 import net.dean.jraw.models.core.Submission;
 import org.codehaus.jackson.JsonNode;
@@ -61,6 +62,7 @@ public class LoggedInAccount extends Account {
 	 * @return A representation of the newly submitted Link
 	 * @throws NetworkException If there was a problem sending the HTTP request
 	 */
+	@EndpointImplementation(uris = "/api/submit")
 	public Submission submitContent(SubmissionType type, Optional<URL> url, Optional<String> selfText, String subreddit,
 	                                String title, boolean saveAfter, boolean sendRepliesToInbox, boolean resubmit, Optional<Captcha> captcha,
 	                                Optional<String> captchaAttempt) throws NetworkException, ApiException {
