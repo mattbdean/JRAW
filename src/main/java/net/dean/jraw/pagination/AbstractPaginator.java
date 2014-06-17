@@ -61,7 +61,7 @@ public abstract class AbstractPaginator<T extends Thing> {
 		args.put("limit", Integer.toString(limit));
 		if (current != null) {
 			if (forwards && current.getAfter() != null)
-				args.put("after", current.getBefore());
+				args.put("after", current.getAfter());
 		}
 
 		if (timePeriod != null && (sorting == Sorting.CONTROVERSIAL || sorting == Sorting.TOP)) {
