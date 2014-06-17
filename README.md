@@ -1,6 +1,6 @@
 #Java Reddit API Wrapper
 
-![travis-ci build status](https://travis-ci.org/thatJavaNerd/JRAW.svg?branch=master)
+[![travis-ci build status](https://travis-ci.org/thatJavaNerd/JRAW.svg?branch=master)](https://travis-ci.org/thatJavaNerd/JRAW)
 
 ###Contributing
 Want to contribute? Fantastic! Follow these steps:
