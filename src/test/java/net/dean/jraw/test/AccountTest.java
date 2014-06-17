@@ -1,11 +1,9 @@
 package net.dean.jraw.test;
 
-import net.dean.jraw.ApiException;
-import net.dean.jraw.JrawUtils;
-import net.dean.jraw.NetworkException;
-import net.dean.jraw.RedditClient;
+import net.dean.jraw.*;
 import net.dean.jraw.models.LoggedInAccount;
 import net.dean.jraw.models.SubmissionType;
+import net.dean.jraw.models.VoteType;
 import net.dean.jraw.models.core.Account;
 import net.dean.jraw.models.core.Submission;
 import org.testng.Assert;
@@ -43,7 +41,7 @@ public class AccountTest {
 		}
 	}
 
-	@Test(dependsOnMethods = "login")
+	@Test
 	public void getUserNotLoggedIn() {
 		try {
 			Account acc = redditClient.getUser("thatJavaNerd");
@@ -69,6 +67,16 @@ public class AccountTest {
 			Assert.fail(e.getMessage());
 		} catch (ApiException e) {
 			TestUtils.ignoreRatelimitQuotaFilled(e);
+		}
+	}
+
+	@Test(dependsOnMethods = "login")
+	public void testVote() {
+		try {
+			Submission submission = redditClient.getSubmission("28d6vv");
+			account.vote(submission, VoteType.NO_VOTE);
+		} catch (NetworkException | ApiException e) {
+			Assert.fail(e.getMessage());
 		}
 	}
 }

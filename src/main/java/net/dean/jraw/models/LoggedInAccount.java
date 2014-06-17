@@ -3,6 +3,7 @@ package net.dean.jraw.models;
 import net.dean.jraw.*;
 import net.dean.jraw.endpointgen.EndpointImplementation;
 import net.dean.jraw.models.core.Account;
+import net.dean.jraw.models.core.Comment;
 import net.dean.jraw.models.core.Submission;
 import org.codehaus.jackson.JsonNode;
 
@@ -67,7 +68,7 @@ public class LoggedInAccount extends Account {
 	                                String title, boolean saveAfter, boolean sendRepliesToInbox, boolean resubmit, Optional<Captcha> captcha,
 	                                Optional<String> captchaAttempt) throws NetworkException, ApiException {
 
-		Map<String, String> args = RestRequest.args(
+		Map<String, String> args = JrawUtils.args(
 				"api_type", "json",
 				"extension", "json",
 				"kind", type.name().toLowerCase(),
@@ -100,6 +101,49 @@ public class LoggedInAccount extends Account {
 		String jsonUrl = response.getJson().get("json").get("data").get("url").getTextValue();
 
 		return creator.execute(new RestRequest(HttpVerb.GET, jsonUrl)).as(Submission.class);
+	}
+
+	/**
+	 * Votes on a submission. Please note that "API clients proxying a human's action one-for-one are OK, but bots
+	 * deciding how to vote on content or amplifying a human's vote are not".
+	 *
+	 * @param s The submission to vote on
+	 * @param voteType How to vote
+	 * @throws NetworkException If there was a problem sending the HTTP request
+	 * @throws ApiException If the API returned an error
+	 */
+	public void vote(Submission s, VoteType voteType) throws NetworkException, ApiException {
+		vote(s.getName(), voteType);
+	}
+
+	/**
+	 * Votes on a comment. Please note that "API clients proxying a human's action one-for-one are OK, but bots
+	 * deciding how to vote on content or amplifying a human's vote are not".
+	 *
+	 * @param c The comment to vote on
+	 * @param voteType How to vote
+	 * @throws NetworkException If there was a problem sending the HTTP request
+	 * @throws ApiException If the API returned an error
+	 */
+	public void vote(Comment c, VoteType voteType) throws NetworkException, ApiException {
+		vote(c.getName(), voteType);
+	}
+
+	/**
+	 * Votes on a thing. Please note that "API clients proxying a human's action one-for-one are OK, but bots
+	 * deciding how to vote on content or amplifying a human's vote are not".
+	 *
+	 * @param fullName The submission or comment's full name to vote on
+	 * @param voteType How to vote
+	 * @throws NetworkException If there was a problem sending the HTTP request
+	 * @throws ApiException If the API returned an error
+	 */
+	@EndpointImplementation(uris = "/api/vote")
+	private void vote(String fullName, VoteType voteType) throws NetworkException, ApiException {
+		genericPost("/api/vote", JrawUtils.args(
+				"dir", voteType.getValue(),
+				"id", fullName
+		));
 	}
 
 

@@ -1,4 +1,4 @@
-<!--- Generated 2014-06-17 at 11:59:13 EDT. Do ./gradlew run to update. DO NOT MODIFY DIRECTLY -->
+<!--- Generated 2014-06-17 at 13:34:48 EDT. Do ./gradlew run to update. DO NOT MODIFY DIRECTLY -->
 #Unimplemented
 ####account
 ~~~
@@ -63,7 +63,6 @@
 /api/unhide
 /api/unmarknsfw
 /api/unsave
-/api/vote
 ~~~
 
 ####listings
@@ -201,6 +200,7 @@
 
 ####links & comments
 ~~~
+/api/vote
 /api/submit
 ~~~
 

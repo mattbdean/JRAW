@@ -1,7 +1,6 @@
 package net.dean.jraw;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -82,39 +81,6 @@ public class RestRequest {
 
 	public void setVerb(HttpVerb verb) {
 		this.verb = verb;
-	}
-
-	/**
-	 * Convenience method to combine a list of strings into a map. Sample usage:<br>
-	 * <br>
-	 * <code>
-	 * Map&lt;String, String&gt; mapOfArguments = args("key1", "value1", "key2", "value2");
-	 * </code><br><br>
-	 * would result in this:
-	 * <pre>
-	 * {@code
-	 * {
-	 *     "key1" => "value1",
-	 *     "key2" => "value2"
-	 * }
-	 * }
-	 * </pre>
-	 *
-	 * @param keysAndValues A list of objects to be turned into strings and condensed into a map. Must be of even length
-	 * @return A map of the given keys and values array
-	 * @throws java.lang.IllegalArgumentException If the length of the string array is not even
-	 */
-	public static Map<String, String> args(Object... keysAndValues) {
-		if (keysAndValues.length % 2 != 0) {
-			throw new IllegalArgumentException("Keys and values length must be even");
-		}
-
-		Map<String, String> args = new HashMap<>();
-		for (int i = 0; i < keysAndValues.length; ) {
-			args.put(String.valueOf(keysAndValues[i++]), String.valueOf(keysAndValues[i++]));
-		}
-
-		return args;
 	}
 
 	@Override

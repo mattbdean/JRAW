@@ -134,7 +134,7 @@ public class RedditClient extends RestClient {
 	@EndpointImplementation(uris = "/api/login")
 	public LoggedInAccount login(String username, String password) throws NetworkException, ApiException {
 		RestResponse loginResponse = new RestResponse(http.execute(HttpVerb.POST, HOST_SSL, "/api/login",
-				RestRequest.args("user", username, "passwd", password, "api_type", "json")));
+				JrawUtils.args("user", username, "passwd", password, "api_type", "json")));
 
 		if (loginResponse.hasErrors()) {
 			throw loginResponse.getApiExceptions()[0];

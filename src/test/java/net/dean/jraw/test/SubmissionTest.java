@@ -4,8 +4,8 @@ import junit.framework.Assert;
 import net.dean.jraw.NetworkException;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.models.core.Comment;
-import net.dean.jraw.models.core.Submission;
 import net.dean.jraw.models.core.Listing;
+import net.dean.jraw.models.core.Submission;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -13,7 +13,7 @@ import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 
 public class SubmissionTest {
-
+	private static final String ID = "92dd8";
 	private RedditClient redditClient;
 
 	@BeforeClass
@@ -24,7 +24,7 @@ public class SubmissionTest {
 	@Test
 	public void testCommentsNotNull() {
 		try {
-			Submission submission = redditClient.getSubmission("92dd8");
+			Submission submission = redditClient.getSubmission(ID);
 			assertNotNull(submission);
 
 			Listing<Comment> comments = submission.getComments();
