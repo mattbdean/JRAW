@@ -19,6 +19,15 @@ public class Submission extends Thing implements Created, Distinguishable, Votab
 	private Listing<Comment> comments;
 
 	/**
+	 * Instantiates a new Submission with no comments
+	 *
+	 * @param dataNode The JsonNode that is used to look up JSON values
+	 */
+	public Submission(JsonNode dataNode) {
+		this(dataNode, null);
+	}
+
+	/**
 	 * Instantiates a new Submission
 	 *
 	 * @param dataNode The JsonNode that is used to look up JSON values
@@ -223,6 +232,7 @@ public class Submission extends Thing implements Created, Distinguishable, Votab
 	/**
 	 * Gets the comments of this Submission
 	 */
+	@JsonInteraction(nullable = true)
 	public Listing<Comment> getComments() {
 		return comments;
 	}

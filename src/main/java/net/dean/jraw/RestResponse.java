@@ -1,5 +1,6 @@
 package net.dean.jraw;
 
+import net.dean.jraw.models.RedditObject;
 import net.dean.jraw.models.core.Comment;
 import net.dean.jraw.models.core.Submission;
 import net.dean.jraw.models.core.Listing;
@@ -64,7 +65,7 @@ public class RestResponse {
 				this.rootNode = OBJECT_MAPPER.readTree(raw);
 			} catch (JsonParseException e) {
 				System.err.println("Unable to parse JSON: " + raw.replace("\n", "").replace("\r", ""));
-				if (raw.substring(0, 20).contains("<html>")) {
+				if (raw.substring(0, 20).toLowerCase().contains("<!doctype")) {
 					System.err.println("Received HTML from Reddit API instead of JSON. Have you been making more than 30 requests per minute?");
 				}
 				throw e;
@@ -95,7 +96,7 @@ public class RestResponse {
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T extends Thing> T as(Class<T> thingClass) {
+	public <T extends RedditObject> T as(Class<T> thingClass) {
 		if (thingClass.equals(Submission.class)) {
 			// Special handling for submissions, not just submission data being returned, also its comments.
 			// For example: http://www.reddit.com/92dd8.json
@@ -111,6 +112,10 @@ public class RestResponse {
 
 		// Normal Thing
 		return redditObjectParser.parse(rootNode, thingClass);
+	}
+
+	public <T extends RedditObject> Listing<T> asListing(Class<T> thingClass) {
+		return new Listing<>(rootNode.get("data"), thingClass);
 	}
 
 	public boolean hasErrors() {

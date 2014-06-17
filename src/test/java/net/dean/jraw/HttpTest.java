@@ -20,7 +20,7 @@ public class HttpTest {
 
 	@BeforeTest
 	public static void init() {
-		client = new HttpHelper();
+		client = new HttpHelper(TestUtils.getUserAgent(HttpTest.class));
 	}
 
 	@Test

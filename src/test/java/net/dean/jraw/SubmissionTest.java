@@ -4,6 +4,7 @@ import junit.framework.Assert;
 import net.dean.jraw.models.core.Comment;
 import net.dean.jraw.models.core.Submission;
 import net.dean.jraw.models.core.Listing;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
@@ -14,9 +15,9 @@ public class SubmissionTest {
 
 	private RedditClient redditClient;
 
-	@BeforeTest
+	@BeforeClass
 	public void setUp() {
-		redditClient = new RedditClient(TestUtils.getUserAgent(getClass()));
+		redditClient = TestUtils.client(SubmissionTest.class);
 	}
 
 	@Test

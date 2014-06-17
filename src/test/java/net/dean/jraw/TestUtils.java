@@ -12,6 +12,20 @@ import java.util.Random;
 public final class TestUtils {
 	private static Random random = new Random();
 
+	private static RedditClient client;
+
+	public static RedditClient client(Class<?> testClass) {
+		String generatedUserAgent = getUserAgent(testClass);
+
+		if (client == null) {
+			client = new RedditClient(generatedUserAgent);
+		} else {
+			client.getHttpHelper().setUserAgent(generatedUserAgent);
+		}
+
+		return client;
+	}
+
 	public static String[] getCredentials() {
 		try {
 			URL resource = TestUtils.class.getResource("/credentials.txt");

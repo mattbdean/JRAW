@@ -18,6 +18,11 @@ public class ThingFieldTest {
 	private static final String SUBMISSION_ID = "92dd8";
 	private static RedditClient reddit;
 
+	@BeforeClass
+	public static void setUp() {
+		reddit = TestUtils.client(ThingFieldTest.class);
+	}
+
 	static <T extends RedditObject> void fieldValidityCheck(T thing) {
 		List<Method> jsonInteractionMethods = getJsonInteractionMethods(thing.getClass());
 
@@ -77,11 +82,6 @@ public class ThingFieldTest {
 		}
 
 		return methods;
-	}
-
-	@BeforeClass
-	public static void setUp() {
-		reddit = new RedditClient(TestUtils.getUserAgent(ThingFieldTest.class));
 	}
 
 	@Test

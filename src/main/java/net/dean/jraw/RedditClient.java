@@ -278,4 +278,12 @@ public class RedditClient extends RestClient {
 			throw new NetworkException("You are not logged in! Use RedditClient.login(user, pass)");
 		}
 	}
+
+	public Paginator getFrontPage() {
+		return Paginator.ofFrontPage(this);
+	}
+
+	public Paginator getSubreddit(String subreddit) {
+		return Paginator.ofSubreddit(this, subreddit);
+	}
 }

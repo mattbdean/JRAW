@@ -1,6 +1,7 @@
 package net.dean.jraw;
 
 import net.dean.jraw.models.RedditObject;
+import net.dean.jraw.models.core.Submission;
 import org.codehaus.jackson.JsonNode;
 
 import java.lang.reflect.Constructor;

@@ -9,10 +9,12 @@ import org.apache.http.client.methods.*;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -37,13 +39,6 @@ public class HttpHelper {
 	private List<Header> defaultHeaders;
 
 	/**
-	 * Instantiates a new HttpClientHelper
-	 */
-	public HttpHelper() {
-		this(null);
-	}
-
-	/**
 	 * Instantiates a new HttpClientHelper and adds a given string as the value for the User-Agent header for every request
 	 *
 	 * @param userAgent The User-Agent to use for the HTTP requests
@@ -51,9 +46,9 @@ public class HttpHelper {
 	public HttpHelper(String userAgent) {
 		this.cookieStore = new BasicCookieStore();
 		this.defaultHeaders = new ArrayList<>();
+		defaultHeaders.add(new BasicHeader("User-Agent", userAgent));
 		this.client = HttpClientBuilder.create()
 				.setDefaultCookieStore(cookieStore)
-				.setUserAgent(userAgent)
 				.build();
 	}
 
@@ -135,5 +130,29 @@ public class HttpHelper {
 
 	public CookieStore getCookieStore() {
 		return cookieStore;
+	}
+
+	public void setUserAgent(String userAgent) {
+		for (Iterator<Header> it = defaultHeaders.iterator(); it.hasNext(); ) {
+			Header currentHeader = it.next();
+			if (currentHeader.getName().equals("User-Agent")) {
+				it.remove();
+				defaultHeaders.add(new BasicHeader("User-Agent", userAgent));
+				return;
+			}
+		}
+
+		// No User-Agent string was found
+		defaultHeaders.add(new BasicHeader("User-Agent", userAgent));
+	}
+
+	public String getUserAgent() {
+		for (Header h : defaultHeaders) {
+			if (h.getName().equals("User-Agent")) {
+				return h.getValue();
+			}
+		}
+
+		return null;
 	}
 }

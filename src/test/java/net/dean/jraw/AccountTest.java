@@ -25,7 +25,7 @@ public class AccountTest {
 
 		credentials = TestUtils.getCredentials();
 
-		redditClient = new RedditClient(TestUtils.getUserAgent(AccountTest.class));
+		redditClient = TestUtils.client(AccountTest.class);
 	}
 
 	@Test

@@ -26,6 +26,8 @@ public class Listing<T extends RedditObject> extends RedditObject {
 	 */
 	private Class<T> thingClass;
 
+	private List<T> children;
+
 	/**
 	 * Whether this listing contains a "more" element in its children
 	 */
@@ -42,6 +44,7 @@ public class Listing<T extends RedditObject> extends RedditObject {
 
 		this.thingClass = thingClass;
 		this.hasChildren = data.has("children");
+		this.children = new ArrayList<>();
 	}
 
 	/**
@@ -49,7 +52,14 @@ public class Listing<T extends RedditObject> extends RedditObject {
 	 *
 	 * @return A list of children
 	 */
+	@JsonInteraction
 	public List<T> getChildren() {
+		if (!(hasChildren && children.size() == 0)) {
+			// Already been populated
+			return children;
+		}
+
+		// JSON node has elements, but the children list has not been populated yet
 		List<T> things = new ArrayList<>();
 
 		if (!hasChildren) {
@@ -122,5 +132,29 @@ public class Listing<T extends RedditObject> extends RedditObject {
 	@Override
 	public ThingType getType() {
 		return ThingType.LISTING;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		if (!super.equals(o)) return false;
+
+		Listing listing = (Listing) o;
+
+		if (hasChildren != listing.hasChildren) return false;
+		if (!children.equals(listing.children)) return false;
+		if (!thingClass.equals(listing.thingClass)) return false;
+
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = super.hashCode();
+		result = 31 * result + thingClass.hashCode();
+		result = 31 * result + children.hashCode();
+		result = 31 * result + (hasChildren ? 1 : 0);
+		return result;
 	}
 }

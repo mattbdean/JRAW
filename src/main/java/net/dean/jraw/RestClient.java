@@ -54,4 +54,5 @@ public class RestClient {
 	public HttpHelper getHttpHelper() {
 		return http;
 	}
+
 }

@@ -2,25 +2,30 @@ package net.dean.jraw;
 
 import junit.framework.Assert;
 import net.dean.jraw.models.Captcha;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 public class CaptchaTest {
-	private RedditClient reddit;
+	private static RedditClient reddit;
 
-	@BeforeTest
-	public void setUp() {
-		this.reddit = new RedditClient(TestUtils.getUserAgent(getClass()));
+	@BeforeClass
+	public static void setUp() {
+		reddit = TestUtils.client(CaptchaTest.class);
+		String[] credentials = TestUtils.getCredentials();
+		try {
+			reddit.login(credentials[0], credentials[1]);
+		} catch (NetworkException | ApiException e) {
+			Assert.fail(e.getMessage());
+		}
 	}
 
 	@Test
 	public void testNeedsCaptchaWorking() {
 		try {
-			String[] credentials = TestUtils.getCredentials();
-			reddit.login(credentials[0], credentials[1]);
 			reddit.needsCaptcha();
-		} catch (NetworkException | ApiException e) {
-			Assert.fail(e.getMessage());
+		} catch (NetworkException e) {
+			e.printStackTrace();
 		}
 	}
 
