@@ -61,7 +61,7 @@ public class EndpointAnalysis {
 
 		try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(exportFile), StandardCharsets.UTF_8))) {
 			// http://stackoverflow.com/a/4829998/1275092
-			bw.write(String.format("<!--- Generated %s. Do ./gradlew run to update. DO NOT MODIFY DIRECTLY -->\n",
+			bw.write(String.format("<!--- Generated %s. Do ./gradlew updateEndpoints to update. DO NOT MODIFY DIRECTLY -->\n",
 					dateFormat.format(new Date())));
 
 			// Write both maps
