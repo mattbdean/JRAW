@@ -191,7 +191,7 @@ public class Submission extends Thing implements Created, Distinguishable, Votab
 	@JsonInteraction(nullable = true)
 	public URL getThumbnail() {
 		String thumb = data.get("thumbnail").getTextValue();
-		if (thumb.equals("self")) {
+		if (thumb.equals("self") || thumb.isEmpty()) {
 			return null;
 		}
 

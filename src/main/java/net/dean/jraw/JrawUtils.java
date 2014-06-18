@@ -34,6 +34,7 @@ public final class JrawUtils {
 		try {
 			return new URL(href);
 		} catch (MalformedURLException e) {
+			System.err.println("Malformed URL: " + href);
 			e.printStackTrace();
 		}
 
@@ -93,5 +94,32 @@ public final class JrawUtils {
 		}
 
 		return args;
+	}
+
+	/**
+	 * Tests if the given string could possibly be the full name of an Thing. In order to pass, the first character must
+	 * be "t". The second character must be a digit in the range of 1-8. The third character must be an underscore. The
+	 * rest of the letters must be alphanumeric. See <a href="http://www.reddit.com/dev/api#fullnames">here</a> for more
+	 * information.
+	 *
+	 * @param name The String to test
+	 * @return If the name given could be a Thing's full name
+	 */
+	public static boolean isFullName(String name) {
+		char[] str = name.toCharArray();
+		if (str.length < 3)
+			throw new IndexOutOfBoundsException("Name must be at least three characters");
+
+		if (str[0] != 't') return false; // Start with 't'
+		if (!Character.isDigit(str[1])) return false; // Second letter is numeric
+
+		int val = Character.getNumericValue(str[1]);
+		if (val > 8 || val < 1) return false; // Second letter is between 1 and 8
+
+		if (str[2] != '_') return false; // Third letter is an underscore
+
+		for (int i = 3; i < str.length; i++) // Rest of the letters are numbers or digits
+			if (!Character.isLetterOrDigit(str[i]))	return false;
+		return true;
 	}
 }
