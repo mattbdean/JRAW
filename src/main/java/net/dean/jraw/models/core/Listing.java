@@ -112,7 +112,7 @@ public class Listing<T extends RedditObject> extends RedditObject {
 	 */
 	@JsonInteraction(nullable = true)
 	public String getBefore() {
-		return data("before", String.class);
+		return data("before");
 	}
 
 	/**
@@ -120,7 +120,7 @@ public class Listing<T extends RedditObject> extends RedditObject {
 	 */
 	@JsonInteraction(nullable = true)
 	public String getAfter() {
-		return data("after", String.class);
+		return data("after");
 	}
 
 	/**
@@ -128,7 +128,7 @@ public class Listing<T extends RedditObject> extends RedditObject {
 	 */
 	@JsonInteraction
 	public String getModhash() {
-		return data("modhash", String.class);
+		return data("modhash");
 	}
 
 	@Override

@@ -85,7 +85,7 @@ public class Account extends Thing implements Created {
 	 */
 	@JsonInteraction(nullable = true)
 	public String getModHash() {
-		return data("modhash", String.class);
+		return data("modhash");
 	}
 
 	/**

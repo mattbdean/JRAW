@@ -3,10 +3,16 @@ package net.dean.jraw.test;
 import junit.framework.Assert;
 import net.dean.jraw.NetworkException;
 import net.dean.jraw.RedditClient;
+import net.dean.jraw.models.EmbeddedMedia;
 import net.dean.jraw.models.JsonInteraction;
+import net.dean.jraw.models.OEmbed;
 import net.dean.jraw.models.RedditObject;
 import net.dean.jraw.models.core.Account;
+import net.dean.jraw.models.core.Listing;
 import net.dean.jraw.models.core.Submission;
+import net.dean.jraw.pagination.SimplePaginator;
+import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -116,4 +122,33 @@ public class ThingFieldTest {
 		}
 	}
 
+	@Test
+	public void testOEmbed() {
+		try {
+			SimplePaginator frontPage = reddit.getFrontPage();
+			Listing<Submission> submissions = frontPage.next();
+
+			submissions.getChildren().stream().filter(s -> s.getOEmbedMedia() != null).forEach(s -> {
+				OEmbed o = s.getOEmbedMedia();
+				fieldValidityCheck(o);
+			});
+		} catch (NetworkException e) {
+			Assert.fail(e.getMessage());
+		}
+	}
+
+	@Test
+	public void testEmbeddedMedia() {
+		try {
+			SimplePaginator frontPage = reddit.getFrontPage();
+			Listing<Submission> submissions = frontPage.next();
+
+			submissions.getChildren().stream().filter(s -> s.getEmbeddedMedia() != null).forEach(s -> {
+				EmbeddedMedia m = s.getEmbeddedMedia();
+				fieldValidityCheck(m);
+			});
+		} catch (NetworkException e) {
+			Assert.fail(e.getMessage());
+		}
+	}
 }

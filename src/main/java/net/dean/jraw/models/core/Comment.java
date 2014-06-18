@@ -28,7 +28,7 @@ public class Comment extends Thing implements Created, Distinguishable, Votable 
 	 */
 	@JsonInteraction(nullable = true)
 	public String getApprovedBy() {
-		return data("approved_by", String.class);
+		return data("approved_by");
 	}
 
 	/**
@@ -36,7 +36,7 @@ public class Comment extends Thing implements Created, Distinguishable, Votable 
 	 */
 	@JsonInteraction
 	public String getAuthor() {
-		return data("author", String.class);
+		return data("author");
 	}
 
 	/**
@@ -44,8 +44,8 @@ public class Comment extends Thing implements Created, Distinguishable, Votable 
 	 */
 	@JsonInteraction
 	public Flair getAuthorFlair() {
-		return new Flair(data("author_flair_css_class", String.class),
-				data("author_flair_text", String.class));
+		return new Flair(data("author_flair_css_class"),
+				data("author_flair_text"));
 	}
 
 	/**
@@ -53,7 +53,7 @@ public class Comment extends Thing implements Created, Distinguishable, Votable 
 	 */
 	@JsonInteraction(nullable = true)
 	public String getBannedBy() {
-		return data("banned_by", String.class);
+		return data("banned_by");
 	}
 
 	/**
@@ -61,7 +61,7 @@ public class Comment extends Thing implements Created, Distinguishable, Votable 
 	 */
 	@JsonInteraction
 	public String getBody() {
-		return data("body", String.class);
+		return data("body");
 	}
 
 	/**
@@ -69,7 +69,7 @@ public class Comment extends Thing implements Created, Distinguishable, Votable 
 	 */
 	@JsonInteraction
 	public String getBodyHtml() {
-		return data("body", String.class);
+		return data("body");
 	}
 
 	/**
@@ -107,7 +107,7 @@ public class Comment extends Thing implements Created, Distinguishable, Votable 
 	 */
 	@JsonInteraction(nullable = true)
 	public String getSubmissionAuthor() {
-		return data("link_author", String.class);
+		return data("link_author");
 	}
 
 	/**
@@ -123,7 +123,7 @@ public class Comment extends Thing implements Created, Distinguishable, Votable 
 	 */
 	@JsonInteraction
 	public String getSubmissionId() {
-		return data("link_id", String.class);
+		return data("link_id");
 	}
 
 	/**
@@ -131,7 +131,7 @@ public class Comment extends Thing implements Created, Distinguishable, Votable 
 	 */
 	@JsonInteraction(nullable = true)
 	public String getSubmissionTitle() {
-		return data("link_title", String.class);
+		return data("link_title");
 	}
 
 	/**
@@ -139,7 +139,7 @@ public class Comment extends Thing implements Created, Distinguishable, Votable 
 	 */
 	@JsonInteraction(nullable = true)
 	public URL getUrl() {
-		String url = data("link_url", String.class);
+		String url = data("link_url");
 		if (url != null) {
 			return JrawUtils.newUrl(url);
 		}
@@ -160,7 +160,7 @@ public class Comment extends Thing implements Created, Distinguishable, Votable 
 	 */
 	@JsonInteraction
 	public String getParentId() {
-		return data("parent_id", String.class);
+		return data("parent_id");
 	}
 
 	/**
@@ -184,7 +184,7 @@ public class Comment extends Thing implements Created, Distinguishable, Votable 
 	 */
 	@JsonInteraction
 	public String getSubredditName() {
-		return data("subreddit", String.class);
+		return data("subreddit");
 	}
 
 	/**
@@ -192,7 +192,7 @@ public class Comment extends Thing implements Created, Distinguishable, Votable 
 	 */
 	@JsonInteraction
 	public String getSubredditId() {
-		return data("subreddit_id", String.class);
+		return data("subreddit_id");
 	}
 
 	@Override

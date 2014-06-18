@@ -48,7 +48,7 @@ public class Submission extends Thing implements Created, Distinguishable, Votab
 	 */
 	@JsonInteraction
 	public String getAuthor() {
-		return data("author", String.class);
+		return data("author");
 	}
 
 	/**
@@ -56,8 +56,8 @@ public class Submission extends Thing implements Created, Distinguishable, Votab
 	 */
 	@JsonInteraction
 	public Flair getAuthorFlair() {
-		return new Flair(data("author_flair_css_class", String.class),
-				data("author_flair_text", String.class));
+		return new Flair(data("author_flair_css_class"),
+				data("author_flair_text"));
 	}
 
 	/**
@@ -73,7 +73,7 @@ public class Submission extends Thing implements Created, Distinguishable, Votab
 	 */
 	@JsonInteraction
 	public String getDomain() {
-		return data("domain", String.class);
+		return data("domain");
 	}
 
 	/**
@@ -106,19 +106,26 @@ public class Submission extends Thing implements Created, Distinguishable, Votab
 	 */
 	@JsonInteraction
 	public Flair getSubmissionFlair() {
-		return new Flair(data("link_flair_css_class", String.class),
-				data("link_flair_text", String.class));
+		return new Flair(data("link_flair_css_class"),
+				data("link_flair_text"));
 	}
 
 
 	// TODO "media" and "embed_media" objects
-//	/** Used for streaming video. Detailed information about the video and its origins. */
-//  @JsonInteraction
-//	public Object media;
-//
-//	/** Used for streaming video. Technical embed specific information is found here. */
-//  @JsonInteraction
-//	public Object media_embed;
+	/** Used for streaming video. Detailed information about the video and its origins. */
+	@JsonInteraction
+	public EmbeddedMedia getEmbeddedMedia() {
+		return new EmbeddedMedia(data.get("media_embed"));
+	}
+
+	/** Used for streaming video. Technical embed specific information is found here. */
+	@JsonInteraction
+	public OEmbed getOEmbedMedia() {
+		if (!data.has("media")) return null;
+		if (data.get("media").size() == 0) return null;
+
+		return new OEmbed(data.get("media").get("oembed"));
+	}
 
 	/**
 	 * The number of comments that belong to this link. Includes removed comments.
@@ -158,7 +165,7 @@ public class Submission extends Thing implements Created, Distinguishable, Votab
 	 */
 	@JsonInteraction
 	public String getSelftext() {
-		return data("selftext", String.class);
+		return data("selftext");
 	}
 
 	/**
@@ -166,7 +173,7 @@ public class Submission extends Thing implements Created, Distinguishable, Votab
 	 */
 	@JsonInteraction
 	public String getSelftextHtml() {
-		return data("selftext_html", String.class);
+		return data("selftext_html");
 	}
 
 	/**
@@ -174,7 +181,7 @@ public class Submission extends Thing implements Created, Distinguishable, Votab
 	 */
 	@JsonInteraction
 	public String getSubredditName() {
-		return data("subreddit", String.class);
+		return data("subreddit");
 	}
 
 	/**
@@ -182,7 +189,7 @@ public class Submission extends Thing implements Created, Distinguishable, Votab
 	 */
 	@JsonInteraction
 	public String getSubredditId() {
-		return data("subreddit_id", String.class);
+		return data("subreddit_id");
 	}
 
 	/**
@@ -203,7 +210,7 @@ public class Submission extends Thing implements Created, Distinguishable, Votab
 	 */
 	@JsonInteraction
 	public String getTitle() {
-		return data("title", String.class);
+		return data("title");
 	}
 
 	/**

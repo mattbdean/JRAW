@@ -32,6 +32,10 @@ public abstract class RedditObject {
 	 */
 	public abstract ThingType getType();
 
+	public String data(String name) {
+		return data(name, String.class);
+	}
+
 	@SuppressWarnings("unchecked")
 	public <T> T data(String name, Class<T> type) {
 		if (nodeCache.containsKey(name)) {
@@ -72,7 +76,7 @@ public abstract class RedditObject {
 	 */
 	@JsonInteraction
 	public String getId() {
-		return data("id", String.class);
+		return data("id");
 	}
 
 	/**
@@ -80,7 +84,7 @@ public abstract class RedditObject {
 	 */
 	@JsonInteraction
 	public String getName() {
-		return data("name", String.class);
+		return data("name");
 	}
 
 	public JsonNode getDataNode() {
