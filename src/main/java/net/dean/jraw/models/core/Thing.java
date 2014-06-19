@@ -1,5 +1,6 @@
 package net.dean.jraw.models.core;
 
+import net.dean.jraw.models.JsonInteraction;
 import net.dean.jraw.models.RedditObject;
 import org.codehaus.jackson.JsonNode;
 
@@ -20,4 +21,28 @@ public abstract class Thing extends RedditObject {
 		super(dataNode);
 	}
 
+	/**
+	 * Gets this Thing's full identifier, e.g. "8xwlg"
+	 */
+	@JsonInteraction
+	public String getId() {
+		return data("id");
+	}
+
+	/**
+	 * Gets the fullname of this Thing, e.g. "t1_c3v7f8u"
+	 */
+	@JsonInteraction
+	public String getName() {
+		return data("name");
+	}
+
+	@Override
+	public String toString() {
+		return "Thing {" +
+				"getType()=" + getType() +
+				", getId()=" + getId() +
+				", getName()=" + getName() +
+				'}';
+	}
 }

@@ -13,7 +13,7 @@ import java.util.List;
  * is most commonly found as the last element of a Listing in the JSON response.
  * See <a href="https://github.com/reddit/reddit/wiki/JSON#more">here</a> for more information.
  */
-public class More extends RedditObject {
+public class More extends Thing {
 
 	/**
 	 * Instantiates a new More

@@ -5,6 +5,9 @@ import org.codehaus.jackson.JsonNode;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * This class provides a way of retrieving data from a single JsonNode.
+ */
 public abstract class JsonModel {
 	protected JsonNode data;
 	private Map<String, Object> nodeCache;
@@ -70,5 +73,11 @@ public abstract class JsonModel {
 		JsonModel that = (JsonModel) o;
 
 		return data.equals(that.data);
+	}
+
+
+	@Override
+	public int hashCode() {
+		return data.hashCode();
 	}
 }
