@@ -8,7 +8,7 @@
 
 A UML diagram of the models look like this:
 
-![UML](https://i.imgur.com/kpMfGrT.png)
+![UML](https://i.imgur.com/I9TXIaT.png)
 
 ####Data Retrieval
 
