@@ -9,7 +9,7 @@ import java.net.URL;
  * Represents media provided by an oEmbed-style JSON object. Documentation in this class is borrowed heavily from the
  * <a href="http://oembed.com/#section2.3">oEmbed website</a>.
  */
-public class OEmbed extends RedditObject {
+public class OEmbed extends JsonModel {
 
 	/**
 	 * Instantiates a new OEmbed object
@@ -154,11 +154,6 @@ public class OEmbed extends RedditObject {
 	@JsonInteraction(nullable = true)
 	public String getHtml() {
 		return data("html");
-	}
-
-	@Override
-	public ThingType getType() {
-		return ThingType.MISC;
 	}
 
 	/**

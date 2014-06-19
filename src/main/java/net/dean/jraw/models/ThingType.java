@@ -40,9 +40,7 @@ public enum ThingType {
 
 	LISTING("Listing"),
 
-	MORE("more"),
-
-	MISC("");
+	MORE("more");
 
 
 	/**

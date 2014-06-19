@@ -3,10 +3,7 @@ package net.dean.jraw.test;
 import junit.framework.Assert;
 import net.dean.jraw.NetworkException;
 import net.dean.jraw.RedditClient;
-import net.dean.jraw.models.EmbeddedMedia;
-import net.dean.jraw.models.JsonInteraction;
-import net.dean.jraw.models.OEmbed;
-import net.dean.jraw.models.RedditObject;
+import net.dean.jraw.models.*;
 import net.dean.jraw.models.core.Account;
 import net.dean.jraw.models.core.Listing;
 import net.dean.jraw.models.core.Submission;
@@ -21,6 +18,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ThingFieldTest {
 	private static final String SUBMISSION_ID = "92dd8";
@@ -31,7 +29,7 @@ public class ThingFieldTest {
 		reddit = TestUtils.client(ThingFieldTest.class);
 	}
 
-	static <T extends RedditObject> void fieldValidityCheck(T thing) {
+	static <T extends JsonModel> void fieldValidityCheck(T thing) {
 		List<Method> jsonInteractionMethods = getJsonInteractionMethods(thing.getClass());
 
 		try {
@@ -62,7 +60,7 @@ public class ThingFieldTest {
 	 * @param thingClass The class to search for
 	 * @return A list of fields that have the JsonAttribute annotation
 	 */
-	private static List<Method> getJsonInteractionMethods(Class<? extends RedditObject> thingClass) {
+	private static List<Method> getJsonInteractionMethods(Class<? extends JsonModel> thingClass) {
 		List<Method> methods = new ArrayList<>();
 
 		Class clazz = thingClass;
@@ -83,11 +81,7 @@ public class ThingFieldTest {
 			clazz = clazz.getSuperclass();
 		}
 
-		for (Method m : toObserve) {
-			if (m.isAnnotationPresent(JsonInteraction.class)) {
-				methods.add(m);
-			}
-		}
+		methods.addAll(toObserve.stream().filter(m -> m.isAnnotationPresent(JsonInteraction.class)).collect(Collectors.toList()));
 
 		return methods;
 	}

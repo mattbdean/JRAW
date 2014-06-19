@@ -2,7 +2,7 @@ package net.dean.jraw.models;
 
 import org.codehaus.jackson.JsonNode;
 
-public class EmbeddedMedia extends RedditObject {
+public class EmbeddedMedia extends JsonModel {
 
 	/**
 	 * Instantiates a new EmbeddedMedia
@@ -11,11 +11,6 @@ public class EmbeddedMedia extends RedditObject {
 	 */
 	public EmbeddedMedia(JsonNode mediaEmbedNode) {
 		super(mediaEmbedNode);
-	}
-
-	@Override
-	public ThingType getType() {
-		return ThingType.MISC;
 	}
 
 	/**

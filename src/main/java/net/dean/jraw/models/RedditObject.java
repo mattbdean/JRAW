@@ -12,9 +12,7 @@ import java.util.Map;
  * However, in this particular project, a RedditObject is simply a carrier of a JsonNode. All classes that extend RedditObject
  * are simply interfaces to grab data from this JsonNode.
  */
-public abstract class RedditObject {
-	protected JsonNode data;
-	private Map<String, Object> nodeCache;
+public abstract class RedditObject extends JsonModel {
 
 	/**
 	 * Instantiates a new RedditObject
@@ -22,8 +20,7 @@ public abstract class RedditObject {
 	 * @param dataNode The node to parse data from
 	 */
 	public RedditObject(JsonNode dataNode) {
-		this.data = dataNode;
-		this.nodeCache = new HashMap<>();
+		super(dataNode);
 	}
 
 	/**
@@ -31,45 +28,6 @@ public abstract class RedditObject {
 	 * ${@link net.dean.jraw.models.core.Account} class will always return ${@link net.dean.jraw.models.ThingType#ACCOUNT}.
 	 */
 	public abstract ThingType getType();
-
-	public String data(String name) {
-		return data(name, String.class);
-	}
-
-	@SuppressWarnings("unchecked")
-	public <T> T data(String name, Class<T> type) {
-		if (nodeCache.containsKey(name)) {
-			Object cachedObject = nodeCache.get(name);
-			if (!cachedObject.getClass().equals(type)) {
-				System.err.printf("Cached object and return type did not match for \"%s\" (wanted %s, got %s)\n",
-						name, type, cachedObject.getClass());
-			}
-			return (T) nodeCache.get(name);
-		}
-
-		if (!data.has(name)) {
-			return null;
-		}
-
-		JsonNode node = data.get(name);
-
-		T returnVal = null;
-
-		if (type.equals(String.class))
-			returnVal = (T) node.asText();
-		else if (type.equals(Boolean.class))
-			returnVal = (T) Boolean.valueOf(node.asBoolean());
-		else if (type.equals(Double.class))
-			returnVal = (T) Double.valueOf(node.asDouble());
-		else if (type.equals(Integer.class))
-			returnVal = (T) Integer.valueOf(node.asInt());
-		else if (type.equals(Long.class))
-			returnVal = (T) Long.valueOf(node.asLong());
-
-		nodeCache.put(name, returnVal);
-
-		return returnVal;
-	}
 
 	/**
 	 * Gets this Thing's full identifier, e.g. "8xwlg"
@@ -87,10 +45,6 @@ public abstract class RedditObject {
 		return data("name");
 	}
 
-	public JsonNode getDataNode() {
-		return data;
-	}
-
 	@Override
 	public String toString() {
 		return "RedditObject {" +
@@ -98,17 +52,6 @@ public abstract class RedditObject {
 				", getId()=" + getId() +
 				", getName()=" + getName() +
 				'}';
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-
-		RedditObject that = (RedditObject) o;
-
-		return data.equals(that.data);
-
 	}
 
 	@Override
