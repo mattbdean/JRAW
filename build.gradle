@@ -33,13 +33,4 @@ jar {
     destinationDir = new File(project.buildDir, "releases")
 }
 
-// Calling this task will Jar the classes and gzip the sources
-task release(type: Tar, dependsOn: jar) {
-    compression = Compression.GZIP
-    baseName = project.name
-    appendix = "src"
-    destinationDir = new File(project.buildDir, "releases")
-    from("src")
-}
-
 defaultTasks "test"
