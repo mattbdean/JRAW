@@ -1,6 +1,8 @@
 package net.dean.jraw.models;
 
-import net.dean.jraw.*;
+import net.dean.jraw.ApiException;
+import net.dean.jraw.JrawUtils;
+import net.dean.jraw.RedditClient;
 import net.dean.jraw.endpointgen.EndpointImplementation;
 import net.dean.jraw.http.HttpVerb;
 import net.dean.jraw.http.NetworkException;
@@ -181,6 +183,13 @@ public class LoggedInAccount extends Account {
 		));
 	}
 
+	@EndpointImplementation(uris = "/api/sendreplies")
+	public RestResponse setSendRepliesToInbox(Submission s, boolean send) throws NetworkException, ApiException {
+		return genericPost("/api/sendreplies", JrawUtils.args(
+				"id", s.getId(),
+				"state", Boolean.toString(send)
+		));
+	}
 
 	/**
 	 * Executes a generic POST request that returns a RedditResponse. Used primarily for convenience and standardization

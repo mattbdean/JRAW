@@ -12,28 +12,28 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 public class PaginationTest {
-	private static RedditClient client;
+	private static RedditClient reddit;
 
 	@BeforeClass
 	public static void setUp() {
-		client = TestUtils.client(PaginationTest.class);
+		reddit = TestUtils.client(PaginationTest.class);
 	}
 
 	@Test
 	public void testFrontPage() throws NetworkException {
-		SimplePaginator frontPage = client.getFrontPage();
+		SimplePaginator frontPage = reddit.getFrontPage();
 		commonTest(frontPage);
 	}
 
 	@Test
 	public void testSubreddit() throws NetworkException {
-		SimplePaginator pics = client.getSubreddit("pics");
+		SimplePaginator pics = reddit.getSubreddit("pics");
 		commonTest(pics);
 	}
 
 	@Test
 	public void testSubmitted() throws NetworkException {
-		UserPaginatorSubmission paginator = client.getUserPaginator("Unidan", Where.SUBMITTED);
+		UserPaginatorSubmission paginator = reddit.getUserPaginator("Unidan", Where.SUBMITTED);
 		commonTest(paginator);
 	}
 

@@ -20,7 +20,7 @@ import java.util.Optional;
 public class AccountTest {
 	// Array length 2 where credentials[0] is the username and credentials[1] is the password
 	private static String[] credentials;
-	private static RedditClient redditClient;
+	private static RedditClient reddit;
 	private static LoggedInAccount account;
 
 	@BeforeClass
@@ -31,13 +31,13 @@ public class AccountTest {
 
 		credentials = TestUtils.getCredentials();
 
-		redditClient = TestUtils.client(AccountTest.class);
+		reddit = TestUtils.client(AccountTest.class);
 	}
 
 	@Test
 	public void login() {
 		try {
-			account = redditClient.login(credentials[0], credentials[1]);
+			account = reddit.login(credentials[0], credentials[1]);
 			Assert.assertNotNull(account, "The account was null");
 			ThingFieldTest.fieldValidityCheck(account);
 		} catch (NetworkException | ApiException e) {
@@ -48,7 +48,7 @@ public class AccountTest {
 	@Test
 	public void getUserNotLoggedIn() {
 		try {
-			Account acc = redditClient.getUser("thatJavaNerd");
+			Account acc = reddit.getUser("thatJavaNerd");
 			Assert.assertNotNull(acc, "The account was null");
 		} catch (NetworkException e) {
 			Assert.fail(e.getMessage());
@@ -77,7 +77,7 @@ public class AccountTest {
 	@Test(dependsOnMethods = "login")
 	public void testVote() {
 		try {
-			Submission submission = redditClient.getSubmission("28d6vv");
+			Submission submission = reddit.getSubmission("28d6vv");
 			account.vote(submission, VoteDirection.NO_VOTE);
 		} catch (NetworkException | ApiException e) {
 			Assert.fail(e.getMessage());
@@ -87,10 +87,10 @@ public class AccountTest {
 	@Test(dependsOnMethods = "login")
 	public void testSaveSubmission() {
 		try {
-			Submission submission = redditClient.getSubmission("28d6vv");
+			Submission submission = reddit.getSubmission("28d6vv");
 			account.save(submission);
 
-			UserPaginatorSubmission paginator = redditClient.getUserPaginator(account.getName(), Where.SAVED);
+			UserPaginatorSubmission paginator = reddit.getUserPaginator(account.getName(), Where.SAVED);
 			List<Submission> saved = paginator.next().getChildren();
 
 			for (Submission s : saved) {
@@ -109,10 +109,10 @@ public class AccountTest {
 	@Test(dependsOnMethods = "testSaveSubmission")
 	public void testUnsaveSubmission() {
 		try {
-			Submission submission = redditClient.getSubmission("28d6vv");
+			Submission submission = reddit.getSubmission("28d6vv");
 			account.unsave(submission);
 
-			UserPaginatorSubmission paginator = redditClient.getUserPaginator(account.getName(), Where.SAVED);
+			UserPaginatorSubmission paginator = reddit.getUserPaginator(account.getName(), Where.SAVED);
 			List<Submission> saved = paginator.next().getChildren();
 
 			// Search for the submission in the saved list

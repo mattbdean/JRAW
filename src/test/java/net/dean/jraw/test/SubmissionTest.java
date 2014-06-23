@@ -1,7 +1,9 @@
 package net.dean.jraw.test;
 
+import net.dean.jraw.ApiException;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.NetworkException;
+import net.dean.jraw.models.LoggedInAccount;
 import net.dean.jraw.models.core.Comment;
 import net.dean.jraw.models.core.Listing;
 import net.dean.jraw.models.core.Submission;
@@ -14,17 +16,17 @@ import static org.testng.Assert.assertNotNull;
 
 public class SubmissionTest {
 	private static final String ID = "92dd8";
-	private RedditClient redditClient;
+	private RedditClient reddit;
 
 	@BeforeClass
 	public void setUp() {
-		redditClient = TestUtils.client(SubmissionTest.class);
+		reddit = TestUtils.client(SubmissionTest.class);
 	}
 
 	@Test
 	public void testCommentsNotNull() {
 		try {
-			Submission submission = redditClient.getSubmission(ID);
+			Submission submission = reddit.getSubmission(ID);
 			assertNotNull(submission);
 
 			Listing<Comment> comments = submission.getComments();
@@ -42,10 +44,21 @@ public class SubmissionTest {
 	@Test
 	public void testRepliesNotNull() {
 		try {
-			Submission s = redditClient.getSubmission(ID);
+			Submission s = reddit.getSubmission(ID);
 
 			Comment c = s.getComments().getChildren().get(0);
 			System.out.println(c.getReplies().getChildren().get(0).getBody());
+		} catch (NetworkException e) {
+			Assert.fail(e.getMessage());
+		}
+	}
+
+	@Test
+	public void testSendRepliesToInbox() throws ApiException {
+		try {
+			Submission s = reddit.getSubmission(ID);
+			LoggedInAccount me = reddit.login(TestUtils.getCredentials()[0], TestUtils.getCredentials()[1]);
+			me.setSendRepliesToInbox(s, true);
 		} catch (NetworkException e) {
 			Assert.fail(e.getMessage());
 		}

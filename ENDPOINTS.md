@@ -1,4 +1,4 @@
-<!--- Generated 2014-06-17 at 19:03:28 EDT. Do ./gradlew run to update. DO NOT MODIFY DIRECTLY -->
+<!--- Generated 2014-06-23 at 15:28:11 EDT. Do ./gradlew updateEndpoints to update. DO NOT MODIFY DIRECTLY -->
 #Unimplemented
 ####account
 ~~~
@@ -55,7 +55,6 @@
 /api/morechildren
 /api/report
 /api/saved_categories.json
-/api/sendreplies
 /api/set_contest_mode
 /api/set_subreddit_sticky
 /api/store_visits
@@ -180,21 +179,22 @@
 #Implemented
 ####account
 ~~~
-/api/me.json
 /api/login
+/api/me.json
 ~~~
 
 ####captcha
 ~~~
+/api/needs_captcha.json
 /api/new_captcha
 /captcha/iden
-/api/needs_captcha.json
 ~~~
 
 ####links & comments
 ~~~
 /api/unsave
 /api/vote
+/api/sendreplies
 /api/save
 /api/submit
 ~~~
