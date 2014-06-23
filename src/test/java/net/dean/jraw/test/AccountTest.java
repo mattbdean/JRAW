@@ -1,9 +1,10 @@
 package net.dean.jraw.test;
 
 import net.dean.jraw.*;
+import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.models.LoggedInAccount;
 import net.dean.jraw.models.SubmissionType;
-import net.dean.jraw.models.VoteType;
+import net.dean.jraw.models.VoteDirection;
 import net.dean.jraw.models.core.Account;
 import net.dean.jraw.models.core.Submission;
 import net.dean.jraw.pagination.UserPaginatorSubmission;
@@ -77,7 +78,7 @@ public class AccountTest {
 	public void testVote() {
 		try {
 			Submission submission = redditClient.getSubmission("28d6vv");
-			account.vote(submission, VoteType.NO_VOTE);
+			account.vote(submission, VoteDirection.NO_VOTE);
 		} catch (NetworkException | ApiException e) {
 			Assert.fail(e.getMessage());
 		}
@@ -90,7 +91,7 @@ public class AccountTest {
 			account.save(submission);
 
 			UserPaginatorSubmission paginator = redditClient.getUserPaginator(account.getName(), Where.SAVED);
-			List<Submission> saved = paginator.first().getChildren();
+			List<Submission> saved = paginator.next().getChildren();
 
 			for (Submission s : saved) {
 				if (s.getId().equals(submission.getId())) {
@@ -112,7 +113,7 @@ public class AccountTest {
 			account.unsave(submission);
 
 			UserPaginatorSubmission paginator = redditClient.getUserPaginator(account.getName(), Where.SAVED);
-			List<Submission> saved = paginator.first().getChildren();
+			List<Submission> saved = paginator.next().getChildren();
 
 			// Search for the submission in the saved list
 			saved.stream().filter(s -> s.getId().equals(submission.getId())).forEach(s -> Assert.fail("Found the submission after it was unsaved"));

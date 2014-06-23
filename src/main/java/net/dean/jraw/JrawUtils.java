@@ -20,6 +20,10 @@ public final class JrawUtils {
 
 	private static Logger logger = LoggerFactory.getLogger("JRAW");
 
+	/**
+	 * Gets the SLF4J logger used to log messages
+	 * @return The logger
+	 */
 	public static Logger logger() {
 		return logger;
 	}
@@ -60,9 +64,9 @@ public final class JrawUtils {
 	/**
 	 * Convenience method to combine a list of strings into a map. Sample usage:<br>
 	 * <br>
-	 * <code>
-	 * Map&lt;String, String&gt; mapOfArguments = args("key1", "value1", "key2", "value2");
-	 * </code><br><br>
+	 * <pre>{@code
+	 * Map<String, String> mapOfArguments = args("key1", "value1", "key2", "value2");
+	 * }</pre>
 	 * would result in this:
 	 * <pre>
 	 * {@code
@@ -75,7 +79,7 @@ public final class JrawUtils {
 	 *
 	 * @param keysAndValues A list of objects to be turned into strings and condensed into a map. Must be of even length
 	 * @return A map of the given keys and values array
-	 * @throws IllegalArgumentException If the length of the string array is not even
+	 * @throws IllegalArgumentException If the amount of parameters is not even
 	 */
 	public static Map<String, String> args(Object... keysAndValues) {
 		if (keysAndValues.length % 2 != 0) {
@@ -98,9 +102,9 @@ public final class JrawUtils {
 
 	/**
 	 * Tests if the given string could possibly be the full name of an Thing. In order to pass, the first character must
-	 * be "t". The second character must be a digit in the range of 1-8. The third character must be an underscore. The
-	 * rest of the letters must be alphanumeric. See <a href="http://www.reddit.com/dev/api#fullnames">here</a> for more
-	 * information.
+	 * be "t", the second character must be a digit in the range of 1-8, the third character must be an underscore, and
+	 * the rest of the letters must be alphanumeric. See <a href="http://www.reddit.com/dev/api#fullnames">here</a> for
+	 * more information.
 	 *
 	 * @param name The String to test
 	 * @return If the name given could be a Thing's full name

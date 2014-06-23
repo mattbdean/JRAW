@@ -9,7 +9,8 @@ import java.util.Date;
  */
 public interface Created {
 	/**
-	 * Registration date in local time
+	 * Gets the registration date in local time
+	 * @return Registration date in local time
 	 */
 	@JsonInteraction
 	default Date getCreated() {
@@ -18,7 +19,8 @@ public interface Created {
 	}
 
 	/**
-	 * Registration date in UTC
+	 * Gets the registration date in UTC
+	 * @return Registration date in UTC
 	 */
 	@JsonInteraction
 	default Date getCreatedUtc() {

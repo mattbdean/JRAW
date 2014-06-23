@@ -1,23 +1,19 @@
-package net.dean.jraw;
+package net.dean.jraw.http;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Responsible for the simplification of the HttpHelper class' methods and returning RedditResponses
+ * This class provides a way to send RESTful HTTP requests and return {@link net.dean.jraw.http.RestResponse} objects
  */
 public class RestClient {
-	/**
-	 * The host to execute the requests on
-	 */
 	private final String host;
 
-	/**
-	 * The HttpHelper that will do all the basic HTTP requests
-	 */
+	/** The HttpHelper that will do all the basic HTTP requests */
 	protected HttpHelper http;
 
+	/** A list of RestRequests sent in the past */
 	protected List<RestRequest> history;
 
 	/**

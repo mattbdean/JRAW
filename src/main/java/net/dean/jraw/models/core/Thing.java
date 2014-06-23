@@ -23,6 +23,7 @@ public abstract class Thing extends RedditObject {
 
 	/**
 	 * Gets this Thing's full identifier, e.g. "8xwlg"
+	 * @return This Thing's full identifier
 	 */
 	@JsonInteraction
 	public String getId() {
@@ -30,19 +31,11 @@ public abstract class Thing extends RedditObject {
 	}
 
 	/**
-	 * Gets the fullname of this Thing, e.g. "t1_c3v7f8u"
+	 * Gets the full name of this Thing, e.g. "t1_c3v7f8u"
+	 * @return This Thing's full name
 	 */
 	@JsonInteraction
 	public String getName() {
 		return data("name");
-	}
-
-	@Override
-	public String toString() {
-		return "Thing {" +
-				"getType()=" + getType() +
-				", getId()=" + getId() +
-				", getName()=" + getName() +
-				'}';
 	}
 }

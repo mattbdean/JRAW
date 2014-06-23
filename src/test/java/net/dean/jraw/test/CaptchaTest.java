@@ -1,10 +1,10 @@
 package net.dean.jraw.test;
 
-import junit.framework.Assert;
 import net.dean.jraw.ApiException;
-import net.dean.jraw.NetworkException;
 import net.dean.jraw.RedditClient;
+import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.models.Captcha;
+import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 

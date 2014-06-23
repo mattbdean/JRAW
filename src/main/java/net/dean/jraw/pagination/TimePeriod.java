@@ -1,4 +1,4 @@
-package net.dean.jraw;
+package net.dean.jraw.pagination;
 
 public enum TimePeriod {
 	HOUR,

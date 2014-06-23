@@ -2,6 +2,10 @@ package net.dean.jraw.models;
 
 import net.dean.jraw.*;
 import net.dean.jraw.endpointgen.EndpointImplementation;
+import net.dean.jraw.http.HttpVerb;
+import net.dean.jraw.http.NetworkException;
+import net.dean.jraw.http.RestRequest;
+import net.dean.jraw.http.RestResponse;
 import net.dean.jraw.models.core.Account;
 import net.dean.jraw.models.core.Comment;
 import net.dean.jraw.models.core.Submission;
@@ -35,7 +39,8 @@ public class LoggedInAccount extends Account {
 	 * @param sendRepliesToInbox Whether to send all top level replies to the poster's inbox
 	 * @param resubmit           Whether the Reddit API will return an error if the link's URL has already been posted
 	 * @return A representation of the newly submitted Link
-	 * @throws net.dean.jraw.NetworkException If there was a problem sending the HTTP request
+	 * @throws net.dean.jraw.http.NetworkException If there was a problem sending the HTTP request
+	 * @throws net.dean.jraw.ApiException If the API returned an error
 	 */
 	public Submission submitContent(SubmissionType type, Optional<URL> url, Optional<String> selfText, String subreddit,
 	                                String title, boolean saveAfter, boolean sendRepliesToInbox, boolean resubmit) throws NetworkException, ApiException {
@@ -61,6 +66,7 @@ public class LoggedInAccount extends Account {
 	 * @param captchaAttempt     The user's attempt at the captcha
 	 * @return A representation of the newly submitted Link
 	 * @throws NetworkException If there was a problem sending the HTTP request
+	 * @throws net.dean.jraw.ApiException If the API returned an error
 	 */
 	@EndpointImplementation(uris = "/api/submit")
 	public Submission submitContent(SubmissionType type, Optional<URL> url, Optional<String> selfText, String subreddit,
@@ -107,12 +113,12 @@ public class LoggedInAccount extends Account {
 	 * deciding how to vote on content or amplifying a human's vote are not".
 	 *
 	 * @param s The submission to vote on
-	 * @param voteType How to vote
+	 * @param voteDirection How to vote
 	 * @throws NetworkException If there was a problem sending the HTTP request
 	 * @throws ApiException If the API returned an error
 	 */
-	public void vote(Submission s, VoteType voteType) throws NetworkException, ApiException {
-		vote(s.getName(), voteType);
+	public void vote(Submission s, VoteDirection voteDirection) throws NetworkException, ApiException {
+		vote(s.getName(), voteDirection);
 	}
 
 	/**
@@ -120,12 +126,12 @@ public class LoggedInAccount extends Account {
 	 * deciding how to vote on content or amplifying a human's vote are not".
 	 *
 	 * @param c The comment to vote on
-	 * @param voteType How to vote
+	 * @param voteDirection How to vote
 	 * @throws NetworkException If there was a problem sending the HTTP request
 	 * @throws ApiException If the API returned an error
 	 */
-	public void vote(Comment c, VoteType voteType) throws NetworkException, ApiException {
-		vote(c.getName(), voteType);
+	public void vote(Comment c, VoteDirection voteDirection) throws NetworkException, ApiException {
+		vote(c.getName(), voteDirection);
 	}
 
 	/**
@@ -133,14 +139,14 @@ public class LoggedInAccount extends Account {
 	 * deciding how to vote on content or amplifying a human's vote are not".
 	 *
 	 * @param fullName The submission or comment's full name to vote on
-	 * @param voteType How to vote
+	 * @param voteDirection How to vote
 	 * @throws NetworkException If there was a problem sending the HTTP request
 	 * @throws ApiException If the API returned an error
 	 */
 	@EndpointImplementation(uris = "/api/vote")
-	private void vote(String fullName, VoteType voteType) throws NetworkException, ApiException {
+	private void vote(String fullName, VoteDirection voteDirection) throws NetworkException, ApiException {
 		genericPost("/api/vote", JrawUtils.args(
-				"dir", voteType.getValue(),
+				"dir", voteDirection.getValue(),
 				"id", fullName
 		));
 	}

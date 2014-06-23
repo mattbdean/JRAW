@@ -1,11 +1,11 @@
 package net.dean.jraw.test;
 
-import junit.framework.Assert;
-import net.dean.jraw.NetworkException;
 import net.dean.jraw.RedditClient;
+import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.models.core.Comment;
 import net.dean.jraw.models.core.Listing;
 import net.dean.jraw.models.core.Submission;
+import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -34,6 +34,18 @@ public class SubmissionTest {
 
 			Comment first = comments.getChildren().get(0);
 			ThingFieldTest.fieldValidityCheck(first);
+		} catch (NetworkException e) {
+			Assert.fail(e.getMessage());
+		}
+	}
+
+	@Test
+	public void testRepliesNotNull() {
+		try {
+			Submission s = redditClient.getSubmission(ID);
+
+			Comment c = s.getComments().getChildren().get(0);
+			System.out.println(c.getReplies().getChildren().get(0).getBody());
 		} catch (NetworkException e) {
 			Assert.fail(e.getMessage());
 		}

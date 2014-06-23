@@ -1,9 +1,9 @@
 package net.dean.jraw.test;
 
-import junit.framework.Assert;
 import net.dean.jraw.ApiException;
-import net.dean.jraw.Constants;
 import net.dean.jraw.RedditClient;
+import net.dean.jraw.Version;
+import org.testng.Assert;
 import org.testng.SkipException;
 
 import java.net.URL;
@@ -41,7 +41,7 @@ public final class TestUtils {
 	}
 
 	public static String getUserAgent(Class<?> clazz) {
-		return clazz.getSimpleName() + " for JRAW v" + Constants.VERSION;
+		return clazz.getSimpleName() + " for JRAW v" + Version.get().formatted();
 	}
 
 	public static int randomInt() {

@@ -1,10 +1,11 @@
-package net.dean.jraw;
+package net.dean.jraw.http;
 
+import net.dean.jraw.ApiException;
+import net.dean.jraw.RedditObjectParser;
 import net.dean.jraw.models.RedditObject;
 import net.dean.jraw.models.core.Comment;
-import net.dean.jraw.models.core.Submission;
 import net.dean.jraw.models.core.Listing;
-import net.dean.jraw.models.core.Thing;
+import net.dean.jraw.models.core.Submission;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
@@ -22,16 +23,12 @@ import java.util.Scanner;
  * This class is used to show the result of a request to a RESTful web service, such as Reddit's JSON API.
  */
 public class RestResponse {
-	/**
-	 * The ObjectMapper used to map parse the response JSON
-	 */
+	/** The ObjectMapper used to read a JSON tree into a JsonNode */
 	protected static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
 	private RedditObjectParser redditObjectParser;
 
-	/**
-	 * A list of all thea headers received from the server
-	 */
+	/** A list of all thea headers received from the server */
 	private List<Header> headers;
 
 	/**
@@ -39,9 +36,7 @@ public class RestResponse {
 	 */
 	private JsonNode rootNode;
 
-	/**
-	 * The raw data of the response's content
-	 */
+	/** The raw data of the response's content */
 	private String raw;
 
 	private ApiException[] apiExceptions;
@@ -126,32 +121,10 @@ public class RestResponse {
 		return apiExceptions;
 	}
 
-	public int getRatelimitUsed() {
-		return getIntHeader("X-Ratelimit-Used");
-	}
-
-	public int getRatelimitRemaining() {
-		return getIntHeader("X-Ratelimit-Remaining");
-	}
-
-	public int getRatelimitReset() {
-		return getIntHeader("X-Ratelimit-Reset");
-	}
-
-	private int getIntHeader(String name) {
-		for (Header h : headers) {
-			if (h.getName().equals(name)) {
-				return Integer.parseInt(h.getValue());
-			}
-		}
-
-		return -1;
-	}
-
 	/**
 	 * Gets a Header object by name from the list of headers
 	 *
-	 * @param name The name of the header, such as <code>Content-Length</code>
+	 * @param name The name of the header, such as {@code Content-Length}
 	 * @return A Header object with a given name
 	 */
 	public Header getHeader(String name) {

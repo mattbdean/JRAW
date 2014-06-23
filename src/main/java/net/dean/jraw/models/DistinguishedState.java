@@ -49,6 +49,7 @@ public enum DistinguishedState {
 
 	/**
 	 * Gets the value that would be found in the JSON response
+	 * @return The value that would be found in the JSON response
 	 */
 	public String getJsonValue() {
 		return jsonValue;

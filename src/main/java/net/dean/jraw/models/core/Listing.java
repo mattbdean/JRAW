@@ -27,6 +27,7 @@ public class Listing<T extends RedditObject> extends RedditObject {
 	private Class<T> thingClass;
 
 	private List<T> children;
+	private More more;
 
 	/**
 	 * Whether this listing contains a "more" element in its children
@@ -44,7 +45,23 @@ public class Listing<T extends RedditObject> extends RedditObject {
 
 		this.thingClass = thingClass;
 		this.hasChildren = data.has("children");
-		this.children = new ArrayList<>();
+		initChildren();
+	}
+
+	private void initChildren() {
+		children = new ArrayList<>();
+
+		// rootNode is a JSON array
+		try {
+			for (JsonNode childNode : data.get("children")) {
+				if (childNode.get("kind").getTextValue().equalsIgnoreCase("more")) {
+					this.more = new More(childNode.get("data"));
+				}
+				children.add(PARSER.parse(childNode, thingClass));
+			}
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -54,44 +71,9 @@ public class Listing<T extends RedditObject> extends RedditObject {
 	 */
 	@JsonInteraction
 	public List<T> getChildren() {
-		if (hasChildren && children.size() > 0) {
-			// Already been populated
-			return children;
-		}
-
-		// JSON node has elements, but the children list has not been populated yet
-		List<T> things = new ArrayList<>();
-
-		if (!hasChildren) {
-			return things;
-		}
-
-		// rootNode is a JSON array
-		for (JsonNode childNode : data.get("children")) {
-			if (childNode.get("kind").getTextValue().equalsIgnoreCase("more")) {
-				// Ignore "more" objects, use getChildrenMore()
-				continue;
-			}
-			things.add(PARSER.parse(childNode, thingClass));
-		}
-
-		this.children = things;
-		return things;
+		return children;
 	}
 
-	/**
-	 * Whether or not this listing has a "more" element in its children
-	 */
-	@JsonInteraction
-	public Boolean hasMore() {
-		if (!hasChildren) {
-			return false;
-		}
-
-		JsonNode childrenNode = data.get("children");
-		// Lookup data->children->last element->kind and check if it equals "more"
-		return childrenNode.get(childrenNode.size() - 1).get("kind").getTextValue().equals(ThingType.MORE.getPrefix());
-	}
 
 	/**
 	 * Gets the "more" element (the last element in the children)
@@ -100,15 +82,12 @@ public class Listing<T extends RedditObject> extends RedditObject {
 	 */
 	@JsonInteraction(nullable = true)
 	public More getMoreChildren() {
-		if (!hasChildren || !hasMore()) {
-			return null;
-		}
-
-		return new More(data.get("children"));
+		return more;
 	}
 
 	/**
-	 * The full name of the listing that follows before this page, or null if there is no previous page
+	 * The full name of the Thing that follows before this page, or null if there is no previous page
+	 * @return The full name of the Thing that comes before this one
 	 */
 	@JsonInteraction(nullable = true)
 	public String getBefore() {
@@ -116,7 +95,8 @@ public class Listing<T extends RedditObject> extends RedditObject {
 	}
 
 	/**
-	 * The full name of the listing that follows after this page, or null if there is no following page
+	 * The full name of the Thing that follows after this page, or null if there is no following page
+	 * @return The full name of the Thing that comes after this page
 	 */
 	@JsonInteraction(nullable = true)
 	public String getAfter() {
@@ -125,6 +105,7 @@ public class Listing<T extends RedditObject> extends RedditObject {
 
 	/**
 	 * Not the same modhash provided upon login. You can reuse the modhash given upon login
+	 * @return A modhash
 	 */
 	@JsonInteraction
 	public String getModhash() {
@@ -144,11 +125,10 @@ public class Listing<T extends RedditObject> extends RedditObject {
 
 		Listing listing = (Listing) o;
 
-		if (hasChildren != listing.hasChildren) return false;
-		if (!children.equals(listing.children)) return false;
-		if (!thingClass.equals(listing.thingClass)) return false;
+		return hasChildren == listing.hasChildren &&
+				data.equals(listing.data) &&
+				thingClass.equals(listing.thingClass);
 
-		return true;
 	}
 
 	@Override

@@ -1,6 +1,6 @@
 package net.dean.jraw.pagination;
 
-import net.dean.jraw.NetworkException;
+import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.endpointgen.EndpointImplementation;
 import net.dean.jraw.models.core.Listing;
@@ -10,8 +10,8 @@ import net.dean.jraw.models.core.Submission;
  * This class is used to paginate through user posts or comments via /user/&lt;username&gt;/&lt;where&gt;.json
  */
 public class UserPaginatorSubmission extends AbstractPaginator<Submission> {
-	private String username;
-	private Where where;
+	private final String username;
+	private final Where where;
 
 	public UserPaginatorSubmission(RedditClient creator, String username, Where where) {
 		super(creator, Submission.class);
@@ -45,17 +45,7 @@ public class UserPaginatorSubmission extends AbstractPaginator<Submission> {
 		return username;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
-		invalidate();
-	}
-
 	public Where getWhere() {
 		return where;
-	}
-
-	public void setWhere(Where where) {
-		this.where = where;
-		invalidate();
 	}
 }

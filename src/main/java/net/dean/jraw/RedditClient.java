@@ -1,13 +1,13 @@
 package net.dean.jraw;
 
 import net.dean.jraw.endpointgen.EndpointImplementation;
+import net.dean.jraw.http.*;
 import net.dean.jraw.models.Captcha;
 import net.dean.jraw.models.LoggedInAccount;
+import net.dean.jraw.models.Sorting;
 import net.dean.jraw.models.core.Account;
 import net.dean.jraw.models.core.Submission;
-import net.dean.jraw.pagination.SimplePaginator;
-import net.dean.jraw.pagination.UserPaginatorSubmission;
-import net.dean.jraw.pagination.Where;
+import net.dean.jraw.pagination.*;
 import org.apache.http.Header;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.cookie.Cookie;
@@ -25,24 +25,16 @@ import java.util.Scanner;
  */
 public class RedditClient extends RestClient {
 
-	/**
-	 * The host that will be used to execute basic HTTP requests.
-	 */
+	/** The host that will be used to execute basic HTTP requests */
 	public static final String HOST = "www.reddit.com";
 
-	/**
-	 * The host that will be used to execute secure HTTP requests
-	 */
+	/** The host that will be used to execute secure HTTP requests */
 	public static final String HOST_SSL = "ssl.reddit.com";
 
-	/**
-	 * The name of the header that will be assigned upon a successful login
-	 */
+	/** The name of the header that will be assigned upon a successful login */
 	private static final String HEADER_MODHASH = "X-Modhash";
 
-	/**
-	 * The amount of requests allowed per minute without using OAuth
-	 */
+	/** The amount of requests allowed per minute without using OAuth */
 	private static final int REQUESTS_PER_MINUTE = 30;
 
 	/**
@@ -109,9 +101,13 @@ public class RedditClient extends RestClient {
 					// Make sure that we leave enough time to make sure we have 30 requests max in the last minute
 					LocalDateTime before = history.get(i - 1).getExecuted();
 					Duration timeToWait = Duration.between(executed, before);
+					long millis = timeToWait.toMillis();
+					if (millis <= 0) {
+						millis = -millis;
+					}
 					try {
 						// Wait the time between the two times
-						Thread.sleep(timeToWait.toMillis());
+						Thread.sleep(millis);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
@@ -132,7 +128,8 @@ public class RedditClient extends RestClient {
 	 * @param username The username to log in to
 	 * @param password The password of the username
 	 * @return An Account object that has the same username as the username parameter
-	 * @throws NetworkException If there was an error returned in the JSON
+	 * @throws NetworkException If there was a problem sending the request
+	 * @throws ApiException If the API returned an error (most likely because of an incorrect password)
 	 */
 	@EndpointImplementation(uris = "/api/login")
 	public LoggedInAccount login(String username, String password) throws NetworkException, ApiException {
@@ -192,11 +189,11 @@ public class RedditClient extends RestClient {
 
 	/**
 	 * Checks if the current user needs a captcha to do specific actions such as submit links and compose private messages.
-	 * This will always be false if there is no logged in user. Usually, this method will return <code>true</code> if
-	 * the current logged in user has less than 10 link karma
+	 * This will always be true if there is no logged in user. Usually, this method will return {@code true} if
+	 * the current logged in user has more than 10 link karma
 	 *
 	 * @return True if the user needs a captcha to do a specific action, else if not or not logged in.
-	 * @throws NetworkException
+	 * @throws NetworkException If there was an issue sending the HTTP request
 	 */
 	@EndpointImplementation(uris = "/api/needs_captcha.json")
 	public boolean needsCaptcha() throws NetworkException {
@@ -286,27 +283,44 @@ public class RedditClient extends RestClient {
 		}
 	}
 
+	public SimplePaginator getFrontPage() {
+		return SimplePaginator.ofFrontPage(this, AbstractPaginator.DEFAULT_SORTING, AbstractPaginator.DEFAULT_TIME_PERIOD);
+	}
+
 	/**
 	 * Gets a Paginator to browse the front page of Reddit
 	 *
+	 * @param sorting The sorting to use
+	 * @param timePeriod The time period to use
 	 * @return A new SimplePaginator for the front page
 	 */
-	public SimplePaginator getFrontPage() {
-		return SimplePaginator.ofFrontPage(this);
+	public SimplePaginator getFrontPage(Sorting sorting, TimePeriod timePeriod) {
+		return SimplePaginator.ofFrontPage(this, sorting, timePeriod);
+	}
+
+	/**
+	 * Gets a Paginator to browse a particular subreddit
+	 * @param subreddit The subreddit to browse
+	 * @return A new Paginator with the default sorting and time period
+	 */
+	public SimplePaginator getSubreddit(String subreddit) {
+		return SimplePaginator.ofSubreddit(this, subreddit, AbstractPaginator.DEFAULT_SORTING, AbstractPaginator.DEFAULT_TIME_PERIOD);
 	}
 
 	/**
 	 * Gets a Paginator to browse a particular subreddit
 	 *
 	 * @param subreddit The subreddit to browse
+	 * @param sorting The sorting to use
+	 * @param timePeriod The time period to use
 	 * @return A new SimplePaginator for a particular subreddit
 	 */
-	public SimplePaginator getSubreddit(String subreddit) {
-		return SimplePaginator.ofSubreddit(this, subreddit);
+	public SimplePaginator getSubreddit(String subreddit, Sorting sorting, TimePeriod timePeriod) {
+		return SimplePaginator.ofSubreddit(this, subreddit, sorting, timePeriod);
 	}
 
 	/**
-	 * Gets a Paginator to interact with /user/&lt;username&gt;/&lt;where&gt; API endpoints
+	 * Gets a Paginator to interact with {@literal /usr/<username>/<where>} API endpoints
 	 *
 	 * @param username The username to use
 	 * @param where Where to browse

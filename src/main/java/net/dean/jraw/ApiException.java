@@ -2,12 +2,12 @@ package net.dean.jraw;
 
 public class ApiException extends Exception {
 	protected final String constant;
-	protected final String humanReadable;
+	protected final String explanation;
 	protected final String third;
 
-	public ApiException(String constant, String humanReadable, String third) {
-		super(String.format("API returned error: \"%s\" (\"%s\")", constant, humanReadable));
-		this.humanReadable = humanReadable;
+	public ApiException(String constant, String explanation, String third) {
+		super(String.format("API returned error: \"%s\" (\"%s\")", constant, explanation));
+		this.explanation = explanation;
 		this.constant = constant;
 		this.third = third;
 	}
@@ -16,8 +16,8 @@ public class ApiException extends Exception {
 		return constant;
 	}
 
-	public String getHumanReadable() {
-		return humanReadable;
+	public String getExplanation() {
+		return explanation;
 	}
 
 	public String getThird() {

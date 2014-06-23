@@ -24,7 +24,8 @@ public class Comment extends Thing implements Created, Distinguishable, Votable 
 	}
 
 	/**
-	 * Who approved this comment, nor null if the logged in user is not a moderator
+	 * Gets who approved this comment, nor null if the logged in user is not a moderator
+	 * @return Who approved this comment
 	 */
 	@JsonInteraction(nullable = true)
 	public String getApprovedBy() {
@@ -32,7 +33,8 @@ public class Comment extends Thing implements Created, Distinguishable, Votable 
 	}
 
 	/**
-	 * The account name of the poster
+	 * Gets the name of the account that posted this comment
+	 * @return The name the account that posted this comment
 	 */
 	@JsonInteraction
 	public String getAuthor() {
@@ -41,6 +43,7 @@ public class Comment extends Thing implements Created, Distinguishable, Votable 
 
 	/**
 	 * The flair of the author. Subreddit specific.
+	 * @return The subreddit-specific flair of the author
 	 */
 	@JsonInteraction
 	public Flair getAuthorFlair() {
@@ -50,6 +53,7 @@ public class Comment extends Thing implements Created, Distinguishable, Votable 
 
 	/**
 	 * Who removed this comment, or null if you are not a mod
+	 * @return Who removed this comment
 	 */
 	@JsonInteraction(nullable = true)
 	public String getBannedBy() {
@@ -57,7 +61,8 @@ public class Comment extends Thing implements Created, Distinguishable, Votable 
 	}
 
 	/**
-	 * The raw, unformatted text. Includes markdown and escaped &lt;, &gt;, and &amp;s
+	 * The raw, unformatted text. Includes markdown and escaped HTML entities
+	 * @return Raw, unformatted text
 	 */
 	@JsonInteraction
 	public String getBody() {
@@ -65,7 +70,8 @@ public class Comment extends Thing implements Created, Distinguishable, Votable 
 	}
 
 	/**
-	 * The formatted HTML will display on Reddit
+	 * The formatted HTML that will be displayed on Reddit
+	 * @return Formatted HTML
 	 */
 	@JsonInteraction
 	public String getBodyHtml() {
@@ -73,13 +79,16 @@ public class Comment extends Thing implements Created, Distinguishable, Votable 
 	}
 
 	/**
-	 * The edit date in UTC, or null if it has not been edited
+	 * The edit date in UTC, or null if it has not been edited. Note: the Reddit API will return {@code true} for some
+	 * old edited comments.
+	 *
+	 * @return The edit date in UTC, or null if it has not been edited
 	 */
 	@JsonInteraction
 	public Date getEditedDate() {
 		JsonNode edited = data.get("edited");
 		if (edited.isBoolean()) {
-			// value of false, but Date cannot be false
+			// API returns true for some old comments
 			return null;
 		}
 
@@ -87,15 +96,34 @@ public class Comment extends Thing implements Created, Distinguishable, Votable 
 	}
 
 	/**
-	 * If the comment has been edited before
+	 * Checks if the comment has been edited before. This method evaluates the value of the "edited" data node. If its
+	 * value is a boolean, then it is returned. If its value is a long, {@code true} is returned. Null if else
+	 *
+	 * @return If this comment has been edited before
 	 */
 	@JsonInteraction
 	public Boolean hasBeenEdited() {
-		return getEditedDate() != null;
+		if (!data.has("edited")) {
+			return null;
+		}
+
+		JsonNode edited = data.get("edited");
+		if (edited.isBoolean()) {
+			// If the node is a boolean, that means it's either true or false. If false, then the comment hasn't been edited.
+			// On very old comments, the API will return true if it has been edited
+			return edited.getBooleanValue();
+		} else if (edited.isLong()) {
+			// The comment has been edited, value is the time (in seconds) from the UTC epoch
+			return true;
+		}
+
+		// Some other data type
+		return null;
 	}
 
 	/**
-	 * The number of times this comment has received Reddit Gold
+	 * Gets the number of times this comment has received Reddit Gold
+	 * @return The number of times this comment has received Reddit Gold
 	 */
 	@JsonInteraction
 	public Integer getTimesGilded() {
@@ -104,6 +132,7 @@ public class Comment extends Thing implements Created, Distinguishable, Votable 
 
 	/**
 	 * The author of the parent link, or null if this comment is not being displayed outside of its own thread
+	 * @return The author of the parent link, or null if this comment is not being displayed outside of its own thread
 	 */
 	@JsonInteraction(nullable = true)
 	public String getSubmissionAuthor() {
@@ -111,15 +140,23 @@ public class Comment extends Thing implements Created, Distinguishable, Votable 
 	}
 
 	/**
-	 * The comments that have replied to this one
+	 * The comments made in reply to this one
+	 * @return The comments that have replied to this one
 	 */
-	@JsonInteraction
+	@JsonInteraction(nullable = true)
 	public Listing<Comment> getReplies() {
-		return new Listing<>(data.get("replies"), Comment.class);
+		// If it has no replies, the value for the replies key will be an empty string
+		if (data.get("replies").isTextual()) {
+			if (data.get("replies").asText().isEmpty()) {
+				return null;
+			}
+		}
+		return new Listing<>(data.get("replies").get("data"), Comment.class);
 	}
 
 	/**
 	 * The ID of the link this comment is in
+	 * @return The ID of the link this comment is in
 	 */
 	@JsonInteraction
 	public String getSubmissionId() {
@@ -128,6 +165,7 @@ public class Comment extends Thing implements Created, Distinguishable, Votable 
 
 	/**
 	 * The title of the parent link, or null if this comment is not being displayed outside of its own thread
+	 * @return The title of the parent link
 	 */
 	@JsonInteraction(nullable = true)
 	public String getSubmissionTitle() {
@@ -136,6 +174,7 @@ public class Comment extends Thing implements Created, Distinguishable, Votable 
 
 	/**
 	 * The author of the parent submission, or null if this comment is not being displayed outside of its own thread
+	 * @return The author of the parent submission
 	 */
 	@JsonInteraction(nullable = true)
 	public URL getUrl() {
@@ -148,7 +187,8 @@ public class Comment extends Thing implements Created, Distinguishable, Votable 
 	}
 
 	/**
-	 * The amount of times this comment has been reported, nor null if not a mod
+	 * The amount of times this comment has been reported, or null if not a mod
+	 * @return The amount of times this comment has been reported
 	 */
 	@JsonInteraction(nullable = true)
 	public Integer getReportCount() {
@@ -157,6 +197,7 @@ public class Comment extends Thing implements Created, Distinguishable, Votable 
 
 	/**
 	 * The ID of the comment or submission this comment is replying to
+	 * @return The ID of the comment or submission this comment is replying to
 	 */
 	@JsonInteraction
 	public String getParentId() {
@@ -165,6 +206,7 @@ public class Comment extends Thing implements Created, Distinguishable, Votable 
 
 	/**
 	 * True if this post is saved by the logged in user, otherwise false
+	 * @return True if this post is saved by the logged in user, otherwise false
 	 */
 	@JsonInteraction
 	public Boolean isSaved() {
@@ -172,7 +214,8 @@ public class Comment extends Thing implements Created, Distinguishable, Votable 
 	}
 
 	/**
-	 * Whether the comment's score is current hidden
+	 * Whether the comment's score is currently hidden
+	 * @return True if the comment's score is hidden, false if not
 	 */
 	@JsonInteraction
 	public Boolean isScoreHidden() {
@@ -181,6 +224,7 @@ public class Comment extends Thing implements Created, Distinguishable, Votable 
 
 	/**
 	 * The subreddit the comment was posted in, excluding the "/r/" prefix (ex: "pics")
+	 * @return The name of the subreddit the comment was posted in
 	 */
 	@JsonInteraction
 	public String getSubredditName() {
@@ -188,7 +232,8 @@ public class Comment extends Thing implements Created, Distinguishable, Votable 
 	}
 
 	/**
-	 * The ID of the subreddit in which this comment was posting
+	 * The ID of the subreddit in which this comment was posted in
+	 * @return The ID of the subreddit in which this comment was posted in
 	 */
 	@JsonInteraction
 	public String getSubredditId() {
@@ -198,21 +243,5 @@ public class Comment extends Thing implements Created, Distinguishable, Votable 
 	@Override
 	public ThingType getType() {
 		return ThingType.COMMENT;
-	}
-
-	/**
-	 * The amount of upvotes this comment has received
-	 */
-	@JsonInteraction
-	public Integer getUpvotes() {
-		return getUpvotes(data);
-	}
-
-	/**
-	 * The amount of upvotes this comment has received
-	 */
-	@JsonInteraction
-	public Integer getDownvotes() {
-		return getDownvotes(data);
 	}
 }

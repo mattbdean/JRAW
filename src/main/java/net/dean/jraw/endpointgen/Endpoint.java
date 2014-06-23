@@ -1,7 +1,7 @@
 package net.dean.jraw.endpointgen;
 
 /**
- * This class represents a Reddit API endpoint such as /api/login
+ * This class represents a Reddit API endpoint such as {@code /api/login}
  */
 public class Endpoint {
 	private final String uri;
@@ -9,7 +9,7 @@ public class Endpoint {
 
 	/**
 	 * Instantiates a new Endpoint
-	 * @param uri The URI that this endpoint uses (such as /api/login)
+	 * @param uri The URI that this endpoint uses (such as {@code /api/login})
 	 * @param category This endpoint's category, such as "accounts". Can be found <a href="http://www.reddit.com/dev/api">here</a>
 	 */
 	public Endpoint(String uri, String category) {

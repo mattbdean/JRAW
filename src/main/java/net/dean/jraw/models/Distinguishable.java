@@ -7,8 +7,10 @@ import org.codehaus.jackson.JsonNode;
  */
 public interface Distinguishable {
 	/**
-	 * The privilege of the poster of this Thing
+	 * Gets the privilege of the poster of this Thing
+	 * @return The privilege of the poster of this Thing
 	 */
+	@JsonInteraction
 	default DistinguishedState getDistinguishedState() {
 		String distinguished = getDataNode().get("distinguished").getTextValue();
 

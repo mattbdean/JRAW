@@ -26,7 +26,7 @@ public class OEmbed extends JsonModel {
 	 */
 	@JsonInteraction
 	public MediaType getMediaType() {
-		String typeString = data("type", String.class);
+		String typeString = data("type");
 
 		for (MediaType t : MediaType.values()) {
 			if (t.name().equalsIgnoreCase(typeString)) {
@@ -142,7 +142,9 @@ public class OEmbed extends JsonModel {
 	 */
 	@JsonInteraction(nullable = true)
 	public URL getUrl() {
-		return JrawUtils.newUrl(data("url"));
+		if (data.has("url"))
+			return JrawUtils.newUrl(data("url"));
+		return null;
 	}
 
 	/**

@@ -1,7 +1,6 @@
 package net.dean.jraw.models.core;
 
 import net.dean.jraw.models.JsonInteraction;
-import net.dean.jraw.models.RedditObject;
 import net.dean.jraw.models.ThingType;
 import org.codehaus.jackson.JsonNode;
 
@@ -31,6 +30,7 @@ public class More extends Thing {
 
 	/**
 	 * Gets the amount of IDs in this list
+	 * @return The amount of IDs in this list
 	 */
 	@JsonInteraction
 	public Integer getCount() {
@@ -39,6 +39,7 @@ public class More extends Thing {
 
 	/**
 	 * Gets a list of Thing IDs
+	 * @return a list of Thing IDs
 	 */
 	@JsonInteraction
 	public List<String> getChildrenIds() {

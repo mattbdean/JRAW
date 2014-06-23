@@ -1,4 +1,4 @@
-package net.dean.jraw;
+package net.dean.jraw.http;
 
 import org.apache.http.client.methods.*;
 

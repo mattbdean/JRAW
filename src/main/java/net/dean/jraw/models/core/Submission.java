@@ -45,6 +45,7 @@ public class Submission extends Thing implements Created, Distinguishable, Votab
 
 	/**
 	 * The name of the poster, or null if this is a promotional link
+	 * @return The name of the poster
 	 */
 	@JsonInteraction
 	public String getAuthor() {
@@ -53,6 +54,7 @@ public class Submission extends Thing implements Created, Distinguishable, Votab
 
 	/**
 	 * The flair used for the poster of the link (subreddit specific)
+	 * @return Poster's flair
 	 */
 	@JsonInteraction
 	public Flair getAuthorFlair() {
@@ -62,6 +64,7 @@ public class Submission extends Thing implements Created, Distinguishable, Votab
 
 	/**
 	 * Whether the user has clicked this link. Most likely false unless the user has Reddit Gold
+	 * @return If the user has clicked this link
 	 */
 	@JsonInteraction
 	public Boolean isClicked() {
@@ -70,6 +73,7 @@ public class Submission extends Thing implements Created, Distinguishable, Votab
 
 	/**
 	 * The domain of this link. Self posts will be "self.reddit.com". Other examples: "en.wikipedia.org" and "s3.amazon.com"
+	 * @return This link's domain
 	 */
 	@JsonInteraction
 	public String getDomain() {
@@ -77,7 +81,8 @@ public class Submission extends Thing implements Created, Distinguishable, Votab
 	}
 
 	/**
-	 * True if this link is a self post
+	 * The type of submission
+	 * @return The type of submission
 	 */
 	@JsonInteraction
 	public SubmissionType getSubmissionType() {
@@ -86,6 +91,7 @@ public class Submission extends Thing implements Created, Distinguishable, Votab
 
 	/**
 	 * True if the post is hidden by the logged in user, false if not logged in or not hidden
+	 * @return True if the post is hidden by the logged in user, false if not logged in or not hidden
 	 */
 	@JsonInteraction
 	public Boolean isHidden() {
@@ -95,6 +101,8 @@ public class Submission extends Thing implements Created, Distinguishable, Votab
 	/**
 	 * The net score of the link (upvotes minus downvotes). Note: the score is
 	 * <a href="http://www.reddit.com/r/woahdude/comments/1vehg6/gopro_on_the_back_of_an_eagle/cersffj">fuzzed</a>
+	 *
+	 * @return The link's net score
 	 */
 	@JsonInteraction
 	public Integer getScore() {
@@ -102,7 +110,8 @@ public class Submission extends Thing implements Created, Distinguishable, Votab
 	}
 
 	/**
-	 * Gets the flair used in this link
+	 * This link's flair
+	 * @return This link's flair
 	 */
 	@JsonInteraction
 	public Flair getSubmissionFlair() {
@@ -111,15 +120,20 @@ public class Submission extends Thing implements Created, Distinguishable, Votab
 	}
 
 
-	// TODO "media" and "embed_media" objects
-	/** Used for streaming video. Detailed information about the video and its origins. */
-	@JsonInteraction
+	/**
+	 * Gets a simplified version of the oEmbed data that includes embedded HTML
+	 * @return A simplified version of the oEmbed data
+	 */
+	@JsonInteraction(nullable = true)
 	public EmbeddedMedia getEmbeddedMedia() {
 		return new EmbeddedMedia(data.get("media_embed"));
 	}
 
-	/** Used for streaming video. Technical embed specific information is found here. */
-	@JsonInteraction
+	/**
+	 * Gets the oEmbed data of this submission
+	 * @return The oEmbed data of this submission
+	 */
+	@JsonInteraction(nullable = true)
 	public OEmbed getOEmbedMedia() {
 		if (!data.has("media")) return null;
 		if (data.get("media").size() == 0) return null;
@@ -128,7 +142,8 @@ public class Submission extends Thing implements Created, Distinguishable, Votab
 	}
 
 	/**
-	 * The number of comments that belong to this link. Includes removed comments.
+	 * The number of comments that belong to this submission. Includes removed comments.
+	 * @return The total number of comments that belong to this submission
 	 */
 	@JsonInteraction
 	public Integer getCommentCount() {
@@ -136,7 +151,8 @@ public class Submission extends Thing implements Created, Distinguishable, Votab
 	}
 
 	/**
-	 * Whether or not the post is tagged as NSFW
+	 * Whether or not the post is tagged as NSFW (not safe for work)
+	 * @return If the post is tagged as NSFW
 	 */
 	@JsonInteraction
 	public Boolean isOver18() {
@@ -145,6 +161,7 @@ public class Submission extends Thing implements Created, Distinguishable, Votab
 
 	/**
 	 * Relative URL (of reddit.com) of the permanent URL for this Submission
+	 * @return The permalink of this submission
 	 */
 	@JsonInteraction
 	public URI getPermalink() {
@@ -153,6 +170,7 @@ public class Submission extends Thing implements Created, Distinguishable, Votab
 
 	/**
 	 * True if saved by the logged in user
+	 * @return True if saved by the logged in user
 	 */
 	@JsonInteraction
 	public Boolean isSaved() {
@@ -161,7 +179,8 @@ public class Submission extends Thing implements Created, Distinguishable, Votab
 
 	/**
 	 * The raw text of the self post. The string is unformatted, so it includes Markdown markup such as "**" for bold.
-	 * HTML entities such as '&lt;', '&gt;', and '&amp;' are escaped.
+	 * HTML entities such as '&amp;lt;', '&amp;gt;', and '&amp;amp;' are escaped.
+	 * @return The raw text of the self post
 	 */
 	@JsonInteraction
 	public String getSelftext() {
@@ -170,6 +189,7 @@ public class Submission extends Thing implements Created, Distinguishable, Votab
 
 	/**
 	 * The formatted, HTML version of ${@link #getSelftext()}
+	 * @return The formatted, HTML version of ${@link #getSelftext()}
 	 */
 	@JsonInteraction
 	public String getSelftextHtml() {
@@ -177,7 +197,8 @@ public class Submission extends Thing implements Created, Distinguishable, Votab
 	}
 
 	/**
-	 * The subreddit that the link is posted in (ex: "pics", "funny")
+	 * The subreddit that the submission is posted in (ex: "pics", "funny")
+	 * @return The subreddit that the submission was posted in
 	 */
 	@JsonInteraction
 	public String getSubredditName() {
@@ -185,7 +206,8 @@ public class Submission extends Thing implements Created, Distinguishable, Votab
 	}
 
 	/**
-	 * The full name of the subreddit which the link is posted in (ex: "t5_2s5oq"
+	 * The full name of the subreddit which the link is posted in (ex: "t5_2s5oq")
+	 * @return The full name of the subreddit
 	 */
 	@JsonInteraction
 	public String getSubredditId() {
@@ -194,6 +216,7 @@ public class Submission extends Thing implements Created, Distinguishable, Votab
 
 	/**
 	 * The full URL to the thumbnail for this submission
+	 * @return The URL to this submission's thumbnail
 	 */
 	@JsonInteraction(nullable = true)
 	public URL getThumbnail() {
@@ -207,6 +230,7 @@ public class Submission extends Thing implements Created, Distinguishable, Votab
 
 	/**
 	 * The title of the submission. May contain newlines (\n).
+	 * @return The title of the submission
 	 */
 	@JsonInteraction
 	public String getTitle() {
@@ -215,6 +239,7 @@ public class Submission extends Thing implements Created, Distinguishable, Votab
 
 	/**
 	 * The URL of this post, or the permalink if this is a self post
+	 * @return This submission's URL
 	 */
 	@JsonInteraction
 	public URL getUrl() {
@@ -223,6 +248,7 @@ public class Submission extends Thing implements Created, Distinguishable, Votab
 
 	/**
 	 * Indicates if the link has been edited. Null if it has not.
+	 * @return The UTC date when this submission was edited, null if it has not been edited
 	 */
 	@JsonInteraction
 	public Date getEdited() {
@@ -238,6 +264,7 @@ public class Submission extends Thing implements Created, Distinguishable, Votab
 
 	/**
 	 * Gets the comments of this Submission
+	 * @return This Submission's comments
 	 */
 	@JsonInteraction(nullable = true)
 	public Listing<Comment> getComments() {
@@ -246,25 +273,10 @@ public class Submission extends Thing implements Created, Distinguishable, Votab
 
 	/**
 	 * True if the post is set as the sticky in its respective subreddit
+	 * @return If this submission is a sticky
 	 */
 	@JsonInteraction
 	public Boolean isStickied() {
 		return data("stickied", Boolean.class);
-	}
-
-	/**
-	 * Gets the amount of upvotes the object has received
-	 */
-	@JsonInteraction
-	public Integer getUpvotes() {
-		return getUpvotes(data);
-	}
-
-	/**
-	 * Gets the amount of downvotes the Thing has received
-	 */
-	@JsonInteraction
-	public Integer getDownvotes() {
-		return getDownvotes(data);
 	}
 }

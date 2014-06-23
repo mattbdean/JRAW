@@ -15,8 +15,8 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
- * This class is responsible for the compilation of {@value #FILE_NAME}, which is a collection of implemented and unimplemented
- * Reddit API endpoints.
+ * This class is responsible for the compilation of <a href="https://github.com/thatJavaNerd/JRAW/blob/master/ENDPOINTS.md">ENDPOINITS.md</a>,
+ * which is a collection of implemented and unimplemented Reddit API endpoints.
  */
 public class EndpointAnalysis {
 	private static final String FILE_NAME = "ENDPOINTS.md";
@@ -93,14 +93,20 @@ public class EndpointAnalysis {
 			unimplMap.get(endpoint.getCategory()).add(endpoint.getUri());
 		}
 
+		// Main header of collection
 		bw.write(String.format("#%s\n", title));
 
+		// Iterate through the entries and write them to the file
 		for (Map.Entry<String, List<String>> entry : unimplMap.entrySet()) {
+			// Write the category header
 			bw.write(String.format("####%s\n", entry.getKey()));
+			// Start the code block
 			bw.write("~~~\n");
+			// Write every endpoint in that category
 			for (String endpoint : entry.getValue()) {
 				bw.write(endpoint + "\n");
 			}
+			// End the code block
 			bw.write("~~~\n\n");
 		}
 	}

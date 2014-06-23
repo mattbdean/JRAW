@@ -6,14 +6,9 @@ import java.io.InputStream;
  * Represents a Captcha.
  */
 public class Captcha {
-	/**
-	 * The ID of the captcha
-	 */
 	private String id;
 
-	/**
-	 * The InputStream that will download the Captcha's image
-	 */
+	/** The InputStream that will download the Captcha's image */
 	private InputStream imageStream;
 
 	/**

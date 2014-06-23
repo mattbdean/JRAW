@@ -1,4 +1,4 @@
-package net.dean.jraw;
+package net.dean.jraw.http;
 
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -8,9 +8,7 @@ import java.util.Map;
  */
 public class RestRequest {
 
-	/**
-	 * The path relative to the root of the host
-	 */
+	/** The path relative to the root of the host */
 	private String path;
 
 	/**
@@ -18,21 +16,17 @@ public class RestRequest {
 	 */
 	private Map<String, String> args;
 
-	/**
-	 * The HTTP verb to use to execute the request
-	 */
+	/** The HTTP verb to use to execute the request */
 	private HttpVerb verb;
 
-	/**
-	 * The time this request was executed
-	 */
+	/** The time this request was executed */
 	private LocalDateTime executed;
 
 	/**
 	 * Instantiates a new RestRequest
 	 *
 	 * @param verb The HTTP verb to use
-	 * @param path The path of the request relative to the host "/{something}"
+	 * @param path The path of the request relative to the host (ex: "/{something}")
 	 */
 	public RestRequest(HttpVerb verb, String path) {
 		this(verb, path, null);

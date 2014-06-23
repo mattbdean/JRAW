@@ -1,9 +1,9 @@
 package net.dean.jraw.test;
 
-import net.dean.jraw.HttpHelper;
-import net.dean.jraw.HttpVerb;
-import net.dean.jraw.NetworkException;
-import net.dean.jraw.RestResponse;
+import net.dean.jraw.http.HttpHelper;
+import net.dean.jraw.http.HttpVerb;
+import net.dean.jraw.http.NetworkException;
+import net.dean.jraw.http.RestResponse;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.codehaus.jackson.JsonNode;
@@ -16,7 +16,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 
-import static net.dean.jraw.HttpVerb.*;
+import static net.dean.jraw.http.HttpVerb.*;
 
 public class HttpTest {
 	private static final String HOST = "httpbin.org";

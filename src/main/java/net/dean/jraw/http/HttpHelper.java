@@ -1,5 +1,6 @@
-package net.dean.jraw;
+package net.dean.jraw.http;
 
+import net.dean.jraw.JrawUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpHost;
 import org.apache.http.client.CookieStore;
@@ -20,23 +21,17 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * This class is responsible for the lowest level of networking found in this library. It conducts HTTP requests with
- * several verbs such as GET, POST, PUT, and PATCH, which all have their respective methods.
- *
- * @author Matthew Dean
+ * This class is responsible for the lowest level of networking found in this library. It can execute RESTful HTTP requests
+ * through the use of the {@code execute} methods
  */
 public class HttpHelper {
 
-	/**
-	 * The HttpClient used to execute HTTP requests
-	 */
+	/** The HttpClient used to execute HTTP requests */
 	private HttpClient client;
 
 	private CookieStore cookieStore;
 
-	/**
-	 * The list of headers that will be sent with every HTTP request
-	 */
+	/** The list of headers that will be sent with every HTTP request */
 	private List<Header> defaultHeaders;
 
 	/**
@@ -60,6 +55,7 @@ public class HttpHelper {
 	 * @param hostname The name of the URL's host. Do not include the scheme (ex: "http://")
 	 * @param path     The path relative to the root directory of the host.
 	 * @return A CloseableHttpResponse formed in the execution of the HTTP request
+	 * @throws net.dean.jraw.http.NetworkException If there was a problem sending the HTTP request
 	 */
 	public CloseableHttpResponse execute(HttpVerb verb, String hostname, String path) throws NetworkException {
 		return execute(verb, hostname, path, null);
@@ -84,7 +80,6 @@ public class HttpHelper {
 		HttpRequestBase request = verb.getRequestObject(path);
 
 		try {
-
 			if (args != null) {
 				// Construct a List of BasicNameValue pairs from a Map
 				List<BasicNameValuePair> params = args.entrySet().stream().map(entry -> new BasicNameValuePair(entry.getKey(),
@@ -110,7 +105,7 @@ public class HttpHelper {
 			JrawUtils.logger().info("{} {}{} {}", new Object[] {verb.name(), hostname, path, request.getProtocolVersion()});
 			CloseableHttpResponse response = (CloseableHttpResponse) client.execute(new HttpHost(hostname), request);
 			if (response.getStatusLine().getStatusCode() != 200) {
-				throw new NetworkException(200, response.getStatusLine().getStatusCode());
+				throw new NetworkException(response.getStatusLine().getStatusCode());
 			}
 
 			return response;
@@ -129,10 +124,18 @@ public class HttpHelper {
 		return defaultHeaders;
 	}
 
+	/**
+	 * Gets the cookies stored while sending HTTP requests
+	 * @return The CookieStore for this HttpHelper
+	 */
 	public CookieStore getCookieStore() {
 		return cookieStore;
 	}
 
+	/**
+	 * Sets the value of the User-Agent header to send with every request
+	 * @param userAgent The User-Agent to use for the HTTP requests
+	 */
 	public void setUserAgent(String userAgent) {
 		for (Iterator<Header> it = defaultHeaders.iterator(); it.hasNext(); ) {
 			Header currentHeader = it.next();
@@ -147,6 +150,10 @@ public class HttpHelper {
 		defaultHeaders.add(new BasicHeader("User-Agent", userAgent));
 	}
 
+	/**
+	 * Gets the User-Agent header
+	 * @return The User-Agent to use for HTTP requests
+	 */
 	public String getUserAgent() {
 		for (Header h : defaultHeaders) {
 			if (h.getName().equals("User-Agent")) {
