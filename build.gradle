@@ -1,7 +1,7 @@
 apply plugin: 'java'
 
 sourceCompatibility = 1.8
-version = '1.0'
+version = '0.1.0'
 
 repositories {
     mavenCentral()
@@ -16,7 +16,7 @@ dependencies {
     testCompile group: 'org.testng',                name: 'testng',             version: '6.1.1'
 }
 
-task(updateEndpoints, type: JavaExec, dependsOn: build) {
+task updateEndpoints(type: JavaExec, dependsOn: build) {
     main = "net.dean.jraw.endpointgen.EndpointAnalysis"
     classpath = sourceSets.main.runtimeClasspath
 }
@@ -27,6 +27,19 @@ test {
 
     // Show stderr and stdout (useful for exceptions)
     testLogging.showStandardStreams = true
+}
+
+jar {
+    destinationDir = new File(project.buildDir, "releases")
+}
+
+// Calling this task will Jar the classes and gzip the sources
+task release(type: Tar, dependsOn: jar) {
+    compression = Compression.GZIP
+    baseName = project.name
+    appendix = "src"
+    destinationDir = new File(project.buildDir, "releases")
+    from("src")
 }
 
 defaultTasks "test"

@@ -16,21 +16,12 @@ public class Version {
 
 	private final int major;
 	private final int minor;
-	private final int micro;
-	private final String extra;
+	private final int patch;
 
-	private Version(int major, int minor, int micro) {
+	private Version(int major, int minor, int patch) {
 		this.major = major;
 		this.minor = minor;
-		this.micro = micro;
-		this.extra = null;
-	}
-
-	private Version(int major, int minor, int micro, String extra) {
-		this.major = major;
-		this.minor = minor;
-		this.micro = micro;
-		this.extra = extra;
+		this.patch = patch;
 	}
 
 	@Override
@@ -38,20 +29,16 @@ public class Version {
 		return "Version {" +
 				"major=" + major +
 				", minor=" + minor +
-				", micro=" + micro +
-				", extra='" + extra + '\'' +
+				", patch=" + patch +
 				'}';
 	}
 
 	/**
-	 * Generates a formatted string representing this Version. The string will be formatted in either of two ways. If {@link #extra}
-	 * is not null, then {@code <major>.<minor>.<micro>-<extra>}. If {@link #extra} IS null, then {@literal <major>.<minor>.<micro>}.
+	 * Generates a formatted string representing this Version in the format of {@code <major>.<minor>.<patch>}
 	 * @return A formatted string representing this Version
 	 */
 	public String formatted() {
-		// <major>.<minor>.<micro>
-		// <major>.<minor>.<micro>-<extra>
-		return String.format("%s.%s.%s%s", major, minor, micro, extra == null ? "" : "-" + extra);
+		return String.format("%s.%s.%s", major, minor, patch);
 	}
 
 	/**
@@ -71,18 +58,10 @@ public class Version {
 	}
 
 	/**
-	 * Gets the micro version (third number)
-	 * @return The micro version
+	 * Gets the patch version (third number)
+	 * @return The patch version
 	 */
-	public int getMicro() {
-		return micro;
-	}
-
-	/**
-	 * Gets the extra detail (ex: "RC-1", "beta")
-	 * @return The extra detail
-	 */
-	public String getExtra() {
-		return extra;
+	public int getPatch() {
+		return patch;
 	}
 }
