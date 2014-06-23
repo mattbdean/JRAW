@@ -1,9 +1,7 @@
 package net.dean.jraw.test;
 
-import net.dean.jraw.ApiException;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.NetworkException;
-import net.dean.jraw.models.LoggedInAccount;
 import net.dean.jraw.models.core.Comment;
 import net.dean.jraw.models.core.Listing;
 import net.dean.jraw.models.core.Submission;
@@ -48,17 +46,6 @@ public class SubmissionTest {
 
 			Comment c = s.getComments().getChildren().get(0);
 			System.out.println(c.getReplies().getChildren().get(0).getBody());
-		} catch (NetworkException e) {
-			Assert.fail(e.getMessage());
-		}
-	}
-
-	@Test
-	public void testSendRepliesToInbox() throws ApiException {
-		try {
-			Submission s = reddit.getSubmission(ID);
-			LoggedInAccount me = reddit.login(TestUtils.getCredentials()[0], TestUtils.getCredentials()[1]);
-			me.setSendRepliesToInbox(s, true);
 		} catch (NetworkException e) {
 			Assert.fail(e.getMessage());
 		}

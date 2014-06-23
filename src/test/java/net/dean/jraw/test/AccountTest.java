@@ -74,6 +74,18 @@ public class AccountTest {
 		}
 	}
 
+
+	@Test
+	public void testSendRepliesToInbox() throws ApiException {
+		try {
+			Submission s = reddit.getSubmission("28vvhm");
+			LoggedInAccount me = reddit.login(TestUtils.getCredentials()[0], TestUtils.getCredentials()[1]);
+			me.setSendRepliesToInbox(s, true);
+		} catch (NetworkException e) {
+			Assert.fail(e.getMessage());
+		}
+	}
+
 	@Test(dependsOnMethods = "login")
 	public void testVote() {
 		try {

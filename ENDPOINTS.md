@@ -1,4 +1,4 @@
-<!--- Generated 2014-06-23 at 15:28:11 EDT. Do ./gradlew updateEndpoints to update. DO NOT MODIFY DIRECTLY -->
+<!--- Generated 2014-06-23 at 15:40:16 EDT. Do ./gradlew updateEndpoints to update. DO NOT MODIFY DIRECTLY -->
 #Unimplemented
 ####account
 ~~~
@@ -47,7 +47,6 @@
 ####links & comments
 ~~~
 /api/comment
-/api/del
 /api/editusertext
 /api/hide
 /api/info
@@ -195,6 +194,7 @@
 /api/unsave
 /api/vote
 /api/sendreplies
+/api/del
 /api/save
 /api/submit
 ~~~

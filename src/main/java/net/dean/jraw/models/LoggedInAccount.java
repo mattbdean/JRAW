@@ -185,10 +185,57 @@ public class LoggedInAccount extends Account {
 
 	@EndpointImplementation(uris = "/api/sendreplies")
 	public RestResponse setSendRepliesToInbox(Submission s, boolean send) throws NetworkException, ApiException {
+		if (!s.getAuthor().equals(getName())) {
+			throw new IllegalArgumentException(String.format("Logged in user (%s) did not post this submission (by %s)", getName(), s.getAuthor()));
+		}
 		return genericPost("/api/sendreplies", JrawUtils.args(
 				"id", s.getId(),
 				"state", Boolean.toString(send)
 		));
+	}
+
+	/**
+	 * Deletes a submission that you posted
+	 * @param s The submission to delete
+	 * @return The response that the Reddit API returned
+	 * @throws NetworkException If there was a problem sending the request
+	 * @throws ApiException If the api returned an error
+	 */
+	public RestResponse delete(Submission s) throws NetworkException, ApiException {
+		if (!s.getAuthor().equals(getName())) {
+			throw new IllegalArgumentException(String.format("Logged in user (%s) did not post this submission (by %s)", getName(), s.getAuthor()));
+		}
+
+		return delete(s.getId());
+	}
+
+
+	/**
+	 * Deletes a comment that you posted
+	 * @param c The comment to delete
+	 * @return The response that the Reddit API returned
+	 * @throws NetworkException If there was a problem sending the request
+	 * @throws ApiException If the api returned an error
+	 */
+	public RestResponse delete(Comment c) throws NetworkException, ApiException {
+		if (!c.getAuthor().equals(getName())) {
+			throw new IllegalArgumentException(String.format("Logged in user (%s) did not post this comment (by %s)", getName(), c.getAuthor()));
+		}
+
+		return delete(c.getId());
+	}
+
+
+	/**
+	 * Deletes a comment or submission that you posted
+	 * @param id The ID of the submission or comment to delete
+	 * @return The response that the Reddit API returned
+	 * @throws NetworkException If there was a problem sending the request
+	 * @throws ApiException If the api returned an error
+	 */
+	@EndpointImplementation(uris = "/api/del")
+	private RestResponse delete(String id) throws NetworkException, ApiException {
+		return genericPost("/api/del", JrawUtils.args("id", id));
 	}
 
 	/**
