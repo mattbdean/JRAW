@@ -110,6 +110,15 @@ public class Submission extends Thing implements Created, Distinguishable, Votab
 	}
 
 	/**
+	 * The ratio of upvotes to downvotes
+	 * @return The ratio of upvotes to downvotes
+	 */
+	@JsonInteraction
+	public Double getUpvoteRatio() {
+		return data("upvote_ratio", Double.class);
+	}
+
+	/**
 	 * This link's flair
 	 * @return This link's flair
 	 */
