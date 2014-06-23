@@ -7,6 +7,21 @@ JRAW was built off of two main principles:
 1. Provide a solid foundation upon which to send HTTP requests
 2. Make using the Reddit API in Java feel as natural as possible
 
+##Examples
+Save every submission on the front page
+
+```java
+RedditClient reddit = new RedditClient("MY-USER-AGENT");
+LoggedInAccount me = reddit.login("MY-USERNAME", "MY-PASSWORD");
+
+SimplePaginator frontPage = reddit.getFrontPage();
+Listing<Submission> submissions = frontPage.next();
+
+for (Submission submission : submissions.getChildren()) {
+    me.save(submission);
+}
+```
+
 ##Building
 
 JRAW uses Gradle as its build system. If you're coming from a Maven background, you can read [Gradle for Maven 2 Users](http://wiki.gradle.org/display/GRADLE/Gradle+for+Maven+2+users) to help you get started
