@@ -2,6 +2,32 @@
 
 >JRAW is currently in an experimental stage, and therefore subject to API changes. You are, however, able to use this library in your own projects.
 
+JRAW was built off of two main principles:
+
+1. Provide a solid foundation upon which to send HTTP requests
+2. Make using the Reddit API in Java feel as natural as possible
+
+##Examples
+Save every submission on the front page
+
+```java
+RedditClient reddit = new RedditClient("MY-USER-AGENT");
+LoggedInAccount me = reddit.login("MY-USERNAME", "MY-PASSWORD");
+
+SimplePaginator frontPage = reddit.getFrontPage();
+Listing<Submission> submissions = frontPage.next();
+
+for (Submission submission : submissions.getChildren()) {
+    me.save(submission);
+}
+```
+
+##Building
+
+JRAW uses Gradle as its build system. If you're coming from a Maven background, you can read [Gradle for Maven 2 Users](http://wiki.gradle.org/display/GRADLE/Gradle+for+Maven+2+users) to help you get started
+
+To run the unit tests, use `./gradlew test`
+
 ##Models
 ####Hierarchy
 [`RedditObject`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/models/RedditObject.java) is the superclass for all major models in JRAW, including [`Thing`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/models/RedditObject.java). All [core models](https://github.com/thatJavaNerd/JRAW/tree/master/src/main/java/net/dean/jraw/models/core) defined by the [Reddit wiki on GitHub](https://github.com/reddit/reddit/wiki/JSON) extend [`Thing`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/models/Thing.java)
