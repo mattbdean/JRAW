@@ -14,7 +14,6 @@ import java.util.stream.Collectors;
  */
 public abstract class JsonModel {
 	protected final JsonNode data;
-	private Map<String, Object> nodeCache;
 
 	/**
 	 * Instantiates a new JsonModel
@@ -23,7 +22,6 @@ public abstract class JsonModel {
 	 */
 	public JsonModel(JsonNode dataNode) {
 		this.data = dataNode;
-		this.nodeCache = new HashMap<>();
 	}
 
 	/**
@@ -48,18 +46,6 @@ public abstract class JsonModel {
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> T data(String name, Class<T> type) {
-		// Check the node cache first
-		if (nodeCache.containsKey(name)) {
-			Object cachedObject = nodeCache.get(name);
-			if (!cachedObject.getClass().equals(type)) {
-				System.err.printf("Cached object and return type did not match for \"%s\" (wanted %s, got %s)\n",
-						name, type, cachedObject.getClass());
-				// Show a warning and "rediscover" the variable using the rest of the method
-			} else {
-				return (T) nodeCache.get(name);
-			}
-		}
-
 		// Make sure the key is actually there
 		if (!data.has(name)) {
 			return null;
@@ -87,9 +73,6 @@ public abstract class JsonModel {
 		else
 			// Assume String
 			returnVal = (T) String.valueOf(node.asText());
-
-		// Put the object in the cache
-		nodeCache.put(name, returnVal);
 
 		return returnVal;
 	}
