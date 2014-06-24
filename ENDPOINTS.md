@@ -1,4 +1,4 @@
-<!--- Generated 2014-06-23 at 15:40:16 EDT. Do ./gradlew updateEndpoints to update. DO NOT MODIFY DIRECTLY -->
+<!--- Generated 2014-06-24 at 12:39:59 EDT. Do ./gradlew updateEndpoints to update. DO NOT MODIFY DIRECTLY -->
 #Unimplemented
 ####account
 ~~~
@@ -133,7 +133,6 @@
 /api/subreddits_by_topic.json
 /api/subscribe
 /api/upload_sr_img
-/r/subreddit/about.json
 /r/subreddit/about/edit.json
 /subreddits/mine/contributor
 /subreddits/mine/moderator
@@ -206,6 +205,11 @@
 /new
 /top
 /sort
+~~~
+
+####subreddits
+~~~
+/r/subreddit/about.json
 ~~~
 
 ####users

@@ -174,7 +174,7 @@ public class Submission extends Thing implements Created, Distinguishable, Votab
 	 */
 	@JsonInteraction
 	public URI getPermalink() {
-		return JrawUtils.newUri(data.get("permalink").getTextValue());
+		return data("permalink", URI.class);
 	}
 
 	/**
@@ -252,7 +252,7 @@ public class Submission extends Thing implements Created, Distinguishable, Votab
 	 */
 	@JsonInteraction
 	public URL getUrl() {
-		return JrawUtils.newUrl(data.get("url").getTextValue());
+		return data("url", URL.class);
 	}
 
 	/**

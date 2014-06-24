@@ -1,11 +1,17 @@
 package net.dean.jraw.models;
 
+import net.dean.jraw.JrawUtils;
 import org.codehaus.jackson.JsonNode;
 
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.net.URI;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -70,7 +76,21 @@ public abstract class JsonModel {
 			returnVal = (T) Long.valueOf(node.asLong());
 		else if (type.equals(Float.class))
 			returnVal = (T) Float.valueOf(node.asText());
-		else
+		else if (type.equals(URL.class) || type.equals(URI.class)) {
+			String href = node.asText();
+			if (href != null) {
+				if (type.equals(URL.class)) {
+					returnVal = (T) JrawUtils.newUrl(href);
+				} else {
+					returnVal = (T) JrawUtils.newUri(href);
+				}
+			} else {
+				returnVal = null;
+			}
+		} else if (type.equals(Date.class)) {
+			long seconds = node.asLong();
+			returnVal = (T) new Date(seconds * 1000);
+		} else
 			// Assume String
 			returnVal = (T) String.valueOf(node.asText());
 

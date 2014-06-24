@@ -70,8 +70,7 @@ public class OEmbed extends JsonModel {
 	 */
 	@JsonInteraction(nullable = true)
 	public URL getAuthorUrl() {
-		String href = data("author_url");
-		return JrawUtils.newUrl(href);
+		return data("author_url", URL.class);
 	}
 
 	/**
@@ -89,8 +88,7 @@ public class OEmbed extends JsonModel {
 	 */
 	@JsonInteraction(nullable = true)
 	public URL getProviderUrl() {
-		String href = data("provider_url");
-		return JrawUtils.newUrl(href);
+		return data("provider_url", URL.class);
 	}
 
 	/**

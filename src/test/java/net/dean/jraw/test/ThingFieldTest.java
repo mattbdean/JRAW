@@ -9,6 +9,7 @@ import net.dean.jraw.models.OEmbed;
 import net.dean.jraw.models.core.Account;
 import net.dean.jraw.models.core.Listing;
 import net.dean.jraw.models.core.Submission;
+import net.dean.jraw.models.core.Subreddit;
 import net.dean.jraw.pagination.SimplePaginator;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -108,6 +109,16 @@ public class ThingFieldTest {
 				EmbeddedMedia m = s.getEmbeddedMedia();
 				fieldValidityCheck(m);
 			});
+		} catch (NetworkException e) {
+			Assert.fail(e.getMessage());
+		}
+	}
+
+	@Test
+	public void testSubreddit() {
+		try {
+			Subreddit sr = reddit.getSubreddit("pics");
+			fieldValidityCheck(sr);
 		} catch (NetworkException e) {
 			Assert.fail(e.getMessage());
 		}

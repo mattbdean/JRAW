@@ -1,6 +1,5 @@
 package net.dean.jraw.models.core;
 
-import net.dean.jraw.JrawUtils;
 import net.dean.jraw.models.*;
 import org.codehaus.jackson.JsonNode;
 
@@ -178,12 +177,7 @@ public class Comment extends Thing implements Created, Distinguishable, Votable 
 	 */
 	@JsonInteraction(nullable = true)
 	public URL getUrl() {
-		String url = data("link_url");
-		if (url != null) {
-			return JrawUtils.newUrl(url);
-		}
-
-		return null;
+		return data("link_url", URL.class);
 	}
 
 	/**

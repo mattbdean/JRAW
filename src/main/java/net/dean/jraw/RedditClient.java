@@ -6,6 +6,7 @@ import net.dean.jraw.models.Captcha;
 import net.dean.jraw.models.LoggedInAccount;
 import net.dean.jraw.models.core.Account;
 import net.dean.jraw.models.core.Submission;
+import net.dean.jraw.models.core.Subreddit;
 import org.apache.http.Header;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.cookie.Cookie;
@@ -268,6 +269,11 @@ public class RedditClient extends RestClient {
 	 */
 	public Submission getSubmission(String id) throws NetworkException {
 		return execute(new RestRequest(HttpVerb.GET, "/" + id + ".json")).as(Submission.class);
+	}
+
+	@EndpointImplementation(uris = "/r/subreddit/about.json")
+	public Subreddit getSubreddit(String name) throws NetworkException {
+		return execute(new RestRequest(HttpVerb.GET, "/r/" + name + "/about.json")).as(Subreddit.class);
 	}
 
 	/**
