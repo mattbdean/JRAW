@@ -102,7 +102,10 @@ public class AccountTest {
 			Submission submission = reddit.getSubmission("28d6vv");
 			account.save(submission);
 
-			UserPaginatorSubmission paginator = reddit.getUserPaginator(account.getName(), Where.SAVED);
+			UserPaginatorSubmission paginator = new UserPaginatorSubmission.Builder(reddit)
+					.username(account.getName())
+					.where(Where.SAVED)
+					.build();
 			List<Submission> saved = paginator.next().getChildren();
 
 			for (Submission s : saved) {
@@ -124,7 +127,10 @@ public class AccountTest {
 			Submission submission = reddit.getSubmission("28d6vv");
 			account.unsave(submission);
 
-			UserPaginatorSubmission paginator = reddit.getUserPaginator(account.getName(), Where.SAVED);
+			UserPaginatorSubmission paginator = new UserPaginatorSubmission.Builder(reddit)
+					.username(account.getName())
+					.where(Where.SAVED)
+					.build();
 			List<Submission> saved = paginator.next().getChildren();
 
 			// Search for the submission in the saved list

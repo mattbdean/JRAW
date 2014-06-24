@@ -86,7 +86,7 @@ public class ThingFieldTest {
 	@Test
 	public void testOEmbed() {
 		try {
-			SimplePaginator frontPage = reddit.getFrontPage();
+			SimplePaginator frontPage = new SimplePaginator.Builder(reddit).build();
 			Listing<Submission> submissions = frontPage.next();
 
 			submissions.getChildren().stream().filter(s -> s.getOEmbedMedia() != null).forEach(s -> {
@@ -101,7 +101,7 @@ public class ThingFieldTest {
 	@Test
 	public void testEmbeddedMedia() {
 		try {
-			SimplePaginator frontPage = reddit.getFrontPage();
+			SimplePaginator frontPage = new SimplePaginator.Builder(reddit).build();
 			Listing<Submission> submissions = frontPage.next();
 
 			submissions.getChildren().stream().filter(s -> s.getEmbeddedMedia() != null).forEach(s -> {

@@ -1,9 +1,8 @@
 package net.dean.jraw.pagination;
 
-import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.endpointgen.EndpointImplementation;
-import net.dean.jraw.models.Sorting;
+import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.models.core.Listing;
 import net.dean.jraw.models.core.Submission;
 
@@ -13,34 +12,9 @@ import net.dean.jraw.models.core.Submission;
 public class SimplePaginator extends AbstractPaginator<Submission> {
 	private final String subreddit;
 
-	/**
-	 * Instantiates a new SimplePaginator that will be used to browse the front page
-	 *
-	 * @param creator The RedditClient that created this object
-	 * @param sorting The sorting to use
-	 * @param timePeriod The time period to use
-	 * @return A new SimplePaginator
-	 */
-	public static SimplePaginator ofFrontPage(RedditClient creator, Sorting sorting, TimePeriod timePeriod) {
-		return new SimplePaginator(creator, null, sorting, timePeriod);
-	}
-
-	/**
-	 * Instantiates a new SimplePaginator that will be used to browse a subreddit
-	 *
-	 * @param creator The RedditClient that created this object
-	 * @param subreddit The subreddit to browse
-	 * @param sorting The sorting to use
-	 * @param timePeriod The time period to use
-	 * @return A new SimplePaginator
-	 */
-	public static SimplePaginator ofSubreddit(RedditClient creator, String subreddit, Sorting sorting, TimePeriod timePeriod) {
-		return new SimplePaginator(creator, subreddit, sorting, timePeriod);
-	}
-
-	private SimplePaginator(RedditClient creator, String subreddit, Sorting sorting, TimePeriod timePeriod) {
-		super(creator, Submission.class, sorting, timePeriod); // Will always be submissions
-		this.subreddit = subreddit;
+	private SimplePaginator(Builder b) {
+		super(b);
+		this.subreddit = b.subreddit;
 	}
 
 	@Override
@@ -68,5 +42,32 @@ public class SimplePaginator extends AbstractPaginator<Submission> {
 	 */
 	public String getSubreddit() {
 		return subreddit;
+	}
+
+	public static class Builder extends AbstractPaginator.Builder<Submission> {
+		private String subreddit;
+
+		/**
+		 * Instantiates a new Builder
+		 * @param reddit The RedditClient to send requests with
+		 */
+		public Builder(RedditClient reddit) {
+			super(reddit, Submission.class);
+		}
+
+		/**
+		 * Sets the subreddit to browse. Defaults to the front page (null)
+		 * @param sr The subreddit to browse
+		 * @return This Builder
+		 */
+		public Builder subreddit(String sr) {
+			this.subreddit = sr;
+			return this;
+		}
+
+		@Override
+		public SimplePaginator build() {
+			return new SimplePaginator(this);
+		}
 	}
 }

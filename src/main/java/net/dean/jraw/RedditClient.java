@@ -4,10 +4,8 @@ import net.dean.jraw.endpointgen.EndpointImplementation;
 import net.dean.jraw.http.*;
 import net.dean.jraw.models.Captcha;
 import net.dean.jraw.models.LoggedInAccount;
-import net.dean.jraw.models.Sorting;
 import net.dean.jraw.models.core.Account;
 import net.dean.jraw.models.core.Submission;
-import net.dean.jraw.pagination.*;
 import org.apache.http.Header;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.cookie.Cookie;
@@ -281,52 +279,5 @@ public class RedditClient extends RestClient {
 		if (!isLoggedIn()) {
 			throw new NetworkException("You are not logged in! Use RedditClient.login(user, pass)");
 		}
-	}
-
-	public SimplePaginator getFrontPage() {
-		return SimplePaginator.ofFrontPage(this, AbstractPaginator.DEFAULT_SORTING, AbstractPaginator.DEFAULT_TIME_PERIOD);
-	}
-
-	/**
-	 * Gets a Paginator to browse the front page of Reddit
-	 *
-	 * @param sorting The sorting to use
-	 * @param timePeriod The time period to use
-	 * @return A new SimplePaginator for the front page
-	 */
-	public SimplePaginator getFrontPage(Sorting sorting, TimePeriod timePeriod) {
-		return SimplePaginator.ofFrontPage(this, sorting, timePeriod);
-	}
-
-	/**
-	 * Gets a Paginator to browse a particular subreddit
-	 * @param subreddit The subreddit to browse
-	 * @return A new Paginator with the default sorting and time period
-	 */
-	public SimplePaginator getSubreddit(String subreddit) {
-		return SimplePaginator.ofSubreddit(this, subreddit, AbstractPaginator.DEFAULT_SORTING, AbstractPaginator.DEFAULT_TIME_PERIOD);
-	}
-
-	/**
-	 * Gets a Paginator to browse a particular subreddit
-	 *
-	 * @param subreddit The subreddit to browse
-	 * @param sorting The sorting to use
-	 * @param timePeriod The time period to use
-	 * @return A new SimplePaginator for a particular subreddit
-	 */
-	public SimplePaginator getSubreddit(String subreddit, Sorting sorting, TimePeriod timePeriod) {
-		return SimplePaginator.ofSubreddit(this, subreddit, sorting, timePeriod);
-	}
-
-	/**
-	 * Gets a Paginator to interact with {@literal /usr/<username>/<where>} API endpoints
-	 *
-	 * @param username The username to use
-	 * @param where Where to browse
-	 * @return A new UserPaginatorSubmission to browse submissions
-	 */
-	public UserPaginatorSubmission getUserPaginator(String username, Where where) {
-		return new UserPaginatorSubmission(this, username, where);
 	}
 }

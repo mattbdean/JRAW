@@ -45,7 +45,7 @@ public class SubmissionTest {
 			Submission s = reddit.getSubmission(ID);
 
 			Comment c = s.getComments().getChildren().get(0);
-			System.out.println(c.getReplies().getChildren().get(0).getBody());
+			Assert.assertNotNull(c.getReplies().getChildren().get(0).getBody());
 		} catch (NetworkException e) {
 			Assert.fail(e.getMessage());
 		}

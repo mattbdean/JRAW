@@ -21,19 +21,22 @@ public class PaginationTest {
 
 	@Test
 	public void testFrontPage() throws NetworkException {
-		SimplePaginator frontPage = reddit.getFrontPage();
+		SimplePaginator frontPage = new SimplePaginator.Builder(reddit).build();
 		commonTest(frontPage);
 	}
 
 	@Test
 	public void testSubreddit() throws NetworkException {
-		SimplePaginator pics = reddit.getSubreddit("pics");
+		SimplePaginator pics = new SimplePaginator.Builder(reddit).subreddit("pics").build();
 		commonTest(pics);
 	}
 
 	@Test
 	public void testSubmitted() throws NetworkException {
-		UserPaginatorSubmission paginator = reddit.getUserPaginator("Unidan", Where.SUBMITTED);
+		UserPaginatorSubmission paginator = new UserPaginatorSubmission.Builder(reddit)
+				.username("Unidan")
+				.where(Where.SUBMITTED)
+				.build();
 		commonTest(paginator);
 	}
 

@@ -13,15 +13,10 @@ public class UserPaginatorSubmission extends AbstractPaginator<Submission> {
 	private final String username;
 	private final Where where;
 
-	public UserPaginatorSubmission(RedditClient creator, String username, Where where) {
-		super(creator, Submission.class);
-
-		if (!where.hasSubmissions() || where.hasComments()) {
-			throw new IllegalArgumentException("Where must only contain submissions");
-		}
-
-		this.where = where;
-		this.username = username;
+	protected UserPaginatorSubmission(Builder b) {
+		super(b);
+		this.username = b.username;
+		this.where = b.where;
 	}
 
 	@Override
@@ -47,5 +42,34 @@ public class UserPaginatorSubmission extends AbstractPaginator<Submission> {
 
 	public Where getWhere() {
 		return where;
+	}
+
+	public static class Builder extends AbstractPaginator.Builder<Submission> {
+		private String username;
+		private Where where;
+
+		/**
+		 * Instantiates a new Builder
+		 * @param reddit The RedditClient to help send requests
+		 */
+		public Builder(RedditClient reddit) {
+			super(reddit, Submission.class);
+		}
+
+
+		public Builder username(String user) {
+			this.username = user;
+			return this;
+		}
+
+		public Builder where(Where w) {
+			this.where = w;
+			return this;
+		}
+
+		@Override
+		public UserPaginatorSubmission build() {
+			return new UserPaginatorSubmission(this);
+		}
 	}
 }

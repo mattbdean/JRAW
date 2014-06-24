@@ -17,64 +17,21 @@ import java.util.Map;
  * @param <T> The type that the listing will contain
  */
 public abstract class AbstractPaginator<T extends Thing> {
-	/** Maximum number of things returned by the Reddit API */
-	public static final int LIMIT_MAX = 100;
-	/** Minimum number of thing returned by the Reddit API */
-	public static final int LIMIT_MIN = 1;
-	/** Default number of things returned by the Reddit API */
-	public static final int DEFAULT_LIMIT = 25;
-	/** Default sorting for new Paginators */
-	public static final Sorting DEFAULT_SORTING = Sorting.HOT;
-	/** Default time period for new Paginators*/
-	public static final TimePeriod DEFAULT_TIME_PERIOD = TimePeriod.DAY;
-
-	protected final Sorting sorting;
-	protected final TimePeriod timePeriod;
-	/** From 1 to {@value #LIMIT_MAX} */
-	protected int limit;
-	/** Current listing. Will get the next listing based on the current listing's "after" value */
-	protected Listing<T> current;
-
 	/** The client that created this */
 	protected final RedditClient creator;
-
+	protected final Sorting sorting;
+	protected final TimePeriod timePeriod;
+	protected final int limit;
+	/** Current listing. Will get the next listing based on the current listing's "after" value */
+	protected Listing<T> current;
 	private Class<T> thingType;
 
-	/**
-	 * Instantiates a new AbstractPaginator using the default limit, sorting, and time period
-	 * @param creator The client that created this
-	 * @param thingType The type of thing that will be created
-	 */
-	protected AbstractPaginator(RedditClient creator, Class<T> thingType) {
-		this(creator, thingType, DEFAULT_SORTING, DEFAULT_TIME_PERIOD);
-	}
-
-	/**
-	 * Instantiates a new AbstractPaginator using the default limit
-	 * @param creator The client that created this
-	 * @param thingType The type of thing that will be created
-	 * @param sorting The sorting that will be used
-	 * @param timePeriod The time period that will be used
-	 */
-	protected AbstractPaginator(RedditClient creator, Class<T> thingType, Sorting sorting, TimePeriod timePeriod) {
-		this(creator, thingType, sorting, timePeriod, DEFAULT_LIMIT);
-	}
-
-	/**
-	 * Instantiates a new AbstractPaginator
-	 *
-	 * @param creator The client that created this
-	 * @param thingType The type of thing that will be created
-	 * @param sorting The sorting that will be used
-	 * @param timePeriod The time period that will be used
-	 * @param limit The maximum amount of things to return
-	 */
-	protected AbstractPaginator(RedditClient creator, Class<T> thingType, Sorting sorting, TimePeriod timePeriod, int limit) {
-		this.creator = creator;
-		this.thingType = thingType;
-		this.limit = limit;
-		this.sorting = sorting;
-		this.timePeriod = timePeriod;
+	protected AbstractPaginator(Builder<T> b) {
+		this.creator = b.creator;
+		this.thingType = b.thingType;
+		this.sorting = b.sorting;
+		this.timePeriod = b.timePeriod;
+		this.limit = b.limit;
 	}
 
 	/**
@@ -89,10 +46,9 @@ public abstract class AbstractPaginator<T extends Thing> {
 
 		Map<String, String> args = new HashMap<>();
 		args.put("limit", String.valueOf(limit));
-		if (current != null) {
+		if (current != null)
 			if (forwards && current.getAfter() != null)
 				args.put("after", current.getAfter());
-		}
 
 		if (timePeriod != null && (sorting == Sorting.CONTROVERSIAL || sorting == Sorting.TOP)) {
 			// Time period only applies to controversial and top listings
@@ -106,7 +62,7 @@ public abstract class AbstractPaginator<T extends Thing> {
 	}
 
 	/**
-	 * Gets the next listing. If a setter method is called (that is not ${@link #setLimit(int)}), then this
+	 * Gets the next listing.
 	 *
 	 * @return The next listing of submissions
 	 * @throws NetworkException If there was a problem sending the HTTP request
@@ -143,26 +99,76 @@ public abstract class AbstractPaginator<T extends Thing> {
 	}
 
 	/**
-	 * Gets the maximum amount of submissions the listing will return. Default is {@value #DEFAULT_LIMIT}, maximum is
-	 * {@value #LIMIT_MAX}.
-	 *
-	 * @return The maximum amount submissions returned in each call
+	 * This class provides a way to easily create Paginator objects with default values for some parameters
+	 * @param <T> The type of Thing that will be returned by the created paginator
 	 */
-	public int getLimit() {
-		return limit;
-	}
+	public abstract static class Builder<T> {
+		/** Maximum number of things returned by the Reddit API */
+		public static final int LIMIT_MAX = 100;
+		/** Minimum number of thing returned by the Reddit API */
+		public static final int LIMIT_MIN = 1;
+		/** Default number of things returned by the Reddit API */
+		public static final int DEFAULT_LIMIT = 25;
+		/** Default sorting for new Paginators */
+		public static final Sorting DEFAULT_SORTING = Sorting.HOT;
+		/** Default time period for new Paginators*/
+		public static final TimePeriod DEFAULT_TIME_PERIOD = TimePeriod.DAY;
 
-	/**
-	 * Sets the amount of posts returned by the Reddit API. Must be at least 1 and no greater than {@value #LIMIT_MAX}
-	 *
-	 * @param limit The new limit
-	 */
-	public void setLimit(int limit) {
-		if (limit > LIMIT_MAX) {
-			throw new IllegalArgumentException(String.format("Limit cannot be over %s (was %s)", LIMIT_MAX, limit));
-		} else if (limit < 1) {
-			throw new IllegalArgumentException(String.format("Limit cannot be less than %s (was %s)", LIMIT_MIN, limit));
+		private final Class<T> thingType;
+		private final RedditClient creator;
+		private int limit = DEFAULT_LIMIT;
+		private Sorting sorting = DEFAULT_SORTING;
+		private TimePeriod timePeriod = DEFAULT_TIME_PERIOD;
+
+		/**
+		 * Instantiates a new Builder
+		 * @param reddit The RedditClient to send requests with
+		 * @param thingType The type of object to return in the built paginator
+		 */
+		public Builder(RedditClient reddit, Class<T> thingType) {
+			this.creator = reddit;
+			this.thingType = thingType;
 		}
-		this.limit = limit;
+
+		/**
+		 * Sets the amount of posts returned by the Reddit API. Must be at least 1 and no greater than {@value #LIMIT_MAX}
+		 *
+		 * @param limit The new limit
+		 */
+		public Builder limit(int limit) {
+			if (limit > LIMIT_MAX) {
+				throw new IllegalArgumentException(String.format("Limit cannot be over %s (was %s)", LIMIT_MAX, limit));
+			} else if (limit < 1) {
+				throw new IllegalArgumentException(String.format("Limit cannot be less than %s (was %s)", LIMIT_MIN, limit));
+			}
+			this.limit = limit;
+			return this;
+		}
+
+		/**
+		 * Sets the sorting to use for the new paginator
+		 * @param s The sorting to use
+		 * @return This Builder
+		 */
+		public Builder sorting(Sorting s) {
+			this.sorting = s;
+			return this;
+		}
+
+		/**
+		 * Sets the time period to use for the new paginator
+		 * @param tp The time period to use
+		 * @return This Builder
+		 */
+		public Builder timePeriod(TimePeriod tp) {
+			this.timePeriod = tp;
+			return this;
+		}
+
+		/**
+		 * Transforms this Builder into a Paginator
+		 * @return A paginator with the same parameters as this Builder
+		 */
+		public abstract AbstractPaginator build();
 	}
 }
