@@ -1,4 +1,4 @@
-<!--- Generated 2014-06-24 at 12:39:59 EDT. Do ./gradlew updateEndpoints to update. DO NOT MODIFY DIRECTLY -->
+<!--- Generated 2014-06-24 at 12:50:11 CDT. Do ./gradlew updateEndpoints to update. DO NOT MODIFY DIRECTLY -->
 #Unimplemented
 ####account
 ~~~
@@ -149,7 +149,6 @@
 /api/friend
 /api/setpermissions
 /api/unfriend
-/api/username_available.json
 /api/v1/me/friends/username
 /api/v1/user/username/trophies
 /user/username/comments
@@ -220,5 +219,6 @@
 /user/username/liked
 /user/username/saved
 /user/username/submitted
+/api/username_available.json
 ~~~
 

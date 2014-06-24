@@ -276,6 +276,11 @@ public class RedditClient extends RestClient {
 		return execute(new RestRequest(HttpVerb.GET, "/r/" + name + "/about.json")).as(Subreddit.class);
 	}
 
+	@EndpointImplementation(uris = "/api/username_available.json")
+	public boolean isUsernameAvailable(String name) throws NetworkException {
+		return Boolean.parseBoolean(execute(new RestRequest(HttpVerb.GET, "/api/username_available.json")).getRaw());
+	}
+
 	/**
 	 * Checks a user is logged in. If not, throws a RedditException
 	 *

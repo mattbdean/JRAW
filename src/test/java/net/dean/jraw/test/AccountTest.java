@@ -55,6 +55,15 @@ public class AccountTest {
 		}
 	}
 
+	@Test
+	public void testUsernameNotAvailable() {
+		try {
+			Assert.assertFalse(reddit.isUsernameAvailable(credentials[0]), "Username was available");
+		} catch (NetworkException e) {
+			Assert.fail(e.getMessage());
+		}
+	}
+
 	@Test(dependsOnMethods = "login")
 	public void testPostLink() {
 		try {
