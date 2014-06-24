@@ -15,7 +15,6 @@ import org.codehaus.jackson.JsonNode;
 
 import java.net.URL;
 import java.util.Map;
-import java.util.Optional;
 
 public class LoggedInAccount extends Account {
 	private RedditClient creator;
@@ -25,83 +24,46 @@ public class LoggedInAccount extends Account {
 		this.creator = creator;
 	}
 
-
-	/**
-	 * Submits a link
-	 *
-	 * @param type               The type of submission, either ${@link net.dean.jraw.models.SubmissionType#LINK} or
-	 *                           ${@link net.dean.jraw.models.SubmissionType#SELF}.
-	 * @param url                The URL that this submission will link to. Not necessary if the submission type is
-	 *                           ${@link net.dean.jraw.models.SubmissionType#SELF}
-	 * @param selfText           The body text of the submission, formatted in Markdown. Not necessary if the submission type is
-	 *                           ${@link net.dean.jraw.models.SubmissionType#LINK}
-	 * @param subreddit          The subreddit to submit the link to (e.g. "funny", "pics", etc.)
-	 * @param title              The title of the submission
-	 * @param saveAfter          Whether to save the submission right after posting
-	 * @param sendRepliesToInbox Whether to send all top level replies to the poster's inbox
-	 * @param resubmit           Whether the Reddit API will return an error if the link's URL has already been posted
-	 * @return A representation of the newly submitted Link
-	 * @throws net.dean.jraw.http.NetworkException If there was a problem sending the HTTP request
-	 * @throws net.dean.jraw.ApiException If the API returned an error
-	 */
-	public Submission submitContent(SubmissionType type, Optional<URL> url, Optional<String> selfText, String subreddit,
-	                                String title, boolean saveAfter, boolean sendRepliesToInbox, boolean resubmit) throws NetworkException, ApiException {
-
-		return submitContent(type, url, selfText, subreddit, title, saveAfter, sendRepliesToInbox, resubmit, Optional.empty(), Optional.empty());
+	public Submission submitContent(SubmissionBuilder b) throws NetworkException, ApiException {
+		return submitContent(b, null, null);
 	}
 
 	/**
 	 * Submits a link with a given captcha. Only really needed if the user has less than 10 link karma.
 	 *
-	 * @param type               The type of submission, either ${@link net.dean.jraw.models.SubmissionType#LINK} or
-	 *                           ${@link net.dean.jraw.models.SubmissionType#SELF}.
-	 * @param url                The URL that this submission will link to. Not necessary if the submission type is
-	 *                           ${@link net.dean.jraw.models.SubmissionType#SELF}
-	 * @param selfText           The body text of the submission, formatted in Markdown. Not necessary if the submission
-	 *                           type is ${@link net.dean.jraw.models.SubmissionType#LINK}
-	 * @param subreddit          The subreddit to submit the link to (e.g. "funny", "pics", etc.)
-	 * @param title              The title of the submission
-	 * @param saveAfter          Whether to save the submission right after posting
-	 * @param sendRepliesToInbox Whether to send all top level replies to the poster's inbox
-	 * @param resubmit           Whether the Reddit API will return an error if the link's URL has already been posted
-	 * @param captcha            The captcha the user is trying to answer
-	 * @param captchaAttempt     The user's attempt at the captcha
 	 * @return A representation of the newly submitted Link
 	 * @throws NetworkException If there was a problem sending the HTTP request
 	 * @throws net.dean.jraw.ApiException If the API returned an error
 	 */
 	@EndpointImplementation(uris = "/api/submit")
-	public Submission submitContent(SubmissionType type, Optional<URL> url, Optional<String> selfText, String subreddit,
-	                                String title, boolean saveAfter, boolean sendRepliesToInbox, boolean resubmit, Optional<Captcha> captcha,
-	                                Optional<String> captchaAttempt) throws NetworkException, ApiException {
-
+	public Submission submitContent(SubmissionBuilder b, Captcha captcha, String captchaAttempt) throws NetworkException, ApiException {
 		Map<String, String> args = JrawUtils.args(
 				"api_type", "json",
 				"extension", "json",
-				"kind", type.name().toLowerCase(),
-				"resubmit", resubmit,
-				"save", saveAfter,
-				"sendreplies", sendRepliesToInbox,
-				"sr", subreddit,
+				"kind", b.type.name().toLowerCase(),
+				"resubmit", b.resubmit,
+				"save", b.saveAfter,
+				"sendreplies", b.sendRepliesToInbox,
+				"sr", b.subreddit,
 				"then", "comments",
-				"title", title
+				"title", b.title
 		);
 
-		if (type == SubmissionType.LINK) {
-			args.put("url", url.get().toExternalForm());
-		} else if (type == SubmissionType.SELF) {
-			args.put("text", selfText.get());
+		if (b.type == SubmissionType.LINK) {
+			args.put("url", b.url.toExternalForm());
+		} else if (b.type == SubmissionType.SELF) {
+			args.put("text", b.selfText);
 		} else {
-			throw new IllegalArgumentException("Unknown SubmissionType: " + type);
+			throw new IllegalArgumentException("Unknown SubmissionType: " + b.type);
 		}
 
-		if (captcha.isPresent()) {
-			if (!captchaAttempt.isPresent()) {
+		if (captcha != null) {
+			if (captchaAttempt == null) {
 				throw new IllegalArgumentException("Captcha present but the attempt is not");
 			}
 
-			args.put("iden", captcha.get().getId());
-			args.put("captcha", captchaAttempt.get());
+			args.put("iden", captcha.getId());
+			args.put("captcha", captchaAttempt);
 		}
 
 		RestResponse response = genericPost("/api/submit", args);
@@ -255,5 +217,77 @@ public class LoggedInAccount extends Account {
 		}
 
 		return response;
+	}
+
+	/**
+	 * This class provides a way to configure posting parameters of a new submission
+	 */
+	public static class SubmissionBuilder {
+		private final SubmissionType type;
+		private final String selfText;
+		private final URL url;
+		private final String subreddit;
+		private final String title;
+		private boolean saveAfter; // = false;
+		private boolean sendRepliesToInbox; // = false;
+		private boolean resubmit; // = false;
+
+		/**
+		 * Instantiates a new SubmissionBuilder that will result in a self post.
+		 * @param selfText The body text of the submission, formatted in Markdown
+		 * @param subreddit The subreddit to submit the link to (e.g. "funny", "pics", etc.)
+		 * @param title The title of the submission
+		 */
+		public SubmissionBuilder(String selfText, String subreddit, String title) {
+			this.type = SubmissionType.SELF;
+			this.selfText = selfText;
+			this.url = null;
+			this.subreddit = subreddit;
+			this.title = title;
+		}
+
+		/**
+		 * Instantiates a new SubmissionBuilder that will result in a link post.
+		 * @param url The URL that this submission will link to
+		 * @param subreddit The subreddit to submit the link to (e.g. "funny", "pics", etc.)
+		 * @param title The title of the submission
+		 */
+		public SubmissionBuilder(URL url, String subreddit, String title) {
+			this.type = SubmissionType.LINK;
+			this.url = url;
+			this.selfText = null;
+			this.subreddit = subreddit;
+			this.title = title;
+		}
+
+		/**
+		 * Whether to save after right after posting
+		 * @param flag To save or not to save, that is the question
+		 * @return This builder
+		 */
+		public SubmissionBuilder saveAfter(boolean flag) {
+			this.saveAfter = flag;
+			return this;
+		}
+
+		/**
+		 * Whether to send top-level replies to your inbox
+		 * @param flag Send replies to your inbox?
+		 * @return This builder
+		 */
+		public SubmissionBuilder sendRepliesToInbox(boolean flag) {
+			this.sendRepliesToInbox = flag;
+			return this;
+		}
+
+		/**
+		 * Set whether or not the Reddit API will return an error if the link's URL has already been posted
+		 * @param flag If there should be an exception if there is already a post like this
+		 * @return This builder
+		 */
+		public SubmissionBuilder resubmit(boolean flag) {
+			this.resubmit = flag;
+			return this;
+		}
 	}
 }

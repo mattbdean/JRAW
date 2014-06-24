@@ -1,9 +1,10 @@
 package net.dean.jraw.test;
 
-import net.dean.jraw.*;
+import net.dean.jraw.ApiException;
+import net.dean.jraw.JrawUtils;
+import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.models.LoggedInAccount;
-import net.dean.jraw.models.SubmissionType;
 import net.dean.jraw.models.VoteDirection;
 import net.dean.jraw.models.core.Account;
 import net.dean.jraw.models.core.Submission;
@@ -15,7 +16,6 @@ import org.testng.annotations.Test;
 
 import java.net.URL;
 import java.util.List;
-import java.util.Optional;
 
 public class AccountTest {
 	// Array length 2 where credentials[0] is the username and credentials[1] is the password
@@ -69,11 +69,11 @@ public class AccountTest {
 		try {
 			int number = TestUtils.randomInt();
 
-			Optional<URL> url = Optional.of(JrawUtils.newUrl("https://www.google.com/?q=" + number));
-			Optional<String> text = Optional.empty();
+			URL url = JrawUtils.newUrl("https://www.google.com/?q=" + number);
 
-			Submission submission = account.submitContent(SubmissionType.LINK, url, text, "jraw_testing2", "Link post test (random=" + number + ")",
-					false, false, false);
+			Submission submission = account.submitContent(
+					new LoggedInAccount.SubmissionBuilder(url, "jraw_testing2", "Link post test (random=" + number + ")"));
+
 			Assert.assertNotNull(submission);
 			ThingFieldTest.fieldValidityCheck(submission);
 		} catch (NetworkException e) {
