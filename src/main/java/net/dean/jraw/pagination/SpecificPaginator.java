@@ -9,7 +9,7 @@ import net.dean.jraw.models.core.Submission;
 
 public class SpecificPaginator extends AbstractPaginator<Submission> {
 	private final String submissionListing;
-	private SpecificPaginator(Builder b, Submission... submissions) {
+	private SpecificPaginator(Builder b) {
 		super(b);
 		this.submissionListing = b.submissionListing;
 	}

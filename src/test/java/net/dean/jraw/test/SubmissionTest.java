@@ -50,4 +50,17 @@ public class SubmissionTest {
 			Assert.fail(e.getMessage());
 		}
 	}
+
+	@Test
+	public void testRandom() {
+		try {
+			Submission s = reddit.getRandom();
+			ThingFieldTest.fieldValidityCheck(s);
+
+			s = reddit.getRandom("pics");
+			ThingFieldTest.fieldValidityCheck(s);
+		} catch (NetworkException e) {
+			Assert.fail(e.getMessage());
+		}
+	}
 }

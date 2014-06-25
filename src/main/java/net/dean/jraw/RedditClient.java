@@ -276,6 +276,19 @@ public class RedditClient extends RestClient {
 		return Boolean.parseBoolean(execute(new RestRequest(HttpVerb.GET, "/api/username_available.json?user=" + name)).getRaw());
 	}
 
+	public Submission getRandom() throws NetworkException {
+		return getRandom(null);
+	}
+
+	@EndpointImplementation(uris = "/random")
+	public Submission getRandom(String subreddit) throws NetworkException  {
+		String path = "/random.json";
+		if (subreddit != null) {
+			path = "/r/" + subreddit + path;
+		}
+		return execute(new RestRequest(HttpVerb.GET, path)).as(Submission.class);
+	}
+
 	/**
 	 * Checks a user is logged in. If not, throws a RedditException
 	 *
