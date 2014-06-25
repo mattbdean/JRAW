@@ -17,7 +17,6 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.Scanner;
 
 /**
  * This class provides access to the most basic Reddit features such as logging in.
@@ -96,7 +95,7 @@ public class RedditClient extends RestClient {
 			executed = history.get(i).getExecuted();
 			// Request was executed before 60 seconds ago or has there been over 30 requests executed already?
 			if (executed.isBefore(now.minus(60, ChronoUnit.SECONDS)) || ++execAmount >= REQUESTS_PER_MINUTE) {
-				if (i >= 0) {
+				if (i > 0) {
 					// Make sure that we leave enough time to make sure we have 30 requests max in the last minute
 					LocalDateTime before = history.get(i - 1).getExecuted();
 					Duration timeToWait = Duration.between(executed, before);
@@ -106,6 +105,7 @@ public class RedditClient extends RestClient {
 					}
 					try {
 						// Wait the time between the two times
+						JrawUtils.logger().info("Sleeping for {} milliseconds", millis);
 						Thread.sleep(millis);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
@@ -198,14 +198,9 @@ public class RedditClient extends RestClient {
 	public boolean needsCaptcha() throws NetworkException {
 		try {
 			// This endpoint does not return JSON, but rather just "true" or "false"
-			CloseableHttpResponse response = http.execute(HttpVerb.GET, HOST, "/api/needs_captcha.json");
-
-			// Read the contents of the response
-			Scanner s = new Scanner(response.getEntity().getContent()).useDelimiter("\\A");
-			String raw = s.hasNext() ? s.next() : "";
-
-			return Boolean.parseBoolean(raw);
-		} catch (NetworkException | IOException e) {
+			RestResponse response = execute(new RestRequest(HttpVerb.GET, "/api/needs_captcha.json"));
+			return Boolean.parseBoolean(response.getRaw());
+		} catch (NetworkException e) {
 			throw new NetworkException("Unable to make the request to /api/needs_captcha.json", e);
 		}
 	}
@@ -278,7 +273,7 @@ public class RedditClient extends RestClient {
 
 	@EndpointImplementation(uris = "/api/username_available.json")
 	public boolean isUsernameAvailable(String name) throws NetworkException {
-		return Boolean.parseBoolean(execute(new RestRequest(HttpVerb.GET, "/api/username_available.json")).getRaw());
+		return Boolean.parseBoolean(execute(new RestRequest(HttpVerb.GET, "/api/username_available.json?user=" + name)).getRaw());
 	}
 
 	/**

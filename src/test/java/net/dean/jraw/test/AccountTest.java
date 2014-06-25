@@ -109,7 +109,7 @@ public class AccountTest {
 	public void testSaveSubmission() {
 		try {
 			Submission submission = reddit.getSubmission("28d6vv");
-			account.save(submission);
+			account.setSaved(submission, true);
 
 			UserPaginatorSubmission paginator = new UserPaginatorSubmission.Builder(reddit)
 					.username(account.getName())
@@ -134,7 +134,7 @@ public class AccountTest {
 	public void testUnsaveSubmission() {
 		try {
 			Submission submission = reddit.getSubmission("28d6vv");
-			account.unsave(submission);
+			account.setSaved(submission, false);
 
 			UserPaginatorSubmission paginator = new UserPaginatorSubmission.Builder(reddit)
 					.username(account.getName())

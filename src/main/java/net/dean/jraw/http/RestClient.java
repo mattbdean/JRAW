@@ -1,5 +1,7 @@
 package net.dean.jraw.http;
 
+import org.apache.http.client.methods.CloseableHttpResponse;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +41,11 @@ public class RestClient {
 	public RestResponse execute(RestRequest request) throws NetworkException {
 		request.setExecuted(LocalDateTime.now());
 		history.add(request);
-		return new RestResponse(http.execute(request.getVerb(), host, request.getPath(), request.getArgs()));
+		CloseableHttpResponse response = http.execute(request.getVerb(), host, request.getPath(), request.getArgs());
+		if (response == null) {
+			throw new NetworkException("Request timed out");
+		}
+		return new RestResponse(response);
 	}
 
 	/**

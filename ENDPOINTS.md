@@ -1,4 +1,4 @@
-<!--- Generated 2014-06-24 at 12:50:11 CDT. Do ./gradlew updateEndpoints to update. DO NOT MODIFY DIRECTLY -->
+<!--- Generated 2014-06-24 at 21:39:55 CDT. Do ./gradlew updateEndpoints to update. DO NOT MODIFY DIRECTLY -->
 #Unimplemented
 ####account
 ~~~
@@ -50,7 +50,6 @@
 /api/editusertext
 /api/hide
 /api/info
-/api/marknsfw
 /api/morechildren
 /api/report
 /api/saved_categories.json
@@ -58,7 +57,6 @@
 /api/set_subreddit_sticky
 /api/store_visits
 /api/unhide
-/api/unmarknsfw
 ~~~
 
 ####listings
@@ -189,11 +187,13 @@
 
 ####links & comments
 ~~~
-/api/unsave
 /api/vote
 /api/sendreplies
+/api/marknsfw
+/api/unmarknsfw
 /api/del
 /api/save
+/api/unsave
 /api/submit
 ~~~
 

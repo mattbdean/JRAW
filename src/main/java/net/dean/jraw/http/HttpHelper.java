@@ -5,9 +5,11 @@ import org.apache.http.Header;
 import org.apache.http.HttpHost;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.*;
 import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicHeader;
@@ -45,6 +47,7 @@ public class HttpHelper {
 		defaultHeaders.add(new BasicHeader("User-Agent", userAgent));
 		this.client = HttpClientBuilder.create()
 				.setDefaultCookieStore(cookieStore)
+				.setDefaultRequestConfig(RequestConfig.custom().setConnectTimeout(5000).setConnectionRequestTimeout(5000).build())
 				.build();
 	}
 
@@ -109,6 +112,8 @@ public class HttpHelper {
 			}
 
 			return response;
+		} catch (ConnectTimeoutException e) {
+			throw new NetworkException("Connection timed out", e);
 		} catch (IOException e) {
 			e.printStackTrace();
 			return null;

@@ -116,32 +116,18 @@ public class LoggedInAccount extends Account {
 	}
 
 	/**
-	 * Saves a submission.
+	 * Saves or unsaves a submission.
 	 *
-	 * @param s The submission to save
+	 * @param s The submission to save or unsave
 	 * @return The JSON response from the API
 	 * @throws NetworkException If there was a problem sending the HTTP request
 	 * @throws ApiException If the API returned an error
 	 */
-	@EndpointImplementation(uris = "/api/save")
-	public RestResponse save(Submission s) throws NetworkException, ApiException {
-		return genericPost("/api/save", JrawUtils.args(
-				"id", ThingType.LINK.getPrefix() + "_" + s.getId()
-		));
-	}
-
-	/**
-	 * Unsaves a submission
-	 *
-	 * @param s The sumbission to unsave
-	 * @return The JSON response from the API
-	 * @throws NetworkException If there was a problem sending the HTTP request
-	 * @throws ApiException If the API returned an error
-	 */
-	@EndpointImplementation(uris = "/api/unsave")
-	public RestResponse unsave(Submission s) throws NetworkException, ApiException {
-		return genericPost("/api/unsave", JrawUtils.args(
-				"id", ThingType.LINK.getPrefix() + "_" + s.getId()
+	@EndpointImplementation(uris = {"/api/save", "/api/unsave"})
+	public RestResponse setSaved(Submission s, boolean save) throws NetworkException, ApiException {
+		// Send it to "/api/save" if save == true, "/api/unsave" if save == false
+		return genericPost(String.format("/api/%ssave", save ? "" : "un"), JrawUtils.args(
+				"id", s.getName()
 		));
 	}
 
@@ -151,8 +137,18 @@ public class LoggedInAccount extends Account {
 			throw new IllegalArgumentException(String.format("Logged in user (%s) did not post this submission (by %s)", getName(), s.getAuthor()));
 		}
 		return genericPost("/api/sendreplies", JrawUtils.args(
-				"id", s.getId(),
+				"id", s.getName(),
 				"state", Boolean.toString(send)
+		));
+	}
+
+	@EndpointImplementation(uris = {"/api/marknsfw", "/api/unmarknsfw"})
+	public RestResponse setNsfw(Submission s, boolean nsfw) throws NetworkException, ApiException {
+		checkIfOwns(s);
+
+		// "/api/marknsfw" if nsfw == true, "/api/unmarknsfw" if nsfw == false
+		return genericPost(String.format("/api/%smarknsfw", nsfw ? "" : "un"), JrawUtils.args(
+				"id", s.getName()
 		));
 	}
 
@@ -164,11 +160,8 @@ public class LoggedInAccount extends Account {
 	 * @throws ApiException If the api returned an error
 	 */
 	public RestResponse delete(Submission s) throws NetworkException, ApiException {
-		if (!s.getAuthor().equals(getName())) {
-			throw new IllegalArgumentException(String.format("Logged in user (%s) did not post this submission (by %s)", getName(), s.getAuthor()));
-		}
-
-		return delete(s.getId());
+		checkIfOwns(s);
+		return delete(s.getName());
 	}
 
 
@@ -184,7 +177,7 @@ public class LoggedInAccount extends Account {
 			throw new IllegalArgumentException(String.format("Logged in user (%s) did not post this comment (by %s)", getName(), c.getAuthor()));
 		}
 
-		return delete(c.getId());
+		return delete(c.getName());
 	}
 
 
@@ -217,6 +210,12 @@ public class LoggedInAccount extends Account {
 		}
 
 		return response;
+	}
+
+	private void checkIfOwns(Submission s) {
+		if (!s.getAuthor().equals(getName())) {
+			throw new IllegalArgumentException(String.format("Logged in user (%s) did not post this submission (by %s)", getName(), s.getAuthor()));
+		}
 	}
 
 	/**

@@ -164,7 +164,7 @@ public class Submission extends Thing implements Created, Distinguishable, Votab
 	 * @return If the post is tagged as NSFW
 	 */
 	@JsonInteraction
-	public Boolean isOver18() {
+	public Boolean isNSFW() {
 		return data("over_18", Boolean.class);
 	}
 
