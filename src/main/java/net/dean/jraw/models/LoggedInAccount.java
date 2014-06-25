@@ -193,6 +193,24 @@ public class LoggedInAccount extends Account {
 		return genericPost("/api/del", JrawUtils.args("id", id));
 	}
 
+	@EndpointImplementation(uris = "/api/adddeveloper")
+	public RestResponse addDeveloper(String clientId, String newDev) throws NetworkException, ApiException {
+		return genericPost("/api/adddeveloper", JrawUtils.args(
+				"api_type", "json",
+				"client_id", clientId,
+				"name", newDev
+		));
+	}
+
+	@EndpointImplementation(uris = "/api/removedeveloper")
+	public RestResponse removeDeveloper(String clientId, String oldDev) throws NetworkException, ApiException {
+		return genericPost("/api/removedeveloper", JrawUtils.args(
+				"api_type", "json",
+				"client_id", clientId,
+				"name", oldDev
+		));
+	}
+
 	/**
 	 * Executes a generic POST request that returns a RedditResponse. Used primarily for convenience and standardization
 	 * of the messages of RedditExceptions that are thrown.

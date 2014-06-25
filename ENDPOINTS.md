@@ -1,5 +1,5 @@
-<!--- Generated 2014-06-24 at 23:59:44 CDT. Do ./gradlew updateEndpoints to update. DO NOT MODIFY DIRECTLY -->
-#Unimplemented (117/145)
+<!--- Generated 2014-06-25 at 10:14:15 CDT. Do ./gradlew updateEndpoints to update. DO NOT MODIFY DIRECTLY -->
+#Unimplemented (115/145)
 ####account
 ~~~
 /api/clear_sessions
@@ -21,9 +21,7 @@
 
 ####apps
 ~~~
-/api/adddeveloper
 /api/deleteapp
-/api/removedeveloper
 /api/revokeapp
 /api/setappicon
 /api/updateapp
@@ -169,11 +167,16 @@
 /wiki/page
 ~~~
 
-#Implemented (28/145)
+#Implemented (30/145)
 ####account
 [`/api/login`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L134)
 
 [`/api/me.json`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L170)
+
+####apps
+[`/api/adddeveloper`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/models/LoggedInAccount.java#L197)
+
+[`/api/removedeveloper`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/models/LoggedInAccount.java#L206)
 
 ####captcha
 [`/api/needs_captcha.json`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L200)
