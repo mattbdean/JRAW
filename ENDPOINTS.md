@@ -1,4 +1,4 @@
-<!--- Generated 2014-06-24 at 22:39:06 CDT. Do ./gradlew updateEndpoints to update. DO NOT MODIFY DIRECTLY -->
+<!--- Generated 2014-06-24 at 22:56:42 CDT. Do ./gradlew updateEndpoints to update. DO NOT MODIFY DIRECTLY -->
 #Unimplemented
 ####account
 ~~~
@@ -62,7 +62,6 @@
 ####listings
 ~~~
 /comments/article
-/random
 ~~~
 
 ####moderation
@@ -199,6 +198,7 @@
 ####listings
 ~~~
 /by_id/names
+/random
 /controversial
 /hot
 /new
