@@ -73,8 +73,8 @@ public class EndpointAnalysis {
 					dateFormat.format(new Date())));
 
 			// Write both maps
-			exportMap(bw, unimplemented, "Unimplemented", allEndpointsSize);
-			exportMap(bw, implemented, "Implemented", allEndpointsSize);
+			exportMap(bw, unimplemented, false, allEndpointsSize);
+			exportMap(bw, implemented, true, allEndpointsSize);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -85,11 +85,11 @@ public class EndpointAnalysis {
 	 *
 	 * @param bw The BufferedWriter to use
 	 * @param endpoints The list of endpoints to write
-	 * @param title The title of the list
+	 * @param implemented If these endpoints have been implemented
 	 *
 	 * @throws IOException If there was a problem writing to the file
 	 */
-	private void exportMap(BufferedWriter bw, List<Endpoint> endpoints, String title, int allEndpointsSize) throws IOException {
+	private void exportMap(BufferedWriter bw, List<Endpoint> endpoints, boolean implemented, int allEndpointsSize) throws IOException {
 		// TreeMap<category, list of endpoints>
 		TreeMap<String, List<Endpoint>> unimplMap = new TreeMap<>();
 		for (Endpoint endpoint : endpoints) {
@@ -102,18 +102,22 @@ public class EndpointAnalysis {
 		}
 
 		// Main header of collection
-		bw.write(String.format("#%s (%s/%s)\n", title, endpoints.size(), allEndpointsSize));
+		bw.write(String.format("#%s (%s/%s)\n", implemented ? "Implemented" : "Unimplemented", endpoints.size(), allEndpointsSize));
 
 		// Iterate through the entries and write them to the file
 		for (Map.Entry<String, List<Endpoint>> entry : unimplMap.entrySet()) {
 			// Write the category header
 			bw.write(String.format("####%s\n", entry.getKey()));
+			// Use code blocks for unimplemented endpoints
+			if (!implemented)
+				bw.write("~~~\n");
+
 			// Write every endpoint in that category
 			for (Endpoint endpoint : entry.getValue()) {
-				// [`/endpoint`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/MyClass.java#L100)
-				if (endpoint.getMethod() == null) {
-						bw.write(String.format("`%s`\n\n", endpoint.getUri()));
+				if (!implemented) {
+					bw.write(endpoint.getUri() + '\n');
 				} else {
+					// [`/endpoint`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/MyClass.java#L100)
 					try {
 						// "It's a one-liner"
 						bw.write(String.format("[`%s`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/%s.java#L%s)\n\n",
@@ -124,6 +128,11 @@ public class EndpointAnalysis {
 						e.printStackTrace();
 					}
 				}
+			}
+
+			// Close the code block
+			if (!implemented) {
+				bw.write("~~~\n\n");
 			}
 		}
 	}
