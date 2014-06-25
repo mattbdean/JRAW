@@ -16,7 +16,7 @@ dependencies {
     testCompile group: 'org.testng',                name: 'testng',             version: '6.1.1'
 }
 
-task updateEndpoints(type: JavaExec, dependsOn: build) {
+task updateEndpoints(type: JavaExec, dependsOn: compileJava) {
     main = "net.dean.jraw.endpointgen.EndpointAnalysis"
     classpath = sourceSets.main.runtimeClasspath
 }

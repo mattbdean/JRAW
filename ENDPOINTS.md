@@ -1,5 +1,5 @@
-<!--- Generated 2014-06-24 at 22:56:42 CDT. Do ./gradlew updateEndpoints to update. DO NOT MODIFY DIRECTLY -->
-#Unimplemented
+<!--- Generated 2014-06-24 at 23:10:28 CDT. Do ./gradlew updateEndpoints to update. DO NOT MODIFY DIRECTLY -->
+#Unimplemented (117/145)
 ####account
 ~~~
 /api/clear_sessions
@@ -169,7 +169,7 @@
 /wiki/page
 ~~~
 
-#Implemented
+#Implemented (28/145)
 ####account
 ~~~
 /api/login

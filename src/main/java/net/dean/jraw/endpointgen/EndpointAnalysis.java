@@ -59,14 +59,19 @@ public class EndpointAnalysis {
 		List<Endpoint> unimplemented = allEndpoints.get(0);
 		List<Endpoint> implemented = allEndpoints.get(1);
 
+		int allEndpointsSize = 0;
+		for (List<Endpoint> endpoints : allEndpoints) {
+			allEndpointsSize += endpoints.size();
+		}
+
 		try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(exportFile), StandardCharsets.UTF_8))) {
 			// http://stackoverflow.com/a/4829998/1275092
 			bw.write(String.format("<!--- Generated %s. Do ./gradlew updateEndpoints to update. DO NOT MODIFY DIRECTLY -->\n",
 					dateFormat.format(new Date())));
 
 			// Write both maps
-			exportMap(bw, unimplemented, "Unimplemented");
-			exportMap(bw, implemented, "Implemented");
+			exportMap(bw, unimplemented, "Unimplemented", allEndpointsSize);
+			exportMap(bw, implemented, "Implemented", allEndpointsSize);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -81,7 +86,7 @@ public class EndpointAnalysis {
 	 *
 	 * @throws IOException If there was a problem writing to the file
 	 */
-	private void exportMap(BufferedWriter bw, List<Endpoint> endpoints, String title) throws IOException {
+	private void exportMap(BufferedWriter bw, List<Endpoint> endpoints, String title, int allEndpointsSize) throws IOException {
 		// TreeMap<category, list of endpoints>
 		TreeMap<String, List<String>> unimplMap = new TreeMap<>();
 		for (Endpoint endpoint : endpoints) {
@@ -94,7 +99,7 @@ public class EndpointAnalysis {
 		}
 
 		// Main header of collection
-		bw.write(String.format("#%s\n", title));
+		bw.write(String.format("#%s (%s/%s)\n", title, endpoints.size(), allEndpointsSize));;
 
 		// Iterate through the entries and write them to the file
 		for (Map.Entry<String, List<String>> entry : unimplMap.entrySet()) {
