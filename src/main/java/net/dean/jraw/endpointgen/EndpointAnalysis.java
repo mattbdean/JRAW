@@ -1,5 +1,7 @@
 package net.dean.jraw.endpointgen;
 
+import javassist.ClassPool;
+import javassist.NotFoundException;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.reflections.Reflections;
@@ -21,6 +23,7 @@ import java.util.*;
 public class EndpointAnalysis {
 	private static final String FILE_NAME = "ENDPOINTS.md";
 	private static final String ALL_ENDPOINTS_FILE_NAME = "endpoints.json";
+	private static final ClassPool CLASS_POOL = ClassPool.getDefault();
 
 	/** The file that represents {@value #FILE_NAME} */
 	private File exportFile;
@@ -88,31 +91,40 @@ public class EndpointAnalysis {
 	 */
 	private void exportMap(BufferedWriter bw, List<Endpoint> endpoints, String title, int allEndpointsSize) throws IOException {
 		// TreeMap<category, list of endpoints>
-		TreeMap<String, List<String>> unimplMap = new TreeMap<>();
+		TreeMap<String, List<Endpoint>> unimplMap = new TreeMap<>();
 		for (Endpoint endpoint : endpoints) {
 			// Initialize the list if it hasn't been already
 			if (unimplMap.get(endpoint.getCategory()) == null) {
 				unimplMap.put(endpoint.getCategory(), new ArrayList<>());
 			}
 
-			unimplMap.get(endpoint.getCategory()).add(endpoint.getUri());
+			unimplMap.get(endpoint.getCategory()).add(endpoint);
 		}
 
 		// Main header of collection
-		bw.write(String.format("#%s (%s/%s)\n", title, endpoints.size(), allEndpointsSize));;
+		bw.write(String.format("#%s (%s/%s)\n", title, endpoints.size(), allEndpointsSize));
 
 		// Iterate through the entries and write them to the file
-		for (Map.Entry<String, List<String>> entry : unimplMap.entrySet()) {
+		for (Map.Entry<String, List<Endpoint>> entry : unimplMap.entrySet()) {
 			// Write the category header
 			bw.write(String.format("####%s\n", entry.getKey()));
-			// Start the code block
-			bw.write("~~~\n");
 			// Write every endpoint in that category
-			for (String endpoint : entry.getValue()) {
-				bw.write(endpoint + "\n");
+			for (Endpoint endpoint : entry.getValue()) {
+				// [`/endpoint`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/MyClass.java#L100)
+				if (endpoint.getMethod() == null) {
+						bw.write(String.format("`%s`\n\n", endpoint.getUri()));
+				} else {
+					try {
+						// "It's a one-liner"
+						bw.write(String.format("[`%s`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/%s.java#L%s)\n\n",
+								endpoint.getUri(),
+								endpoint.getMethod().getDeclaringClass().getName().replace('.', '/'),
+								CLASS_POOL.getMethod(endpoint.getMethod().getDeclaringClass().getName(), endpoint.getMethod().getName()).getMethodInfo().getLineNumber(0) - 1));
+					} catch (NotFoundException e) {
+						e.printStackTrace();
+					}
+				}
 			}
-			// End the code block
-			bw.write("~~~\n\n");
 		}
 	}
 
@@ -141,6 +153,7 @@ public class EndpointAnalysis {
 					Endpoint un = it.next();
 					if (un.getUri().equals(uri)) {
 						it.remove();
+						un.setMethod(m);
 						implemented.add(un);
 					}
 				}

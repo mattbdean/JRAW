@@ -9,6 +9,7 @@ repositories {
 
 dependencies {
     compile fileTree(dir: 'libs/', include: '*.jar')
+    compile     group: 'org.javassist',             name: 'javassist',          version: '3.18.2-GA'
     compile     group: 'org.apache.httpcomponents', name: 'httpclient',         version: '4.3.3'
     compile     group: 'org.codehaus.jackson',      name: 'jackson-mapper-asl', version: '1.9.+'
     compile     group: 'org.slf4j',                 name: 'slf4j-api',          version: '1.7.+'

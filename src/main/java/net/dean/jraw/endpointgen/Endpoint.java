@@ -1,11 +1,14 @@
 package net.dean.jraw.endpointgen;
 
+import java.lang.reflect.Method;
+
 /**
  * This class represents a Reddit API endpoint such as {@code /api/login}
  */
 public class Endpoint {
 	private final String uri;
 	private final String category;
+	private Method method;
 
 	/**
 	 * Instantiates a new Endpoint
@@ -35,11 +38,20 @@ public class Endpoint {
 		return category;
 	}
 
+	public Method getMethod() {
+		return method;
+	}
+
+	public void setMethod(Method method) {
+		this.method = method;
+	}
+
 	@Override
 	public String toString() {
-		return "Endpoint {" +
-				"category='" + category + '\'' +
-				", uri='" + uri + '\'' +
+		return "Endpoint{" +
+				"uri='" + uri + '\'' +
+				", category='" + category + '\'' +
+				", method=" + method +
 				'}';
 	}
 }
