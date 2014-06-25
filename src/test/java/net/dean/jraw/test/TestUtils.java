@@ -31,9 +31,15 @@ public final class TestUtils {
 
 	public static String[] getCredentials() {
 		try {
-			URL resource = TestUtils.class.getResource("/credentials.txt");
-			Path credPath = Paths.get(resource.toURI());
-			return new String(Files.readAllBytes(credPath), "UTF-8").split("\n");
+			// If running locally, use credentials file
+			// If running with Travis-CI, use env variables
+			if (System.getenv("TRAVIS") != null && Boolean.parseBoolean(System.getenv("TRAVIS"))) {
+				return new String[] {System.getenv("USERNAME"), System.getenv("PASS")};
+			} else {
+				URL resource = TestUtils.class.getResource("/credentials.txt");
+				Path credPath = Paths.get(resource.toURI());
+				return new String(Files.readAllBytes(credPath), "UTF-8").split("\n");
+			}
 		} catch (Exception e) {
 			Assert.fail(e.getMessage());
 			return null;
