@@ -192,7 +192,11 @@ public class AccountTest {
 		try {
 			MultiReddit multi = reddit.getPublicMulti(account.getName(), "test_multi");
 			ThingFieldTest.fieldValidityCheck(multi);
-		} catch (NetworkException e) {
+
+			for (String desc : reddit.getPublicMultiDescription(account.getName(), "test_multi")) {
+				Assert.assertNotNull(desc, "Description was null");
+			}
+		} catch (NetworkException | ApiException e) {
 			Assert.fail(e.getMessage());
 		}
 	}

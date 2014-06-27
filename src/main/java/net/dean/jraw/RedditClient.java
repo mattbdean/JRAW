@@ -278,14 +278,39 @@ public class RedditClient extends RestClient {
 		return Boolean.parseBoolean(execute(new RestRequest(HttpVerb.GET, "/api/username_available.json?user=" + name)).getRaw());
 	}
 
-	public Submission getRandom() throws NetworkException {
-		return getRandom(null);
+	/**
+	 * Gets a publicly available MultiReddit
+	 * @param username The owner of the multireddit
+	 * @param multiName The name of the multireddit
+	 * @return A MultiReddit
+	 * @throws NetworkException
+	 * @throws ApiException
+	 */
+	@EndpointImplementation(uris = "/api/multi/multipath")
+	public MultiReddit getPublicMulti(String username, String multiName) throws NetworkException, ApiException {
+		JsonNode node = execute(new RestRequest(HttpVerb.GET, String.format("/api/multi/user/%s/m/%s", username, multiName))).getJson();
+		checkMultiRedditError(node);
+		return new MultiReddit(node.get("data"));
 	}
 
-	@EndpointImplementation(uris = "/api/multi/multipath")
-	public MultiReddit getPublicMulti(String username, String multiName) throws NetworkException {
-		JsonNode node = execute(new RestRequest(HttpVerb.GET, String.format("/api/multi/user/%s/m/%s", username, multiName))).getJson();
-		return new MultiReddit(node.get("data"));
+	/**
+	 * Fetches the description of a public or self-owned multireddit. The first String in the resulting array is the
+	 * Markdown version of the text, while the second is the HTML version
+	 * @param username The owner of the multireddit
+	 * @param multiName The name of the multireddit
+	 * @return A String array in which the first index is Markdown and the second is HTML
+	 * @throws NetworkException If there was a problem sending the request
+	 */
+	@EndpointImplementation(uris = "/api/multi/multipath/description")
+	public String[] getPublicMultiDescription(String username, String multiName) throws NetworkException, ApiException {
+		JsonNode node = execute(new RestRequest(HttpVerb.GET, String.format("/api/multi/user/%s/m/%s/description", username, multiName))).getJson();
+		checkMultiRedditError(node);
+		node = node.get("data");
+		return new String[] {node.get("body_md").asText(), node.get("body_html").asText()};
+	}
+
+	public Submission getRandom() throws NetworkException {
+		return getRandom(null);
 	}
 
 	@EndpointImplementation(uris = "/random")
@@ -295,6 +320,18 @@ public class RedditClient extends RestClient {
 			path = "/r/" + subreddit + path;
 		}
 		return execute(new RestRequest(HttpVerb.GET, path)).as(Submission.class);
+	}
+
+	/**
+	 * Checks if there was an error returned by a /api/multi/* request, since those URIs return a different error handling
+	 * format than the rest of the API
+	 * @param root The root JsonNode
+	 * @throws ApiException If there is a visible error
+	 */
+	private void checkMultiRedditError(JsonNode root) throws ApiException {
+		if (root.has("explanation") && root.has("reason")) {
+			throw new ApiException(root.get("reason").asText(), root.get("explanation").asText());
+		}
 	}
 
 	/**

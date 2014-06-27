@@ -77,7 +77,7 @@ public class RestResponse {
 
 					for (int i = 0; i < errorsNode.size(); i++) {
 						JsonNode error = errorsNode.get(i);
-						apiExceptions[i] = new ApiException(error.get(0).asText(), error.get(1).asText(), error.get(2).asText());
+						apiExceptions[i] = new ApiException(error.get(0).asText(), error.get(1).asText());
 					}
 				}
 			} else {

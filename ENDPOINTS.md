@@ -1,5 +1,5 @@
-<!--- Generated 2014-06-27 at 11:14:27 CDT. Do ./gradlew updateEndpoints to update. DO NOT MODIFY DIRECTLY -->
-#Unimplemented (111/145)
+<!--- Generated 2014-06-27 at 11:40:29 CDT. Do ./gradlew updateEndpoints to update. DO NOT MODIFY DIRECTLY -->
+#Unimplemented (110/145)
 ####account
 ~~~
 /api/clear_sessions
@@ -77,7 +77,6 @@
 ####multis
 ~~~
 /api/multi/multipath/copy
-/api/multi/multipath/description
 /api/multi/multipath/r/srname
 /api/multi/multipath/rename
 ~~~
@@ -163,7 +162,7 @@
 /wiki/page
 ~~~
 
-#Implemented (34/145)
+#Implemented (35/145)
 ####account
 [`/api/login`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L136)
 
@@ -205,7 +204,7 @@
 ####listings
 [`/by_id/names`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/SpecificPaginator.java#L25)
 
-[`/random`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L281)
+[`/random`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L312)
 
 [`/controversial`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/SimplePaginator.java#L23)
 
@@ -218,7 +217,9 @@
 [`/sort`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/SimplePaginator.java#L23)
 
 ####multis
-[`/api/multi/multipath`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L286)
+[`/api/multi/multipath`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L290)
+
+[`/api/multi/multipath/description`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L305)
 
 [`/api/multi/mine`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/models/LoggedInAccount.java#L224)
 

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MultiReddit extends Thing implements Created {
+
 	/**
 	 * Instantiates a new Thing
 	 *
