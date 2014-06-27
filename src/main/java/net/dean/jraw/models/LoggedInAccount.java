@@ -14,6 +14,8 @@ import net.dean.jraw.models.core.Submission;
 import org.codehaus.jackson.JsonNode;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class LoggedInAccount extends Account {
@@ -216,6 +218,18 @@ public class LoggedInAccount extends Account {
 		return genericPost(String.format("/api/%shide", hidden ? "" : "un"), JrawUtils.args(
 				"id", s.getName()
 		));
+	}
+
+	@EndpointImplementation(uris = "/api/multi/mine")
+	public List<MultiReddit> getMyMultis() throws NetworkException {
+		List<MultiReddit> multis = new ArrayList<>();
+		JsonNode multiArray = creator.execute(new RestRequest(HttpVerb.GET, "/api/multi/mine")).getJson();
+
+		for (JsonNode multi : multiArray) {
+			multis.add(new MultiReddit(multi.get("data")));
+		}
+
+		return multis;
 	}
 
 	/**

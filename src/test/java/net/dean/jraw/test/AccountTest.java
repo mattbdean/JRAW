@@ -5,6 +5,7 @@ import net.dean.jraw.JrawUtils;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.models.LoggedInAccount;
+import net.dean.jraw.models.MultiReddit;
 import net.dean.jraw.models.VoteDirection;
 import net.dean.jraw.models.core.Account;
 import net.dean.jraw.models.core.Submission;
@@ -171,6 +172,20 @@ public class AccountTest {
 
 			hidden.stream().filter(s -> s.getId().equals(submission.getId())).forEach(s -> Assert.fail("Found "));
 		} catch (NetworkException | ApiException e) {
+			Assert.fail(e.getMessage());
+		}
+	}
+
+	@Test
+	public void testMyMultis() {
+		try {
+			List<MultiReddit> multis = account.getMyMultis();
+
+			for (String str : multis.get(0).getSubreddits()) {
+				System.out.println(str);
+			}
+			multis.forEach(ThingFieldTest::fieldValidityCheck);
+		} catch (NetworkException e) {
 			Assert.fail(e.getMessage());
 		}
 	}
