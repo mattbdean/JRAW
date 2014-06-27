@@ -170,7 +170,7 @@ public class AccountTest {
 			UserPaginatorSubmission paginator = getPaginator(Where.HIDDEN);
 			List<Submission> hidden = paginator.next().getChildren();
 
-			hidden.stream().filter(s -> s.getId().equals(submission.getId())).forEach(s -> Assert.fail("Found "));
+			hidden.stream().filter(s -> s.getId().equals(submission.getId())).forEach(s -> Assert.fail("Found unhidden submission in hidden posts"));
 		} catch (NetworkException | ApiException e) {
 			Assert.fail(e.getMessage());
 		}
@@ -182,6 +182,16 @@ public class AccountTest {
 			List<MultiReddit> multis = account.getMyMultis();
 
 			multis.forEach(ThingFieldTest::fieldValidityCheck);
+		} catch (NetworkException e) {
+			Assert.fail(e.getMessage());
+		}
+	}
+
+	@Test
+	public void testMultis() {
+		try {
+			MultiReddit multi = reddit.getPublicMulti(account.getName(), "test_multi");
+			ThingFieldTest.fieldValidityCheck(multi);
 		} catch (NetworkException e) {
 			Assert.fail(e.getMessage());
 		}

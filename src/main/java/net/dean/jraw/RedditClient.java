@@ -4,6 +4,7 @@ import net.dean.jraw.endpointgen.EndpointImplementation;
 import net.dean.jraw.http.*;
 import net.dean.jraw.models.Captcha;
 import net.dean.jraw.models.LoggedInAccount;
+import net.dean.jraw.models.MultiReddit;
 import net.dean.jraw.models.core.Account;
 import net.dean.jraw.models.core.Submission;
 import net.dean.jraw.models.core.Subreddit;
@@ -11,6 +12,7 @@ import org.apache.http.Header;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.message.BasicHeader;
+import org.codehaus.jackson.JsonNode;
 
 import java.io.IOException;
 import java.time.Duration;
@@ -278,6 +280,11 @@ public class RedditClient extends RestClient {
 
 	public Submission getRandom() throws NetworkException {
 		return getRandom(null);
+	}
+
+	public MultiReddit getPublicMulti(String username, String multiName) throws NetworkException {
+		JsonNode node = execute(new RestRequest(HttpVerb.GET, String.format("/api/multi/user/%s/m/%s", username, multiName))).getJson();
+		return new MultiReddit(node.get("data"));
 	}
 
 	@EndpointImplementation(uris = "/random")
