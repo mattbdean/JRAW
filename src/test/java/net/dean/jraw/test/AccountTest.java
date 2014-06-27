@@ -25,12 +25,7 @@ public class AccountTest {
 
 	@BeforeClass
 	public static void setUp() {
-		if (AccountTest.class.getResource("/credentials.txt") == null) {
-			Assert.fail("Credentials file missing (/src/main/resources/credentials.txt)");
-		}
-
 		credentials = TestUtils.getCredentials();
-
 		reddit = TestUtils.client(AccountTest.class);
 	}
 
