@@ -282,6 +282,7 @@ public class RedditClient extends RestClient {
 		return getRandom(null);
 	}
 
+	@EndpointImplementation(uris = "/api/multi/multipath")
 	public MultiReddit getPublicMulti(String username, String multiName) throws NetworkException {
 		JsonNode node = execute(new RestRequest(HttpVerb.GET, String.format("/api/multi/user/%s/m/%s", username, multiName))).getJson();
 		return new MultiReddit(node.get("data"));

@@ -1,5 +1,5 @@
-<!--- Generated 2014-06-27 at 10:58:30 CDT. Do ./gradlew updateEndpoints to update. DO NOT MODIFY DIRECTLY -->
-#Unimplemented (112/145)
+<!--- Generated 2014-06-27 at 11:14:27 CDT. Do ./gradlew updateEndpoints to update. DO NOT MODIFY DIRECTLY -->
+#Unimplemented (111/145)
 ####account
 ~~~
 /api/clear_sessions
@@ -76,7 +76,6 @@
 
 ####multis
 ~~~
-/api/multi/multipath
 /api/multi/multipath/copy
 /api/multi/multipath/description
 /api/multi/multipath/r/srname
@@ -164,11 +163,11 @@
 /wiki/page
 ~~~
 
-#Implemented (33/145)
+#Implemented (34/145)
 ####account
-[`/api/login`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L137)
+[`/api/login`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L136)
 
-[`/api/me.json`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L173)
+[`/api/me.json`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L172)
 
 ####apps
 [`/api/adddeveloper`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/models/LoggedInAccount.java#L199)
@@ -176,11 +175,11 @@
 [`/api/removedeveloper`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/models/LoggedInAccount.java#L208)
 
 ####captcha
-[`/api/needs_captcha.json`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L203)
+[`/api/needs_captcha.json`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L202)
 
-[`/api/new_captcha`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L219)
+[`/api/new_captcha`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L218)
 
-[`/captcha/iden`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L240)
+[`/captcha/iden`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L239)
 
 ####links & comments
 [`/api/vote`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/models/LoggedInAccount.java#L86)
@@ -206,7 +205,7 @@
 ####listings
 [`/by_id/names`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/SpecificPaginator.java#L25)
 
-[`/random`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L282)
+[`/random`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L281)
 
 [`/controversial`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/SimplePaginator.java#L23)
 
@@ -219,13 +218,15 @@
 [`/sort`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/SimplePaginator.java#L23)
 
 ####multis
+[`/api/multi/multipath`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L286)
+
 [`/api/multi/mine`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/models/LoggedInAccount.java#L224)
 
 ####subreddits
-[`/r/subreddit/about.json`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L273)
+[`/r/subreddit/about.json`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L272)
 
 ####users
-[`/user/username/about.json`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L257)
+[`/user/username/about.json`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L256)
 
 [`/user/username/disliked`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/UserPaginatorSubmission.java#L30)
 
@@ -237,5 +238,5 @@
 
 [`/user/username/submitted`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/UserPaginatorSubmission.java#L30)
 
-[`/api/username_available.json`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L278)
+[`/api/username_available.json`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L277)
 
