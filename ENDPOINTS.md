@@ -1,5 +1,5 @@
-<!--- Generated 2014-06-25 at 10:14:15 CDT. Do ./gradlew updateEndpoints to update. DO NOT MODIFY DIRECTLY -->
-#Unimplemented (115/145)
+<!--- Generated 2014-06-26 at 23:08:41 CDT. Do ./gradlew updateEndpoints to update. DO NOT MODIFY DIRECTLY -->
+#Unimplemented (113/145)
 ####account
 ~~~
 /api/clear_sessions
@@ -46,7 +46,6 @@
 ~~~
 /api/comment
 /api/editusertext
-/api/hide
 /api/info
 /api/morechildren
 /api/report
@@ -54,7 +53,6 @@
 /api/set_contest_mode
 /api/set_subreddit_sticky
 /api/store_visits
-/api/unhide
 ~~~
 
 ####listings
@@ -167,7 +165,7 @@
 /wiki/page
 ~~~
 
-#Implemented (30/145)
+#Implemented (32/145)
 ####account
 [`/api/login`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L134)
 
@@ -189,6 +187,10 @@
 [`/api/vote`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/models/LoggedInAccount.java#L84)
 
 [`/api/sendreplies`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/models/LoggedInAccount.java#L135)
+
+[`/api/hide`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/models/LoggedInAccount.java#L215)
+
+[`/api/unhide`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/models/LoggedInAccount.java#L215)
 
 [`/api/marknsfw`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/models/LoggedInAccount.java#L146)
 

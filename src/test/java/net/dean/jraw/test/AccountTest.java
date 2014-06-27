@@ -111,10 +111,7 @@ public class AccountTest {
 			Submission submission = reddit.getSubmission("28d6vv");
 			account.setSaved(submission, true);
 
-			UserPaginatorSubmission paginator = new UserPaginatorSubmission.Builder(reddit)
-					.username(account.getName())
-					.where(Where.SAVED)
-					.build();
+			UserPaginatorSubmission paginator = getPaginator(Where.SAVED);
 			List<Submission> saved = paginator.next().getChildren();
 
 			for (Submission s : saved) {
@@ -136,10 +133,7 @@ public class AccountTest {
 			Submission submission = reddit.getSubmission("28d6vv");
 			account.setSaved(submission, false);
 
-			UserPaginatorSubmission paginator = new UserPaginatorSubmission.Builder(reddit)
-					.username(account.getName())
-					.where(Where.SAVED)
-					.build();
+			UserPaginatorSubmission paginator = getPaginator(Where.SAVED);
 			List<Submission> saved = paginator.next().getChildren();
 
 			// Search for the submission in the saved list
@@ -148,5 +142,48 @@ public class AccountTest {
 		} catch (NetworkException | ApiException e) {
 			Assert.fail(e.getMessage());
 		}
+	}
+
+	@Test
+	public void testHideSubmission() {
+		try {
+			Submission submission = reddit.getSubmission("28d6vv");
+			account.setHidden(submission, true);
+
+			UserPaginatorSubmission paginator = getPaginator(Where.HIDDEN);
+			List<Submission> hidden = paginator.next().getChildren();
+
+			for (Submission s : hidden) {
+				if (s.getId().equals(submission.getId())) {
+					return;
+				}
+			}
+
+			Assert.fail("Did not find the submission in the hidden posts");
+		} catch (NetworkException | ApiException e) {
+			Assert.fail(e.getMessage());
+		}
+	}
+
+	@Test(dependsOnMethods = "testHideSubmission")
+	public void testUnhideSubmission() {
+		try {
+			Submission submission = reddit.getSubmission("28d6vv");
+			account.setHidden(submission, false);
+
+			UserPaginatorSubmission paginator = getPaginator(Where.HIDDEN);
+			List<Submission> hidden = paginator.next().getChildren();
+
+			hidden.stream().filter(s -> s.getId().equals(submission.getId())).forEach(s -> Assert.fail("Found "));
+		} catch (NetworkException | ApiException e) {
+			Assert.fail(e.getMessage());
+		}
+	}
+
+	private UserPaginatorSubmission getPaginator(Where where) {
+		return new UserPaginatorSubmission.Builder(reddit)
+				.username(account.getName())
+				.where(where)
+				.build();
 	}
 }

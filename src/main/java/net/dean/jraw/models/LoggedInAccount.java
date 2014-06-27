@@ -211,6 +211,13 @@ public class LoggedInAccount extends Account {
 		));
 	}
 
+	@EndpointImplementation(uris = {"/api/hide", "/api/unhide"})
+	public RestResponse setHidden(Submission s, boolean hidden) throws NetworkException, ApiException {
+		return genericPost(String.format("/api/%shide", hidden ? "" : "un"), JrawUtils.args(
+				"id", s.getName()
+		));
+	}
+
 	/**
 	 * Executes a generic POST request that returns a RedditResponse. Used primarily for convenience and standardization
 	 * of the messages of RedditExceptions that are thrown.
