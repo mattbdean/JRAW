@@ -286,7 +286,7 @@ public class RedditClient extends RestClient {
 	 * @throws NetworkException
 	 * @throws ApiException
 	 */
-	@EndpointImplementation(uris = "/api/multi/multipath")
+	@EndpointImplementation(uris = {"/api/multi/multipath", "GET /api/multi/multipath/r/srname"})
 	public MultiReddit getPublicMulti(String username, String multiName) throws NetworkException, ApiException {
 		JsonNode node = execute(new RestRequest(HttpVerb.GET, String.format("/api/multi/user/%s/m/%s", username, multiName))).getJson();
 		checkMultiRedditError(node);
@@ -301,7 +301,7 @@ public class RedditClient extends RestClient {
 	 * @return A String array in which the first index is Markdown and the second is HTML
 	 * @throws NetworkException If there was a problem sending the request
 	 */
-	@EndpointImplementation(uris = "/api/multi/multipath/description")
+	@EndpointImplementation(uris = "GET /api/multi/multipath/description")
 	public String[] getPublicMultiDescription(String username, String multiName) throws NetworkException, ApiException {
 		JsonNode node = execute(new RestRequest(HttpVerb.GET, String.format("/api/multi/user/%s/m/%s/description", username, multiName))).getJson();
 		checkMultiRedditError(node);

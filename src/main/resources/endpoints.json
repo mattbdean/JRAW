@@ -91,7 +91,11 @@
         "/api/multi/mine",
         "/api/multi/multipath",
         "/api/multi/multipath/copy",
-        "/api/multi/multipath/description",
+        "GET /api/multi/multipath/description",
+        "PUT /api/multi/multipath/description",
+        "GET /api/multi/multipath/r/srname",
+        "PUT /api/multi/multipath/r/srname",
+        "DELETE /api/multi/multipath/r/srname",
         "/api/multi/multipath/r/srname",
         "/api/multi/multipath/rename"
     ],

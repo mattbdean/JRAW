@@ -1,5 +1,5 @@
-<!--- Generated 2014-06-27 at 11:40:29 CDT. Do ./gradlew updateEndpoints to update. DO NOT MODIFY DIRECTLY -->
-#Unimplemented (110/145)
+<!--- Generated 2014-06-27 at 11:48:35 CDT. Do ./gradlew updateEndpoints to update. DO NOT MODIFY DIRECTLY -->
+#Unimplemented (113/149)
 ####account
 ~~~
 /api/clear_sessions
@@ -77,6 +77,9 @@
 ####multis
 ~~~
 /api/multi/multipath/copy
+PUT /api/multi/multipath/description
+PUT /api/multi/multipath/r/srname
+DELETE /api/multi/multipath/r/srname
 /api/multi/multipath/r/srname
 /api/multi/multipath/rename
 ~~~
@@ -162,7 +165,7 @@
 /wiki/page
 ~~~
 
-#Implemented (35/145)
+#Implemented (36/149)
 ####account
 [`/api/login`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L136)
 
@@ -219,7 +222,9 @@
 ####multis
 [`/api/multi/multipath`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L290)
 
-[`/api/multi/multipath/description`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L305)
+[`GET /api/multi/multipath/r/srname`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L290)
+
+[`GET /api/multi/multipath/description`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L305)
 
 [`/api/multi/mine`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/models/LoggedInAccount.java#L224)
 
