@@ -181,9 +181,6 @@ public class AccountTest {
 		try {
 			List<MultiReddit> multis = account.getMyMultis();
 
-			for (String str : multis.get(0).getSubreddits()) {
-				System.out.println(str);
-			}
 			multis.forEach(ThingFieldTest::fieldValidityCheck);
 		} catch (NetworkException e) {
 			Assert.fail(e.getMessage());
