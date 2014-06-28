@@ -54,7 +54,7 @@ public class HttpTest {
 
 	@Test(expectedExceptions = NetworkException.class)
 	public void httpGetInvalidResponseCode() throws IOException, NetworkException {
-		CloseableHttpResponse response = client.execute(GET, HOST, "/status/418");
+		CloseableHttpResponse response = client.execute(new HttpHelper.RequestBuilder(GET, HOST, "/status/418"));
 		if (response != null) {
 			EntityUtils.consume(response.getEntity());
 		}
@@ -70,7 +70,7 @@ public class HttpTest {
 			Map<String, String> clientArgs = new TreeMap<>();
 			clientArgs.put("hello", "world");
 
-			CloseableHttpResponse response = client.execute(verb, HOST, "/" + verb.name().toLowerCase(), clientArgs);
+			CloseableHttpResponse response = client.execute(new HttpHelper.RequestBuilder(verb, HOST, "/" + verb.name().toLowerCase()).args(clientArgs));
 
 			RestResponse rest = new RestResponse(response);
 

@@ -1,5 +1,7 @@
 package net.dean.jraw.http;
 
+import org.codehaus.jackson.JsonNode;
+
 import java.time.LocalDateTime;
 import java.util.Map;
 
@@ -16,6 +18,10 @@ public class RestRequest {
 	 */
 	private Map<String, String> args;
 
+	private JsonNode json;
+
+	private boolean isJson;
+
 	/** The HTTP verb to use to execute the request */
 	private HttpVerb verb;
 
@@ -29,7 +35,7 @@ public class RestRequest {
 	 * @param path The path of the request relative to the host (ex: "/{something}")
 	 */
 	public RestRequest(HttpVerb verb, String path) {
-		this(verb, path, null);
+		this(verb, path, (Map<String, String>)null);
 	}
 
 	/**
@@ -43,6 +49,14 @@ public class RestRequest {
 		this.verb = verb;
 		this.path = path;
 		this.args = args;
+		this.isJson = false;
+	}
+
+	public RestRequest(HttpVerb verb, String path, JsonNode json) {
+		this.verb = verb;
+		this.path = path;
+		this.json = json;
+		this.isJson = true;
 	}
 
 	public String getPath() {
@@ -59,6 +73,7 @@ public class RestRequest {
 
 	public void setArgs(Map<String, String> args) {
 		this.args = args;
+		this.isJson = false;
 	}
 
 	public LocalDateTime getExecuted() {
@@ -75,6 +90,19 @@ public class RestRequest {
 
 	public void setVerb(HttpVerb verb) {
 		this.verb = verb;
+	}
+
+	public void setJson(JsonNode json) {
+		this.json = json;
+		this.isJson = true;
+	}
+
+	public JsonNode getJson() {
+		return json;
+	}
+
+	public boolean isJson() {
+		return isJson;
 	}
 
 	@Override

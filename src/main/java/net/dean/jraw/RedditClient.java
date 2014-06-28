@@ -134,8 +134,8 @@ public class RedditClient extends RestClient {
 	 */
 	@EndpointImplementation(uris = "/api/login")
 	public LoggedInAccount login(String username, String password) throws NetworkException, ApiException {
-		RestResponse loginResponse = new RestResponse(http.execute(HttpVerb.POST, HOST_SSL, "/api/login",
-				JrawUtils.args("user", username, "passwd", password, "api_type", "json")));
+		RestResponse loginResponse = new RestResponse(http.execute(new HttpHelper.RequestBuilder(HttpVerb.POST, HOST_SSL, "/api/login")
+				.args(JrawUtils.args("user", username, "passwd", password, "api_type", "json"))));
 
 		if (loginResponse.hasErrors()) {
 			throw loginResponse.getApiExceptions()[0];
@@ -237,7 +237,7 @@ public class RedditClient extends RestClient {
 	@EndpointImplementation(uris = "/captcha/iden")
 	public Captcha getCaptcha(String id) throws NetworkException {
 		try {
-			CloseableHttpResponse response = http.execute(HttpVerb.GET, HOST, "/captcha/" + id + ".png");
+			CloseableHttpResponse response = http.execute(new HttpHelper.RequestBuilder(HttpVerb.GET, HOST, "/captcha/" + id + ".png"));
 
 			return new Captcha(id, response.getEntity().getContent());
 		} catch (IOException | NetworkException e) {

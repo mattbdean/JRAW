@@ -236,8 +236,8 @@ public class LoggedInAccount extends Account {
 	 * Executes a generic POST request that returns a RedditResponse. Used primarily for convenience and standardization
 	 * of the messages of RedditExceptions that are thrown.
 	 *
-	 * @param path       The path relative of the domain to send a request to
-	 * @param args       The arguments to send in the POST body
+	 * @param path The path relative of the domain to send a request to
+	 * @param args The arguments to send in the POST body
 	 * @return A representation of the response by the Reddit API
 	 * @throws NetworkException If needsLogin is true and the user was not logged in, or there was an error making the
 	 *                          HTTP request.

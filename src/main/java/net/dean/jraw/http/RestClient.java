@@ -41,7 +41,15 @@ public class RestClient {
 	public RestResponse execute(RestRequest request) throws NetworkException {
 		request.setExecuted(LocalDateTime.now());
 		history.add(request);
-		CloseableHttpResponse response = http.execute(request.getVerb(), host, request.getPath(), request.getArgs());
+		HttpHelper.RequestBuilder builder = new HttpHelper.RequestBuilder(request.getVerb(), host, request.getPath());
+		if (request.isJson()) {
+			builder.json(request.getJson());
+		} else {
+			builder.args(request.getArgs());
+		}
+
+		CloseableHttpResponse response = http.execute(builder);
+
 		if (response == null) {
 			throw new NetworkException("Request timed out");
 		}
