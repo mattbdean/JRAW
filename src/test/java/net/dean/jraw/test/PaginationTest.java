@@ -36,7 +36,7 @@ public class PaginationTest {
 	@Test
 	public void testSubmitted() throws NetworkException {
 		UserPaginatorSubmission paginator = new UserPaginatorSubmission.Builder(reddit)
-				.username("Unidan")
+				.username("way_fairer")
 				.where(Where.SUBMITTED)
 				.build();
 		commonTest(paginator);

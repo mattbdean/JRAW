@@ -1,7 +1,7 @@
 apply plugin: 'java'
 
 sourceCompatibility = 1.8
-version = '0.1.0'
+version = '0.1.1'
 
 repositories {
     mavenCentral()
@@ -31,7 +31,9 @@ test {
 }
 
 jar {
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }}
     destinationDir = new File(project.buildDir, "releases")
+
 }
 
 defaultTasks "test"
