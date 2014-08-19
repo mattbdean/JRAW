@@ -2,7 +2,7 @@ package net.dean.jraw.pagination;
 
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.RedditClient;
-import net.dean.jraw.endpointgen.EndpointImplementation;
+import net.dean.jraw.EndpointImplementation;
 import net.dean.jraw.models.core.Listing;
 import net.dean.jraw.models.core.Submission;
 

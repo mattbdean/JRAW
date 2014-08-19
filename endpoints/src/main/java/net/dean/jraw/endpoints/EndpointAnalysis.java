@@ -1,5 +1,6 @@
-package net.dean.jraw.endpointgen;
+package net.dean.jraw.endpoints;
 
+import net.dean.jraw.EndpointImplementation;
 import javassist.ClassPool;
 import javassist.NotFoundException;
 import org.codehaus.jackson.JsonNode;
@@ -44,7 +45,7 @@ public class EndpointAnalysis {
 			this.jsonEndpoints = new File(EndpointAnalysis.class.getResource("/" + ALL_ENDPOINTS_FILE_NAME).toURI());
 			// Json file located in "JRAW/build/resources/main/" when run, go up 4 directories
 			this.exportFile = jsonEndpoints;
-			for (int i = 0; i < 4; i++) {
+			for (int i = 0; i < 5; i++) {
 				exportFile = exportFile.getParentFile();
 			}
 			// "JRAW/ENDPOINTS.md"
@@ -69,7 +70,7 @@ public class EndpointAnalysis {
 
 		try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(exportFile), StandardCharsets.UTF_8))) {
 			// http://stackoverflow.com/a/4829998/1275092
-			bw.write(String.format("<!--- Generated %s. Do ./gradlew updateEndpoints to update. DO NOT MODIFY DIRECTLY -->\n",
+			bw.write(String.format("<!--- Generated %s. Use ./gradlew :endpoints:update to update. DO NOT MODIFY DIRECTLY -->\n",
 					dateFormat.format(new Date())));
 
 			// Write both maps

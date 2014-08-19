@@ -1,6 +1,6 @@
 package net.dean.jraw;
 
-import net.dean.jraw.endpointgen.EndpointImplementation;
+import net.dean.jraw.EndpointImplementation;
 import net.dean.jraw.http.*;
 import net.dean.jraw.models.Captcha;
 import net.dean.jraw.models.LoggedInAccount;

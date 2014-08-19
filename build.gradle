@@ -3,37 +3,73 @@ apply plugin: 'java'
 sourceCompatibility = 1.8
 version = '0.1.1'
 
-repositories {
-    mavenCentral()
+def releaseDest = new File((File) project.buildDir, "releases")
+
+allprojects {
+    apply plugin: 'java'
+    sourceCompatibility = 1.8
+    version = '0.1.1'
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        compile     group: 'org.codehaus.jackson',      name: 'jackson-mapper-asl', version: '1.9.+'
+        compile     group: 'org.slf4j',                 name: 'slf4j-api',          version: '1.7.+'
+        testCompile group: 'org.slf4j',                 name: 'slf4j-simple',       version: '1.7.+'
+        testCompile group: 'org.testng',                name: 'testng',             version: '6.1.1'
+    }
+
+    test {
+        // TestNG instead of default JUnit
+        useTestNG()
+
+        // Show stderr and stdout (useful for exceptions)
+        testLogging.showStandardStreams = true
+    }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs/', include: '*.jar')
-    compile     group: 'org.javassist',             name: 'javassist',          version: '3.18.2-GA'
     compile     group: 'org.apache.httpcomponents', name: 'httpclient',         version: '4.3.3'
-    compile     group: 'org.codehaus.jackson',      name: 'jackson-mapper-asl', version: '1.9.+'
-    compile     group: 'org.slf4j',                 name: 'slf4j-api',          version: '1.7.+'
-    testCompile group: 'org.slf4j',                 name: 'slf4j-simple',       version: '1.7.+'
-    testCompile group: 'org.testng',                name: 'testng',             version: '6.1.1'
 }
 
-task updateEndpoints(type: JavaExec, dependsOn: compileJava) {
-    main = "net.dean.jraw.endpointgen.EndpointAnalysis"
-    classpath = sourceSets.main.runtimeClasspath
+project(':endpoints') {
+    dependencies {
+        compile 'org.javassist:javassist:3.18.2-GA'
+        compile 'org.reflections:reflections:0.9.8'
+        compile project(':')
+    }
+
+    task update(type: JavaExec, dependsOn: compileJava) {
+        main = "net.dean.jraw.endpoints.EndpointAnalysis"
+        classpath = sourceSets.main.runtimeClasspath
+    }
 }
 
-test {
-    // TestNG instead of default JUnit
-    useTestNG()
-
-    // Show stderr and stdout (useful for exceptions)
-    testLogging.showStandardStreams = true
+task fatJar(type: Jar, dependsOn: assemble) {
+    classifier = 'fat'
+    destinationDir = releaseDest
+    from(
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) },
+        sourceSets.main.output
+    )
 }
 
-jar {
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }}
-    destinationDir = new File(project.buildDir, "releases")
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    destinationDir = releaseDest
+    from javadoc.destinationDir
+}
 
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    destinationDir = releaseDest
+    from sourceSets.main.allSource
+}
+
+task release(type: Jar, dependsOn: ['fatJar', 'javadocJar', 'sourcesJar']) {
+    destinationDir = releaseDest
 }
 
 defaultTasks "test"

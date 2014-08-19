@@ -1,4 +1,4 @@
-package net.dean.jraw.endpointgen;
+package net.dean.jraw;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

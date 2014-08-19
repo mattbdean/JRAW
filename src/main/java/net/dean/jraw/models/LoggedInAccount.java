@@ -3,7 +3,7 @@ package net.dean.jraw.models;
 import net.dean.jraw.ApiException;
 import net.dean.jraw.JrawUtils;
 import net.dean.jraw.RedditClient;
-import net.dean.jraw.endpointgen.EndpointImplementation;
+import net.dean.jraw.EndpointImplementation;
 import net.dean.jraw.http.HttpVerb;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.RestRequest;

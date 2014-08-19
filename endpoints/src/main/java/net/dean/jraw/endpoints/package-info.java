@@ -1,4 +1,4 @@
 /**
  * A mini application to dynamically generate a ENDPOINTS.md file
  */
-package net.dean.jraw.endpointgen;
+package net.dean.jraw.endpoints;

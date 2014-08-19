@@ -1,4 +1,4 @@
-package net.dean.jraw.endpointgen;
+package net.dean.jraw.endpoints;
 
 import java.lang.reflect.Method;
 
