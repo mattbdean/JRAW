@@ -28,7 +28,7 @@ allprojects {
 }
 
 dependencies {
-    compile     group: 'org.apache.httpcomponents', name: 'httpclient',         version: '4.3.3'
+    compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.3.3'
 }
 
 project(':endpoints') {

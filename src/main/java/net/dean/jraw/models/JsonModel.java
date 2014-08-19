@@ -160,8 +160,8 @@ public abstract class JsonModel {
 	}
 
 	/**
-	 * Gets a list of fields that have the JsonInteraction annotation attached to them. Also searches the superclass up
-	 * until ${@link net.dean.jraw.models.core.Thing} for fields.
+	 * Gets a list of fields that have the JsonInteraction annotation attached to them. This method also returns
+	 * JsonInteraction-annotated methods in this class' superclasses, up until JsonModel. Mainly used for testing.
 	 *
 	 * @param thingClass The class to search in
 	 * @return A list of fields that have the JsonInteraction annotation
@@ -178,7 +178,7 @@ public abstract class JsonModel {
 				toObserve.addAll(Arrays.asList(interf.getDeclaredMethods()));
 			}
 
-			if (clazz.equals(RedditObject.class)) {
+			if (clazz.equals(JsonModel.class)) {
 				// Already at the highest level and we don't need to scan Object
 				break;
 			}
