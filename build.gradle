@@ -66,6 +66,7 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 }
 
 task release(type: Jar, dependsOn: ['fatJar', 'javadocJar', 'sourcesJar']) {
+    from sourceSets.main.output
     destinationDir = releaseDest
 }
 
