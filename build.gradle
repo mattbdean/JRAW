@@ -1,7 +1,7 @@
 apply plugin: 'java'
 
 sourceCompatibility = 1.8
-version = '0.1.1'
+version = '0.2.0'
 
 def releaseDest = new File((File) project.buildDir, "releases")
 
