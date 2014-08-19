@@ -94,8 +94,10 @@ public class ThingFieldTest {
 				OEmbed o = s.getOEmbedMedia();
 				fieldValidityCheck(o);
 			});
-		} catch (NetworkException e) {
-			Assert.fail(e.getMessage());
+		} catch (IllegalStateException e) {
+			if (e.getCause().getClass().equals(NetworkException.class)) {
+				Assert.fail(e.getMessage());
+			}
 		}
 	}
 
@@ -109,8 +111,10 @@ public class ThingFieldTest {
 				EmbeddedMedia m = s.getEmbeddedMedia();
 				fieldValidityCheck(m);
 			});
-		} catch (NetworkException e) {
-			Assert.fail(e.getMessage());
+		} catch (IllegalStateException e) {
+			if (e.getCause().getClass().equals(NetworkException.class)) {
+				Assert.fail(e.getMessage());
+			}
 		}
 	}
 

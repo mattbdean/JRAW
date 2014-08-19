@@ -85,8 +85,8 @@ public class Submission extends Thing implements Created, Distinguishable, Votab
 	 * @return The type of submission
 	 */
 	@JsonInteraction
-	public SubmissionType getSubmissionType() {
-		return data.get("is_self").getBooleanValue() ? SubmissionType.SELF : SubmissionType.LINK;
+	public Boolean isSelfPost() {
+		return data.get("is_self").getBooleanValue();
 	}
 
 	/**

@@ -42,7 +42,7 @@ public class LoggedInAccount extends Account {
 		Map<String, String> args = JrawUtils.args(
 				"api_type", "json",
 				"extension", "json",
-				"kind", b.type.name().toLowerCase(),
+				"kind", b.selfPost ? "self" : "link",
 				"resubmit", b.resubmit,
 				"save", b.saveAfter,
 				"sendreplies", b.sendRepliesToInbox,
@@ -51,12 +51,10 @@ public class LoggedInAccount extends Account {
 				"title", b.title
 		);
 
-		if (b.type == SubmissionType.LINK) {
+		if (b.selfPost) {
 			args.put("url", b.url.toExternalForm());
-		} else if (b.type == SubmissionType.SELF) {
-			args.put("text", b.selfText);
 		} else {
-			throw new IllegalArgumentException("Unknown SubmissionType: " + b.type);
+			args.put("text", b.selfText);
 		}
 
 		if (captcha != null) {
@@ -261,7 +259,7 @@ public class LoggedInAccount extends Account {
 	 * This class provides a way to configure posting parameters of a new submission
 	 */
 	public static class SubmissionBuilder {
-		private final SubmissionType type;
+		private final boolean selfPost;
 		private final String selfText;
 		private final URL url;
 		private final String subreddit;
@@ -277,7 +275,7 @@ public class LoggedInAccount extends Account {
 		 * @param title The title of the submission
 		 */
 		public SubmissionBuilder(String selfText, String subreddit, String title) {
-			this.type = SubmissionType.SELF;
+			this.selfPost = true;
 			this.selfText = selfText;
 			this.url = null;
 			this.subreddit = subreddit;
@@ -291,7 +289,7 @@ public class LoggedInAccount extends Account {
 		 * @param title The title of the submission
 		 */
 		public SubmissionBuilder(URL url, String subreddit, String title) {
-			this.type = SubmissionType.LINK;
+			this.selfPost = true;
 			this.url = url;
 			this.selfText = null;
 			this.subreddit = subreddit;

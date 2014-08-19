@@ -44,6 +44,7 @@ public class PaginationTest {
 
 	@Test
 	public void testById() throws NetworkException {
+		// It would be easier to declare fullNames as an array, but we want to use List.contains()
 		List<String> fullNames = Arrays.asList("t3_92dd8", "t3_290287", "t3_28zy98", "t3_28zh9i");
 		SpecificPaginator paginator = new SpecificPaginator.Builder(reddit,	fullNames.toArray(new String[fullNames.size()]))
 				.build();
@@ -51,6 +52,19 @@ public class PaginationTest {
 		Listing<Submission> submissions = paginator.next();
 		for (Submission s : submissions.getChildren()) {
 			Assert.assertTrue(fullNames.contains(s.getName()));
+		}
+	}
+
+	@Test(timeOut = 15_000)
+	public void testPaginationTerminates() throws NetworkException {
+		UserPaginatorSubmission paginator = new UserPaginatorSubmission.Builder(reddit)
+				.where(Where.SUBMITTED)
+				.username(TestUtils.getCredentials()[0])
+				.build();
+
+		Listing<Submission> submissions;
+		while (paginator.hasNext()) {
+			submissions = paginator.next();
 		}
 	}
 

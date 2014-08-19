@@ -1,7 +1,6 @@
 package net.dean.jraw.models.core;
 
 import net.dean.jraw.models.JsonInteraction;
-import net.dean.jraw.models.SubmissionType;
 import net.dean.jraw.models.ThingType;
 import org.codehaus.jackson.JsonNode;
 
@@ -82,18 +81,15 @@ public class Subreddit extends Thing {
 	}
 
 	@JsonInteraction
-	public SubmissionType[] getAllowedSubmissionTypes() {
-		String type = data("submission_type").toLowerCase();
-		switch (type) {
-			case "link":
-				return new SubmissionType[] {SubmissionType.LINK};
-			case "self":
-				return new SubmissionType[] {SubmissionType.SELF};
-			case "all":
-				return SubmissionType.values();
-			default:
-				throw new IllegalArgumentException("Invalid submission type: " + type);
-		}
+	public Boolean isAllowingSelfPosts() {
+		String type = data("submission_type");
+		return type.equals("self") || type.equals("all");
+	}
+
+	@JsonInteraction
+	public Boolean isAllowingLinks() {
+		String type = data("submission_type");
+		return type.equals("link") || type.equals("all");
 	}
 
 	@JsonInteraction

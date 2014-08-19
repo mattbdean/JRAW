@@ -9,6 +9,7 @@ import net.dean.jraw.models.core.Listing;
 import net.dean.jraw.models.core.Thing;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -16,7 +17,7 @@ import java.util.Map;
  *
  * @param <T> The type that the listing will contain
  */
-public abstract class AbstractPaginator<T extends Thing> {
+public abstract class AbstractPaginator<T extends Thing> implements Iterator<Listing<T>> {
 	/** The client that created this */
 	protected final RedditClient creator;
 	protected final Sorting sorting;
@@ -61,14 +62,24 @@ public abstract class AbstractPaginator<T extends Thing> {
 		return listing;
 	}
 
+	@Override
+	public boolean hasNext() {
+		return current == null || current.getAfter() != null;
+	}
+
 	/**
 	 * Gets the next listing.
 	 *
 	 * @return The next listing of submissions
-	 * @throws NetworkException If there was a problem sending the HTTP request
+	 * @throws IllegalStateException If there was a problem sending the HTTP request
 	 */
-	public Listing<T> next() throws NetworkException {
-		return getListing(true);
+	@Override
+	public Listing<T> next() {
+		try {
+			return getListing(true);
+		} catch (NetworkException e) {
+			throw new IllegalStateException("Could not get the next listing", e);
+		}
 	}
 
 	/**

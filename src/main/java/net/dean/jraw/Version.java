@@ -1,10 +1,10 @@
 package net.dean.jraw;
 
 /**
- * This class provides a way to version the library with a uniform standard
+ * This class provides a standard way to version the library
  */
 public class Version {
-	private static final Version v = new Version(0, 1, 0);
+	private static final Version v = new Version(0, 1, 1);
 
 	/**
 	 * Returns the current version of the library

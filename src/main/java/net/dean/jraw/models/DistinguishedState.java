@@ -8,20 +8,30 @@ public enum DistinguishedState {
 	/**
 	 * Represents a normal user
 	 */
-	NORMAL(null),
+	NORMAL("null"),
 	/**
 	 * Represents a moderator
 	 */
-	MODERATOR("moderator"),
+	MODERATOR,
 	/**
 	 * Represents an administrator
 	 */
-	ADMIN("admin");
+	ADMIN,
+
+	/**
+	 * Various other special distinguishes (most commonly seen as the darker red [Δ] "admin emeritus"
+	 * (<a href="http://www.reddit.com/r/bestof/comments/175prt/alilarter_connects_with_a_user_who_has_a/c82tlns">example</a>
+	 */
+	SPECIAL;
 
 	/**
 	 * The value that will be found if the key of "distinguished" is looked up
 	 */
 	private String jsonValue;
+
+	private DistinguishedState() {
+		this.jsonValue = this.name().toLowerCase();
+	}
 
 	private DistinguishedState(String jsonValue) {
 		this.jsonValue = jsonValue;

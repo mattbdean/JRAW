@@ -125,10 +125,7 @@ public class Listing<T extends RedditObject> extends RedditObject {
 
 		Listing listing = (Listing) o;
 
-		return hasChildren == listing.hasChildren &&
-				data.equals(listing.data) &&
-				thingClass.equals(listing.thingClass);
-
+		return data.equals(listing.data);
 	}
 
 	@Override
