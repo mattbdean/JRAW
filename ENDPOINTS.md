@@ -1,5 +1,5 @@
-<!--- Generated 2014-08-18 at 23:10:50 EDT. Do ./gradlew updateEndpoints to update. DO NOT MODIFY DIRECTLY -->
-#Unimplemented (113/149)
+<!--- Generated 2014-08-18 at 23:16:29 EDT. Do ./gradlew updateEndpoints to update. DO NOT MODIFY DIRECTLY -->
+#Unimplemented (130/166)
 ####account
 ~~~
 /api/clear_sessions
@@ -58,6 +58,27 @@
 ####listings
 ~~~
 /comments/article
+~~~
+
+####live threads
+~~~
+/api/live/create
+/api/live/thread/accept_contributor_invite
+/api/live/thread/close_thread
+/api/live/thread/delete_update
+/api/live/thread/edit
+/api/live/thread/invite_contributor
+/api/live/thread/leave_contributor
+/api/live/thread/report
+/api/live/thread/rm_contributor
+/api/live/thread/rm_contributor_invite
+/api/live/thread/set_contributor_permissions
+/api/live/thread/strike_update
+/api/live/thread/update
+/live/thread
+/live/thread/about.json
+/live/thread/contributors.json
+/live/thread/discussions
 ~~~
 
 ####moderation
@@ -165,7 +186,7 @@ DELETE /api/multi/multipath/r/srname
 /wiki/page
 ~~~
 
-#Implemented (36/149)
+#Implemented (36/166)
 ####account
 [`/api/login`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L136)
 

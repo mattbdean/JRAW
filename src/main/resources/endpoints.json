@@ -75,6 +75,25 @@
         "/top",
         "/sort"
     ],
+    "live threads": [
+        "/api/live/create",
+        "/api/live/thread/accept_contributor_invite",
+        "/api/live/thread/close_thread",
+        "/api/live/thread/delete_update",
+        "/api/live/thread/edit",
+        "/api/live/thread/invite_contributor",
+        "/api/live/thread/leave_contributor",
+        "/api/live/thread/report",
+        "/api/live/thread/rm_contributor",
+        "/api/live/thread/rm_contributor_invite",
+        "/api/live/thread/set_contributor_permissions",
+        "/api/live/thread/strike_update",
+        "/api/live/thread/update",
+        "/live/thread",
+        "/live/thread/about.json",
+        "/live/thread/contributors.json",
+        "/live/thread/discussions"
+    ],
     "moderation": [
         "/about/log",
         "/api/accept_moderator_invite",
