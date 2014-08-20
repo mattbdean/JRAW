@@ -322,6 +322,17 @@ public class RedditClient extends RestClient {
 		return execute(new RestRequest(HttpVerb.GET, path)).as(Submission.class);
 	}
 
+	@EndpointImplementation(uris = "/api/submit_text.json")
+	public String[] getSubmitText(String subreddit) throws NetworkException {
+		String query = "/api/submit_text.json";
+		if (subreddit != null) {
+			query = "/r/" + subreddit + query;
+		}
+
+		RestResponse response = execute(new RestRequest(HttpVerb.GET, query));
+		return new String[] {response.getJson().get("submit_text").asText(), response.getJson().get("submit_text_html").asText()};
+	}
+
 	/**
 	 * Checks if there was an error returned by a /api/multi/* request, since those URIs return a different error handling
 	 * format than the rest of the API
