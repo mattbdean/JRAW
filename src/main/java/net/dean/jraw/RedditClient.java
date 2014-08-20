@@ -234,7 +234,7 @@ public class RedditClient extends RestClient {
 	 * @return A new Captcha object
 	 * @throws NetworkException If there was a problem executing the HTTP request
 	 */
-	@EndpointImplementation(uris = "/captcha/iden")
+	@EndpointImplementation(uris = "/captcha/{iden}")
 	public Captcha getCaptcha(String id) throws NetworkException {
 		try {
 			CloseableHttpResponse response = http.execute(new HttpHelper.RequestBuilder(HttpVerb.GET, HOST, "/captcha/" + id + ".png"));
@@ -252,7 +252,7 @@ public class RedditClient extends RestClient {
 	 * @return An Account whose name matches the given username
 	 * @throws NetworkException If the user does not exist or there was a problem making the request
 	 */
-	@EndpointImplementation(uris = "/user/username/about.json")
+	@EndpointImplementation(uris = "/user/{username}/about.json")
 	public Account getUser(String username) throws NetworkException {
 		return execute(new RestRequest(HttpVerb.GET, "/user/" + username + "/about.json")).as(Account.class);
 	}
@@ -268,7 +268,7 @@ public class RedditClient extends RestClient {
 		return execute(new RestRequest(HttpVerb.GET, "/" + id + ".json")).as(Submission.class);
 	}
 
-	@EndpointImplementation(uris = "/r/subreddit/about.json")
+	@EndpointImplementation(uris = "/r/{subreddit}/about.json")
 	public Subreddit getSubreddit(String name) throws NetworkException {
 		return execute(new RestRequest(HttpVerb.GET, "/r/" + name + "/about.json")).as(Subreddit.class);
 	}
@@ -286,7 +286,7 @@ public class RedditClient extends RestClient {
 	 * @throws NetworkException
 	 * @throws ApiException
 	 */
-	@EndpointImplementation(uris = {"/api/multi/multipath", "GET /api/multi/multipath/r/srname"})
+	@EndpointImplementation(uris = {"/api/multi/{multipath}", "GET /api/multi/{multipath}/r/{srname}"})
 	public MultiReddit getPublicMulti(String username, String multiName) throws NetworkException, ApiException {
 		JsonNode node = execute(new RestRequest(HttpVerb.GET, String.format("/api/multi/user/%s/m/%s", username, multiName))).getJson();
 		checkMultiRedditError(node);
@@ -301,7 +301,7 @@ public class RedditClient extends RestClient {
 	 * @return A String array in which the first index is Markdown and the second is HTML
 	 * @throws NetworkException If there was a problem sending the request
 	 */
-	@EndpointImplementation(uris = "GET /api/multi/multipath/description")
+	@EndpointImplementation(uris = "GET /api/multi/{multipath}/description")
 	public String[] getPublicMultiDescription(String username, String multiName) throws NetworkException, ApiException {
 		JsonNode node = execute(new RestRequest(HttpVerb.GET, String.format("/api/multi/user/%s/m/%s/description", username, multiName))).getJson();
 		checkMultiRedditError(node);

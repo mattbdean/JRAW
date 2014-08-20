@@ -5,6 +5,7 @@
         "/api/login",
         "/api/me.json",
         "/api/register",
+        "/api/set_force_https",
         "/api/update",
         "/api/update_email",
         "/api/update_password",
@@ -16,7 +17,7 @@
         "/api/v1/me/trophies",
         "/prefs/blocked",
         "/prefs/friends",
-        "/prefs/where"
+        "/prefs/{where}"
     ],
     "apps": [
         "/api/adddeveloper",
@@ -29,7 +30,7 @@
     "captcha": [
         "/api/needs_captcha.json",
         "/api/new_captcha",
-        "/captcha/iden"
+        "/captcha/{iden}"
     ],
     "flair": [
         "/api/clearflairtemplates",
@@ -66,8 +67,8 @@
         "/api/vote"
     ],
     "listings": [
-        "/by_id/names",
-        "/comments/article",
+        "/by_id/{names}",
+        "/comments/{article}",
         "/controversial",
         "/hot",
         "/new",
@@ -77,25 +78,31 @@
     ],
     "live threads": [
         "/api/live/create",
-        "/api/live/thread/accept_contributor_invite",
-        "/api/live/thread/close_thread",
-        "/api/live/thread/delete_update",
-        "/api/live/thread/edit",
-        "/api/live/thread/invite_contributor",
-        "/api/live/thread/leave_contributor",
-        "/api/live/thread/report",
-        "/api/live/thread/rm_contributor",
-        "/api/live/thread/rm_contributor_invite",
-        "/api/live/thread/set_contributor_permissions",
-        "/api/live/thread/strike_update",
-        "/api/live/thread/update",
-        "/live/thread",
-        "/live/thread/about.json",
-        "/live/thread/contributors.json",
-        "/live/thread/discussions"
+        "/api/live/{thread}/accept_contributor_invite",
+        "/api/live/{thread}/close_thread",
+        "/api/live/{thread}/delete_update",
+        "/api/live/{thread}/edit",
+        "/api/live/{thread}/invite_contributor",
+        "/api/live/{thread}/leave_contributor",
+        "/api/live/{thread}/report",
+        "/api/live/{thread}/rm_contributor",
+        "/api/live/{thread}/rm_contributor_invite",
+        "/api/live/{thread}/set_contributor_permissions",
+        "/api/live/{thread}/strike_update",
+        "/api/live/{thread}/update",
+        "/live/{thread}",
+        "/live/{thread}/about.json",
+        "/live/{thread}/contributors.json",
+        "/live/{thread}/discussions"
     ],
     "moderation": [
+        "/about/edited",
         "/about/log",
+        "/about/modqueue",
+        "/about/reports",
+        "/about/spam",
+        "/about/unmoderated",
+        "/about/{location}",
         "/api/accept_moderator_invite",
         "/api/approve",
         "/api/distinguish",
@@ -107,16 +114,18 @@
         "/stylesheet"
     ],
     "multis": [
+        "/api/filter/{filterpath}",
+        "/api/filter/{filterpath}/r/{srname}",
         "/api/multi/mine",
-        "/api/multi/multipath",
-        "/api/multi/multipath/copy",
-        "GET /api/multi/multipath/description",
-        "PUT /api/multi/multipath/description",
-        "GET /api/multi/multipath/r/srname",
-        "PUT /api/multi/multipath/r/srname",
-        "DELETE /api/multi/multipath/r/srname",
-        "/api/multi/multipath/r/srname",
-        "/api/multi/multipath/rename"
+        "/api/multi/{multipath}",
+        "/api/multi/{multipath}/copy",
+        "GET /api/multi/{multipath}/description",
+        "PUT /api/multi/{multipath}/description",
+        "GET /api/multi/{multipath}/r/{srname}",
+        "PUT /api/multi/{multipath}/r/{srname}",
+        "DELETE /api/multi/{multipath}/r/{srname}",
+        "/api/multi/{multipath}/r/{srname}",
+        "/api/multi/{multipath}/rename"
     ],
     "private messages": [
         "/api/block",
@@ -126,11 +135,11 @@
         "/message/inbox",
         "/message/sent",
         "/message/unread",
-        "/message/where"
+        "/message/{where}"
     ],
     "reddit gold": [
-        "/api/v1/gold/gild/fullname",
-        "/api/v1/gold/give/username"
+        "/api/v1/gold/gild/{fullname}",
+        "/api/v1/gold/give/{username}"
     ],
     "search": [
         "/search"
@@ -141,10 +150,10 @@
         "/about/moderators",
         "/about/wikibanned",
         "/about/wikicontributors",
-        "/about/where",
+        "/about/{where}",
         "/api/delete_sr_header",
         "/api/delete_sr_img",
-        "/api/recommend/sr/srnames",
+        "/api/recommend/sr/{srnames}",
         "/api/search_reddit_names.json",
         "/api/site_admin",
         "/api/submit_text.json",
@@ -152,8 +161,8 @@
         "/api/subreddits_by_topic.json",
         "/api/subscribe",
         "/api/upload_sr_img",
-        "/r/subreddit/about.json",
-        "/r/subreddit/about/edit.json",
+        "/r/{subreddit}/about.json",
+        "/r/{subreddit}/about/edit.json",
         "/subreddits/mine/contributor",
         "/subreddits/mine/moderator",
         "/subreddits/mine/subscriber",
@@ -161,25 +170,25 @@
         "/subreddits/new",
         "/subreddits/popular",
         "/subreddits/search",
-        "/subreddits/where"
+        "/subreddits/{where}"
     ],
     "users": [
         "/api/friend",
         "/api/setpermissions",
         "/api/unfriend",
         "/api/username_available.json",
-        "/api/v1/me/friends/username",
-        "/api/v1/user/username/trophies",
-        "/user/username/about.json",
-        "/user/username/comments",
-        "/user/username/disliked",
-        "/user/username/gilded",
-        "/user/username/hidden",
-        "/user/username/liked",
-        "/user/username/overview",
-        "/user/username/saved",
-        "/user/username/submitted",
-        "/user/username/where"
+        "/api/v1/me/friends/{username}",
+        "/api/v1/user/{username}/trophies",
+        "/user/{username}/about.json",
+        "/user/{username}/comments",
+        "/user/{username}/disliked",
+        "/user/{username}/gilded",
+        "/user/{username}/hidden",
+        "/user/{username}/liked",
+        "/user/{username}/overview",
+        "/user/{username}/saved",
+        "/user/{username}/submitted",
+        "/user/{username}/where"
     ],
     "wiki": [
         "/api/wiki/alloweditor/add",
@@ -188,11 +197,11 @@
         "/api/wiki/edit",
         "/api/wiki/hide",
         "/api/wiki/revert",
-        "/wiki/discussions/page",
+        "/wiki/discussions/{page}",
         "/wiki/pages",
         "/wiki/revisions",
-        "/wiki/revisions/page",
-        "/wiki/settings/page",
-        "/wiki/page"
+        "/wiki/revisions/{page}",
+        "/wiki/settings/{page}",
+        "/wiki/{page}"
     ]
 }

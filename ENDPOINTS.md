@@ -1,10 +1,11 @@
-<!--- Generated 2014-08-19 at 07:59:23 EDT. Use ./gradlew :endpoints:update to update. DO NOT MODIFY DIRECTLY -->
-#Unimplemented (130/166)
+<!--- Generated 2014-08-19 at 23:43:51 EDT. Use ./gradlew :endpoints:update to update. DO NOT MODIFY DIRECTLY -->
+#Unimplemented (139/175)
 ####account
 ~~~
 /api/clear_sessions
 /api/delete_user
 /api/register
+/api/set_force_https
 /api/update
 /api/update_email
 /api/update_password
@@ -16,7 +17,7 @@
 /api/v1/me/trophies
 /prefs/blocked
 /prefs/friends
-/prefs/where
+/prefs/{where}
 ~~~
 
 ####apps
@@ -57,33 +58,39 @@
 
 ####listings
 ~~~
-/comments/article
+/comments/{article}
 ~~~
 
 ####live threads
 ~~~
 /api/live/create
-/api/live/thread/accept_contributor_invite
-/api/live/thread/close_thread
-/api/live/thread/delete_update
-/api/live/thread/edit
-/api/live/thread/invite_contributor
-/api/live/thread/leave_contributor
-/api/live/thread/report
-/api/live/thread/rm_contributor
-/api/live/thread/rm_contributor_invite
-/api/live/thread/set_contributor_permissions
-/api/live/thread/strike_update
-/api/live/thread/update
-/live/thread
-/live/thread/about.json
-/live/thread/contributors.json
-/live/thread/discussions
+/api/live/{thread}/accept_contributor_invite
+/api/live/{thread}/close_thread
+/api/live/{thread}/delete_update
+/api/live/{thread}/edit
+/api/live/{thread}/invite_contributor
+/api/live/{thread}/leave_contributor
+/api/live/{thread}/report
+/api/live/{thread}/rm_contributor
+/api/live/{thread}/rm_contributor_invite
+/api/live/{thread}/set_contributor_permissions
+/api/live/{thread}/strike_update
+/api/live/{thread}/update
+/live/{thread}
+/live/{thread}/about.json
+/live/{thread}/contributors.json
+/live/{thread}/discussions
 ~~~
 
 ####moderation
 ~~~
+/about/edited
 /about/log
+/about/modqueue
+/about/reports
+/about/spam
+/about/unmoderated
+/about/{location}
 /api/accept_moderator_invite
 /api/approve
 /api/distinguish
@@ -97,12 +104,14 @@
 
 ####multis
 ~~~
-/api/multi/multipath/copy
-PUT /api/multi/multipath/description
-PUT /api/multi/multipath/r/srname
-DELETE /api/multi/multipath/r/srname
-/api/multi/multipath/r/srname
-/api/multi/multipath/rename
+/api/filter/{filterpath}
+/api/filter/{filterpath}/r/{srname}
+/api/multi/{multipath}/copy
+PUT /api/multi/{multipath}/description
+PUT /api/multi/{multipath}/r/{srname}
+DELETE /api/multi/{multipath}/r/{srname}
+/api/multi/{multipath}/r/{srname}
+/api/multi/{multipath}/rename
 ~~~
 
 ####private messages
@@ -114,13 +123,13 @@ DELETE /api/multi/multipath/r/srname
 /message/inbox
 /message/sent
 /message/unread
-/message/where
+/message/{where}
 ~~~
 
 ####reddit gold
 ~~~
-/api/v1/gold/gild/fullname
-/api/v1/gold/give/username
+/api/v1/gold/gild/{fullname}
+/api/v1/gold/give/{username}
 ~~~
 
 ####search
@@ -135,10 +144,10 @@ DELETE /api/multi/multipath/r/srname
 /about/moderators
 /about/wikibanned
 /about/wikicontributors
-/about/where
+/about/{where}
 /api/delete_sr_header
 /api/delete_sr_img
-/api/recommend/sr/srnames
+/api/recommend/sr/{srnames}
 /api/search_reddit_names.json
 /api/site_admin
 /api/submit_text.json
@@ -146,7 +155,7 @@ DELETE /api/multi/multipath/r/srname
 /api/subreddits_by_topic.json
 /api/subscribe
 /api/upload_sr_img
-/r/subreddit/about/edit.json
+/r/{subreddit}/about/edit.json
 /subreddits/mine/contributor
 /subreddits/mine/moderator
 /subreddits/mine/subscriber
@@ -154,7 +163,7 @@ DELETE /api/multi/multipath/r/srname
 /subreddits/new
 /subreddits/popular
 /subreddits/search
-/subreddits/where
+/subreddits/{where}
 ~~~
 
 ####users
@@ -162,12 +171,12 @@ DELETE /api/multi/multipath/r/srname
 /api/friend
 /api/setpermissions
 /api/unfriend
-/api/v1/me/friends/username
-/api/v1/user/username/trophies
-/user/username/comments
-/user/username/gilded
-/user/username/overview
-/user/username/where
+/api/v1/me/friends/{username}
+/api/v1/user/{username}/trophies
+/user/{username}/comments
+/user/{username}/gilded
+/user/{username}/overview
+/user/{username}/where
 ~~~
 
 ####wiki
@@ -178,15 +187,15 @@ DELETE /api/multi/multipath/r/srname
 /api/wiki/edit
 /api/wiki/hide
 /api/wiki/revert
-/wiki/discussions/page
+/wiki/discussions/{page}
 /wiki/pages
 /wiki/revisions
-/wiki/revisions/page
-/wiki/settings/page
-/wiki/page
+/wiki/revisions/{page}
+/wiki/settings/{page}
+/wiki/{page}
 ~~~
 
-#Implemented (36/166)
+#Implemented (36/175)
 ####account
 [`/api/login`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L136)
 
@@ -202,7 +211,7 @@ DELETE /api/multi/multipath/r/srname
 
 [`/api/new_captcha`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L218)
 
-[`/captcha/iden`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L239)
+[`/captcha/{iden}`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L239)
 
 ####links & comments
 [`/api/vote`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/models/LoggedInAccount.java#L84)
@@ -226,7 +235,7 @@ DELETE /api/multi/multipath/r/srname
 [`/api/submit`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/models/LoggedInAccount.java#L29)
 
 ####listings
-[`/by_id/names`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/SpecificPaginator.java#L25)
+[`/by_id/{names}`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/SpecificPaginator.java#L25)
 
 [`/random`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L312)
 
@@ -241,29 +250,29 @@ DELETE /api/multi/multipath/r/srname
 [`/sort`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/SimplePaginator.java#L23)
 
 ####multis
-[`/api/multi/multipath`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L290)
+[`/api/multi/{multipath}`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L290)
 
-[`GET /api/multi/multipath/r/srname`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L290)
+[`GET /api/multi/{multipath}/r/{srname}`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L290)
 
-[`GET /api/multi/multipath/description`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L305)
+[`GET /api/multi/{multipath}/description`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L305)
 
 [`/api/multi/mine`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/models/LoggedInAccount.java#L222)
 
 ####subreddits
-[`/r/subreddit/about.json`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L272)
+[`/r/{subreddit}/about.json`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L272)
 
 ####users
-[`/user/username/about.json`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L256)
+[`/user/{username}/about.json`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L256)
 
-[`/user/username/disliked`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/UserPaginatorSubmission.java#L30)
+[`/user/{username}/disliked`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/UserPaginatorSubmission.java#L30)
 
-[`/user/username/hidden`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/UserPaginatorSubmission.java#L30)
+[`/user/{username}/hidden`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/UserPaginatorSubmission.java#L30)
 
-[`/user/username/liked`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/UserPaginatorSubmission.java#L30)
+[`/user/{username}/liked`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/UserPaginatorSubmission.java#L30)
 
-[`/user/username/saved`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/UserPaginatorSubmission.java#L30)
+[`/user/{username}/saved`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/UserPaginatorSubmission.java#L30)
 
-[`/user/username/submitted`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/UserPaginatorSubmission.java#L30)
+[`/user/{username}/submitted`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/UserPaginatorSubmission.java#L30)
 
 [`/api/username_available.json`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L277)
 

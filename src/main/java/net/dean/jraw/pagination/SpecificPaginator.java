@@ -20,7 +20,7 @@ public class SpecificPaginator extends AbstractPaginator<Submission> {
 	}
 
 	@Override
-	@EndpointImplementation(uris = "/by_id/names")
+	@EndpointImplementation(uris = "/by_id/{names}")
 	protected Listing<Submission> getListing(boolean forwards) throws NetworkException {
 		// Just call super so we can add the @EndpointImplementation annotation
 		return super.getListing(forwards);
