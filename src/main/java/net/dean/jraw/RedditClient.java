@@ -5,6 +5,7 @@ import net.dean.jraw.http.*;
 import net.dean.jraw.models.Captcha;
 import net.dean.jraw.models.LoggedInAccount;
 import net.dean.jraw.models.MultiReddit;
+import net.dean.jraw.models.RenderStringPair;
 import net.dean.jraw.models.core.Account;
 import net.dean.jraw.models.core.Submission;
 import net.dean.jraw.models.core.Subreddit;
@@ -302,11 +303,11 @@ public class RedditClient extends RestClient {
 	 * @throws NetworkException If there was a problem sending the request
 	 */
 	@EndpointImplementation(uris = "GET /api/multi/{multipath}/description")
-	public String[] getPublicMultiDescription(String username, String multiName) throws NetworkException, ApiException {
+	public RenderStringPair getPublicMultiDescription(String username, String multiName) throws NetworkException, ApiException {
 		JsonNode node = execute(new RestRequest(HttpVerb.GET, String.format("/api/multi/user/%s/m/%s/description", username, multiName))).getJson();
 		checkMultiRedditError(node);
 		node = node.get("data");
-		return new String[] {node.get("body_md").asText(), node.get("body_html").asText()};
+		return new RenderStringPair(node.get("body_md").asText(), node.get("body_html").asText());
 	}
 
 	public Submission getRandom() throws NetworkException {
@@ -323,14 +324,14 @@ public class RedditClient extends RestClient {
 	}
 
 	@EndpointImplementation(uris = "/api/submit_text.json")
-	public String[] getSubmitText(String subreddit) throws NetworkException {
+	public RenderStringPair getSubmitText(String subreddit) throws NetworkException {
 		String query = "/api/submit_text.json";
 		if (subreddit != null) {
 			query = "/r/" + subreddit + query;
 		}
 
-		RestResponse response = execute(new RestRequest(HttpVerb.GET, query));
-		return new String[] {response.getJson().get("submit_text").asText(), response.getJson().get("submit_text_html").asText()};
+		JsonNode node = execute(new RestRequest(HttpVerb.GET, query)).getJson();
+		return new RenderStringPair(node.get("submit_text").asText(), node.get("submit_text_html").asText());
 	}
 
 	/**

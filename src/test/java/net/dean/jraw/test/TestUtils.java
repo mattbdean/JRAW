@@ -3,6 +3,7 @@ package net.dean.jraw.test;
 import net.dean.jraw.ApiException;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.Version;
+import net.dean.jraw.models.RenderStringPair;
 import org.testng.Assert;
 import org.testng.SkipException;
 
@@ -71,6 +72,12 @@ public final class TestUtils {
 			System.err.println(msg);
 			throw new SkipException(msg);
 		}
+	}
+
+	public static void testRenderString(RenderStringPair strings) {
+		Assert.assertNotNull(strings);
+		Assert.assertNotNull(strings.getMarkdown());
+		Assert.assertNotNull(strings.getHtml());
 	}
 
 	private static String getCallingMethod() {

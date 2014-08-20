@@ -192,8 +192,8 @@ public class Submission extends Thing implements Created, Distinguishable, Votab
 	 * @return The raw text of the self post
 	 */
 	@JsonInteraction
-	public String getSelftext() {
-		return data("selftext");
+	public RenderStringPair getSelftext() {
+		return new RenderStringPair(data("selftext"), data("selftext_html"));
 	}
 
 	/**

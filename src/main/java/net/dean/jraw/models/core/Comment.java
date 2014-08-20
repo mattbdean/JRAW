@@ -59,22 +59,9 @@ public class Comment extends Thing implements Created, Distinguishable, Votable 
 		return data("banned_by");
 	}
 
-	/**
-	 * The raw, unformatted text. Includes markdown and escaped HTML entities
-	 * @return Raw, unformatted text
-	 */
 	@JsonInteraction
-	public String getBody() {
-		return data("body");
-	}
-
-	/**
-	 * The formatted HTML that will be displayed on Reddit
-	 * @return Formatted HTML
-	 */
-	@JsonInteraction
-	public String getBodyHtml() {
-		return data("body");
+	public RenderStringPair getBody() {
+		return new RenderStringPair(data("body"), data("body_html"));
 	}
 
 	/**

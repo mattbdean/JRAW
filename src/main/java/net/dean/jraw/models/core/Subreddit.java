@@ -1,6 +1,7 @@
 package net.dean.jraw.models.core;
 
 import net.dean.jraw.models.JsonInteraction;
+import net.dean.jraw.models.RenderStringPair;
 import net.dean.jraw.models.ThingType;
 import org.codehaus.jackson.JsonNode;
 
@@ -30,13 +31,8 @@ public class Subreddit extends Thing {
 	}
 
 	@JsonInteraction
-	public String getSidebar() {
-		return data("description");
-	}
-
-	@JsonInteraction
-	public String getSidebarHtml() {
-		return data("description_html");
+	public RenderStringPair getSidebar() {
+		return new RenderStringPair(data("description"), data("description_html"));
 	}
 
 	@JsonInteraction
