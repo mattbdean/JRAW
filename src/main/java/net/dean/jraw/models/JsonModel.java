@@ -3,15 +3,11 @@ package net.dean.jraw.models;
 import net.dean.jraw.JrawUtils;
 import org.codehaus.jackson.JsonNode;
 
-import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -20,6 +16,9 @@ import java.util.stream.Collectors;
  */
 public abstract class JsonModel {
 	protected final JsonNode data;
+	/** The maximum length of a result of a @JsonInteraction method in {@link #toString()} */
+	private static final int MAX_STRING_LENGTH = 500;
+	private static final String ELLIPSIS = "(...)";
 
 	/**
 	 * Instantiates a new JsonModel
@@ -144,17 +143,46 @@ public abstract class JsonModel {
 		Class<? extends JsonModel> clazz = getClass();
 		StringBuilder sb = new StringBuilder(clazz.getSimpleName() + " {");
 
-		getJsonInteractionMethods(clazz).stream().filter(AccessibleObject::isAccessible).forEach(m -> {
+		List<Method> jsonInteractionMethods = getJsonInteractionMethods(clazz);
+
+		// Sort the methods by name
+		Collections.sort(jsonInteractionMethods, (o1, o2) -> o1.getName().compareTo(o2.getName()));
+
+		int counter = 0;
+		for (Method m : jsonInteractionMethods) {
 			try {
-				// "methodName()=>returnVal"
-				sb.append(m.getName()).append("()=>").append(asString(m.invoke(this)));
+				// methodName()="returnVal"
+				sb.append(m.getName()).append("()=");
+				Object result = m.invoke(this);
+
+				if (result instanceof JsonModel) {
+					// Avoid calling asString on JsonModels
+					sb.append('[').append(result.getClass().getSimpleName()).append(']');
+				} else {
+					String resultString = asString(result);
+					// Remove new lines
+					resultString = resultString.replace("\n", "\\n");
+					if (resultString.length() > MAX_STRING_LENGTH) {
+						// Prevent the resultString from being too long, cut it off at a certain length and add an ellipsis
+						resultString = resultString.substring(0, MAX_STRING_LENGTH - ELLIPSIS.length());
+						resultString += ELLIPSIS;
+					}
+					sb.append('\"').append(resultString).append('\"');
+				}
+
+				if (counter != jsonInteractionMethods.size() - 1) {
+					// Append the delimiter only if there will be a next element
+					sb.append(", ");
+				}
+				counter++;
 			} catch (IllegalAccessException e) {
 				System.err.println("IllegalAccessException. This really shouldn't happen.");
 				e.printStackTrace();
 			} catch (InvocationTargetException e) {
 				e.printStackTrace();
 			}
-		});
+		}
+		sb.append('}');
 
 		return sb.toString();
 	}

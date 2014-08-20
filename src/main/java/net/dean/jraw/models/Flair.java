@@ -42,4 +42,12 @@ public class Flair {
 	public String getText() {
 		return text;
 	}
+
+	@Override
+	public String toString() {
+		return "Flair {" +
+				"cssClass='" + cssClass + '\'' +
+				", text='" + text + '\'' +
+				'}';
+	}
 }

@@ -39,4 +39,12 @@ public class Captcha {
 	public InputStream getImageStream() {
 		return imageStream;
 	}
+
+	@Override
+	public String toString() {
+		return "Captcha{" +
+				"id='" + id + '\'' +
+				", imageStream=" + (imageStream == null ? "null" : imageStream) +
+				'}';
+	}
 }
