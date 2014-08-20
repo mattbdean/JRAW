@@ -179,7 +179,7 @@ public class AccountTest {
 	@Test
 	public void testMyMultis() {
 		try {
-			List<MultiReddit> multis = account.getMyMultis();
+			List<MultiReddit> multis = account.getMyMultiReddits();
 
 			multis.forEach(ThingFieldTest::fieldValidityCheck);
 		} catch (NetworkException e) {

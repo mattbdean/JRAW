@@ -219,7 +219,7 @@ public class LoggedInAccount extends Account {
 	}
 
 	@EndpointImplementation(uris = "/api/multi/mine")
-	public List<MultiReddit> getMyMultis() throws NetworkException {
+	public List<MultiReddit> getMyMultiReddits() throws NetworkException {
 		List<MultiReddit> multis = new ArrayList<>();
 		JsonNode multiArray = creator.execute(new RestRequest(HttpVerb.GET, "/api/multi/mine")).getJson();
 
