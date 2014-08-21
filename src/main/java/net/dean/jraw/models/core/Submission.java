@@ -197,15 +197,6 @@ public class Submission extends Thing implements Created, Distinguishable, Votab
 	}
 
 	/**
-	 * The formatted, HTML version of ${@link #getSelftext()}
-	 * @return The formatted, HTML version of ${@link #getSelftext()}
-	 */
-	@JsonInteraction
-	public String getSelftextHtml() {
-		return data("selftext_html");
-	}
-
-	/**
 	 * The subreddit that the submission is posted in (ex: "pics", "funny")
 	 * @return The subreddit that the submission was posted in
 	 */

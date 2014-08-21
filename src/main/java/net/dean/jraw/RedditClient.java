@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -332,6 +333,18 @@ public class RedditClient extends RestClient {
 
 		JsonNode node = execute(new RestRequest(HttpVerb.GET, query)).getJson();
 		return new RenderStringPair(node.get("submit_text").asText(), node.get("submit_text_html").asText());
+	}
+
+	@EndpointImplementation(uris = "/api/subreddits_by_topic.json")
+	public List<String> getSubredditsByTopic(String topic) throws NetworkException {
+		List<String> subreddits = new ArrayList<>();
+
+		JsonNode node = execute(new RestRequest(HttpVerb.GET, "/api/subreddits_by_topic.json", JrawUtils.args("query", topic))).getJson();
+		for (JsonNode childNode : node) {
+			subreddits.add(childNode.get("name").asText());
+		}
+
+		return subreddits;
 	}
 
 	/**

@@ -7,6 +7,8 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import java.util.List;
+
 public class SubredditTest {
 
 	private RedditClient reddit;
@@ -22,7 +24,18 @@ public class SubredditTest {
 			RenderStringPair submitText = reddit.getSubmitText("videos");
 			TestUtils.testRenderString(submitText);
 		} catch (NetworkException e) {
+			Assert.fail(e.getMessage());
+		}
+	}
 
+	@Test
+	public void testSubredditsByTopic() {
+		try {
+			List<String> subs = reddit.getSubredditsByTopic("programming");
+
+			Assert.assertTrue(subs.size() > 0);
+			subs.forEach(Assert::assertNotNull);
+		} catch (NetworkException e) {
 			Assert.fail(e.getMessage());
 		}
 	}
