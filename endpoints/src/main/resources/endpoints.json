@@ -166,7 +166,7 @@
         "/subreddits/mine/contributor",
         "/subreddits/mine/moderator",
         "/subreddits/mine/subscriber",
-        "/subreddits/mine/where",
+        "/subreddits/mine/{where}",
         "/subreddits/new",
         "/subreddits/popular",
         "/subreddits/search",

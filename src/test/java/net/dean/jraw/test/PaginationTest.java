@@ -12,6 +12,8 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -40,9 +42,8 @@ public class PaginationTest {
 
 	@Test
 	public void testSubmitted() throws NetworkException {
-		UserPaginatorSubmission paginator = new UserPaginatorSubmission.Builder(reddit)
+		UserPaginatorSubmission paginator = new UserPaginatorSubmission.Builder(reddit, UserPaginatorSubmission.Where.SUBMITTED)
 				.username("way_fairer")
-				.where(UserPaginatorSubmission.Where.SUBMITTED)
 				.build();
 		commonTest(paginator);
 	}
@@ -62,8 +63,7 @@ public class PaginationTest {
 
 	@Test(timeOut = 15_000)
 	public void testPaginationTerminates() throws NetworkException {
-		UserPaginatorSubmission paginator = new UserPaginatorSubmission.Builder(reddit)
-				.where(UserPaginatorSubmission.Where.SUBMITTED)
+		UserPaginatorSubmission paginator = new UserPaginatorSubmission.Builder(reddit, UserPaginatorSubmission.Where.SUBMITTED)
 				.username(TestUtils.getCredentials()[0])
 				.build();
 
@@ -77,6 +77,16 @@ public class PaginationTest {
 		// Test all Where values
 		for (MySubredditsPaginator.Where where : MySubredditsPaginator.Where.values()) {
 			MySubredditsPaginator paginator = new MySubredditsPaginator.Builder(account, where).build();
+			commonTest(paginator);
+		}
+	}
+
+
+	@Test
+	public void testAllSubredditsPaginator() throws NetworkException {
+		// Test all Where values
+		for (AllSubredditsPaginator.Where where : AllSubredditsPaginator.Where.values()) {
+			AllSubredditsPaginator paginator = new AllSubredditsPaginator.Builder(reddit, where).build();
 			commonTest(paginator);
 		}
 	}

@@ -1,5 +1,5 @@
-<!--- Generated 2014-08-20 at 22:00:46 EDT. Use ./gradlew :endpoints:update to update. DO NOT MODIFY DIRECTLY -->
-#Unimplemented (132/175)
+<!--- Generated 2014-08-20 at 23:26:26 EDT. Use ./gradlew :endpoints:update to update. DO NOT MODIFY DIRECTLY -->
+#Unimplemented (129/175)
 ####account
 ~~~
 /api/clear_sessions
@@ -153,10 +153,7 @@ DELETE /api/multi/{multipath}/r/{srname}
 /api/subscribe
 /api/upload_sr_img
 /r/{subreddit}/about/edit.json
-/subreddits/new
-/subreddits/popular
 /subreddits/search
-/subreddits/{where}
 ~~~
 
 ####users
@@ -188,7 +185,7 @@ DELETE /api/multi/{multipath}/r/{srname}
 /wiki/{page}
 ~~~
 
-#Implemented (43/175)
+#Implemented (46/175)
 ####account
 [`/api/login`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L138)
 
@@ -252,13 +249,19 @@ DELETE /api/multi/{multipath}/r/{srname}
 [`/api/multi/mine`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/models/LoggedInAccount.java#L222)
 
 ####subreddits
-[`/subreddits/mine/contributor`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/MySubredditsPaginator.java#L31)
+[`/subreddits/popular`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/AllSubredditsPaginator.java#L25)
 
-[`/subreddits/mine/moderator`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/MySubredditsPaginator.java#L31)
+[`/subreddits/new`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/AllSubredditsPaginator.java#L25)
 
-[`/subreddits/mine/subscriber`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/MySubredditsPaginator.java#L31)
+[`/subreddits/{where}`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/AllSubredditsPaginator.java#L25)
 
-[`/subreddits/mine/where`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/MySubredditsPaginator.java#L31)
+[`/subreddits/mine/contributor`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/MySubredditsPaginator.java#L28)
+
+[`/subreddits/mine/moderator`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/MySubredditsPaginator.java#L28)
+
+[`/subreddits/mine/subscriber`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/MySubredditsPaginator.java#L28)
+
+[`/subreddits/mine/where`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/MySubredditsPaginator.java#L28)
 
 [`/api/submit_text.json`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L328)
 

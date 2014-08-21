@@ -15,7 +15,7 @@ import java.util.Map;
 /**
  * Represents the basic concept of a paginator
  *
- * @param <T> The type that the listing will contain
+ * @param <T> The type that the listings will contain
  */
 public abstract class AbstractPaginator<T extends Thing> implements Iterator<Listing<T>> {
 	/** The client that created this */

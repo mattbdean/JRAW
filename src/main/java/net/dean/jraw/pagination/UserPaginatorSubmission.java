@@ -7,16 +7,14 @@ import net.dean.jraw.models.core.Listing;
 import net.dean.jraw.models.core.Submission;
 
 /**
- * This class is used to paginate through user posts or comments via /user/&lt;username&gt;/&lt;where&gt;.json
+ * This class is used to paginate through user posts or comments via {@code /user/{username}/{where}.json}
  */
-public class UserPaginatorSubmission extends AbstractPaginator<Submission> {
+public class UserPaginatorSubmission extends GenericPaginator<Submission, UserPaginatorSubmission.Where, UserPaginatorSubmission> {
 	private final String username;
-	private final Where where;
 
 	protected UserPaginatorSubmission(Builder b) {
 		super(b);
 		this.username = b.username;
-		this.where = b.where;
 	}
 
 	@Override
@@ -33,38 +31,28 @@ public class UserPaginatorSubmission extends AbstractPaginator<Submission> {
 	}
 
 	@Override
-	protected String getBaseUri() {
-		return String.format("/user/%s/%s.json", username, where.name().toLowerCase());
+	public String getUriPrefix() {
+		return "/user/" + username;
 	}
 
 	public String getUsername() {
 		return username;
 	}
 
-	public Where getWhere() {
-		return where;
-	}
-
-	public static class Builder extends AbstractPaginator.Builder<Submission> {
+	public static class Builder extends GenericPaginator.Builder<Submission, Where, UserPaginatorSubmission> {
 		private String username;
-		private Where where;
 
 		/**
 		 * Instantiates a new Builder
 		 * @param reddit The RedditClient to help send requests
 		 */
-		public Builder(RedditClient reddit) {
-			super(reddit, Submission.class);
+		public Builder(RedditClient reddit, Where where) {
+			super(reddit, Submission.class, where);
 		}
 
 
 		public Builder username(String user) {
 			this.username = user;
-			return this;
-		}
-
-		public Builder where(Where w) {
-			this.where = w;
 			return this;
 		}
 
@@ -75,7 +63,7 @@ public class UserPaginatorSubmission extends AbstractPaginator<Submission> {
 	}
 
 	/**
-	 * Used by UserPaginatorSubmission to fill in the "where" in {@code /user/<username>/<where>}
+	 * Used by UserPaginatorSubmission to fill in the "where" in {@code /user/{username}/{where}}
 	 */
 	public static enum Where {
 		// Both submissions and comments

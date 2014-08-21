@@ -200,9 +200,8 @@ public class AccountTest {
 	}
 
 	private UserPaginatorSubmission getPaginator(Where where) {
-		return new UserPaginatorSubmission.Builder(reddit)
+		return new UserPaginatorSubmission.Builder(reddit, where)
 				.username(account.getName())
-				.where(where)
 				.build();
 	}
 }
