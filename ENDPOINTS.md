@@ -1,5 +1,5 @@
-<!--- Generated 2014-08-20 at 20:50:42 EDT. Use ./gradlew :endpoints:update to update. DO NOT MODIFY DIRECTLY -->
-#Unimplemented (137/175)
+<!--- Generated 2014-08-20 at 21:30:17 EDT. Use ./gradlew :endpoints:update to update. DO NOT MODIFY DIRECTLY -->
+#Unimplemented (133/175)
 ####account
 ~~~
 /api/clear_sessions
@@ -154,10 +154,6 @@ DELETE /api/multi/{multipath}/r/{srname}
 /api/subscribe
 /api/upload_sr_img
 /r/{subreddit}/about/edit.json
-/subreddits/mine/contributor
-/subreddits/mine/moderator
-/subreddits/mine/subscriber
-/subreddits/mine/where
 /subreddits/new
 /subreddits/popular
 /subreddits/search
@@ -193,7 +189,7 @@ DELETE /api/multi/{multipath}/r/{srname}
 /wiki/{page}
 ~~~
 
-#Implemented (38/175)
+#Implemented (42/175)
 ####account
 [`/api/login`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L138)
 
@@ -257,6 +253,14 @@ DELETE /api/multi/{multipath}/r/{srname}
 [`/api/multi/mine`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/models/LoggedInAccount.java#L222)
 
 ####subreddits
+[`/subreddits/mine/contributor`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/MySubredditsPaginator.java#L32)
+
+[`/subreddits/mine/moderator`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/MySubredditsPaginator.java#L32)
+
+[`/subreddits/mine/subscriber`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/MySubredditsPaginator.java#L32)
+
+[`/subreddits/mine/where`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/MySubredditsPaginator.java#L32)
+
 [`/api/submit_text.json`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L328)
 
 [`/api/subreddits_by_topic.json`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L339)
@@ -266,15 +270,15 @@ DELETE /api/multi/{multipath}/r/{srname}
 ####users
 [`/user/{username}/about.json`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L258)
 
-[`/user/{username}/disliked`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/UserPaginatorSubmission.java#L30)
+[`/user/{username}/disliked`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/UserPaginatorSubmission.java#L31)
 
-[`/user/{username}/hidden`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/UserPaginatorSubmission.java#L30)
+[`/user/{username}/hidden`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/UserPaginatorSubmission.java#L31)
 
-[`/user/{username}/liked`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/UserPaginatorSubmission.java#L30)
+[`/user/{username}/liked`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/UserPaginatorSubmission.java#L31)
 
-[`/user/{username}/saved`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/UserPaginatorSubmission.java#L30)
+[`/user/{username}/saved`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/UserPaginatorSubmission.java#L31)
 
-[`/user/{username}/submitted`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/UserPaginatorSubmission.java#L30)
+[`/user/{username}/submitted`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/UserPaginatorSubmission.java#L31)
 
 [`/api/username_available.json`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L279)
 

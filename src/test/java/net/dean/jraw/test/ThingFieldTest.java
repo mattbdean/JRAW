@@ -44,6 +44,7 @@ public class ThingFieldTest {
 					} else {
 						// Other reason for InvocationTargetException
 						Throwable cause = e.getCause();
+						cause.printStackTrace();
 						Assert.fail(cause.getClass().getName() + ": " + cause.getMessage());
 					}
 				}

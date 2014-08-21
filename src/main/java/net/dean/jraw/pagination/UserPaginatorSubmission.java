@@ -25,7 +25,8 @@ public class UserPaginatorSubmission extends AbstractPaginator<Submission> {
 			"/user/{username}/hidden",
 			"/user/{username}/liked",
 			"/user/{username}/saved",
-			"/user/{username}/submitted"})
+			"/user/{username}/submitted"
+	})
 	protected Listing<Submission> getListing(boolean forwards) throws NetworkException {
 		// Just call super so that we can add the @EndpointImplementation annotation
 		return super.getListing(forwards);

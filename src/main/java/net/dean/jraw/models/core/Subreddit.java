@@ -48,6 +48,9 @@ public class Subreddit extends Thing {
 	@JsonInteraction(nullable = true)
 	public Dimension getHeaderSize() {
 		JsonNode node = data.get("header_size");
+		if (node.isNull()) {
+			return null;
+		}
 		return new Dimension(node.get(0).asInt(-1), node.get(1).asInt(-1));
 	}
 

@@ -1,7 +1,9 @@
 package net.dean.jraw.test;
 
+import net.dean.jraw.ApiException;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.NetworkException;
+import net.dean.jraw.models.LoggedInAccount;
 import net.dean.jraw.models.core.Listing;
 import net.dean.jraw.models.core.Submission;
 import net.dean.jraw.models.core.Thing;
@@ -15,10 +17,13 @@ import java.util.List;
 
 public class PaginationTest {
 	private static RedditClient reddit;
+	private static LoggedInAccount account;
 
 	@BeforeClass
-	public static void setUp() {
+	public static void setUp() throws NetworkException, ApiException {
 		reddit = TestUtils.client(PaginationTest.class);
+		String[] creds = TestUtils.getCredentials();
+		account = reddit.login(creds[0], creds[1]);
 	}
 
 	@Test
@@ -62,9 +67,17 @@ public class PaginationTest {
 				.username(TestUtils.getCredentials()[0])
 				.build();
 
-		Listing<Submission> submissions;
 		while (paginator.hasNext()) {
-			submissions = paginator.next();
+			paginator.next();
+		}
+	}
+
+	@Test
+	public void testMySubredditsPaginator() throws NetworkException {
+		// Test all Where values
+		for (MySubredditsPaginator.Where where : MySubredditsPaginator.Where.values()) {
+			MySubredditsPaginator paginator = new MySubredditsPaginator.Builder(account, where).build();
+			commonTest(paginator);
 		}
 	}
 

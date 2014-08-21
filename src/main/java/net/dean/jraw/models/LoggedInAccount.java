@@ -255,6 +255,10 @@ public class LoggedInAccount extends Account {
 		}
 	}
 
+	public RedditClient getCreator() {
+		return creator;
+	}
+
 	/**
 	 * This class provides a way to configure posting parameters of a new submission
 	 */
