@@ -348,6 +348,30 @@ public class RedditClient extends RestClient {
 	}
 
 	/**
+	 * Gets a list of subreddits that start with the given string. For instance, searching for "fun" would return
+	 * {@code ["funny", "FunnyandSad", "funnysigns", "funnycharts", ...]}
+	 * @param start The begging of the subreddit to search for
+	 * @param includeNsfw Whether to include NSFW subreddits.
+	 * @return A list of subreddits that starts with the given string
+	 * @throws NetworkException
+	 */
+	@EndpointImplementation(uris = "/api/search_reddit_names.json")
+	public List<String> searchSubreddits(String start, boolean includeNsfw) throws NetworkException {
+		List<String> subs = new ArrayList<>();
+
+		JsonNode node = execute(new RestRequest(HttpVerb.POST, "/api/search_reddit_names.json", JrawUtils.args(
+				"query", start,
+				"include_over_18", includeNsfw
+		))).getJson();
+
+		for (JsonNode name : node.get("names")) {
+			subs.add(name.asText());
+		}
+
+		return subs;
+	}
+
+	/**
 	 * Checks if there was an error returned by a /api/multi/* request, since those URIs return a different error handling
 	 * format than the rest of the API
 	 * @param root The root JsonNode

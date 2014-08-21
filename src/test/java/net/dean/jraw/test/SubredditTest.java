@@ -40,4 +40,16 @@ public class SubredditTest {
 		}
 	}
 
+	@Test
+	public void testSearchSubreddits() {
+		try {
+			List<String> subs = reddit.searchSubreddits("fun", false);
+
+			Assert.assertTrue(subs.size() > 0);
+			subs.forEach(Assert::assertNotNull);
+		} catch (NetworkException e) {
+			Assert.fail(e.getMessage());
+		}
+	}
+
 }
