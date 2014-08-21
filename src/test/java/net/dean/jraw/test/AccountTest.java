@@ -10,7 +10,7 @@ import net.dean.jraw.models.VoteDirection;
 import net.dean.jraw.models.core.Account;
 import net.dean.jraw.models.core.Submission;
 import net.dean.jraw.pagination.UserPaginatorSubmission;
-import net.dean.jraw.pagination.Where;
+import static net.dean.jraw.pagination.UserPaginatorSubmission.Where;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;

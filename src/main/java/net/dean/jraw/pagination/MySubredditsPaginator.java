@@ -4,7 +4,6 @@ import net.dean.jraw.EndpointImplementation;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.models.LoggedInAccount;
 import net.dean.jraw.models.core.Listing;
-import net.dean.jraw.models.core.Submission;
 import net.dean.jraw.models.core.Subreddit;
 
 public class MySubredditsPaginator extends AbstractPaginator<Subreddit> {

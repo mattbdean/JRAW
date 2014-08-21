@@ -42,7 +42,7 @@ public class PaginationTest {
 	public void testSubmitted() throws NetworkException {
 		UserPaginatorSubmission paginator = new UserPaginatorSubmission.Builder(reddit)
 				.username("way_fairer")
-				.where(Where.SUBMITTED)
+				.where(UserPaginatorSubmission.Where.SUBMITTED)
 				.build();
 		commonTest(paginator);
 	}
@@ -63,7 +63,7 @@ public class PaginationTest {
 	@Test(timeOut = 15_000)
 	public void testPaginationTerminates() throws NetworkException {
 		UserPaginatorSubmission paginator = new UserPaginatorSubmission.Builder(reddit)
-				.where(Where.SUBMITTED)
+				.where(UserPaginatorSubmission.Where.SUBMITTED)
 				.username(TestUtils.getCredentials()[0])
 				.build();
 
