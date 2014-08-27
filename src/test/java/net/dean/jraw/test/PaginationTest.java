@@ -28,13 +28,13 @@ public class PaginationTest {
 
     @Test
     public void testFrontPage() throws NetworkException {
-        SimplePaginator frontPage = new SimplePaginator.Builder(reddit).build();
+        FrontPagePaginator frontPage = new FrontPagePaginator.Builder(reddit).build();
         commonTest(frontPage);
     }
 
     @Test
     public void testSubreddit() throws NetworkException {
-        SimplePaginator pics = new SimplePaginator.Builder(reddit).subreddit("pics").build();
+        FrontPagePaginator pics = new FrontPagePaginator.Builder(reddit).subreddit("pics").build();
         commonTest(pics);
     }
 
@@ -88,7 +88,7 @@ public class PaginationTest {
         }
     }
 
-    private <T extends Thing> void commonTest(AbstractPaginator<T> p) throws NetworkException {
+    private <T extends Thing> void commonTest(Paginator<T> p) throws NetworkException {
         // Test that the paginator can retrieve the data
         Listing<T> firstPage = p.next();
         ThingFieldTest.fieldValidityCheck(firstPage);

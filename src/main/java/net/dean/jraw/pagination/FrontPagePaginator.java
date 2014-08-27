@@ -9,10 +9,10 @@ import net.dean.jraw.models.core.Submission;
 /**
  * This class is used to paginate through the front page or a subreddit with different time periods or sortings.
  */
-public class SimplePaginator extends AbstractPaginator<Submission> {
+public class FrontPagePaginator extends Paginator<Submission> {
     private final String subreddit;
 
-    private SimplePaginator(Builder b) {
+    private FrontPagePaginator(Builder b) {
         super(b);
         this.subreddit = b.subreddit;
     }
@@ -44,7 +44,7 @@ public class SimplePaginator extends AbstractPaginator<Submission> {
         return subreddit;
     }
 
-    public static class Builder extends AbstractPaginator.Builder<Submission> {
+    public static class Builder extends Paginator.Builder<Submission> {
         private String subreddit;
 
         /**
@@ -66,8 +66,8 @@ public class SimplePaginator extends AbstractPaginator<Submission> {
         }
 
         @Override
-        public SimplePaginator build() {
-            return new SimplePaginator(this);
+        public FrontPagePaginator build() {
+            return new FrontPagePaginator(this);
         }
     }
 }

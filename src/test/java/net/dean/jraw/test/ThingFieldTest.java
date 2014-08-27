@@ -10,7 +10,7 @@ import net.dean.jraw.models.core.Account;
 import net.dean.jraw.models.core.Listing;
 import net.dean.jraw.models.core.Submission;
 import net.dean.jraw.models.core.Subreddit;
-import net.dean.jraw.pagination.SimplePaginator;
+import net.dean.jraw.pagination.FrontPagePaginator;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -88,7 +88,7 @@ public class ThingFieldTest {
     @Test
     public void testOEmbed() {
         try {
-            SimplePaginator frontPage = new SimplePaginator.Builder(reddit).build();
+            FrontPagePaginator frontPage = new FrontPagePaginator.Builder(reddit).build();
             Listing<Submission> submissions = frontPage.next();
 
             submissions.getChildren().stream().filter(s -> s.getOEmbedMedia() != null).forEach(s -> {
@@ -105,7 +105,7 @@ public class ThingFieldTest {
     @Test
     public void testEmbeddedMedia() {
         try {
-            SimplePaginator frontPage = new SimplePaginator.Builder(reddit).build();
+            FrontPagePaginator frontPage = new FrontPagePaginator.Builder(reddit).build();
             Listing<Submission> submissions = frontPage.next();
 
             submissions.getChildren().stream().filter(s -> s.getEmbeddedMedia() != null).forEach(s -> {

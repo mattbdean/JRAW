@@ -10,7 +10,7 @@ import net.dean.jraw.models.core.Submission;
 /**
  * This class provides a way to iterate through a list of Submissions by their names.
  */
-public class SpecificPaginator extends AbstractPaginator<Submission> {
+public class SpecificPaginator extends Paginator<Submission> {
     private final String submissionListing;
     private SpecificPaginator(Builder b) {
         super(b);
@@ -29,7 +29,7 @@ public class SpecificPaginator extends AbstractPaginator<Submission> {
         return super.getListing(forwards);
     }
 
-    public static class Builder extends AbstractPaginator.Builder<Submission> {
+    public static class Builder extends Paginator.Builder<Submission> {
         private String submissionListing;
 
         /**

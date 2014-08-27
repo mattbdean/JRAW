@@ -14,7 +14,7 @@ import net.dean.jraw.models.core.Thing;
  * @param <U> The type of enum that will be used in place of the "where" parameter.
  * @param <V> The type of GenericPaginator that the Builder will return
  */
-public abstract class GenericPaginator<T extends Thing, U extends Enum<U>, V extends GenericPaginator<T, U, V>> extends AbstractPaginator<T> {
+public abstract class GenericPaginator<T extends Thing, U extends Enum<U>, V extends GenericPaginator<T, U, V>> extends Paginator<T> {
     private final U where;
 
     /**
@@ -64,7 +64,7 @@ public abstract class GenericPaginator<T extends Thing, U extends Enum<U>, V ext
      * @param <U> The type of enum that will be used in place of the "where" parameter.
      * @param <V> The type of GenericPaginator that this will return
      */
-    public static abstract class Builder<T extends Thing, U extends Enum<U>, V extends GenericPaginator<T, U, V>> extends AbstractPaginator.Builder<T> {
+    public static abstract class Builder<T extends Thing, U extends Enum<U>, V extends GenericPaginator<T, U, V>> extends Paginator.Builder<T> {
         private final U where;
 
         /**

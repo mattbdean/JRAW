@@ -16,7 +16,7 @@ import java.util.Map;
  *
  * @param <T> The type that the listings will contain
  */
-public abstract class AbstractPaginator<T extends Thing> implements Iterator<Listing<T>> {
+public abstract class Paginator<T extends Thing> implements Iterator<Listing<T>> {
     /** The client that created this */
     protected final RedditClient creator;
     protected final Sorting sorting;
@@ -27,10 +27,10 @@ public abstract class AbstractPaginator<T extends Thing> implements Iterator<Lis
     private Class<T> thingType;
 
     /**
-     * Instantiates a new AbstractPaginator
+     * Instantiates a new Paginator
      * @param b The Builder to use
      */
-    protected AbstractPaginator(Builder<T> b) {
+    protected Paginator(Builder<T> b) {
         this.creator = b.creator;
         this.thingType = b.thingType;
         this.sorting = b.sorting;
@@ -184,6 +184,6 @@ public abstract class AbstractPaginator<T extends Thing> implements Iterator<Lis
          * Transforms this Builder into a Paginator
          * @return A paginator with the same parameters as this Builder
          */
-        public abstract AbstractPaginator build();
+        public abstract Paginator build();
     }
 }
