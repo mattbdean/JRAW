@@ -114,20 +114,9 @@ public final class JrawUtils {
 	 * @return If the name given could be a Thing's full name
 	 */
 	public static boolean isFullName(String name) {
-		char[] str = name.toCharArray();
-		if (str.length < 3)
-			throw new IndexOutOfBoundsException("Name must be at least three characters");
-
-		if (str[0] != 't') return false; // Start with 't'
-		if (!Character.isDigit(str[1])) return false; // Second letter is numeric
-
-		int val = Character.getNumericValue(str[1]);
-		if (val > 8 || val < 1) return false; // Second letter is between 1 and 8
-
-		if (str[2] != '_') return false; // Third letter is an underscore
-
-		for (int i = 3; i < str.length; i++) // Rest of the letters are numbers or digits
-			if (!Character.isLetterOrDigit(str[i]))	return false;
-		return true;
+        if (name.length() < 3) {
+            throw new IllegalArgumentException("Name must be at least three characters");
+        }
+        return name.matches("t[1-8]_[a-zA-Z].*");
 	}
 }

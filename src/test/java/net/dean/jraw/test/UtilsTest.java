@@ -35,7 +35,7 @@ public class UtilsTest {
 		assertFalse(isFullName("jfdklsa"));
 	}
 
-	@Test(expectedExceptions = IndexOutOfBoundsException.class)
+	@Test(expectedExceptions = IllegalArgumentException.class)
 	public void testFullNameEmpty() {
 		isFullName("");
 	}
