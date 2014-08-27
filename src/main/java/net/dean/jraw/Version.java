@@ -17,11 +17,17 @@ public class Version {
 	private final int major;
 	private final int minor;
 	private final int patch;
+    private final boolean snapshot;
 
-	private Version(int major, int minor, int patch) {
+    private Version(int major, int minor, int patch) {
+        this(major, minor, patch, false);
+    }
+
+	private Version(int major, int minor, int patch, boolean snapshot) {
 		this.major = major;
 		this.minor = minor;
 		this.patch = patch;
+        this.snapshot = snapshot;
 	}
 
 	@Override
@@ -30,6 +36,7 @@ public class Version {
 				"major=" + major +
 				", minor=" + minor +
 				", patch=" + patch +
+                ", snapshot=" + snapshot +
 				'}';
 	}
 
@@ -38,7 +45,7 @@ public class Version {
 	 * @return A formatted string representing this Version
 	 */
 	public String formatted() {
-		return String.format("%s.%s.%s", major, minor, patch);
+		return String.format("%s.%s.%s%s", major, minor, patch, snapshot ? "-SNAPSHOT" : "");
 	}
 
 	/**
@@ -64,4 +71,6 @@ public class Version {
 	public int getPatch() {
 		return patch;
 	}
+
+
 }
