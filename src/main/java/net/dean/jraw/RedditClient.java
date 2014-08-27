@@ -1,12 +1,12 @@
 package net.dean.jraw;
 
-import net.dean.jraw.EndpointImplementation;
 import net.dean.jraw.http.*;
 import net.dean.jraw.models.Captcha;
 import net.dean.jraw.models.LoggedInAccount;
 import net.dean.jraw.models.MultiReddit;
 import net.dean.jraw.models.RenderStringPair;
 import net.dean.jraw.models.core.Account;
+import net.dean.jraw.models.core.Comment;
 import net.dean.jraw.models.core.Submission;
 import net.dean.jraw.models.core.Subreddit;
 import org.apache.http.Header;
@@ -21,6 +21,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * This class provides access to the most basic Reddit features such as logging in.

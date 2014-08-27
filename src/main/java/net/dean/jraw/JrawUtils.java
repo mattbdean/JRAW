@@ -1,5 +1,9 @@
 package net.dean.jraw;
 
+import net.dean.jraw.http.HttpVerb;
+import net.dean.jraw.http.NetworkException;
+import net.dean.jraw.http.RestRequest;
+import net.dean.jraw.http.RestResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

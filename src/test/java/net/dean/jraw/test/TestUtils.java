@@ -11,11 +11,14 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Random;
 
 public final class TestUtils {
 	private static Random random = new Random();
-
+    private static final DateFormat df = new SimpleDateFormat();
 	private static RedditClient client;
 
 	public static RedditClient client(Class<?> testClass) {
@@ -55,7 +58,11 @@ public final class TestUtils {
 		return random.nextInt(1_000_000_000);
 	}
 
-	public static void ignoreRatelimitQuotaFilled(ApiException e) {
+    public static String curDate() {
+        return df.format(new Date());
+    }
+
+	public static void handleApiException(ApiException e) {
 
 		String msg = null;
 		// toUpperCase just in case (no pun intended)
@@ -64,13 +71,15 @@ public final class TestUtils {
 				msg = String.format("Skipping %s(), link posting quota has been filled for this user", getCallingMethod());
 				break;
 			case "RATELIMIT":
-				msg = String.format("Skipping %s(), reached ratelimit", getCallingMethod());
+				msg = String.format("Skipping %s(), reached ratelimit (%s)", getCallingMethod(), e.getExplanation());
 				break;
 		}
 
 		if (msg != null) {
 			System.err.println(msg);
 			throw new SkipException(msg);
+		} else {
+			Assert.fail(e.getMessage());
 		}
 	}
 
@@ -84,8 +93,8 @@ public final class TestUtils {
 		StackTraceElement[] elements = Thread.currentThread().getStackTrace();
 		// [0] = Thread.getStackTrace()
 		// [1] = this method
-		// [2] = ignoreRatelimitQuotaFilled
-		// [3] = Caller of ignoreRatelimitQuotaFilled
+		// [2] = handleApiException
+		// [3] = Caller of handleApiException
 		return elements[3].getMethodName();
 	}
 }
