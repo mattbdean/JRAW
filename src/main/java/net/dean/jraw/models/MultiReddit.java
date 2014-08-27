@@ -40,7 +40,7 @@ public class MultiReddit extends Thing implements Created {
      * @return The multireddit's name
      */
     @JsonInteraction
-    public String getName() {
+    public String getFullName() {
         return data("name");
     }
 

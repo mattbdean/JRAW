@@ -93,7 +93,7 @@ public class LoggedInAccount extends Account {
      * @throws ApiException If the API returned an error
      */
     public void vote(Submission s, VoteDirection voteDirection) throws NetworkException, ApiException {
-        vote(s.getName(), voteDirection);
+        vote(s.getFullName(), voteDirection);
     }
 
     /**
@@ -106,7 +106,7 @@ public class LoggedInAccount extends Account {
      * @throws ApiException If the API returned an error
      */
     public void vote(Comment c, VoteDirection voteDirection) throws NetworkException, ApiException {
-        vote(c.getName(), voteDirection);
+        vote(c.getFullName(), voteDirection);
     }
 
     /**
@@ -139,7 +139,7 @@ public class LoggedInAccount extends Account {
     public RestResponse setSaved(Submission s, boolean save) throws NetworkException, ApiException {
         // Send it to "/api/save" if save == true, "/api/unsave" if save == false
         return genericPost(String.format("/api/%ssave", save ? "" : "un"), JrawUtils.args(
-                "id", s.getName()
+                "id", s.getFullName()
         ));
     }
 
@@ -154,11 +154,11 @@ public class LoggedInAccount extends Account {
      */
     @EndpointImplementation(uris = "/api/sendreplies")
     public RestResponse setSendRepliesToInbox(Submission s, boolean send) throws NetworkException, ApiException {
-        if (!s.getAuthor().equals(getName())) {
-            throw new IllegalArgumentException(String.format("Logged in user (%s) did not post this submission (by %s)", getName(), s.getAuthor()));
+        if (!s.getAuthor().equals(getFullName())) {
+            throw new IllegalArgumentException(String.format("Logged in user (%s) did not post this submission (by %s)", getFullName(), s.getAuthor()));
         }
         return genericPost("/api/sendreplies", JrawUtils.args(
-                "id", s.getName(),
+                "id", s.getFullName(),
                 "state", Boolean.toString(send)
         ));
     }
@@ -178,7 +178,7 @@ public class LoggedInAccount extends Account {
 
         // "/api/marknsfw" if nsfw == true, "/api/unmarknsfw" if nsfw == false
         return genericPost(String.format("/api/%smarknsfw", nsfw ? "" : "un"), JrawUtils.args(
-                "id", s.getName()
+                "id", s.getFullName()
         ));
     }
 
@@ -191,7 +191,7 @@ public class LoggedInAccount extends Account {
      */
     public RestResponse delete(Submission s) throws NetworkException, ApiException {
         checkIfOwns(s);
-        return delete(s.getName());
+        return delete(s.getFullName());
     }
 
 
@@ -203,11 +203,11 @@ public class LoggedInAccount extends Account {
      * @throws ApiException If the API returned an error
      */
     public RestResponse delete(Comment c) throws NetworkException, ApiException {
-        if (!c.getAuthor().equals(getName())) {
-            throw new IllegalArgumentException(String.format("Logged in user (%s) did not post this comment (by %s)", getName(), c.getAuthor()));
+        if (!c.getAuthor().equals(getFullName())) {
+            throw new IllegalArgumentException(String.format("Logged in user (%s) did not post this comment (by %s)", getFullName(), c.getAuthor()));
         }
 
-        return delete(c.getName());
+        return delete(c.getFullName());
     }
 
 
@@ -271,7 +271,7 @@ public class LoggedInAccount extends Account {
     @EndpointImplementation(uris = {"/api/hide", "/api/unhide"})
     public RestResponse setHidden(Submission s, boolean hidden) throws NetworkException, ApiException {
         return genericPost(String.format("/api/%shide", hidden ? "" : "un"), JrawUtils.args(
-                "id", s.getName()
+                "id", s.getFullName()
         ));
     }
 
@@ -322,7 +322,7 @@ public class LoggedInAccount extends Account {
      * @throws ApiException If the Reddit API returned an error
      */
     public String reply(Submission parent, String text) throws NetworkException, ApiException {
-        return reply(parent.getName(), text);
+        return reply(parent.getFullName(), text);
     }
 
     /**
@@ -335,7 +335,7 @@ public class LoggedInAccount extends Account {
      * @throws ApiException If the Reddit API returned an error
      */
     public String reply(Comment parent, String text) throws NetworkException, ApiException {
-        return reply(parent.getName(), text);
+        return reply(parent.getFullName(), text);
     }
 
     /**
@@ -360,8 +360,8 @@ public class LoggedInAccount extends Account {
 
 
     private void checkIfOwns(Submission s) {
-        if (!s.getAuthor().equals(getName())) {
-            throw new IllegalArgumentException(String.format("Logged in user (%s) did not post this submission (by %s)", getName(), s.getAuthor()));
+        if (!s.getAuthor().equals(getFullName())) {
+            throw new IllegalArgumentException(String.format("Logged in user (%s) did not post this submission (by %s)", getFullName(), s.getAuthor()));
         }
     }
 

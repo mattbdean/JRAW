@@ -66,7 +66,7 @@ public class SpecificPaginator extends AbstractPaginator<Submission> {
         private static String[] compile(Submission... submissions) {
             String[] fullNames = new String[submissions.length];
             for (int i = 0; i < fullNames.length; i++) {
-                fullNames[i] = submissions[i].getName();
+                fullNames[i] = submissions[i].getFullName();
             }
 
             return fullNames;

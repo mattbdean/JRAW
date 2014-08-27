@@ -54,7 +54,7 @@ public class PaginationTest {
 
         Listing<Submission> submissions = paginator.next();
         for (Submission s : submissions.getChildren()) {
-            Assert.assertTrue(fullNames.contains(s.getName()));
+            Assert.assertTrue(fullNames.contains(s.getFullName()));
         }
     }
 

@@ -120,7 +120,7 @@ public class Account extends Thing implements Created {
      * @return The name of this account
      */
     @Override
-    public String getName() {
-        return super.getName();
+    public String getFullName() {
+        return super.getFullName();
     }
 }

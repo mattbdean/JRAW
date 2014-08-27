@@ -35,7 +35,7 @@ public abstract class Thing extends RedditObject {
      * @return This Thing's full name
      */
     @JsonInteraction
-    public String getName() {
+    public String getFullName() {
         return data("name");
     }
 }

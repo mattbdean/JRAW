@@ -219,17 +219,17 @@ public class AccountTest {
     @Test
     public void testMultis() {
         try {
-            MultiReddit multi = reddit.getPublicMulti(account.getName(), "test_multi");
+            MultiReddit multi = reddit.getPublicMulti(account.getFullName(), "test_multi");
             ThingFieldTest.fieldValidityCheck(multi);
 
-            TestUtils.testRenderString(reddit.getPublicMultiDescription(account.getName(), "test_multi"));
+            TestUtils.testRenderString(reddit.getPublicMultiDescription(account.getFullName(), "test_multi"));
         } catch (NetworkException | ApiException e) {
             Assert.fail(e.getMessage());
         }
     }
 
     private UserPaginatorSubmission getPaginator(Where where) {
-        return new UserPaginatorSubmission.Builder(reddit, where, account.getName())
+        return new UserPaginatorSubmission.Builder(reddit, where, account.getFullName())
                 .build();
     }
 }
