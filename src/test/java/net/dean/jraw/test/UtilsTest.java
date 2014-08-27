@@ -1,11 +1,13 @@
 package net.dean.jraw.test;
 
-import static org.testng.Assert.*;
-import static net.dean.jraw.JrawUtils.*;
 import org.testng.annotations.Test;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static net.dean.jraw.JrawUtils.args;
+import static net.dean.jraw.JrawUtils.isFullName;
+import static org.testng.Assert.*;
 
 public class UtilsTest {
     @Test
@@ -33,6 +35,7 @@ public class UtilsTest {
         assertFalse(isFullName("t9_s9al4"));
         assertFalse(isFullName("t0_ula8k"));
         assertFalse(isFullName("jfdklsa"));
+        assertFalse(isFullName("t7_fd01ll"));
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
