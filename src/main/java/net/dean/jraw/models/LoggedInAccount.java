@@ -317,7 +317,7 @@ public class LoggedInAccount extends Account {
      *
      * @param parent The submission to reply to
      * @param text The body of the message, formatted in Markdown
-     * @return The ID of the newly created reply
+     * @return The full name of the newly created reply
      * @throws NetworkException If there was an error making the HTTP request
      * @throws ApiException If the Reddit API returned an error
      */

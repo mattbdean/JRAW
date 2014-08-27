@@ -8,17 +8,16 @@ import net.dean.jraw.models.LoggedInAccount;
 import net.dean.jraw.models.MultiReddit;
 import net.dean.jraw.models.VoteDirection;
 import net.dean.jraw.models.core.Account;
-import net.dean.jraw.models.core.Comment;
-import net.dean.jraw.models.core.Listing;
 import net.dean.jraw.models.core.Submission;
 import net.dean.jraw.pagination.UserPaginatorSubmission;
-import static net.dean.jraw.pagination.UserPaginatorSubmission.Where;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.net.URL;
 import java.util.List;
+
+import static net.dean.jraw.pagination.UserPaginatorSubmission.Where;
 
 public class AccountTest {
     // Array length 2 where credentials[0] is the username and credentials[1] is the password
@@ -93,24 +92,11 @@ public class AccountTest {
             // Reply to a submission
             this.commentId = account.reply(submission, replyText);
             Assert.assertTrue(JrawUtils.isFullName(commentId));
-            Assert.assertTrue(commentExists(submissionId, commentId));
-            this.commentId = "ck1uhrr";
         } catch (ApiException e) {
             TestUtils.handleApiException(e);
         } catch (NetworkException e) {
             Assert.fail(e.getMessage());
         }
-    }
-
-    private boolean commentExists(String submissionId, String commentId) throws NetworkException {
-        Submission s = reddit.getSubmission(submissionId);
-        for (Comment c : s.getComments().getChildren()) {
-            if (c.getId().equals(commentId)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     @Test(dependsOnMethods = "testReply")
@@ -243,8 +229,7 @@ public class AccountTest {
     }
 
     private UserPaginatorSubmission getPaginator(Where where) {
-        return new UserPaginatorSubmission.Builder(reddit, where)
-                .username(account.getName())
+        return new UserPaginatorSubmission.Builder(reddit, where, account.getName())
                 .build();
     }
 }

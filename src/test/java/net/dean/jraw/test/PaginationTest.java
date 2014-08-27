@@ -12,8 +12,6 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -42,8 +40,7 @@ public class PaginationTest {
 
     @Test
     public void testSubmitted() throws NetworkException {
-        UserPaginatorSubmission paginator = new UserPaginatorSubmission.Builder(reddit, UserPaginatorSubmission.Where.SUBMITTED)
-                .username("way_fairer")
+        UserPaginatorSubmission paginator = new UserPaginatorSubmission.Builder(reddit, UserPaginatorSubmission.Where.SUBMITTED, "way_fairer")
                 .build();
         commonTest(paginator);
     }
@@ -63,8 +60,8 @@ public class PaginationTest {
 
     @Test(timeOut = 15_000)
     public void testPaginationTerminates() throws NetworkException {
-        UserPaginatorSubmission paginator = new UserPaginatorSubmission.Builder(reddit, UserPaginatorSubmission.Where.SUBMITTED)
-                .username(TestUtils.getCredentials()[0])
+        UserPaginatorSubmission paginator = new UserPaginatorSubmission.Builder(reddit, UserPaginatorSubmission.Where.SUBMITTED,
+                TestUtils.getCredentials()[0])
                 .build();
 
         while (paginator.hasNext()) {
