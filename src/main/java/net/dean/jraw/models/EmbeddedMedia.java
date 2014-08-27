@@ -2,6 +2,9 @@ package net.dean.jraw.models;
 
 import org.codehaus.jackson.JsonNode;
 
+/**
+ * This class represents a simplified version of oEmbed data that includes embedded HTML
+ */
 public class EmbeddedMedia extends JsonModel {
 
     /**

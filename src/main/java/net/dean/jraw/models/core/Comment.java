@@ -59,6 +59,10 @@ public class Comment extends Thing implements Created, Distinguishable, Votable 
         return data("banned_by");
     }
 
+    /**
+     * Gets the body of the comment
+     * @return The body of the comment
+     */
     @JsonInteraction
     public RenderStringPair getBody() {
         return new RenderStringPair(data("body"), data("body_html"));

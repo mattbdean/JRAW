@@ -21,5 +21,9 @@ public interface Distinguishable {
         return DistinguishedState.getByJsonValue(distinguished);
     }
 
+    /**
+     * See {@link JsonModel#getDataNode()}
+     * @return The JsonNode to use for methods annotated with @JsonInteraction
+     */
     public JsonNode getDataNode();
 }

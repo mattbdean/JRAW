@@ -96,6 +96,27 @@ public abstract class JsonModel {
         return returnVal;
     }
 
+    /**
+     * This method gets the "data" JsonNode. In a normal request (let's say to <a href="http://www.reddit.com/r/pics/about.json">/r/pics' "about" API link</a>),
+     * the Reddit API returns some JSON data. An example would look like this:
+     * <pre>
+     * {@code
+     * {
+     *     "kind": "t5",
+     *     "data": {
+     *         "submit_text_html": null,
+     *         "user_is_banned": false,
+     *         "id": "2qh0u",
+     *         ...
+     *     }
+     * }
+     * }
+     * </pre>
+     *
+     * The "data" node contains all the properties essential to this model.
+     *
+     * @return The JsonNode to get data from
+     */
     public JsonNode getDataNode() {
         return data;
     }

@@ -9,39 +9,25 @@ package net.dean.jraw.models;
  * @author Matthew Dean
  */
 public enum ThingType {
-    /**
-     * Represents a comment with the prefix "t1"
-     */
+    /** Represents a comment with the prefix "t1" */
     COMMENT(1),
-    /**
-     * Represents an account with the prefix "t2"
-     */
+    /** Represents an account with the prefix "t2" */
     ACCOUNT(2),
-    /**
-     * Represents a submission with the prefix "t3"
-     */
+    /** Represents a submission with the prefix "t3" */
     LINK(3),
-    /**
-     * Represents a message with the prefix "t4"
-     */
+    /** Represents a message with the prefix "t4" */
     MESSAGE(4),
-    /**
-     * Represents a subreddit with the prefix "t5"
-     */
+    /** Represents a subreddit with the prefix "t5" */
     SUBREDDIT(5),
-    /**
-     * Represents an award with the prefix "t6"
-     */
+    /** Represents an award with the prefix "t6" */
     AWARD(6),
-    /**
-     * Represents a promo campaign with the prefix "t8"
-     */
+    /** Represents a promo campaign with the prefix "t8" */
     PROMO_CAMPAIGN(8),
-
+    /** Represents a listing */
     LISTING("Listing"),
-
+    /** Represents a "more" object. See {@link net.dean.jraw.models.core.More} */
     MORE("more"),
-
+    /** Represents a MultiReddit */
     MULTI("LabeledMulti");
 
 
@@ -61,16 +47,6 @@ public enum ThingType {
 
     private ThingType(String custom) {
         this.prefix = custom;
-    }
-
-    public static ThingType getByPrefix(String prefix) {
-        for (ThingType type : values()) {
-            if (type.getPrefix().equals(prefix)) {
-                return type;
-            }
-        }
-
-        return null;
     }
 
     /**

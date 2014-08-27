@@ -72,5 +72,11 @@ public class Version {
         return patch;
     }
 
-
+    /**
+     * Checks if this build is a snapshot build
+     * @return If this version is a snapshot
+     */
+    public boolean isSnapshot() {
+        return snapshot;
+    }
 }

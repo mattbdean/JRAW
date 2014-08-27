@@ -11,7 +11,7 @@ import net.dean.jraw.models.core.Subreddit;
  */
 public class AllSubredditsPaginator extends GenericPaginator<Subreddit, AllSubredditsPaginator.Where, AllSubredditsPaginator> {
 
-    protected AllSubredditsPaginator(Builder b) {
+    private AllSubredditsPaginator(Builder b) {
         super(b);
     }
 

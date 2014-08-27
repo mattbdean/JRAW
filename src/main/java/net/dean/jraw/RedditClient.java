@@ -6,7 +6,6 @@ import net.dean.jraw.models.LoggedInAccount;
 import net.dean.jraw.models.MultiReddit;
 import net.dean.jraw.models.RenderStringPair;
 import net.dean.jraw.models.core.Account;
-import net.dean.jraw.models.core.Comment;
 import net.dean.jraw.models.core.Submission;
 import net.dean.jraw.models.core.Subreddit;
 import org.apache.http.Header;
@@ -21,7 +20,6 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * This class provides access to the most basic Reddit features such as logging in.
@@ -271,11 +269,25 @@ public class RedditClient extends RestClient {
         return execute(new RestRequest(HttpVerb.GET, "/" + id + ".json")).as(Submission.class);
     }
 
+    /**
+     * Gets a Subreddit
+     *
+     * @param name The subreddit's name
+     * @return A new Subreddit object
+     * @throws NetworkException If there was a problem executing the request
+     */
     @EndpointImplementation(uris = "/r/{subreddit}/about.json")
     public Subreddit getSubreddit(String name) throws NetworkException {
         return execute(new RestRequest(HttpVerb.GET, "/r/" + name + "/about.json")).as(Subreddit.class);
     }
 
+    /**
+     * Checks if a given username is available
+     *
+     * @param name The username to test
+     * @return True if that username is available for registration, false if else
+     * @throws NetworkException If there was a problem executing the request
+     */
     @EndpointImplementation(uris = "/api/username_available.json")
     public boolean isUsernameAvailable(String name) throws NetworkException {
         return Boolean.parseBoolean(execute(new RestRequest(HttpVerb.GET, "/api/username_available.json?user=" + name)).getRaw());
@@ -286,8 +298,8 @@ public class RedditClient extends RestClient {
      * @param username The owner of the multireddit
      * @param multiName The name of the multireddit
      * @return A MultiReddit
-     * @throws NetworkException
-     * @throws ApiException
+     * @throws NetworkException If there was a problem making the request
+     * @throws ApiException If the Reddit API returned an error
      */
     @EndpointImplementation(uris = {"/api/multi/{multipath}", "GET /api/multi/{multipath}/r/{srname}"})
     public MultiReddit getPublicMulti(String username, String multiName) throws NetworkException, ApiException {
@@ -299,10 +311,12 @@ public class RedditClient extends RestClient {
     /**
      * Fetches the description of a public or self-owned multireddit. The first String in the resulting array is the
      * Markdown version of the text, while the second is the HTML version
+     *
      * @param username The owner of the multireddit
      * @param multiName The name of the multireddit
      * @return A String array in which the first index is Markdown and the second is HTML
      * @throws NetworkException If there was a problem sending the request
+     * @throws ApiException If the Reddit API returned an error
      */
     @EndpointImplementation(uris = "GET /api/multi/{multipath}/description")
     public RenderStringPair getPublicMultiDescription(String username, String multiName) throws NetworkException, ApiException {
@@ -312,10 +326,21 @@ public class RedditClient extends RestClient {
         return new RenderStringPair(node.get("body_md").asText(), node.get("body_html").asText());
     }
 
+    /**
+     * Gets a random submission
+     * @return A random submission
+     * @throws NetworkException If there was a problem executing the request
+     */
     public Submission getRandom() throws NetworkException {
         return getRandom(null);
     }
 
+    /**
+     * Gets a random submission from a specific subreddit
+     * @param subreddit The subreddit to use
+     * @return A random submission
+     * @throws NetworkException If there was a problem executing the request
+     */
     @EndpointImplementation(uris = "/random")
     public Submission getRandom(String subreddit) throws NetworkException  {
         String path = "/random.json";
@@ -325,6 +350,12 @@ public class RedditClient extends RestClient {
         return execute(new RestRequest(HttpVerb.GET, path)).as(Submission.class);
     }
 
+    /**
+     * Gets the text displayed in the "submit link" form.
+     * @param subreddit The subreddit to use
+     * @return The text displayed int he "submit link" form
+     * @throws NetworkException If there was a problem executing the request
+     */
     @EndpointImplementation(uris = "/api/submit_text.json")
     public RenderStringPair getSubmitText(String subreddit) throws NetworkException {
         String query = "/api/submit_text.json";
@@ -336,6 +367,12 @@ public class RedditClient extends RestClient {
         return new RenderStringPair(node.get("submit_text").asText(), node.get("submit_text_html").asText());
     }
 
+    /**
+     * Gets a list of subreddit names by a topic. For example, the topic "programming" returns "programming", "ProgrammerHumor", etc.
+     * @param topic The topic to use
+     * @return A list of subreddits related to the given topic
+     * @throws NetworkException If there was a problem executing the request
+     */
     @EndpointImplementation(uris = "/api/subreddits_by_topic.json")
     public List<String> getSubredditsByTopic(String topic) throws NetworkException {
         List<String> subreddits = new ArrayList<>();
@@ -354,7 +391,7 @@ public class RedditClient extends RestClient {
      * @param start The begging of the subreddit to search for
      * @param includeNsfw Whether to include NSFW subreddits.
      * @return A list of subreddits that starts with the given string
-     * @throws NetworkException
+     * @throws NetworkException If there was a problem executing the request
      */
     @EndpointImplementation(uris = "/api/search_reddit_names.json")
     public List<String> searchSubreddits(String start, boolean includeNsfw) throws NetworkException {

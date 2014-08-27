@@ -12,7 +12,7 @@ import net.dean.jraw.models.core.Submission;
 public class SimplePaginator extends AbstractPaginator<Submission> {
     private final String subreddit;
 
-    protected SimplePaginator(Builder b) {
+    private SimplePaginator(Builder b) {
         super(b);
         this.subreddit = b.subreddit;
     }

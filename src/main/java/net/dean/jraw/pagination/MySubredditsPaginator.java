@@ -6,9 +6,12 @@ import net.dean.jraw.models.LoggedInAccount;
 import net.dean.jraw.models.core.Listing;
 import net.dean.jraw.models.core.Subreddit;
 
+/**
+ * This paginator provides a way to iterate through the logged-in user's subscribed subreddits
+ */
 public class MySubredditsPaginator extends GenericPaginator<Subreddit, MySubredditsPaginator.Where, MySubredditsPaginator> {
 
-    protected MySubredditsPaginator(GenericPaginator.Builder<Subreddit, Where, MySubredditsPaginator> b) {
+    private MySubredditsPaginator(GenericPaginator.Builder<Subreddit, Where, MySubredditsPaginator> b) {
         super(b);
     }
 

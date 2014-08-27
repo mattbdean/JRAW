@@ -28,5 +28,9 @@ public interface Created {
         return new Date(getDataNode().get("created_utc").getLongValue() * 1000);
     }
 
+    /**
+     * See {@link JsonModel#getDataNode()}
+     * @return The JsonNode to use for methods annotated with @JsonInteraction
+     */
     public JsonNode getDataNode();
 }

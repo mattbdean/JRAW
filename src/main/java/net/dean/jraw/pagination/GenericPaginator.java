@@ -12,10 +12,15 @@ import net.dean.jraw.models.core.Thing;
  *
  * @param <T> The type that the listings will contain
  * @param <U> The type of enum that will be used in place of the "where" parameter.
+ * @param <V> The type of GenericPaginator that the Builder will return
  */
 public abstract class GenericPaginator<T extends Thing, U extends Enum<U>, V extends GenericPaginator<T, U, V>> extends AbstractPaginator<T> {
     private final U where;
 
+    /**
+     * Instantiates a new GenericPaginator
+     * @param b The Builder to use
+     */
     protected GenericPaginator(Builder<T, U, V> b) {
         super(b);
         this.where = b.where;
@@ -43,6 +48,10 @@ public abstract class GenericPaginator<T extends Thing, U extends Enum<U>, V ext
      */
     public String getUriPostfix() { return ".json"; }
 
+    /**
+     * Gets the enum value that will be appended to the base URI
+     * @return The enum value that will be appended to the base URI
+     */
     public final U getWhere() {
         return where;
     }

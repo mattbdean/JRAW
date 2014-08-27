@@ -7,6 +7,11 @@ public class RenderStringPair {
     private final String markdown;
     private final String html;
 
+    /**
+     * Instantiates a new RenderStringPair
+     * @param markdown The markdown version
+     * @param html The HTML version
+     */
     public RenderStringPair(String markdown, String html) {
         this.markdown = markdown;
         this.html = html;

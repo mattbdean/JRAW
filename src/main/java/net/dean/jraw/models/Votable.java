@@ -44,5 +44,9 @@ public interface Votable {
         return likes.getBooleanValue() ? VoteDirection.UPVOTE : VoteDirection.DOWNVOTE;
     }
 
+    /**
+     * See {@link JsonModel#getDataNode()}
+     * @return The JsonNode to use for methods annotated with @JsonInteraction
+     */
     public JsonNode getDataNode();
 }

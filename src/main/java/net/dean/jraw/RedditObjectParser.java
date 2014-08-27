@@ -7,12 +7,12 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 /**
- * This class is responsible for parsing JsonNodes into Things
+ * This class is responsible for parsing JsonNodes into RedditObjects
  */
 public class RedditObjectParser {
 
     /**
-     * Parses a JsonNode into a Thing
+     * Parses a JsonNode into a RedditObject
      *
      * @param rootNode   The root node of the Thing. Should only contain two elements: "kind", and "data".
      * @param thingClass The type of Thing this JsonNode should be turned into

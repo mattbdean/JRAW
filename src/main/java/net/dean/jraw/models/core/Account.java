@@ -12,6 +12,10 @@ import org.codehaus.jackson.JsonNode;
  * @author Matthew Dean
  */
 public class Account extends Thing implements Created {
+    /**
+     * Instantiates a new Account
+     * @param data The node to get data from
+     */
     public Account(JsonNode data) {
         super(data);
     }

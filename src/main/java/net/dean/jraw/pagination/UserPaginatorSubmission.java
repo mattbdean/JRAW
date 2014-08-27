@@ -12,7 +12,7 @@ import net.dean.jraw.models.core.Submission;
 public class UserPaginatorSubmission extends GenericPaginator<Submission, UserPaginatorSubmission.Where, UserPaginatorSubmission> {
     private final String username;
 
-    protected UserPaginatorSubmission(Builder b) {
+    private UserPaginatorSubmission(Builder b) {
         super(b);
         this.username = b.username;
     }
@@ -35,25 +35,26 @@ public class UserPaginatorSubmission extends GenericPaginator<Submission, UserPa
         return "/user/" + username;
     }
 
+    /**
+     * Gets the name whose submitted links you are iterating over
+     * @return The username
+     */
     public String getUsername() {
         return username;
     }
 
     public static class Builder extends GenericPaginator.Builder<Submission, Where, UserPaginatorSubmission> {
-        private String username;
+        private final String username;
 
         /**
          * Instantiates a new Builder
          * @param reddit The RedditClient to help send requests
+         * @param where What to iterate over
+         * @param username The username to use
          */
-        public Builder(RedditClient reddit, Where where) {
+        public Builder(RedditClient reddit, Where where, String username) {
             super(reddit, Submission.class, where);
-        }
-
-
-        public Builder username(String user) {
-            this.username = user;
-            return this;
+            this.username = username;
         }
 
         @Override

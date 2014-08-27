@@ -1,9 +1,5 @@
 package net.dean.jraw;
 
-import net.dean.jraw.http.HttpVerb;
-import net.dean.jraw.http.NetworkException;
-import net.dean.jraw.http.RestRequest;
-import net.dean.jraw.http.RestResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,7 +63,6 @@ public final class JrawUtils {
 
     /**
      * Convenience method to combine a list of strings into a map. Sample usage:<br>
-     * <br>
      * <pre>{@code
      * Map<String, String> mapOfArguments = args("key1", "value1", "key2", "value2");
      * }</pre>

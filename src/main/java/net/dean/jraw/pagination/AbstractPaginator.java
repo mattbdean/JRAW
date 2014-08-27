@@ -4,7 +4,6 @@ import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.HttpVerb;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.RestRequest;
-import net.dean.jraw.models.Sorting;
 import net.dean.jraw.models.core.Listing;
 import net.dean.jraw.models.core.Thing;
 
@@ -27,6 +26,10 @@ public abstract class AbstractPaginator<T extends Thing> implements Iterator<Lis
     protected Listing<T> current;
     private Class<T> thingType;
 
+    /**
+     * Instantiates a new AbstractPaginator
+     * @param b The Builder to use
+     */
     protected AbstractPaginator(Builder<T> b) {
         this.creator = b.creator;
         this.thingType = b.thingType;
@@ -91,7 +94,7 @@ public abstract class AbstractPaginator<T extends Thing> implements Iterator<Lis
     protected abstract String getBaseUri();
 
     /**
-     * How the Reddit API will choose to return the listing. If the sorting is ${@link net.dean.jraw.models.Sorting#TOP},
+     * How the Reddit API will choose to return the listing. If the sorting is ${@link Sorting#TOP},
      * then the time period will default to the last requested time period. If there was none, Reddit will use DAY.
      *
      * @return The current sorting
@@ -136,7 +139,7 @@ public abstract class AbstractPaginator<T extends Thing> implements Iterator<Lis
          * @param reddit The RedditClient to send requests with
          * @param thingType The type of object to return in the built paginator
          */
-        public Builder(RedditClient reddit, Class<T> thingType) {
+        protected Builder(RedditClient reddit, Class<T> thingType) {
             this.creator = reddit;
             this.thingType = thingType;
         }
@@ -145,6 +148,7 @@ public abstract class AbstractPaginator<T extends Thing> implements Iterator<Lis
          * Sets the amount of posts returned by the Reddit API. Must be at least 1 and no greater than {@value #LIMIT_MAX}
          *
          * @param limit The new limit
+         * @return This Builder
          */
         public Builder limit(int limit) {
             if (limit > LIMIT_MAX) {

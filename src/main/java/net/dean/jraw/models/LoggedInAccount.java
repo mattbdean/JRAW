@@ -26,14 +26,25 @@ public class LoggedInAccount extends Account {
         this.creator = creator;
     }
 
+    /**
+     * Submits a new link
+     *
+     * @param b The SubmissionBuilder to gather data from
+     * @return A representation of the newly submitted Submission
+     * @throws NetworkException If there was a problem sending the HTTP request
+     * @throws ApiException If the Reddit API returned an error
+     */
     public Submission submitContent(SubmissionBuilder b) throws NetworkException, ApiException {
         return submitContent(b, null, null);
     }
 
     /**
-     * Submits a link with a given captcha. Only really needed if the user has less than 10 link karma.
+     * Submits a new link with a given captcha. Only really needed if the user has less than 10 link karma.
      *
-     * @return A representation of the newly submitted Link
+     * @param b The SubmissionBuilder to gather data from
+     * @param captcha The Captcha the user is attempting
+     * @param captchaAttempt The user's guess at the captcha
+     * @return A representation of the newly submitted Submission
      * @throws NetworkException If there was a problem sending the HTTP request
      * @throws net.dean.jraw.ApiException If the API returned an error
      */
@@ -119,6 +130,7 @@ public class LoggedInAccount extends Account {
      * Saves or unsaves a submission.
      *
      * @param s The submission to save or unsave
+     * @param save Whether or not to save the submission
      * @return The JSON response from the API
      * @throws NetworkException If there was a problem sending the HTTP request
      * @throws ApiException If the API returned an error
@@ -131,6 +143,15 @@ public class LoggedInAccount extends Account {
         ));
     }
 
+    /**
+     * Sets whether or not replies to this submission should be sent to your inbox. You must own this Submission.
+     *
+     * @param s The submission to modify
+     * @param send Whether or not to send replies to your inbox
+     * @return The response returned from the Reddit API
+     * @throws NetworkException If there was a problem sending the HTTP request
+     * @throws ApiException If the API returned an error
+     */
     @EndpointImplementation(uris = "/api/sendreplies")
     public RestResponse setSendRepliesToInbox(Submission s, boolean send) throws NetworkException, ApiException {
         if (!s.getAuthor().equals(getName())) {
@@ -142,6 +163,15 @@ public class LoggedInAccount extends Account {
         ));
     }
 
+    /**
+     * Sets whether or not this submission should be marked as not safe for work
+     *
+     * @param s The submission to modify
+     * @param nsfw Whether or not this submission is not safe for work
+     * @return The response returned from the Reddit API
+     * @throws NetworkException If there was a problem sending the HTTP request
+     * @throws ApiException If the API returned an error
+     */
     @EndpointImplementation(uris = {"/api/marknsfw", "/api/unmarknsfw"})
     public RestResponse setNsfw(Submission s, boolean nsfw) throws NetworkException, ApiException {
         checkIfOwns(s);
@@ -157,7 +187,7 @@ public class LoggedInAccount extends Account {
      * @param s The submission to delete
      * @return The response that the Reddit API returned
      * @throws NetworkException If there was a problem sending the request
-     * @throws ApiException If the api returned an error
+     * @throws ApiException If the API returned an error
      */
     public RestResponse delete(Submission s) throws NetworkException, ApiException {
         checkIfOwns(s);
@@ -170,7 +200,7 @@ public class LoggedInAccount extends Account {
      * @param c The comment to delete
      * @return The response that the Reddit API returned
      * @throws NetworkException If there was a problem sending the request
-     * @throws ApiException If the api returned an error
+     * @throws ApiException If the API returned an error
      */
     public RestResponse delete(Comment c) throws NetworkException, ApiException {
         if (!c.getAuthor().equals(getName())) {
@@ -186,13 +216,22 @@ public class LoggedInAccount extends Account {
      * @param id The ID of the submission or comment to delete
      * @return The response that the Reddit API returned
      * @throws NetworkException If there was a problem sending the request
-     * @throws ApiException If the api returned an error
+     * @throws ApiException If the API returned an error
      */
     @EndpointImplementation(uris = "/api/del")
     public RestResponse delete(String id) throws NetworkException, ApiException {
         return genericPost("/api/del", JrawUtils.args("id", id));
     }
 
+    /**
+     * Adds a user as a developer of an application. See <a href="https://ssl.reddit.com/prefs/apps/">here</a> for more.
+     *
+     * @param clientId Your application's client ID. You must be a developer of the app.
+     * @param newDev The username of the new developer
+     * @return The response that the Reddit API returned
+     * @throws NetworkException If there was a problem sending the request
+     * @throws ApiException If the API returned an error
+     */
     @EndpointImplementation(uris = "/api/adddeveloper")
     public RestResponse addDeveloper(String clientId, String newDev) throws NetworkException, ApiException {
         return genericPost("/api/adddeveloper", JrawUtils.args(
@@ -202,6 +241,15 @@ public class LoggedInAccount extends Account {
         ));
     }
 
+    /**
+     * Removes a user as a developer of an application. See <a href="https://ssl.reddit.com/prefs/apps/">here</a> for more.
+     *
+     * @param clientId Your application's client ID. You must be a developer of the app.
+     * @param oldDev The username of the (soon-to-be) former developer
+     * @return The response that the Reddit API returned
+     * @throws NetworkException If there was a problem sending the request
+     * @throws ApiException If the api returned an error
+     */
     @EndpointImplementation(uris = "/api/removedeveloper")
     public RestResponse removeDeveloper(String clientId, String oldDev) throws NetworkException, ApiException {
         return genericPost("/api/removedeveloper", JrawUtils.args(
@@ -211,6 +259,15 @@ public class LoggedInAccount extends Account {
         ));
     }
 
+    /**
+     * Sets whether or not a submission is hidden
+     *
+     * @param s The submission to hide or unhide
+     * @param hidden If the submission is to be hidden
+     * @return The response that the Reddit API returned
+     * @throws NetworkException If there was a problem sending the request
+     * @throws ApiException If the API returned an error
+     */
     @EndpointImplementation(uris = {"/api/hide", "/api/unhide"})
     public RestResponse setHidden(Submission s, boolean hidden) throws NetworkException, ApiException {
         return genericPost(String.format("/api/%shide", hidden ? "" : "un"), JrawUtils.args(
@@ -218,6 +275,12 @@ public class LoggedInAccount extends Account {
         ));
     }
 
+    /**
+     * Gets a list of your MultiReddits
+     *
+     * @return A list of your multireddits
+     * @throws NetworkException If there was a problem sending the request
+     */
     @EndpointImplementation(uris = "/api/multi/mine")
     public List<MultiReddit> getMyMultiReddits() throws NetworkException {
         List<MultiReddit> multis = new ArrayList<>();
@@ -302,6 +365,10 @@ public class LoggedInAccount extends Account {
         }
     }
 
+    /**
+     * Gets the RedditClient that created this LoggedInAccount
+     * @return The creator of this object
+     */
     public RedditClient getCreator() {
         return creator;
     }

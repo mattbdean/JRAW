@@ -7,6 +7,9 @@ import net.dean.jraw.models.core.Listing;
 import net.dean.jraw.models.core.Submission;
 
 
+/**
+ * This class provides a way to iterate through a list of Submissions by their names.
+ */
 public class SpecificPaginator extends AbstractPaginator<Submission> {
     private final String submissionListing;
     private SpecificPaginator(Builder b) {
@@ -29,10 +32,20 @@ public class SpecificPaginator extends AbstractPaginator<Submission> {
     public static class Builder extends AbstractPaginator.Builder<Submission> {
         private String submissionListing;
 
+        /**
+         * Instantiates a new Builder
+         * @param reddit The RedditClient that will be used to send HTTP requests
+         * @param submissions A list of Submission objects
+         */
         public Builder(RedditClient reddit, Submission... submissions) {
             this(reddit, compile(submissions));
         }
 
+        /**
+         * Instantiates a new Builder
+         * @param reddit The RedditClient that will be used to send HTTP requests
+         * @param submissionFullNames A list of fullnames of submissions
+         */
         public Builder(RedditClient reddit, String... submissionFullNames) {
             super(reddit, Submission.class);
             StringBuilder sb = new StringBuilder();
