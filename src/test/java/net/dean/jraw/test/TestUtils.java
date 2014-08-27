@@ -85,8 +85,8 @@ public final class TestUtils {
 
 	public static void testRenderString(RenderStringPair strings) {
 		Assert.assertNotNull(strings);
-		Assert.assertNotNull(strings.getMarkdown());
-		Assert.assertNotNull(strings.getHtml());
+		Assert.assertNotNull(strings.md());
+		Assert.assertNotNull(strings.html());
 	}
 
 	private static String getCallingMethod() {

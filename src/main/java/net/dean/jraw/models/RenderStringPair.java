@@ -16,7 +16,7 @@ public class RenderStringPair {
 	 * Get the raw, unformatted text. Characters such as '*', '&lt;', '&gt;', and '&amp;' will likely be escaped.
 	 * @return The raw, unformatted text.
 	 */
-	public String getMarkdown() {
+	public String md() {
 		return markdown;
 	}
 
@@ -24,7 +24,12 @@ public class RenderStringPair {
 	 * The formatted HTML that will be displayed on Reddit
 	 * @return Formatted HTML
 	 */
-	public String getHtml() {
+	public String html() {
 		return html;
 	}
+
+    @Override
+    public String toString() {
+        return markdown;
+    }
 }
