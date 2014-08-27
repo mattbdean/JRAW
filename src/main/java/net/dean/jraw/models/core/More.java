@@ -14,40 +14,40 @@ import java.util.List;
  */
 public class More extends Thing {
 
-	/**
-	 * Instantiates a new More
-	 *
-	 * @param dataNode The JsonNode to gather data from
-	 */
-	public More(JsonNode dataNode) {
-		super(dataNode);
-	}
+    /**
+     * Instantiates a new More
+     *
+     * @param dataNode The JsonNode to gather data from
+     */
+    public More(JsonNode dataNode) {
+        super(dataNode);
+    }
 
-	@Override
-	public ThingType getType() {
-		return ThingType.MORE;
-	}
+    @Override
+    public ThingType getType() {
+        return ThingType.MORE;
+    }
 
-	/**
-	 * Gets the amount of IDs in this list
-	 * @return The amount of IDs in this list
-	 */
-	@JsonInteraction
-	public Integer getCount() {
-		return data("count", Integer.class);
-	}
+    /**
+     * Gets the amount of IDs in this list
+     * @return The amount of IDs in this list
+     */
+    @JsonInteraction
+    public Integer getCount() {
+        return data("count", Integer.class);
+    }
 
-	/**
-	 * Gets a list of Thing IDs
-	 * @return a list of Thing IDs
-	 */
-	@JsonInteraction
-	public List<String> getChildrenIds() {
-		List<String> ids = new ArrayList<>();
-		for (JsonNode child : data.get("children")) {
-			ids.add(child.getTextValue());
-		}
+    /**
+     * Gets a list of Thing IDs
+     * @return a list of Thing IDs
+     */
+    @JsonInteraction
+    public List<String> getChildrenIds() {
+        List<String> ids = new ArrayList<>();
+        for (JsonNode child : data.get("children")) {
+            ids.add(child.getTextValue());
+        }
 
-		return ids;
-	}
+        return ids;
+    }
 }

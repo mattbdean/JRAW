@@ -12,10 +12,10 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface EndpointImplementation {
-	/**
-	 * An array of endpoint URIs that this method implements (such as /api/login)
-	 *
-	 * @return A list of endpoints
-	 */
-	public String[] uris();
+    /**
+     * An array of endpoint URIs that this method implements (such as /api/login)
+     *
+     * @return A list of endpoints
+     */
+    public String[] uris();
 }

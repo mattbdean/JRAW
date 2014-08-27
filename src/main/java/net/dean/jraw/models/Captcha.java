@@ -6,45 +6,45 @@ import java.io.InputStream;
  * Represents a Captcha.
  */
 public class Captcha {
-	private String id;
+    private String id;
 
-	/** The InputStream that will download the Captcha's image */
-	private InputStream imageStream;
+    /** The InputStream that will download the Captcha's image */
+    private InputStream imageStream;
 
-	/**
-	 * Instantiates a new Captcha
-	 *
-	 * @param id          The captcha's ID
-	 * @param imageStream The captcha's input stream that will download its image
-	 */
-	public Captcha(String id, InputStream imageStream) {
-		this.id = id;
-		this.imageStream = imageStream;
-	}
+    /**
+     * Instantiates a new Captcha
+     *
+     * @param id          The captcha's ID
+     * @param imageStream The captcha's input stream that will download its image
+     */
+    public Captcha(String id, InputStream imageStream) {
+        this.id = id;
+        this.imageStream = imageStream;
+    }
 
-	/**
-	 * Gets the captcha's ID
-	 *
-	 * @return The captcha's ID
-	 */
-	public String getId() {
-		return id;
-	}
+    /**
+     * Gets the captcha's ID
+     *
+     * @return The captcha's ID
+     */
+    public String getId() {
+        return id;
+    }
 
-	/**
-	 * Gets the captcha's InputStream that will download an image
-	 *
-	 * @return The captcha's InputStream
-	 */
-	public InputStream getImageStream() {
-		return imageStream;
-	}
+    /**
+     * Gets the captcha's InputStream that will download an image
+     *
+     * @return The captcha's InputStream
+     */
+    public InputStream getImageStream() {
+        return imageStream;
+    }
 
-	@Override
-	public String toString() {
-		return "Captcha{" +
-				"id='" + id + '\'' +
-				", imageStream=" + (imageStream == null ? "null" : imageStream) +
-				'}';
-	}
+    @Override
+    public String toString() {
+        return "Captcha{" +
+                "id='" + id + '\'' +
+                ", imageStream=" + (imageStream == null ? "null" : imageStream) +
+                '}';
+    }
 }

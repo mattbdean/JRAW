@@ -15,208 +15,208 @@ import java.util.stream.Collectors;
  * Reddit API.
  */
 public abstract class JsonModel {
-	protected final JsonNode data;
-	/** The maximum length of a result of a @JsonInteraction method in {@link #toString()} */
-	private static final int MAX_STRING_LENGTH = 500;
-	private static final String ELLIPSIS = "(...)";
+    protected final JsonNode data;
+    /** The maximum length of a result of a @JsonInteraction method in {@link #toString()} */
+    private static final int MAX_STRING_LENGTH = 500;
+    private static final String ELLIPSIS = "(...)";
 
-	/**
-	 * Instantiates a new JsonModel
-	 *
-	 * @param dataNode The node to parse data from
-	 */
-	public JsonModel(JsonNode dataNode) {
-		this.data = dataNode;
-	}
+    /**
+     * Instantiates a new JsonModel
+     *
+     * @param dataNode The node to parse data from
+     */
+    public JsonModel(JsonNode dataNode) {
+        this.data = dataNode;
+    }
 
-	/**
-	 * Retrieves a String value from the JSON node.
-	 *
-	 * @param name The key to look up in the JSON node.
-	 * @return An String in the JSON node
-	 */
-	public String data(String name) {
-		return data(name, String.class);
-	}
+    /**
+     * Retrieves a String value from the JSON node.
+     *
+     * @param name The key to look up in the JSON node.
+     * @return An String in the JSON node
+     */
+    public String data(String name) {
+        return data(name, String.class);
+    }
 
-	/**
-	 * Retrieves a value from the JSON node (provided in the constructor) of type T. The resulting object is cached for
-	 * later use.
-	 *
-	 * @param name The key to look up in the JSON node.
-	 * @param type The wanted return value. Supported values are any class representing a primitive data type, such as
-	 *             {@link Integer} or {@link Boolean}.
-	 * @param <T> The desired return data type
-	 * @return An object of type T in the JSON node
-	 */
-	@SuppressWarnings("unchecked")
-	public <T> T data(String name, Class<T> type) {
-		// Make sure the key is actually there
-		if (!data.has(name)) {
-			return null;
-		}
+    /**
+     * Retrieves a value from the JSON node (provided in the constructor) of type T. The resulting object is cached for
+     * later use.
+     *
+     * @param name The key to look up in the JSON node.
+     * @param type The wanted return value. Supported values are any class representing a primitive data type, such as
+     *             {@link Integer} or {@link Boolean}.
+     * @param <T> The desired return data type
+     * @return An object of type T in the JSON node
+     */
+    @SuppressWarnings("unchecked")
+    public <T> T data(String name, Class<T> type) {
+        // Make sure the key is actually there
+        if (!data.has(name)) {
+            return null;
+        }
 
-		JsonNode node = data.get(name);
+        JsonNode node = data.get(name);
 
-		if (node.isNull()) {
-			return null;
-		}
+        if (node.isNull()) {
+            return null;
+        }
 
-		T returnVal;
+        T returnVal;
 
-		// Try to return the desired value
-		if (type.equals(Boolean.class))
-			returnVal = (T) Boolean.valueOf(node.asBoolean());
-		else if (type.equals(Double.class))
-			returnVal = (T) Double.valueOf(node.asDouble());
-		else if (type.equals(Integer.class))
-			returnVal = (T) Integer.valueOf(node.asInt());
-		else if (type.equals(Long.class))
-			returnVal = (T) Long.valueOf(node.asLong());
-		else if (type.equals(Float.class))
-			returnVal = (T) Float.valueOf(node.asText());
-		else if (type.equals(URL.class) || type.equals(URI.class)) {
-			String href = node.asText();
-			if (href != null) {
-				if (type.equals(URL.class)) {
-					returnVal = (T) JrawUtils.newUrl(href);
-				} else {
-					returnVal = (T) JrawUtils.newUri(href);
-				}
-			} else {
-				returnVal = null;
-			}
-		} else if (type.equals(Date.class)) {
-			long seconds = node.asLong();
-			returnVal = (T) new Date(seconds * 1000);
-		} else
-			// Assume String
-			returnVal = (T) String.valueOf(node.asText());
+        // Try to return the desired value
+        if (type.equals(Boolean.class))
+            returnVal = (T) Boolean.valueOf(node.asBoolean());
+        else if (type.equals(Double.class))
+            returnVal = (T) Double.valueOf(node.asDouble());
+        else if (type.equals(Integer.class))
+            returnVal = (T) Integer.valueOf(node.asInt());
+        else if (type.equals(Long.class))
+            returnVal = (T) Long.valueOf(node.asLong());
+        else if (type.equals(Float.class))
+            returnVal = (T) Float.valueOf(node.asText());
+        else if (type.equals(URL.class) || type.equals(URI.class)) {
+            String href = node.asText();
+            if (href != null) {
+                if (type.equals(URL.class)) {
+                    returnVal = (T) JrawUtils.newUrl(href);
+                } else {
+                    returnVal = (T) JrawUtils.newUri(href);
+                }
+            } else {
+                returnVal = null;
+            }
+        } else if (type.equals(Date.class)) {
+            long seconds = node.asLong();
+            returnVal = (T) new Date(seconds * 1000);
+        } else
+            // Assume String
+            returnVal = (T) String.valueOf(node.asText());
 
-		return returnVal;
-	}
+        return returnVal;
+    }
 
-	public JsonNode getDataNode() {
-		return data;
-	}
+    public JsonNode getDataNode() {
+        return data;
+    }
 
-	/**
-	 * Convenience method to be used in toString() methods that returns the String literal "null" if the value is null.
-	 * If the object's toString() method throws a NullPointerException, then the String literal "(NullPointerException)
-	 * is returned. If no exceptions were thrown, then this method returns {@code val.toString()}.
-	 *
-	 * @param val The object to evaluate
-	 * @return A string representation of the object
-	 */
-	protected String asString(Object val) {
-		if (val == null) {
-			return "null";
-		}
+    /**
+     * Convenience method to be used in toString() methods that returns the String literal "null" if the value is null.
+     * If the object's toString() method throws a NullPointerException, then the String literal "(NullPointerException)
+     * is returned. If no exceptions were thrown, then this method returns {@code val.toString()}.
+     *
+     * @param val The object to evaluate
+     * @return A string representation of the object
+     */
+    protected String asString(Object val) {
+        if (val == null) {
+            return "null";
+        }
 
-		try {
-			return val.toString();
-		} catch (NullPointerException e) {
-			return "(NullPointerException)";
-		}
-	}
+        try {
+            return val.toString();
+        } catch (NullPointerException e) {
+            return "(NullPointerException)";
+        }
+    }
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-		JsonModel that = (JsonModel) o;
+        JsonModel that = (JsonModel) o;
 
-		return (data != null ? !data.equals(that.data) : that.data != null);
-	}
+        return (data != null ? !data.equals(that.data) : that.data != null);
+    }
 
-	@Override
-	public int hashCode() {
-		return data != null ? data.hashCode() : 0;
-	}
+    @Override
+    public int hashCode() {
+        return data != null ? data.hashCode() : 0;
+    }
 
-	@Override
-	public String toString() {
-		// Since JsonModel subclasses don't have many meaningful fields (except for data), a dynamic toString() is
-		// more suited for better representing the JsonModel
+    @Override
+    public String toString() {
+        // Since JsonModel subclasses don't have many meaningful fields (except for data), a dynamic toString() is
+        // more suited for better representing the JsonModel
 
-		Class<? extends JsonModel> clazz = getClass();
-		StringBuilder sb = new StringBuilder(clazz.getSimpleName() + " {");
+        Class<? extends JsonModel> clazz = getClass();
+        StringBuilder sb = new StringBuilder(clazz.getSimpleName() + " {");
 
-		List<Method> jsonInteractionMethods = getJsonInteractionMethods(clazz);
+        List<Method> jsonInteractionMethods = getJsonInteractionMethods(clazz);
 
-		// Sort the methods by name
-		Collections.sort(jsonInteractionMethods, (o1, o2) -> o1.getName().compareTo(o2.getName()));
+        // Sort the methods by name
+        Collections.sort(jsonInteractionMethods, (o1, o2) -> o1.getName().compareTo(o2.getName()));
 
-		int counter = 0;
-		for (Method m : jsonInteractionMethods) {
-			try {
-				// methodName()="returnVal"
-				sb.append(m.getName()).append("()=");
-				Object result = m.invoke(this);
+        int counter = 0;
+        for (Method m : jsonInteractionMethods) {
+            try {
+                // methodName()="returnVal"
+                sb.append(m.getName()).append("()=");
+                Object result = m.invoke(this);
 
-				if (result instanceof JsonModel) {
-					// Avoid calling asString on JsonModels
-					sb.append('[').append(result.getClass().getSimpleName()).append(']');
-				} else {
-					String resultString = asString(result);
-					// Remove new lines
-					resultString = resultString.replace("\n", "\\n");
-					if (resultString.length() > MAX_STRING_LENGTH) {
-						// Prevent the resultString from being too long, cut it off at a certain length and add an ellipsis
-						resultString = resultString.substring(0, MAX_STRING_LENGTH - ELLIPSIS.length());
-						resultString += ELLIPSIS;
-					}
-					sb.append('\"').append(resultString).append('\"');
-				}
+                if (result instanceof JsonModel) {
+                    // Avoid calling asString on JsonModels
+                    sb.append('[').append(result.getClass().getSimpleName()).append(']');
+                } else {
+                    String resultString = asString(result);
+                    // Remove new lines
+                    resultString = resultString.replace("\n", "\\n");
+                    if (resultString.length() > MAX_STRING_LENGTH) {
+                        // Prevent the resultString from being too long, cut it off at a certain length and add an ellipsis
+                        resultString = resultString.substring(0, MAX_STRING_LENGTH - ELLIPSIS.length());
+                        resultString += ELLIPSIS;
+                    }
+                    sb.append('\"').append(resultString).append('\"');
+                }
 
-				if (counter != jsonInteractionMethods.size() - 1) {
-					// Append the delimiter only if there will be a next element
-					sb.append(", ");
-				}
-				counter++;
-			} catch (IllegalAccessException e) {
-				System.err.println("IllegalAccessException. This really shouldn't happen.");
-				e.printStackTrace();
-			} catch (InvocationTargetException e) {
-				e.printStackTrace();
-			}
-		}
-		sb.append('}');
+                if (counter != jsonInteractionMethods.size() - 1) {
+                    // Append the delimiter only if there will be a next element
+                    sb.append(", ");
+                }
+                counter++;
+            } catch (IllegalAccessException e) {
+                System.err.println("IllegalAccessException. This really shouldn't happen.");
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            }
+        }
+        sb.append('}');
 
-		return sb.toString();
-	}
+        return sb.toString();
+    }
 
-	/**
-	 * Gets a list of fields that have the JsonInteraction annotation attached to them. This method also returns
-	 * JsonInteraction-annotated methods in this class' superclasses, up until JsonModel. Mainly used for testing.
-	 *
-	 * @param thingClass The class to search in
-	 * @return A list of fields that have the JsonInteraction annotation
-	 */
-	public static List<Method> getJsonInteractionMethods(Class<? extends JsonModel> thingClass) {
-		List<Method> methods = new ArrayList<>();
+    /**
+     * Gets a list of fields that have the JsonInteraction annotation attached to them. This method also returns
+     * JsonInteraction-annotated methods in this class' superclasses, up until JsonModel. Mainly used for testing.
+     *
+     * @param thingClass The class to search in
+     * @return A list of fields that have the JsonInteraction annotation
+     */
+    public static List<Method> getJsonInteractionMethods(Class<? extends JsonModel> thingClass) {
+        List<Method> methods = new ArrayList<>();
 
-		Class clazz = thingClass;
-		List<Method> toObserve = new ArrayList<>();
+        Class clazz = thingClass;
+        List<Method> toObserve = new ArrayList<>();
 
-		while (clazz != null) {
-			toObserve.addAll(Arrays.asList(clazz.getDeclaredMethods()));
-			for (Class<?> interf : clazz.getInterfaces()) {
-				toObserve.addAll(Arrays.asList(interf.getDeclaredMethods()));
-			}
+        while (clazz != null) {
+            toObserve.addAll(Arrays.asList(clazz.getDeclaredMethods()));
+            for (Class<?> interf : clazz.getInterfaces()) {
+                toObserve.addAll(Arrays.asList(interf.getDeclaredMethods()));
+            }
 
-			if (clazz.equals(JsonModel.class)) {
-				// Already at the highest level and we don't need to scan Object
-				break;
-			}
+            if (clazz.equals(JsonModel.class)) {
+                // Already at the highest level and we don't need to scan Object
+                break;
+            }
 
-			// Can still go deeper...
-			clazz = clazz.getSuperclass();
-		}
+            // Can still go deeper...
+            clazz = clazz.getSuperclass();
+        }
 
-		methods.addAll(toObserve.stream().filter(m -> m.isAnnotationPresent(JsonInteraction.class)).collect(Collectors.toList()));
+        methods.addAll(toObserve.stream().filter(m -> m.isAnnotationPresent(JsonInteraction.class)).collect(Collectors.toList()));
 
-		return methods;
-	}
+        return methods;
+    }
 }

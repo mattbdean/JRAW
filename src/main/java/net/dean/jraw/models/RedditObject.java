@@ -8,21 +8,21 @@ import org.codehaus.jackson.JsonNode;
  */
 public abstract class RedditObject extends JsonModel {
 
-	/**
-	 * Instantiates a new RedditObject
-	 *
-	 * @param dataNode The node to parse data from
-	 */
-	public RedditObject(JsonNode dataNode) {
-		super(dataNode);
-	}
+    /**
+     * Instantiates a new RedditObject
+     *
+     * @param dataNode The node to parse data from
+     */
+    public RedditObject(JsonNode dataNode) {
+        super(dataNode);
+    }
 
-	/**
-	 * Gets the type of this RedditObject. Will always be constant for every class. For example, every
-	 * {@link net.dean.jraw.models.core.Account} class will always return {@link net.dean.jraw.models.ThingType#ACCOUNT}.
-	 *
-	 * @return The type of this Thing
-	 */
-	@JsonInteraction
-	public abstract ThingType getType();
+    /**
+     * Gets the type of this RedditObject. Will always be constant for every class. For example, every
+     * {@link net.dean.jraw.models.core.Account} class will always return {@link net.dean.jraw.models.ThingType#ACCOUNT}.
+     *
+     * @return The type of this Thing
+     */
+    @JsonInteraction
+    public abstract ThingType getType();
 }
