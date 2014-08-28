@@ -10,7 +10,6 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.*;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.conn.ConnectTimeoutException;
-import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -79,7 +78,7 @@ public class HttpHelper {
                 } else {
                     // Use POST data or similar
                     StringEntity params = new StringEntity(b.json.toString());
-                    request.addHeader("Content-Type", ContentType.APPLICATION_JSON.getMimeType());
+                    request.addHeader("Content-Type", ContentType.JSON);
                     // POST, PATCH, or PUT
                     ((HttpEntityEnclosingRequestBase) request).setEntity(params);
                 }
@@ -108,7 +107,7 @@ public class HttpHelper {
                 request.addHeader(h);
             }
 
-            JrawUtils.logger().info("{} {}{} {}", new Object[] {b.verb.name(), b.hostname, path, request.getProtocolVersion()});
+            JrawUtils.logger().info("{} {}{} {}", b.verb.name(), b.hostname, path, request.getProtocolVersion());
             CloseableHttpResponse response = (CloseableHttpResponse) client.execute(new HttpHost(b.hostname), request);
             if (response.getStatusLine().getStatusCode() != 200) {
                 throw new NetworkException(response.getStatusLine().getStatusCode());

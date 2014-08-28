@@ -4,10 +4,7 @@ import net.dean.jraw.ApiException;
 import net.dean.jraw.JrawUtils;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.EndpointImplementation;
-import net.dean.jraw.http.HttpVerb;
-import net.dean.jraw.http.NetworkException;
-import net.dean.jraw.http.RestRequest;
-import net.dean.jraw.http.RestResponse;
+import net.dean.jraw.http.*;
 import net.dean.jraw.models.core.Account;
 import net.dean.jraw.models.core.Comment;
 import net.dean.jraw.models.core.Submission;
@@ -77,7 +74,7 @@ public class LoggedInAccount extends Account {
             args.put("captcha", captchaAttempt);
         }
 
-        RestResponse response = genericPost("/api/submit", args);
+        RedditResponse response = genericPost("/api/submit", args);
         String jsonUrl = response.getJson().get("json").get("data").get("url").getTextValue();
 
         return creator.execute(new RestRequest(HttpVerb.GET, jsonUrl)).as(Submission.class);
@@ -139,7 +136,7 @@ public class LoggedInAccount extends Account {
             "POST /api/save",
             "POST /api/unsave"
     })
-    public RestResponse setSaved(Submission s, boolean save) throws NetworkException, ApiException {
+    public RedditResponse setSaved(Submission s, boolean save) throws NetworkException, ApiException {
         // Send it to "/api/save" if save == true, "/api/unsave" if save == false
         return genericPost(String.format("/api/%ssave", save ? "" : "un"), JrawUtils.args(
                 "id", s.getFullName()
@@ -156,7 +153,7 @@ public class LoggedInAccount extends Account {
      * @throws ApiException If the API returned an error
      */
     @EndpointImplementation(uris = "POST /api/sendreplies")
-    public RestResponse setSendRepliesToInbox(Submission s, boolean send) throws NetworkException, ApiException {
+    public RedditResponse setSendRepliesToInbox(Submission s, boolean send) throws NetworkException, ApiException {
         if (!s.getAuthor().equals(getFullName())) {
             throw new IllegalArgumentException(String.format("Logged in user (%s) did not post this submission (by %s)", getFullName(), s.getAuthor()));
         }
@@ -179,7 +176,7 @@ public class LoggedInAccount extends Account {
             "POST /api/marknsfw",
             "POST /api/unmarknsfw"
     })
-    public RestResponse setNsfw(Submission s, boolean nsfw) throws NetworkException, ApiException {
+    public RedditResponse setNsfw(Submission s, boolean nsfw) throws NetworkException, ApiException {
         checkIfOwns(s);
 
         // "/api/marknsfw" if nsfw == true, "/api/unmarknsfw" if nsfw == false
@@ -195,7 +192,7 @@ public class LoggedInAccount extends Account {
      * @throws NetworkException If there was a problem sending the request
      * @throws ApiException If the API returned an error
      */
-    public RestResponse delete(Submission s) throws NetworkException, ApiException {
+    public RedditResponse delete(Submission s) throws NetworkException, ApiException {
         checkIfOwns(s);
         return delete(s.getFullName());
     }
@@ -208,7 +205,7 @@ public class LoggedInAccount extends Account {
      * @throws NetworkException If there was a problem sending the request
      * @throws ApiException If the API returned an error
      */
-    public RestResponse delete(Comment c) throws NetworkException, ApiException {
+    public RedditResponse delete(Comment c) throws NetworkException, ApiException {
         if (!c.getAuthor().equals(getFullName())) {
             throw new IllegalArgumentException(String.format("Logged in user (%s) did not post this comment (by %s)", getFullName(), c.getAuthor()));
         }
@@ -225,7 +222,7 @@ public class LoggedInAccount extends Account {
      * @throws ApiException If the API returned an error
      */
     @EndpointImplementation(uris = "POST /api/del")
-    public RestResponse delete(String id) throws NetworkException, ApiException {
+    public RedditResponse delete(String id) throws NetworkException, ApiException {
         return genericPost("/api/del", JrawUtils.args("id", id));
     }
 
@@ -239,7 +236,7 @@ public class LoggedInAccount extends Account {
      * @throws ApiException If the API returned an error
      */
     @EndpointImplementation(uris = "POST /api/adddeveloper")
-    public RestResponse addDeveloper(String clientId, String newDev) throws NetworkException, ApiException {
+    public RedditResponse addDeveloper(String clientId, String newDev) throws NetworkException, ApiException {
         return genericPost("/api/adddeveloper", JrawUtils.args(
                 "api_type", "json",
                 "client_id", clientId,
@@ -257,7 +254,7 @@ public class LoggedInAccount extends Account {
      * @throws ApiException If the api returned an error
      */
     @EndpointImplementation(uris = "POST /api/removedeveloper")
-    public RestResponse removeDeveloper(String clientId, String oldDev) throws NetworkException, ApiException {
+    public RedditResponse removeDeveloper(String clientId, String oldDev) throws NetworkException, ApiException {
         return genericPost("/api/removedeveloper", JrawUtils.args(
                 "api_type", "json",
                 "client_id", clientId,
@@ -275,7 +272,7 @@ public class LoggedInAccount extends Account {
      * @throws ApiException If the API returned an error
      */
     @EndpointImplementation(uris = {"POST /api/hide", "/api/unhide"})
-    public RestResponse setHidden(Submission s, boolean hidden) throws NetworkException, ApiException {
+    public RedditResponse setHidden(Submission s, boolean hidden) throws NetworkException, ApiException {
         return genericPost(String.format("/api/%shide", hidden ? "" : "un"), JrawUtils.args(
                 "id", s.getFullName()
         ));
@@ -309,8 +306,8 @@ public class LoggedInAccount extends Account {
      * @throws NetworkException If needsLogin is true and the user was not logged in, or there was an error making the
      *                          HTTP request.
      */
-    private RestResponse genericPost(String path, Map<String, String> args) throws NetworkException, ApiException {
-        RestResponse response = creator.execute(new RestRequest(HttpVerb.POST, path, args));
+    private RedditResponse genericPost(String path, Map<String, String> args) throws NetworkException, ApiException {
+        RedditResponse response = creator.execute(new RestRequest(HttpVerb.POST, path, args));
         if (response.hasErrors()) {
             throw response.getApiExceptions()[0];
         }
@@ -355,7 +352,7 @@ public class LoggedInAccount extends Account {
      */
     @EndpointImplementation(uris = "POST /api/comment")
     private String reply(String name, String text) throws NetworkException, ApiException {
-        RestResponse response = genericPost("/api/comment", JrawUtils.args(
+        RedditResponse response = genericPost("/api/comment", JrawUtils.args(
                 "api_type", "json",
                 "text", text,
                 "thing_id", name

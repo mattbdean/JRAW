@@ -81,15 +81,15 @@ public class RedditClient extends RestClient {
     }
 
     @Override
-    public RestResponse execute(RestRequest request) throws NetworkException {
+    public RedditResponse execute(RestRequest request) throws NetworkException {
         if (!requestManagement) {
             // All in your hands, buddy
-            return super.execute(request);
+            return (RedditResponse) super.execute(request);
         }
 
         // No history, safe to assume that there were no recent requests
         if (history.size() == 0) {
-            return super.execute(request);
+            return (RedditResponse) super.execute(request);
         }
 
         // Transverse the history backwards and look for the latest request executed just after one minute
@@ -122,7 +122,7 @@ public class RedditClient extends RestClient {
             }
         }
 
-        return super.execute(request);
+        return (RedditResponse) super.execute(request);
     }
 
 
@@ -137,7 +137,7 @@ public class RedditClient extends RestClient {
      */
     @EndpointImplementation(uris = "GET /api/login")
     public LoggedInAccount login(String username, String password) throws NetworkException, ApiException {
-        RestResponse loginResponse = new RestResponse(http.execute(new HttpHelper.RequestBuilder(POST, HOST_SSL, "/api/login")
+        RedditResponse loginResponse = new RedditResponse(http.execute(new HttpHelper.RequestBuilder(POST, HOST_SSL, "/api/login")
                 .args(JrawUtils.args("user", username, "passwd", password, "api_type", "json"))));
 
         if (loginResponse.hasErrors()) {
@@ -203,7 +203,7 @@ public class RedditClient extends RestClient {
     public boolean needsCaptcha() throws NetworkException {
         try {
             // This endpoint does not return JSON, but rather just "true" or "false"
-            RestResponse response = execute(new RestRequest(GET, "/api/needs_captcha.json"));
+            RedditResponse response = execute(new RestRequest(GET, "/api/needs_captcha.json"));
             return Boolean.parseBoolean(response.getRaw());
         } catch (NetworkException e) {
             throw new NetworkException("Unable to make the request to /api/needs_captcha.json", e);
@@ -219,7 +219,7 @@ public class RedditClient extends RestClient {
     @EndpointImplementation(uris = "POST /api/new_captcha")
     public Captcha getNewCaptcha() throws NetworkException {
         try {
-            RestResponse response = execute(new RestRequest(POST, "/api/new_captcha"));
+            RedditResponse response = execute(new RestRequest(POST, "/api/new_captcha"));
 
             // Some strange response you got there, reddit...
             String id = response.getJson().get("jquery").get(11).get(3).get(0).getTextValue();
@@ -430,9 +430,9 @@ public class RedditClient extends RestClient {
 
         RestResponse response = execute(new RestRequest(GET, path));
 
-        String type = response.getHeader("Content-Type").getValue();
-        if (!type.equals("text/css")) {
-            throw new NetworkException("The request did not return a Content-Type of text/css (was " + type + ")");
+        String type = response.getContentType();
+        if (!type.equals(ContentType.CSS)) {
+            throw new NetworkException(String.format("The request did not return a Content-Type of %s (was \"%s\")", ContentType.CSS, type));
         }
 
         return response.getRaw();

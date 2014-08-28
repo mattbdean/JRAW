@@ -1,12 +1,6 @@
 package net.dean.jraw.http;
 
-import net.dean.jraw.ApiException;
 import net.dean.jraw.JrawUtils;
-import net.dean.jraw.RedditObjectParser;
-import net.dean.jraw.models.RedditObject;
-import net.dean.jraw.models.core.Comment;
-import net.dean.jraw.models.core.Listing;
-import net.dean.jraw.models.core.Submission;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -23,15 +17,13 @@ import java.util.Scanner;
 public class RestResponse {
     /** The ObjectMapper used to read a JSON tree into a JsonNode */
     protected static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-    protected static final RedditObjectParser REDDIT_OBJECT_PARSER = new RedditObjectParser();
     /** A list of all the headers received from the server */
-    private final Header[] headers;
+    protected final Header[] headers;
     /** The root node of the JSON */
-    private final JsonNode rootNode;
+    protected final JsonNode rootNode;
     /** The raw data of the response's content */
-    private final String raw;
-    private final ApiException[] apiExceptions;
-    private final String contentType;
+    protected final String raw;
+    protected final String contentType;
 
     /**
      * Instantiates a new RestResponse. This constructor also reads the contents of the input stream and parses it into
@@ -54,35 +46,16 @@ public class RestResponse {
         type = type.trim();
 
         this.contentType = type;
-        if (contentType.equals("application/json")) {
+        if (contentType.equals(ContentType.JSON)) {
             this.rootNode = readTree(raw);
 
-            JsonNode errorsNode = rootNode.get("json");
-            if (errorsNode != null) {
-                errorsNode = errorsNode.get("errors");
-            }
-
-            if (errorsNode != null) {
-                apiExceptions = new net.dean.jraw.ApiException[errorsNode.size()];
-                if (errorsNode.size() > 0) {
-
-                    for (int i = 0; i < errorsNode.size(); i++) {
-                        JsonNode error = errorsNode.get(i);
-                        apiExceptions[i] = new ApiException(error.get(0).asText(), error.get(1).asText());
-                    }
-                }
-            } else {
-                // We still have to initialize it
-                apiExceptions = new net.dean.jraw.ApiException[0];
-            }
         } else {
-            if (contentType.equals("text/html"))
+            if (contentType.equals(ContentType.HTML))
                 JrawUtils.logger().warn("Received HTML from Reddit API instead of JSON. Are you sure you have access to this document?");
             else
                 JrawUtils.logger().warn("Unknown Content-Type received: \"{}\"", contentType);
 
             // Init JSON-related final variables
-            this.apiExceptions = null;
             this.rootNode = null;
         }
 
@@ -109,63 +82,6 @@ public class RestResponse {
             JrawUtils.logger().error("Unable to parse JSON: {}", raw.replace("\n", "").replace("\r", ""));
             return null;
         }
-    }
-
-
-     /**
-     * This method is a convenience method for turning the JsonNode associated with this data into a RedditObject. Make
-     * sure that the appropriate class is used. No exception will be thrown if the "wrong" class is used, but you will
-     * receive many NullPointerExceptions down the road.
-     *
-     * @param thingClass The class that will be used to instantiate the T
-     * @param <T> The type of object to be created
-     * @return A new RedditObject
-     */
-    @SuppressWarnings("unchecked")
-    public <T extends RedditObject> T as(Class<T> thingClass) {
-        if (thingClass.equals(Submission.class)) {
-            // Special handling for submissions, not just submission data being returned, also its comments.
-            // For example: http://www.reddit.com/92dd8.json
-
-            // rootNode is an array where the first is a listing which contains one element in its "children": the submission.
-            // The second element in the array is a listing of comments
-
-            // Get the list of comments first
-            JsonNode commentListingDataNode = rootNode.get(1).get("data");
-            Listing<Comment> comments = new Listing<>(commentListingDataNode, Comment.class);
-            return (T) new Submission(rootNode.get(0).get("data").get("children").get(0).get("data"), comments);
-        }
-
-        // Normal Thing
-        return REDDIT_OBJECT_PARSER.parse(rootNode, thingClass);
-    }
-
-    /**
-     * This method is essentially the same as {@link #as(Class)}, except for {@link Listing}s.
-     *
-     * @param thingClass The class of T
-     * @param <T> The type of object that the listing will contain
-     * @return A new Listing
-     */
-    public <T extends RedditObject> Listing<T> asListing(Class<T> thingClass) {
-        return new Listing<>(rootNode.get("data"), thingClass);
-    }
-
-    /**
-     * Checks if there were errors returned by the Reddit API
-     * @return True if there were errors, false if else
-     * @see #getApiExceptions()
-     */
-    public boolean hasErrors() {
-        return apiExceptions.length != 0;
-    }
-
-    /**
-     * Gets the ApiExceptions returned from the Reddit API
-     * @return An array of ApiExceptions
-     */
-    public ApiException[] getApiExceptions() {
-        return apiExceptions;
     }
 
     /**
