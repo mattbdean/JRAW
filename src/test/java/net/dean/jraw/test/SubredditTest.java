@@ -52,4 +52,16 @@ public class SubredditTest {
         }
     }
 
+
+    @Test
+    public void testStylesheet() {
+        try {
+            reddit.getStylesheet(null);
+            reddit.getStylesheet("pics");
+            // Just make sure a NetworkException isn't thrown
+        } catch (NetworkException e) {
+            Assert.fail(e.getMessage());
+        }
+    }
+
 }

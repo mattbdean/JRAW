@@ -1,9 +1,9 @@
-<!--- Generated 2014-08-27 at 22:35:00 EDT. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
+<!--- Generated 2014-08-27 at 23:23:03 EDT. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
 #Endpoints
 
 This file contains a list of all the endpoints (regardless of if they have been implemented) that can be found at the [official Reddit API docs](https://www.reddit.com/dev/api). To update this file, run `./gradlew endpoints:update`.
 
-So far **44** endpoints (out of 184 total) have been implemented.
+So far **45** endpoints (out of 184 total) have been implemented.
 
 ##account
 Method|Endpoint|Implemented?
@@ -133,7 +133,7 @@ Method|Endpoint|Implemented?
 `POST`|[`/api/leavemoderator`](https://www.reddit.com/dev/api#POST_api_leavemoderator)|No
 `POST`|[`/api/remove`](https://www.reddit.com/dev/api#POST_api_remove)|No
 `POST`|[`/api/unignore_reports`](https://www.reddit.com/dev/api#POST_api_unignore_reports)|No
-`GET`|[`/stylesheet`](https://www.reddit.com/dev/api#GET_stylesheet)|No
+`GET`|[`/stylesheet`](https://www.reddit.com/dev/api#GET_stylesheet)|[`RedditClient.getStylesheet()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L425)
 
 ##multis
 Method|Endpoint|Implemented?

@@ -415,6 +415,30 @@ public class RedditClient extends RestClient {
     }
 
     /**
+     * Gets the contents of the CSS file affiliated with a given subreddit (or the front page)
+     * @param subreddit The subreddit to use, or null for the front page.
+     * @return The content of the raw CSS file
+     * @throws NetworkException If there was a problem sending the request, or the {@code Content-Type} header's value was
+     *                          not {@code text/css}.
+     */
+    @EndpointImplementation(uris = "GET /stylesheet")
+    public String getStylesheet(String subreddit) throws NetworkException {
+        String path = "/stylesheet";
+        if (subreddit != null) {
+            path = "/r/" + subreddit + path;
+        }
+
+        RestResponse response = execute(new RestRequest(GET, path));
+
+        String type = response.getHeader("Content-Type").getValue();
+        if (!type.equals("text/css")) {
+            throw new NetworkException("The request did not return a Content-Type of text/css (was " + type + ")");
+        }
+
+        return response.getRaw();
+    }
+
+    /**
      * Checks if there was an error returned by a /api/multi/* request, since those URIs return a different error handling
      * format than the rest of the API
      * @param root The root JsonNode
