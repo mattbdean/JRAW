@@ -17,9 +17,9 @@ public class AllSubredditsPaginator extends GenericPaginator<Subreddit, AllSubre
 
     @Override
     @EndpointImplementation(uris = {
-            "/subreddits/popular",
-            "/subreddits/new",
-            "/subreddits/{where}"
+            "GET /subreddits/popular",
+            "GET /subreddits/new",
+            "GET /subreddits/{where}"
     })
     protected Listing<Subreddit> getListing(boolean forwards) throws NetworkException {
         // Just call super so that we can add the @EndpointImplementation annotation

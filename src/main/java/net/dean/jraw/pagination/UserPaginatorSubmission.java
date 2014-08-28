@@ -19,11 +19,11 @@ public class UserPaginatorSubmission extends GenericPaginator<Submission, UserPa
 
     @Override
     @EndpointImplementation(uris = {
-            "/user/{username}/disliked",
-            "/user/{username}/hidden",
-            "/user/{username}/liked",
-            "/user/{username}/saved",
-            "/user/{username}/submitted"
+            "GET /user/{username}/disliked",
+            "GET /user/{username}/hidden",
+            "GET /user/{username}/liked",
+            "GET /user/{username}/saved",
+            "GET /user/{username}/submitted"
     })
     protected Listing<Submission> getListing(boolean forwards) throws NetworkException {
         // Just call super so that we can add the @EndpointImplementation annotation

@@ -48,7 +48,7 @@ public class LoggedInAccount extends Account {
      * @throws NetworkException If there was a problem sending the HTTP request
      * @throws net.dean.jraw.ApiException If the API returned an error
      */
-    @EndpointImplementation(uris = "/api/submit")
+    @EndpointImplementation(uris = "POST /api/submit")
     public Submission submitContent(SubmissionBuilder b, Captcha captcha, String captchaAttempt) throws NetworkException, ApiException {
         Map<String, String> args = JrawUtils.args(
                 "api_type", "json",
@@ -118,7 +118,7 @@ public class LoggedInAccount extends Account {
      * @throws NetworkException If there was a problem sending the HTTP request
      * @throws ApiException If the API returned an error
      */
-    @EndpointImplementation(uris = "/api/vote")
+    @EndpointImplementation(uris = "POST /api/vote")
     private void vote(String fullName, VoteDirection voteDirection) throws NetworkException, ApiException {
         genericPost("/api/vote", JrawUtils.args(
                 "dir", voteDirection.getValue(),
@@ -135,7 +135,10 @@ public class LoggedInAccount extends Account {
      * @throws NetworkException If there was a problem sending the HTTP request
      * @throws ApiException If the API returned an error
      */
-    @EndpointImplementation(uris = {"/api/save", "/api/unsave"})
+    @EndpointImplementation(uris = {
+            "POST /api/save",
+            "POST /api/unsave"
+    })
     public RestResponse setSaved(Submission s, boolean save) throws NetworkException, ApiException {
         // Send it to "/api/save" if save == true, "/api/unsave" if save == false
         return genericPost(String.format("/api/%ssave", save ? "" : "un"), JrawUtils.args(
@@ -152,7 +155,7 @@ public class LoggedInAccount extends Account {
      * @throws NetworkException If there was a problem sending the HTTP request
      * @throws ApiException If the API returned an error
      */
-    @EndpointImplementation(uris = "/api/sendreplies")
+    @EndpointImplementation(uris = "POST /api/sendreplies")
     public RestResponse setSendRepliesToInbox(Submission s, boolean send) throws NetworkException, ApiException {
         if (!s.getAuthor().equals(getFullName())) {
             throw new IllegalArgumentException(String.format("Logged in user (%s) did not post this submission (by %s)", getFullName(), s.getAuthor()));
@@ -172,7 +175,10 @@ public class LoggedInAccount extends Account {
      * @throws NetworkException If there was a problem sending the HTTP request
      * @throws ApiException If the API returned an error
      */
-    @EndpointImplementation(uris = {"/api/marknsfw", "/api/unmarknsfw"})
+    @EndpointImplementation(uris = {
+            "POST /api/marknsfw",
+            "POST /api/unmarknsfw"
+    })
     public RestResponse setNsfw(Submission s, boolean nsfw) throws NetworkException, ApiException {
         checkIfOwns(s);
 
@@ -218,7 +224,7 @@ public class LoggedInAccount extends Account {
      * @throws NetworkException If there was a problem sending the request
      * @throws ApiException If the API returned an error
      */
-    @EndpointImplementation(uris = "/api/del")
+    @EndpointImplementation(uris = "POST /api/del")
     public RestResponse delete(String id) throws NetworkException, ApiException {
         return genericPost("/api/del", JrawUtils.args("id", id));
     }
@@ -232,7 +238,7 @@ public class LoggedInAccount extends Account {
      * @throws NetworkException If there was a problem sending the request
      * @throws ApiException If the API returned an error
      */
-    @EndpointImplementation(uris = "/api/adddeveloper")
+    @EndpointImplementation(uris = "POST /api/adddeveloper")
     public RestResponse addDeveloper(String clientId, String newDev) throws NetworkException, ApiException {
         return genericPost("/api/adddeveloper", JrawUtils.args(
                 "api_type", "json",
@@ -250,7 +256,7 @@ public class LoggedInAccount extends Account {
      * @throws NetworkException If there was a problem sending the request
      * @throws ApiException If the api returned an error
      */
-    @EndpointImplementation(uris = "/api/removedeveloper")
+    @EndpointImplementation(uris = "POST /api/removedeveloper")
     public RestResponse removeDeveloper(String clientId, String oldDev) throws NetworkException, ApiException {
         return genericPost("/api/removedeveloper", JrawUtils.args(
                 "api_type", "json",
@@ -268,7 +274,7 @@ public class LoggedInAccount extends Account {
      * @throws NetworkException If there was a problem sending the request
      * @throws ApiException If the API returned an error
      */
-    @EndpointImplementation(uris = {"/api/hide", "/api/unhide"})
+    @EndpointImplementation(uris = {"POST /api/hide", "/api/unhide"})
     public RestResponse setHidden(Submission s, boolean hidden) throws NetworkException, ApiException {
         return genericPost(String.format("/api/%shide", hidden ? "" : "un"), JrawUtils.args(
                 "id", s.getFullName()
@@ -281,7 +287,7 @@ public class LoggedInAccount extends Account {
      * @return A list of your multireddits
      * @throws NetworkException If there was a problem sending the request
      */
-    @EndpointImplementation(uris = "/api/multi/mine")
+    @EndpointImplementation(uris = "GET /api/multi/mine")
     public List<MultiReddit> getMyMultiReddits() throws NetworkException {
         List<MultiReddit> multis = new ArrayList<>();
         JsonNode multiArray = creator.execute(new RestRequest(HttpVerb.GET, "/api/multi/mine")).getJson();
@@ -347,7 +353,7 @@ public class LoggedInAccount extends Account {
      * @throws NetworkException If there was an error making the HTTP request
      * @throws ApiException If the Reddit API returned an error
      */
-    @EndpointImplementation(uris = "/api/comment")
+    @EndpointImplementation(uris = "POST /api/comment")
     private String reply(String name, String text) throws NetworkException, ApiException {
         RestResponse response = genericPost("/api/comment", JrawUtils.args(
                 "api_type", "json",

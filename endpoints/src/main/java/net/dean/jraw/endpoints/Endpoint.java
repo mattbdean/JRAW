@@ -1,23 +1,36 @@
 package net.dean.jraw.endpoints;
 
+import net.dean.jraw.http.HttpVerb;
+
 import java.lang.reflect.Method;
 
 /**
- * This class represents a Reddit API endpoint such as {@code /api/login}
+ * This class represents a Reddit API endpoint such as "{@code POST /api/login}"
  */
-public class Endpoint {
+class Endpoint {
+    private final String httpDescriptor;
     private final String uri;
+    private final HttpVerb verb;
     private final String category;
+    private boolean implemented;
     private Method method;
 
     /**
      * Instantiates a new Endpoint
-     * @param uri The URI that this endpoint uses (such as {@code /api/login})
+     * @param httpDescriptor A string consisting of two parts: the HTTP verb, and the URI. For example: "@{code POST /api/login}"
      * @param category This endpoint's category, such as "accounts". Can be found <a href="http://www.reddit.com/dev/api">here</a>
      */
-    public Endpoint(String uri, String category) {
-        this.uri = uri;
+    public Endpoint(String httpDescriptor, String category) {
+        this.httpDescriptor = httpDescriptor;
+        String[] parts = httpDescriptor.split(" ");
+        if (parts.length != 2) {
+            throw new IllegalArgumentException("Invalid number of parts for descriptor \"" + httpDescriptor + "\"");
+        }
+
+        this.verb = HttpVerb.valueOf(parts[0].toUpperCase());
+        this.uri = parts[1];
         this.category = category;
+        this.implemented = false;
     }
 
     /**
@@ -25,7 +38,7 @@ public class Endpoint {
      *
      * @return This endpoint's URI
      */
-    public String getUri() {
+    String getUri() {
         return uri;
     }
 
@@ -34,15 +47,35 @@ public class Endpoint {
      *
      * @return This endpoint's category
      */
-    public String getCategory() {
+    String getCategory() {
         return category;
     }
 
-    public Method getMethod() {
+    /**
+     * Gets the HTTP verb used for this endpoint
+     * @return The HTTP verb
+     */
+    HttpVerb getVerb() {
+        return verb;
+    }
+
+    Method getMethod() {
         return method;
     }
 
-    public void setMethod(Method method) {
+    boolean isImplemented() {
+        return implemented;
+    }
+
+    void setImplemented(boolean implemented) {
+        this.implemented = implemented;
+    }
+
+    String getHttpDescriptor() {
+        return httpDescriptor;
+    }
+
+    void setMethod(Method method) {
         this.method = method;
     }
 
@@ -51,6 +84,7 @@ public class Endpoint {
         return "Endpoint{" +
                 "uri='" + uri + '\'' +
                 ", category='" + category + '\'' +
+                ", implemented=" + implemented + '\'' +
                 ", method=" + method +
                 '}';
     }

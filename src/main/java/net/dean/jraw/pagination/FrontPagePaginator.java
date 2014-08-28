@@ -18,7 +18,13 @@ public class FrontPagePaginator extends Paginator<Submission> {
     }
 
     @Override
-    @EndpointImplementation(uris = {"/controversial", "/hot", "/new", "/top", "/sort"})
+    @EndpointImplementation(uris = {
+            "GET /controversial",
+            "GET /hot",
+            "GET /new",
+            "GET /top",
+            "GET /sort"
+    })
     protected Listing<Submission> getListing(boolean forwards) throws NetworkException {
         // Just call super so that we can add the @EndpointImplementation annotation
         return super.getListing(forwards);

@@ -22,10 +22,10 @@ public class MySubredditsPaginator extends GenericPaginator<Subreddit, MySubredd
 
     @Override
     @EndpointImplementation(uris = {
-            "/subreddits/mine/contributor",
-            "/subreddits/mine/moderator",
-            "/subreddits/mine/subscriber",
-            "/subreddits/mine/{where}",
+            "GET /subreddits/mine/contributor",
+            "GET /subreddits/mine/moderator",
+            "GET /subreddits/mine/subscriber",
+            "GET /subreddits/mine/{where}",
     })
     protected Listing<Subreddit> getListing(boolean forwards) throws NetworkException {
         // Just call super so that we can add the @EndpointImplementation annotation
