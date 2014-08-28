@@ -197,7 +197,7 @@ public abstract class JsonModel {
                 }
                 counter++;
             } catch (IllegalAccessException e) {
-                System.err.println("IllegalAccessException. This really shouldn't happen.");
+                JrawUtils.logger().error("IllegalAccessException. This really shouldn't happen.", e);
                 e.printStackTrace();
             } catch (InvocationTargetException e) {
                 e.printStackTrace();

@@ -1,6 +1,7 @@
 package net.dean.jraw.test;
 
 import net.dean.jraw.ApiException;
+import net.dean.jraw.JrawUtils;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.Version;
 import net.dean.jraw.models.RenderStringPair;
@@ -76,7 +77,7 @@ public final class TestUtils {
         }
 
         if (msg != null) {
-            System.err.println(msg);
+            JrawUtils.logger().error(msg);
             throw new SkipException(msg);
         } else {
             Assert.fail(e.getMessage());

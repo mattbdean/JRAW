@@ -38,7 +38,7 @@ public final class JrawUtils {
         try {
             return new URL(href);
         } catch (MalformedURLException e) {
-            System.err.println("Malformed URL: " + href);
+            JrawUtils.logger.error("Malformed URL: " + href, e);
             e.printStackTrace();
         }
 
