@@ -27,7 +27,7 @@ public class RedditResponse extends RestResponse {
     public RedditResponse(HttpResponse response) {
         super(response);
 
-        ApiException[] errors = null;
+        ApiException[] errors = new ApiException[0];
         if (contentType.equals(ContentType.JSON)) {
             // Parse the errors into ApiExceptions
             JsonNode errorsNode = rootNode.get("json");

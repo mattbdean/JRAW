@@ -26,7 +26,7 @@ import static net.dean.jraw.http.HttpVerb.*;
 /**
  * This class provides access to the most basic Reddit features such as logging in.
  */
-public class RedditClient extends RestClient {
+public class RedditClient extends RestClient<RedditResponse> {
 
     /** The host that will be used to execute basic HTTP requests */
     public static final String HOST = "www.reddit.com";
@@ -65,7 +65,7 @@ public class RedditClient extends RestClient {
      *                  </blockquote>
      */
     public RedditClient(String userAgent) {
-        super(HOST, userAgent);
+        super(HOST, userAgent, RedditResponse.class);
         this.requestManagement = true;
     }
 
@@ -84,12 +84,12 @@ public class RedditClient extends RestClient {
     public RedditResponse execute(RestRequest request) throws NetworkException {
         if (!requestManagement) {
             // All in your hands, buddy
-            return (RedditResponse) super.execute(request);
+            return super.execute(request);
         }
 
         // No history, safe to assume that there were no recent requests
         if (history.size() == 0) {
-            return (RedditResponse) super.execute(request);
+            return super.execute(request);
         }
 
         // Transverse the history backwards and look for the latest request executed just after one minute
@@ -122,7 +122,7 @@ public class RedditClient extends RestClient {
             }
         }
 
-        return (RedditResponse) super.execute(request);
+        return super.execute(request);
     }
 
 
