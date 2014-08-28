@@ -51,6 +51,15 @@ public class Comment extends Thing implements Created, Distinguishable, Votable 
     }
 
     /**
+     * If the comment is controversial (has a large number of both upvotes and downvotes)
+     * @return If the comment is controversial
+     */
+    @JsonInteraction
+    public Boolean isControversial() {
+        return data("controversiality", Integer.class) == 1;
+    }
+
+    /**
      * Who removed this comment, or null if you are not a mod
      * @return Who removed this comment
      */
