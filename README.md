@@ -1,8 +1,8 @@
 #Java Reddit API Wrapper [![travis-ci build status](https://travis-ci.org/thatJavaNerd/JRAW.svg?branch=master)](https://travis-ci.org/thatJavaNerd/JRAW)
 
->JRAW is currently in an experimental stage, and therefore subject to API changes. You are, however, able to use this library in your own projects.
+>JRAW is currently in an experimental stage, and therefore subject to API changes. Application-breaking changes could occur at any release before 1.0.
 
-JRAW was built off of two main principles:
+JRAW was built off these principles:
 
 1. Provide a solid foundation upon which to send HTTP requests
 2. Make using the Reddit API feel as comforatble as possible for Java developers
@@ -34,6 +34,13 @@ See [`ENDPOINTS.md`](https://github.com/thatJavaNerd/JRAW/blob/master/ENDPOINTS.
 The subproject [`endpoints`](https://github.com/thatJavaNerd/JRAW/tree/master/endpoints) uses annotations and the Reflections library to find methods that implement different API endpoints and then compile them into `ENDPOINTS.md`. Running `./gradlew endpoints:update` will run the [`EndpointAnalysis`](https://github.com/thatJavaNerd/JRAW/blob/master/endpoints/src/main/java/net/dean/jraw/endpoints/EndpointAnalysis.java) class, which will in turn generate the endpoints markdown file.
 
 ##Contributing
+Before contributing, it is recommended that you have a decent knowledge of how the Reddit API works.
+
+Some references:
+ - [reddit/reddit's 'API' wiki page](https://github.com/reddit/reddit/wiki/API): Quick overview of the API and its rules
+ - [reddit/reddit's 'JSON' wiki page](https://github.com/reddit/reddit/wiki/JSON): Shows the data structure of the objects returned by the API
+ - And of course, don't forget the [official Reddit API documentation](https://www.reddit.com/dev/api)
+
 Want to contribute? Follow these steps:
 
 1. Fork the repository
