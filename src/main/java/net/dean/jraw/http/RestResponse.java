@@ -56,34 +56,38 @@ public class RestResponse {
             Scanner s = new Scanner(response.getEntity().getContent()).useDelimiter("\\A");
             this.raw = s.hasNext() ? s.next() : "";
 
-            try {
-                this.rootNode = OBJECT_MAPPER.readTree(raw);
-            } catch (JsonParseException e) {
-                System.err.println("Unable to parse JSON: " + raw.replace("\n", "").replace("\r", ""));
-                if (raw.substring(0, 20).toLowerCase().contains("<!doctype")) {
-                    System.err.println("Received HTML from Reddit API instead of JSON. Have you been making more than 30 requests per minute?");
-                }
-                throw e;
-            }
-
-            JsonNode errorsNode = rootNode.get("json");
-            if (errorsNode != null) {
-                errorsNode = errorsNode.get("errors");
-            }
-
-            if (errorsNode != null) {
-                apiExceptions = new net.dean.jraw.ApiException[errorsNode.size()];
-                if (errorsNode.size() > 0) {
-
-                    for (int i = 0; i < errorsNode.size(); i++) {
-                        JsonNode error = errorsNode.get(i);
-                        apiExceptions[i] = new ApiException(error.get(0).asText(), error.get(1).asText());
+            if (getHeader("Content-Type").getValue().startsWith("application/json")) {
+                // Make sure we are actually operating on JSON
+                try {
+                    this.rootNode = OBJECT_MAPPER.readTree(raw);
+                } catch (JsonParseException e) {
+                    System.err.println("Unable to parse JSON: " + raw.replace("\n", "").replace("\r", ""));
+                    if (raw.substring(0, 20).toLowerCase().contains("<!doctype")) {
+                        System.err.println("Received HTML from Reddit API instead of JSON. Have you been making more than 30 requests per minute?");
                     }
+                    throw e;
                 }
-            } else {
-                // We still have to initialize it
-                apiExceptions = new net.dean.jraw.ApiException[0];
+
+                JsonNode errorsNode = rootNode.get("json");
+                if (errorsNode != null) {
+                    errorsNode = errorsNode.get("errors");
+                }
+
+                if (errorsNode != null) {
+                    apiExceptions = new net.dean.jraw.ApiException[errorsNode.size()];
+                    if (errorsNode.size() > 0) {
+
+                        for (int i = 0; i < errorsNode.size(); i++) {
+                            JsonNode error = errorsNode.get(i);
+                            apiExceptions[i] = new ApiException(error.get(0).asText(), error.get(1).asText());
+                        }
+                    }
+                } else {
+                    // We still have to initialize it
+                    apiExceptions = new net.dean.jraw.ApiException[0];
+                }
             }
+
             EntityUtils.consume(response.getEntity());
         } catch (IOException e) {
             e.printStackTrace();
