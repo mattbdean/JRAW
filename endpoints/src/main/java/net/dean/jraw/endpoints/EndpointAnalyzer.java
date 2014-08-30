@@ -17,7 +17,7 @@ import java.net.URISyntaxException;
 import java.util.*;
 
 /**
- * This class is responsible for parsing {@value #ALL_ENDPOINTS_FILE_NAME} into
+ * This class is responsible for parsing {@value #ALL_ENDPOINTS_FILE_NAME} into a Endpoint objects
  */
 public class EndpointAnalyzer {
     private static final String ALL_ENDPOINTS_FILE_NAME = "endpoints.json";
