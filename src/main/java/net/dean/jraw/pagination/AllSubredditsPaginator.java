@@ -1,6 +1,7 @@
 package net.dean.jraw.pagination;
 
 import net.dean.jraw.EndpointImplementation;
+import net.dean.jraw.Endpoints;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.models.core.Listing;
@@ -16,10 +17,10 @@ public class AllSubredditsPaginator extends GenericPaginator<Subreddit, AllSubre
     }
 
     @Override
-    @EndpointImplementation(uris = {
-            "GET /subreddits/popular",
-            "GET /subreddits/new",
-            "GET /subreddits/{where}"
+    @EndpointImplementation({
+            Endpoints.SUBREDDITS_POPULAR,
+            Endpoints.SUBREDDITS_NEW,
+            Endpoints.SUBREDDITS_WHERE
     })
     protected Listing<Subreddit> getListing(boolean forwards) throws NetworkException {
         // Just call super so that we can add the @EndpointImplementation annotation

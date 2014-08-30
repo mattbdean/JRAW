@@ -1,5 +1,6 @@
 package net.dean.jraw.pagination;
 
+import net.dean.jraw.Endpoints;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.EndpointImplementation;
 import net.dean.jraw.http.NetworkException;
@@ -23,7 +24,7 @@ public class SpecificPaginator extends Paginator<Submission> {
     }
 
     @Override
-    @EndpointImplementation(uris = "GET /by_id/{names}")
+    @EndpointImplementation(Endpoints.BY_ID_NAMES)
     protected Listing<Submission> getListing(boolean forwards) throws NetworkException {
         // Just call super so we can add the @EndpointImplementation annotation
         return super.getListing(forwards);

@@ -1,9 +1,6 @@
 package net.dean.jraw.models;
 
-import net.dean.jraw.ApiException;
-import net.dean.jraw.JrawUtils;
-import net.dean.jraw.RedditClient;
-import net.dean.jraw.EndpointImplementation;
+import net.dean.jraw.*;
 import net.dean.jraw.http.*;
 import net.dean.jraw.models.core.Account;
 import net.dean.jraw.models.core.Comment;
@@ -45,7 +42,7 @@ public class LoggedInAccount extends Account {
      * @throws NetworkException If there was a problem sending the HTTP request
      * @throws net.dean.jraw.ApiException If the API returned an error
      */
-    @EndpointImplementation(uris = "POST /api/submit")
+    @EndpointImplementation(Endpoints.SUBMIT)
     public Submission submitContent(SubmissionBuilder b, Captcha captcha, String captchaAttempt) throws NetworkException, ApiException {
         Map<String, String> args = JrawUtils.args(
                 "api_type", "json",
@@ -115,7 +112,7 @@ public class LoggedInAccount extends Account {
      * @throws NetworkException If there was a problem sending the HTTP request
      * @throws ApiException If the API returned an error
      */
-    @EndpointImplementation(uris = "POST /api/vote")
+    @EndpointImplementation(Endpoints.VOTE)
     private void vote(String fullName, VoteDirection voteDirection) throws NetworkException, ApiException {
         genericPost("/api/vote", JrawUtils.args(
                 "dir", voteDirection.getValue(),
@@ -132,10 +129,7 @@ public class LoggedInAccount extends Account {
      * @throws NetworkException If there was a problem sending the HTTP request
      * @throws ApiException If the API returned an error
      */
-    @EndpointImplementation(uris = {
-            "POST /api/save",
-            "POST /api/unsave"
-    })
+    @EndpointImplementation({Endpoints.SAVE, Endpoints.UNSAVE})
     public RedditResponse setSaved(Submission s, boolean save) throws NetworkException, ApiException {
         // Send it to "/api/save" if save == true, "/api/unsave" if save == false
         return genericPost(String.format("/api/%ssave", save ? "" : "un"), JrawUtils.args(
@@ -152,7 +146,7 @@ public class LoggedInAccount extends Account {
      * @throws NetworkException If there was a problem sending the HTTP request
      * @throws ApiException If the API returned an error
      */
-    @EndpointImplementation(uris = "POST /api/sendreplies")
+    @EndpointImplementation(Endpoints.SENDREPLIES)
     public RedditResponse setSendRepliesToInbox(Submission s, boolean send) throws NetworkException, ApiException {
         if (!s.getAuthor().equals(getFullName())) {
             throw new IllegalArgumentException(String.format("Logged in user (%s) did not post this submission (by %s)", getFullName(), s.getAuthor()));
@@ -172,10 +166,7 @@ public class LoggedInAccount extends Account {
      * @throws NetworkException If there was a problem sending the HTTP request
      * @throws ApiException If the API returned an error
      */
-    @EndpointImplementation(uris = {
-            "POST /api/marknsfw",
-            "POST /api/unmarknsfw"
-    })
+    @EndpointImplementation({Endpoints.MARKNSFW, Endpoints.UNMARKNSFW})
     public RedditResponse setNsfw(Submission s, boolean nsfw) throws NetworkException, ApiException {
         checkIfOwns(s);
 
@@ -221,7 +212,7 @@ public class LoggedInAccount extends Account {
      * @throws NetworkException If there was a problem sending the request
      * @throws ApiException If the API returned an error
      */
-    @EndpointImplementation(uris = "POST /api/del")
+    @EndpointImplementation(Endpoints.DEL)
     public RedditResponse delete(String id) throws NetworkException, ApiException {
         return genericPost("/api/del", JrawUtils.args("id", id));
     }
@@ -235,7 +226,7 @@ public class LoggedInAccount extends Account {
      * @throws NetworkException If there was a problem sending the request
      * @throws ApiException If the API returned an error
      */
-    @EndpointImplementation(uris = "POST /api/adddeveloper")
+    @EndpointImplementation(Endpoints.ADDDEVELOPER)
     public RedditResponse addDeveloper(String clientId, String newDev) throws NetworkException, ApiException {
         return genericPost("/api/adddeveloper", JrawUtils.args(
                 "api_type", "json",
@@ -253,7 +244,7 @@ public class LoggedInAccount extends Account {
      * @throws NetworkException If there was a problem sending the request
      * @throws ApiException If the api returned an error
      */
-    @EndpointImplementation(uris = "POST /api/removedeveloper")
+    @EndpointImplementation(Endpoints.REMOVEDEVELOPER)
     public RedditResponse removeDeveloper(String clientId, String oldDev) throws NetworkException, ApiException {
         return genericPost("/api/removedeveloper", JrawUtils.args(
                 "api_type", "json",
@@ -271,7 +262,7 @@ public class LoggedInAccount extends Account {
      * @throws NetworkException If there was a problem sending the request
      * @throws ApiException If the API returned an error
      */
-    @EndpointImplementation(uris = {"POST /api/hide", "/api/unhide"})
+    @EndpointImplementation({Endpoints.HIDE, Endpoints.UNHIDE})
     public RedditResponse setHidden(Submission s, boolean hidden) throws NetworkException, ApiException {
         return genericPost(String.format("/api/%shide", hidden ? "" : "un"), JrawUtils.args(
                 "id", s.getFullName()
@@ -284,7 +275,7 @@ public class LoggedInAccount extends Account {
      * @return A list of your multireddits
      * @throws NetworkException If there was a problem sending the request
      */
-    @EndpointImplementation(uris = "GET /api/multi/mine")
+    @EndpointImplementation(Endpoints.MULTI_MINE)
     public List<MultiReddit> getMyMultiReddits() throws NetworkException {
         List<MultiReddit> multis = new ArrayList<>();
         JsonNode multiArray = creator.execute(new RestRequest(HttpVerb.GET, "/api/multi/mine")).getJson();
@@ -350,7 +341,7 @@ public class LoggedInAccount extends Account {
      * @throws NetworkException If there was an error making the HTTP request
      * @throws ApiException If the Reddit API returned an error
      */
-    @EndpointImplementation(uris = "POST /api/comment")
+    @EndpointImplementation(Endpoints.COMMENT)
     private String reply(String name, String text) throws NetworkException, ApiException {
         RedditResponse response = genericPost("/api/comment", JrawUtils.args(
                 "api_type", "json",
@@ -360,7 +351,6 @@ public class LoggedInAccount extends Account {
 
         return response.getJson().get("json").get("data").get("things").get(0).get("data").get("id").asText();
     }
-
 
     private void checkIfOwns(Submission s) {
         if (!s.getAuthor().equals(getFullName())) {

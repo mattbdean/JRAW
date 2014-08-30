@@ -1,8 +1,9 @@
 package net.dean.jraw.pagination;
 
-import net.dean.jraw.http.NetworkException;
-import net.dean.jraw.RedditClient;
 import net.dean.jraw.EndpointImplementation;
+import net.dean.jraw.Endpoints;
+import net.dean.jraw.RedditClient;
+import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.models.core.Listing;
 import net.dean.jraw.models.core.Submission;
 
@@ -18,12 +19,12 @@ public class UserPaginatorSubmission extends GenericPaginator<Submission, UserPa
     }
 
     @Override
-    @EndpointImplementation(uris = {
-            "GET /user/{username}/disliked",
-            "GET /user/{username}/hidden",
-            "GET /user/{username}/liked",
-            "GET /user/{username}/saved",
-            "GET /user/{username}/submitted"
+    @EndpointImplementation({
+            Endpoints.USER_USERNAME_DISLIKED,
+            Endpoints.USER_USERNAME_HIDDEN,
+            Endpoints.USER_USERNAME_LIKED,
+            Endpoints.USER_USERNAME_SAVED,
+            Endpoints.USER_USERNAME_SUBMITTED
     })
     protected Listing<Submission> getListing(boolean forwards) throws NetworkException {
         // Just call super so that we can add the @EndpointImplementation annotation

@@ -1,5 +1,6 @@
 package net.dean.jraw.pagination;
 
+import net.dean.jraw.Endpoints;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.EndpointImplementation;
 import net.dean.jraw.http.NetworkException;
@@ -18,12 +19,12 @@ public class FrontPagePaginator extends Paginator<Submission> {
     }
 
     @Override
-    @EndpointImplementation(uris = {
-            "GET /controversial",
-            "GET /hot",
-            "GET /new",
-            "GET /top",
-            "GET /sort"
+    @EndpointImplementation({
+            Endpoints.CONTROVERSIAL,
+            Endpoints.HOT,
+            Endpoints.NEW,
+            Endpoints.TOP,
+            Endpoints.SORT
     })
     protected Listing<Submission> getListing(boolean forwards) throws NetworkException {
         // Just call super so that we can add the @EndpointImplementation annotation

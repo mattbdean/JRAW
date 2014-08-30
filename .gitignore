@@ -1,9 +1,19 @@
+# IntelliJ
 .idea/
 *.iml
+*.ipr
+*.iml
+*.iws
+
+# Gradle
 .gradle/
+!build/generated-src/
 build/
 out/
 
+# Testing account credentials
 src/test/resources/credentials.txt
+
+# Local todo list
 todo.txt
 

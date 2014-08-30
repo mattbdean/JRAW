@@ -1,6 +1,4 @@
-apply plugin: 'java'
-
-def releaseDest = new File((File) project.buildDir, "releases")
+apply plugin: 'idea'
 
 allprojects {
     apply plugin: 'java'
@@ -12,10 +10,10 @@ allprojects {
     }
 
     dependencies {
-        compile     group: 'org.codehaus.jackson',      name: 'jackson-mapper-asl', version: '1.9.+'
-        compile     group: 'org.slf4j',                 name: 'slf4j-api',          version: '1.7.+'
-        testCompile group: 'org.slf4j',                 name: 'slf4j-simple',       version: '1.7.+'
-        testCompile group: 'org.testng',                name: 'testng',             version: '6.1.1'
+        compile     group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.+'
+        compile     group: 'org.slf4j',            name: 'slf4j-api',          version: '1.7.+'
+        testCompile group: 'org.slf4j',            name: 'slf4j-simple',       version: '1.7.+'
+        testCompile group: 'org.testng',           name: 'testng',             version: '6.1.1'
     }
 
     test {
@@ -31,6 +29,15 @@ dependencies {
     compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.3.3'
 }
 
+def generatedJavaSrcName = "generated-src"
+def generatedJavaSrc = file("$buildDir/$generatedJavaSrcName")
+def releaseDest = new File((File) project.buildDir, "releases")
+def genJavaClass = file("$generatedJavaSrc/net/dean/jraw/Endpoints.java").absolutePath
+def genEndpointsMd = file("ENDPOINTS.md").absolutePath
+
+// Add the generated source to the main Java source directories
+sourceSets.main.java.srcDir generatedJavaSrc
+
 project(':endpoints') {
     dependencies {
         compile 'org.javassist:javassist:3.18.2-GA'
@@ -39,9 +46,21 @@ project(':endpoints') {
     }
 
     task update(type: JavaExec, dependsOn: compileJava) {
-        main = "net.dean.jraw.endpoints.EndpointAnalysis"
+        main = "net.dean.jraw.endpoints.EndpointAnalyzer"
         classpath = sourceSets.main.runtimeClasspath
+
+        File parent = file(genJavaClass).parentFile
+
+        parent.exists() || parent.mkdirs()
+        args = [
+                "java=" + genJavaClass,
+                "md=" + genEndpointsMd
+        ]
     }
+}
+
+clean {
+    delete generatedJavaSrc
 }
 
 task fatJar(type: Jar, dependsOn: assemble) {
@@ -70,4 +89,17 @@ task release(type: Jar, dependsOn: ['fatJar', 'javadocJar', 'sourcesJar']) {
     destinationDir = releaseDest
 }
 
-defaultTasks "test"
+idea {
+    module {
+        // Exclude everything in the build dir except for the generated source folder
+        excludeDirs = buildDir.listFiles(new FilenameFilter() {
+            @Override
+            boolean accept(File file, String s) {
+                return !s.equals(generatedJavaSrcName)
+            }
+        })
+        sourceDirs += file(generatedJavaSrc)
+    }
+}
+
+defaultTasks "check"

@@ -1,6 +1,7 @@
 package net.dean.jraw.pagination;
 
 import net.dean.jraw.EndpointImplementation;
+import net.dean.jraw.Endpoints;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.models.LoggedInAccount;
 import net.dean.jraw.models.core.Listing;
@@ -21,11 +22,11 @@ public class MySubredditsPaginator extends GenericPaginator<Subreddit, MySubredd
     }
 
     @Override
-    @EndpointImplementation(uris = {
-            "GET /subreddits/mine/contributor",
-            "GET /subreddits/mine/moderator",
-            "GET /subreddits/mine/subscriber",
-            "GET /subreddits/mine/{where}",
+    @EndpointImplementation({
+            Endpoints.SUBREDDITS_MINE_CONTRIBUTOR,
+            Endpoints.SUBREDDITS_MINE_MODERATOR,
+            Endpoints.SUBREDDITS_MINE_SUBSCRIBER,
+            Endpoints.SUBREDDITS_MINE_WHERE
     })
     protected Listing<Subreddit> getListing(boolean forwards) throws NetworkException {
         // Just call super so that we can add the @EndpointImplementation annotation

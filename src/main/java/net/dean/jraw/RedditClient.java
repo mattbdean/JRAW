@@ -135,7 +135,7 @@ public class RedditClient extends RestClient<RedditResponse> {
      * @throws NetworkException If there was a problem sending the request
      * @throws ApiException If the API returned an error (most likely because of an incorrect password)
      */
-    @EndpointImplementation(uris = "GET /api/login")
+    @EndpointImplementation(Endpoints.LOGIN)
     public LoggedInAccount login(String username, String password) throws NetworkException, ApiException {
         RedditResponse loginResponse = new RedditResponse(http.execute(new HttpHelper.RequestBuilder(POST, HOST_SSL, "/api/login")
                 .args(JrawUtils.args("user", username, "passwd", password, "api_type", "json"))));
@@ -171,7 +171,7 @@ public class RedditClient extends RestClient<RedditResponse> {
      * @return The currently logged in account
      * @throws NetworkException If the user has not been logged in yet
      */
-    @EndpointImplementation(uris = "GET /api/me.json")
+    @EndpointImplementation(Endpoints.ME)
     public Account me() throws NetworkException {
         loginCheck();
         return execute(new RestRequest(GET, "/api/me.json")).as(Account.class);
@@ -199,7 +199,7 @@ public class RedditClient extends RestClient<RedditResponse> {
      * @return True if the user needs a captcha to do a specific action, else if not or not logged in.
      * @throws NetworkException If there was an issue sending the HTTP request
      */
-    @EndpointImplementation(uris = "GET /api/needs_captcha.json")
+    @EndpointImplementation(Endpoints.NEEDS_CAPTCHA)
     public boolean needsCaptcha() throws NetworkException {
         try {
             // This endpoint does not return JSON, but rather just "true" or "false"
@@ -216,7 +216,7 @@ public class RedditClient extends RestClient<RedditResponse> {
      * @return A new Captcha
      * @throws NetworkException If there was a problem executing the HTTP request
      */
-    @EndpointImplementation(uris = "POST /api/new_captcha")
+    @EndpointImplementation(Endpoints.NEW_CAPTCHA)
     public Captcha getNewCaptcha() throws NetworkException {
         try {
             RedditResponse response = execute(new RestRequest(POST, "/api/new_captcha"));
@@ -237,7 +237,7 @@ public class RedditClient extends RestClient<RedditResponse> {
      * @return A new Captcha object
      * @throws NetworkException If there was a problem executing the HTTP request
      */
-    @EndpointImplementation(uris = "GET /captcha/{iden}")
+    @EndpointImplementation(Endpoints.CAPTCHA_IDEN)
     public Captcha getCaptcha(String id) throws NetworkException {
         try {
             CloseableHttpResponse response = http.execute(new HttpHelper.RequestBuilder(GET, HOST, "/captcha/" + id + ".png"));
@@ -255,7 +255,7 @@ public class RedditClient extends RestClient<RedditResponse> {
      * @return An Account whose name matches the given username
      * @throws NetworkException If the user does not exist or there was a problem making the request
      */
-    @EndpointImplementation(uris = "GET /user/{username}/about.json")
+    @EndpointImplementation(Endpoints.USER_USERNAME_ABOUT)
     public Account getUser(String username) throws NetworkException {
         return execute(new RestRequest(GET, "/user/" + username + "/about.json")).as(Account.class);
     }
@@ -278,7 +278,7 @@ public class RedditClient extends RestClient<RedditResponse> {
      * @return A new Subreddit object
      * @throws NetworkException If there was a problem executing the request
      */
-    @EndpointImplementation(uris = "GET /r/{subreddit}/about.json")
+    @EndpointImplementation(Endpoints.SUBREDDIT_ABOUT)
     public Subreddit getSubreddit(String name) throws NetworkException {
         return execute(new RestRequest(GET, "/r/" + name + "/about.json")).as(Subreddit.class);
     }
@@ -290,7 +290,7 @@ public class RedditClient extends RestClient<RedditResponse> {
      * @return True if that username is available for registration, false if else
      * @throws NetworkException If there was a problem executing the request
      */
-    @EndpointImplementation(uris = "GET /api/username_available.json")
+    @EndpointImplementation(Endpoints.USERNAME_AVAILABLE)
     public boolean isUsernameAvailable(String name) throws NetworkException {
         return Boolean.parseBoolean(execute(new RestRequest(GET, "/api/username_available.json?user=" + name)).getRaw());
     }
@@ -303,9 +303,9 @@ public class RedditClient extends RestClient<RedditResponse> {
      * @throws NetworkException If there was a problem making the request
      * @throws ApiException If the Reddit API returned an error
      */
-    @EndpointImplementation(uris = {
-            "GET /api/multi/{multipath}",
-            "GET /api/multi/{multipath}/r/{srname}"
+    @EndpointImplementation({
+            Endpoints.MULTI_MULTIPATH_GET,
+            Endpoints.MULTI_MULTIPATH_R_SRNAME_GET
     })
     public MultiReddit getPublicMulti(String username, String multiName) throws NetworkException, ApiException {
         JsonNode node = execute(new RestRequest(GET, String.format("/api/multi/user/%s/m/%s", username, multiName))).getJson();
@@ -323,7 +323,7 @@ public class RedditClient extends RestClient<RedditResponse> {
      * @throws NetworkException If there was a problem sending the request
      * @throws ApiException If the Reddit API returned an error
      */
-    @EndpointImplementation(uris = "GET /api/multi/{multipath}/description")
+    @EndpointImplementation(Endpoints.MULTI_MULTIPATH_DESCRIPTION_GET)
     public RenderStringPair getPublicMultiDescription(String username, String multiName) throws NetworkException, ApiException {
         JsonNode node = execute(new RestRequest(GET, String.format("/api/multi/user/%s/m/%s/description", username, multiName))).getJson();
         checkMultiRedditError(node);
@@ -346,7 +346,7 @@ public class RedditClient extends RestClient<RedditResponse> {
      * @return A random submission
      * @throws NetworkException If there was a problem executing the request
      */
-    @EndpointImplementation(uris = "GET /random")
+    @EndpointImplementation(Endpoints.RANDOM)
     public Submission getRandom(String subreddit) throws NetworkException  {
         String path = "/random.json";
         if (subreddit != null) {
@@ -361,7 +361,7 @@ public class RedditClient extends RestClient<RedditResponse> {
      * @return The text displayed int he "submit link" form
      * @throws NetworkException If there was a problem executing the request
      */
-    @EndpointImplementation(uris = "GET /api/submit_text.json")
+    @EndpointImplementation(Endpoints.SUBMIT_TEXT)
     public RenderStringPair getSubmitText(String subreddit) throws NetworkException {
         String query = "/api/submit_text.json";
         if (subreddit != null) {
@@ -378,7 +378,7 @@ public class RedditClient extends RestClient<RedditResponse> {
      * @return A list of subreddits related to the given topic
      * @throws NetworkException If there was a problem executing the request
      */
-    @EndpointImplementation(uris = "GET /api/subreddits_by_topic.json")
+    @EndpointImplementation(Endpoints.SUBREDDITS_BY_TOPIC)
     public List<String> getSubredditsByTopic(String topic) throws NetworkException {
         List<String> subreddits = new ArrayList<>();
 
@@ -398,7 +398,7 @@ public class RedditClient extends RestClient<RedditResponse> {
      * @return A list of subreddits that starts with the given string
      * @throws NetworkException If there was a problem executing the request
      */
-    @EndpointImplementation(uris = "POST /api/search_reddit_names.json")
+    @EndpointImplementation(Endpoints.SEARCH_REDDIT_NAMES)
     public List<String> searchSubreddits(String start, boolean includeNsfw) throws NetworkException {
         List<String> subs = new ArrayList<>();
 
@@ -421,7 +421,7 @@ public class RedditClient extends RestClient<RedditResponse> {
      * @throws NetworkException If there was a problem sending the request, or the {@code Content-Type} header's value was
      *                          not {@code text/css}.
      */
-    @EndpointImplementation(uris = "GET /stylesheet")
+    @EndpointImplementation(Endpoints.STYLESHEET)
     public String getStylesheet(String subreddit) throws NetworkException {
         String path = "/stylesheet";
         if (subreddit != null) {
