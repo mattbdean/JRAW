@@ -36,8 +36,8 @@ public class JavaGenerator extends AbstractEndpointGenerator {
     protected void _generate(File dest, BufferedWriter bw) throws IOException {
         write(bw, "package net.dean.jraw;");
         newLine(bw);
-        write(bw, "@SuppressWarnings(\"unused\")");
         write(bw, JAVADOC_CLASS);
+        write(bw, "@SuppressWarnings(\"unused\")");
         write(bw, "public enum Endpoints {");
 
         NavigableMap<String, List<String>> duplicateUris = findDuplicateUris(endpoints);
