@@ -10,10 +10,17 @@ import net.dean.jraw.models.core.Subreddit;
 /**
  * This paginator will iterate through the newest and most popular subreddits
  */
-public class AllSubredditsPaginator extends GenericPaginator<Subreddit, AllSubredditsPaginator.Where, AllSubredditsPaginator> {
+public class AllSubredditsPaginator extends GenericPaginator<Subreddit, AllSubredditsPaginator.Where> {
 
-    private AllSubredditsPaginator(Builder b) {
-        super(b);
+
+    /**
+     * Instantiates a new AllSubredditsPaginator
+     *
+     * @param creator The RedditClient that will be used to send HTTP requests
+     * @param where The criteria in which to return Subreddits
+     */
+    public AllSubredditsPaginator(RedditClient creator, Where where) {
+        super(creator, Subreddit.class, where);
     }
 
     @Override
@@ -35,23 +42,5 @@ public class AllSubredditsPaginator extends GenericPaginator<Subreddit, AllSubre
     public static enum Where {
         POPULAR,
         NEW
-    }
-
-    public static class Builder extends GenericPaginator.Builder<Subreddit, Where, AllSubredditsPaginator> {
-
-        /**
-         * Instantiates a new Builder
-         *
-         * @param reddit The RedditClient to send requests with
-         * @param where  The enum that will be appended to the
-         */
-        public Builder(RedditClient reddit, Where where) {
-            super(reddit, Subreddit.class, where);
-        }
-
-        @Override
-        public AllSubredditsPaginator build() {
-            return new AllSubredditsPaginator(this);
-        }
     }
 }

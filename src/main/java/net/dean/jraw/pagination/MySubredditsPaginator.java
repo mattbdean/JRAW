@@ -10,10 +10,16 @@ import net.dean.jraw.models.core.Subreddit;
 /**
  * This paginator provides a way to iterate through the logged-in user's subscribed subreddits
  */
-public class MySubredditsPaginator extends GenericPaginator<Subreddit, MySubredditsPaginator.Where, MySubredditsPaginator> {
+public class MySubredditsPaginator extends GenericPaginator<Subreddit, MySubredditsPaginator.Where> {
 
-    private MySubredditsPaginator(GenericPaginator.Builder<Subreddit, Where, MySubredditsPaginator> b) {
-        super(b);
+    /**
+     * Instantiates a new MySubredditsPaginator
+     *
+     * @param account The LoggedInAccount whose RedditClient will be used to send HTTP requests
+     * @param where The criteria in which to return Subreddits
+     */
+    public MySubredditsPaginator(LoggedInAccount account, Where where) {
+        super(account.getCreator(), Subreddit.class, where);
     }
 
     @Override
@@ -40,23 +46,5 @@ public class MySubredditsPaginator extends GenericPaginator<Subreddit, MySubredd
         CONTRIBUTOR,
         /** Subreddits that you moderate */
         MODERATOR
-    }
-
-    public static class Builder extends GenericPaginator.Builder<Subreddit, Where, MySubredditsPaginator> {
-
-        /**
-         * Instantiates a new Builder
-         *
-         * @param account The (logged in) account you wish to view the subreddits of
-         * @param where   The enum that will be appended to the
-         */
-        public Builder(LoggedInAccount account, Where where) {
-            super(account.getCreator(), Subreddit.class, where);
-        }
-
-        @Override
-        public MySubredditsPaginator build() {
-            return new MySubredditsPaginator(this);
-        }
     }
 }

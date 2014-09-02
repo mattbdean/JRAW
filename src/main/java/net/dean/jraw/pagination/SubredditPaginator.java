@@ -10,12 +10,15 @@ import net.dean.jraw.models.core.Submission;
 /**
  * This class is used to paginate through the front page or a subreddit with different time periods or sortings.
  */
-public class FrontPagePaginator extends Paginator<Submission> {
-    private final String subreddit;
+public class SubredditPaginator extends Paginator<Submission> {
+    private String subreddit;
 
-    private FrontPagePaginator(Builder b) {
-        super(b);
-        this.subreddit = b.subreddit;
+    /**
+     * Instantiates a new SubredditPaginator
+     * @param creator The RedditClient that will be used to send HTTP requests
+     */
+    public SubredditPaginator(RedditClient creator) {
+        super(creator, Submission.class);
     }
 
     @Override
@@ -51,30 +54,8 @@ public class FrontPagePaginator extends Paginator<Submission> {
         return subreddit;
     }
 
-    public static class Builder extends Paginator.Builder<Submission> {
-        private String subreddit;
-
-        /**
-         * Instantiates a new Builder
-         * @param reddit The RedditClient to send requests with
-         */
-        public Builder(RedditClient reddit) {
-            super(reddit, Submission.class);
-        }
-
-        /**
-         * Sets the subreddit to browse. Defaults to the front page (null)
-         * @param sr The subreddit to browse
-         * @return This Builder
-         */
-        public Builder subreddit(String sr) {
-            this.subreddit = sr;
-            return this;
-        }
-
-        @Override
-        public FrontPagePaginator build() {
-            return new FrontPagePaginator(this);
-        }
+    public void setSubreddit(String subreddit) {
+        this.subreddit = subreddit;
+        invalidate();
     }
 }

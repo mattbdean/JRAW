@@ -17,25 +17,40 @@ import java.util.Map;
  * @param <T> The type that the listings will contain
  */
 public abstract class Paginator<T extends Thing> implements Iterator<Listing<T>> {
+    /** The default limit of Things to return */
+    public static final int DEFAULT_LIMIT = 25;
+    /** The default sorting */
+    public static final Sorting DEFAULT_SORTING = Sorting.HOT;
+    /** The default time period */
+    public static final TimePeriod DEFAULT_TIME_PERIOD = TimePeriod.DAY;
+
     /** The client that created this */
     protected final RedditClient creator;
-    protected final Sorting sorting;
-    protected final TimePeriod timePeriod;
-    protected final int limit;
+    protected final Class<T> thingType;
+
+    protected Sorting sorting;
+    protected TimePeriod timePeriod;
+    protected int limit;
     /** Current listing. Will get the next listing based on the current listing's "after" value */
     protected Listing<T> current;
-    private Class<T> thingType;
+
+    private boolean started;
+    private boolean changed;
 
     /**
      * Instantiates a new Paginator
-     * @param b The Builder to use
+     *
+     * @param creator The RedditClient that will be used to send HTTP requests
+     * @param thingType The type of Thing that this Paginator will return
      */
-    protected Paginator(Builder<T> b) {
-        this.creator = b.creator;
-        this.thingType = b.thingType;
-        this.sorting = b.sorting;
-        this.timePeriod = b.timePeriod;
-        this.limit = b.limit;
+    public Paginator(RedditClient creator, Class<T> thingType) {
+        this.creator = creator;
+        this.thingType = thingType;
+        this.sorting = DEFAULT_SORTING;
+        this.timePeriod = DEFAULT_TIME_PERIOD;
+        this.limit = DEFAULT_LIMIT;
+        this.changed = false;
+        this.started = false;
     }
 
     /**
@@ -44,8 +59,14 @@ public abstract class Paginator<T extends Thing> implements Iterator<Listing<T>>
      * @param forwards If true, this method will return the next listing. If false, it will return the first listing.
      * @return A new listing
      * @throws NetworkException If there was a problem sending the HTTP request
+     * @throws IllegalStateException If a setter method (such as {@link #setLimit(int)} was called after the first listing was
+     *                               requested.
      */
-    protected Listing<T> getListing(boolean forwards) throws NetworkException {
+    protected Listing<T> getListing(boolean forwards) throws NetworkException, IllegalStateException {
+        if (started && changed) {
+            throw new IllegalStateException("Cannot change parameters without calling reset()");
+        }
+
         String path = getBaseUri();
 
         Map<String, String> args = new HashMap<>();
@@ -62,6 +83,10 @@ public abstract class Paginator<T extends Thing> implements Iterator<Listing<T>>
         Listing<T> listing = creator.execute(new RestRequest(HttpVerb.GET, path, args)).asListing(thingType);
         this.current = listing;
 
+        if (!started) {
+            started = true;
+        }
+
         return listing;
     }
 
@@ -74,7 +99,7 @@ public abstract class Paginator<T extends Thing> implements Iterator<Listing<T>>
      * Gets the next listing.
      *
      * @return The next listing of submissions
-     * @throws IllegalStateException If there was a problem sending the HTTP request
+     * @throws IllegalStateException If there was a problem getting the next listing
      */
     @Override
     public Listing<T> next() {
@@ -113,77 +138,54 @@ public abstract class Paginator<T extends Thing> implements Iterator<Listing<T>>
     }
 
     /**
-     * This class provides a way to easily create Paginator objects with default values for some parameters
-     * @param <T> The type of Thing that will be returned by the created paginator
+     * Sets the new sorting
+     * @param sorting The new sorting
      */
-    public abstract static class Builder<T> {
-        /** Maximum number of things returned by the Reddit API */
-        public static final int LIMIT_MAX = 100;
-        /** Minimum number of thing returned by the Reddit API */
-        public static final int LIMIT_MIN = 1;
-        /** Default number of things returned by the Reddit API */
-        public static final int DEFAULT_LIMIT = 25;
-        /** Default sorting for new Paginators */
-        public static final Sorting DEFAULT_SORTING = Sorting.HOT;
-        /** Default time period for new Paginators*/
-        public static final TimePeriod DEFAULT_TIME_PERIOD = TimePeriod.DAY;
+    public void setSorting(Sorting sorting) {
+        this.sorting = sorting;
+        invalidate();
+    }
 
-        private final Class<T> thingType;
-        private final RedditClient creator;
-        private int limit = DEFAULT_LIMIT;
-        private Sorting sorting = DEFAULT_SORTING;
-        private TimePeriod timePeriod = DEFAULT_TIME_PERIOD;
+    /**
+     * Sets the new time period
+     * @param timePeriod The new time period
+     */
+    public void setTimePeriod(TimePeriod timePeriod) {
+        this.timePeriod = timePeriod;
+        invalidate();
+    }
 
-        /**
-         * Instantiates a new Builder
-         * @param reddit The RedditClient to send requests with
-         * @param thingType The type of object to return in the built paginator
-         */
-        protected Builder(RedditClient reddit, Class<T> thingType) {
-            this.creator = reddit;
-            this.thingType = thingType;
-        }
+    /**
+     * Sets the new limit
+     * @param limit The new limit
+     */
+    public void setLimit(int limit) {
+        this.limit = limit;
+        invalidate();
+    }
 
-        /**
-         * Sets the amount of posts returned by the Reddit API. Must be at least 1 and no greater than {@value #LIMIT_MAX}
-         *
-         * @param limit The new limit
-         * @return This Builder
-         */
-        public Builder limit(int limit) {
-            if (limit > LIMIT_MAX) {
-                throw new IllegalArgumentException(String.format("Limit cannot be over %s (was %s)", LIMIT_MAX, limit));
-            } else if (limit < 1) {
-                throw new IllegalArgumentException(String.format("Limit cannot be less than %s (was %s)", LIMIT_MIN, limit));
-            }
-            this.limit = limit;
-            return this;
-        }
+    /**
+     * Checks whether this Paginator has sent a request yet. Calling {@link #reset()} resets this.
+     * @return True if this Paginator has sent a request yet, false if else
+     */
+    public boolean hasStarted() {
+        return started;
+    }
 
-        /**
-         * Sets the sorting to use for the new paginator
-         * @param s The sorting to use
-         * @return This Builder
-         */
-        public Builder sorting(Sorting s) {
-            this.sorting = s;
-            return this;
-        }
+    /**
+     * Resets the listing. Call this method after you call a setter method such as {@link #setTimePeriod(TimePeriod)}
+     */
+    public void reset() {
+        current = null;
+        started = false;
+        changed = false;
+    }
 
-        /**
-         * Sets the time period to use for the new paginator
-         * @param tp The time period to use
-         * @return This Builder
-         */
-        public Builder timePeriod(TimePeriod tp) {
-            this.timePeriod = tp;
-            return this;
-        }
-
-        /**
-         * Transforms this Builder into a Paginator
-         * @return A paginator with the same parameters as this Builder
-         */
-        public abstract Paginator build();
+    /**
+     * Invalidates the current listing. This must be called in setter methods to notify {@link #getListing(boolean)} that
+     * its parameters have changed.
+     */
+    protected void invalidate() {
+        this.changed = true;
     }
 }

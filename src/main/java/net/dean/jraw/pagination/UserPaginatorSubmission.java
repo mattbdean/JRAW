@@ -10,12 +10,18 @@ import net.dean.jraw.models.core.Submission;
 /**
  * This class is used to paginate through user posts or comments via {@code /user/{username}/{where}.json}
  */
-public class UserPaginatorSubmission extends GenericPaginator<Submission, UserPaginatorSubmission.Where, UserPaginatorSubmission> {
-    private final String username;
+public class UserPaginatorSubmission extends GenericPaginator<Submission, UserPaginatorSubmission.Where> {
+    private String username;
 
-    private UserPaginatorSubmission(Builder b) {
-        super(b);
-        this.username = b.username;
+    /**
+     * Instantiates a new UserPaginatorSubmission
+     * @param creator The RedditClient that will be used to send HTTP requests
+     * @param where The criteria in which to return Subreddits
+     * @param username The user to view
+     */
+    public UserPaginatorSubmission(RedditClient creator, Where where, String username) {
+        super(creator, Submission.class, where);
+        this.username = username;
     }
 
     @Override
@@ -42,26 +48,6 @@ public class UserPaginatorSubmission extends GenericPaginator<Submission, UserPa
      */
     public String getUsername() {
         return username;
-    }
-
-    public static class Builder extends GenericPaginator.Builder<Submission, Where, UserPaginatorSubmission> {
-        private final String username;
-
-        /**
-         * Instantiates a new Builder
-         * @param reddit The RedditClient to help send requests
-         * @param where What to iterate over
-         * @param username The username to use
-         */
-        public Builder(RedditClient reddit, Where where, String username) {
-            super(reddit, Submission.class, where);
-            this.username = username;
-        }
-
-        @Override
-        public UserPaginatorSubmission build() {
-            return new UserPaginatorSubmission(this);
-        }
     }
 
     /**

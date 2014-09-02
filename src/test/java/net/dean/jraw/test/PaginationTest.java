@@ -28,20 +28,20 @@ public class PaginationTest {
 
     @Test
     public void testFrontPage() throws NetworkException {
-        FrontPagePaginator frontPage = new FrontPagePaginator.Builder(reddit).build();
+        SubredditPaginator frontPage = new SubredditPaginator(reddit);
         commonTest(frontPage);
     }
 
     @Test
     public void testSubreddit() throws NetworkException {
-        FrontPagePaginator pics = new FrontPagePaginator.Builder(reddit).subreddit("pics").build();
+        SubredditPaginator pics = new SubredditPaginator(reddit);
+        pics.setSubreddit("pics");
         commonTest(pics);
     }
 
     @Test
     public void testSubmitted() throws NetworkException {
-        UserPaginatorSubmission paginator = new UserPaginatorSubmission.Builder(reddit, UserPaginatorSubmission.Where.SUBMITTED, "way_fairer")
-                .build();
+        UserPaginatorSubmission paginator = new UserPaginatorSubmission(reddit, UserPaginatorSubmission.Where.SUBMITTED, "way_fairer");
         commonTest(paginator);
     }
 
@@ -49,8 +49,7 @@ public class PaginationTest {
     public void testById() throws NetworkException {
         // It would be easier to declare fullNames as an array, but we want to use List.contains()
         List<String> fullNames = Arrays.asList("t3_92dd8", "t3_290287", "t3_28zy98", "t3_28zh9i");
-        SpecificPaginator paginator = new SpecificPaginator.Builder(reddit,    fullNames.toArray(new String[fullNames.size()]))
-                .build();
+        SpecificPaginator paginator = new SpecificPaginator(reddit, fullNames.toArray(new String[fullNames.size()]));
 
         Listing<Submission> submissions = paginator.next();
         for (Submission s : submissions.getChildren()) {
@@ -60,9 +59,8 @@ public class PaginationTest {
 
     @Test(timeOut = 15_000)
     public void testPaginationTerminates() throws NetworkException {
-        UserPaginatorSubmission paginator = new UserPaginatorSubmission.Builder(reddit, UserPaginatorSubmission.Where.SUBMITTED,
-                TestUtils.getCredentials()[0])
-                .build();
+        UserPaginatorSubmission paginator = new UserPaginatorSubmission(reddit, UserPaginatorSubmission.Where.SUBMITTED,
+                TestUtils.getCredentials()[0]);
 
         while (paginator.hasNext()) {
             paginator.next();
@@ -73,7 +71,7 @@ public class PaginationTest {
     public void testMySubredditsPaginator() throws NetworkException {
         // Test all Where values
         for (MySubredditsPaginator.Where where : MySubredditsPaginator.Where.values()) {
-            MySubredditsPaginator paginator = new MySubredditsPaginator.Builder(account, where).build();
+            MySubredditsPaginator paginator = new MySubredditsPaginator(account, where);
             commonTest(paginator);
         }
     }
@@ -83,10 +81,35 @@ public class PaginationTest {
     public void testAllSubredditsPaginator() throws NetworkException {
         // Test all Where values
         for (AllSubredditsPaginator.Where where : AllSubredditsPaginator.Where.values()) {
-            AllSubredditsPaginator paginator = new AllSubredditsPaginator.Builder(reddit, where).build();
+            AllSubredditsPaginator paginator = new AllSubredditsPaginator(reddit, where);
             commonTest(paginator);
         }
     }
+
+    @Test(expectedExceptions = IllegalStateException.class)
+    public void testChangeRequestParamters() {
+        AllSubredditsPaginator paginator = new AllSubredditsPaginator(reddit, AllSubredditsPaginator.Where.NEW);
+        paginator.next();
+        // Modifying the request parameters after the initial request
+        paginator.setLimit(Paginator.DEFAULT_LIMIT);
+        // Should throw an IllegalStateException
+        paginator.next();
+    }
+
+    @Test
+    public void testResetRequestParameters() {
+        AllSubredditsPaginator paginator = new AllSubredditsPaginator(reddit, AllSubredditsPaginator.Where.NEW);
+        paginator.next();
+        paginator.setLimit(Paginator.DEFAULT_LIMIT);
+        // We know it has already started, but just making sure this method works as expected
+        if (paginator.hasStarted()) {
+            paginator.reset();
+        }
+
+        // Now should not throw an IllegalStateException
+        paginator.next();
+    }
+
 
     private <T extends Thing> void commonTest(Paginator<T> p) throws NetworkException {
         // Test that the paginator can retrieve the data

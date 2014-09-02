@@ -10,20 +10,21 @@ import net.dean.jraw.models.core.Thing;
  * resulted in "/user/username", the enum value's name was "SUBMITTED", and {@link #getUriPostfix()} resulted in ".json",
  * then the base URI would be "/user/username/submitted.json".
  *
- * @param <T> The type that the listings will contain
+ * @param <T> The type of Thing that
  * @param <U> The type of enum that will be used in place of the "where" parameter.
- * @param <V> The type of GenericPaginator that the Builder will return
  */
-public abstract class GenericPaginator<T extends Thing, U extends Enum<U>, V extends GenericPaginator<T, U, V>> extends Paginator<T> {
-    private final U where;
+public abstract class GenericPaginator<T extends Thing, U extends Enum<U>> extends Paginator<T> {
+    protected U where;
 
     /**
      * Instantiates a new GenericPaginator
-     * @param b The Builder to use
+     * @param creator The RedditClient that will be used to send requests
+     * @param thingClass The type of Thing to return
+     * @param where The "where" enum value to use
      */
-    protected GenericPaginator(Builder<T, U, V> b) {
-        super(b);
-        this.where = b.where;
+    protected GenericPaginator(RedditClient creator, Class<T> thingClass, U where) {
+        super(creator, thingClass);
+        this.where = where;
     }
 
     @Override
@@ -33,7 +34,7 @@ public abstract class GenericPaginator<T extends Thing, U extends Enum<U>, V ext
             pre += "/";
         }
 
-        return String.format("%s%s%s", pre, where.name().toLowerCase(), getUriPostfix());
+        return pre + where.name().toLowerCase() + getUriPostfix();
     }
 
     /**
@@ -56,30 +57,8 @@ public abstract class GenericPaginator<T extends Thing, U extends Enum<U>, V ext
         return where;
     }
 
-    /**
-     * This class is a generic Builder class that is designed to work with {@link net.dean.jraw.pagination.GenericPaginator}
-     * so that classes that extend it do not necessarily need to create their own Builder class
-     *
-     * @param <T> The type that the listings will contain
-     * @param <U> The type of enum that will be used in place of the "where" parameter.
-     * @param <V> The type of GenericPaginator that this will return
-     */
-    public static abstract class Builder<T extends Thing, U extends Enum<U>, V extends GenericPaginator<T, U, V>> extends Paginator.Builder<T> {
-        private final U where;
-
-        /**
-         * Instantiates a new Builder
-         *
-         * @param reddit    The RedditClient to send requests with
-         * @param thingType The type of object to return in the built paginator
-         * @param where     The enum that will be appended to the
-         */
-        public Builder(RedditClient reddit, Class<T> thingType, U where) {
-            super(reddit, thingType);
-            this.where = where;
-        }
-
-        @Override
-        public abstract V build();
+    public void setWhere(U where) {
+        this.where = where;
+        invalidate();
     }
 }

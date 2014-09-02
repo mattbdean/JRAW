@@ -21,7 +21,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
-import static net.dean.jraw.http.HttpVerb.*;
+import static net.dean.jraw.http.HttpVerb.GET;
+import static net.dean.jraw.http.HttpVerb.POST;
 
 /**
  * This class provides access to the most basic Reddit features such as logging in.
