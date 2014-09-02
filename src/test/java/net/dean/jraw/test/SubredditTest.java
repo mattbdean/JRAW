@@ -64,4 +64,16 @@ public class SubredditTest {
         }
     }
 
+    @Test
+    public void testTrendingSubs() {
+        List<String> trending = reddit.getTrendingSubreddits();
+
+        for (String sub : trending) {
+            try {
+                ThingFieldTest.fieldValidityCheck(reddit.getSubreddit(sub));
+            } catch (NetworkException e) {
+                Assert.fail(e.getMessage());
+            }
+        }
+    }
 }

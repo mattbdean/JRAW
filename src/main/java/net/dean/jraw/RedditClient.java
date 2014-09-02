@@ -8,6 +8,8 @@ import net.dean.jraw.models.RenderStringPair;
 import net.dean.jraw.models.core.Account;
 import net.dean.jraw.models.core.Submission;
 import net.dean.jraw.models.core.Subreddit;
+import net.dean.jraw.pagination.Sorting;
+import net.dean.jraw.pagination.SubredditPaginator;
 import org.apache.http.Header;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.cookie.Cookie;
@@ -437,6 +439,29 @@ public class RedditClient extends RestClient<RedditResponse> {
         }
 
         return response.getRaw();
+    }
+
+    /**
+     * Gets a list of trending subreddits' names. See <a href="http://www.reddit.com/r/trendingsubreddits/">here</a> for more.
+     * @return A list of trending subreddits' names
+     */
+    public List<String> getTrendingSubreddits() {
+        SubredditPaginator paginator = new SubredditPaginator(this);
+        paginator.setSubreddit("trendingsubreddits");
+        paginator.setSorting(Sorting.NEW);
+
+        Submission latest = paginator.next().getChildren().get(0);
+        String title = latest.getTitle();
+        String[] parts = title.split(" ");
+        List<String> subreddits = new ArrayList<>(5); // Always 5 trending subs
+
+        for (String part : parts) {
+            if (part.startsWith("/r/")) {
+                subreddits.add(part.substring("/r/".length(), part.length() - 1)); // Use the upper bound for the comma ("/r/something,")
+            }
+        }
+
+        return subreddits;
     }
 
     /**
