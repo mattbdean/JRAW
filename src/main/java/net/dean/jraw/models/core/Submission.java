@@ -221,11 +221,38 @@ public class Submission extends Thing implements Created, Distinguishable, Votab
     @JsonInteraction(nullable = true)
     public URL getThumbnail() {
         String thumb = data.get("thumbnail").getTextValue();
-        if (thumb.equals("self") || thumb.equals("nsfw") || thumb.isEmpty()) {
+        if (getThumbnailType() != ThumbnailType.URL) {
             return null;
         }
 
         return JrawUtils.newUrl(thumb);
+    }
+
+    /**
+     * Gets this Submission's thumbnail type. Different thumbnail values are returned for different reasons, such as if
+     * the post is NSFW, a self post, etc. If the type is {@link ThumbnailType#URL}, then Reddit has created a thumbnail
+     * for this post.
+     * @return This Submission's thumbnail type
+     */
+    @JsonInteraction
+    public ThumbnailType getThumbnailType() {
+        String thumb = data.get("thumbnail").getTextValue();
+
+        // Try to find the type
+        ThumbnailType type;
+
+        if (thumb.isEmpty()) {
+            type = ThumbnailType.NONE;
+        } else {
+            try {
+                type = ThumbnailType.valueOf(thumb.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                // "thumbnail"'s value is a URL
+                type = ThumbnailType.URL;
+            }
+        }
+
+        return type;
     }
 
     /**
@@ -278,5 +305,24 @@ public class Submission extends Thing implements Created, Distinguishable, Votab
     @JsonInteraction
     public Boolean isStickied() {
         return data("stickied", Boolean.class);
+    }
+
+    /**
+     * Represents a list of possible return values for the "thumbnail" JsonNode. All of the values in this enum can be
+     * returned by the Reddit API, except for {@link #URL} and {@link #NONE}. If {@code URL} is returned, then Reddit
+     * has created a thumbnail for specifically for that post. If {@code NONE} is returned, then there is no thumbnail
+     * available.
+     */
+    public static enum ThumbnailType {
+        /** For when a post is marked as NSFW */
+        NSFW,
+        /** For when reddit couldn't create one */
+        DEFAULT,
+        /** For self posts */
+        SELF,
+        /** No thumbnail */
+        NONE,
+        /** A custom thumbnail that can be accessed by calling {@link Submission#getThumbnail()} */
+        URL
     }
 }
