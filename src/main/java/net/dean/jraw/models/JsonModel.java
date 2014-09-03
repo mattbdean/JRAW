@@ -174,21 +174,34 @@ public abstract class JsonModel {
             try {
                 // methodName()="returnVal"
                 sb.append(m.getName()).append("()=");
-                Object result = m.invoke(this);
+                InvocationTargetException thrown = null;
+                Object result = null;
+                try {
+                    result = m.invoke(this);
+                } catch (InvocationTargetException e) {
+                    thrown = e;
+                }
 
-                if (result instanceof JsonModel) {
-                    // Avoid calling asString on JsonModels
-                    sb.append('[').append(result.getClass().getSimpleName()).append(']');
-                } else {
-                    String resultString = asString(result);
-                    // Remove new lines
-                    resultString = resultString.replace("\n", "\\n");
-                    if (resultString.length() > MAX_STRING_LENGTH) {
-                        // Prevent the resultString from being too long, cut it off at a certain length and add an ellipsis
-                        resultString = resultString.substring(0, MAX_STRING_LENGTH - ELLIPSIS.length());
-                        resultString += ELLIPSIS;
+                if (thrown == null) {
+                    // No InvocationTargetException thrown
+                    if (result instanceof JsonModel) {
+                        // Avoid calling asString on JsonModels
+                        sb.append('[').append(result.getClass().getSimpleName()).append(']');
+                    } else {
+                        String resultString = asString(result);
+                        // Remove new lines
+                        resultString = resultString.replace("\n", "\\n");
+                        if (resultString.length() > MAX_STRING_LENGTH) {
+                            // Prevent the resultString from being too long, cut it off at a certain length and add an ellipsis
+                            resultString = resultString.substring(0, MAX_STRING_LENGTH - ELLIPSIS.length());
+                            resultString += ELLIPSIS;
+                        }
+                        sb.append('\"').append(resultString).append('\"');
                     }
-                    sb.append('\"').append(resultString).append('\"');
+                } else {
+                    // Show the exception and its cause
+                    Throwable cause = thrown.getCause();
+                    sb.append('[').append(cause.getClass().getName()).append(": ").append(cause.getMessage()).append(']');
                 }
 
                 if (counter != jsonInteractionMethods.size() - 1) {
@@ -198,8 +211,6 @@ public abstract class JsonModel {
                 counter++;
             } catch (IllegalAccessException e) {
                 JrawUtils.logger().error("IllegalAccessException. This really shouldn't happen.", e);
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
                 e.printStackTrace();
             }
         }

@@ -9,7 +9,8 @@ import net.dean.jraw.models.MultiReddit;
 import net.dean.jraw.models.VoteDirection;
 import net.dean.jraw.models.core.Account;
 import net.dean.jraw.models.core.Submission;
-import net.dean.jraw.pagination.UserPaginatorSubmission;
+import net.dean.jraw.pagination.Contribution;
+import net.dean.jraw.pagination.UserContributionPaginator;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -17,7 +18,7 @@ import org.testng.annotations.Test;
 import java.net.URL;
 import java.util.List;
 
-import static net.dean.jraw.pagination.UserPaginatorSubmission.Where;
+import static net.dean.jraw.pagination.UserContributionPaginator.Where;
 
 public class AccountTest {
     // Array length 2 where credentials[0] is the username and credentials[1] is the password
@@ -136,10 +137,11 @@ public class AccountTest {
             Submission submission = reddit.getSubmission("28d6vv");
             account.setSaved(submission, true);
 
-            UserPaginatorSubmission paginator = getPaginator(Where.SAVED);
-            List<Submission> saved = paginator.next().getChildren();
+            UserContributionPaginator paginator = getPaginator(Where.SAVED);
+            List<Contribution> saved = paginator.next().getChildren();
 
-            for (Submission s : saved) {
+            for (Contribution c : saved) {
+                Submission s = c.getSubmission();
                 if (s.getId().equals(submission.getId())) {
                     return;
                 }
@@ -158,8 +160,8 @@ public class AccountTest {
             Submission submission = reddit.getSubmission("28d6vv");
             account.setSaved(submission, false);
 
-            UserPaginatorSubmission paginator = getPaginator(Where.SAVED);
-            List<Submission> saved = paginator.next().getChildren();
+            UserContributionPaginator paginator = getPaginator(Where.SAVED);
+            List<Contribution> saved = paginator.next().getChildren();
 
             // Search for the submission in the saved list
             saved.stream().filter(s -> s.getId().equals(submission.getId())).forEach(s -> Assert.fail("Found the submission after it was unsaved"));
@@ -175,10 +177,11 @@ public class AccountTest {
             Submission submission = reddit.getSubmission("28d6vv");
             account.setHidden(submission, true);
 
-            UserPaginatorSubmission paginator = getPaginator(Where.HIDDEN);
-            List<Submission> hidden = paginator.next().getChildren();
+            UserContributionPaginator paginator = getPaginator(Where.HIDDEN);
+            List<Contribution> hidden = paginator.next().getChildren();
 
-            for (Submission s : hidden) {
+            for (Contribution c : hidden) {
+                Submission s = c.getSubmission();
                 if (s.getId().equals(submission.getId())) {
                     return;
                 }
@@ -196,10 +199,15 @@ public class AccountTest {
             Submission submission = reddit.getSubmission("28d6vv");
             account.setHidden(submission, false);
 
-            UserPaginatorSubmission paginator = getPaginator(Where.HIDDEN);
-            List<Submission> hidden = paginator.next().getChildren();
+            UserContributionPaginator paginator = getPaginator(Where.HIDDEN);
+            List<Contribution> hidden = paginator.next().getChildren();
 
-            hidden.stream().filter(s -> s.getId().equals(submission.getId())).forEach(s -> Assert.fail("Found unhidden submission in hidden posts"));
+            for (Contribution c : hidden) {
+                Submission s = c.getSubmission();
+                if (s.getId().equals(submission.getId())) {
+                    Assert.fail("Found unhidden submission in hidden posts");
+                }
+            }
         } catch (NetworkException | ApiException e) {
             Assert.fail(e.getMessage());
         }
@@ -228,7 +236,7 @@ public class AccountTest {
         }
     }
 
-    private UserPaginatorSubmission getPaginator(Where where) {
-        return new UserPaginatorSubmission(reddit, where, account.getFullName());
+    private UserContributionPaginator getPaginator(Where where) {
+        return new UserContributionPaginator(reddit, where, account.getFullName());
     }
 }

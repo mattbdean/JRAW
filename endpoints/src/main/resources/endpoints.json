@@ -197,7 +197,7 @@
         "GET /user/{username}/overview",
         "GET /user/{username}/saved",
         "GET /user/{username}/submitted",
-        "GET /user/{username}/where"
+        "GET /user/{username}/{where}"
     ],
     "wiki": [
         "POST /api/wiki/alloweditor/add",

@@ -9,22 +9,14 @@ import java.util.Map;
  * This class provides a way to consolidate all the main attributes of a RESTful HTTP request into one object
  */
 public class RestRequest {
-
     /** The path relative to the root of the host */
     private String path;
-
-    /**
-     * The arguments to be passed either by query string if the method is GET or DELETE, or by form if it is a different request
-     */
+    /** The arguments to be passed either by query string if the method is GET or DELETE, or by form if it is a different request */
     private Map<String, String> args;
-
     private JsonNode json;
-
     private boolean isJson;
-
     /** The HTTP verb to use to execute the request */
     private HttpVerb verb;
-
     /** The time this request was executed */
     private LocalDateTime executed;
 
@@ -104,6 +96,11 @@ public class RestRequest {
     public boolean isJson() {
         return isJson;
     }
+
+    public void setJson(boolean isJson) {
+        this.isJson = isJson;
+    }
+
 
     @Override
     public String toString() {

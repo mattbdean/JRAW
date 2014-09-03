@@ -27,7 +27,8 @@ import static net.dean.jraw.http.HttpVerb.GET;
 import static net.dean.jraw.http.HttpVerb.POST;
 
 /**
- * This class provides access to the most basic Reddit features such as logging in.
+ * This class provides access to the most basic Reddit features such as logging in. It is recommended that only one instance
+ * of this class is used at a time, unless you disable request management and implement your own.
  */
 public class RedditClient extends RestClient<RedditResponse> {
 

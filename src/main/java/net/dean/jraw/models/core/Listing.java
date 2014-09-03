@@ -51,7 +51,7 @@ public class Listing<T extends RedditObject> extends RedditObject {
     private void initChildren() {
         children = new ArrayList<>();
 
-        // rootNode is a JSON array
+        // children is a JSON array
         try {
             for (JsonNode childNode : data.get("children")) {
                 if (childNode.get("kind").getTextValue().equalsIgnoreCase("more")) {

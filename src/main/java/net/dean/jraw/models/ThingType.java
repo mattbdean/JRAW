@@ -57,4 +57,14 @@ public enum ThingType {
     public String getPrefix() {
         return prefix;
     }
+
+    public static ThingType getByPrefix(String prefix) {
+        for (ThingType type : values()) {
+            if (type.getPrefix().equals(prefix)) {
+                return type;
+            }
+        }
+
+        return null;
+    }
 }

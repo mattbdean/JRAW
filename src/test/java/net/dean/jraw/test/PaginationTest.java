@@ -40,9 +40,12 @@ public class PaginationTest {
     }
 
     @Test
-    public void testSubmitted() throws NetworkException {
-        UserPaginatorSubmission paginator = new UserPaginatorSubmission(reddit, UserPaginatorSubmission.Where.SUBMITTED, "way_fairer");
-        commonTest(paginator);
+    public void testUserContributions() throws NetworkException {
+        // Test all Where values
+        for (UserContributionPaginator.Where where : UserContributionPaginator.Where.values()) {
+            UserContributionPaginator paginator = new UserContributionPaginator(reddit, where, account.getFullName());
+            commonTest(paginator);
+        }
     }
 
     @Test
@@ -59,7 +62,7 @@ public class PaginationTest {
 
     @Test(timeOut = 15_000)
     public void testPaginationTerminates() throws NetworkException {
-        UserPaginatorSubmission paginator = new UserPaginatorSubmission(reddit, UserPaginatorSubmission.Where.SUBMITTED,
+        UserContributionPaginator paginator = new UserContributionPaginator(reddit, UserContributionPaginator.Where.SUBMITTED,
                 TestUtils.getCredentials()[0]);
 
         while (paginator.hasNext()) {
@@ -115,6 +118,19 @@ public class PaginationTest {
         // Test that the paginator can retrieve the data
         Listing<T> firstPage = p.next();
         ThingFieldTest.fieldValidityCheck(firstPage);
-        ThingFieldTest.fieldValidityCheck(firstPage.getChildren().get(0));
+
+        if (firstPage.getChildren().size() > 0) {
+            T thing = firstPage.getChildren().get(0);
+
+            if (thing instanceof Contribution) {
+                // Make a special exception for Contribution, since calling data() will fail the test by throwing an
+                // UnsupportedOperationException when data() is called. Instead test the Thing that it's wrapping
+                Contribution c = (Contribution) thing;
+                ThingFieldTest.fieldValidityCheck(c.getActiveThing());
+            } else {
+                // Normal Thing
+                ThingFieldTest.fieldValidityCheck(firstPage.getChildren().get(0));
+            }
+        }
     }
 }

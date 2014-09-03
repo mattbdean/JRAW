@@ -5,12 +5,11 @@ import net.dean.jraw.Endpoints;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.models.core.Listing;
-import net.dean.jraw.models.core.Submission;
 
 /**
  * This class is used to paginate through user posts or comments via {@code /user/{username}/{where}.json}
  */
-public class UserPaginatorSubmission extends GenericPaginator<Submission, UserPaginatorSubmission.Where> {
+public class UserContributionPaginator extends GenericPaginator<Contribution, UserContributionPaginator.Where> {
     private String username;
 
     /**
@@ -19,20 +18,24 @@ public class UserPaginatorSubmission extends GenericPaginator<Submission, UserPa
      * @param where The criteria in which to return Subreddits
      * @param username The user to view
      */
-    public UserPaginatorSubmission(RedditClient creator, Where where, String username) {
-        super(creator, Submission.class, where);
+    public UserContributionPaginator(RedditClient creator, Where where, String username) {
+        super(creator, Contribution.class, where);
         this.username = username;
     }
 
     @Override
     @EndpointImplementation({
+            Endpoints.USER_USERNAME_WHERE,
+            Endpoints.USER_USERNAME_OVERVIEW,
+            Endpoints.USER_USERNAME_SUBMITTED,
+            Endpoints.USER_USERNAME_COMMENTS,
+            Endpoints.USER_USERNAME_LIKED,
             Endpoints.USER_USERNAME_DISLIKED,
             Endpoints.USER_USERNAME_HIDDEN,
-            Endpoints.USER_USERNAME_LIKED,
             Endpoints.USER_USERNAME_SAVED,
-            Endpoints.USER_USERNAME_SUBMITTED
+            Endpoints.USER_USERNAME_GILDED
     })
-    protected Listing<Submission> getListing(boolean forwards) throws NetworkException {
+    protected Listing<Contribution> getListing(boolean forwards) throws NetworkException {
         // Just call super so that we can add the @EndpointImplementation annotation
         return super.getListing(forwards);
     }
@@ -56,48 +59,24 @@ public class UserPaginatorSubmission extends GenericPaginator<Submission, UserPa
     public static enum Where {
         // Both submissions and comments
         /** Represents the user overview. Contains both submissions and comments */
-        OVERVIEW(true, true),
+        OVERVIEW,
         /** Represents the user's gilded submissions and comments */
-        GILDED(true, true),
+        GILDED,
 
         // Only submissions
         /** Represents the user's submitted links */
-        SUBMITTED(true, false),
+        SUBMITTED,
         /** Represents the user's liked (upvoted) submissions */
-        LIKED(true, false),
+        LIKED,
         /** Represents the user's disliked (downvoted) submissions */
-        DISLIKED(true, false),
+        DISLIKED,
         /** Represents the user's hidden submissions */
-        HIDDEN(true, false),
+        HIDDEN,
         /** Represents the user's saved submissions */
-        SAVED(true, false),
+        SAVED,
 
         // Only comments
         /** Represents the user's comments */
-        COMMENTS(false, true);
-
-        private boolean hasSubmissions;
-        private boolean hasComments;
-
-        private Where(boolean hasSubmissions, boolean hasComments) {
-            this.hasSubmissions = hasSubmissions;
-            this.hasComments = hasComments;
-        }
-
-        /**
-         * Whether this sorting could contain submissions in it
-         * @return If this Where contains submissions
-         */
-        public boolean hasSubmissions() {
-            return hasSubmissions;
-        }
-
-        /**
-         * Whether this sorting could contain comments in it
-         * @return If this Where contains submissions
-         */
-        public boolean hasComments() {
-            return hasComments;
-        }
+        COMMENTS
     }
 }

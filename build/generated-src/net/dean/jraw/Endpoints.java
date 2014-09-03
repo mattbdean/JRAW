@@ -353,28 +353,28 @@ public enum Endpoints {
     OAUTH_ME_FRIENDS_USERNAME_DELETE("DELETE /api/v1/me/friends/{username}"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_api_v1_user_%7Busername%7D_trophies">{@code GET /api/v1/user/{username}/trophies}</a>" in the "users" category */
     OAUTH_USER_USERNAME_TROPHIES("GET /api/v1/user/{username}/trophies"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_user_%7Busername%7D_comments">{@code GET /user/{username}/comments}</a>" in the "users" category */
-    USER_USERNAME_COMMENTS("GET /user/{username}/comments"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_user_%7Busername%7D_gilded">{@code GET /user/{username}/gilded}</a>" in the "users" category */
-    USER_USERNAME_GILDED("GET /user/{username}/gilded"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_user_%7Busername%7D_overview">{@code GET /user/{username}/overview}</a>" in the "users" category */
-    USER_USERNAME_OVERVIEW("GET /user/{username}/overview"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_user_%7Busername%7D_where">{@code GET /user/{username}/where}</a>" in the "users" category */
-    USER_USERNAME_WHERE("GET /user/{username}/where"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_api_username_available.json">{@code GET /api/username_available.json}</a>" in the "users" category */
     USERNAME_AVAILABLE("GET /api/username_available.json"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_user_%7Busername%7D_about.json">{@code GET /user/{username}/about.json}</a>" in the "users" category */
     USER_USERNAME_ABOUT("GET /user/{username}/about.json"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_user_%7Busername%7D_comments">{@code GET /user/{username}/comments}</a>" in the "users" category */
+    USER_USERNAME_COMMENTS("GET /user/{username}/comments"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_user_%7Busername%7D_disliked">{@code GET /user/{username}/disliked}</a>" in the "users" category */
     USER_USERNAME_DISLIKED("GET /user/{username}/disliked"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_user_%7Busername%7D_gilded">{@code GET /user/{username}/gilded}</a>" in the "users" category */
+    USER_USERNAME_GILDED("GET /user/{username}/gilded"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_user_%7Busername%7D_hidden">{@code GET /user/{username}/hidden}</a>" in the "users" category */
     USER_USERNAME_HIDDEN("GET /user/{username}/hidden"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_user_%7Busername%7D_liked">{@code GET /user/{username}/liked}</a>" in the "users" category */
     USER_USERNAME_LIKED("GET /user/{username}/liked"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_user_%7Busername%7D_overview">{@code GET /user/{username}/overview}</a>" in the "users" category */
+    USER_USERNAME_OVERVIEW("GET /user/{username}/overview"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_user_%7Busername%7D_saved">{@code GET /user/{username}/saved}</a>" in the "users" category */
     USER_USERNAME_SAVED("GET /user/{username}/saved"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_user_%7Busername%7D_submitted">{@code GET /user/{username}/submitted}</a>" in the "users" category */
     USER_USERNAME_SUBMITTED("GET /user/{username}/submitted"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_user_%7Busername%7D_%7Bwhere%7D">{@code GET /user/{username}/{where}}</a>" in the "users" category */
+    USER_USERNAME_WHERE("GET /user/{username}/{where}"),
 
     ///////// wiki/////////
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_wiki_alloweditor_act">{@code POST /api/wiki/alloweditor/act}</a>" in the "wiki" category */

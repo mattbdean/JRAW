@@ -144,11 +144,10 @@ public class Comment extends Thing implements Created, Distinguishable, Votable 
      */
     @JsonInteraction(nullable = true)
     public Listing<Comment> getReplies() {
-        // If it has no replies, the value for the replies key will be an empty string
-        if (data.get("replies").isTextual()) {
-            if (data.get("replies").asText().isEmpty()) {
-                return null;
-            }
+        // If it has no replies, the value for the replies key will be an empty string or null
+        JsonNode replies = data.get("replies");
+        if ((replies.isTextual() && replies.asText().isEmpty()) || replies.isNull()) {
+            return null;
         }
         return new Listing<>(data.get("replies").get("data"), Comment.class);
     }
