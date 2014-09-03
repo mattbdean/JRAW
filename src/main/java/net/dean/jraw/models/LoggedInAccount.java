@@ -72,9 +72,7 @@ public class LoggedInAccount extends Account {
         }
 
         RedditResponse response = genericPost("/api/submit", args);
-        String jsonUrl = response.getJson().get("json").get("data").get("url").getTextValue();
-
-        return creator.execute(new RestRequest(HttpVerb.GET, jsonUrl)).as(Submission.class);
+        return creator.getSubmission(response.getJson().get("json").get("data").get("id").asText());
     }
 
     /**

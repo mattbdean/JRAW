@@ -43,6 +43,9 @@ public class RedditClient extends RestClient<RedditResponse> {
     /** The amount of requests allowed per minute without using OAuth */
     private static final int REQUESTS_PER_MINUTE = 30;
 
+    /** The amount of trending subreddits that will appear in each /r/trendingsubreddits post */
+    private static final int NUM_TRENDING_SUBREDDITS = 5;
+
     /**
      * Whether to stall the requests to make sure that no more than ${@value #REQUESTS_PER_MINUTE} requests have been made
      * in the past minute
@@ -453,11 +456,14 @@ public class RedditClient extends RestClient<RedditResponse> {
         Submission latest = paginator.next().getChildren().get(0);
         String title = latest.getTitle();
         String[] parts = title.split(" ");
-        List<String> subreddits = new ArrayList<>(5); // Always 5 trending subs
+        List<String> subreddits = new ArrayList<>(NUM_TRENDING_SUBREDDITS);
 
         for (String part : parts) {
             if (part.startsWith("/r/")) {
-                subreddits.add(part.substring("/r/".length(), part.length() - 1)); // Use the upper bound for the comma ("/r/something,")
+                String sub = part.substring("/r/".length());
+                // All but the last part will be formatted like "/r/{name},", so remove the commas
+                sub = sub.replace(",", "");
+                subreddits.add(sub);
             }
         }
 
