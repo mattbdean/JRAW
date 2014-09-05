@@ -308,6 +308,14 @@ public class Submission extends Thing implements Created, Distinguishable, Votab
     }
 
     /**
+     * Gets a URL on the redd.it domain. For example, <a href="http://redd.it/92dd8">http://redd.it/92dd8</a>
+     * @return The short URL to this post
+     */
+    public URL getShortURL() {
+        return JrawUtils.newUrl("http://redd.it/" + getId());
+    }
+
+    /**
      * Represents a list of possible return values for the "thumbnail" JsonNode. All of the values in this enum can be
      * returned by the Reddit API, except for {@link #URL} and {@link #NONE}. If {@code URL} is returned, then Reddit
      * has created a thumbnail for specifically for that post. If {@code NONE} is returned, then there is no thumbnail
