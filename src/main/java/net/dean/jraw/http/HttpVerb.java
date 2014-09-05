@@ -8,45 +8,35 @@ import org.apache.http.client.methods.*;
  * @author Matthew Dean
  */
 public enum HttpVerb {
-    /**
-     * Represents a GET request
-     */
+    /** Represents a GET request */
     GET {
         @Override
         public HttpRequestBase getRequestObject(String path) {
             return new HttpGet(path);
         }
     },
-    /**
-     * Represents a POST request
-     */
+    /** Represents a POST request */
     POST {
         @Override
         public HttpRequestBase getRequestObject(String path) {
             return new HttpPost(path);
         }
     },
-    /**
-     * Represents a PATCH request
-     */
+    /** Represents a PATCH request */
     PATCH {
         @Override
         public HttpRequestBase getRequestObject(String path) {
             return new HttpPatch(path);
         }
     },
-    /**
-     * Represents a PUT request
-     */
+    /** Represents a PUT request */
     PUT {
         @Override
         public HttpRequestBase getRequestObject(String path) {
             return new HttpPut(path);
         }
     },
-    /**
-     * Represents a DELETE request
-     */
+    /** Represents a DELETE request */
     DELETE {
         @Override
         public HttpRequestBase getRequestObject(String path) {

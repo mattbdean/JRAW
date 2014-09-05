@@ -32,6 +32,11 @@ public class NetworkException extends Exception {
         this(200, httpCode);
     }
 
+    /**
+     * Instantiates a new NetworkException
+     * @param httpCodeDesired The desired HTTP code
+     * @param httpCodeActual The actual HTTP code
+     */
     public NetworkException(int httpCodeDesired, int httpCodeActual) {
         super(String.format("Status code not %s (was %s)", httpCodeDesired, httpCodeActual));
 

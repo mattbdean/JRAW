@@ -16,6 +16,11 @@ public class Endpoint {
     protected final String uri;
     protected final String requestDescriptor;
 
+    /**
+     * Instantiates a new Endpoint. Used mostly for meta-programming in the <a href="https://github.com/thatJavaNerd/JRAW/tree/master/endpoints">endpoints</a>
+     * subproject.
+     * @param requestDescriptor A string consisting of two parts: the HTTP verb, and the URI. For example: "@{code POST /api/login}"
+     */
     public Endpoint(String requestDescriptor) {
         this(requestDescriptor, null);
     }

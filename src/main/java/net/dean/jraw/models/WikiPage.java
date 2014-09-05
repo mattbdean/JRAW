@@ -6,6 +6,9 @@ import org.codehaus.jackson.JsonNode;
 
 import java.util.Date;
 
+/**
+ * Represents a wiki page. See <a href="http://www.reddit.com/wiki/wiki">here</a> for some basic information
+ */
 public class WikiPage extends RedditObject {
     /**
      * Instantiates a new WikiPage
@@ -27,13 +30,17 @@ public class WikiPage extends RedditObject {
 
     /**
      * Gets the date of last revision (or creation?)
-     * @return
+     * @return The date of last revision
      */
     @JsonInteraction
     public Date getRevisionDate() {
         return data("revision_date", Date.class);
     }
 
+    /**
+     * Gets the content of this page
+     * @return The content
+     */
     @JsonInteraction
     public RenderStringPair getContent() {
         String md = data("content_md");
@@ -45,6 +52,10 @@ public class WikiPage extends RedditObject {
         return new RenderStringPair(md, data("content_html"));
     }
 
+    /**
+     * Gets the person who last revised this page
+     * @return The person ({@link net.dean.jraw.models.core.Account}) who last revised this page
+     */
     @JsonInteraction
     public Account getRevisionBy() {
         return new Account(data.get("revision_by").get("data"));

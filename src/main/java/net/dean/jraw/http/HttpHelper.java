@@ -171,6 +171,9 @@ public class HttpHelper {
         return null;
     }
 
+    /**
+     * This class helps create a configuration for executing an HTTP request using Apache's HttpComponents.
+     */
     public static class RequestBuilder {
         private final HttpVerb verb;
         private final String hostname;
