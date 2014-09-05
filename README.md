@@ -1,11 +1,11 @@
 #Java Reddit API Wrapper [![travis-ci build status](https://travis-ci.org/thatJavaNerd/JRAW.svg?branch=master)](https://travis-ci.org/thatJavaNerd/JRAW)
 
->JRAW is currently in an experimental stage, and therefore subject to API changes. Application-breaking changes could occur at any time before v1.0.
+>JRAW is currently in an experimental stage, and therefore subject to application-breaking API changes that could occur at any time before v1.0.
 
 ##Features
  - Mini-framework that wraps Apache's HttpComponents
  - (Optional) request management to prevent sending over 30 requests per minute
- - Iterate through posts on the front page or specific subreddits, with support for sortings (hot, new, top, etc.) and time periods when using 'top' (day, week, all, etc.)
+ - Ability to iterate through posts on the front page or specific subreddits, with support for limits, sortings (hot, new, top, etc.) and time periods when using 'top' (day, week, all, etc.)
  - Captcha support
  - Get posts, users, and subreddits by ID (or name, in case of a user)
  - Basic wiki access
@@ -13,9 +13,7 @@
  - Get the submit text of a subreddit
  - Searching subreddits
  - Trending subreddits
- - Submit posts
- - Comment on posts
- - Vote on posts
+ - Comment on/vote on/submit posts
  - Hide/unhide and save/unsave posts
  - Delete posts and comments
  - Reply to a post or comment
@@ -68,11 +66,11 @@ while (frontPage.hasNext()) {
 }
 
 // Post a link
-URL url = new URL("http://my-awesome-website/article");
+URL url = // ...
 me.submitContent(new LoggedInAccount.SubmissionBuilder(url, SUBREDDIT, TITLE);
 
 // Post a self-post
-String content = //
+String content = // ...
 me.submitContent(new LoggedInAccount.SubmissionBuilder(content, SUBREDDIT, TITLE);
 
 // Do stuff with a submission
@@ -97,7 +95,7 @@ An overview of the models looks like this:
 The workings behind getter methods of models are not the same as most Java objects. All models are instantiated with a [Jackson](http://jackson.codehaus.org/) JsonNode. Each getter method retrieves a value from the "data" node (*see [here](http://www.reddit.com/user/way_fairer/about.json) for an example*) by using a key specific to that method.
 
 ##API Endpoints
-See [`ENDPOINTS.md`](https://github.com/thatJavaNerd/JRAW/blob/master/ENDPOINTS.md) for a list of endpoints that need to implemented and ones that have already been implemented.
+See [`ENDPOINTS.md`](https://github.com/thatJavaNerd/JRAW/blob/master/ENDPOINTS.md) for full list of Reddit's API endpoints.
 
 ####Updating Endpoints
 The subproject [`endpoints`](https://github.com/thatJavaNerd/JRAW/tree/master/endpoints) uses annotations and the Reflections library to find methods that implement different API endpoints and then compile them into `ENDPOINTS.md`. Running `./gradlew endpoints:update` will run the [`EndpointAnalyzer`](https://github.com/thatJavaNerd/JRAW/blob/master/endpoints/src/main/java/net/dean/jraw/endpoints/EndpointAnalyzer.java) class, which will in turn generate the endpoints markdown file.
