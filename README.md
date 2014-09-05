@@ -1,25 +1,94 @@
 #Java Reddit API Wrapper [![travis-ci build status](https://travis-ci.org/thatJavaNerd/JRAW.svg?branch=master)](https://travis-ci.org/thatJavaNerd/JRAW)
 
->JRAW is currently in an experimental stage, and therefore subject to API changes. Application-breaking changes could occur at any release before 1.0.
+>JRAW is currently in an experimental stage, and therefore subject to API changes. Application-breaking changes could occur at any time before v1.0.
 
-JRAW was built off these principles:
+##Features
+ - Mini-framework that wraps Apache's HttpComponents
+ - (Optional) request management to prevent sending over 30 requests per minute
+ - Iterate through posts on the front page or specific subreddits, with support for sortings (hot, new, top, etc.) and time periods when using 'top' (day, week, all, etc.)
+ - Captcha support
+ - Get posts, users, and subreddits by ID (or name, in case of a user)
+ - Basic wiki access
+ - Get random posts
+ - Get the submit text of a subreddit
+ - Searching subreddits
+ - Trending subreddits
+ - Submit posts
+ - Comment on posts
+ - Vote on posts
+ - Hide/unhide and save/unsave posts
+ - Delete posts and comments
+ - Reply to a post or comment
+ - Get user's multi reddits
+ - Adding/removing developers from [Reddit apps](https://ssl.reddit.com/prefs/apps/)
+ - Iterate through new/popular subreddits
+ - Get your subscribed subreddits
+ - Iterate through your posts/comments/saved/hidden posts and comments, etc.
+ - Lots of smaller features not mentioned here
+ - Get a subreddit's stylesheet
+ - Search for subreddits (by topic and by name)
 
-1. Provide a solid foundation upon which to send HTTP requests
-2. Make using the Reddit API feel as comforatble as possible for Java developers
 
-##Building
+##Design Philosiphy
+JRAW was built off the principle that as few classes as possible should be able to access the internet. Therefore, only [`RestClient`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/http/RestClient.java) and its subclasses (most notably [`RedditClient`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java)) can send HTTP requests. In order for other classes to send HTTP requests, they must acquire a `RestClient`, such as what [`Paginator`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/Paginator.java) does.
 
-JRAW uses Gradle as its build system. If you're coming from a Maven background, you can read [this StackOverflow question](http://stackoverflow.com/q/7719495/1275092) to help you get started.
+All [models](https://github.com/thatJavaNerd/JRAW/tree/master/src/main/java/net/dean/jraw/models) are instantiated with a Jackson `JsonNode` parsed from responses from the Reddit API.
 
-`./gradlew release` will generate four Jar files in `build/releases/`: a normal jar with just the library, a "fat" jar with all of JRAW's runtime dependencies, a Javadoc jar, and a sources jar.
+##Getting Started
+Add the jar to your dependencies
+```java
+dependencies {
+     compile file("path/to/JRAW-fat.jar")
+}
+```
 
-`./gradlew test` will run the unit tests
+Get yourself a `RedditClient`
+
+```java
+RedditClient reddit = new RedditClient(MY_USER_AGENT);
+```
+
+Login (if necessary)
+
+```java
+LoggedInAccount me = reddit.login(MY_USERNAME, MY_PASSWORD);
+```
+
+Start using the library! Some examples:
+
+```java
+// Iterate through the front page
+SubredditPaginator frontPage = new SubredditPaginator(reddit); // Second parameter could be a subreddit
+while (frontPage.hasNext()) {
+    Listing<Submission> submissions = frontPage.next();
+
+    for (Submission submission : submissions.getChildren()) {
+        System.out.println(submission.getTitle());
+    }
+}
+
+// Post a link
+URL url = new URL("http://my-awesome-website/article");
+me.submitContent(new LoggedInAccount.SubmissionBuilder(url, SUBREDDIT, TITLE);
+
+// Post a self-post
+String content = //
+me.submitContent(new LoggedInAccount.SubmissionBuilder(content, SUBREDDIT, TITLE);
+
+// Do stuff with a submission
+Submission submission = reddit.getSubmission("28d6vv"); // http://redd.it/28d6vv
+me.vote(submission, VoteDirection.UPVOTE);
+me.setSaved(submission, true);
+me.setHidden(submission, true);
+```
+
+For even more examples, see the [unit tests](https://github.com/thatJavaNerd/JRAW/tree/master/src/test/java/net/dean/jraw/test)
 
 ##Models
 ####Hierarchy
-[`JsonModel`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/models/JsonModel.java) is the superclass for all models in JRAW, including [`Thing`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/models/core/Thing.java). All [core models](https://github.com/thatJavaNerd/JRAW/tree/master/src/main/java/net/dean/jraw/models/core) defined by the [Reddit wiki on GitHub](https://github.com/reddit/reddit/wiki/JSON) extend `Thing`
+[`JsonModel`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/models/JsonModel.java) is the superclass for all models in JRAW, including [`Thing`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/models/core/Thing.java). All [core models](https://github.com/thatJavaNerd/JRAW/tree/master/src/main/java/net/dean/jraw/models/core) defined by the [Reddit wiki on GitHub](https://github.com/reddit/reddit/wiki/JSON) extend `Thing` (except for `Listing`, which extends `Thing`'s superclass, `RedditObject`
 
-An overview of the models would look like this:
+An overview of the models looks like this:
 
 ![UML](https://i.imgur.com/151gWff.png)
 
@@ -33,7 +102,16 @@ See [`ENDPOINTS.md`](https://github.com/thatJavaNerd/JRAW/blob/master/ENDPOINTS.
 ####Updating Endpoints
 The subproject [`endpoints`](https://github.com/thatJavaNerd/JRAW/tree/master/endpoints) uses annotations and the Reflections library to find methods that implement different API endpoints and then compile them into `ENDPOINTS.md`. Running `./gradlew endpoints:update` will run the [`EndpointAnalyzer`](https://github.com/thatJavaNerd/JRAW/blob/master/endpoints/src/main/java/net/dean/jraw/endpoints/EndpointAnalyzer.java) class, which will in turn generate the endpoints markdown file.
 
+##Building
+
+JRAW uses Gradle as its build system. If you're coming from a Maven background, you can read [this StackOverflow question](http://stackoverflow.com/q/7719495/1275092) to help you get started.
+
+`./gradlew release` will generate four Jar files in `build/releases/`: a normal jar with just the library, a "fat" jar with all of JRAW's runtime dependencies, a Javadoc jar, and a sources jar. See [here](https://github.com/thatJavaNerd/JRAW/releases/tag/v0.2.0) for an example.
+
+`./gradlew test` will run the unit tests
+
 ##Contributing
+
 Before contributing, it is recommended that you have a decent knowledge of how the Reddit API works.
 
 Some references:
@@ -48,5 +126,11 @@ Want to contribute? Follow these steps:
 3. Add your code. Implement an API endpoint, make the code prettier, or even just fix up some whitespace or documentation.
 4. Write some TestNG unit tests relevant to your changes
 5. Test your code by executing `./gradlew test`
-6. Update [`ENDPOINTS.md`](https://github.com/thatJavaNerd/JRAW/blob/master/ENDPOINTS.md) by running `./gradlew endpoints:update`
+6. Update `ENDPOINTS.md` and `Endpoints.java` by running `./gradlew endpoints:update`
 6. Send the pull request
+
+####Creating a user for unit testing
+1. Create a multireddit containing at least one subreddit
+2. Have at least 10 link karma (otherwise you will have to use captchas)
+3. Submit at least one post (how about on [/r/jraw_testing2](http://www.reddit.com/r/jraw_testing2)?)
+
