@@ -113,7 +113,7 @@ public class AccountTest {
     @Test
     public void testSendRepliesToInbox() throws ApiException {
         try {
-            Submission s = reddit.getSubmission("28vvhm");
+            Submission s = getPaginator(Where.SUBMITTED).next().getChildren().get(0).getSubmission();
             LoggedInAccount me = reddit.login(TestUtils.getCredentials()[0], TestUtils.getCredentials()[1]);
             me.setSendRepliesToInbox(s, true);
         } catch (NetworkException e) {
