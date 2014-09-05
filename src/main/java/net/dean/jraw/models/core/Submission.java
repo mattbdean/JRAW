@@ -193,7 +193,7 @@ public class Submission extends Thing implements Created, Distinguishable, Votab
      */
     @JsonInteraction
     public RenderStringPair getSelftext() {
-        return new RenderStringPair(data("selftext"), data("selftext_html"));
+        return data("selftext", RenderStringPair.class);
     }
 
     /**

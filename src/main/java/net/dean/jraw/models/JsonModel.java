@@ -1,5 +1,6 @@
 package net.dean.jraw.models;
 
+import net.dean.jraw.JrawConfig;
 import net.dean.jraw.JrawUtils;
 import org.codehaus.jackson.JsonNode;
 
@@ -40,8 +41,12 @@ public abstract class JsonModel {
     }
 
     /**
-     * Retrieves a value from the JSON node (provided in the constructor) of type T. The resulting object is cached for
-     * later use.
+     * Retrieves a value from the JSON node (provided in the constructor) of type T. When the class is Boolean, Double,
+     * Integer, Long, Float, or String, then it returns one of those objects using {@code JsonNode.asX()}. If class is URI, or
+     * URI, a new URL or URI is returned. If class is (java.util.)Date, then the JsonNode's value is assumed to be long.
+     * The value is multiplied by 1000 (since the value is assumed to be in seconds) and then passed to {@link Date#Date(long)}.
+     * Finally, if the class is RenderStringPair, then one will be returned based on the value of
+     * {@link net.dean.jraw.JrawConfig#loadRenderStringPairHtml}
      *
      * @param name The key to look up in the JSON node.
      * @param type The wanted return value. Supported values are any class representing a primitive data type, such as
@@ -89,6 +94,13 @@ public abstract class JsonModel {
         } else if (type.equals(Date.class)) {
             long seconds = node.asLong();
             returnVal = (T) new Date(seconds * 1000);
+        } else if (type.equals(RenderStringPair.class)) {
+            String md = data(name);
+            if (!JrawConfig.loadRenderStringPairHtml) {
+                return (T) new RenderStringPair(md);
+            }
+
+            return (T) new RenderStringPair(md, data(name + "_html"));
         } else
             // Assume String
             returnVal = (T) String.valueOf(node.asText());

@@ -8,6 +8,16 @@ public class RenderStringPair {
     private final String html;
 
     /**
+     * Instantiates a new RenderStringPair. Used most commonly by {@link net.dean.jraw.models.JsonModel#data(String, Class)}
+     * when {@link net.dean.jraw.JrawConfig#loadRenderStringPairHtml} is false.
+     * @param markdown The markdown version
+     */
+    public RenderStringPair(String markdown) {
+        this.markdown = markdown;
+        this.html = null;
+    }
+
+    /**
      * Instantiates a new RenderStringPair
      * @param markdown The markdown version
      * @param html The HTML version

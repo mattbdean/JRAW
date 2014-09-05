@@ -74,7 +74,7 @@ public class Comment extends Thing implements Created, Distinguishable, Votable 
      */
     @JsonInteraction
     public RenderStringPair getBody() {
-        return new RenderStringPair(data("body"), data("body_html"));
+        return data("body", RenderStringPair.class);
     }
 
     /**

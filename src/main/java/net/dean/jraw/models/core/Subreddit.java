@@ -47,7 +47,7 @@ public class Subreddit extends Thing {
      */
     @JsonInteraction
     public RenderStringPair getSidebar() {
-        return new RenderStringPair(data("description"), data("description_html"));
+        return data("description", RenderStringPair.class);
     }
 
     /**
