@@ -2,6 +2,8 @@
 
 >JRAW is currently in an experimental stage, and therefore subject to application-breaking API changes that could occur at any time before v1.0.
 
+>JRAW requires language features that are only available in Java 8 and above. Please adjust your project accordingly.
+
 ##Features
  - Mini-framework that wraps Apache's HttpComponents
  - (Optional) request management to prevent sending over 30 requests per minute
@@ -67,11 +69,11 @@ while (frontPage.hasNext()) {
 
 // Post a link
 URL url = // ...
-me.submitContent(new LoggedInAccount.SubmissionBuilder(url, SUBREDDIT, TITLE);
+me.submitContent(new LoggedInAccount.SubmissionBuilder(url, SUBREDDIT, TITLE));
 
 // Post a self-post
 String content = // ...
-me.submitContent(new LoggedInAccount.SubmissionBuilder(content, SUBREDDIT, TITLE);
+me.submitContent(new LoggedInAccount.SubmissionBuilder(content, SUBREDDIT, TITLE));
 
 // Do stuff with a submission
 Submission submission = reddit.getSubmission("28d6vv"); // http://redd.it/28d6vv
@@ -131,4 +133,3 @@ Want to contribute? Follow these steps:
 1. Create a multireddit containing at least one subreddit
 2. Have at least 10 link karma (otherwise you will have to use captchas)
 3. Submit at least one post (how about on [/r/jraw_testing2](http://www.reddit.com/r/jraw_testing2)?)
-
