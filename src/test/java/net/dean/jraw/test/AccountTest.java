@@ -135,7 +135,7 @@ public class AccountTest {
     public void testSaveSubmission() {
         try {
             Submission submission = reddit.getSubmission("28d6vv");
-            account.setSaved(submission, true);
+            account.save(submission, true);
 
             UserContributionPaginator paginator = getPaginator(Where.SAVED);
             List<Contribution> saved = paginator.next().getChildren();
@@ -158,7 +158,7 @@ public class AccountTest {
     public void testUnsaveSubmission() {
         try {
             Submission submission = reddit.getSubmission("28d6vv");
-            account.setSaved(submission, false);
+            account.save(submission, false);
 
             UserContributionPaginator paginator = getPaginator(Where.SAVED);
             List<Contribution> saved = paginator.next().getChildren();
@@ -175,7 +175,7 @@ public class AccountTest {
     public void testHideSubmission() {
         try {
             Submission submission = reddit.getSubmission("28d6vv");
-            account.setHidden(submission, true);
+            account.hide(submission, true);
 
             UserContributionPaginator paginator = getPaginator(Where.HIDDEN);
             List<Contribution> hidden = paginator.next().getChildren();
@@ -197,7 +197,7 @@ public class AccountTest {
     public void testUnhideSubmission() {
         try {
             Submission submission = reddit.getSubmission("28d6vv");
-            account.setHidden(submission, false);
+            account.hide(submission, false);
 
             UserContributionPaginator paginator = getPaginator(Where.HIDDEN);
             List<Contribution> hidden = paginator.next().getChildren();

@@ -5,6 +5,7 @@ import net.dean.jraw.http.*;
 import net.dean.jraw.models.core.Account;
 import net.dean.jraw.models.core.Comment;
 import net.dean.jraw.models.core.Submission;
+import net.dean.jraw.models.core.Thing;
 import org.codehaus.jackson.JsonNode;
 
 import java.net.URL;
@@ -76,46 +77,21 @@ public class LoggedInAccount extends Account {
     }
 
     /**
-     * Votes on a submission. Please note that "API clients proxying a human's action one-for-one are OK, but bots
-     * deciding how to vote on content or amplifying a human's vote are not".
+     * Votes on a comment or submission. Please note that "API clients proxying a human's action one-for-one are OK, but
+     * bots deciding how to vote on content or amplifying a human's vote are not".
      *
      * @param s The submission to vote on
      * @param voteDirection How to vote
      * @throws NetworkException If there was a problem sending the HTTP request
      * @throws ApiException If the API returned an error
      */
-    public void vote(Submission s, VoteDirection voteDirection) throws NetworkException, ApiException {
-        vote(s.getFullName(), voteDirection);
-    }
-
-    /**
-     * Votes on a comment. Please note that "API clients proxying a human's action one-for-one are OK, but bots
-     * deciding how to vote on content or amplifying a human's vote are not".
-     *
-     * @param c The comment to vote on
-     * @param voteDirection How to vote
-     * @throws NetworkException If there was a problem sending the HTTP request
-     * @throws ApiException If the API returned an error
-     */
-    public void vote(Comment c, VoteDirection voteDirection) throws NetworkException, ApiException {
-        vote(c.getFullName(), voteDirection);
-    }
-
-    /**
-     * Votes on a thing. Please note that "API clients proxying a human's action one-for-one are OK, but bots
-     * deciding how to vote on content or amplifying a human's vote are not".
-     *
-     * @param fullName The submission or comment's full name to vote on
-     * @param voteDirection How to vote
-     * @throws NetworkException If there was a problem sending the HTTP request
-     * @throws ApiException If the API returned an error
-     */
     @EndpointImplementation(Endpoints.VOTE)
-    private void vote(String fullName, VoteDirection voteDirection) throws NetworkException, ApiException {
+    public <T extends Thing & Votable> void vote(T s, VoteDirection voteDirection) throws NetworkException, ApiException {
         genericPost("/api/vote", JrawUtils.args(
+                "api_type", "json",
                 "dir", voteDirection.getValue(),
-                "id", fullName
-        ));
+                "id", s.getFullName()
+        )).getJson();
     }
 
     /**
@@ -128,7 +104,7 @@ public class LoggedInAccount extends Account {
      * @throws ApiException If the API returned an error
      */
     @EndpointImplementation({Endpoints.SAVE, Endpoints.UNSAVE})
-    public RedditResponse setSaved(Submission s, boolean save) throws NetworkException, ApiException {
+    public RedditResponse save(Submission s, boolean save) throws NetworkException, ApiException {
         // Send it to "/api/save" if save == true, "/api/unsave" if save == false
         return genericPost(String.format("/api/%ssave", save ? "" : "un"), JrawUtils.args(
                 "id", s.getFullName()
@@ -176,30 +152,24 @@ public class LoggedInAccount extends Account {
 
     /**
      * Deletes a submission that you posted
-     * @param s The submission to delete
+     * @param thing The submission to delete
      * @return The response that the Reddit API returned
      * @throws NetworkException If there was a problem sending the request
      * @throws ApiException If the API returned an error
      */
-    public RedditResponse delete(Submission s) throws NetworkException, ApiException {
-        checkIfOwns(s);
-        return delete(s.getFullName());
-    }
-
-
-    /**
-     * Deletes a comment that you posted
-     * @param c The comment to delete
-     * @return The response that the Reddit API returned
-     * @throws NetworkException If there was a problem sending the request
-     * @throws ApiException If the API returned an error
-     */
-    public RedditResponse delete(Comment c) throws NetworkException, ApiException {
-        if (!c.getAuthor().equals(getFullName())) {
-            throw new IllegalArgumentException(String.format("Logged in user (%s) did not post this comment (by %s)", getFullName(), c.getAuthor()));
+    public <T extends Thing & Votable> RedditResponse delete(T thing) throws NetworkException, ApiException {
+        if (thing instanceof Submission) {
+            checkIfOwns((Submission) thing);
+        } else if (thing instanceof Comment) {
+            Comment c = (Comment) thing;
+            if (!c.getAuthor().equals(getFullName())) {
+                throw new IllegalArgumentException(String.format("Logged in user (%s) did not post this comment (by %s)", getFullName(), c.getAuthor()));
+            }
+        } else {
+            throw new IllegalArgumentException("Unknown Votable: " + thing.getClass());
         }
 
-        return delete(c.getFullName());
+        return delete(thing.getFullName());
     }
 
 
@@ -261,7 +231,7 @@ public class LoggedInAccount extends Account {
      * @throws ApiException If the API returned an error
      */
     @EndpointImplementation({Endpoints.HIDE, Endpoints.UNHIDE})
-    public RedditResponse setHidden(Submission s, boolean hidden) throws NetworkException, ApiException {
+    public RedditResponse hide(Submission s, boolean hidden) throws NetworkException, ApiException {
         return genericPost(String.format("/api/%shide", hidden ? "" : "un"), JrawUtils.args(
                 "id", s.getFullName()
         ));
