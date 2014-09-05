@@ -1,10 +1,7 @@
 package net.dean.jraw;
 
 import net.dean.jraw.http.*;
-import net.dean.jraw.models.Captcha;
-import net.dean.jraw.models.LoggedInAccount;
-import net.dean.jraw.models.MultiReddit;
-import net.dean.jraw.models.RenderStringPair;
+import net.dean.jraw.models.*;
 import net.dean.jraw.models.core.Account;
 import net.dean.jraw.models.core.Submission;
 import net.dean.jraw.models.core.Subreddit;
@@ -355,10 +352,7 @@ public class RedditClient extends RestClient<RedditResponse> {
      */
     @EndpointImplementation(Endpoints.RANDOM)
     public Submission getRandom(String subreddit) throws NetworkException  {
-        String path = "/random.json";
-        if (subreddit != null) {
-            path = "/r/" + subreddit + path;
-        }
+        String path = getSubredditPath(subreddit, "/random.json");
         return execute(new RestRequest(GET, path)).as(Submission.class);
     }
 
@@ -370,12 +364,9 @@ public class RedditClient extends RestClient<RedditResponse> {
      */
     @EndpointImplementation(Endpoints.SUBMIT_TEXT)
     public RenderStringPair getSubmitText(String subreddit) throws NetworkException {
-        String query = "/api/submit_text.json";
-        if (subreddit != null) {
-            query = "/r/" + subreddit + query;
-        }
+        String path = getSubredditPath(subreddit, "/api/submit_text.json");
 
-        JsonNode node = execute(new RestRequest(GET, query)).getJson();
+        JsonNode node = execute(new RestRequest(GET, path)).getJson();
         return new RenderStringPair(node.get("submit_text").asText(), node.get("submit_text_html").asText());
     }
 
@@ -430,10 +421,7 @@ public class RedditClient extends RestClient<RedditResponse> {
      */
     @EndpointImplementation(Endpoints.STYLESHEET)
     public String getStylesheet(String subreddit) throws NetworkException {
-        String path = "/stylesheet";
-        if (subreddit != null) {
-            path = "/r/" + subreddit + path;
-        }
+        String path = getSubredditPath(subreddit, "/stylesheet");
 
         RestResponse response = execute(new RestRequest(GET, path));
 
@@ -472,6 +460,62 @@ public class RedditClient extends RestClient<RedditResponse> {
     }
 
     /**
+     * Gets a list of names of wiki pages for Reddit
+     * @return A list of Reddit's wiki pages
+     * @throws NetworkException If there was a problem sending the HTTP request
+     */
+    public List<String> getWikiPages() throws NetworkException {
+        return getWikiPages(null);
+    }
+
+    /**
+     * Gets a list of names of wiki pages for a certain subreddit
+     * @param subreddit The subreddit to use
+     * @return A list of wiki pages for this subreddit
+     * @throws NetworkException If there was a problem sending the HTTP request
+     */
+    @EndpointImplementation(Endpoints.WIKI_PAGES)
+    public List<String> getWikiPages(String subreddit) throws NetworkException {
+        String path = getSubredditPath(subreddit, "/wiki/pages.json");
+
+        List<String> pages = new ArrayList<>();
+        JsonNode pagesNode = execute(new RestRequest(GET, path)).getJson().get("data");
+
+        for (JsonNode page : pagesNode) {
+            pages.add(page.asText());
+        }
+
+        return pages;
+    }
+
+    /**
+     * Gets a WikiPage that represents one of Reddit's main pages. See <a href="http://www.reddit.com/wiki/pages">here</a>
+     * for a list.
+     *
+     * @param page The page to get
+     * @return A WikiPage for the given page
+     * @throws NetworkException If there was a problem sending the HTTP request
+     *
+     * @see #getWikiPages()
+     */
+    public WikiPage getWikiPage(String page) throws NetworkException {
+        return getWikiPage(null, page);
+    }
+
+    /**
+     * Gets a WikiPage for a certain subreddit
+     * @param subreddit The subreddit to use
+     * @param page The page to get
+     * @return A WikiPage for the given page
+     * @throws NetworkException If there was a problem sending the HTTP request
+     */
+    @EndpointImplementation(Endpoints.WIKI_PAGE)
+    public WikiPage getWikiPage(String subreddit, String page) throws NetworkException {
+        String path = getSubredditPath(subreddit, "/wiki/" + page + ".json");
+        return execute(new RestRequest(GET, path)).as(WikiPage.class);
+    }
+
+    /**
      * Checks if there was an error returned by a /api/multi/* request, since those URIs return a different error handling
      * format than the rest of the API
      * @param root The root JsonNode
@@ -481,6 +525,20 @@ public class RedditClient extends RestClient<RedditResponse> {
         if (root.has("explanation") && root.has("reason")) {
             throw new ApiException(root.get("reason").asText(), root.get("explanation").asText());
         }
+    }
+
+    /**
+     * Prepends "/r/{subreddit}" to {@code path} if {@code subreddit} is not null
+     * @param subreddit The subreddit to use
+     * @param path The path to use
+     * @return "/r/{subreddit}/{path}" if {@code subreddit} is not null, otherwise "{path}"
+     */
+    private String getSubredditPath(String subreddit, String path) {
+        if (subreddit != null) {
+            path = "/r/" + subreddit + path;
+        }
+
+        return path;
     }
 
     /**

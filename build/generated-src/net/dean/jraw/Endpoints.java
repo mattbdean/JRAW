@@ -391,14 +391,14 @@ public enum Endpoints {
     WIKI_REVERT("POST /api/wiki/revert"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_wiki_discussions_%7Bpage%7D">{@code GET /wiki/discussions/{page}}</a>" in the "wiki" category */
     WIKI_DISCUSSIONS_PAGE("GET /wiki/discussions/{page}"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_wiki_pages">{@code GET /wiki/pages}</a>" in the "wiki" category */
-    WIKI_PAGES("GET /wiki/pages"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_wiki_revisions">{@code GET /wiki/revisions}</a>" in the "wiki" category */
     WIKI_REVISIONS("GET /wiki/revisions"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_wiki_revisions_%7Bpage%7D">{@code POST /wiki/revisions/{page}}</a>" in the "wiki" category */
     WIKI_REVISIONS_PAGE("POST /wiki/revisions/{page}"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_wiki_settings_%7Bpage%7D">{@code GET /wiki/settings/{page}}</a>" in the "wiki" category */
     WIKI_SETTINGS_PAGE("GET /wiki/settings/{page}"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_wiki_pages">{@code GET /wiki/pages}</a>" in the "wiki" category */
+    WIKI_PAGES("GET /wiki/pages"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_wiki_%7Bpage%7D">{@code GET /wiki/{page}}</a>" in the "wiki" category */
     WIKI_PAGE("GET /wiki/{page}");
 

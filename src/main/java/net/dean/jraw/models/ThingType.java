@@ -28,7 +28,9 @@ public enum ThingType {
     /** Represents a "more" object. See {@link net.dean.jraw.models.core.More} */
     MORE("more"),
     /** Represents a MultiReddit */
-    MULTI("LabeledMulti");
+    MULTI("LabeledMulti"),
+    /** Represents a wiki page */
+    WIKI_PAGE("wikipage");
 
 
     /**
