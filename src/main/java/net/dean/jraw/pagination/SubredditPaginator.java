@@ -20,6 +20,16 @@ public class SubredditPaginator extends Paginator<Submission> {
     public SubredditPaginator(RedditClient creator) {
         super(creator, Submission.class);
     }
+    
+    /**
+     * Instantiates a new SubredditPaginator for a subreddit
+     * @param creator The RedditClient that will be used to send HTTP requests
+     * @param subreddit The subreddit to paginate through
+     */
+    public SubredditPaginator(RedditClient creator, String subreddit) {
+        super(creator, Submission.class);
+        this.subreddit = subreddit;
+    }
 
     @Override
     @EndpointImplementation({
