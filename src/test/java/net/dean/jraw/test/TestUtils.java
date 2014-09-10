@@ -5,9 +5,12 @@ import net.dean.jraw.JrawUtils;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.Version;
 import net.dean.jraw.models.RenderStringPair;
+
 import org.testng.Assert;
 import org.testng.SkipException;
 
+import java.io.BufferedInputStream;
+import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -16,6 +19,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
+import java.util.Scanner;
 
 public final class TestUtils {
     private static Random random = new Random();
@@ -41,9 +45,12 @@ public final class TestUtils {
             if (System.getenv("TRAVIS") != null && Boolean.parseBoolean(System.getenv("TRAVIS"))) {
                 return new String[] {System.getenv("USERNAME"), System.getenv("PASS")};
             } else {
-                URL resource = TestUtils.class.getResource("/credentials.txt");
-                Path credPath = Paths.get(resource.toURI());
-                return new String(Files.readAllBytes(credPath), "UTF-8").split("\n");
+                String[] details = new String[2];
+                Scanner s = new Scanner(TestUtils.class.getResourceAsStream("/credentials.txt"));
+                details[0] = s.nextLine(); 
+                details[1] = s.nextLine();
+                s.close();
+                return details;
             }
         } catch (Exception e) {
             Assert.fail(e.getMessage());
