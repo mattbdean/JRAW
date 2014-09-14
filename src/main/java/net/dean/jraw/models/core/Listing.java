@@ -1,5 +1,6 @@
 package net.dean.jraw.models.core;
 
+import net.dean.jraw.JrawUtils;
 import net.dean.jraw.RedditObjectParser;
 import net.dean.jraw.models.JsonInteraction;
 import net.dean.jraw.models.RedditObject;
@@ -60,6 +61,7 @@ public class Listing<T extends RedditObject> extends RedditObject {
                 children.add(PARSER.parse(childNode, thingClass));
             }
         } catch (NullPointerException e) {
+            JrawUtils.logger().error("NullPointerException", e);
             e.printStackTrace();
         }
     }

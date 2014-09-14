@@ -80,7 +80,6 @@ public class ThingFieldTest {
             Submission submission = reddit.getSubmission(SUBMISSION_ID);
             fieldValidityCheck(submission.getComments().getChildren().get(0));
         } catch (NetworkException e) {
-            e.printStackTrace(System.err);
             Assert.fail(e.getMessage());
         }
     }

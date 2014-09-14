@@ -117,7 +117,7 @@ public class RedditClient extends RestClient<RedditResponse> {
                         JrawUtils.logger().info("Sleeping for {} milliseconds", millis);
                         Thread.sleep(millis);
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        JrawUtils.logger().error("Interrupted", e);
                     }
                 }
 

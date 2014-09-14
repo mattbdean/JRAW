@@ -9,7 +9,7 @@ import net.dean.jraw.models.MultiReddit;
 import net.dean.jraw.models.VoteDirection;
 import net.dean.jraw.models.core.Account;
 import net.dean.jraw.models.core.Submission;
-import net.dean.jraw.pagination.Contribution;
+import net.dean.jraw.models.Contribution;
 import net.dean.jraw.pagination.UserContributionPaginator;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -113,7 +113,7 @@ public class AccountTest {
     @Test
     public void testSendRepliesToInbox() throws ApiException {
         try {
-            Submission s = getPaginator(Where.SUBMITTED).next().getChildren().get(0).getSubmission();
+            Submission s = (Submission) getPaginator(Where.SUBMITTED).next().getChildren().get(0);
             LoggedInAccount me = reddit.login(TestUtils.getCredentials()[0], TestUtils.getCredentials()[1]);
             me.setSendRepliesToInbox(s, true);
         } catch (NetworkException e) {
@@ -141,7 +141,7 @@ public class AccountTest {
             List<Contribution> saved = paginator.next().getChildren();
 
             for (Contribution c : saved) {
-                Submission s = c.getSubmission();
+                Submission s = (Submission) c;
                 if (s.getId().equals(submission.getId())) {
                     return;
                 }
@@ -181,7 +181,7 @@ public class AccountTest {
             List<Contribution> hidden = paginator.next().getChildren();
 
             for (Contribution c : hidden) {
-                Submission s = c.getSubmission();
+                Submission s = (Submission) c;
                 if (s.getId().equals(submission.getId())) {
                     return;
                 }
@@ -203,7 +203,7 @@ public class AccountTest {
             List<Contribution> hidden = paginator.next().getChildren();
 
             for (Contribution c : hidden) {
-                Submission s = c.getSubmission();
+                Submission s = (Submission) c;
                 if (s.getId().equals(submission.getId())) {
                     Assert.fail("Found unhidden submission in hidden posts");
                 }

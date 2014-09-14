@@ -4,7 +4,7 @@ import net.dean.jraw.models.RedditObject;
 import net.dean.jraw.models.ThingType;
 import net.dean.jraw.models.core.Comment;
 import net.dean.jraw.models.core.Submission;
-import net.dean.jraw.pagination.Contribution;
+import net.dean.jraw.models.Contribution;
 import org.codehaus.jackson.JsonNode;
 
 import java.lang.reflect.Constructor;
@@ -28,9 +28,9 @@ public class RedditObjectParser {
         if (thingClass.equals(Contribution.class)) {
             switch (ThingType.getByPrefix(rootNode.get("kind").asText())) {
                 case LINK:
-                    return (T) Contribution.of(new Submission(rootNode.get("data")));
+                    return (T) new Submission(rootNode.get("data"));
                 case COMMENT:
-                    return (T) Contribution.of(new Comment(rootNode.get("data")));
+                    return (T) new Comment(rootNode.get("data"));
                 default:
                     throw new IllegalArgumentException("Class " + thingClass.getName() + " is not applicable for Contribution");
             }
@@ -41,7 +41,7 @@ public class RedditObjectParser {
             return constructor.newInstance(rootNode.get("data"));
         } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
             // Holy exceptions Batman!
-            e.printStackTrace();
+            JrawUtils.logger().error("Could not create the Thing ({})", thingClass.getName(), e);
         }
 
         return null;

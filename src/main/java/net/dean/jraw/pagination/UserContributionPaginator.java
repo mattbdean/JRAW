@@ -4,6 +4,7 @@ import net.dean.jraw.EndpointImplementation;
 import net.dean.jraw.Endpoints;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.NetworkException;
+import net.dean.jraw.models.Contribution;
 import net.dean.jraw.models.core.Listing;
 
 /**

@@ -223,7 +223,6 @@ public abstract class JsonModel {
                 counter++;
             } catch (IllegalAccessException e) {
                 JrawUtils.logger().error("IllegalAccessException. This really shouldn't happen.", e);
-                e.printStackTrace();
             }
         }
         sb.append('}');

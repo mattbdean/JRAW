@@ -117,7 +117,7 @@ public class HttpHelper {
         } catch (ConnectTimeoutException e) {
             throw new NetworkException("Connection timed out", e);
         } catch (IOException e) {
-            e.printStackTrace();
+            JrawUtils.logger().error("Connection aborted", e);
             return null;
         }
     }

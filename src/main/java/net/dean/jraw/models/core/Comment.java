@@ -11,7 +11,7 @@ import java.util.Date;
  *
  * @author Matthew Dean
  */
-public class Comment extends Thing implements Created, Distinguishable, Votable {
+public class Comment extends Contribution {
 
     /**
      * Instantiates a new Comment
