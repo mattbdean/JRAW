@@ -1,8 +1,10 @@
 apply plugin: 'idea'
+apply plugin: 'maven-publish'
 
 allprojects {
     apply plugin: 'java'
     sourceCompatibility = 1.8
+    group = 'net.dean.jraw'
     version = '0.3.0'
 
     repositories {
@@ -101,6 +103,14 @@ idea {
             }
         })
         sourceDirs += file(generatedJavaSrc)
+    }
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from components.java
+        }
     }
 }
 
