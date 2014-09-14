@@ -47,7 +47,7 @@ public class JavaGenerator extends AbstractEndpointGenerator {
             List<String> duplicates = duplicateUris.get(entry.getKey());
 
             bw.write('\n');
-            write(bw, 1, "///////// " + entry.getKey() + "/////////");
+            write(bw, 1, "///////// " + entry.getKey() + " /////////");
 
             int endpointCounter = 0;
             for (Endpoint endpoint : entry.getValue()) {

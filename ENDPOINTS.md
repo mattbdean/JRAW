@@ -1,4 +1,4 @@
-<!--- Generated 2014-09-05 at 17:38:19 EDT. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
+<!--- Generated 2014-09-14 at 14:38:09 EDT. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
 #Endpoints
 
 This file contains a list of all the endpoints (regardless of if they have been implemented) that can be found at the [official Reddit API docs](https://www.reddit.com/dev/api). To update this file, run `./gradlew endpoints:update`.
@@ -87,12 +87,12 @@ Method|Endpoint|Implemented?
 :----:|--------|------------
 `GET`|[`/comments/{article}`](https://www.reddit.com/dev/api#GET_comments_%7Barticle%7D)|No
 `GET`|[`/by_id/{names}`](https://www.reddit.com/dev/api#GET_by_id_%7Bnames%7D)|[`SpecificPaginator.getListing()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/SpecificPaginator.java#L64)
-`GET`|[`/controversial`](https://www.reddit.com/dev/api#GET_controversial)|[`SubredditPaginator.getListing()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/SubredditPaginator.java#L33)
-`GET`|[`/hot`](https://www.reddit.com/dev/api#GET_hot)|[`SubredditPaginator.getListing()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/SubredditPaginator.java#L33)
-`GET`|[`/new`](https://www.reddit.com/dev/api#GET_new)|[`SubredditPaginator.getListing()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/SubredditPaginator.java#L33)
+`GET`|[`/controversial`](https://www.reddit.com/dev/api#GET_controversial)|[`SubredditPaginator.getListing()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/SubredditPaginator.java#L43)
+`GET`|[`/hot`](https://www.reddit.com/dev/api#GET_hot)|[`SubredditPaginator.getListing()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/SubredditPaginator.java#L43)
+`GET`|[`/new`](https://www.reddit.com/dev/api#GET_new)|[`SubredditPaginator.getListing()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/SubredditPaginator.java#L43)
 `GET`|[`/random`](https://www.reddit.com/dev/api#GET_random)|[`RedditClient.getRandom()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L343)
-`GET`|[`/sort`](https://www.reddit.com/dev/api#GET_sort)|[`SubredditPaginator.getListing()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/SubredditPaginator.java#L33)
-`GET`|[`/top`](https://www.reddit.com/dev/api#GET_top)|[`SubredditPaginator.getListing()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/SubredditPaginator.java#L33)
+`GET`|[`/sort`](https://www.reddit.com/dev/api#GET_sort)|[`SubredditPaginator.getListing()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/SubredditPaginator.java#L43)
+`GET`|[`/top`](https://www.reddit.com/dev/api#GET_top)|[`SubredditPaginator.getListing()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/SubredditPaginator.java#L43)
 
 ##live threads
 Method|Endpoint|Implemented?
@@ -223,15 +223,15 @@ Method|Endpoint|Implemented?
 `GET`|[`/api/v1/user/{username}/trophies`](https://www.reddit.com/dev/api#GET_api_v1_user_%7Busername%7D_trophies)|No
 `GET`|[`/api/username_available.json`](https://www.reddit.com/dev/api#GET_api_username_available.json)|[`RedditClient.isUsernameAvailable()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L298)
 `GET`|[`/user/{username}/about.json`](https://www.reddit.com/dev/api#GET_user_%7Busername%7D_about.json)|[`RedditClient.getUser()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L263)
-`GET`|[`/user/{username}/comments`](https://www.reddit.com/dev/api#GET_user_%7Busername%7D_comments)|[`UserContributionPaginator.getListing()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/UserContributionPaginator.java#L39)
-`GET`|[`/user/{username}/disliked`](https://www.reddit.com/dev/api#GET_user_%7Busername%7D_disliked)|[`UserContributionPaginator.getListing()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/UserContributionPaginator.java#L39)
-`GET`|[`/user/{username}/gilded`](https://www.reddit.com/dev/api#GET_user_%7Busername%7D_gilded)|[`UserContributionPaginator.getListing()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/UserContributionPaginator.java#L39)
-`GET`|[`/user/{username}/hidden`](https://www.reddit.com/dev/api#GET_user_%7Busername%7D_hidden)|[`UserContributionPaginator.getListing()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/UserContributionPaginator.java#L39)
-`GET`|[`/user/{username}/liked`](https://www.reddit.com/dev/api#GET_user_%7Busername%7D_liked)|[`UserContributionPaginator.getListing()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/UserContributionPaginator.java#L39)
-`GET`|[`/user/{username}/overview`](https://www.reddit.com/dev/api#GET_user_%7Busername%7D_overview)|[`UserContributionPaginator.getListing()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/UserContributionPaginator.java#L39)
-`GET`|[`/user/{username}/saved`](https://www.reddit.com/dev/api#GET_user_%7Busername%7D_saved)|[`UserContributionPaginator.getListing()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/UserContributionPaginator.java#L39)
-`GET`|[`/user/{username}/submitted`](https://www.reddit.com/dev/api#GET_user_%7Busername%7D_submitted)|[`UserContributionPaginator.getListing()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/UserContributionPaginator.java#L39)
-`GET`|[`/user/{username}/{where}`](https://www.reddit.com/dev/api#GET_user_%7Busername%7D_%7Bwhere%7D)|[`UserContributionPaginator.getListing()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/UserContributionPaginator.java#L39)
+`GET`|[`/user/{username}/comments`](https://www.reddit.com/dev/api#GET_user_%7Busername%7D_comments)|[`UserContributionPaginator.getListing()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/UserContributionPaginator.java#L40)
+`GET`|[`/user/{username}/disliked`](https://www.reddit.com/dev/api#GET_user_%7Busername%7D_disliked)|[`UserContributionPaginator.getListing()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/UserContributionPaginator.java#L40)
+`GET`|[`/user/{username}/gilded`](https://www.reddit.com/dev/api#GET_user_%7Busername%7D_gilded)|[`UserContributionPaginator.getListing()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/UserContributionPaginator.java#L40)
+`GET`|[`/user/{username}/hidden`](https://www.reddit.com/dev/api#GET_user_%7Busername%7D_hidden)|[`UserContributionPaginator.getListing()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/UserContributionPaginator.java#L40)
+`GET`|[`/user/{username}/liked`](https://www.reddit.com/dev/api#GET_user_%7Busername%7D_liked)|[`UserContributionPaginator.getListing()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/UserContributionPaginator.java#L40)
+`GET`|[`/user/{username}/overview`](https://www.reddit.com/dev/api#GET_user_%7Busername%7D_overview)|[`UserContributionPaginator.getListing()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/UserContributionPaginator.java#L40)
+`GET`|[`/user/{username}/saved`](https://www.reddit.com/dev/api#GET_user_%7Busername%7D_saved)|[`UserContributionPaginator.getListing()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/UserContributionPaginator.java#L40)
+`GET`|[`/user/{username}/submitted`](https://www.reddit.com/dev/api#GET_user_%7Busername%7D_submitted)|[`UserContributionPaginator.getListing()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/UserContributionPaginator.java#L40)
+`GET`|[`/user/{username}/{where}`](https://www.reddit.com/dev/api#GET_user_%7Busername%7D_%7Bwhere%7D)|[`UserContributionPaginator.getListing()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/UserContributionPaginator.java#L40)
 
 ##wiki
 Method|Endpoint|Implemented?
