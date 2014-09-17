@@ -29,36 +29,35 @@ public final class JrawUtils {
     }
 
     /**
-     * Creates a new URL and prints the stack trace if a MalformedURLException is caught
+     * Creates a new URL and wraps the {@link java.net.MalformedURLException} around an IllegalArgumentException if one
+     * was thrown.
      *
      * @param href The data of the URL
      * @return A new URL
+     * @throws IllegalArgumentException If a MalformedURLException was thrown
      */
     public static URL newUrl(String href) {
         try {
             return new URL(href);
         } catch (MalformedURLException e) {
-            JrawUtils.logger.error("Malformed URL: " + href, e);
-            e.printStackTrace();
+            throw new IllegalArgumentException("Malformed URL: " + href, e);
         }
-
-        return null;
     }
 
     /**
-     * Creates a new URI and prints the stack trace if a URISyntaxException is caught
+     * Creates a new URI and wraps the {@link java.net.URISyntaxException} around an IllegalArgumentException if one was
+     * thrown.
      *
      * @param location The location of the URI
      * @return A new URI
+     * @throws IllegalArgumentException If a URISyntaxException was thrown
      */
     public static URI newUri(String location) {
         try {
             return new URI(location);
         } catch (URISyntaxException e) {
-            e.printStackTrace();
+            throw new IllegalArgumentException("Malformed URI: " + location, e);
         }
-
-        return null;
     }
 
     /**
