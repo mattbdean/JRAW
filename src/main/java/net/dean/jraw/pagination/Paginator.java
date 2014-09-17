@@ -33,6 +33,7 @@ public abstract class Paginator<T extends Thing> implements Iterator<Listing<T>>
     protected int limit;
     /** Current listing. Will get the next listing based on the current listing's "after" value */
     protected Listing<T> current;
+    private int pageNumber;
 
     private boolean started;
     private boolean changed;
@@ -80,8 +81,14 @@ public abstract class Paginator<T extends Thing> implements Iterator<Listing<T>>
             args.put("t", timePeriod.name().toLowerCase());
         }
 
+        Map<String, String> extraArgs = getExtraQueryArgs();
+        if (extraArgs != null) {
+            args.putAll(extraArgs);
+        }
+
         Listing<T> listing = creator.execute(new RestRequest(HttpVerb.GET, path, args)).asListing(thingType);
         this.current = listing;
+        pageNumber++;
 
         if (!started) {
             started = true;
@@ -173,12 +180,21 @@ public abstract class Paginator<T extends Thing> implements Iterator<Listing<T>>
     }
 
     /**
+     * Generates extra arguments to be included in the query string.
+     * @return A map of paginator-implementation-specific arguments
+     */
+    protected Map<String, String> getExtraQueryArgs() {
+        return null;
+    }
+
+    /**
      * Resets the listing. Call this method after you call a setter method such as {@link #setTimePeriod(TimePeriod)}
      */
     public void reset() {
         current = null;
         started = false;
         changed = false;
+        pageNumber = 0;
     }
 
     /**
@@ -187,5 +203,23 @@ public abstract class Paginator<T extends Thing> implements Iterator<Listing<T>>
      */
     protected void invalidate() {
         this.changed = true;
+    }
+
+    /**
+     * Gets the last listing that was retrieved
+     * @return The last listing retrieved, or null if this is a new Paginator or {@link #reset()} was just called
+     */
+    public Listing<T> getCurrentListing() {
+        return current;
+    }
+
+    /**
+     * Gets the page index, where 1 is the first page and 0 means that this is a new Paginator or {@link #reset()} was
+     * just called.
+     *
+     * @return An integer representing the current page number
+     */
+    public int getPageIndex() {
+        return pageNumber;
     }
 }

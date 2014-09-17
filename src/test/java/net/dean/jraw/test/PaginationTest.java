@@ -35,9 +35,21 @@ public class PaginationTest {
 
     @Test
     public void testSubreddit() throws NetworkException {
-        SubredditPaginator pics = new SubredditPaginator(reddit);
-        pics.setSubreddit("pics");
+        SubredditPaginator pics = new SubredditPaginator(reddit, "pics");
         commonTest(pics);
+    }
+
+    @Test
+    public void testSearch() throws NetworkException {
+        SearchPaginator paginator = new SearchPaginator(reddit, "test");
+        String subreddit = "AskReddit";
+        paginator.setSubreddit(subreddit);
+        commonTest(paginator);
+
+        for (Submission s : paginator.getCurrentListing().getChildren()) {
+            // Make sure they all come from the same subreddit
+            Assert.assertTrue(s.getSubredditName().equals(subreddit));
+        }
     }
 
     @Test

@@ -1,9 +1,9 @@
-<!--- Generated 2014-09-16 at 16:28:48 EDT. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
+<!--- Generated 2014-09-16 at 22:39:39 EDT. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
 #Endpoints
 
 This file contains a list of all the endpoints (regardless of if they have been implemented) that can be found at the [official Reddit API docs](https://www.reddit.com/dev/api). To update this file, run `./gradlew endpoints:update`.
 
-So far **54** endpoints (out of 184 total) have been implemented.
+So far **55** endpoints (out of 184 total) have been implemented.
 
 ##account
 Method|Endpoint|Implemented?
@@ -179,7 +179,7 @@ Method|Endpoint|Implemented?
 ##search
 Method|Endpoint|Implemented?
 :----:|--------|------------
-`GET`|[`/search`](https://www.reddit.com/dev/api#GET_search)|No
+`GET`|[`/search`](https://www.reddit.com/dev/api#GET_search)|[`SearchPaginator.getListing()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/SearchPaginator.java#L31)
 
 ##subreddits
 Method|Endpoint|Implemented?
