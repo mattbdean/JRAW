@@ -104,7 +104,9 @@ me.setSaved(submission, true);
 me.setHidden(submission, true);
 ```
 
-For even more examples, see the [unit tests](https://github.com/thatJavaNerd/JRAW/tree/master/src/test/java/net/dean/jraw/test)
+For even more examples, see the [unit tests](https://github.com/thatJavaNerd/JRAW/tree/master/src/test/java/net/dean/jraw/test).
+
+Javadoc can be found [here](https://thatjavanerd.github.io/JRAW/docs/0.3.0/)
 
 ##Models
 ####Hierarchy
