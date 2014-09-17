@@ -425,9 +425,10 @@ public class RedditClient extends RestClient<RedditResponse> {
 
         RestResponse response = execute(new RestRequest(GET, path));
 
-        String type = response.getContentType();
+        ContentType type = response.getContentType();
         if (!type.equals(ContentType.CSS)) {
-            throw new NetworkException(String.format("The request did not return a Content-Type of %s (was \"%s\")", ContentType.CSS, type));
+            throw new NetworkException(String.format("The request did not return a Content-Type of %s (was \"%s\")",
+                    ContentType.CSS.asHeader(), type));
         }
 
         return response.getRaw();

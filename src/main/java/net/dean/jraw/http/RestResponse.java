@@ -23,7 +23,7 @@ public class RestResponse {
     protected final JsonNode rootNode;
     /** The raw data of the response's content */
     protected final String raw;
-    protected final String contentType;
+    protected final ContentType contentType;
 
     /**
      * Instantiates a new RestResponse. This constructor also reads the contents of the input stream and parses it into
@@ -39,21 +39,14 @@ public class RestResponse {
         this.raw = s.hasNext() ? s.next() : "";
 
         String type = getHeader("Content-Type").getValue().toLowerCase();
-        if (type.contains(";")) {
-            // Remove any extra data. For example: "application/json; charset=UTF-8"
-            type = type.substring(0, type.indexOf(";"));
-        }
-        type = type.trim();
-
-        this.contentType = type;
+        this.contentType = ContentType.parse(type);
         if (contentType.equals(ContentType.JSON)) {
             this.rootNode = readTree(raw);
-
         } else {
             if (contentType.equals(ContentType.HTML))
                 JrawUtils.logger().warn("Received HTML from Reddit API instead of JSON. Are you sure you have access to this document?");
             else
-                JrawUtils.logger().warn("Unknown Content-Type received: \"{}\"", contentType);
+                JrawUtils.logger().warn("Unknown Content-Type received: \"{}\"", contentType.asHeader());
 
             // Init JSON-related final variables
             this.rootNode = null;
@@ -112,7 +105,7 @@ public class RestResponse {
      * Gets the value of the Content-Type header received from the server
      * @return The Content-Type
      */
-    public String getContentType() {
+    public ContentType getContentType() {
         return contentType;
     }
 

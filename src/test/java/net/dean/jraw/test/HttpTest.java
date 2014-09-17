@@ -1,9 +1,6 @@
 package net.dean.jraw.test;
 
-import net.dean.jraw.http.HttpHelper;
-import net.dean.jraw.http.HttpVerb;
-import net.dean.jraw.http.NetworkException;
-import net.dean.jraw.http.RestResponse;
+import net.dean.jraw.http.*;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.codehaus.jackson.JsonNode;
@@ -12,9 +9,7 @@ import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 import static net.dean.jraw.http.HttpVerb.*;
 
@@ -57,6 +52,20 @@ public class HttpTest {
         CloseableHttpResponse response = client.execute(new HttpHelper.RequestBuilder(GET, HOST, "/status/418"));
         if (response != null) {
             EntityUtils.consume(response.getEntity());
+        }
+    }
+
+    @Test
+    public void contentTypeParse() {
+        List<String> contentTypes = new ArrayList<>();
+        contentTypes.add("application/json");
+        contentTypes.add(contentTypes.get(0) + "; charset=utf-8");
+        contentTypes.add(contentTypes.get(1) + "; foo=bar");
+
+        for (String expected : contentTypes) {
+            ContentType type = ContentType.parse(expected);
+            String actual = type.asHeader();
+            Assert.assertEquals(actual, expected);
         }
     }
 

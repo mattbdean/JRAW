@@ -78,7 +78,7 @@ public class HttpHelper {
                 } else {
                     // Use POST data or similar
                     StringEntity params = new StringEntity(b.json.toString());
-                    request.addHeader("Content-Type", ContentType.JSON);
+                    request.addHeader("Content-Type", ContentType.JSON.asHeader());
                     // POST, PATCH, or PUT
                     ((HttpEntityEnclosingRequestBase) request).setEntity(params);
                 }
