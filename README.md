@@ -35,12 +35,34 @@ JRAW was built off the principle that as few classes as possible should be able 
 All [models](https://github.com/thatJavaNerd/JRAW/tree/master/src/main/java/net/dean/jraw/models) are instantiated with a Jackson `JsonNode` parsed from responses from the Reddit API.
 
 ##Getting Started
-Add the jar to your dependencies
-```java
+####Adding the Dependency
+
+JRAW is hosted on Bintray's [jCenter](https://bintray.com/thatjavanerd/maven/JRAW/view).
+
+**Gradle**:
+```groovy
+repositories {
+    jcenter()
+}
+
 dependencies {
-     compile file("path/to/JRAW-fat.jar")
+    compile(group: 'net.dean.jraw', name: 'JRAW', version: '0.3.0')
 }
 ```
+
+**Maven**:
+
+Add jCenter to your repositories (see [here](https://bintray.com/bintray/jcenter) and press "Set me up!" on the right hand side) and then add the repository:
+
+```xml
+<dependency>
+    <groupId>net.dean.jraw</groupId>
+    <artifactId>JRAW</artifactId>
+    <version>0.3.0</version>
+</dependency>
+```
+
+####Using the Library
 
 Get yourself a `RedditClient`
 
