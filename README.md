@@ -84,7 +84,7 @@ SubredditPaginator frontPage = new SubredditPaginator(reddit); // Second paramet
 while (frontPage.hasNext()) {
     Listing<Submission> submissions = frontPage.next();
 
-    for (Submission submission : submissions.getChildren()) {
+    for (Submission submission : submissions) {
         System.out.println(submission.getTitle());
     }
 }
@@ -157,3 +157,5 @@ Want to contribute? Follow these steps:
 1. Create a multireddit containing at least one subreddit
 2. Have at least 10 link karma (otherwise you will have to use captchas)
 3. Submit at least one post (how about on [/r/jraw_testing2](http://www.reddit.com/r/jraw_testing2)?)
+
+

@@ -113,7 +113,7 @@ public class AccountTest {
     @Test
     public void testSendRepliesToInbox() throws ApiException {
         try {
-            Submission s = (Submission) getPaginator(Where.SUBMITTED).next().getChildren().get(0);
+            Submission s = (Submission) getPaginator(Where.SUBMITTED).next().get(0);
             LoggedInAccount me = reddit.login(TestUtils.getCredentials()[0], TestUtils.getCredentials()[1]);
             me.setSendRepliesToInbox(s, true);
         } catch (NetworkException e) {
@@ -138,7 +138,7 @@ public class AccountTest {
             account.save(submission, true);
 
             UserContributionPaginator paginator = getPaginator(Where.SAVED);
-            List<Contribution> saved = paginator.next().getChildren();
+            List<Contribution> saved = paginator.next();
 
             for (Contribution c : saved) {
                 Submission s = (Submission) c;
@@ -161,7 +161,7 @@ public class AccountTest {
             account.save(submission, false);
 
             UserContributionPaginator paginator = getPaginator(Where.SAVED);
-            List<Contribution> saved = paginator.next().getChildren();
+            List<Contribution> saved = paginator.next();
 
             // Search for the submission in the saved list
             saved.stream().filter(s -> s.getId().equals(submission.getId())).forEach(s -> Assert.fail("Found the submission after it was unsaved"));
@@ -178,7 +178,7 @@ public class AccountTest {
             account.hide(submission, true);
 
             UserContributionPaginator paginator = getPaginator(Where.HIDDEN);
-            List<Contribution> hidden = paginator.next().getChildren();
+            List<Contribution> hidden = paginator.next();
 
             for (Contribution c : hidden) {
                 Submission s = (Submission) c;
@@ -200,7 +200,7 @@ public class AccountTest {
             account.hide(submission, false);
 
             UserContributionPaginator paginator = getPaginator(Where.HIDDEN);
-            List<Contribution> hidden = paginator.next().getChildren();
+            List<Contribution> hidden = paginator.next();
 
             for (Contribution c : hidden) {
                 Submission s = (Submission) c;

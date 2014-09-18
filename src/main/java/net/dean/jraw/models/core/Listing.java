@@ -7,16 +7,17 @@ import net.dean.jraw.models.RedditObject;
 import net.dean.jraw.models.ThingType;
 import org.codehaus.jackson.JsonNode;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
- * Represents a listing of Things. A Listing has four main keys: before, after, modhash, and its children.
+ * Represents a listing of Things. A Listing has four main keys: before, after, modhash, and its children. Listing uses
+ * an ArrayList to implement the method inherited by {@link java.util.List}. Any method that attempts to change the data
+ * (such as {@link List#remove(Object)}) will throw an UnsupportedOperationException.
  *
  * @param <T> The type of elements that will be in this listing
  * @author Matthew Dean
  */
-public class Listing<T extends RedditObject> extends RedditObject {
+public class Listing<T extends RedditObject> extends RedditObject implements List<T> {
     /**
      * The RedditObjectParser which will be used to parse JSON values into RedditObjects
      */
@@ -25,15 +26,15 @@ public class Listing<T extends RedditObject> extends RedditObject {
     /**
      * The class of the contents of the listing
      */
-    private Class<T> thingClass;
+    private final Class<T> thingClass;
 
-    private List<T> children;
-    private More more;
+    private final List<T> children;
+    private final More more;
 
     /**
      * Whether this listing contains a "more" element in its children
      */
-    private boolean hasChildren;
+    private final boolean hasChildren;
 
     /**
      * Instantiates a new listing
@@ -46,36 +47,34 @@ public class Listing<T extends RedditObject> extends RedditObject {
 
         this.thingClass = thingClass;
         this.hasChildren = data.has("children");
-        initChildren();
+        this.children = initChildren();
+        this.more = initMore();
     }
 
-    private void initChildren() {
-        children = new ArrayList<>();
+    private List<T> initChildren() {
+        List<T> children = new ArrayList<>();
 
         // children is a JSON array
         try {
             for (JsonNode childNode : data.get("children")) {
-                if (childNode.get("kind").getTextValue().equalsIgnoreCase("more")) {
-                    this.more = new More(childNode.get("data"));
-                }
                 children.add(PARSER.parse(childNode, thingClass));
             }
         } catch (NullPointerException e) {
             JrawUtils.logger().error("NullPointerException", e);
-            e.printStackTrace();
         }
-    }
 
-    /**
-     * Gets a list of children RedditObjects
-     *
-     * @return A list of children
-     */
-    @JsonInteraction
-    public List<T> getChildren() {
         return children;
     }
 
+    private More initMore() {
+        for (JsonNode childNode : data.get("children")) {
+            if (childNode.get("kind").getTextValue().equalsIgnoreCase("more")) {
+                return new More(childNode.get("data"));
+            }
+        }
+
+        return null;
+    }
 
     /**
      * Gets the "more" element (the last element in the children)
@@ -119,6 +118,10 @@ public class Listing<T extends RedditObject> extends RedditObject {
         return ThingType.LISTING;
     }
 
+    private void onDataModified() {
+        throw new UnsupportedOperationException("Listing children are not modifiable.");
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -138,4 +141,130 @@ public class Listing<T extends RedditObject> extends RedditObject {
         result = 31 * result + (hasChildren ? 1 : 0);
         return result;
     }
+
+    // java.util.List methods below
+
+    @Override
+    public int size() {
+        return children.size();
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return children.isEmpty();
+    }
+
+    @Override
+    public boolean contains(Object o) {
+        return children.contains(o);
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        return children.iterator();
+    }
+
+    @Override
+    public Object[] toArray() {
+        return children.toArray();
+    }
+
+    @Override
+    public <T1> T1[] toArray(T1[] t1s) {
+        return children.toArray(t1s);
+    }
+
+    @Override
+    public boolean add(T t) {
+        onDataModified();
+        return false;
+    }
+
+    @Override
+    public boolean remove(Object o) {
+        onDataModified();
+        return false;
+    }
+
+    @Override
+    public boolean containsAll(Collection<?> objects) {
+        return children.containsAll(objects);
+    }
+
+    @Override
+    public boolean addAll(Collection<? extends T> ts) {
+        onDataModified();
+        return false;
+    }
+
+    @Override
+    public boolean addAll(int i, Collection<? extends T> ts) {
+        onDataModified();
+        return false;
+    }
+
+    @Override
+    public boolean removeAll(Collection<?> objects) {
+        onDataModified();
+        return false;
+    }
+
+    @Override
+    public boolean retainAll(Collection<?> objects) {
+        onDataModified();
+        return false;
+    }
+
+    @Override
+    public void clear() {
+        onDataModified();
+    }
+
+    @Override
+    public T get(int i) {
+        return children.get(i);
+    }
+
+    @Override
+    public T set(int i, T t) {
+        onDataModified();
+        return null;
+    }
+
+    @Override
+    public void add(int i, T t) {
+        onDataModified();
+    }
+
+    @Override
+    public T remove(int i) {
+        onDataModified();
+        return null;
+    }
+
+    @Override
+    public int indexOf(Object o) {
+        return children.indexOf(o);
+    }
+
+    @Override
+    public int lastIndexOf(Object o) {
+        return children.lastIndexOf(o);
+    }
+
+    @Override
+    public ListIterator<T> listIterator() {
+        return children.listIterator();
+    }
+
+    @Override
+    public ListIterator<T> listIterator(int i) {
+        return children.listIterator(i);
+    }
+
+    @Override
+    public List<T> subList(int i, int i2) {
+        return children.subList(i, i2);
+    }
+
 }

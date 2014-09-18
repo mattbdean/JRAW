@@ -3,7 +3,6 @@ package net.dean.jraw.test;
 import net.dean.jraw.ApiException;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.NetworkException;
-import net.dean.jraw.models.Contribution;
 import net.dean.jraw.models.LoggedInAccount;
 import net.dean.jraw.models.core.Listing;
 import net.dean.jraw.models.core.Submission;
@@ -46,7 +45,7 @@ public class PaginationTest {
         paginator.setSubreddit(subreddit);
         commonTest(paginator);
 
-        for (Submission s : paginator.getCurrentListing().getChildren()) {
+        for (Submission s : paginator.getCurrentListing()) {
             // Make sure they all come from the same subreddit
             Assert.assertTrue(s.getSubredditName().equals(subreddit));
         }
@@ -68,7 +67,7 @@ public class PaginationTest {
         SpecificPaginator paginator = new SpecificPaginator(reddit, fullNames.toArray(new String[fullNames.size()]));
 
         Listing<Submission> submissions = paginator.next();
-        for (Submission s : submissions.getChildren()) {
+        for (Submission s : submissions) {
             Assert.assertTrue(fullNames.contains(s.getFullName()));
         }
     }
@@ -132,18 +131,9 @@ public class PaginationTest {
         Listing<T> firstPage = p.next();
         ThingFieldTest.fieldValidityCheck(firstPage);
 
-        if (firstPage.getChildren().size() > 0) {
-            T thing = firstPage.getChildren().get(0);
-
-            if (thing instanceof Contribution) {
-                // Make a special exception for Contribution, since calling data() will fail the test by throwing an
-                // UnsupportedOperationException when data() is called. Instead test the Thing that it's wrapping
-                Contribution c = (Contribution) thing;
-                ThingFieldTest.fieldValidityCheck(c);
-            } else {
-                // Normal Thing
-                ThingFieldTest.fieldValidityCheck(firstPage.getChildren().get(0));
-            }
+        if (firstPage.size() > 0) {
+            // Normal Thing
+            ThingFieldTest.fieldValidityCheck(firstPage.get(0));
         }
     }
 }

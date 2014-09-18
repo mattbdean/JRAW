@@ -258,6 +258,7 @@ public abstract class JsonModel {
             clazz = clazz.getSuperclass();
         }
 
+        // Filter out the methods that don't have the JsonInteraction annotation
         methods.addAll(toObserve.stream().filter(m -> m.isAnnotationPresent(JsonInteraction.class)).collect(Collectors.toList()));
 
         return methods;

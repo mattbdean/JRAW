@@ -30,9 +30,9 @@ public class SubmissionTest {
             Listing<Comment> comments = submission.getComments();
             assertNotNull(comments, "Submission comments was null");
             // This is the most upvoted link in reddit history, there's bound to be more than one comment
-            assertFalse(comments.getChildren().isEmpty());
+            assertFalse(comments.isEmpty());
 
-            Comment first = comments.getChildren().get(0);
+            Comment first = comments.get(0);
             ThingFieldTest.fieldValidityCheck(first);
         } catch (NetworkException e) {
             Assert.fail(e.getMessage());
@@ -44,8 +44,8 @@ public class SubmissionTest {
         try {
             Submission s = reddit.getSubmission(ID);
 
-            Comment c = s.getComments().getChildren().get(0);
-            Assert.assertNotNull(c.getReplies().getChildren().get(0).getBody());
+            Comment c = s.getComments().get(0);
+            Assert.assertNotNull(c.getReplies().get(0).getBody());
         } catch (NetworkException e) {
             Assert.fail(e.getMessage());
         }

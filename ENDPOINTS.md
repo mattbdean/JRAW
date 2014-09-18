@@ -1,4 +1,4 @@
-<!--- Generated 2014-09-16 at 22:39:39 EDT. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
+<!--- Generated 2014-09-17 at 20:54:34 EDT. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
 #Endpoints
 
 This file contains a list of all the endpoints (regardless of if they have been implemented) that can be found at the [official Reddit API docs](https://www.reddit.com/dev/api). To update this file, run `./gradlew endpoints:update`.
@@ -179,7 +179,7 @@ Method|Endpoint|Implemented?
 ##search
 Method|Endpoint|Implemented?
 :----:|--------|------------
-`GET`|[`/search`](https://www.reddit.com/dev/api#GET_search)|[`SearchPaginator.getListing()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/SearchPaginator.java#L31)
+`GET`|[`/search`](https://www.reddit.com/dev/api#GET_search)|[`SearchPaginator.getListing()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/SearchPaginator.java#L39)
 
 ##subreddits
 Method|Endpoint|Implemented?
@@ -246,5 +246,5 @@ Method|Endpoint|Implemented?
 `GET`|[`/wiki/revisions`](https://www.reddit.com/dev/api#GET_wiki_revisions)|No
 `POST`|[`/wiki/revisions/{page}`](https://www.reddit.com/dev/api#POST_wiki_revisions_%7Bpage%7D)|No
 `GET`|[`/wiki/settings/{page}`](https://www.reddit.com/dev/api#GET_wiki_settings_%7Bpage%7D)|No
-`GET`|[`/wiki/pages`](https://www.reddit.com/dev/api#GET_wiki_pages)|[`RedditClient.getWikiPages()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L467)
-`GET`|[`/wiki/{page}`](https://www.reddit.com/dev/api#GET_wiki_%7Bpage%7D)|[`RedditClient.getWikiPage()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L501)
+`GET`|[`/wiki/pages`](https://www.reddit.com/dev/api#GET_wiki_pages)|[`RedditClient.getWikiPages()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L468)
+`GET`|[`/wiki/{page}`](https://www.reddit.com/dev/api#GET_wiki_%7Bpage%7D)|[`RedditClient.getWikiPage()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L502)

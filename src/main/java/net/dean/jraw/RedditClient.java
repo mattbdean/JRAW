@@ -443,7 +443,7 @@ public class RedditClient extends RestClient<RedditResponse> {
         paginator.setSubreddit("trendingsubreddits");
         paginator.setSorting(Sorting.NEW);
 
-        Submission latest = paginator.next().getChildren().get(0);
+        Submission latest = paginator.next().get(0);
         String title = latest.getTitle();
         String[] parts = title.split(" ");
         List<String> subreddits = new ArrayList<>(NUM_TRENDING_SUBREDDITS);

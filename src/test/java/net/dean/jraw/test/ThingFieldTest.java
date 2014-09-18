@@ -78,7 +78,7 @@ public class ThingFieldTest {
     public void testComment() {
         try {
             Submission submission = reddit.getSubmission(SUBMISSION_ID);
-            fieldValidityCheck(submission.getComments().getChildren().get(0));
+            fieldValidityCheck(submission.getComments().get(0));
         } catch (NetworkException e) {
             Assert.fail(e.getMessage());
         }
@@ -90,7 +90,7 @@ public class ThingFieldTest {
             SubredditPaginator frontPage = new SubredditPaginator(reddit);
             Listing<Submission> submissions = frontPage.next();
 
-            submissions.getChildren().stream().filter(s -> s.getOEmbedMedia() != null).forEach(s -> {
+            submissions.stream().filter(s -> s.getOEmbedMedia() != null).forEach(s -> {
                 OEmbed o = s.getOEmbedMedia();
                 fieldValidityCheck(o);
             });
@@ -107,7 +107,7 @@ public class ThingFieldTest {
             SubredditPaginator frontPage = new SubredditPaginator(reddit);
             Listing<Submission> submissions = frontPage.next();
 
-            submissions.getChildren().stream().filter(s -> s.getEmbeddedMedia() != null).forEach(s -> {
+            submissions.stream().filter(s -> s.getEmbeddedMedia() != null).forEach(s -> {
                 EmbeddedMedia m = s.getEmbeddedMedia();
                 fieldValidityCheck(m);
             });
