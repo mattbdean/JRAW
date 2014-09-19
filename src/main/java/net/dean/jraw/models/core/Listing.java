@@ -1,7 +1,6 @@
 package net.dean.jraw.models.core;
 
 import net.dean.jraw.JrawUtils;
-import net.dean.jraw.RedditObjectParser;
 import net.dean.jraw.models.JsonInteraction;
 import net.dean.jraw.models.RedditObject;
 import net.dean.jraw.models.ThingType;
@@ -18,10 +17,6 @@ import java.util.*;
  * @author Matthew Dean
  */
 public class Listing<T extends RedditObject> extends RedditObject implements List<T> {
-    /**
-     * The RedditObjectParser which will be used to parse JSON values into RedditObjects
-     */
-    private static final RedditObjectParser PARSER = new RedditObjectParser();
 
     /**
      * The class of the contents of the listing
