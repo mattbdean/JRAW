@@ -75,7 +75,7 @@ public final class TestUtils {
         String msg = null;
         // toUpperCase just in case (no pun intended)
         String method = getCallingMethod();
-        switch (e.getConstant().toUpperCase()) {
+        switch (e.getCode().toUpperCase()) {
             case "QUOTA_FILLED":
                 msg = String.format("Skipping %s(), link posting quota has been filled for this user", method);
                 break;

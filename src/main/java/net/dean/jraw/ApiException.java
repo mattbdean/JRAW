@@ -4,26 +4,26 @@ package net.dean.jraw;
  * This class provides to translate errors returned by the Reddit API into Java Exceptions
  */
 public class ApiException extends Exception {
-    protected final String constant;
+    protected final String code;
     protected final String explanation;
 
     /**
      * Instantiates a new ApiException
-     * @param constant The constant error string
+     * @param code The code error string
      * @param explanation The localized explanation
      */
-    public ApiException(String constant, String explanation) {
-        super(String.format("API returned error: \"%s\" (\"%s\")", constant, explanation));
-        this.constant = constant;
+    public ApiException(String code, String explanation) {
+        super(String.format("API returned error: \"%s\" (\"%s\")", code, explanation));
+        this.code = code;
         this.explanation = explanation;
     }
 
     /**
-     * Gets the constant error string
-     * @return The constant
+     * Gets the code error string
+     * @return The code
      */
-    public String getConstant() {
-        return constant;
+    public String getCode() {
+        return code;
     }
 
     /**
