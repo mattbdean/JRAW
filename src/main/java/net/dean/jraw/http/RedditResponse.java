@@ -2,7 +2,6 @@ package net.dean.jraw.http;
 
 import net.dean.jraw.ApiException;
 import net.dean.jraw.JrawUtils;
-import net.dean.jraw.RedditObjectParser;
 import net.dean.jraw.models.RedditObject;
 import net.dean.jraw.models.core.Comment;
 import net.dean.jraw.models.core.Listing;
@@ -14,8 +13,6 @@ import org.codehaus.jackson.JsonNode;
  * This class provides automatic parsing and handling of ApiExceptions, as well as quick RedditObject and Listing creation
  */
 public class RedditResponse extends RestResponse {
-
-    protected static final RedditObjectParser REDDIT_OBJECT_PARSER = new RedditObjectParser();
 
     private final ApiException[] apiExceptions;
 
@@ -87,7 +84,7 @@ public class RedditResponse extends RestResponse {
         }
 
         // Normal Thing
-        return REDDIT_OBJECT_PARSER.parse(rootNode, thingClass);
+        return JrawUtils.parseJson(rootNode, thingClass);
     }
 
     /**
