@@ -1,6 +1,7 @@
 package net.dean.jraw.http;
 
 import net.dean.jraw.ApiException;
+import net.dean.jraw.JrawUtils;
 import net.dean.jraw.RedditObjectParser;
 import net.dean.jraw.models.RedditObject;
 import net.dean.jraw.models.core.Comment;
@@ -18,14 +19,21 @@ public class RedditResponse extends RestResponse {
 
     private final ApiException[] apiExceptions;
 
+    public RedditResponse(HttpResponse response) {
+        this(response, ContentType.JSON);
+    }
+
     /**
      * Instantiates a new RestResponse. This constructor also reads the contents of the input stream and parses it into
      * the root JsonNode, and then consumes the response's entity.
      *
      * @param response The HttpResponse used to get the information
      */
-    public RedditResponse(HttpResponse response) {
-        super(response);
+    public RedditResponse(HttpResponse response, ContentType expected) {
+        super(response, expected);
+
+        if (contentType.equals(ContentType.HTML))
+            JrawUtils.logger().warn("Received HTML from Reddit API instead of JSON. Are you sure you have access to this document?");
 
         ApiException[] errors = new ApiException[0];
         if (contentType.equals(ContentType.JSON)) {

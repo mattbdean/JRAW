@@ -9,11 +9,13 @@ import java.util.Map;
  * does not compare any extra arguments, only the type and subtype.
  */
 public class ContentType {
-    /** Represents a JavaScript Object Notation file */
+    /** Represents any content type (&#42;/&#42;) */
+    public static final ContentType ANY = ContentType.parse("*/*");
+    /** Represents a JavaScript Object Notation file (application/json) */
     public static final ContentType JSON = ContentType.parse("application/json");
-    /** Represents a HyperText Markup Language file */
+    /** Represents a HyperText Markup Language file (text/html) */
     public static final ContentType HTML = ContentType.parse("text/html");
-    /** Represents a Cascading Style Sheet file */
+    /** Represents a Cascading Style Sheet file (text/css) */
     public static final ContentType CSS = ContentType.parse("text/css");
 
     /**

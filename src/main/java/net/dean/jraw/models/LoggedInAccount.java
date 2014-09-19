@@ -246,7 +246,7 @@ public class LoggedInAccount extends Account {
     @EndpointImplementation(Endpoints.MULTI_MINE)
     public List<MultiReddit> getMyMultiReddits() throws NetworkException {
         List<MultiReddit> multis = new ArrayList<>();
-        JsonNode multiArray = creator.execute(new RestRequest(HttpVerb.GET, "/api/multi/mine")).getJson();
+        JsonNode multiArray = creator.execute(creator.request(HttpVerb.GET, "/api/multi/mine")).getJson();
 
         for (JsonNode multi : multiArray) {
             multis.add(new MultiReddit(multi.get("data")));
@@ -266,7 +266,8 @@ public class LoggedInAccount extends Account {
      *                          HTTP request.
      */
     private RedditResponse genericPost(String path, Map<String, String> args) throws NetworkException, ApiException {
-        RedditResponse response = creator.execute(new RestRequest(HttpVerb.POST, path, args));
+        RestRequest request = creator.requestBuilder(HttpVerb.POST, path).args(args).build();
+        RedditResponse response = creator.execute(request);
         if (response.hasErrors()) {
             throw response.getApiExceptions()[0];
         }

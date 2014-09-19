@@ -86,7 +86,10 @@ public abstract class Paginator<T extends Thing> implements Iterator<Listing<T>>
             args.putAll(extraArgs);
         }
 
-        Listing<T> listing = creator.execute(new RestRequest(HttpVerb.GET, path, args)).asListing(thingType);
+        RestRequest request = creator.requestBuilder(HttpVerb.GET, path)
+                .args(args)
+                .build();
+        Listing<T> listing = creator.execute(request).asListing(thingType);
         this.current = listing;
         pageNumber++;
 

@@ -25,13 +25,17 @@ public class RestResponse {
     protected final String raw;
     protected final ContentType contentType;
 
+    public RestResponse(HttpResponse response) {
+        this(response, ContentType.JSON);
+    }
+
     /**
      * Instantiates a new RestResponse. This constructor also reads the contents of the input stream and parses it into
      * the root JsonNode, and then consumes the response's entity.
      *
      * @param response The HttpResponse used to get the information
      */
-    public RestResponse(HttpResponse response) {
+    public RestResponse(HttpResponse response, ContentType expected) {
         this.headers = response.getAllHeaders();
 
         // http://stackoverflow.com/a/5445161
@@ -40,14 +44,12 @@ public class RestResponse {
 
         String type = getHeader("Content-Type").getValue().toLowerCase();
         this.contentType = ContentType.parse(type);
+        if (!contentType.equals(expected)) {
+            JrawUtils.logger().warn("Unknown Content-Type received: \"{}\"", contentType.asHeader());
+        }
         if (contentType.equals(ContentType.JSON)) {
             this.rootNode = readTree(raw);
         } else {
-            if (contentType.equals(ContentType.HTML))
-                JrawUtils.logger().warn("Received HTML from Reddit API instead of JSON. Are you sure you have access to this document?");
-            else
-                JrawUtils.logger().warn("Unknown Content-Type received: \"{}\"", contentType.asHeader());
-
             // Init JSON-related final variables
             this.rootNode = null;
         }

@@ -15,14 +15,12 @@ import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
-import org.codehaus.jackson.JsonNode;
 
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -57,36 +55,36 @@ public class HttpHelper {
     /**
      * Conducts an HTTP request
      *
-     * @param b The RequestBuilder to use to execute the request
+     * @param r The request to execute
      * @return A CloseableHttpResponse formed in the execution of the HTTP request
      * @throws NetworkException If the status code was not "200 OK"
      */
-    public CloseableHttpResponse execute(RequestBuilder b) throws NetworkException {
-        String path = b.path;
+    public CloseableHttpResponse execute(HttpRequest r) throws NetworkException {
+        String path = r.getPath();
         if (!path.startsWith("/")) {
             path = "/" + path;
         }
 
-        HttpRequestBase request = b.verb.getRequestObject(path);
+        HttpRequestBase request = r.getVerb().getRequestObject(path);
 
         try {
-            if (b.isJson) {
-                if (b.verb != HttpVerb.PUT && b.verb != HttpVerb.PATCH && b.verb != HttpVerb.POST) {
+            if (r.isJson()) {
+                if (r.getVerb() != HttpVerb.PUT && r.getVerb() != HttpVerb.PATCH && r.getVerb() != HttpVerb.POST) {
                     // Being exclusive would be shorter, but exclusive cryptographic patterns almost always fail
                     // Use query string
-                    path += "?" + URLEncoder.encode(b.json.toString(), "UTF-8");
+                    path += "?" + URLEncoder.encode(r.getJson().toString(), "UTF-8");
                 } else {
                     // Use POST data or similar
-                    StringEntity params = new StringEntity(b.json.toString());
+                    StringEntity params = new StringEntity(r.getJson().asText());
                     request.addHeader("Content-Type", ContentType.JSON.asHeader());
                     // POST, PATCH, or PUT
                     ((HttpEntityEnclosingRequestBase) request).setEntity(params);
                 }
             } else {
                 // Either not JSON data or no args at all
-                if (b.args != null) {
+                if (r.getArgs() != null) {
                     // Construct a List of BasicNameValue pairs from a Map
-                    List<BasicNameValuePair> params = b.args.entrySet().stream().map(entry -> new BasicNameValuePair(entry.getKey(),
+                    List<BasicNameValuePair> params = r.getArgs().entrySet().stream().map(entry -> new BasicNameValuePair(entry.getKey(),
                             entry.getValue())).collect(Collectors.toList());
 
                     if (request instanceof HttpGet || request instanceof HttpDelete) {
@@ -107,8 +105,8 @@ public class HttpHelper {
                 request.addHeader(h);
             }
 
-            JrawUtils.logger().info("{} {}{} {}", b.verb.name(), b.hostname, path, request.getProtocolVersion());
-            CloseableHttpResponse response = (CloseableHttpResponse) client.execute(new HttpHost(b.hostname), request);
+            JrawUtils.logger().info("{} {}{} {}", r.getVerb().name(), r.getHostname(), path, request.getProtocolVersion());
+            CloseableHttpResponse response = (CloseableHttpResponse) client.execute(new HttpHost(r.getHostname()), request);
             if (response.getStatusLine().getStatusCode() != 200) {
                 throw new NetworkException(response.getStatusLine().getStatusCode());
             }
@@ -169,52 +167,5 @@ public class HttpHelper {
         }
 
         return null;
-    }
-
-    /**
-     * This class helps create a configuration for executing an HTTP request using Apache's HttpComponents.
-     */
-    public static class RequestBuilder {
-        private final HttpVerb verb;
-        private final String hostname;
-        private final String path;
-        private Map<String, String> args;
-        private JsonNode json;
-        private boolean isJson;
-
-        /**
-         * Instantiates a new RequestBuilder
-         * @param verb The HTTP verb to use (GET, POST, etc)
-         * @param hostname The name of the URL's host. Do not include the scheme (ex: "http://")
-         * @param path The path relative to the root directory of the host.
-         */
-        public RequestBuilder(HttpVerb verb, String hostname, String path) {
-            this.verb = verb;
-            this.hostname = hostname;
-            this.path = path;
-        }
-
-        /**
-         * @param args The arguments to use. If the verb uses form data (POST, PATCH, PUT), then these will be put into the
-         *             request body. If the verb is "GET", then a query string will be appended to the path.
-         * @return This builder
-         */
-        public RequestBuilder args(Map<String, String> args) {
-            this.args = args;
-            this.isJson = false;
-            return this;
-        }
-
-        /**
-         * Sets the JSON data to send. The HTTP verb must be PUT, POST, or PATCH.
-         *
-         * @param json The JSON data to send
-         * @return This builder
-         */
-        public RequestBuilder json(JsonNode json) {
-            this.json = json;
-            this.isJson = true;
-            return this;
-        }
     }
 }

@@ -1,41 +1,42 @@
 package net.dean.jraw.http;
 
-import net.dean.jraw.JrawUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.CloseableHttpResponse;
 
-import java.lang.reflect.InvocationTargetException;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * This class provides a way to send RESTful HTTP requests and return {@link net.dean.jraw.http.RestResponse} objects
- * @param <T> The type of response object that will be returned by {@link #execute(RestRequest)}
+ * @param <U> The type of response object that will be returned by {@link #execute(HttpRequest)}
  */
-public class RestClient<T extends RestResponse> {
+public class RestClient<T extends RestRequest, U extends RestResponse> {
     private final String host;
 
     /** The HttpHelper that will do all the basic HTTP requests */
     protected HttpHelper http;
 
     /** A list of RestRequests sent in the past */
-    protected List<RestRequest> history;
-
-    protected Class<T> responseClass;
+    protected List<HttpRequest> history;
 
     /**
      * Instantiates a new RestClient
      *
      * @param host          The host on which to operate
      * @param userAgent     The User-Agent header which will be sent with all requests
-     * @param responseClass The class that will be used to create response objects
      */
-    public RestClient(String host, String userAgent, Class<T> responseClass) {
+    public RestClient(String host, String userAgent) {
         this.http = new HttpHelper(userAgent);
         this.host = host;
         this.history = new ArrayList<>();
-        this.responseClass = responseClass;
+    }
+
+    public RestRequest.Builder requestBuilder(HttpVerb verb, String path) {
+        return new RestRequest.Builder(verb, host, path);
+    }
+
+    public RestRequest request(HttpVerb verb, String path) {
+        return new RestRequest(verb, host, path);
     }
 
     /**
@@ -45,29 +46,20 @@ public class RestClient<T extends RestResponse> {
      * @return A RestResponse from the resulting response
      * @throws NetworkException If the status code was not "200 OK"
      */
-    public T execute(RestRequest request) throws NetworkException {
-        request.setExecuted(LocalDateTime.now());
+    public U execute(T request) throws NetworkException {
+        request.onExecuted();
         history.add(request);
-        HttpHelper.RequestBuilder builder = new HttpHelper.RequestBuilder(request.getVerb(), host, request.getPath());
-        if (request.isJson()) {
-            builder.json(request.getJson());
-        } else {
-            builder.args(request.getArgs());
-        }
-
-        CloseableHttpResponse response = http.execute(builder);
+        CloseableHttpResponse response = http.execute(request);
 
         if (response == null) {
             throw new NetworkException("Request timed out");
         }
 
-        try {
-            return responseClass.getConstructor(HttpResponse.class).newInstance(response);
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-            // Holy exceptions, Batman!
-            JrawUtils.logger().error("Could not instantiate a new " + responseClass.getName(), e);
-            return null;
-        }
+        return initResponse(request, response);
+    }
+
+    public U initResponse(RestRequest request, HttpResponse response) {
+        return (U) new RestResponse(response, request.getExpected());
     }
 
     /**
