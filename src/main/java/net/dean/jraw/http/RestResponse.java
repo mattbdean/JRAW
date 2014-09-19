@@ -23,8 +23,14 @@ public class RestResponse {
     protected final JsonNode rootNode;
     /** The raw data of the response's content */
     protected final String raw;
+    /** The ContentType object parsed from the "Content-Type" header of the HTTP response */
     protected final ContentType contentType;
 
+    /**
+     * Instantiates a new RestResponse
+     *
+     * @param response The HttpResponse used to get the information
+     */
     public RestResponse(HttpResponse response) {
         this(response, ContentType.JSON);
     }
@@ -34,6 +40,7 @@ public class RestResponse {
      * the root JsonNode, and then consumes the response's entity.
      *
      * @param response The HttpResponse used to get the information
+     * @param expected The expected ContentType
      */
     public RestResponse(HttpResponse response, ContentType expected) {
         this.headers = response.getAllHeaders();

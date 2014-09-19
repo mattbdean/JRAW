@@ -59,10 +59,21 @@ public class ContentType {
     private String subtype;
     private Map<String, String> args;
 
+    /**
+     * Instantiates a new ContentType
+     * @param type The type (ex: "application", "text")
+     * @param subtype The subtype (ex: "x-www-form-urlencoded", "css")
+     */
     public ContentType(String type, String subtype) {
         this(type, subtype, new HashMap<>());
     }
 
+    /**
+     * Instantiates a new ContentType with additional information
+     * @param type The type (ex: "application", "text")
+     * @param subtype The subtype (ex: "x-www-form-urlencoded", "css")
+     * @param args The additional arguments (ex: "encoding=utf-8")
+     */
     public ContentType(String type, String subtype, Map<String, String> args) {
         this.type = type;
         this.subtype = subtype;
@@ -97,6 +108,13 @@ public class ContentType {
                 '}';
     }
 
+    /**
+     * Formats this ContentType as it could appear in an HTTP header. For example, a ContentType where the type is "text",
+     * the subtype is "css", and the extra arguments are {@code {encoding=utf-8, foo=bar}} would produce the output of
+     * {@code text/css; encoding=utf-8; foo=bar}
+     *
+     * @return A string representing how this class would appear in an HTTP header
+     */
     public String asHeader() {
         StringBuilder sb = new StringBuilder(getBasicForm());
         for (Map.Entry<String, String> arg : args.entrySet()) {
@@ -107,6 +125,13 @@ public class ContentType {
         return sb.toString();
     }
 
+    /**
+     * Formats this ContentType like {@link #asHeader()}, but excluding the extra arguments. For example, a ContentType
+     * where the type is "text", the subtype is "css", and the extra arguments are {@code {encoding=utf-8, foo=bar}}
+     * would produce the output of {@code text/css}
+     *
+     * @return The basic form of this ContentType
+     */
     public String getBasicForm() {
         return String.format("%s/%s", type, subtype);
     }

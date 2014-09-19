@@ -26,12 +26,17 @@ public class HttpRequest {
      * Instantiates a simple RestRequest
      *
      * @param verb The HTTP verb to use
+     * @param hostname The host to use. For example, "reddit.com" or "ssl.reddit.com"
      * @param path The path of the request. For example, "/api/login".
      */
     public HttpRequest(HttpVerb verb, String hostname, String path) {
         this(new Builder(verb, hostname, path));
     }
 
+    /**
+     * Instantiates a new HttpRequest
+     * @param b The Builder to use
+     */
     protected HttpRequest(Builder b) {
         this.verb = b.verb;
         this.hostname = b.hostname;
@@ -49,6 +54,12 @@ public class HttpRequest {
         return args;
     }
 
+    /**
+     * Get the time that this request was executed. Mainly used for ratelimiting.
+     *
+     * @return The time this request was executed, or null if it hasn't been executed yet.
+     * @see net.dean.jraw.RedditClient#setRequestManagementEnabled(boolean)
+     */
     public LocalDateTime getExecuted() {
         return executed;
     }
@@ -65,11 +76,18 @@ public class HttpRequest {
         return json;
     }
 
+    /**
+     * Checks if this request contains JSON data.
+     * @return False if the HTTP verb is GET or DELETE or no JsonNode was passed to this request's Builder.
+     */
     public boolean isJson() {
         return isJson;
     }
 
-
+    /**
+     * Called when this request is executed to take note of the current time.
+     * @throws IllegalStateException If this method has been called more than once
+     */
     public void onExecuted() {
         if (executed != null) {
             throw new IllegalStateException("Already executed (" + executed + ")");
@@ -88,6 +106,14 @@ public class HttpRequest {
                 '}';
     }
 
+    /**
+     * This class is responsible for building HttpRequest objects. When extending this class where {@literal <T>} is not
+     * {@link HttpRequest}, you <b>must</b> override {@link #build()} lest your application will become flooded with
+     * ClassCastExceptions.
+     *
+     * @param <T> The type of HttpRequest to return
+     * @param <U> The type of Builder to return in {@link #build()}
+     */
     public static class Builder<T extends HttpRequest, U extends Builder<T, U>> {
         protected final HttpVerb verb;
         protected final String hostname;
@@ -95,22 +121,47 @@ public class HttpRequest {
         protected Map<String, String> args;
         protected JsonNode json;
 
+        /**
+         * Instantiates a new Builder
+         * @param verb The HTTP verb to use
+         * @param hostname The host to use. For example, "reddit.com" or "ssl.reddit.com"
+         * @param path The path of the request. For example, "/api/login".
+         */
         public Builder(HttpVerb verb, String hostname, String path) {
             this.verb = verb;
             this.hostname = hostname;
             this.path = path;
         }
 
+        /**
+         * Sets the query args for GET and DELETE requests or the form args for other HTTP verbs.
+         * @param args The arguments to use
+         * @return This Builder
+         */
+        @SuppressWarnings("unchecked")
         public U args(Map<String, String> args) {
             this.args = args;
             return (U) this;
         }
 
+        /**
+         * Sets the query args for GET and DELETE requests or the form args for other HTTP verbs. The Object array must
+         * meet the requirements described in {@link net.dean.jraw.JrawUtils#args(Object...)} for this method to complete
+         * successfully.
+         * @param args The arguments to use
+         * @return This Builder
+         */
+        @SuppressWarnings("unchecked")
         public U args(Object... args) {
             this.args = JrawUtils.args(args);
             return (U) this;
         }
 
+        /**
+         * Sets the JSON data. Only applicable for HTTP verbs that support form arguments such as POST.
+         * @param json The JSON data to use
+         * @return This Builder
+         */
         public Builder json(JsonNode json) {
             if (verb == HttpVerb.GET || verb == HttpVerb.DELETE) {
                 throw new IllegalArgumentException("Can't have JSON in a query string (you tried to attach a JsonNode to an " +
@@ -120,6 +171,10 @@ public class HttpRequest {
             return this;
         }
 
+        /**
+         * Instantiates a new HttpRequest or one of its subclasses
+         * @return A new HttpRequest
+         */
         public T build() {
             return (T) new HttpRequest(this);
         }

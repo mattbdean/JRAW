@@ -19,15 +19,20 @@ public class RedditResponse extends RestResponse {
 
     private final ApiException[] apiExceptions;
 
+    /**
+     * Instantiates a new RedditResponse.
+     *
+     * @param response The HttpResponse used to get the information
+     */
     public RedditResponse(HttpResponse response) {
         this(response, ContentType.JSON);
     }
 
     /**
-     * Instantiates a new RestResponse. This constructor also reads the contents of the input stream and parses it into
-     * the root JsonNode, and then consumes the response's entity.
+     * Instantiates a new RestResponse with an expected ContentType
      *
      * @param response The HttpResponse used to get the information
+     * @param expected The expected ContentType
      */
     public RedditResponse(HttpResponse response, ContentType expected) {
         super(response, expected);

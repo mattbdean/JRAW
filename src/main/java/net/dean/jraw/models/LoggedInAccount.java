@@ -82,6 +82,7 @@ public class LoggedInAccount extends Account {
      *
      * @param s The submission to vote on
      * @param voteDirection How to vote
+     * @param <T> The Votable Thing to vote on
      * @throws NetworkException If there was a problem sending the HTTP request
      * @throws ApiException If the API returned an error
      */
@@ -153,6 +154,7 @@ public class LoggedInAccount extends Account {
     /**
      * Deletes a submission that you posted
      * @param thing The submission to delete
+     * @param <T> The Votable Thing to delete
      * @return The response that the Reddit API returned
      * @throws NetworkException If there was a problem sending the request
      * @throws ApiException If the API returned an error
