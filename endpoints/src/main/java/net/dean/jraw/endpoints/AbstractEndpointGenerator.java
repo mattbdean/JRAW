@@ -5,6 +5,7 @@ import javassist.CtMethod;
 import javassist.NotFoundException;
 import net.dean.jraw.Endpoint;
 import net.dean.jraw.JrawUtils;
+import net.dean.jraw.Version;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -80,7 +81,7 @@ public abstract class AbstractEndpointGenerator {
      * @param m The method to use
      * @return A URL
      */
-    protected  String getSourceUrl(Method m) {
+    protected String getSourceUrl(Method m) {
         try {
             String base = "https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/%s.java#L%s";
             CtMethod method = CLASS_POOL.getMethod(m.getDeclaringClass().getName(), m.getName());
@@ -92,6 +93,35 @@ public abstract class AbstractEndpointGenerator {
             e.printStackTrace();
             return null;
         }
+    }
+
+    protected String getJavadocUrl(Endpoint endpoint) {
+        String base = "https://thatjavanerd.github.io/JRAW/docs/";
+        Method m = endpoint.getMethod();
+        // "/0.3.0"
+        base += "/" + Version.get().formatted();
+        // "/net/dean/jraw/ClassName.html"
+        base += "/" + m.getDeclaringClass().getName().replace('.', '/');
+        // "#myMethod"
+        base += "#" + m.getName().replace('(', '-').replace(')', '-');
+
+        // Begin parameter types
+        base += '-';
+        Class<?>[] parameterTypes = m.getParameterTypes();
+        int counter = 0;
+        for (Class<?> parameterType : parameterTypes) {
+            base += parameterType.getName();
+            if (counter != parameterTypes.length - 1) {
+                // Parameters are separated with a hyphen
+                base += '-';
+            }
+
+            counter++;
+        }
+
+        // End parameter types
+        base += '-';
+        return base;
     }
 
     /**

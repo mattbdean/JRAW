@@ -1,4 +1,4 @@
-<!--- Generated 2014-09-17 at 20:54:34 EDT. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
+<!--- Generated 2014-09-19 at 16:40:28 EDT. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
 #Endpoints
 
 This file contains a list of all the endpoints (regardless of if they have been implemented) that can be found at the [official Reddit API docs](https://www.reddit.com/dev/api). To update this file, run `./gradlew endpoints:update`.
@@ -24,8 +24,8 @@ Method|Endpoint|Implemented?
 `GET`|[`/prefs/blocked`](https://www.reddit.com/dev/api#GET_prefs_blocked)|No
 `GET`|[`/prefs/friends`](https://www.reddit.com/dev/api#GET_prefs_friends)|No
 `GET`|[`/prefs/{where}`](https://www.reddit.com/dev/api#GET_prefs_%7Bwhere%7D)|No
-`POST`|[`/api/login`](https://www.reddit.com/dev/api#POST_api_login)|[`RedditClient.login()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L143)
-`GET`|[`/api/me.json`](https://www.reddit.com/dev/api#GET_api_me.json)|[`RedditClient.me()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L179)
+`POST`|[`/api/login`](https://www.reddit.com/dev/api#POST_api_login)|[`RedditClient.login()`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/RedditClient#login-java.lang.String-java.lang.String-)
+`GET`|[`/api/me.json`](https://www.reddit.com/dev/api#GET_api_me.json)|[`RedditClient.me()`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/RedditClient#me--)
 
 ##apps
 Method|Endpoint|Implemented?
@@ -34,15 +34,15 @@ Method|Endpoint|Implemented?
 `POST`|[`/api/revokeapp`](https://www.reddit.com/dev/api#POST_api_revokeapp)|No
 `POST`|[`/api/setappicon`](https://www.reddit.com/dev/api#POST_api_setappicon)|No
 `POST`|[`/api/updateapp`](https://www.reddit.com/dev/api#POST_api_updateapp)|No
-`POST`|[`/api/adddeveloper`](https://www.reddit.com/dev/api#POST_api_adddeveloper)|[`LoggedInAccount.addDeveloper()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/models/LoggedInAccount.java#L198)
-`POST`|[`/api/removedeveloper`](https://www.reddit.com/dev/api#POST_api_removedeveloper)|[`LoggedInAccount.removeDeveloper()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/models/LoggedInAccount.java#L216)
+`POST`|[`/api/adddeveloper`](https://www.reddit.com/dev/api#POST_api_adddeveloper)|[`LoggedInAccount.addDeveloper()`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/models/LoggedInAccount#addDeveloper-java.lang.String-java.lang.String-)
+`POST`|[`/api/removedeveloper`](https://www.reddit.com/dev/api#POST_api_removedeveloper)|[`LoggedInAccount.removeDeveloper()`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/models/LoggedInAccount#removeDeveloper-java.lang.String-java.lang.String-)
 
 ##captcha
 Method|Endpoint|Implemented?
 :----:|--------|------------
-`GET`|[`/api/needs_captcha.json`](https://www.reddit.com/dev/api#GET_api_needs_captcha.json)|[`RedditClient.needsCaptcha()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L209)
-`POST`|[`/api/new_captcha`](https://www.reddit.com/dev/api#POST_api_new_captcha)|[`RedditClient.getNewCaptcha()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L225)
-`GET`|[`/captcha/{iden}`](https://www.reddit.com/dev/api#GET_captcha_%7Biden%7D)|[`RedditClient.getCaptcha()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L246)
+`GET`|[`/api/needs_captcha.json`](https://www.reddit.com/dev/api#GET_api_needs_captcha.json)|[`RedditClient.needsCaptcha()`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/RedditClient#needsCaptcha--)
+`POST`|[`/api/new_captcha`](https://www.reddit.com/dev/api#POST_api_new_captcha)|[`RedditClient.getNewCaptcha()`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/RedditClient#getNewCaptcha--)
+`GET`|[`/captcha/{iden}`](https://www.reddit.com/dev/api#GET_captcha_%7Biden%7D)|[`RedditClient.getCaptcha()`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/RedditClient#getCaptcha-java.lang.String-)
 
 ##flair
 Method|Endpoint|Implemented?
@@ -70,29 +70,29 @@ Method|Endpoint|Implemented?
 `POST`|[`/api/set_contest_mode`](https://www.reddit.com/dev/api#POST_api_set_contest_mode)|No
 `POST`|[`/api/set_subreddit_sticky`](https://www.reddit.com/dev/api#POST_api_set_subreddit_sticky)|No
 `POST`|[`/api/store_visits`](https://www.reddit.com/dev/api#POST_api_store_visits)|No
-`POST`|[`/api/comment`](https://www.reddit.com/dev/api#POST_api_comment)|[`LoggedInAccount.reply()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/models/LoggedInAccount.java#L286)
-`POST`|[`/api/del`](https://www.reddit.com/dev/api#POST_api_del)|[`LoggedInAccount.delete()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/models/LoggedInAccount.java#L160)
-`POST`|[`/api/hide`](https://www.reddit.com/dev/api#POST_api_hide)|[`LoggedInAccount.hide()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/models/LoggedInAccount.java#L234)
-`POST`|[`/api/marknsfw`](https://www.reddit.com/dev/api#POST_api_marknsfw)|[`LoggedInAccount.setNsfw()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/models/LoggedInAccount.java#L144)
-`POST`|[`/api/save`](https://www.reddit.com/dev/api#POST_api_save)|[`LoggedInAccount.save()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/models/LoggedInAccount.java#L108)
-`POST`|[`/api/sendreplies`](https://www.reddit.com/dev/api#POST_api_sendreplies)|[`LoggedInAccount.setSendRepliesToInbox()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/models/LoggedInAccount.java#L124)
-`POST`|[`/api/submit`](https://www.reddit.com/dev/api#POST_api_submit)|[`LoggedInAccount.submitContent()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/models/LoggedInAccount.java#L32)
-`POST`|[`/api/unhide`](https://www.reddit.com/dev/api#POST_api_unhide)|[`LoggedInAccount.hide()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/models/LoggedInAccount.java#L234)
-`POST`|[`/api/unmarknsfw`](https://www.reddit.com/dev/api#POST_api_unmarknsfw)|[`LoggedInAccount.setNsfw()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/models/LoggedInAccount.java#L144)
-`POST`|[`/api/unsave`](https://www.reddit.com/dev/api#POST_api_unsave)|[`LoggedInAccount.save()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/models/LoggedInAccount.java#L108)
-`POST`|[`/api/vote`](https://www.reddit.com/dev/api#POST_api_vote)|[`LoggedInAccount.vote()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/models/LoggedInAccount.java#L89)
+`POST`|[`/api/comment`](https://www.reddit.com/dev/api#POST_api_comment)|[`LoggedInAccount.reply()`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/models/LoggedInAccount#reply-java.lang.String-java.lang.String-)
+`POST`|[`/api/del`](https://www.reddit.com/dev/api#POST_api_del)|[`LoggedInAccount.delete()`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/models/LoggedInAccount#delete-java.lang.String-)
+`POST`|[`/api/hide`](https://www.reddit.com/dev/api#POST_api_hide)|[`LoggedInAccount.hide()`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/models/LoggedInAccount#hide-net.dean.jraw.models.core.Submission-boolean-)
+`POST`|[`/api/marknsfw`](https://www.reddit.com/dev/api#POST_api_marknsfw)|[`LoggedInAccount.setNsfw()`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/models/LoggedInAccount#setNsfw-net.dean.jraw.models.core.Submission-boolean-)
+`POST`|[`/api/save`](https://www.reddit.com/dev/api#POST_api_save)|[`LoggedInAccount.save()`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/models/LoggedInAccount#save-net.dean.jraw.models.core.Submission-boolean-)
+`POST`|[`/api/sendreplies`](https://www.reddit.com/dev/api#POST_api_sendreplies)|[`LoggedInAccount.setSendRepliesToInbox()`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/models/LoggedInAccount#setSendRepliesToInbox-net.dean.jraw.models.core.Submission-boolean-)
+`POST`|[`/api/submit`](https://www.reddit.com/dev/api#POST_api_submit)|[`LoggedInAccount.submitContent()`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/models/LoggedInAccount#submitContent-net.dean.jraw.models.LoggedInAccount$SubmissionBuilder-net.dean.jraw.models.Captcha-java.lang.String-)
+`POST`|[`/api/unhide`](https://www.reddit.com/dev/api#POST_api_unhide)|[`LoggedInAccount.hide()`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/models/LoggedInAccount#hide-net.dean.jraw.models.core.Submission-boolean-)
+`POST`|[`/api/unmarknsfw`](https://www.reddit.com/dev/api#POST_api_unmarknsfw)|[`LoggedInAccount.setNsfw()`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/models/LoggedInAccount#setNsfw-net.dean.jraw.models.core.Submission-boolean-)
+`POST`|[`/api/unsave`](https://www.reddit.com/dev/api#POST_api_unsave)|[`LoggedInAccount.save()`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/models/LoggedInAccount#save-net.dean.jraw.models.core.Submission-boolean-)
+`POST`|[`/api/vote`](https://www.reddit.com/dev/api#POST_api_vote)|[`LoggedInAccount.vote()`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/models/LoggedInAccount#vote-net.dean.jraw.models.core.Thing-net.dean.jraw.models.VoteDirection-)
 
 ##listings
 Method|Endpoint|Implemented?
 :----:|--------|------------
 `GET`|[`/comments/{article}`](https://www.reddit.com/dev/api#GET_comments_%7Barticle%7D)|No
-`GET`|[`/by_id/{names}`](https://www.reddit.com/dev/api#GET_by_id_%7Bnames%7D)|[`SpecificPaginator.getListing()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/SpecificPaginator.java#L64)
-`GET`|[`/controversial`](https://www.reddit.com/dev/api#GET_controversial)|[`SubredditPaginator.getListing()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/SubredditPaginator.java#L43)
-`GET`|[`/hot`](https://www.reddit.com/dev/api#GET_hot)|[`SubredditPaginator.getListing()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/SubredditPaginator.java#L43)
-`GET`|[`/new`](https://www.reddit.com/dev/api#GET_new)|[`SubredditPaginator.getListing()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/SubredditPaginator.java#L43)
-`GET`|[`/random`](https://www.reddit.com/dev/api#GET_random)|[`RedditClient.getRandom()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L343)
-`GET`|[`/sort`](https://www.reddit.com/dev/api#GET_sort)|[`SubredditPaginator.getListing()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/SubredditPaginator.java#L43)
-`GET`|[`/top`](https://www.reddit.com/dev/api#GET_top)|[`SubredditPaginator.getListing()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/SubredditPaginator.java#L43)
+`GET`|[`/by_id/{names}`](https://www.reddit.com/dev/api#GET_by_id_%7Bnames%7D)|[`SpecificPaginator.getListing()`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/pagination/SpecificPaginator#getListing-boolean-)
+`GET`|[`/controversial`](https://www.reddit.com/dev/api#GET_controversial)|[`SubredditPaginator.getListing()`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/pagination/SubredditPaginator#getListing-boolean-)
+`GET`|[`/hot`](https://www.reddit.com/dev/api#GET_hot)|[`SubredditPaginator.getListing()`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/pagination/SubredditPaginator#getListing-boolean-)
+`GET`|[`/new`](https://www.reddit.com/dev/api#GET_new)|[`SubredditPaginator.getListing()`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/pagination/SubredditPaginator#getListing-boolean-)
+`GET`|[`/random`](https://www.reddit.com/dev/api#GET_random)|[`RedditClient.getRandom()`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/RedditClient#getRandom-java.lang.String-)
+`GET`|[`/sort`](https://www.reddit.com/dev/api#GET_sort)|[`SubredditPaginator.getListing()`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/pagination/SubredditPaginator#getListing-boolean-)
+`GET`|[`/top`](https://www.reddit.com/dev/api#GET_top)|[`SubredditPaginator.getListing()`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/pagination/SubredditPaginator#getListing-boolean-)
 
 ##live threads
 Method|Endpoint|Implemented?
@@ -133,7 +133,7 @@ Method|Endpoint|Implemented?
 `POST`|[`/api/leavemoderator`](https://www.reddit.com/dev/api#POST_api_leavemoderator)|No
 `POST`|[`/api/remove`](https://www.reddit.com/dev/api#POST_api_remove)|No
 `POST`|[`/api/unignore_reports`](https://www.reddit.com/dev/api#POST_api_unignore_reports)|No
-`GET`|[`/stylesheet`](https://www.reddit.com/dev/api#GET_stylesheet)|[`RedditClient.getStylesheet()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L423)
+`GET`|[`/stylesheet`](https://www.reddit.com/dev/api#GET_stylesheet)|[`RedditClient.getStylesheet()`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/RedditClient#getStylesheet-java.lang.String-)
 
 ##multis
 Method|Endpoint|Implemented?
@@ -153,10 +153,10 @@ Method|Endpoint|Implemented?
 `PUT`|[`/api/multi/{multipath}/r/srname`](https://www.reddit.com/dev/api#PUT_api_multi_%7Bmultipath%7D_r_srname)|No
 `DELETE`|[`/api/multi/{multipath}/r/srname`](https://www.reddit.com/dev/api#DELETE_api_multi_%7Bmultipath%7D_r_srname)|No
 `POST`|[`/api/multi/{multipath}/rename`](https://www.reddit.com/dev/api#POST_api_multi_%7Bmultipath%7D_rename)|No
-`GET`|[`/api/multi/mine`](https://www.reddit.com/dev/api#GET_api_multi_mine)|[`LoggedInAccount.getMyMultiReddits()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/models/LoggedInAccount.java#L247)
-`GET`|[`/api/multi/{multipath}`](https://www.reddit.com/dev/api#GET_api_multi_%7Bmultipath%7D)|[`RedditClient.getPublicMulti()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L314)
-`GET`|[`/api/multi/{multipath}/description`](https://www.reddit.com/dev/api#GET_api_multi_%7Bmultipath%7D_description)|[`RedditClient.getPublicMultiDescription()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L331)
-`GET`|[`/api/multi/{multipath}/r/srname`](https://www.reddit.com/dev/api#GET_api_multi_%7Bmultipath%7D_r_srname)|[`RedditClient.getPublicMulti()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L314)
+`GET`|[`/api/multi/mine`](https://www.reddit.com/dev/api#GET_api_multi_mine)|[`LoggedInAccount.getMyMultiReddits()`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/models/LoggedInAccount#getMyMultiReddits--)
+`GET`|[`/api/multi/{multipath}`](https://www.reddit.com/dev/api#GET_api_multi_%7Bmultipath%7D)|[`RedditClient.getPublicMulti()`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/RedditClient#getPublicMulti-java.lang.String-java.lang.String-)
+`GET`|[`/api/multi/{multipath}/description`](https://www.reddit.com/dev/api#GET_api_multi_%7Bmultipath%7D_description)|[`RedditClient.getPublicMultiDescription()`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/RedditClient#getPublicMultiDescription-java.lang.String-java.lang.String-)
+`GET`|[`/api/multi/{multipath}/r/srname`](https://www.reddit.com/dev/api#GET_api_multi_%7Bmultipath%7D_r_srname)|[`RedditClient.getPublicMulti()`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/RedditClient#getPublicMulti-java.lang.String-java.lang.String-)
 
 ##private messages
 Method|Endpoint|Implemented?
@@ -179,7 +179,7 @@ Method|Endpoint|Implemented?
 ##search
 Method|Endpoint|Implemented?
 :----:|--------|------------
-`GET`|[`/search`](https://www.reddit.com/dev/api#GET_search)|[`SearchPaginator.getListing()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/SearchPaginator.java#L39)
+`GET`|[`/search`](https://www.reddit.com/dev/api#GET_search)|[`SearchPaginator.getListing()`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/pagination/SearchPaginator#getListing-boolean-)
 
 ##subreddits
 Method|Endpoint|Implemented?
@@ -199,17 +199,17 @@ Method|Endpoint|Implemented?
 `POST`|[`/api/upload_sr_img`](https://www.reddit.com/dev/api#POST_api_upload_sr_img)|No
 `GET`|[`/r/{subreddit}/about/edit.json`](https://www.reddit.com/dev/api#GET_r_%7Bsubreddit%7D_about_edit.json)|No
 `GET`|[`/subreddits/search`](https://www.reddit.com/dev/api#GET_subreddits_search)|No
-`POST`|[`/api/search_reddit_names.json`](https://www.reddit.com/dev/api#POST_api_search_reddit_names.json)|[`RedditClient.searchSubreddits()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L400)
-`GET`|[`/api/submit_text.json`](https://www.reddit.com/dev/api#GET_api_submit_text.json)|[`RedditClient.getSubmitText()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L366)
-`GET`|[`/api/subreddits_by_topic.json`](https://www.reddit.com/dev/api#GET_api_subreddits_by_topic.json)|[`RedditClient.getSubredditsByTopic()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L380)
-`GET`|[`/r/{subreddit}/about.json`](https://www.reddit.com/dev/api#GET_r_%7Bsubreddit%7D_about.json)|[`RedditClient.getSubreddit()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L286)
-`GET`|[`/subreddits/mine/contributor`](https://www.reddit.com/dev/api#GET_subreddits_mine_contributor)|[`MySubredditsPaginator.getListing()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/MySubredditsPaginator.java#L38)
-`GET`|[`/subreddits/mine/moderator`](https://www.reddit.com/dev/api#GET_subreddits_mine_moderator)|[`MySubredditsPaginator.getListing()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/MySubredditsPaginator.java#L38)
-`GET`|[`/subreddits/mine/subscriber`](https://www.reddit.com/dev/api#GET_subreddits_mine_subscriber)|[`MySubredditsPaginator.getListing()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/MySubredditsPaginator.java#L38)
-`GET`|[`/subreddits/mine/{where}`](https://www.reddit.com/dev/api#GET_subreddits_mine_%7Bwhere%7D)|[`MySubredditsPaginator.getListing()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/MySubredditsPaginator.java#L38)
-`GET`|[`/subreddits/new`](https://www.reddit.com/dev/api#GET_subreddits_new)|[`AllSubredditsPaginator.getListing()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/AllSubredditsPaginator.java#L33)
-`GET`|[`/subreddits/popular`](https://www.reddit.com/dev/api#GET_subreddits_popular)|[`AllSubredditsPaginator.getListing()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/AllSubredditsPaginator.java#L33)
-`GET`|[`/subreddits/{where}`](https://www.reddit.com/dev/api#GET_subreddits_%7Bwhere%7D)|[`AllSubredditsPaginator.getListing()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/AllSubredditsPaginator.java#L33)
+`POST`|[`/api/search_reddit_names.json`](https://www.reddit.com/dev/api#POST_api_search_reddit_names.json)|[`RedditClient.searchSubreddits()`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/RedditClient#searchSubreddits-java.lang.String-boolean-)
+`GET`|[`/api/submit_text.json`](https://www.reddit.com/dev/api#GET_api_submit_text.json)|[`RedditClient.getSubmitText()`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/RedditClient#getSubmitText-java.lang.String-)
+`GET`|[`/api/subreddits_by_topic.json`](https://www.reddit.com/dev/api#GET_api_subreddits_by_topic.json)|[`RedditClient.getSubredditsByTopic()`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/RedditClient#getSubredditsByTopic-java.lang.String-)
+`GET`|[`/r/{subreddit}/about.json`](https://www.reddit.com/dev/api#GET_r_%7Bsubreddit%7D_about.json)|[`RedditClient.getSubreddit()`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/RedditClient#getSubreddit-java.lang.String-)
+`GET`|[`/subreddits/mine/contributor`](https://www.reddit.com/dev/api#GET_subreddits_mine_contributor)|[`MySubredditsPaginator.getListing()`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/pagination/MySubredditsPaginator#getListing-boolean-)
+`GET`|[`/subreddits/mine/moderator`](https://www.reddit.com/dev/api#GET_subreddits_mine_moderator)|[`MySubredditsPaginator.getListing()`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/pagination/MySubredditsPaginator#getListing-boolean-)
+`GET`|[`/subreddits/mine/subscriber`](https://www.reddit.com/dev/api#GET_subreddits_mine_subscriber)|[`MySubredditsPaginator.getListing()`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/pagination/MySubredditsPaginator#getListing-boolean-)
+`GET`|[`/subreddits/mine/{where}`](https://www.reddit.com/dev/api#GET_subreddits_mine_%7Bwhere%7D)|[`MySubredditsPaginator.getListing()`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/pagination/MySubredditsPaginator#getListing-boolean-)
+`GET`|[`/subreddits/new`](https://www.reddit.com/dev/api#GET_subreddits_new)|[`AllSubredditsPaginator.getListing()`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/pagination/AllSubredditsPaginator#getListing-boolean-)
+`GET`|[`/subreddits/popular`](https://www.reddit.com/dev/api#GET_subreddits_popular)|[`AllSubredditsPaginator.getListing()`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/pagination/AllSubredditsPaginator#getListing-boolean-)
+`GET`|[`/subreddits/{where}`](https://www.reddit.com/dev/api#GET_subreddits_%7Bwhere%7D)|[`AllSubredditsPaginator.getListing()`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/pagination/AllSubredditsPaginator#getListing-boolean-)
 
 ##users
 Method|Endpoint|Implemented?
@@ -221,17 +221,17 @@ Method|Endpoint|Implemented?
 `PUT`|[`/api/v1/me/friends/{username}`](https://www.reddit.com/dev/api#PUT_api_v1_me_friends_%7Busername%7D)|No
 `DELETE`|[`/api/v1/me/friends/{username}`](https://www.reddit.com/dev/api#DELETE_api_v1_me_friends_%7Busername%7D)|No
 `GET`|[`/api/v1/user/{username}/trophies`](https://www.reddit.com/dev/api#GET_api_v1_user_%7Busername%7D_trophies)|No
-`GET`|[`/api/username_available.json`](https://www.reddit.com/dev/api#GET_api_username_available.json)|[`RedditClient.isUsernameAvailable()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L298)
-`GET`|[`/user/{username}/about.json`](https://www.reddit.com/dev/api#GET_user_%7Busername%7D_about.json)|[`RedditClient.getUser()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L263)
-`GET`|[`/user/{username}/comments`](https://www.reddit.com/dev/api#GET_user_%7Busername%7D_comments)|[`UserContributionPaginator.getListing()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/UserContributionPaginator.java#L40)
-`GET`|[`/user/{username}/disliked`](https://www.reddit.com/dev/api#GET_user_%7Busername%7D_disliked)|[`UserContributionPaginator.getListing()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/UserContributionPaginator.java#L40)
-`GET`|[`/user/{username}/gilded`](https://www.reddit.com/dev/api#GET_user_%7Busername%7D_gilded)|[`UserContributionPaginator.getListing()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/UserContributionPaginator.java#L40)
-`GET`|[`/user/{username}/hidden`](https://www.reddit.com/dev/api#GET_user_%7Busername%7D_hidden)|[`UserContributionPaginator.getListing()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/UserContributionPaginator.java#L40)
-`GET`|[`/user/{username}/liked`](https://www.reddit.com/dev/api#GET_user_%7Busername%7D_liked)|[`UserContributionPaginator.getListing()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/UserContributionPaginator.java#L40)
-`GET`|[`/user/{username}/overview`](https://www.reddit.com/dev/api#GET_user_%7Busername%7D_overview)|[`UserContributionPaginator.getListing()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/UserContributionPaginator.java#L40)
-`GET`|[`/user/{username}/saved`](https://www.reddit.com/dev/api#GET_user_%7Busername%7D_saved)|[`UserContributionPaginator.getListing()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/UserContributionPaginator.java#L40)
-`GET`|[`/user/{username}/submitted`](https://www.reddit.com/dev/api#GET_user_%7Busername%7D_submitted)|[`UserContributionPaginator.getListing()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/UserContributionPaginator.java#L40)
-`GET`|[`/user/{username}/{where}`](https://www.reddit.com/dev/api#GET_user_%7Busername%7D_%7Bwhere%7D)|[`UserContributionPaginator.getListing()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/UserContributionPaginator.java#L40)
+`GET`|[`/api/username_available.json`](https://www.reddit.com/dev/api#GET_api_username_available.json)|[`RedditClient.isUsernameAvailable()`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/RedditClient#isUsernameAvailable-java.lang.String-)
+`GET`|[`/user/{username}/about.json`](https://www.reddit.com/dev/api#GET_user_%7Busername%7D_about.json)|[`RedditClient.getUser()`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/RedditClient#getUser-java.lang.String-)
+`GET`|[`/user/{username}/comments`](https://www.reddit.com/dev/api#GET_user_%7Busername%7D_comments)|[`UserContributionPaginator.getListing()`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/pagination/UserContributionPaginator#getListing-boolean-)
+`GET`|[`/user/{username}/disliked`](https://www.reddit.com/dev/api#GET_user_%7Busername%7D_disliked)|[`UserContributionPaginator.getListing()`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/pagination/UserContributionPaginator#getListing-boolean-)
+`GET`|[`/user/{username}/gilded`](https://www.reddit.com/dev/api#GET_user_%7Busername%7D_gilded)|[`UserContributionPaginator.getListing()`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/pagination/UserContributionPaginator#getListing-boolean-)
+`GET`|[`/user/{username}/hidden`](https://www.reddit.com/dev/api#GET_user_%7Busername%7D_hidden)|[`UserContributionPaginator.getListing()`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/pagination/UserContributionPaginator#getListing-boolean-)
+`GET`|[`/user/{username}/liked`](https://www.reddit.com/dev/api#GET_user_%7Busername%7D_liked)|[`UserContributionPaginator.getListing()`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/pagination/UserContributionPaginator#getListing-boolean-)
+`GET`|[`/user/{username}/overview`](https://www.reddit.com/dev/api#GET_user_%7Busername%7D_overview)|[`UserContributionPaginator.getListing()`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/pagination/UserContributionPaginator#getListing-boolean-)
+`GET`|[`/user/{username}/saved`](https://www.reddit.com/dev/api#GET_user_%7Busername%7D_saved)|[`UserContributionPaginator.getListing()`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/pagination/UserContributionPaginator#getListing-boolean-)
+`GET`|[`/user/{username}/submitted`](https://www.reddit.com/dev/api#GET_user_%7Busername%7D_submitted)|[`UserContributionPaginator.getListing()`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/pagination/UserContributionPaginator#getListing-boolean-)
+`GET`|[`/user/{username}/{where}`](https://www.reddit.com/dev/api#GET_user_%7Busername%7D_%7Bwhere%7D)|[`UserContributionPaginator.getListing()`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/pagination/UserContributionPaginator#getListing-boolean-)
 
 ##wiki
 Method|Endpoint|Implemented?
@@ -246,5 +246,5 @@ Method|Endpoint|Implemented?
 `GET`|[`/wiki/revisions`](https://www.reddit.com/dev/api#GET_wiki_revisions)|No
 `POST`|[`/wiki/revisions/{page}`](https://www.reddit.com/dev/api#POST_wiki_revisions_%7Bpage%7D)|No
 `GET`|[`/wiki/settings/{page}`](https://www.reddit.com/dev/api#GET_wiki_settings_%7Bpage%7D)|No
-`GET`|[`/wiki/pages`](https://www.reddit.com/dev/api#GET_wiki_pages)|[`RedditClient.getWikiPages()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L468)
-`GET`|[`/wiki/{page}`](https://www.reddit.com/dev/api#GET_wiki_%7Bpage%7D)|[`RedditClient.getWikiPage()`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java#L502)
+`GET`|[`/wiki/pages`](https://www.reddit.com/dev/api#GET_wiki_pages)|[`RedditClient.getWikiPages()`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/RedditClient#getWikiPages-java.lang.String-)
+`GET`|[`/wiki/{page}`](https://www.reddit.com/dev/api#GET_wiki_%7Bpage%7D)|[`RedditClient.getWikiPage()`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/RedditClient#getWikiPage-java.lang.String-java.lang.String-)

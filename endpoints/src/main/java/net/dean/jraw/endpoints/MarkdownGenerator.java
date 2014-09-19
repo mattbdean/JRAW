@@ -69,7 +69,7 @@ public class MarkdownGenerator extends AbstractEndpointGenerator {
                 if (e.isImplemented()) {
                     implString = String.format("[`%s`](%s)",
                             getStringRepresentation(e.getMethod()),
-                            getSourceUrl(e.getMethod()));
+                            getJavadocUrl(e));
                 }
 
                 // ex: `GET`|[`/api/me.json`](https://www.reddit.com/dev/api#GET_api_me.json)|[`RedditClient.me()`](url and line #)
