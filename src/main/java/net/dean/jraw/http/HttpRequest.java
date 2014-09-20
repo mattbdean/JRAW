@@ -100,7 +100,7 @@ public class HttpRequest {
     /**
      * Gets the cookie spec used for executing this request. Only really used for requests that set a "secure_session"
      * cookie (aka {@link net.dean.jraw.RedditClient#login(String, String)}).
-     * @return
+     * @return The cookie spec this request will use
      */
     public String getCookieSpec() {
         return cookieSpec;
@@ -114,6 +114,9 @@ public class HttpRequest {
                 ", args=" + args +
                 ", hostname='" + hostname + '\'' +
                 ", executed=" + executed +
+                ", json=" + json +
+                ", isJson=" + isJson +
+                ", cookieSpec='" + cookieSpec + '\'' +
                 '}';
     }
 
