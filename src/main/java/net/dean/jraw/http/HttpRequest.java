@@ -21,6 +21,7 @@ public class HttpRequest {
     private LocalDateTime executed;
     private final JsonNode json;
     private final boolean isJson;
+    private final String cookieSpec;
 
     /**
      * Instantiates a simple RestRequest
@@ -44,6 +45,7 @@ public class HttpRequest {
         this.args = b.args;
         this.json = b.json;
         this.isJson = b.json != null;
+        this.cookieSpec = b.cookieSpec;
     }
 
     public String getPath() {
@@ -95,6 +97,15 @@ public class HttpRequest {
         this.executed = LocalDateTime.now();
     }
 
+    /**
+     * Gets the cookie spec used for executing this request. Only really used for requests that set a "secure_session"
+     * cookie (aka {@link net.dean.jraw.RedditClient#login(String, String)}).
+     * @return
+     */
+    public String getCookieSpec() {
+        return cookieSpec;
+    }
+
     @Override
     public String toString() {
         return "HttpRequest {" +
@@ -120,6 +131,7 @@ public class HttpRequest {
         protected final String path;
         protected Map<String, String> args;
         protected JsonNode json;
+        protected String cookieSpec;
 
         /**
          * Instantiates a new Builder
@@ -131,6 +143,7 @@ public class HttpRequest {
             this.verb = verb;
             this.hostname = hostname;
             this.path = path;
+            this.cookieSpec = HttpHelper.COOKIE_SPEC_DEFAULT;
         }
 
         /**
@@ -168,6 +181,20 @@ public class HttpRequest {
                         "HTTP verb that doesn't support application/x-www-form-urlencoded data: " + verb + ")");
             }
             this.json = json;
+            return this;
+        }
+
+        /**
+         * Sets the cookie spec used for executing this request. Only really used for requests that set a "secure_session"
+         * cookie (aka {@link net.dean.jraw.RedditClient#login(String, String)}).
+         *
+         * @param cookieSpec The cookie spec to use. Valid values are constants in  the
+         *                   {@link org.apache.http.client.config.CookieSpecs} class and {@code COOKIE_SPEC_*} constants
+         *                   in {@link net.dean.jraw.http.HttpHelper}.
+         * @return This Builder
+         */
+        public Builder cookieSpec(String cookieSpec) {
+            this.cookieSpec = cookieSpec;
             return this;
         }
 

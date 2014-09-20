@@ -152,7 +152,8 @@ public class RedditClient extends RestClient<RestRequest, RedditResponse> {
                         "user", username,
                         "passwd", password,
                         "api_type", "json"
-                )).build();
+                )).cookieSpec(HttpHelper.COOKIE_SPEC_REDDIT)
+                .build();
 
         RedditResponse loginResponse = new RedditResponse(http.execute(request));
 

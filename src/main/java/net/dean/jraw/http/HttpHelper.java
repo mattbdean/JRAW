@@ -5,14 +5,22 @@ import org.apache.http.Header;
 import org.apache.http.HttpHost;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.*;
 import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.config.Registry;
+import org.apache.http.config.RegistryBuilder;
 import org.apache.http.conn.ConnectTimeoutException;
+import org.apache.http.cookie.ClientCookie;
+import org.apache.http.cookie.CookieSpecProvider;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.cookie.BestMatchSpecFactory;
+import org.apache.http.impl.cookie.BrowserCompatSpec;
+import org.apache.http.impl.cookie.BrowserCompatSpecFactory;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 
@@ -28,9 +36,14 @@ import java.util.stream.Collectors;
  * through the use of the {@code execute} methods
  */
 public class HttpHelper {
+    /** This cookie spec is used when executing a request that sets a "secure_session" cookie (aka /api/login) */
+    public static final String COOKIE_SPEC_REDDIT = "redditMaxAge";
+    /** This cookie spec is the default for all requests */
+    public static final String COOKIE_SPEC_DEFAULT = CookieSpecs.BEST_MATCH;
 
     /** The HttpClient used to execute HTTP requests */
-    private HttpClient client;
+    private final HttpClient client;
+    private final RequestConfig defaultConfig;
 
     private CookieStore cookieStore;
 
@@ -46,9 +59,29 @@ public class HttpHelper {
         this.cookieStore = new BasicCookieStore();
         this.defaultHeaders = new ArrayList<>();
         defaultHeaders.add(new BasicHeader("User-Agent", userAgent));
+
+        // Register the RedditMaxAgeHandler
+        CookieSpecProvider cookieSpecProvider = context -> {
+            BrowserCompatSpec spec = new BrowserCompatSpec();
+            spec.registerAttribHandler(ClientCookie.MAX_AGE_ATTR, new RedditMaxAgeHandler());
+            return spec;
+        };
+        Registry<CookieSpecProvider> r = RegistryBuilder.<CookieSpecProvider>create()
+                .register(COOKIE_SPEC_REDDIT, cookieSpecProvider)
+                .register(CookieSpecs.BEST_MATCH, new BestMatchSpecFactory())
+                .register(CookieSpecs.BROWSER_COMPATIBILITY, new BrowserCompatSpecFactory())
+                .build();
+
+        this.defaultConfig = RequestConfig.custom()
+                .setCookieSpec(COOKIE_SPEC_DEFAULT)
+                .setConnectTimeout(5000)
+                .setConnectionRequestTimeout(5000)
+                .build();
+
         this.client = HttpClientBuilder.create()
                 .setDefaultCookieStore(cookieStore)
-                .setDefaultRequestConfig(RequestConfig.custom().setConnectTimeout(5000).setConnectionRequestTimeout(5000).build())
+                .setDefaultRequestConfig(defaultConfig)
+                .setDefaultCookieSpecRegistry(r)
                 .build();
     }
 
@@ -103,6 +136,14 @@ public class HttpHelper {
             // Add the default headers to the request
             for (Header h : defaultHeaders) {
                 request.addHeader(h);
+            }
+
+            // Update the request config if not using the default cookie spec
+            if (!r.getCookieSpec().equals(defaultConfig.getCookieSpec())) {
+                RequestConfig requestConfig = RequestConfig.copy(defaultConfig)
+                        .setCookieSpec(r.getCookieSpec())
+                        .build();
+                request.setConfig(requestConfig);
             }
 
             JrawUtils.logger().info("{} {}{} {}", r.getVerb().name(), r.getHostname(), path, request.getProtocolVersion());
