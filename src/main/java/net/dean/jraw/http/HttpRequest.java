@@ -1,7 +1,6 @@
 package net.dean.jraw.http;
 
 import net.dean.jraw.JrawUtils;
-import org.codehaus.jackson.JsonNode;
 
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -19,8 +18,6 @@ public class HttpRequest {
     private final String hostname;
     /** The time this request was executed */
     private LocalDateTime executed;
-    private final JsonNode json;
-    private final boolean isJson;
     private final String cookieSpec;
 
     /**
@@ -43,8 +40,6 @@ public class HttpRequest {
         this.hostname = b.hostname;
         this.path = b.path;
         this.args = b.args;
-        this.json = b.json;
-        this.isJson = b.json != null;
         this.cookieSpec = b.cookieSpec;
     }
 
@@ -72,18 +67,6 @@ public class HttpRequest {
 
     public String getHostname() {
         return hostname;
-    }
-
-    public JsonNode getJson() {
-        return json;
-    }
-
-    /**
-     * Checks if this request contains JSON data.
-     * @return False if the HTTP verb is GET or DELETE or no JsonNode was passed to this request's Builder.
-     */
-    public boolean isJson() {
-        return isJson;
     }
 
     /**
@@ -114,8 +97,6 @@ public class HttpRequest {
                 ", args=" + args +
                 ", hostname='" + hostname + '\'' +
                 ", executed=" + executed +
-                ", json=" + json +
-                ", isJson=" + isJson +
                 ", cookieSpec='" + cookieSpec + '\'' +
                 '}';
     }
@@ -133,7 +114,6 @@ public class HttpRequest {
         protected final String hostname;
         protected final String path;
         protected Map<String, String> args;
-        protected JsonNode json;
         protected String cookieSpec;
 
         /**
@@ -171,20 +151,6 @@ public class HttpRequest {
         public U args(Object... args) {
             this.args = JrawUtils.args(args);
             return (U) this;
-        }
-
-        /**
-         * Sets the JSON data. Only applicable for HTTP verbs that support form arguments such as POST.
-         * @param json The JSON data to use
-         * @return This Builder
-         */
-        public Builder json(JsonNode json) {
-            if (verb == HttpVerb.GET || verb == HttpVerb.DELETE) {
-                throw new IllegalArgumentException("Can't have JSON in a query string (you tried to attach a JsonNode to an " +
-                        "HTTP verb that doesn't support application/x-www-form-urlencoded data: " + verb + ")");
-            }
-            this.json = json;
-            return this;
         }
 
         /**

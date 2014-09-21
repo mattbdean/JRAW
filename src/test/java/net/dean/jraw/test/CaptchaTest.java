@@ -18,16 +18,16 @@ public class CaptchaTest {
         try {
             reddit.login(credentials[0], credentials[1]);
         } catch (NetworkException | ApiException e) {
-            Assert.fail(e.getMessage());
+            TestUtils.handle(e);
         }
     }
 
     @Test
-    public void testNeedsCaptchaWorking() {
+    public void testNeedsCaptcha() {
         try {
             reddit.needsCaptcha();
         } catch (NetworkException e) {
-            e.printStackTrace();
+            TestUtils.handle(e);
         }
     }
 
@@ -38,7 +38,7 @@ public class CaptchaTest {
             Assert.assertNotNull(c.getId());
             Assert.assertNotNull(c.getImageStream());
         } catch (NetworkException e) {
-            Assert.fail(e.getMessage());
+            TestUtils.handle(e);
         }
     }
 }

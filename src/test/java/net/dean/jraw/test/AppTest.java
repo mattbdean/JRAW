@@ -4,7 +4,6 @@ import net.dean.jraw.ApiException;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.models.LoggedInAccount;
-import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -20,7 +19,7 @@ public class AppTest {
         try {
             account = reddit.login(creds[0], creds[1]);
         } catch (NetworkException | ApiException e) {
-            Assert.fail(e.getMessage());
+            TestUtils.handle(e);
         }
     }
 
@@ -29,7 +28,7 @@ public class AppTest {
         try {
             account.addDeveloper(CLIENT_ID, DEV_NAME);
         } catch (NetworkException | ApiException e) {
-            e.printStackTrace();
+            TestUtils.handle(e);
         }
     }
 
@@ -38,7 +37,7 @@ public class AppTest {
         try {
             account.removeDeveloper(CLIENT_ID, DEV_NAME);
         } catch (NetworkException | ApiException e) {
-            e.printStackTrace();
+            TestUtils.handle(e);
         }
     }
 }

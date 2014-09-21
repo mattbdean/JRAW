@@ -35,7 +35,7 @@ public class SubmissionTest {
             Comment first = comments.get(0);
             ThingFieldTest.fieldValidityCheck(first);
         } catch (NetworkException e) {
-            Assert.fail(e.getMessage());
+            TestUtils.handle(e);
         }
     }
 
@@ -47,7 +47,7 @@ public class SubmissionTest {
             Comment c = s.getComments().get(0);
             Assert.assertNotNull(c.getReplies().get(0).getBody());
         } catch (NetworkException e) {
-            Assert.fail(e.getMessage());
+            TestUtils.handle(e);
         }
     }
 
@@ -60,7 +60,7 @@ public class SubmissionTest {
             s = reddit.getRandom("pics");
             ThingFieldTest.fieldValidityCheck(s);
         } catch (NetworkException e) {
-            Assert.fail(e.getMessage());
+            TestUtils.handle(e);
         }
     }
 }

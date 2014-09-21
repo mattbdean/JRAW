@@ -4,12 +4,11 @@ import net.dean.jraw.ApiException;
 import net.dean.jraw.JrawUtils;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.NetworkException;
+import net.dean.jraw.models.Contribution;
 import net.dean.jraw.models.LoggedInAccount;
-import net.dean.jraw.models.MultiReddit;
 import net.dean.jraw.models.VoteDirection;
 import net.dean.jraw.models.core.Account;
 import net.dean.jraw.models.core.Submission;
-import net.dean.jraw.models.Contribution;
 import net.dean.jraw.pagination.UserContributionPaginator;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -40,7 +39,7 @@ public class AccountTest {
             Assert.assertNotNull(account, "The account was null");
             ThingFieldTest.fieldValidityCheck(account);
         } catch (NetworkException | ApiException e) {
-            Assert.fail(e.getMessage());
+            TestUtils.handle(e);
         }
     }
 
@@ -50,7 +49,7 @@ public class AccountTest {
             Account acc = reddit.getUser("thatJavaNerd");
             Assert.assertNotNull(acc, "The account was null");
         } catch (NetworkException e) {
-            Assert.fail(e.getMessage());
+            TestUtils.handle(e);
         }
     }
 
@@ -59,7 +58,7 @@ public class AccountTest {
         try {
             Assert.assertFalse(reddit.isUsernameAvailable(credentials[0]), "Username was available");
         } catch (NetworkException e) {
-            Assert.fail(e.getMessage());
+            TestUtils.handle(e);
         }
     }
 
@@ -76,7 +75,7 @@ public class AccountTest {
             Assert.assertNotNull(submission);
             ThingFieldTest.fieldValidityCheck(submission);
         } catch (NetworkException e) {
-            Assert.fail(e.getMessage());
+            TestUtils.handle(e);
         } catch (ApiException e) {
             TestUtils.handleApiException(e);
         }
@@ -96,7 +95,7 @@ public class AccountTest {
         } catch (ApiException e) {
             TestUtils.handleApiException(e);
         } catch (NetworkException e) {
-            Assert.fail(e.getMessage());
+            TestUtils.handle(e);
         }
     }
 
@@ -105,7 +104,7 @@ public class AccountTest {
         try {
             account.delete(commentId);
         } catch (NetworkException | ApiException e) {
-            Assert.fail(e.getMessage());
+            TestUtils.handle(e);
         }
     }
 
@@ -117,7 +116,7 @@ public class AccountTest {
             LoggedInAccount me = reddit.login(TestUtils.getCredentials()[0], TestUtils.getCredentials()[1]);
             me.setSendRepliesToInbox(s, true);
         } catch (NetworkException e) {
-            Assert.fail(e.getMessage());
+            TestUtils.handle(e);
         }
     }
 
@@ -127,7 +126,7 @@ public class AccountTest {
             Submission submission = reddit.getSubmission("28d6vv");
             account.vote(submission, VoteDirection.NO_VOTE);
         } catch (NetworkException | ApiException e) {
-            Assert.fail(e.getMessage());
+            TestUtils.handle(e);
         }
     }
 
@@ -150,7 +149,7 @@ public class AccountTest {
             Assert.fail("Did not find saved submission");
 
         } catch (NetworkException | ApiException e) {
-            Assert.fail(e.getMessage());
+            TestUtils.handle(e);
         }
     }
 
@@ -167,7 +166,7 @@ public class AccountTest {
             saved.stream().filter(s -> s.getId().equals(submission.getId())).forEach(s -> Assert.fail("Found the submission after it was unsaved"));
 
         } catch (NetworkException | ApiException e) {
-            Assert.fail(e.getMessage());
+            TestUtils.handle(e);
         }
     }
 
@@ -189,7 +188,7 @@ public class AccountTest {
 
             Assert.fail("Did not find the submission in the hidden posts");
         } catch (NetworkException | ApiException e) {
-            Assert.fail(e.getMessage());
+            TestUtils.handle(e);
         }
     }
 
@@ -209,30 +208,7 @@ public class AccountTest {
                 }
             }
         } catch (NetworkException | ApiException e) {
-            Assert.fail(e.getMessage());
-        }
-    }
-
-    @Test
-    public void testMyMultis() {
-        try {
-            List<MultiReddit> multis = account.getMyMultiReddits();
-
-            multis.forEach(ThingFieldTest::fieldValidityCheck);
-        } catch (NetworkException e) {
-            Assert.fail(e.getMessage());
-        }
-    }
-
-    @Test
-    public void testMultis() {
-        try {
-            MultiReddit multi = reddit.getPublicMulti(account.getFullName(), "test_multi");
-            ThingFieldTest.fieldValidityCheck(multi);
-
-            TestUtils.testRenderString(reddit.getPublicMultiDescription(account.getFullName(), "test_multi"));
-        } catch (NetworkException | ApiException e) {
-            Assert.fail(e.getMessage());
+            TestUtils.handle(e);
         }
     }
 

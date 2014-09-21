@@ -313,42 +313,6 @@ public class RedditClient extends RestClient<RestRequest, RedditResponse> {
     }
 
     /**
-     * Gets a publicly available MultiReddit
-     * @param username The owner of the multireddit
-     * @param multiName The name of the multireddit
-     * @return A MultiReddit
-     * @throws NetworkException If there was a problem making the request
-     * @throws ApiException If the Reddit API returned an error
-     */
-    @EndpointImplementation({
-            Endpoints.MULTI_MULTIPATH_GET,
-            Endpoints.MULTI_MULTIPATH_R_SRNAME_GET
-    })
-    public MultiReddit getPublicMulti(String username, String multiName) throws NetworkException, ApiException {
-        JsonNode node = execute(request(GET, String.format("/api/multi/user/%s/m/%s", username, multiName))).getJson();
-        checkMultiRedditError(node);
-        return new MultiReddit(node.get("data"));
-    }
-
-    /**
-     * Fetches the description of a public or self-owned multireddit. The first String in the resulting array is the
-     * Markdown version of the text, while the second is the HTML version
-     *
-     * @param username The owner of the multireddit
-     * @param multiName The name of the multireddit
-     * @return A String array in which the first index is Markdown and the second is HTML
-     * @throws NetworkException If there was a problem sending the request
-     * @throws ApiException If the Reddit API returned an error
-     */
-    @EndpointImplementation(Endpoints.MULTI_MULTIPATH_DESCRIPTION_GET)
-    public RenderStringPair getPublicMultiDescription(String username, String multiName) throws NetworkException, ApiException {
-        JsonNode node = execute(request(GET, String.format("/api/multi/user/%s/m/%s/description", username, multiName))).getJson();
-        checkMultiRedditError(node);
-        node = node.get("data");
-        return new RenderStringPair(node.get("body_md").asText(), node.get("body_html").asText());
-    }
-
-    /**
      * Gets a random submission
      * @return A random submission
      * @throws NetworkException If there was a problem executing the request
@@ -538,17 +502,6 @@ public class RedditClient extends RestClient<RestRequest, RedditResponse> {
         return execute(request(GET, path)).as(WikiPage.class);
     }
 
-    /**
-     * Checks if there was an error returned by a /api/multi/* request, since those URIs return a different error handling
-     * format than the rest of the API
-     * @param root The root JsonNode
-     * @throws ApiException If there is a visible error
-     */
-    private void checkMultiRedditError(JsonNode root) throws ApiException {
-        if (root.has("explanation") && root.has("reason")) {
-            throw new ApiException(root.get("reason").asText(), root.get("explanation").asText());
-        }
-    }
 
     /**
      * Prepends "/r/{subreddit}" to {@code path} if {@code subreddit} is not null

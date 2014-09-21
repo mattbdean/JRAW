@@ -48,7 +48,7 @@ public class SubredditTest {
             Assert.assertTrue(subs.size() > 0);
             subs.forEach(Assert::assertNotNull);
         } catch (NetworkException e) {
-            Assert.fail(e.getMessage());
+            TestUtils.handle(e);
         }
     }
 
@@ -60,7 +60,7 @@ public class SubredditTest {
             reddit.getStylesheet("pics");
             // Just make sure a NetworkException isn't thrown
         } catch (NetworkException e) {
-            Assert.fail(e.getMessage());
+            TestUtils.handle(e);
         }
     }
 
@@ -72,7 +72,7 @@ public class SubredditTest {
             try {
                 ThingFieldTest.fieldValidityCheck(reddit.getSubreddit(sub));
             } catch (NetworkException e) {
-                Assert.fail(e.getMessage());
+                TestUtils.handle(e);
             }
         }
     }

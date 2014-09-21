@@ -1,7 +1,10 @@
 package net.dean.jraw.models;
 
 import net.dean.jraw.*;
-import net.dean.jraw.http.*;
+import net.dean.jraw.http.HttpVerb;
+import net.dean.jraw.http.NetworkException;
+import net.dean.jraw.http.RedditResponse;
+import net.dean.jraw.http.RestRequest;
 import net.dean.jraw.models.core.Account;
 import net.dean.jraw.models.core.Comment;
 import net.dean.jraw.models.core.Submission;
@@ -9,8 +12,6 @@ import net.dean.jraw.models.core.Thing;
 import org.codehaus.jackson.JsonNode;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 public class LoggedInAccount extends Account {
@@ -237,24 +238,6 @@ public class LoggedInAccount extends Account {
         return genericPost(String.format("/api/%shide", hidden ? "" : "un"), JrawUtils.args(
                 "id", s.getFullName()
         ));
-    }
-
-    /**
-     * Gets a list of your MultiReddits
-     *
-     * @return A list of your multireddits
-     * @throws NetworkException If there was a problem sending the request
-     */
-    @EndpointImplementation(Endpoints.MULTI_MINE)
-    public List<MultiReddit> getMyMultiReddits() throws NetworkException {
-        List<MultiReddit> multis = new ArrayList<>();
-        JsonNode multiArray = creator.execute(creator.request(HttpVerb.GET, "/api/multi/mine")).getJson();
-
-        for (JsonNode multi : multiArray) {
-            multis.add(new MultiReddit(multi.get("data")));
-        }
-
-        return multis;
     }
 
     /**

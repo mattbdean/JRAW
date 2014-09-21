@@ -107,7 +107,7 @@ public class HttpTest {
 
             response.close();
         } catch (IOException | NetworkException e) {
-            Assert.fail(e.getMessage());
+            TestUtils.handle(e);
         }
     }
 

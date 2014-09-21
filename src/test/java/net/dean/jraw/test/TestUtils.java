@@ -29,6 +29,7 @@ public final class TestUtils {
         } else {
             client.getHttpHelper().setUserAgent(generatedUserAgent);
         }
+        client.setRequestManagementEnabled(false);
 
         return client;
     }
@@ -53,7 +54,7 @@ public final class TestUtils {
                 return details;
             }
         } catch (Exception e) {
-            Assert.fail(e.getMessage());
+            TestUtils.handle(e);
             return null;
         }
     }
@@ -68,6 +69,11 @@ public final class TestUtils {
 
     public static String curDate() {
         return df.format(new Date());
+    }
+
+    public static void handle(Throwable t) {
+        t.printStackTrace();
+        Assert.fail(t.getMessage() == null ? t.getClass().getName() : t.getMessage(), t);
     }
 
     public static void handleApiException(ApiException e) {

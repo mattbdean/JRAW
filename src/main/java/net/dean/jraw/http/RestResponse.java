@@ -54,7 +54,7 @@ public class RestResponse {
         if (!contentType.equals(expected)) {
             JrawUtils.logger().warn("Unknown Content-Type received: \"{}\"", contentType.asHeader());
         }
-        if (contentType.equals(ContentType.JSON)) {
+        if (contentType.equals(ContentType.JSON) && !raw.isEmpty()) {
             this.rootNode = readTree(raw);
         } else {
             // Init JSON-related final variables
@@ -81,7 +81,7 @@ public class RestResponse {
         try {
             return OBJECT_MAPPER.readTree(raw);
         } catch (IOException e) {
-            JrawUtils.logger().error("Unable to parse JSON: {}", raw.replace("\n", "").replace("\r", ""));
+            JrawUtils.logger().error("Unable to parse JSON: \"{}\"", raw.replace("\n", "").replace("\r", ""));
             return null;
         }
     }

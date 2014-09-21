@@ -50,7 +50,7 @@ public class ThingFieldTest {
                 }
             }
         } catch (IllegalAccessException e) {
-            Assert.fail(e.getMessage());
+            TestUtils.handle(e);
         }
     }
 
@@ -60,7 +60,7 @@ public class ThingFieldTest {
             Account redditAccount = reddit.getUser("spladug");
             fieldValidityCheck(redditAccount);
         } catch (NetworkException e) {
-            Assert.fail(e.getMessage());
+            TestUtils.handle(e);
         }
     }
 
@@ -70,7 +70,7 @@ public class ThingFieldTest {
             Submission submission = reddit.getSubmission(SUBMISSION_ID);
             fieldValidityCheck(submission);
         } catch (NetworkException e) {
-            Assert.fail(e.getMessage());
+            TestUtils.handle(e);
         }
     }
 
@@ -80,7 +80,7 @@ public class ThingFieldTest {
             Submission submission = reddit.getSubmission(SUBMISSION_ID);
             fieldValidityCheck(submission.getComments().get(0));
         } catch (NetworkException e) {
-            Assert.fail(e.getMessage());
+            TestUtils.handle(e);
         }
     }
 
@@ -95,9 +95,7 @@ public class ThingFieldTest {
                 fieldValidityCheck(o);
             });
         } catch (IllegalStateException e) {
-            if (e.getCause().getClass().equals(NetworkException.class)) {
-                Assert.fail(e.getMessage());
-            }
+            TestUtils.handle(e);
         }
     }
 
@@ -112,9 +110,7 @@ public class ThingFieldTest {
                 fieldValidityCheck(m);
             });
         } catch (IllegalStateException e) {
-            if (e.getCause().getClass().equals(NetworkException.class)) {
-                Assert.fail(e.getMessage());
-            }
+            TestUtils.handle(e);
         }
     }
 
@@ -124,7 +120,7 @@ public class ThingFieldTest {
             Subreddit sr = reddit.getSubreddit("pics");
             fieldValidityCheck(sr);
         } catch (NetworkException e) {
-            Assert.fail(e.getMessage());
+            TestUtils.handle(e);
         }
     }
 }

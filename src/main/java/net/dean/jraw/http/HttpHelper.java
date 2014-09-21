@@ -15,7 +15,6 @@ import org.apache.http.config.RegistryBuilder;
 import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.cookie.ClientCookie;
 import org.apache.http.cookie.CookieSpecProvider;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.cookie.BestMatchSpecFactory;
@@ -25,7 +24,6 @@ import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 
 import java.io.IOException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -74,8 +72,8 @@ public class HttpHelper {
 
         this.defaultConfig = RequestConfig.custom()
                 .setCookieSpec(COOKIE_SPEC_DEFAULT)
-                .setConnectTimeout(5000)
-                .setConnectionRequestTimeout(5000)
+                .setConnectTimeout(10_000)
+                .setConnectionRequestTimeout(10_000)
                 .build();
 
         this.client = HttpClientBuilder.create()
@@ -101,35 +99,21 @@ public class HttpHelper {
         HttpRequestBase request = r.getVerb().getRequestObject(path);
 
         try {
-            if (r.isJson()) {
-                if (r.getVerb() != HttpVerb.PUT && r.getVerb() != HttpVerb.PATCH && r.getVerb() != HttpVerb.POST) {
-                    // Being exclusive would be shorter, but exclusive cryptographic patterns almost always fail
-                    // Use query string
-                    path += "?" + URLEncoder.encode(r.getJson().toString(), "UTF-8");
+            // Either not JSON data or no args at all
+            if (r.getArgs() != null) {
+                // Construct a List of BasicNameValue pairs from a Map
+                List<BasicNameValuePair> params = r.getArgs().entrySet().stream().map(entry -> new BasicNameValuePair(entry.getKey(),
+                        entry.getValue())).collect(Collectors.toList());
+
+                if (request instanceof HttpGet || request instanceof HttpDelete) {
+                    // GET or DELETE
+                    path += "?" + URLEncodedUtils.format(params, "UTF-8");
+
+                    if (request instanceof HttpGet) request = new HttpGet(path);
+                    if (request instanceof HttpDelete) request = new HttpDelete(path);
                 } else {
-                    // Use POST data or similar
-                    StringEntity params = new StringEntity(r.getJson().asText());
-                    request.addHeader("Content-Type", ContentType.JSON.asHeader());
                     // POST, PATCH, or PUT
-                    ((HttpEntityEnclosingRequestBase) request).setEntity(params);
-                }
-            } else {
-                // Either not JSON data or no args at all
-                if (r.getArgs() != null) {
-                    // Construct a List of BasicNameValue pairs from a Map
-                    List<BasicNameValuePair> params = r.getArgs().entrySet().stream().map(entry -> new BasicNameValuePair(entry.getKey(),
-                            entry.getValue())).collect(Collectors.toList());
-
-                    if (request instanceof HttpGet || request instanceof HttpDelete) {
-                        // GET or DELETE
-                        path += "?" + URLEncodedUtils.format(params, "UTF-8");
-
-                        if (request instanceof HttpGet) request = new HttpGet(path);
-                        if (request instanceof HttpDelete) request = new HttpDelete(path);
-                    } else {
-                        // POST, PATCH, or PUT
-                        ((HttpEntityEnclosingRequestBase) request).setEntity(new UrlEncodedFormEntity(params));
-                    }
+                    ((HttpEntityEnclosingRequestBase) request).setEntity(new UrlEncodedFormEntity(params));
                 }
             }
 

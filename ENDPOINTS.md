@@ -1,9 +1,9 @@
-<!--- Generated 2014-09-19 at 16:40:28 EDT. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
+<!--- Generated 2014-09-21 at 12:06:55 EDT. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
 #Endpoints
 
 This file contains a list of all the endpoints (regardless of if they have been implemented) that can be found at the [official Reddit API docs](https://www.reddit.com/dev/api). To update this file, run `./gradlew endpoints:update`.
 
-So far **55** endpoints (out of 184 total) have been implemented.
+So far **57** endpoints (out of 184 total) have been implemented.
 
 ##account
 Method|Endpoint|Implemented?
@@ -145,18 +145,18 @@ Method|Endpoint|Implemented?
 `GET`|[`/api/filter/{filterpath}/r/srname`](https://www.reddit.com/dev/api#GET_api_filter_%7Bfilterpath%7D_r_srname)|No
 `PUT`|[`/api/filter/{filterpath}/r/srname`](https://www.reddit.com/dev/api#PUT_api_filter_%7Bfilterpath%7D_r_srname)|No
 `DELETE`|[`/api/filter/{filterpath}/r/srname`](https://www.reddit.com/dev/api#DELETE_api_filter_%7Bfilterpath%7D_r_srname)|No
-`POST`|[`/api/multi/{multipath}`](https://www.reddit.com/dev/api#POST_api_multi_%7Bmultipath%7D)|No
 `PUT`|[`/api/multi/{multipath}`](https://www.reddit.com/dev/api#PUT_api_multi_%7Bmultipath%7D)|No
-`DELETE`|[`/api/multi/{multipath}`](https://www.reddit.com/dev/api#DELETE_api_multi_%7Bmultipath%7D)|No
 `POST`|[`/api/multi/{multipath}/copy`](https://www.reddit.com/dev/api#POST_api_multi_%7Bmultipath%7D_copy)|No
 `PUT`|[`/api/multi/{multipath}/description`](https://www.reddit.com/dev/api#PUT_api_multi_%7Bmultipath%7D_description)|No
 `PUT`|[`/api/multi/{multipath}/r/srname`](https://www.reddit.com/dev/api#PUT_api_multi_%7Bmultipath%7D_r_srname)|No
 `DELETE`|[`/api/multi/{multipath}/r/srname`](https://www.reddit.com/dev/api#DELETE_api_multi_%7Bmultipath%7D_r_srname)|No
 `POST`|[`/api/multi/{multipath}/rename`](https://www.reddit.com/dev/api#POST_api_multi_%7Bmultipath%7D_rename)|No
-`GET`|[`/api/multi/mine`](https://www.reddit.com/dev/api#GET_api_multi_mine)|[`LoggedInAccount.getMyMultiReddits()`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/models/LoggedInAccount#getMyMultiReddits--)
-`GET`|[`/api/multi/{multipath}`](https://www.reddit.com/dev/api#GET_api_multi_%7Bmultipath%7D)|[`RedditClient.getPublicMulti()`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/RedditClient#getPublicMulti-java.lang.String-java.lang.String-)
-`GET`|[`/api/multi/{multipath}/description`](https://www.reddit.com/dev/api#GET_api_multi_%7Bmultipath%7D_description)|[`RedditClient.getPublicMultiDescription()`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/RedditClient#getPublicMultiDescription-java.lang.String-java.lang.String-)
-`GET`|[`/api/multi/{multipath}/r/srname`](https://www.reddit.com/dev/api#GET_api_multi_%7Bmultipath%7D_r_srname)|[`RedditClient.getPublicMulti()`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/RedditClient#getPublicMulti-java.lang.String-java.lang.String-)
+`GET`|[`/api/multi/mine`](https://www.reddit.com/dev/api#GET_api_multi_mine)|[`MultiRedditManager.mine()`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/MultiRedditManager#mine--)
+`GET`|[`/api/multi/{multipath}`](https://www.reddit.com/dev/api#GET_api_multi_%7Bmultipath%7D)|[`MultiRedditManager.get()`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/MultiRedditManager#get-java.lang.String-java.lang.String-)
+`POST`|[`/api/multi/{multipath}`](https://www.reddit.com/dev/api#POST_api_multi_%7Bmultipath%7D)|[`MultiRedditManager.create()`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/MultiRedditManager#create-java.lang.String-java.util.List-boolean-)
+`DELETE`|[`/api/multi/{multipath}`](https://www.reddit.com/dev/api#DELETE_api_multi_%7Bmultipath%7D)|[`MultiRedditManager.delete()`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/MultiRedditManager#delete-java.lang.String-)
+`GET`|[`/api/multi/{multipath}/description`](https://www.reddit.com/dev/api#GET_api_multi_%7Bmultipath%7D_description)|[`MultiRedditManager.getDescription()`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/MultiRedditManager#getDescription-java.lang.String-)
+`GET`|[`/api/multi/{multipath}/r/srname`](https://www.reddit.com/dev/api#GET_api_multi_%7Bmultipath%7D_r_srname)|[`MultiRedditManager.get()`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/MultiRedditManager#get-java.lang.String-java.lang.String-)
 
 ##private messages
 Method|Endpoint|Implemented?
