@@ -161,23 +161,11 @@ public class RedditClient extends RestClient<RestRequest, RedditResponse> {
             throw loginResponse.getApiExceptions()[0];
         }
 
-        List<Header> headers = http.getDefaultHeaders();
-
+        //Add the mod has header
         Header h = new BasicHeader(HEADER_MODHASH,
                 loginResponse.getJson().get("json").get("data").get("modhash").getTextValue());
 
-        // Add the X-Modhash header, or update it if it already exists
-        Header modhashHeader = null;
-        for (Header header : headers) {
-            if (header.getName().equals(HEADER_MODHASH)) {
-                modhashHeader = header;
-            }
-        }
-
-        if (modhashHeader != null) {
-            headers.remove(modhashHeader);
-        }
-        headers.add(h);
+        http.addHeader(h);
 
         return new LoggedInAccount(execute(request(GET, "/api/me.json")).getJson().get("data"), this);
     }
