@@ -1,6 +1,7 @@
 package net.dean.jraw.http;
 
 import net.dean.jraw.JrawUtils;
+
 import org.apache.http.Header;
 import org.apache.http.HttpHost;
 import org.apache.http.client.CookieStore;
@@ -25,8 +26,9 @@ import org.apache.http.message.BasicNameValuePair;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -45,8 +47,8 @@ public class HttpHelper {
 
     private CookieStore cookieStore;
 
-    /** The list of headers that will be sent with every HTTP request */
-    private List<Header> defaultHeaders;
+    /** The map of headers that will be sent with every HTTP request, key -> value : header name -> header */
+    private Map<String, Header> defaultHeaders;
 
     /**
      * Instantiates a new HttpClientHelper and adds a given string as the value for the User-Agent header for every request
@@ -55,8 +57,8 @@ public class HttpHelper {
      */
     public HttpHelper(String userAgent) {
         this.cookieStore = new BasicCookieStore();
-        this.defaultHeaders = new ArrayList<>();
-        defaultHeaders.add(new BasicHeader("User-Agent", userAgent));
+        this.defaultHeaders = new HashMap<>();
+        addHeader(new BasicHeader("User-Agent", userAgent));
 
         // Register the RedditMaxAgeHandler
         CookieSpecProvider cookieSpecProvider = context -> {
@@ -118,7 +120,7 @@ public class HttpHelper {
             }
 
             // Add the default headers to the request
-            for (Header h : defaultHeaders) {
+            for (Header h : defaultHeaders.values()) {
                 request.addHeader(h);
             }
 
@@ -150,8 +152,8 @@ public class HttpHelper {
      *
      * @return A list of default headers
      */
-    public List<Header> getDefaultHeaders() {
-        return defaultHeaders;
+    /* package */List<Header> getDefaultHeaders() {
+        return new ArrayList<>(defaultHeaders.values());
     }
 
     /**
@@ -167,17 +169,7 @@ public class HttpHelper {
      * @param userAgent The User-Agent to use for the HTTP requests
      */
     public void setUserAgent(String userAgent) {
-        for (Iterator<Header> it = defaultHeaders.iterator(); it.hasNext(); ) {
-            Header currentHeader = it.next();
-            if (currentHeader.getName().equals("User-Agent")) {
-                it.remove();
-                defaultHeaders.add(new BasicHeader("User-Agent", userAgent));
-                return;
-            }
-        }
-
-        // No User-Agent string was found
-        defaultHeaders.add(new BasicHeader("User-Agent", userAgent));
+        addHeader(new BasicHeader("User-Agent", userAgent));
     }
 
     /**
@@ -185,12 +177,31 @@ public class HttpHelper {
      * @return The User-Agent to use for HTTP requests
      */
     public String getUserAgent() {
-        for (Header h : defaultHeaders) {
-            if (h.getName().equals("User-Agent")) {
-                return h.getValue();
-            }
-        }
-
-        return null;
+        Header h = defaultHeaders.get("User-Agent");
+        return h == null ? null : h.getValue();
     }
+    
+    /**
+     * Add header to headers sent with each request. If another header with the
+     * same name exists this will replace that header
+     * 
+     * @param header
+     *            The header to add to each request
+     */
+    public void addHeader(Header header) {
+        if (header != null) {
+            defaultHeaders.put(header.getName(), header);
+        }
+    }
+    
+    /**
+     * Remove a header from headers sent with each request.
+     * 
+     * @param name
+     *            name of the header to remove.
+     */
+    public void removeHeader(String name) {
+        defaultHeaders.remove(name);
+    }
+    
 }
