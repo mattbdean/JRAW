@@ -192,11 +192,7 @@ public class MultiRedditManager implements NetworkAccessible<RedditClient> {
 
         checkForError(node);
         node = node.get("data");
-        String md = node.get("body_md").asText();
-        if (!JrawConfig.loadRenderStringPairHtml) {
-            return new RenderStringPair(md);
-        }
-        return new RenderStringPair(md, node.get("body_html").asText());
+        return new RenderStringPair(node.get("body_md").asText(), node.get("body_html").asText());
     }
 
     /**

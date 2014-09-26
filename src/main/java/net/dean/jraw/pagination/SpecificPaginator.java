@@ -55,7 +55,10 @@ public class SpecificPaginator extends Paginator<Submission> {
      * @return A list of fullnames
      */
     public String[] getSubmissions() {
-        return submissions;
+        String[] localCopy = new String[submissions.length];
+        System.arraycopy(submissions, 0, localCopy, 0, submissions.length);
+
+        return localCopy;
     }
 
     @Override

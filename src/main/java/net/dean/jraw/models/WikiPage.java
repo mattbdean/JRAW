@@ -1,6 +1,5 @@
 package net.dean.jraw.models;
 
-import net.dean.jraw.JrawConfig;
 import net.dean.jraw.models.core.Account;
 import org.codehaus.jackson.JsonNode;
 
@@ -43,13 +42,7 @@ public class WikiPage extends RedditObject {
      */
     @JsonInteraction
     public RenderStringPair getContent() {
-        String md = data("content_md");
-
-        if (!JrawConfig.loadRenderStringPairHtml) {
-            return new RenderStringPair(md);
-        }
-
-        return new RenderStringPair(md, data("content_html"));
+        return new RenderStringPair(data("content_md"), data("content_html"));
     }
 
     /**
