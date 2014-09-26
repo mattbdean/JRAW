@@ -19,7 +19,7 @@ public class MultiRedditManagerTest {
 
     private static LoggedInAccount account;
     private static MultiRedditManager manager;
-    private static final String MULTI_NAME = "fdsafdsafds";
+    private static final String MULTI_NAME = "jraw_testing";
     private static String readOnlyMulti;
     private static final List<String> MULTI_INITIAL_SUBS = Arrays.asList("funny", "pics");
 
