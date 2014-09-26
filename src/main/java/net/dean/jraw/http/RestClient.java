@@ -1,5 +1,6 @@
 package net.dean.jraw.http;
 
+import com.google.common.util.concurrent.RateLimiter;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
@@ -20,27 +21,34 @@ import java.util.Map;
 public abstract class RestClient<T extends RestResponse> {
     private final String host;
     private final String hostHttps;
-
+    private final RateLimiter rateLimiter;
     /** The OkHttpClient used to execute RESTful HTTP requests */
-    protected OkHttpClient http;
-    /** The CookieStore that will contain all the cookies saved by {@link #cookieJar} */
-    protected CookieStore cookieJar;
+    protected final OkHttpClient http;
+    /** The CookieStore that will contain all the cookies saved by {@link #http} */
+    protected final CookieStore cookieJar;
 
     /** A list of Requests sent in the past */
-    protected LinkedHashMap<T, LocalDateTime> history;
+    protected final LinkedHashMap<T, LocalDateTime> history;
     /** A list of headers to be sent for request */
-    protected Map<String, String> defaultHeaders;
+    protected final Map<String, String> defaultHeaders;
+    private boolean enforceRatelimit;
+
 
     /**
      * Instantiates a new RestClient
      *
-     * @param host      The host on which to operate
+     * @param host The host on which to operate
      * @param hostHttps The host on which to send HTTP requests secured with SSL on
      * @param userAgent The User-Agent header which will be sent with all requests
+     * @param requestsPerMinute The amount of HTTP requests that can be sent in one minute. A value greater than 0 will
+     *                          enable rate limit enforcing, one less than or equal to 0 will disable it. This value cannot
+     *                          be changed aft
      */
-    public RestClient(String host, String hostHttps, String userAgent) {
+    public RestClient(String host, String hostHttps, String userAgent, int requestsPerMinute) {
         this.host = host;
         this.hostHttps = hostHttps;
+        this.enforceRatelimit = requestsPerMinute > 0;
+        this.rateLimiter = enforceRatelimit ? RateLimiter.create((double) requestsPerMinute / 60) : null;
         this.http = new OkHttpClient();
         CookieManager manager = new CookieManager();
         manager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
@@ -85,6 +93,21 @@ public abstract class RestClient<T extends RestResponse> {
     }
 
     /**
+     * Whether to automatically manage the execution of HTTP requests based on time (enabled by default). If there has
+     * been more than 30 requests in the last minute, this class will wait to execute the next request in order to
+     * minimize the chance of getting IP banned by Reddit, or simply having the API return a 403.
+     *
+     * @param enabled Whether to enable request management
+     */
+    public void setEnforceRatelimit(boolean enabled) {
+        this.enforceRatelimit = enabled;
+    }
+
+    public boolean isEnforcingRatelimit() {
+        return enforceRatelimit;
+    }
+
+    /**
      * Executes a RESTful HTTP request
      *
      * @param r The request to execute
@@ -92,6 +115,11 @@ public abstract class RestClient<T extends RestResponse> {
      * @throws NetworkException If the status code was not "200 OK"
      */
     public T execute(Request r) throws NetworkException {
+        if (enforceRatelimit) {
+            JrawUtils.logger().info("Slept for {} seconds", rateLimiter.acquire());
+        }
+
+
         try {
             Response response = http.newCall(r).execute();
 

@@ -17,9 +17,6 @@ import net.dean.jraw.pagination.SubredditPaginator;
 import org.codehaus.jackson.JsonNode;
 
 import java.net.HttpCookie;
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,12 +42,6 @@ public class RedditClient extends RestClient<RedditResponse> {
     private static final int NUM_TRENDING_SUBREDDITS = 5;
 
     /**
-     * Whether to stall the requests to make sure that no more than ${@value #REQUESTS_PER_MINUTE} requests have been made
-     * in the past minute
-     */
-    private boolean requestManagement;
-
-    /**
      * Instantiates a new RedditClient and adds the given user agent to the default headers of the RestClient
      *
      * @param userAgent The User-Agent header that will be sent with all the HTTP requests.
@@ -69,68 +60,7 @@ public class RedditClient extends RestClient<RedditResponse> {
      *                  </blockquote>
      */
     public RedditClient(String userAgent) {
-        super(HOST, HOST_SSL, userAgent);
-        this.requestManagement = true;
-    }
-
-    /**
-     * Whether to automatically manage the execution of HTTP requests based on time (enabled by default). If there has
-     * been more than 30 requests in the last minute, this class will wait to execute the next request in order to
-     * minimize the chance of getting IP banned by Reddit, or simply having the API return a 403.
-     *
-     * @param enabled Whether to enable request management
-     */
-    public void setRequestManagementEnabled(boolean enabled) {
-        this.requestManagement = enabled;
-    }
-
-    @Override
-    public RedditResponse execute(Request request) throws NetworkException {
-        if (!requestManagement) {
-            // All in your hands, buddy
-            return super.execute(request);
-        }
-
-        // No history, safe to assume that there were no recent requests
-        if (history.size() == 0) {
-            return super.execute(request);
-        }
-
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime executed;
-        int execAmount = 0; // Amount of times executed in the last minute
-
-        // We only care about the LocalDateTimes
-        List<LocalDateTime> entrySet = new ArrayList<>(history.values());
-
-        // Transverse the history backwards and look for the latest request executed just after one minute
-        for (int i = entrySet.size() - 1; i >= 0; i--) {
-            executed = entrySet.get(i);
-            // Request was executed before 60 seconds ago or has there been over 30 requests executed already?
-            if (executed.isBefore(now.minus(60, ChronoUnit.SECONDS)) || ++execAmount >= REQUESTS_PER_MINUTE) {
-                if (i > 0) {
-                    // Make sure that we leave enough time to make sure we have 30 requests max in the last minute
-                    LocalDateTime before = entrySet.get(i - 1);
-                    Duration timeToWait = Duration.between(executed, before);
-                    long millis = timeToWait.toMillis();
-                    if (millis <= 0) {
-                        millis = -millis;
-                    }
-                    try {
-                        // Wait the time between the two times
-                        JrawUtils.logger().info("Sleeping for {} milliseconds", millis);
-                        Thread.sleep(millis);
-                    } catch (InterruptedException e) {
-                        JrawUtils.logger().error("Interrupted", e);
-                    }
-                }
-
-                // We've waited our time
-                break;
-            }
-        }
-
-        return super.execute(request);
+        super(HOST, HOST_SSL, userAgent, REQUESTS_PER_MINUTE);
     }
 
     @Override

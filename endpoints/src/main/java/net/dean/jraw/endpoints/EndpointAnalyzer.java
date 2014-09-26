@@ -1,9 +1,9 @@
 package net.dean.jraw.endpoints;
 
+import com.google.common.hash.Hashing;
 import net.dean.jraw.Endpoint;
 import net.dean.jraw.EndpointImplementation;
 import net.dean.jraw.Endpoints;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.reflections.Reflections;
@@ -131,7 +131,7 @@ public class EndpointAnalyzer {
     }
 
     private static String getMd5Sum(File f) throws IOException {
-        return DigestUtils.md5Hex(new FileInputStream(f));
+        return com.google.common.io.Files.hash(f, Hashing.md5()).toString();
     }
 
     /**
