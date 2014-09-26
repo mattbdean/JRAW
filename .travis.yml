@@ -5,6 +5,4 @@ env:
   global:
     - secure: u0Gmfx91ndH4u32msTaMtMcKSluz6VzQE1mxpwjFha2+mRw7bGmLlkEh6CNfbv9lio2cHP1RN+zmAXq28iQQ4qiOSW5HdfC2M2RzzD9IxQ8rrg4rnHjl3QagfWBltm7QhmgSwVA3gyK1EHNnhUehYhwbSZLD1velBt6je6vQp78=
     - USERNAME=jraw_test
-install:
-  - ./gradlew endpoints:update
-  - ./gradlew assemble
+script: ./gradlew test
