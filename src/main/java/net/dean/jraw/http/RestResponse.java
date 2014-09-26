@@ -97,4 +97,14 @@ public class RestResponse {
     public String getRaw() {
         return raw;
     }
+
+    @Override
+    public String toString() {
+        return "RestResponse {" +
+                "headers=" + headers +
+                ", rootNode=" + rootNode +
+                ", raw='" + raw + '\'' +
+                ", type=" + type +
+                '}';
+    }
 }
