@@ -64,7 +64,7 @@ public abstract class AbstractEndpointGenerator {
      * @return A URL pointing to the given endpoint
      */
     protected String getRedditDocUrl(Endpoint endpoint) {
-        String base = endpoint.getVerb().name() + endpoint.getUri().replace('/', '_');
+        String base = endpoint.getVerb() + endpoint.getUri().replace('/', '_');
 
         try {
             base = URLEncoder.encode(base, "UTF-8");

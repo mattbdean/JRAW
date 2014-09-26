@@ -126,12 +126,12 @@
         "POST /api/multi/{multipath}/copy",
         "GET /api/multi/{multipath}/description",
         "PUT /api/multi/{multipath}/description",
-        "DELETE /api/multi/{multipath}/r/srname",
-        "DELETE /api/filter/{filterpath}/r/srname",
-        "GET /api/multi/{multipath}/r/srname",
-        "GET /api/filter/{filterpath}/r/srname",
-        "PUT /api/multi/{multipath}/r/srname",
-        "PUT /api/filter/{filterpath}/r/srname",
+        "DELETE /api/multi/{multipath}/r/{srname}",
+        "DELETE /api/filter/{filterpath}/r/{srname}",
+        "GET /api/multi/{multipath}/r/{srname}",
+        "GET /api/filter/{filterpath}/r/{srname}",
+        "PUT /api/multi/{multipath}/r/{srname}",
+        "PUT /api/filter/{filterpath}/r/{srname}",
         "POST /api/multi/{multipath}/rename"
     ],
     "private messages": [

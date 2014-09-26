@@ -1,11 +1,11 @@
 package net.dean.jraw;
 
 /**
- * This class provides to translate errors returned by the Reddit API into Java Exceptions
+ * This class provides a way to translate errors returned by the Reddit API into Java Exceptions
  */
 public class ApiException extends Exception {
-    protected final String code;
-    protected final String explanation;
+    private final String code;
+    private final String explanation;
 
     /**
      * Instantiates a new ApiException from the Reddit API
@@ -42,7 +42,9 @@ public class ApiException extends Exception {
     }
 
     /**
-     * Gets the code error string
+     * Gets the code error string. A full list can be found
+     * <a href="https://github.com/reddit/reddit/blob/master/r2/r2/lib/errors.py">here</a>.
+     *
      * @return The code
      */
     public String getCode() {

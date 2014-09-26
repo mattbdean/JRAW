@@ -75,7 +75,7 @@ public class MarkdownGenerator extends AbstractEndpointGenerator {
                 // ex: `GET`|[`/api/me.json`](https://www.reddit.com/dev/api#GET_api_me.json)|[`RedditClient.me()`](url and line #)
                 // or: `POST`|[`/api/clear_sessions`](https://www.reddit.com/dev/api#POST_api_clear_sessions)|No
 
-                sb.append('`').append(e.getVerb().name()).append("`|")
+                sb.append('`').append(e.getVerb()).append("`|")
                         .append("[`").append(e.getUri()).append("`](").append(getRedditDocUrl(e)).append(")|")
                         .append(implString).append('\n');
 

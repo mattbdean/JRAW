@@ -1,95 +1,135 @@
 package net.dean.jraw.http;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.CloseableHttpResponse;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
+import net.dean.jraw.JrawUtils;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
+import java.net.CookieManager;
+import java.net.CookiePolicy;
+import java.net.CookieStore;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
- * This class provides a way to send RESTful HTTP requests and return {@link net.dean.jraw.http.RestResponse} objects
- * @param <U> The type of response object that will be returned by {@link #execute(RestRequest)}
+ * This class provides a way to send RESTful HTTP requests
  */
-public class RestClient<T extends RestRequest, U extends RestResponse> {
+public abstract class RestClient<T extends RestResponse> {
     private final String host;
+    private final String hostHttps;
 
-    /** The HttpHelper that will do all the basic HTTP requests */
-    protected HttpHelper http;
+    /** The OkHttpClient used to execute RESTful HTTP requests */
+    protected OkHttpClient http;
+    /** The CookieStore that will contain all the cookies saved by {@link #cookieJar} */
+    protected CookieStore cookieJar;
 
-    /** A list of RestRequests sent in the past */
-    protected List<HttpRequest> history;
+    /** A list of Requests sent in the past */
+    protected LinkedHashMap<T, LocalDateTime> history;
+    /** A list of headers to be sent for request */
+    protected Map<String, String> defaultHeaders;
 
     /**
      * Instantiates a new RestClient
      *
-     * @param host          The host on which to operate
-     * @param userAgent     The User-Agent header which will be sent with all requests
+     * @param host      The host on which to operate
+     * @param hostHttps The host on which to send HTTP requests secured with SSL on
+     * @param userAgent The User-Agent header which will be sent with all requests
      */
-    public RestClient(String host, String userAgent) {
-        this.http = new HttpHelper(userAgent);
+    public RestClient(String host, String hostHttps, String userAgent) {
         this.host = host;
-        this.history = new ArrayList<>();
+        this.hostHttps = hostHttps;
+        this.http = new OkHttpClient();
+        CookieManager manager = new CookieManager();
+        manager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
+        http.setCookieHandler(manager);
+        this.cookieJar = manager.getCookieStore();
+        this.history = new LinkedHashMap<>();
+        this.defaultHeaders = new HashMap<>();
+        defaultHeaders.put("User-Agent", userAgent);
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public String getHostHttps() {
+        return hostHttps;
     }
 
     /**
-     * Instantiates a new {@link RestRequest.Builder} with the host given to create this RestClient
-     * @param verb The HTTP verb to use
-     * @param path The path of the request. For example, "/api/login"
-     * @return A new RestRequest Builder
+     * Creates a new RequestBuilder whose host is {@link #getHost()}
+     * @return A new RequestBuilder
      */
-    public RestRequest.Builder requestBuilder(HttpVerb verb, String path) {
-        return new RestRequest.Builder(verb, host, path);
+    public RequestBuilder request() {
+        return request(false);
     }
 
     /**
-     * Instantiates a new simple RestRequest with the host given to create this RestClient
-     * @param verb The HTTP verb to use
-     * @param path The path of the request. For example, "/api/login"
-     * @return A new RestRequest
+     * Creates a new RequestBuilder
+     * @param https If this request should be executed on {@link #getHostHttps()} with HTTPS
+     * @return A new RequestBuilder
      */
-    public RestRequest request(HttpVerb verb, String path) {
-        return new RestRequest(verb, host, path);
+    public RequestBuilder request(boolean https) {
+        return addDefaultHeaders(new RequestBuilder(https ? hostHttps : host)
+                .https(https));
+    }
+
+    private RequestBuilder addDefaultHeaders(RequestBuilder builder) {
+        for (Map.Entry<String, String> entry : defaultHeaders.entrySet()) {
+            builder.header(entry.getKey(), entry.getValue());
+        }
+        return builder;
     }
 
     /**
      * Executes a RESTful HTTP request
      *
-     * @param request The request to execute
+     * @param r The request to execute
      * @return A RestResponse from the resulting response
      * @throws NetworkException If the status code was not "200 OK"
      */
-    public U execute(T request) throws NetworkException {
-        request.onExecuted();
-        history.add(request);
-        CloseableHttpResponse response = http.execute(request);
+    public T execute(Request r) throws NetworkException {
+        try {
+            Response response = http.newCall(r).execute();
 
-        if (response == null) {
-            throw new NetworkException("Request timed out");
+            JrawUtils.logger().info("{} {}", r.method(), r.url());
+            if (!response.isSuccessful()) {
+                throw new NetworkException(String.format("Request not successful (got %s) : %s", response.code(), response));
+            }
+
+            T genericResponse = initResponse(http.newCall(r).execute());
+
+            history.put(genericResponse, LocalDateTime.now());
+            return genericResponse;
+        } catch (IOException e) {
+            throw new NetworkException("Could not execute the request: " + r);
         }
-
-        return initResponse(request, response);
     }
 
     /**
-     * This method is responsible for instantiating a new RestResponse for {@link #execute(RestRequest)}.
-     * This method must be overwritten if the extending class is using a subclass of RestResponse for type {@code <U>}.
-     *
-     * @param request The given RestRequest
-     * @param response An Apache HttpComponents response for the given request
-     * @return A new response object
+     * Gets the User-Agent header for this RestClient
+     * @return The value of the User-Agent header
      */
-    @SuppressWarnings("unchecked")
-    protected U initResponse(T request, HttpResponse response) {
-        return (U) new RestResponse(response, request.getExpected());
+    public String getUserAgent() {
+        return defaultHeaders.get("User-Agent");
     }
 
     /**
-     * Gets the HttpHelper used to execute HTTP requests
-     *
-     * @return The HttpHelper
+     * Sets the User-Agent header for this RestClient
+     * @param userAgent The new User-Agent header
      */
-    public HttpHelper getHttpHelper() {
-        return http;
+    public void setUserAgent(String userAgent) {
+        defaultHeaders.put("User-Agent", userAgent);
     }
 
+    /**
+     * This method is responsible for instantiating a new <T> (RestResponse or one of its subclasses)
+     *
+     * @param r The OkHttp response given
+     * @return A new <T>
+     */
+    protected abstract T initResponse(Response r);
 }

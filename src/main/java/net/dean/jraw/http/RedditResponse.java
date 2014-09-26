@@ -1,12 +1,13 @@
 package net.dean.jraw.http;
 
+import com.squareup.okhttp.MediaType;
+import com.squareup.okhttp.Response;
 import net.dean.jraw.ApiException;
 import net.dean.jraw.JrawUtils;
 import net.dean.jraw.models.RedditObject;
 import net.dean.jraw.models.core.Comment;
 import net.dean.jraw.models.core.Listing;
 import net.dean.jraw.models.core.Submission;
-import org.apache.http.HttpResponse;
 import org.codehaus.jackson.JsonNode;
 
 /**
@@ -21,8 +22,8 @@ public class RedditResponse extends RestResponse {
      *
      * @param response The HttpResponse used to get the information
      */
-    public RedditResponse(HttpResponse response) {
-        this(response, ContentType.JSON);
+    public RedditResponse(Response response) {
+        this(response, MediaTypes.JSON.type());
     }
 
     /**
@@ -31,14 +32,14 @@ public class RedditResponse extends RestResponse {
      * @param response The HttpResponse used to get the information
      * @param expected The expected ContentType
      */
-    public RedditResponse(HttpResponse response, ContentType expected) {
+    public RedditResponse(Response response, MediaType expected) {
         super(response, expected);
 
-        if (contentType.equals(ContentType.HTML))
+        if (JrawUtils.typeComparison(expected, MediaTypes.HTML.type())) {
             JrawUtils.logger().warn("Received HTML from Reddit API instead of JSON. Are you sure you have access to this document?");
-
+        }
         ApiException[] errors = new ApiException[0];
-        if (contentType.equals(ContentType.JSON) && !raw.isEmpty()) {
+        if (JrawUtils.typeComparison(type, MediaTypes.JSON.type()) && !raw.isEmpty()) {
             // Parse the errors into ApiExceptions
             JsonNode errorsNode = rootNode.get("json");
             if (errorsNode != null) {

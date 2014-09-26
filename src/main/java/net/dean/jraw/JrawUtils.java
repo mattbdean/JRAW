@@ -1,5 +1,6 @@
 package net.dean.jraw;
 
+import com.squareup.okhttp.MediaType;
 import net.dean.jraw.models.Contribution;
 import net.dean.jraw.models.RedditObject;
 import net.dean.jraw.models.ThingType;
@@ -152,5 +153,15 @@ public final class JrawUtils {
         }
 
         return null;
+    }
+
+    /**
+     * Compares the type and subtype of two MediaTypes.
+     * @param t1 The first MediaType
+     * @param t2 The second MediaType
+     * @return True, if {@code t1.type().equals(t2.type())} and {@code t1.subtype().equals(t2.subtype())}, false if else.
+     */
+    public static boolean typeComparison(MediaType t1, MediaType t2) {
+        return t1.type().equals(t2.type()) && t1.subtype().equals(t2.subtype());
     }
 }

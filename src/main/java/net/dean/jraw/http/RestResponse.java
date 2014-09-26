@@ -1,15 +1,13 @@
 package net.dean.jraw.http;
 
+import com.squareup.okhttp.Headers;
+import com.squareup.okhttp.MediaType;
+import com.squareup.okhttp.Response;
 import net.dean.jraw.JrawUtils;
-import org.apache.http.Header;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.util.EntityUtils;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.IOException;
-import java.util.Scanner;
 
 /**
  * This class is used to show the result of a request to a RESTful web service, such as Reddit's JSON API.
@@ -18,21 +16,21 @@ public class RestResponse {
     /** The ObjectMapper used to read a JSON tree into a JsonNode */
     protected static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     /** A list of all the headers received from the server */
-    protected final Header[] headers;
+    protected final Headers headers;
     /** The root node of the JSON */
     protected final JsonNode rootNode;
     /** The raw data of the response's content */
     protected final String raw;
-    /** The ContentType object parsed from the "Content-Type" header of the HTTP response */
-    protected final ContentType contentType;
+    /** The Content-Type returned from the response */
+    protected final MediaType type;
 
     /**
      * Instantiates a new RestResponse
      *
      * @param response The HttpResponse used to get the information
      */
-    public RestResponse(HttpResponse response) {
-        this(response, ContentType.JSON);
+    public RestResponse(Response response) {
+        this(response, MediaType.parse("application/json"));
     }
 
     /**
@@ -42,37 +40,27 @@ public class RestResponse {
      * @param response The HttpResponse used to get the information
      * @param expected The expected ContentType
      */
-    public RestResponse(HttpResponse response, ContentType expected) {
-        this.headers = response.getAllHeaders();
+    public RestResponse(Response response, MediaType expected) {
+        this.headers = response.headers();
+        this.raw = readContent(response);
+        this.type = MediaType.parse(response.header("Content-Type"));
 
-        // http://stackoverflow.com/a/5445161
-        Scanner s = getContentScanner(response.getEntity());
-        this.raw = s.hasNext() ? s.next() : "";
-
-        String type = getHeader("Content-Type").getValue().toLowerCase();
-        this.contentType = ContentType.parse(type);
-        if (!contentType.equals(expected)) {
-            JrawUtils.logger().warn("Unknown Content-Type received: \"{}\"", contentType.asHeader());
+        if (!JrawUtils.typeComparison(expected, type)) {
+            JrawUtils.logger().warn("Unknown Content-Type received: \"{}\"", type.toString());
         }
-        if (contentType.equals(ContentType.JSON) && !raw.isEmpty()) {
+        if (JrawUtils.typeComparison(type, MediaTypes.JSON.type()) && !raw.isEmpty()) {
             this.rootNode = readTree(raw);
         } else {
             // Init JSON-related final variables
             this.rootNode = null;
         }
-
-        try {
-            EntityUtils.consume(response.getEntity());
-        } catch (IOException e) {
-            JrawUtils.logger().error("Unable to consume entity", e);
-        }
     }
 
-    private Scanner getContentScanner(HttpEntity entity) {
+    private String readContent(Response r) {
         try {
-            return new Scanner(entity.getContent()).useDelimiter("\\A");
+            return r.body().string();
         } catch (IOException e) {
-            JrawUtils.logger().error("Could not get the content of HttpEntity " + entity, e);
+            JrawUtils.logger().error("Could not read the body of the given response");
             return null;
         }
     }
@@ -87,35 +75,11 @@ public class RestResponse {
     }
 
     /**
-     * Gets a Header object by name from the list of headers
-     *
-     * @param name The name of the header, such as {@code Content-Length}
-     * @return A Header object with a given name
+     * Gets the Content-Type of the response
+     * @return The Content-Type of the response
      */
-    public Header getHeader(String name) {
-        for (Header h : headers) {
-            if (h.getName().equalsIgnoreCase(name)) {
-                return h;
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Gets all the headers received from the server
-     * @return An array of Header objects
-     */
-    public Header[] getHeaders() {
-        return headers;
-    }
-
-    /**
-     * Gets the value of the Content-Type header received from the server
-     * @return The Content-Type
-     */
-    public ContentType getContentType() {
-        return contentType;
+    public MediaType getType() {
+        return type;
     }
 
     /**

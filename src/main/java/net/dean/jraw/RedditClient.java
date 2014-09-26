@@ -1,34 +1,33 @@
 package net.dean.jraw;
 
+import com.squareup.okhttp.FormEncodingBuilder;
+import com.squareup.okhttp.MediaType;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
 import net.dean.jraw.http.*;
-import net.dean.jraw.models.*;
+import net.dean.jraw.models.Captcha;
+import net.dean.jraw.models.LoggedInAccount;
+import net.dean.jraw.models.RenderStringPair;
+import net.dean.jraw.models.WikiPage;
 import net.dean.jraw.models.core.Account;
 import net.dean.jraw.models.core.Submission;
 import net.dean.jraw.models.core.Subreddit;
 import net.dean.jraw.pagination.Sorting;
 import net.dean.jraw.pagination.SubredditPaginator;
-import org.apache.http.Header;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.cookie.Cookie;
-import org.apache.http.message.BasicHeader;
 import org.codehaus.jackson.JsonNode;
 
-import java.io.IOException;
+import java.net.HttpCookie;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
-import static net.dean.jraw.http.HttpVerb.GET;
-import static net.dean.jraw.http.HttpVerb.POST;
-
 /**
  * This class provides access to the most basic Reddit features such as logging in. It is recommended that only one instance
  * of this class is used at a time, unless you disable request management and implement your own.
  */
-public class RedditClient extends RestClient<RestRequest, RedditResponse> {
+public class RedditClient extends RestClient<RedditResponse> {
 
     /** The host that will be used to execute basic HTTP requests */
     public static final String HOST = "www.reddit.com";
@@ -70,7 +69,7 @@ public class RedditClient extends RestClient<RestRequest, RedditResponse> {
      *                  </blockquote>
      */
     public RedditClient(String userAgent) {
-        super(HOST, userAgent);
+        super(HOST, HOST_SSL, userAgent);
         this.requestManagement = true;
     }
 
@@ -86,12 +85,7 @@ public class RedditClient extends RestClient<RestRequest, RedditResponse> {
     }
 
     @Override
-    public RedditResponse initResponse(RestRequest request, HttpResponse response) {
-        return new RedditResponse(response, request.getExpected());
-    }
-
-    @Override
-    public RedditResponse execute(RestRequest request) throws NetworkException {
+    public RedditResponse execute(Request request) throws NetworkException {
         if (!requestManagement) {
             // All in your hands, buddy
             return super.execute(request);
@@ -102,17 +96,21 @@ public class RedditClient extends RestClient<RestRequest, RedditResponse> {
             return super.execute(request);
         }
 
-        // Transverse the history backwards and look for the latest request executed just after one minute
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime executed;
         int execAmount = 0; // Amount of times executed in the last minute
-        for (int i = history.size() - 1; i >= 0; i--) {
-            executed = history.get(i).getExecuted();
+
+        // We only care about the LocalDateTimes
+        List<LocalDateTime> entrySet = new ArrayList<>(history.values());
+
+        // Transverse the history backwards and look for the latest request executed just after one minute
+        for (int i = entrySet.size() - 1; i >= 0; i--) {
+            executed = entrySet.get(i);
             // Request was executed before 60 seconds ago or has there been over 30 requests executed already?
             if (executed.isBefore(now.minus(60, ChronoUnit.SECONDS)) || ++execAmount >= REQUESTS_PER_MINUTE) {
                 if (i > 0) {
                     // Make sure that we leave enough time to make sure we have 30 requests max in the last minute
-                    LocalDateTime before = history.get(i - 1).getExecuted();
+                    LocalDateTime before = entrySet.get(i - 1);
                     Duration timeToWait = Duration.between(executed, before);
                     long millis = timeToWait.toMillis();
                     if (millis <= 0) {
@@ -135,6 +133,11 @@ public class RedditClient extends RestClient<RestRequest, RedditResponse> {
         return super.execute(request);
     }
 
+    @Override
+    protected RedditResponse initResponse(Response r) {
+        return new RedditResponse(r);
+    }
+
 
     /**
      * Logs in to an account and returns the data associated with it
@@ -147,39 +150,27 @@ public class RedditClient extends RestClient<RestRequest, RedditResponse> {
      */
     @EndpointImplementation(Endpoints.LOGIN)
     public LoggedInAccount login(String username, String password) throws NetworkException, ApiException {
-        HttpRequest request = new HttpRequest.Builder(POST, HOST_SSL, "/api/login")
-                .args(JrawUtils.args(
-                        "user", username,
-                        "passwd", password,
-                        "api_type", "json"
-                )).cookieSpec(HttpHelper.COOKIE_SPEC_REDDIT)
-                .build();
+        Request request = request(true)
+                .endpoint(Endpoints.LOGIN)
+                .post(new FormEncodingBuilder()
+                                .add("user", username)
+                                .add("passwd", password)
+                                .add("api_type", "json")
+                                .build()
+                ).build();
 
-        RedditResponse loginResponse = new RedditResponse(http.execute(request));
+        RedditResponse loginResponse = execute(request);
 
         if (loginResponse.hasErrors()) {
             throw loginResponse.getApiExceptions()[0];
         }
 
-        List<Header> headers = http.getDefaultHeaders();
-
-        Header h = new BasicHeader(HEADER_MODHASH,
-                loginResponse.getJson().get("json").get("data").get("modhash").getTextValue());
+        String modhash = loginResponse.getJson().get("json").get("data").get("modhash").getTextValue();
 
         // Add the X-Modhash header, or update it if it already exists
-        Header modhashHeader = null;
-        for (Header header : headers) {
-            if (header.getName().equals(HEADER_MODHASH)) {
-                modhashHeader = header;
-            }
-        }
+        defaultHeaders.put(HEADER_MODHASH, modhash);
 
-        if (modhashHeader != null) {
-            headers.remove(modhashHeader);
-        }
-        headers.add(h);
-
-        return new LoggedInAccount(execute(request(GET, "/api/me.json")).getJson().get("data"), this);
+        return me();
     }
 
     /**
@@ -189,9 +180,14 @@ public class RedditClient extends RestClient<RestRequest, RedditResponse> {
      * @throws NetworkException If the user has not been logged in yet
      */
     @EndpointImplementation(Endpoints.ME)
-    public Account me() throws NetworkException {
+    public LoggedInAccount me() throws NetworkException {
         loginCheck();
-        return execute(request(GET, "/api/me.json")).as(Account.class);
+
+        RedditResponse response = execute(request()
+                .endpoint(Endpoints.ME)
+                .get()
+                .build());
+        return new LoggedInAccount(response.getJson().get("data"), this);
     }
 
     /**
@@ -200,7 +196,7 @@ public class RedditClient extends RestClient<RestRequest, RedditResponse> {
      * @return True if the user is logged in
      */
     public boolean isLoggedIn() {
-        for (Cookie cookie : http.getCookieStore().getCookies()) {
+        for (HttpCookie cookie : cookieJar.getCookies()) {
             if (cookie.getName().equals("reddit_session") && cookie.getDomain().equals("reddit.com")) {
                 return true;
             }
@@ -220,7 +216,10 @@ public class RedditClient extends RestClient<RestRequest, RedditResponse> {
     public boolean needsCaptcha() throws NetworkException {
         try {
             // This endpoint does not return JSON, but rather just "true" or "false"
-            RedditResponse response = execute(request(GET, "/api/needs_captcha.json"));
+            RedditResponse response = execute(request()
+                    .endpoint(Endpoints.NEEDS_CAPTCHA)
+                    .get()
+                    .build());
             return Boolean.parseBoolean(response.getRaw());
         } catch (NetworkException e) {
             throw new NetworkException("Unable to make the request to /api/needs_captcha.json", e);
@@ -236,7 +235,10 @@ public class RedditClient extends RestClient<RestRequest, RedditResponse> {
     @EndpointImplementation(Endpoints.NEW_CAPTCHA)
     public Captcha getNewCaptcha() throws NetworkException {
         try {
-            RedditResponse response = execute(request(POST, "/api/new_captcha"));
+            RedditResponse response = execute(request()
+                    .endpoint(Endpoints.NEW_CAPTCHA)
+                    .post(null)
+                    .build());
 
             // Some strange response you got there, reddit...
             String id = response.getJson().get("jquery").get(11).get(3).get(0).getTextValue();
@@ -256,13 +258,13 @@ public class RedditClient extends RestClient<RestRequest, RedditResponse> {
      */
     @EndpointImplementation(Endpoints.CAPTCHA_IDEN)
     public Captcha getCaptcha(String id) throws NetworkException {
-        try {
-            CloseableHttpResponse response = http.execute(new HttpRequest.Builder(GET, HOST, "/captcha/" + id + ".png").build());
+        // Use Request to format the URL
+        Request request = request()
+                .endpoint(Endpoints.CAPTCHA_IDEN, id)
+                .get()
+                .build();
 
-            return new Captcha(id, response.getEntity().getContent());
-        } catch (IOException | NetworkException e) {
-            throw new NetworkException("Unable to get the captcha \"" + id + "\"", e);
-        }
+        return new Captcha(id, request.urlString());
     }
 
     /**
@@ -274,7 +276,10 @@ public class RedditClient extends RestClient<RestRequest, RedditResponse> {
      */
     @EndpointImplementation(Endpoints.USER_USERNAME_ABOUT)
     public Account getUser(String username) throws NetworkException {
-        return execute(request(GET, "/user/" + username + "/about.json")).as(Account.class);
+        return execute(request()
+                .endpoint(Endpoints.USER_USERNAME_ABOUT, username)
+                .get()
+                .build()).as(Account.class);
     }
 
     /**
@@ -285,7 +290,10 @@ public class RedditClient extends RestClient<RestRequest, RedditResponse> {
      * @throws NetworkException If the link does not exist or there was a problem making the request
      */
     public Submission getSubmission(String id) throws NetworkException {
-        return execute(request(GET, "/" + id + ".json")).as(Submission.class);
+        return execute(request()
+                .path(String.format("/%s.json", id))
+                .get()
+                .build()).as(Submission.class);
     }
 
     /**
@@ -297,7 +305,9 @@ public class RedditClient extends RestClient<RestRequest, RedditResponse> {
      */
     @EndpointImplementation(Endpoints.SUBREDDIT_ABOUT)
     public Subreddit getSubreddit(String name) throws NetworkException {
-        return execute(request(GET, "/r/" + name + "/about.json")).as(Subreddit.class);
+        return execute(request()
+                .endpoint(Endpoints.SUBREDDIT_ABOUT, name)
+                .build()).as(Subreddit.class);
     }
 
     /**
@@ -309,7 +319,12 @@ public class RedditClient extends RestClient<RestRequest, RedditResponse> {
      */
     @EndpointImplementation(Endpoints.USERNAME_AVAILABLE)
     public boolean isUsernameAvailable(String name) throws NetworkException {
-        return Boolean.parseBoolean(execute(request(GET, "/api/username_available.json?user=" + name)).getRaw());
+        RedditResponse response = execute(request()
+                .endpoint(Endpoints.USERNAME_AVAILABLE)
+                .query("user", name)
+                .build());
+
+        return Boolean.parseBoolean(response.getRaw());
     }
 
     /**
@@ -330,20 +345,25 @@ public class RedditClient extends RestClient<RestRequest, RedditResponse> {
     @EndpointImplementation(Endpoints.RANDOM)
     public Submission getRandom(String subreddit) throws NetworkException  {
         String path = getSubredditPath(subreddit, "/random.json");
-        return execute(request(GET, path)).as(Submission.class);
+
+        // Favor path() instead of endpoint() because we have already decided the path above
+        return execute(request()
+                .path(path)
+                .build()).as(Submission.class);
     }
 
     /**
      * Gets the text displayed in the "submit link" form.
      * @param subreddit The subreddit to use
-     * @return The text displayed int he "submit link" form
-     * @throws NetworkException If there was a problem executing the request
+     * @return The text displayed int he "submit link" form * @throws NetworkException If there was a problem executing the request
      */
     @EndpointImplementation(Endpoints.SUBMIT_TEXT)
     public RenderStringPair getSubmitText(String subreddit) throws NetworkException {
         String path = getSubredditPath(subreddit, "/api/submit_text.json");
 
-        JsonNode node = execute(request(GET, path)).getJson();
+        JsonNode node = execute(request()
+                .path(path)
+                .build()).getJson();
         return new RenderStringPair(node.get("submit_text").asText(), node.get("submit_text_html").asText());
     }
 
@@ -357,8 +377,9 @@ public class RedditClient extends RestClient<RestRequest, RedditResponse> {
     public List<String> getSubredditsByTopic(String topic) throws NetworkException {
         List<String> subreddits = new ArrayList<>();
 
-        RestRequest request = requestBuilder(GET, "/api/subreddits_by_topic.json")
-                .args("query", topic)
+        Request request = request()
+                .endpoint(Endpoints.SUBREDDITS_BY_TOPIC)
+                .query("query", topic)
                 .build();
 
         JsonNode node = execute(request).getJson();
@@ -381,11 +402,13 @@ public class RedditClient extends RestClient<RestRequest, RedditResponse> {
     public List<String> searchSubreddits(String start, boolean includeNsfw) throws NetworkException {
         List<String> subs = new ArrayList<>();
 
-        RestRequest request = requestBuilder(POST, "/api/search_reddit_names.json")
-                .args(
-                        "query", start,
-                        "include_over_18", includeNsfw
-                ).build();
+        Request request = new RequestBuilder(HOST)
+                .endpoint(Endpoints.SEARCH_REDDIT_NAMES)
+                .post(new FormEncodingBuilder()
+                        .add("query", start)
+                        .add("include_over_18", Boolean.toString(includeNsfw))
+                        .build())
+                .build();
         JsonNode node = execute(request).getJson();
 
         for (JsonNode name : node.get("names")) {
@@ -406,15 +429,16 @@ public class RedditClient extends RestClient<RestRequest, RedditResponse> {
     public String getStylesheet(String subreddit) throws NetworkException {
         String path = getSubredditPath(subreddit, "/stylesheet");
 
-        RestRequest request = requestBuilder(GET, path)
-                .expectedContentType(ContentType.CSS)
+        Request r = request()
+                .path(path)
                 .build();
-        RestResponse response = execute(request);
+        RedditResponse response = execute(r);
 
-        ContentType type = response.getContentType();
-        if (!type.equals(ContentType.CSS)) {
-            throw new NetworkException(String.format("The request did not return a Content-Type of %s (was \"%s\")",
-                    ContentType.CSS.asHeader(), type));
+        MediaType actual = response.getType();
+        MediaType expected = MediaTypes.CSS.type();
+        if (!JrawUtils.typeComparison(actual, MediaTypes.CSS.type())) {
+            throw new NetworkException(String.format("The request did not return a Content-Type of %s/%s (was \"%s/%s\")",
+                    expected.type(), expected.subtype(), actual.type(), actual.subtype()));
         }
 
         return response.getRaw();
@@ -466,7 +490,9 @@ public class RedditClient extends RestClient<RestRequest, RedditResponse> {
         String path = getSubredditPath(subreddit, "/wiki/pages.json");
 
         List<String> pages = new ArrayList<>();
-        JsonNode pagesNode = execute(request(GET, path)).getJson().get("data");
+        JsonNode pagesNode = execute(request()
+                .path(path)
+                .build()).getJson().get("data");
 
         for (JsonNode page : pagesNode) {
             pages.add(page.asText());
@@ -499,7 +525,11 @@ public class RedditClient extends RestClient<RestRequest, RedditResponse> {
     @EndpointImplementation(Endpoints.WIKI_PAGE)
     public WikiPage getWikiPage(String subreddit, String page) throws NetworkException {
         String path = getSubredditPath(subreddit, "/wiki/" + page + ".json");
-        return execute(request(GET, path)).as(WikiPage.class);
+
+        Request r = request()
+                .path(path)
+                .build();
+        return execute(r).as(WikiPage.class);
     }
 
 

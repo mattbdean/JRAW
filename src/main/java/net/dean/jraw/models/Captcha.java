@@ -1,25 +1,25 @@
 package net.dean.jraw.models;
 
-import java.io.InputStream;
+import net.dean.jraw.JrawUtils;
+
+import java.net.URL;
 
 /**
  * Represents a Captcha.
  */
 public class Captcha {
-    private String id;
-
-    /** The InputStream that will download the Captcha's image */
-    private InputStream imageStream;
+    private final String id;
+    private final URL imageUrl;
 
     /**
      * Instantiates a new Captcha
      *
-     * @param id          The captcha's ID
-     * @param imageStream The captcha's input stream that will download its image
+     * @param id The captcha's ID
+     * @param url The URL to the captcha (as in the image)
      */
-    public Captcha(String id, InputStream imageStream) {
+    public Captcha(String id, String url) {
         this.id = id;
-        this.imageStream = imageStream;
+        this.imageUrl = JrawUtils.newUrl(url);
     }
 
     /**
@@ -32,19 +32,18 @@ public class Captcha {
     }
 
     /**
-     * Gets the captcha's InputStream that will download an image
-     *
-     * @return The captcha's InputStream
+     * Gets the URL to this Captcha's image. The format of the URL is {@code http://reddit.com/captcha/{id}.png}
+     * @return The URL to this Captcha's image
      */
-    public InputStream getImageStream() {
-        return imageStream;
+    public URL getImageUrl() {
+        return imageUrl;
     }
 
     @Override
     public String toString() {
-        return "Captcha{" +
+        return "Captcha {" +
                 "id='" + id + '\'' +
-                ", imageStream=" + (imageStream == null ? "null" : imageStream) +
+                ", imageUrl=" + imageUrl +
                 '}';
     }
 }

@@ -5,7 +5,7 @@
 >JRAW requires language features that are only available in Java 8 and above. Please adjust your project accordingly.
 
 ##Features
- - Mini-framework that wraps Apache's HttpComponents
+ - Mini-framework that wraps Square's OkHttp
  - (Optional) request management to prevent sending over 30 requests per minute
  - Ability to iterate through posts on the front page or specific subreddits, with support for limits, sortings (hot, new, top, etc.) and time periods when using 'top' (day, week, all, etc.)
  - Captcha support
@@ -154,7 +154,7 @@ Want to contribute? Follow these steps:
 6. Send the pull request
 
 ####Creating a user for unit testing
-1. Create a multireddit containing at least one subreddit
+1. Create a multireddit whose name is *not* "jraw_testing", containing at least one subreddit
 2. Have at least 10 link karma (otherwise you will have to use captchas)
 3. Submit at least one post (how about on [/r/jraw_testing2](http://www.reddit.com/r/jraw_testing2)?)
 

@@ -1,10 +1,10 @@
 package net.dean.jraw.models;
 
+import com.squareup.okhttp.FormEncodingBuilder;
+import com.squareup.okhttp.Request;
 import net.dean.jraw.*;
-import net.dean.jraw.http.HttpVerb;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.RedditResponse;
-import net.dean.jraw.http.RestRequest;
 import net.dean.jraw.models.core.Account;
 import net.dean.jraw.models.core.Comment;
 import net.dean.jraw.models.core.Submission;
@@ -73,7 +73,15 @@ public class LoggedInAccount extends Account {
             args.put("captcha", captchaAttempt);
         }
 
-        RedditResponse response = genericPost("/api/submit", args);
+        FormEncodingBuilder form = new FormEncodingBuilder();
+        for (Map.Entry<String, String> entry : args.entrySet()) {
+            form.add(entry.getKey(), entry.getValue());
+        }
+
+        RedditResponse response = genericPost(creator.request()
+                .endpoint(Endpoints.SUBMIT)
+                .post(form.build())
+                .build());
         return creator.getSubmission(response.getJson().get("json").get("data").get("id").asText());
     }
 
@@ -89,11 +97,14 @@ public class LoggedInAccount extends Account {
      */
     @EndpointImplementation(Endpoints.VOTE)
     public <T extends Thing & Votable> void vote(T s, VoteDirection voteDirection) throws NetworkException, ApiException {
-        genericPost("/api/vote", JrawUtils.args(
-                "api_type", "json",
-                "dir", voteDirection.getValue(),
-                "id", s.getFullName()
-        )).getJson();
+        genericPost(creator.request()
+                .endpoint(Endpoints.VOTE)
+                .post(new FormEncodingBuilder()
+                        .add("api_type", "json")
+                        .add("dir", Integer.toString(voteDirection.getValue()))
+                        .add("id", s.getFullName())
+                        .build())
+                .build());
     }
 
     /**
@@ -108,9 +119,12 @@ public class LoggedInAccount extends Account {
     @EndpointImplementation({Endpoints.SAVE, Endpoints.UNSAVE})
     public RedditResponse save(Submission s, boolean save) throws NetworkException, ApiException {
         // Send it to "/api/save" if save == true, "/api/unsave" if save == false
-        return genericPost(String.format("/api/%ssave", save ? "" : "un"), JrawUtils.args(
-                "id", s.getFullName()
-        ));
+        return genericPost(creator.request()
+                .endpoint(save ? Endpoints.SAVE : Endpoints.UNSAVE)
+                .post(new FormEncodingBuilder()
+                        .add("id", s.getFullName())
+                        .build())
+                .build());
     }
 
     /**
@@ -127,10 +141,13 @@ public class LoggedInAccount extends Account {
         if (!s.getAuthor().equals(getFullName())) {
             throw new IllegalArgumentException(String.format("Logged in user (%s) did not post this submission (by %s)", getFullName(), s.getAuthor()));
         }
-        return genericPost("/api/sendreplies", JrawUtils.args(
-                "id", s.getFullName(),
-                "state", Boolean.toString(send)
-        ));
+        return genericPost(creator.request()
+                .endpoint(Endpoints.SENDREPLIES)
+                .post(new FormEncodingBuilder()
+                        .add("id", s.getFullName())
+                        .add("state", Boolean.toString(send))
+                        .build())
+                .build());
     }
 
     /**
@@ -147,9 +164,12 @@ public class LoggedInAccount extends Account {
         checkIfOwns(s);
 
         // "/api/marknsfw" if nsfw == true, "/api/unmarknsfw" if nsfw == false
-        return genericPost(String.format("/api/%smarknsfw", nsfw ? "" : "un"), JrawUtils.args(
-                "id", s.getFullName()
-        ));
+        return genericPost(creator.request()
+                .endpoint(nsfw ? Endpoints.MARKNSFW : Endpoints.MARKNSFW)
+                .post(new FormEncodingBuilder()
+                        .add("id", s.getFullName())
+                        .build())
+                .build());
     }
 
     /**
@@ -185,7 +205,12 @@ public class LoggedInAccount extends Account {
      */
     @EndpointImplementation(Endpoints.DEL)
     public RedditResponse delete(String id) throws NetworkException, ApiException {
-        return genericPost("/api/del", JrawUtils.args("id", id));
+        return genericPost(creator.request()
+                .endpoint(Endpoints.DEL)
+                .post(new FormEncodingBuilder()
+                        .add("id", id)
+                        .build())
+                .build());
     }
 
     /**
@@ -197,13 +222,8 @@ public class LoggedInAccount extends Account {
      * @throws NetworkException If there was a problem sending the request
      * @throws ApiException If the API returned an error
      */
-    @EndpointImplementation(Endpoints.ADDDEVELOPER)
     public RedditResponse addDeveloper(String clientId, String newDev) throws NetworkException, ApiException {
-        return genericPost("/api/adddeveloper", JrawUtils.args(
-                "api_type", "json",
-                "client_id", clientId,
-                "name", newDev
-        ));
+        return modifyDeveloperStatus(clientId, newDev, false);
     }
 
     /**
@@ -215,44 +235,56 @@ public class LoggedInAccount extends Account {
      * @throws NetworkException If there was a problem sending the request
      * @throws ApiException If the api returned an error
      */
-    @EndpointImplementation(Endpoints.REMOVEDEVELOPER)
     public RedditResponse removeDeveloper(String clientId, String oldDev) throws NetworkException, ApiException {
-        return genericPost("/api/removedeveloper", JrawUtils.args(
-                "api_type", "json",
-                "client_id", clientId,
-                "name", oldDev
-        ));
+        return modifyDeveloperStatus(clientId, oldDev, true);
+    }
+
+    @EndpointImplementation({Endpoints.ADDDEVELOPER, Endpoints.REMOVEDEVELOPER})
+    private RedditResponse modifyDeveloperStatus(String clientId, String devName, boolean remove) throws NetworkException, ApiException {
+        return genericPost(creator.request()
+                .endpoint(remove ? Endpoints.REMOVEDEVELOPER : Endpoints.ADDDEVELOPER)
+                .post(new FormEncodingBuilder()
+                        .add("api_type", "json")
+                        .add("client_id", clientId)
+                        .add("name", devName)
+                        .build())
+                .build());
     }
 
     /**
-     * Sets whether or not a submission is hidden
+     * Sets whether or not a submission is hidd
      *
      * @param s The submission to hide or unhide
-     * @param hidden If the submission is to be hidden
+     * @param hide If the submission is to be hidden
      * @return The response that the Reddit API returned
      * @throws NetworkException If there was a problem sending the request
      * @throws ApiException If the API returned an error
      */
     @EndpointImplementation({Endpoints.HIDE, Endpoints.UNHIDE})
-    public RedditResponse hide(Submission s, boolean hidden) throws NetworkException, ApiException {
-        return genericPost(String.format("/api/%shide", hidden ? "" : "un"), JrawUtils.args(
-                "id", s.getFullName()
-        ));
+    public RedditResponse hide(Submission s, boolean hide) throws NetworkException, ApiException {
+        return genericPost(creator.request()
+                .endpoint(hide ? Endpoints.HIDE : Endpoints.UNHIDE)
+                .post(new FormEncodingBuilder()
+                        .add("id", s.getFullName())
+                        .build())
+                .build());
     }
 
     /**
      * Executes a generic POST request that returns a RedditResponse. Used primarily for convenience and standardization
      * of the messages of RedditExceptions that are thrown.
      *
-     * @param path The path relative of the domain to send a request to
-     * @param args The arguments to send in the POST body
+     * @param r The request to execute
      * @return A representation of the response by the Reddit API
      * @throws NetworkException If needsLogin is true and the user was not logged in, or there was an error making the
      *                          HTTP request.
      */
-    private RedditResponse genericPost(String path, Map<String, String> args) throws NetworkException, ApiException {
-        RestRequest request = creator.requestBuilder(HttpVerb.POST, path).args(args).build();
-        RedditResponse response = creator.execute(request);
+    private RedditResponse genericPost(Request r) throws NetworkException, ApiException {
+        if (!r.method().equals("POST")) {
+            throw new IllegalArgumentException("Request is not POST");
+        }
+
+        RedditResponse response = creator.execute(r);
         if (response.hasErrors()) {
             throw response.getApiExceptions()[0];
         }
@@ -297,11 +329,14 @@ public class LoggedInAccount extends Account {
      */
     @EndpointImplementation(Endpoints.COMMENT)
     private String reply(String name, String text) throws NetworkException, ApiException {
-        RedditResponse response = genericPost("/api/comment", JrawUtils.args(
-                "api_type", "json",
-                "text", text,
-                "thing_id", name
-        ));
+        RedditResponse response = genericPost(creator.request()
+                .endpoint(Endpoints.COMMENT)
+                .post(new FormEncodingBuilder()
+                        .add("api_type", "json")
+                        .add("text", text)
+                        .add("thing_id", name)
+                        .build())
+                .build());
 
         return response.getJson().get("json").get("data").get("things").get(0).get("data").get("id").asText();
     }

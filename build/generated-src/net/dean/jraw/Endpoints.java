@@ -217,40 +217,40 @@ public enum Endpoints {
     STYLESHEET("GET /stylesheet"),
 
     ///////// multis /////////
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#DELETE_api_filter_%7Bfilterpath%7D">{@code DELETE /api/filter/{filterpath}}</a>" in the "multis" category */
+    FILTER_FILTERPATH_DELETE("DELETE /api/filter/{filterpath}"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_api_filter_%7Bfilterpath%7D">{@code GET /api/filter/{filterpath}}</a>" in the "multis" category */
     FILTER_FILTERPATH_GET("GET /api/filter/{filterpath}"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_filter_%7Bfilterpath%7D">{@code POST /api/filter/{filterpath}}</a>" in the "multis" category */
     FILTER_FILTERPATH_POST("POST /api/filter/{filterpath}"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#PUT_api_filter_%7Bfilterpath%7D">{@code PUT /api/filter/{filterpath}}</a>" in the "multis" category */
     FILTER_FILTERPATH_PUT("PUT /api/filter/{filterpath}"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#DELETE_api_filter_%7Bfilterpath%7D">{@code DELETE /api/filter/{filterpath}}</a>" in the "multis" category */
-    FILTER_FILTERPATH_DELETE("DELETE /api/filter/{filterpath}"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#DELETE_api_filter_%7Bfilterpath%7D_r_srname">{@code DELETE /api/filter/{filterpath}/r/srname}</a>" in the "multis" category */
+    FILTER_FILTERPATH_R_SRNAME_DELETE("DELETE /api/filter/{filterpath}/r/srname"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_api_filter_%7Bfilterpath%7D_r_srname">{@code GET /api/filter/{filterpath}/r/srname}</a>" in the "multis" category */
     FILTER_FILTERPATH_R_SRNAME_GET("GET /api/filter/{filterpath}/r/srname"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#PUT_api_filter_%7Bfilterpath%7D_r_srname">{@code PUT /api/filter/{filterpath}/r/srname}</a>" in the "multis" category */
     FILTER_FILTERPATH_R_SRNAME_PUT("PUT /api/filter/{filterpath}/r/srname"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#DELETE_api_filter_%7Bfilterpath%7D_r_srname">{@code DELETE /api/filter/{filterpath}/r/srname}</a>" in the "multis" category */
-    FILTER_FILTERPATH_R_SRNAME_DELETE("DELETE /api/filter/{filterpath}/r/srname"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#PUT_api_multi_%7Bmultipath%7D">{@code PUT /api/multi/{multipath}}</a>" in the "multis" category */
     MULTI_MULTIPATH_PUT("PUT /api/multi/{multipath}"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_multi_%7Bmultipath%7D_copy">{@code POST /api/multi/{multipath}/copy}</a>" in the "multis" category */
     MULTI_MULTIPATH_COPY("POST /api/multi/{multipath}/copy"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#PUT_api_multi_%7Bmultipath%7D_description">{@code PUT /api/multi/{multipath}/description}</a>" in the "multis" category */
     MULTI_MULTIPATH_DESCRIPTION_PUT("PUT /api/multi/{multipath}/description"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#PUT_api_multi_%7Bmultipath%7D_r_srname">{@code PUT /api/multi/{multipath}/r/srname}</a>" in the "multis" category */
-    MULTI_MULTIPATH_R_SRNAME_PUT("PUT /api/multi/{multipath}/r/srname"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#DELETE_api_multi_%7Bmultipath%7D_r_srname">{@code DELETE /api/multi/{multipath}/r/srname}</a>" in the "multis" category */
     MULTI_MULTIPATH_R_SRNAME_DELETE("DELETE /api/multi/{multipath}/r/srname"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#PUT_api_multi_%7Bmultipath%7D_r_srname">{@code PUT /api/multi/{multipath}/r/srname}</a>" in the "multis" category */
+    MULTI_MULTIPATH_R_SRNAME_PUT("PUT /api/multi/{multipath}/r/srname"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_multi_%7Bmultipath%7D_rename">{@code POST /api/multi/{multipath}/rename}</a>" in the "multis" category */
     MULTI_MULTIPATH_RENAME("POST /api/multi/{multipath}/rename"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_api_multi_mine">{@code GET /api/multi/mine}</a>" in the "multis" category */
     MULTI_MINE("GET /api/multi/mine"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#DELETE_api_multi_%7Bmultipath%7D">{@code DELETE /api/multi/{multipath}}</a>" in the "multis" category */
+    MULTI_MULTIPATH_DELETE("DELETE /api/multi/{multipath}"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_api_multi_%7Bmultipath%7D">{@code GET /api/multi/{multipath}}</a>" in the "multis" category */
     MULTI_MULTIPATH_GET("GET /api/multi/{multipath}"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_multi_%7Bmultipath%7D">{@code POST /api/multi/{multipath}}</a>" in the "multis" category */
     MULTI_MULTIPATH_POST("POST /api/multi/{multipath}"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#DELETE_api_multi_%7Bmultipath%7D">{@code DELETE /api/multi/{multipath}}</a>" in the "multis" category */
-    MULTI_MULTIPATH_DELETE("DELETE /api/multi/{multipath}"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_api_multi_%7Bmultipath%7D_description">{@code GET /api/multi/{multipath}/description}</a>" in the "multis" category */
     MULTI_MULTIPATH_DESCRIPTION_GET("GET /api/multi/{multipath}/description"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_api_multi_%7Bmultipath%7D_r_srname">{@code GET /api/multi/{multipath}/r/srname}</a>" in the "multis" category */
@@ -345,12 +345,12 @@ public enum Endpoints {
     SETPERMISSIONS("POST /api/setpermissions"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_unfriend">{@code POST /api/unfriend}</a>" in the "users" category */
     UNFRIEND("POST /api/unfriend"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#DELETE_api_v1_me_friends_%7Busername%7D">{@code DELETE /api/v1/me/friends/{username}}</a>" in the "users" category */
+    OAUTH_ME_FRIENDS_USERNAME_DELETE("DELETE /api/v1/me/friends/{username}"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_api_v1_me_friends_%7Busername%7D">{@code GET /api/v1/me/friends/{username}}</a>" in the "users" category */
     OAUTH_ME_FRIENDS_USERNAME_GET("GET /api/v1/me/friends/{username}"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#PUT_api_v1_me_friends_%7Busername%7D">{@code PUT /api/v1/me/friends/{username}}</a>" in the "users" category */
     OAUTH_ME_FRIENDS_USERNAME_PUT("PUT /api/v1/me/friends/{username}"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#DELETE_api_v1_me_friends_%7Busername%7D">{@code DELETE /api/v1/me/friends/{username}}</a>" in the "users" category */
-    OAUTH_ME_FRIENDS_USERNAME_DELETE("DELETE /api/v1/me/friends/{username}"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_api_v1_user_%7Busername%7D_trophies">{@code GET /api/v1/user/{username}/trophies}</a>" in the "users" category */
     OAUTH_USER_USERNAME_TROPHIES("GET /api/v1/user/{username}/trophies"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_api_username_available.json">{@code GET /api/username_available.json}</a>" in the "users" category */

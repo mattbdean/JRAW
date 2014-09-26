@@ -1,9 +1,8 @@
 package net.dean.jraw.pagination;
 
+import com.squareup.okhttp.Request;
 import net.dean.jraw.RedditClient;
-import net.dean.jraw.http.HttpVerb;
 import net.dean.jraw.http.NetworkException;
-import net.dean.jraw.http.RestRequest;
 import net.dean.jraw.models.core.Listing;
 import net.dean.jraw.models.core.Thing;
 
@@ -86,8 +85,9 @@ public abstract class Paginator<T extends Thing> implements Iterator<Listing<T>>
             args.putAll(extraArgs);
         }
 
-        RestRequest request = creator.requestBuilder(HttpVerb.GET, path)
-                .args(args)
+        Request request = creator.request()
+                .path(path)
+                .query(args)
                 .build();
         Listing<T> listing = creator.execute(request).asListing(thingType);
         this.current = listing;

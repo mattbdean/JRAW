@@ -113,7 +113,7 @@ public class JavaGenerator extends AbstractEndpointGenerator {
                 .replace("}", "");
 
         if (isDuplicate) {
-            enumName += "_" + ep.getVerb().name();
+            enumName += "_" + ep.getVerb();
         }
 
         return enumName;

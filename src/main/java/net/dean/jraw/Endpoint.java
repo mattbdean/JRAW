@@ -1,20 +1,25 @@
 package net.dean.jraw;
 
-import net.dean.jraw.http.HttpVerb;
-
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * This class represents a Reddit API endpoint such as "{@code POST /api/login}"
  */
 public class Endpoint {
+    public static final Pattern URI_PARAM_PATTERN = Pattern.compile("\\{([^\\}]+)\\}");
+
     private final String category;
     private boolean implemented;
     private Method method;
 
-    protected final HttpVerb verb;
+    protected final String verb;
     protected final String uri;
     protected final String requestDescriptor;
+    protected final List<String> urlParams;
 
     /**
      * Instantiates a new Endpoint. Used mostly for meta-programming in the <a href="https://github.com/thatJavaNerd/JRAW/tree/master/endpoints">endpoints</a>
@@ -37,16 +42,48 @@ public class Endpoint {
             throw new IllegalArgumentException("Invalid number of parts for descriptor \"" + requestDescriptor + "\"");
         }
 
-        this.verb = HttpVerb.valueOf(parts[0].toUpperCase());
+        this.verb = parts[0].toUpperCase();
         this.uri = parts[1];
+        this.urlParams = parseUrlParams(uri);
         this.category = category;
         this.implemented = false;
     }
 
+    private List<String> parseUrlParams(String uri) {
+        List<String> params = new ArrayList<>();
+        Matcher matcher = URI_PARAM_PATTERN.matcher(uri);
+        while (matcher.find()) {
+            params.add(matcher.group());
+        }
+
+        return params;
+    }
+
+    /**
+     * Gets a list of parameters in this endpoint's URI. For example, the endpoint {@code /user/{username}/about.json}
+     * would have one parameter: {@code {username}}.
+     * @return The URI parameters
+     */
+    public List<String> getUrlParams() {
+        return urlParams;
+    }
+
+    /**
+     * Gets this endpoint's category. Always null for normal library use. See <a href="http://www.reddit.com/dev/api">here</a>
+     * for examples.
+     *
+     * @return This endpoint's category
+     */
     public String getCategory() {
         return category;
     }
 
+    /**
+     * Checks if a {@link net.dean.jraw.EndpointImplementation} annotation with the corresponding {@link net.dean.jraw.Endpoints}
+     * enum has been registered. Always false for normal library use.
+     *
+     * @return If this endpoint has been implemented
+     */
     public boolean isImplemented() {
         return implemented;
     }
@@ -55,6 +92,10 @@ public class Endpoint {
         this.implemented = implemented;
     }
 
+    /**
+     * Gets the method at which this endpoint is implemented. Always null for normal library use.
+     * @return The method where this endpoint is implemented
+     */
     public Method getMethod() {
         return method;
     }
@@ -63,7 +104,7 @@ public class Endpoint {
         this.method = method;
     }
 
-    public HttpVerb getVerb() {
+    public String getVerb() {
         return verb;
     }
 
@@ -101,12 +142,14 @@ public class Endpoint {
 
     @Override
     public String toString() {
-        return "MetaEndpoint {" +
-                "uri='" + uri + '\'' +
-                ", verb=" + verb + '\'' +
-                ", category='" + category + '\'' +
+        return "Endpoint {" +
+                "category='" + category + '\'' +
                 ", implemented=" + implemented +
                 ", method=" + method +
+                ", verb='" + verb + '\'' +
+                ", uri='" + uri + '\'' +
+                ", requestDescriptor='" + requestDescriptor + '\'' +
+                ", urlParams=" + urlParams +
                 '}';
     }
 }

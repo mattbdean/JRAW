@@ -28,7 +28,7 @@ allprojects {
 }
 
 dependencies {
-    compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.3.3'
+    compile group: 'com.squareup.okhttp', name: 'okhttp', version: '2.0.0'
 }
 
 def generatedJavaSrcName = "generated-src"
@@ -45,6 +45,7 @@ project(':endpoints') {
     dependencies {
         compile 'org.javassist:javassist:3.18.2-GA'
         compile 'org.reflections:reflections:0.9.8'
+        compile 'commons-codec:commons-codec:1.9'
         compile project(':')
     }
 

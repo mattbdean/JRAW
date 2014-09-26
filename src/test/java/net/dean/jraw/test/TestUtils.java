@@ -27,9 +27,8 @@ public final class TestUtils {
         if (client == null) {
             client = new RedditClient(generatedUserAgent);
         } else {
-            client.getHttpHelper().setUserAgent(generatedUserAgent);
+            client.setUserAgent(generatedUserAgent);
         }
-        client.setRequestManagementEnabled(false);
 
         return client;
     }
