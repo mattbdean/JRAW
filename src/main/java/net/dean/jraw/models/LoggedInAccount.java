@@ -3,6 +3,7 @@ package net.dean.jraw.models;
 import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.Request;
 import net.dean.jraw.*;
+import net.dean.jraw.http.NetworkAccessible;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.RedditResponse;
 import net.dean.jraw.models.core.Account;
@@ -14,7 +15,7 @@ import org.codehaus.jackson.JsonNode;
 import java.net.URL;
 import java.util.Map;
 
-public class LoggedInAccount extends Account {
+public class LoggedInAccount extends Account implements NetworkAccessible<RedditClient> {
     private RedditClient creator;
 
     public LoggedInAccount(JsonNode data, RedditClient creator) {
@@ -351,6 +352,7 @@ public class LoggedInAccount extends Account {
      * Gets the RedditClient that created this LoggedInAccount
      * @return The creator of this object
      */
+    @Override
     public RedditClient getCreator() {
         return creator;
     }

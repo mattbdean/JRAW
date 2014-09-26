@@ -2,6 +2,7 @@ package net.dean.jraw;
 
 import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.Request;
+import net.dean.jraw.http.NetworkAccessible;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.RedditResponse;
 import net.dean.jraw.models.LoggedInAccount;
@@ -19,7 +20,7 @@ import java.util.List;
 /**
  * This class provides the ability to perform CRUD operations on multireddits.
  */
-public class MultiRedditManager {
+public class MultiRedditManager implements NetworkAccessible<RedditClient> {
     private final LoggedInAccount account;
     private final RedditClient reddit;
 
@@ -232,5 +233,10 @@ public class MultiRedditManager {
         if (root.has("explanation") && root.has("reason")) {
             throw new ApiException(root.get("reason").asText(), root.get("explanation").asText());
         }
+    }
+
+    @Override
+    public RedditClient getCreator() {
+        return reddit;
     }
 }

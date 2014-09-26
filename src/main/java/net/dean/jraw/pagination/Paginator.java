@@ -2,6 +2,7 @@ package net.dean.jraw.pagination;
 
 import com.squareup.okhttp.Request;
 import net.dean.jraw.RedditClient;
+import net.dean.jraw.http.NetworkAccessible;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.models.core.Listing;
 import net.dean.jraw.models.core.Thing;
@@ -15,7 +16,7 @@ import java.util.Map;
  *
  * @param <T> The type that the listings will contain
  */
-public abstract class Paginator<T extends Thing> implements Iterator<Listing<T>> {
+public abstract class Paginator<T extends Thing> implements Iterator<Listing<T>>, NetworkAccessible<RedditClient> {
     /** The default limit of Things to return */
     public static final int DEFAULT_LIMIT = 25;
     /** The default sorting */

@@ -123,4 +123,4 @@ publishing {
     }
 }
 
-defaultTasks "check"
+defaultTasks "test"
