@@ -166,7 +166,7 @@ public class LoggedInAccount extends Account implements NetworkAccessible<Reddit
 
         // "/api/marknsfw" if nsfw == true, "/api/unmarknsfw" if nsfw == false
         return genericPost(creator.request()
-                .endpoint(nsfw ? Endpoints.MARKNSFW : Endpoints.MARKNSFW)
+                .endpoint(nsfw ? Endpoints.MARKNSFW : Endpoints.UNMARKNSFW)
                 .post(new FormEncodingBuilder()
                         .add("id", s.getFullName())
                         .build())

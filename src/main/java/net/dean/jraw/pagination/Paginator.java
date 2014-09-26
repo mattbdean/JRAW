@@ -226,4 +226,9 @@ public abstract class Paginator<T extends Thing> implements Iterator<Listing<T>>
     public int getPageIndex() {
         return pageNumber;
     }
+
+    @Override
+    public RedditClient getCreator() {
+        return creator;
+    }
 }
