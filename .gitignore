@@ -17,3 +17,4 @@ src/test/resources/credentials.txt
 # Local todo list
 todo.txt
 
+/bin/
