@@ -6,11 +6,14 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
+import java.util.stream.Collectors;
 
 /**
  * This class is responsible for the compilation of <a href="https://github.com/thatJavaNerd/JRAW/blob/master/ENDPOINTS.md">ENDPOINITS.md</a>,
@@ -116,7 +119,16 @@ public class MarkdownGenerator extends AbstractEndpointGenerator {
      * @return A condensed version of the given method
      */
     private String getStringRepresentation(Method m) {
-        return m.getDeclaringClass().getSimpleName() + "." + m.getName() + "()";
+        return m.getDeclaringClass().getSimpleName() + "." + m.getName() + "(" + methodParameters(m) + ")";
+    }
+    
+    private String methodParameters(Method m){
+        if(m.getParameterCount() == 0){
+            return "";
+        }
+        return Arrays.asList(m.getParameters()).stream().map(
+            p -> p.getType().getSimpleName()).collect(Collectors.joining(", ")
+        );
     }
 
 }
