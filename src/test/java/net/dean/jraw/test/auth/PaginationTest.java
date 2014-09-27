@@ -1,4 +1,4 @@
-package net.dean.jraw.test;
+package net.dean.jraw.test.auth;
 
 import net.dean.jraw.JrawUtils;
 import net.dean.jraw.http.NetworkException;
@@ -6,6 +6,7 @@ import net.dean.jraw.models.core.Listing;
 import net.dean.jraw.models.core.Submission;
 import net.dean.jraw.models.core.Thing;
 import net.dean.jraw.pagination.*;
+import net.dean.jraw.test.auth.AuthenticatedRedditTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

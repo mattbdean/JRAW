@@ -24,7 +24,7 @@ public abstract class RedditTest {
     protected static final Random random = new Random();
     protected static final RedditClient reddit = new RedditClient("");
 
-    RedditTest() {
+    protected RedditTest() {
         reddit.setUserAgent(getUserAgent(getClass()));
     }
 

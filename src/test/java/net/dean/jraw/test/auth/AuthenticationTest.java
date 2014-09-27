@@ -1,4 +1,4 @@
-package net.dean.jraw.test;
+package net.dean.jraw.test.auth;
 
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.models.LoggedInAccount;

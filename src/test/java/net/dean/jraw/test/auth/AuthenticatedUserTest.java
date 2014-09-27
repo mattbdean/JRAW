@@ -1,4 +1,4 @@
-package net.dean.jraw.test;
+package net.dean.jraw.test.auth;
 
 import net.dean.jraw.ApiException;
 import net.dean.jraw.JrawUtils;

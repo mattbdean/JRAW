@@ -1,8 +1,9 @@
-package net.dean.jraw.test;
+package net.dean.jraw.test.auth;
 
 import net.dean.jraw.ApiException;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.models.LoggedInAccount;
+import net.dean.jraw.test.RedditTest;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
