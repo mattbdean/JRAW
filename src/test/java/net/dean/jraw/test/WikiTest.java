@@ -6,6 +6,9 @@ import org.testng.annotations.Test;
 
 import java.util.List;
 
+/**
+ * Tests anything and everything related to wikis.
+ */
 public class WikiTest extends RedditTest {
 
     @Test

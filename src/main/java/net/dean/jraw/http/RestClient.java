@@ -154,10 +154,10 @@ public abstract class RestClient<T extends RestResponse> {
     }
 
     /**
-     * This method is responsible for instantiating a new <T> (RestResponse or one of its subclasses)
+     * This method is responsible for instantiating a new RestResponse or one of its subclasses
      *
      * @param r The OkHttp response given
-     * @return A new <T>
+     * @return A new response
      */
     protected abstract T initResponse(Response r);
 }

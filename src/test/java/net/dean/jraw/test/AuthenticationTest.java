@@ -5,6 +5,9 @@ import net.dean.jraw.models.LoggedInAccount;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+/**
+ * This class tests methods that deal with logging in and out, as well as testing the state.
+ */
 public class AuthenticationTest extends AuthenticatedRedditTest {
     @Test
     @Override

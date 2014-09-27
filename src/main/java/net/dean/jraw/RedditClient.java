@@ -285,7 +285,8 @@ public class RedditClient extends RestClient<RedditResponse> {
     /**
      * Gets the text displayed in the "submit link" form.
      * @param subreddit The subreddit to use
-     * @return The text displayed int he "submit link" form * @throws NetworkException If there was a problem executing the request
+     * @return The text displayed int he "submit link" form
+     * @throws NetworkException If there was a problem executing the request
      */
     @EndpointImplementation(Endpoints.SUBMIT_TEXT)
     public RenderStringPair getSubmitText(String subreddit) throws NetworkException {

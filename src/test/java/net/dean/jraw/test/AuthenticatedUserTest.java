@@ -18,6 +18,9 @@ import java.util.List;
 import static net.dean.jraw.pagination.UserContributionPaginator.Where;
 import static org.testng.Assert.*;
 
+/**
+ * This class tests methods that require authentication, such as voting, saving, hiding, and posting.
+ */
 public class AuthenticatedUserTest extends AuthenticatedRedditTest {
     private static final String SUBMISSION_ID = "262la4";
     private static final String COMMENT_ID = "cieys70";

@@ -20,6 +20,9 @@ import java.util.regex.Pattern;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
+/**
+ * This class tests the {@link MultiRedditManager} class.
+ */
 public class MultiRedditTest extends AuthenticatedRedditTest {
     private static final String MULTI_NAME = "jraw_testing";
     private static final List<String> MULTI_INITIAL_SUBS = Arrays.asList("funny", "pics");

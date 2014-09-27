@@ -14,6 +14,9 @@ import java.util.List;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
+/**
+ * This class tests data that is accessible to everyone, such as submissions and basic user information.
+ */
 public class ReadOnlyDataTest extends RedditTest {
     private static final String SUBMISSION_ID = "92dd8";
 

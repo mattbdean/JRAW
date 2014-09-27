@@ -12,6 +12,9 @@ import org.testng.annotations.Test;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * This class tests all concrete subclasses of {@link net.dean.jraw.pagination.Paginator}
+ */
 public class PaginationTest extends AuthenticatedRedditTest {
 
     @Test

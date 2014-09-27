@@ -17,7 +17,8 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * This class is the base class of all JRAW test classes. It provides dynamic User-Agents
+ * This class is the base class of all JRAW test classes. It provides dynamic User-Agents based on the name of the class
+ * and several utility methods.
  */
 public abstract class RedditTest {
     protected static final Random random = new Random();

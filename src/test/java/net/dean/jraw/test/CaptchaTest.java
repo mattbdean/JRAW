@@ -9,6 +9,9 @@ import net.dean.jraw.models.Captcha;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+/**
+ * This class tests anything and everything related to captchas.
+ */
 public class CaptchaTest extends RedditTest {
 
     @Test

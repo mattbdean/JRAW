@@ -103,7 +103,7 @@ public class Comment extends Contribution {
     @JsonInteraction
     public Boolean hasBeenEdited() {
         if (!data.has("edited")) {
-            return null;
+            return false;
         }
 
         JsonNode edited = data.get("edited");
@@ -117,7 +117,7 @@ public class Comment extends Contribution {
         }
 
         // Some other data type
-        return null;
+        return false;
     }
 
     /**
