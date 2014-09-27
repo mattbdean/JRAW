@@ -60,9 +60,9 @@ public class LoggedInAccount extends Account implements NetworkAccessible<Reddit
         );
 
         if (b.selfPost) {
-            args.put("url", b.url.toExternalForm());
-        } else {
             args.put("text", b.selfText);
+        } else {
+            args.put("url", b.url.toExternalForm());
         }
 
         if (captcha != null) {
@@ -391,7 +391,7 @@ public class LoggedInAccount extends Account implements NetworkAccessible<Reddit
          * @param title The title of the submission
          */
         public SubmissionBuilder(URL url, String subreddit, String title) {
-            this.selfPost = true;
+            this.selfPost = false;
             this.url = url;
             this.selfText = null;
             this.subreddit = subreddit;

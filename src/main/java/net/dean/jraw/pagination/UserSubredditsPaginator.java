@@ -8,9 +8,10 @@ import net.dean.jraw.models.core.Listing;
 import net.dean.jraw.models.core.Subreddit;
 
 /**
- * This paginator provides a way to iterate through the logged-in user's subscribed subreddits
+ * This paginator provides a way to iterate through the logged-in user's subreddits they interact with, whether that be
+ * through being a contributor of, a moderator of, or are subscribed to
  */
-public class MySubredditsPaginator extends GenericPaginator<Subreddit, MySubredditsPaginator.Where> {
+public class UserSubredditsPaginator extends GenericPaginator<Subreddit, UserSubredditsPaginator.Where> {
 
     /**
      * Instantiates a new MySubredditsPaginator
@@ -18,7 +19,7 @@ public class MySubredditsPaginator extends GenericPaginator<Subreddit, MySubredd
      * @param account The LoggedInAccount whose RedditClient will be used to send HTTP requests
      * @param where The criteria in which to return Subreddits
      */
-    public MySubredditsPaginator(LoggedInAccount account, Where where) {
+    public UserSubredditsPaginator(LoggedInAccount account, Where where) {
         super(account.getCreator(), Subreddit.class, where);
     }
 

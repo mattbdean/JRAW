@@ -9,7 +9,8 @@ import static net.dean.jraw.JrawUtils.args;
 import static net.dean.jraw.JrawUtils.isFullName;
 import static org.testng.Assert.*;
 
-public class UtilsTest {
+/** Tests methods found in {@link net.dean.jraw.JrawUtils} */
+public class UtilsTest extends RedditTest {
     @Test
     public void testArgs() {
         Map<String, String> expected = new HashMap<>();

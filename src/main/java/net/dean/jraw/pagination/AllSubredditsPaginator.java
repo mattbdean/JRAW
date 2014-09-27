@@ -8,7 +8,7 @@ import net.dean.jraw.models.core.Listing;
 import net.dean.jraw.models.core.Subreddit;
 
 /**
- * This paginator will iterate through the newest and most popular subreddits
+ * This paginator will iterate through either the newest or the most popular subreddits
  */
 public class AllSubredditsPaginator extends GenericPaginator<Subreddit, AllSubredditsPaginator.Where> {
 

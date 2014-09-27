@@ -52,7 +52,9 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
         // children is a JSON array
         try {
             for (JsonNode childNode : data.get("children")) {
-                children.add(JrawUtils.parseJson(childNode, thingClass));
+                if (!childNode.get("kind").getTextValue().equalsIgnoreCase("more")) {
+                    children.add(JrawUtils.parseJson(childNode, thingClass));
+                }
             }
         } catch (NullPointerException e) {
             JrawUtils.logger().error("NullPointerException", e);

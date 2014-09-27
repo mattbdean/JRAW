@@ -1,20 +1,12 @@
 package net.dean.jraw.test;
 
-import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.models.WikiPage;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.util.List;
 
-public class WikiTest {
-    private static RedditClient reddit;
-
-    @BeforeClass
-    public static void setUp() {
-        reddit = TestUtils.client(WikiTest.class);
-    }
+public class WikiTest extends RedditTest {
 
     @Test
     public void testFrontWikiPages() throws NetworkException {
@@ -34,7 +26,7 @@ public class WikiTest {
         int counter = 0;
         for (String page : pages) {
             WikiPage wikiPage = reddit.getWikiPage(subreddit, page);
-            ThingFieldTest.fieldValidityCheck(wikiPage);
+            validateModel(wikiPage);
 
             counter++;
             if (counter >= limit) {

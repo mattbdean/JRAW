@@ -146,7 +146,7 @@ public class Comment extends Contribution {
     public Listing<Comment> getReplies() {
         // If it has no replies, the value for the replies key will be an empty string or null
         JsonNode replies = data.get("replies");
-        if ((replies.isTextual() && replies.asText().isEmpty()) || replies.isNull()) {
+        if (replies.isNull() || (replies.isTextual() && replies.asText().isEmpty())) {
             return null;
         }
         return new Listing<>(data.get("replies").get("data"), Comment.class);

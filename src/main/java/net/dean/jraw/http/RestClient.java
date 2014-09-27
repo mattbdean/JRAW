@@ -125,7 +125,7 @@ public abstract class RestClient<T extends RestResponse> {
 
             JrawUtils.logger().info("{} {}", r.method(), r.url());
             if (!response.isSuccessful()) {
-                throw new NetworkException(String.format("Request not successful (got %s) : %s", response.code(), response));
+                throw new NetworkException(response.code());
             }
 
             T genericResponse = initResponse(http.newCall(r).execute());
