@@ -97,7 +97,14 @@ task release(type: Jar, dependsOn: ['fatJar', 'javadocJar', 'sourcesJar']) {
 
 test {
     useTestNG {
-        def travisPR = !"$System.env.TRAVIS_PULL_REQUEST".isEmpty()
+        def travisPR = true
+        try {
+            // "$TRAVIS_PULL_REQUEST" will be an integer representing the pull request number
+            Integer.parseInt("$System.env.TRAVIS_PULL_REQUEST")
+        } catch (ignored) {
+            travisPR = false
+        }
+
         def testPackage = "net.dean.jraw.test" // Defaults to just non-auth tests
 
         if (travisPR) {
