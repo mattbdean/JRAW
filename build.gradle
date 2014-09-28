@@ -1,6 +1,18 @@
 apply plugin: 'idea'
 apply plugin: 'maven-publish'
 apply plugin: 'findbugs'
+apply plugin: 'jacoco'
+apply plugin: 'com.github.kt3k.coveralls'
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.0.0'
+    }
+}
 
 allprojects {
     apply plugin: 'java'
@@ -141,6 +153,13 @@ idea {
 findbugsMain {
     reports {
         xml.enabled = false
+        html.enabled = true
+    }
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled = true // coveralls depends on XML reports
         html.enabled = true
     }
 }
