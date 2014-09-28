@@ -285,6 +285,15 @@ public class RedditClient extends RestClient<RedditResponse> {
     }
 
     /**
+     * Gets a random subreddit
+     * @return A random subreddit
+     * @throws NetworkException If there was a problem with the request
+     */
+    public Subreddit getRandomSubreddit() throws NetworkException {
+        return getSubreddit("random");
+    }
+
+    /**
      * Gets the text displayed in the "submit link" form.
      * @param subreddit The subreddit to use
      * @return The text displayed int he "submit link" form
