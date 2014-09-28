@@ -296,13 +296,13 @@ public class AuthenticatedUserTest extends AuthenticatedRedditTest {
     public void testSetNsfw() {
         try {
             Submission s = (Submission) getPaginator(Where.SUBMITTED).next().get(0);
-            boolean newVal = !s.isNSFW();
+            boolean newVal = !s.isNsfw();
 
             account.setNsfw(s, newVal);
 
             // Reload the submission's data
             s = reddit.getSubmission(s.getId());
-            assertTrue(s.isNSFW() == newVal);
+            assertTrue(s.isNsfw() == newVal);
         } catch (NetworkException | ApiException e) {
             handle(e);
         }

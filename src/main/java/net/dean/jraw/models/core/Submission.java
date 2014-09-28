@@ -164,7 +164,7 @@ public class Submission extends Contribution {
      * @return If the post is tagged as NSFW
      */
     @JsonInteraction
-    public Boolean isNSFW() {
+    public Boolean isNsfw() {
         return data("over_18", Boolean.class);
     }
 
