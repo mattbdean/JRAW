@@ -31,6 +31,7 @@ public abstract class RestClient<T extends RestResponse> {
     protected final LinkedHashMap<T, LocalDateTime> history;
     /** A list of headers to be sent for request */
     protected final Map<String, String> defaultHeaders;
+    private boolean useHttpsDefault;
     private boolean enforceRatelimit;
 
 
@@ -55,6 +56,7 @@ public abstract class RestClient<T extends RestResponse> {
         http.setCookieHandler(manager);
         this.cookieJar = manager.getCookieStore();
         this.history = new LinkedHashMap<>();
+        this.useHttpsDefault = false;
         this.defaultHeaders = new HashMap<>();
         defaultHeaders.put("User-Agent", userAgent);
     }
@@ -68,11 +70,27 @@ public abstract class RestClient<T extends RestResponse> {
     }
 
     /**
-     * Creates a new RequestBuilder whose host is {@link #getHost()}
+     * Checks to see if RequestBuilders returned from {@link #request()} will be executed with HTTPS
+     * @return If HTTPS will be used by default
+     */
+    public boolean isHttpsDefault() {
+        return useHttpsDefault;
+    }
+
+    /**
+     * Sets whether or not RequestBuilders returned from {@link #request()} will be executed with HTTPS
+     * @param useHttpsDefault If HTTPS will be used by default
+     */
+    public void setHttpsDefault(boolean useHttpsDefault) {
+        this.useHttpsDefault = useHttpsDefault;
+    }
+
+    /**
+     * Creates a new RequestBuilder whose host is {@link #getHost()}.
      * @return A new RequestBuilder
      */
     public RequestBuilder request() {
-        return request(false);
+        return request(useHttpsDefault);
     }
 
     /**

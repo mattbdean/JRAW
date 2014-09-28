@@ -95,6 +95,8 @@ public class RedditClient extends RestClient<RedditResponse> {
             throw loginResponse.getApiExceptions()[0];
         }
 
+        setHttpsDefault(loginResponse.getJson().get("json").get("data").get("need_https").asBoolean());
+
         String modhash = loginResponse.getJson().get("json").get("data").get("modhash").getTextValue();
 
         // Add the X-Modhash header, or update it if it already exists
