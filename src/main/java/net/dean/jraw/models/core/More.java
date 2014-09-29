@@ -37,6 +37,11 @@ public class More extends Thing {
         return data("count", Integer.class);
     }
 
+    @JsonInteraction
+    public String getParentId() {
+        return data("parent_id");
+    }
+
     /**
      * Gets a list of Thing IDs
      * @return a list of Thing IDs

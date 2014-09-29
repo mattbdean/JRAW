@@ -108,7 +108,7 @@ public class MultiRedditTest extends AuthenticatedRedditTest {
     @Test
     public void testUnownedMulti() { // aka public multis
         // Matches a multireddit URL: see http://regexr.com/39j27
-        // Usernames must only alphanumeric characters, underscores, and hyphens allowed in usernames with a max length of 20
+        // Usernames must only contain alphanumeric characters, underscores, and hyphens with a max length of 20
         // Source: https://github.com/reddit/reddit/blob/c86113850/r2/r2/lib/validator/validator.py#L1311
         // Multireddits must only contain alphanumeric characters, underscores, and hyphens, and have a max length of 21
         // Source: https://github.com/reddit/reddit/blob/3b7b74148/r2/r2/lib/validator/validator.py#L2622

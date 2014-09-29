@@ -205,7 +205,12 @@ public abstract class JsonModel {
                 } else {
                     // Show the exception and its cause
                     Throwable cause = thrown.getCause();
-                    sb.append('[').append(cause.getClass().getName()).append(": ").append(cause.getMessage()).append(']');
+                    sb.append('[')
+                            .append("threw ")
+                            .append(cause.getClass().getName())
+                            .append(": ")
+                            .append(cause.getMessage())
+                            .append(']');
                 }
 
                 if (counter != jsonInteractionMethods.size() - 1) {

@@ -71,10 +71,10 @@ public abstract class RedditTest {
 
     protected String getCallingMethod() {
         StackTraceElement[] elements = Thread.currentThread().getStackTrace();
-        // [0] = Thread.getStackTrace()
+        // [0] = Thread.currentThread().getStackTrace()
         // [1] = this method
-        // [2] = handlePostingQuota
-        // [3] = Caller of handlePostingQuota
+        // [2] = caller of this method
+        // [3] = Caller of the caller of this method
         return elements[3].getMethodName();
     }
 

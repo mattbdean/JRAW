@@ -1,5 +1,6 @@
 package net.dean.jraw.models.core;
 
+import com.google.common.collect.UnmodifiableListIterator;
 import net.dean.jraw.JrawUtils;
 import net.dean.jraw.models.JsonInteraction;
 import net.dean.jraw.models.RedditObject;
@@ -50,14 +51,10 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
         List<T> children = new ArrayList<>();
 
         // children is a JSON array
-        try {
-            for (JsonNode childNode : data.get("children")) {
-                if (!childNode.get("kind").getTextValue().equalsIgnoreCase("more")) {
-                    children.add(JrawUtils.parseJson(childNode, thingClass));
-                }
+        for (JsonNode childNode : data.get("children")) {
+            if (!childNode.get("kind").getTextValue().equalsIgnoreCase("more")) {
+                children.add(JrawUtils.parseJson(childNode, thingClass));
             }
-        } catch (NullPointerException e) {
-            JrawUtils.logger().error("NullPointerException", e);
         }
 
         return children;
@@ -251,12 +248,43 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
 
     @Override
     public ListIterator<T> listIterator() {
-        return children.listIterator();
+        return listIterator(0);
     }
 
     @Override
     public ListIterator<T> listIterator(int i) {
-        return children.listIterator(i);
+        final ListIterator<T> it = children.listIterator();
+        return new UnmodifiableListIterator<T>() {
+            @Override
+            public boolean hasPrevious() {
+                return it.hasNext();
+            }
+
+            @Override
+            public T previous() {
+                return it.previous();
+            }
+
+            @Override
+            public int nextIndex() {
+                return it.nextIndex();
+            }
+
+            @Override
+            public int previousIndex() {
+                return it.previousIndex();
+            }
+
+            @Override
+            public boolean hasNext() {
+                return it.hasNext();
+            }
+
+            @Override
+            public T next() {
+                return it.next();
+            }
+        };
     }
 
     @Override

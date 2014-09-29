@@ -206,7 +206,8 @@ public abstract class Paginator<T extends Thing> implements Iterator<Listing<T>>
      * its parameters have changed.
      */
     protected void invalidate() {
-        this.changed = true;
+        if (started)
+            this.changed = true;
     }
 
     /**
