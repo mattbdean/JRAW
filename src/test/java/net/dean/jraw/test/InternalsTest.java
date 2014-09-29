@@ -11,11 +11,11 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.*;
 
 public class InternalsTest extends RedditTest {
     private static final ObjectMapper objectMapper = new ObjectMapper();
@@ -40,6 +40,30 @@ public class InternalsTest extends RedditTest {
         MockJsonModel model = new MockJsonModel();
         assertEquals(model.asString(null), "null");
         assertEquals(model.asString("hello"), "hello");
+    }
+
+    @Test
+    public void testModifyListingData() {
+        final Listing<Submission> listing = new SubredditPaginator(reddit).next();
+        List<Execute> executes = new ArrayList<>();
+
+        // List of Executes that will modify the listing
+        executes.addAll(Arrays.asList(
+                () -> listing.add(null),
+                () -> listing.add(0, null),
+                () -> listing.addAll(0, null),
+                () -> listing.addAll(null),
+                listing::clear,
+                () -> listing.remove(null),
+                () -> listing.remove(0),
+                () -> listing.removeAll(null),
+                () -> listing.retainAll(null),
+                () -> listing.set(0, null)
+        ));
+
+        for (Execute e : executes) {
+            assertNotNull(getException(e));
+        }
     }
 
     @Test
@@ -69,6 +93,19 @@ public class InternalsTest extends RedditTest {
         } catch (IOException e) {
             handle(e);
         }
+    }
+
+    private Exception getException(Execute e) {
+        try {
+            e.execute();
+            return null;
+        } catch (Exception ex) {
+            return ex;
+        }
+    }
+
+    private interface Execute {
+        public void execute();
     }
 
     // Normally this class would be private but JsonModel.toString() will throw an IllegalAccessException

@@ -1,13 +1,16 @@
 package net.dean.jraw.models.core;
 
-import com.google.common.collect.UnmodifiableListIterator;
+import com.google.common.collect.ImmutableList;
 import net.dean.jraw.JrawUtils;
 import net.dean.jraw.models.JsonInteraction;
 import net.dean.jraw.models.RedditObject;
 import net.dean.jraw.models.ThingType;
 import org.codehaus.jackson.JsonNode;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 
 /**
  * Represents a listing of Things. A Listing has four main keys: before, after, modhash, and its children. Listing uses
@@ -17,6 +20,7 @@ import java.util.*;
  * @param <T> The type of elements that will be in this listing
  * @author Matthew Dean
  */
+@SuppressWarnings("deprecation")
 public class Listing<T extends RedditObject> extends RedditObject implements List<T> {
 
     /**
@@ -24,7 +28,7 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
      */
     private final Class<T> thingClass;
 
-    private final List<T> children;
+    private final ImmutableList<T> children;
     private final More more;
 
     /**
@@ -47,8 +51,8 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
         this.more = initMore();
     }
 
-    private List<T> initChildren() {
-        List<T> children = new ArrayList<>();
+    private ImmutableList<T> initChildren() {
+        ImmutableList.Builder<T> children = ImmutableList.<T>builder();
 
         // children is a JSON array
         for (JsonNode childNode : data.get("children")) {
@@ -57,7 +61,7 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
             }
         }
 
-        return children;
+        return children.build();
     }
 
     private More initMore() {
@@ -110,10 +114,6 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
     @Override
     public ThingType getType() {
         return ThingType.LISTING;
-    }
-
-    private void onDataModified() {
-        throw new UnsupportedOperationException("Listing children are not modifiable.");
     }
 
     @Override
@@ -170,14 +170,12 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
 
     @Override
     public boolean add(T t) {
-        onDataModified();
-        return false;
+        return children.add(t);
     }
 
     @Override
     public boolean remove(Object o) {
-        onDataModified();
-        return false;
+        return children.remove(o);
     }
 
     @Override
@@ -187,31 +185,27 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
 
     @Override
     public boolean addAll(Collection<? extends T> ts) {
-        onDataModified();
-        return false;
+        return children.addAll(ts);
     }
 
     @Override
     public boolean addAll(int i, Collection<? extends T> ts) {
-        onDataModified();
-        return false;
+        return children.addAll(i, ts);
     }
 
     @Override
     public boolean removeAll(Collection<?> objects) {
-        onDataModified();
-        return false;
+        return children.removeAll(objects);
     }
 
     @Override
     public boolean retainAll(Collection<?> objects) {
-        onDataModified();
-        return false;
+        return children.removeAll(objects);
     }
 
     @Override
     public void clear() {
-        onDataModified();
+        children.clear();
     }
 
     @Override
@@ -221,19 +215,17 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
 
     @Override
     public T set(int i, T t) {
-        onDataModified();
-        return null;
+        return children.set(i, t);
     }
 
     @Override
     public void add(int i, T t) {
-        onDataModified();
+        children.add(i, t);
     }
 
     @Override
     public T remove(int i) {
-        onDataModified();
-        return null;
+        return children.remove(i);
     }
 
     @Override
@@ -248,43 +240,12 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
 
     @Override
     public ListIterator<T> listIterator() {
-        return listIterator(0);
+        return children.listIterator();
     }
 
     @Override
     public ListIterator<T> listIterator(int i) {
-        final ListIterator<T> it = children.listIterator();
-        return new UnmodifiableListIterator<T>() {
-            @Override
-            public boolean hasPrevious() {
-                return it.hasNext();
-            }
-
-            @Override
-            public T previous() {
-                return it.previous();
-            }
-
-            @Override
-            public int nextIndex() {
-                return it.nextIndex();
-            }
-
-            @Override
-            public int previousIndex() {
-                return it.previousIndex();
-            }
-
-            @Override
-            public boolean hasNext() {
-                return it.hasNext();
-            }
-
-            @Override
-            public T next() {
-                return it.next();
-            }
-        };
+        return children.listIterator(i);
     }
 
     @Override
