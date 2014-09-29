@@ -69,6 +69,20 @@ public class AuthenticatedUserTest extends AuthenticatedRedditTest {
         }
     }
 
+    @Test(expectedExceptions = ApiException.class)
+    public void testPostWithInvalidCaptcha() {
+        try {
+            account.submitContent(
+                    new LoggedInAccount.SubmissionBuilder("content", "jraw_testing2", "title"), reddit.getNewCaptcha(), "invalid captcha attempt");
+        } catch (NetworkException e) {
+            handle(e);
+        } catch (ApiException e) {
+            if (!e.getCode().equals("BAD_CAPTCHA")) {
+                handle(e);
+            }
+        }
+    }
+
     @Test
     public void testReplySubmission() {
         try {

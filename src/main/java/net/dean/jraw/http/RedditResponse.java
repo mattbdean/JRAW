@@ -115,11 +115,7 @@ public class RedditResponse extends RestResponse {
     public ApiException[] getApiExceptions() {
         ApiException[] localCopy = new ApiException[apiExceptions.length];
         for (int i = 0; i < apiExceptions.length; i++) {
-            localCopy[i] = apiExceptions[i].getCode() == null ?
-                    // Used the (String msg) or (String msg, Throwable cause) constructor
-                    new ApiException(apiExceptions[i].getMessage(), apiExceptions[i].getCause()) :
-                    // Used the (String code, String explanation) constructor
-                    new ApiException(apiExceptions[i].getCode(), apiExceptions[i].getExplanation());
+            localCopy[i] = new ApiException(apiExceptions[i].getCode(), apiExceptions[i].getExplanation());
         }
         return localCopy;
     }

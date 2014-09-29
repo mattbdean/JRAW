@@ -1,7 +1,10 @@
 package net.dean.jraw.test;
 
+import net.dean.jraw.Version;
+import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.models.JsonInteraction;
 import net.dean.jraw.models.JsonModel;
+import net.dean.jraw.models.RenderStringPair;
 import net.dean.jraw.models.core.Listing;
 import net.dean.jraw.models.core.More;
 import net.dean.jraw.models.core.Submission;
@@ -63,6 +66,43 @@ public class InternalsTest extends RedditTest {
 
         for (Execute e : executes) {
             assertNotNull(getException(e));
+        }
+    }
+
+    @Test
+    public void testRenderStringToString() {
+        RenderStringPair string = new RenderStringPair("md", "html");
+        assertEquals(string.md(), string.toString());
+    }
+
+    @Test
+    public void testNetworkException() {
+        NetworkException ex = new NetworkException(404);
+        assertEquals(ex.getCode(), 404);
+        assertEquals(ex.getMessage(), "Request returned bad code (404)");
+
+        ex = new NetworkException("message");
+        assertTrue(ex.getCode() == -1);
+
+        NullPointerException cause = new NullPointerException();
+        ex = new NetworkException("message", cause);
+        assertTrue(ex.getCause().equals(ex));
+    }
+
+    @Test
+    public void testVersion() {
+        MockVersion v = new MockVersion(1, 2, 3);
+        assertTrue(v.getMajor() == 1);
+        assertTrue(v.getMinor() == 2);
+        assertTrue(v.getPatch() == 3);
+        assertFalse(v.isSnapshot());
+        assertNotNull(v.toString());
+    }
+
+    private class MockVersion extends Version {
+
+        protected MockVersion(int major, int minor, int patch) {
+            super(major, minor, patch);
         }
     }
 

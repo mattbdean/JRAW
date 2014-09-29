@@ -19,11 +19,11 @@ public class Version {
     private final int patch;
     private final boolean snapshot;
 
-    private Version(int major, int minor, int patch) {
+    protected Version(int major, int minor, int patch) {
         this(major, minor, patch, false);
     }
 
-    private Version(int major, int minor, int patch, boolean snapshot) {
+    protected Version(int major, int minor, int patch, boolean snapshot) {
         this.major = major;
         this.minor = minor;
         this.patch = patch;
