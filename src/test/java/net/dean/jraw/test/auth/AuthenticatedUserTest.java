@@ -193,7 +193,7 @@ public class AuthenticatedUserTest extends AuthenticatedRedditTest {
     public void testSaveSubmission() {
         try {
             Submission submission = reddit.getSubmission("28d6vv");
-            account.save(submission, true);
+            account.setSaved(submission, true);
 
             UserContributionPaginator paginator = getPaginator(Where.SAVED);
             List<Contribution> saved = paginator.next();
@@ -216,7 +216,7 @@ public class AuthenticatedUserTest extends AuthenticatedRedditTest {
     public void testUnsaveSubmission() {
         try {
             Submission submission = reddit.getSubmission("28d6vv");
-            account.save(submission, false);
+            account.setSaved(submission, false);
 
             UserContributionPaginator paginator = getPaginator(Where.SAVED);
             List<Contribution> saved = paginator.next();

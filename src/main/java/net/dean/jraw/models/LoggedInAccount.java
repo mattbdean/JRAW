@@ -118,7 +118,7 @@ public class LoggedInAccount extends Account implements NetworkAccessible<Reddit
      * @throws ApiException If the API returned an error
      */
     @EndpointImplementation({Endpoints.SAVE, Endpoints.UNSAVE})
-    public RedditResponse save(Submission s, boolean save) throws NetworkException, ApiException {
+    public RedditResponse setSaved(Submission s, boolean save) throws NetworkException, ApiException {
         // Send it to "/api/save" if save == true, "/api/unsave" if save == false
         return genericPost(creator.request()
                 .endpoint(save ? Endpoints.SAVE : Endpoints.UNSAVE)
@@ -223,6 +223,7 @@ public class LoggedInAccount extends Account implements NetworkAccessible<Reddit
      * @throws NetworkException If there was a problem sending the request
      * @throws ApiException If the API returned an error
      */
+    @EndpointImplementation(Endpoints.ADDDEVELOPER)
     public RedditResponse addDeveloper(String clientId, String newDev) throws NetworkException, ApiException {
         return modifyDeveloperStatus(clientId, newDev, false);
     }
@@ -236,11 +237,11 @@ public class LoggedInAccount extends Account implements NetworkAccessible<Reddit
      * @throws NetworkException If there was a problem sending the request
      * @throws ApiException If the api returned an error
      */
+    @EndpointImplementation(Endpoints.REMOVEDEVELOPER)
     public RedditResponse removeDeveloper(String clientId, String oldDev) throws NetworkException, ApiException {
         return modifyDeveloperStatus(clientId, oldDev, true);
     }
 
-    @EndpointImplementation({Endpoints.ADDDEVELOPER, Endpoints.REMOVEDEVELOPER})
     private RedditResponse modifyDeveloperStatus(String clientId, String devName, boolean remove) throws NetworkException, ApiException {
         return genericPost(creator.request()
                 .endpoint(remove ? Endpoints.REMOVEDEVELOPER : Endpoints.ADDDEVELOPER)
