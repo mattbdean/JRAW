@@ -10,6 +10,7 @@ import net.dean.jraw.models.core.Comment;
 import net.dean.jraw.models.core.Listing;
 import net.dean.jraw.models.core.Submission;
 import net.dean.jraw.pagination.UserContributionPaginator;
+import org.testng.SkipException;
 import org.testng.annotations.Test;
 
 import java.net.URL;
@@ -69,17 +70,24 @@ public class AuthenticatedUserTest extends AuthenticatedRedditTest {
         }
     }
 
-    @Test(expectedExceptions = ApiException.class)
-    public void testPostWithInvalidCaptcha() {
+    @Test(expectedExceptions = {ApiException.class, SkipException.class})
+    public void testPostWithInvalidCaptcha() throws ApiException {
         try {
             account.submitContent(
                     new LoggedInAccount.SubmissionBuilder("content", "jraw_testing2", "title"), reddit.getNewCaptcha(), "invalid captcha attempt");
         } catch (NetworkException e) {
             handle(e);
         } catch (ApiException e) {
-            if (!e.getCode().equals("BAD_CAPTCHA")) {
-                handle(e);
+            if (isRateLimit(e)) {
+                // Nothing we can really do about this
+                handlePostingQuota(e);
             }
+            if (e.getCode().equals("BAD_CAPTCHA")) {
+                // What we want
+                throw e;
+            }
+            // Some other reason
+            handle(e);
         }
     }
 

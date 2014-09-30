@@ -41,7 +41,14 @@ public abstract class RedditTest {
         Assert.fail(t.getMessage() == null ? t.getClass().getName() : t.getMessage(), t);
     }
 
+    protected final boolean isRateLimit(ApiException e) {
+        return e.getCode().equals("QUOTA_FILLED") || e.getCode().equals("RATELIMIT");
+    }
+
     protected void handlePostingQuota(ApiException e) {
+        if (!isRateLimit(e)) {
+            Assert.fail(e.getMessage());
+        }
 
         String msg = null;
         // toUpperCase just in case (no pun intended)

@@ -86,7 +86,7 @@ public class InternalsTest extends RedditTest {
 
         NullPointerException cause = new NullPointerException();
         ex = new NetworkException("message", cause);
-        assertTrue(ex.getCause().equals(ex));
+        assertEquals(ex.getCause(), cause);
     }
 
     @Test
