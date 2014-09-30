@@ -4,6 +4,7 @@ import net.dean.jraw.ApiException;
 import net.dean.jraw.JrawUtils;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.Version;
+import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.models.JsonInteraction;
 import net.dean.jraw.models.JsonModel;
 import net.dean.jraw.models.RenderStringPair;
@@ -37,6 +38,12 @@ public abstract class RedditTest {
     }
 
     protected void handle(Throwable t) {
+        if (t instanceof NetworkException) {
+            NetworkException e = (NetworkException) t;
+            if (e.getCode() == 504) {
+                throw new SkipException("Received 504, skipping");
+            }
+        }
         t.printStackTrace();
         Assert.fail(t.getMessage() == null ? t.getClass().getName() : t.getMessage(), t);
     }
