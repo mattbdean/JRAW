@@ -26,11 +26,17 @@ import java.util.List;
  */
 public class RedditClient extends RestClient<RedditResponse> {
 
-    /** The host that will be used to execute basic HTTP requests */
+    /** The host that will be used to execute most HTTP(S) requests */
     public static final String HOST = "www.reddit.com";
 
-    /** The host that will be used to execute secure HTTP requests */
-    public static final String HOST_SSL = "ssl.reddit.com";
+    /**
+     * The host that will be used to execute OAuth requests, with the exception of authorization, in which case
+     * {@link #HOST_HTTPS_SPECIAL} will be used
+     */
+    public static final String HOST_OAUTH = "oauth.reddit.com";
+
+    /** The host that will be used for logging in, OAuth authorizations, and preferences */
+    public static final String HOST_HTTPS_SPECIAL = "ssl.reddit.com";
 
     /** The name of the header that will be assigned upon a successful login */
     private static final String HEADER_MODHASH = "X-Modhash";
@@ -60,7 +66,7 @@ public class RedditClient extends RestClient<RedditResponse> {
      *                  </blockquote>
      */
     public RedditClient(String userAgent) {
-        super(HOST, HOST_SSL, userAgent, REQUESTS_PER_MINUTE);
+        super(HOST, userAgent, REQUESTS_PER_MINUTE);
     }
 
     @Override
@@ -81,6 +87,7 @@ public class RedditClient extends RestClient<RedditResponse> {
     @EndpointImplementation(Endpoints.LOGIN)
     public LoggedInAccount login(String username, String password) throws NetworkException, ApiException {
         Request request = request(true)
+                .host(HOST_HTTPS_SPECIAL)
                 .endpoint(Endpoints.LOGIN)
                 .post(new FormEncodingBuilder()
                                 .add("user", username)
@@ -96,6 +103,7 @@ public class RedditClient extends RestClient<RedditResponse> {
         }
 
         setHttpsDefault(loginResponse.getJson().get("json").get("data").get("need_https").asBoolean());
+        setHttpsDefault(true);
 
         String modhash = loginResponse.getJson().get("json").get("data").get("modhash").getTextValue();
 
@@ -344,7 +352,7 @@ public class RedditClient extends RestClient<RedditResponse> {
     public List<String> searchSubreddits(String start, boolean includeNsfw) throws NetworkException {
         List<String> subs = new ArrayList<>();
 
-        Request request = new RequestBuilder(HOST)
+        Request request = request()
                 .endpoint(Endpoints.SEARCH_REDDIT_NAMES)
                 .post(new FormEncodingBuilder()
                         .add("query", start)

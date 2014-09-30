@@ -29,10 +29,8 @@ public class RequestBuilder extends Request.Builder {
 
     /**
      * Instantiates a new RequestBuilder
-     * @param host The host (ex: "www.reddit.com" or "ssl.reddit.com")
      */
-    public RequestBuilder(String host) {
-        this.host = host;
+    public RequestBuilder() {
         this.https = false;
     }
 
@@ -43,7 +41,6 @@ public class RequestBuilder extends Request.Builder {
      */
     public RequestBuilder https(boolean https) {
         this.https = https;
-        updateUrl();
         return this;
     }
 
@@ -64,7 +61,6 @@ public class RequestBuilder extends Request.Builder {
      */
     public RequestBuilder query(Map<String, String> args) {
         this.query = args;
-        updateUrl();
         return this;
     }
 
@@ -83,7 +79,6 @@ public class RequestBuilder extends Request.Builder {
     public RequestBuilder endpoint(Endpoints e, String... positionalUrlParams) {
         this.endpoint = e;
         this.urlParams = Arrays.asList(positionalUrlParams);
-        updateUrl();
         return this;
     }
 
@@ -96,41 +91,12 @@ public class RequestBuilder extends Request.Builder {
      */
     public RequestBuilder path(String path) {
         this.path = path;
-        updateUrl();
         return this;
     }
 
-    /**
-     * Builds a URL string based on the given RequestBuilder-specific methods ({@link #query(java.util.Map)},
-     * {@link #endpoint(net.dean.jraw.Endpoints, String...)}, etc.) and calls {@link #url(String)} with it.
-     */
-    private void updateUrl() {
-        StringBuilder url = new StringBuilder(
-                String.format("http%s://%s", https ? "s" : "", host));
-
-        // Add the endpoint URI
-        if (endpoint != null) {
-            Endpoint e = endpoint.getEndpoint();
-            if (e.getUrlParams().isEmpty()) {
-                // There are no parameters for the endpoint or none have been given
-                url.append(e.getUri());
-            } else {
-                url.append(replaceUriParameters(e, urlParams));
-            }
-        } else if (path != null) {
-            // Endpoint takes priority over path
-            if (!path.startsWith("/")) {
-                url.append("/");
-            }
-            url.append(path);
-        }
-
-        if (query != null) {
-            url.append(generateQueryString(query));
-        }
-
-        url(url.toString());
-
+    public RequestBuilder host(String host) {
+        this.host = host;
+        return this;
     }
 
     /**
@@ -187,6 +153,41 @@ public class RequestBuilder extends Request.Builder {
         }
 
         return updatedUri;
+    }
+
+    @Override
+    public Request build() {
+        if (host == null || host.isEmpty()) {
+            throw new IllegalStateException("No host given");
+        }
+
+        // Update the url using url()
+        StringBuilder url = new StringBuilder(
+                String.format("http%s://%s", https ? "s" : "", host));
+
+        // Add the endpoint URI
+        if (endpoint != null) {
+            Endpoint e = endpoint.getEndpoint();
+            if (e.getUrlParams().isEmpty()) {
+                // There are no parameters for the endpoint or none have been given
+                url.append(e.getUri());
+            } else {
+                url.append(replaceUriParameters(e, urlParams));
+            }
+        } else if (path != null) {
+            // Endpoint takes priority over path
+            if (!path.startsWith("/")) {
+                url.append("/");
+            }
+            url.append(path);
+        }
+
+        if (query != null) {
+            url.append(generateQueryString(query));
+        }
+
+        url(url.toString());
+        return super.build();
     }
 
     /**

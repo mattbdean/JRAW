@@ -19,8 +19,7 @@ import java.util.Map;
  * This class provides a way to send RESTful HTTP requests
  */
 public abstract class RestClient<T extends RestResponse> {
-    private final String host;
-    private final String hostHttps;
+    private final String defaultHost;
     private final RateLimiter rateLimiter;
     /** The OkHttpClient used to execute RESTful HTTP requests */
     protected final OkHttpClient http;
@@ -38,16 +37,14 @@ public abstract class RestClient<T extends RestResponse> {
     /**
      * Instantiates a new RestClient
      *
-     * @param host The host on which to operate
-     * @param hostHttps The host on which to send HTTP requests secured with SSL on
+     * @param defaultHost The host on which to operate
      * @param userAgent The User-Agent header which will be sent with all requests
      * @param requestsPerMinute The amount of HTTP requests that can be sent in one minute. A value greater than 0 will
      *                          enable rate limit enforcing, one less than or equal to 0 will disable it. This value cannot
      *                          be changed aft
      */
-    public RestClient(String host, String hostHttps, String userAgent, int requestsPerMinute) {
-        this.host = host;
-        this.hostHttps = hostHttps;
+    public RestClient(String defaultHost, String userAgent, int requestsPerMinute) {
+        this.defaultHost = defaultHost;
         this.enforceRatelimit = requestsPerMinute > 0;
         this.rateLimiter = enforceRatelimit ? RateLimiter.create((double) requestsPerMinute / 60) : null;
         this.http = new OkHttpClient();
@@ -61,12 +58,8 @@ public abstract class RestClient<T extends RestResponse> {
         defaultHeaders.put("User-Agent", userAgent);
     }
 
-    public String getHost() {
-        return host;
-    }
-
-    public String getHostHttps() {
-        return hostHttps;
+    public String getDefaultHost() {
+        return defaultHost;
     }
 
     /**
@@ -86,7 +79,7 @@ public abstract class RestClient<T extends RestResponse> {
     }
 
     /**
-     * Creates a new RequestBuilder whose host is {@link #getHost()}.
+     * Creates a new RequestBuilder that has HTTPS enabled by default if {@link #isHttpsDefault()} is true.
      * @return A new RequestBuilder
      */
     public RequestBuilder request() {
@@ -95,11 +88,12 @@ public abstract class RestClient<T extends RestResponse> {
 
     /**
      * Creates a new RequestBuilder
-     * @param https If this request should be executed on {@link #getHostHttps()} with HTTPS
+     * @param https Whether to execute this HTTP request over SSL
      * @return A new RequestBuilder
      */
     public RequestBuilder request(boolean https) {
-        return addDefaultHeaders(new RequestBuilder(https ? hostHttps : host)
+        return addDefaultHeaders(new RequestBuilder()
+                .host(defaultHost)
                 .https(https));
     }
 
