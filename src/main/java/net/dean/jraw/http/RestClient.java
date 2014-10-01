@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * This class provides a way to send RESTful HTTP requests
@@ -102,6 +103,22 @@ public abstract class RestClient<T extends RestResponse> {
             builder.header(entry.getKey(), entry.getValue());
         }
         return builder;
+    }
+
+    /**
+     * Sets the time in milliseconds the HTTP client will wait before timing out
+     * @param milliseconds Timeout length in milliseconds
+     */
+    public void setTimeoutLength(long milliseconds) {
+        http.setConnectTimeout(milliseconds, TimeUnit.MILLISECONDS);
+    }
+
+    /**
+     * Gets the time in milliseconds the HTTP client will wait before timing out
+     * @return Timeout length in milliseconds
+     */
+    public long getTimeoutLength() {
+        return http.getConnectTimeout();
     }
 
     /**
