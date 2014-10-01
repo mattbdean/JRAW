@@ -1,7 +1,9 @@
 package net.dean.jraw.test;
 
+import net.dean.jraw.Endpoint;
 import net.dean.jraw.Version;
 import net.dean.jraw.http.NetworkException;
+import net.dean.jraw.models.Flair;
 import net.dean.jraw.models.JsonInteraction;
 import net.dean.jraw.models.JsonModel;
 import net.dean.jraw.models.RenderStringPair;
@@ -33,7 +35,7 @@ public class InternalsTest extends RedditTest {
     public void testJsonModelToString() {
         MockJsonModel model = new MockJsonModel();
         String actual = model.toString();
-        String expected = "MockJsonModel {getBar()=\"0\", getFoo()=\"foo\", getSomeModel()=[MockJsonModel], " +
+        String expected = "MockJsonModel {getBar()=\"0.0\", getFoo()=\"foo\", getSomeModel()=[MockJsonModel], " +
                 "throwsException()=[threw java.lang.UnsupportedOperationException: exception message]}";
         assertEquals(actual, expected);
     }
@@ -48,10 +50,10 @@ public class InternalsTest extends RedditTest {
     @Test
     public void testModifyListingData() {
         final Listing<Submission> listing = new SubredditPaginator(reddit).next();
-        List<Execute> executes = new ArrayList<>();
+        List<CodeBlock> codeBlocks = new ArrayList<>();
 
-        // List of Executes that will modify the listing
-        executes.addAll(Arrays.asList(
+        // List of CodeBlocks that will modify the listing
+        codeBlocks.addAll(Arrays.asList(
                 () -> listing.add(null),
                 () -> listing.add(0, null),
                 () -> listing.addAll(0, null),
@@ -64,7 +66,7 @@ public class InternalsTest extends RedditTest {
                 () -> listing.set(0, null)
         ));
 
-        for (Execute e : executes) {
+        for (CodeBlock e : codeBlocks) {
             assertNotNull(getException(e));
         }
     }
@@ -73,6 +75,18 @@ public class InternalsTest extends RedditTest {
     public void testRenderStringToString() {
         RenderStringPair string = new RenderStringPair("md", "html");
         assertEquals(string.md(), string.toString());
+    }
+
+    @Test
+    public void testFlair() {
+        String css = "css";
+        String text = "text";
+        Flair f = new Flair(css, text);
+        assertEquals(f.getCssClass(), css);
+        assertEquals(f.getText(), text);
+
+        Flair f2 = new Flair(css, text);
+        basicObjectTest(f, f2);
     }
 
     @Test
@@ -96,7 +110,24 @@ public class InternalsTest extends RedditTest {
         assertTrue(v.getMinor() == 2);
         assertTrue(v.getPatch() == 3);
         assertFalse(v.isSnapshot());
-        assertNotNull(v.toString());
+
+        MockVersion v2 = new MockVersion(1, 2, 3);
+        basicObjectTest(v, v2);
+    }
+
+    /**
+     * Makes sure that equals(), hashCode(), and toString() were overridden
+     *
+     * @param o1 An object
+     * @param o2 An object which is supposedly equal to o1
+     * @param <T> The type of object
+     */
+    private <T> void basicObjectTest(T o1, T o2) {
+        // Make sure the default toString() was overridden
+        assertFalse(o1.toString().equals(o1.getClass().getName() + "@" + Integer.toHexString(o1.hashCode())),
+                "toString() not overridden");
+        assertEquals(o1.hashCode(), o2.hashCode(), "hashCode() not overridden");
+        assertEquals(o1, o2, "equals() not overridden");
     }
 
     private class MockVersion extends Version {
@@ -118,7 +149,7 @@ public class InternalsTest extends RedditTest {
                     "    \"ckuzt7k\"," +
                     "    \"ckv4o7l\"," +
                     "    \"ckv5qjp\"" +
-                    "],\n" +
+                    "]," +
                     "\"id\":\"ckuzahs\"," +
                     "\"name\":\"t1_ckuzahs\"" +
                     "}";
@@ -135,7 +166,7 @@ public class InternalsTest extends RedditTest {
         }
     }
 
-    private Exception getException(Execute e) {
+    private Exception getException(CodeBlock e) {
         try {
             e.execute();
             return null;
@@ -144,11 +175,33 @@ public class InternalsTest extends RedditTest {
         }
     }
 
-    private interface Execute {
+    @Test
+    public void testEndpoint() {
+        String requestDescriptor = "GET /api/{foo}/{bar}/baz";
+        String category = "cat";
+
+        Endpoint e = new Endpoint(requestDescriptor, category);
+        assertEquals(e.getCategory(), "cat");
+        assertEquals(e.getUri(), "/api/{foo}/{bar}/baz");
+        assertEquals(e.getVerb(), "GET");
+        assertEquals(e.getUrlParams(), Arrays.asList("{foo}", "{bar}"));
+        assertEquals(e.getRequestDescriptor(), requestDescriptor);
+
+        Endpoint e2 = new Endpoint(requestDescriptor, category);
+        basicObjectTest(e, e2);
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void testEndpointInvalidRequestDescriptor() {
+        new Endpoint("part1 part2 part3");
+    }
+
+    private interface CodeBlock {
         public void execute();
     }
 
-    // Normally this class would be private but JsonModel.toString() will throw an IllegalAccessException
+    // Normally this class would be private but JsonModel.toString() will throw an IllegalAccessException because it
+    // can't access this class' @JsonInteraction methods
     public class MockJsonModel extends JsonModel {
 
         public MockJsonModel() {
@@ -161,8 +214,8 @@ public class InternalsTest extends RedditTest {
         }
 
         @JsonInteraction
-        public Integer getBar() {
-            return 0;
+        public Float getBar() {
+            return 0f;
         }
 
         @JsonInteraction

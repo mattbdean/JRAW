@@ -79,4 +79,28 @@ public class Version {
     public boolean isSnapshot() {
         return snapshot;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Version version = (Version) o;
+
+        if (major != version.major) return false;
+        if (minor != version.minor) return false;
+        if (patch != version.patch) return false;
+        if (snapshot != version.snapshot) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = major;
+        result = 31 * result + minor;
+        result = 31 * result + patch;
+        result = 31 * result + (snapshot ? 1 : 0);
+        return result;
+    }
 }
