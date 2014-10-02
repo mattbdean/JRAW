@@ -145,7 +145,9 @@ public abstract class RestClient<T extends RestResponse> {
      */
     public T execute(Request r) throws NetworkException {
         if (enforceRatelimit) {
-            JrawUtils.logger().info("Slept for {} seconds", rateLimiter.acquire());
+            if (!rateLimiter.tryAcquire()) {
+                JrawUtils.logger().info("Slept for {} seconds", rateLimiter.acquire());
+            }
         }
 
 
