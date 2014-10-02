@@ -8,14 +8,15 @@ import net.dean.jraw.http.RedditResponse;
 import net.dean.jraw.models.LoggedInAccount;
 import net.dean.jraw.models.MultiReddit;
 import net.dean.jraw.models.RenderStringPair;
-import org.codehaus.jackson.JsonFactory;
-import org.codehaus.jackson.JsonGenerator;
 import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * This class provides the ability to perform CRUD operations on multireddits.
@@ -23,6 +24,7 @@ import java.util.List;
 public class MultiRedditManager implements NetworkAccessible<RedditClient> {
     private final LoggedInAccount account;
     private final RedditClient reddit;
+    private final ObjectMapper objectMapper;
 
     /**
      * Instantiates a new MultiRedditManager
@@ -31,6 +33,7 @@ public class MultiRedditManager implements NetworkAccessible<RedditClient> {
     public MultiRedditManager(LoggedInAccount account) {
         this.account = account;
         this.reddit = account.getCreator();
+        this.objectMapper = new ObjectMapper();
     }
 
     /**
@@ -67,36 +70,12 @@ public class MultiRedditManager implements NetworkAccessible<RedditClient> {
     @EndpointImplementation(Endpoints.MULTI_MULTIPATH_POST)
     public void create(String name, List<String> subreddits, boolean priv) throws NetworkException, ApiException {
         StringWriter out = new StringWriter();
+        MultiRedditJsonModel creationData = new MultiRedditJsonModel(subreddits, priv);
         try {
-            JsonGenerator jgen = new JsonFactory().createJsonGenerator(out);
-
-            /*
-            {
-                "subreddits": [
-                    {"name": <sub>},
-                    ...
-                ],
-                "visibility": ["public" | "private"]
-            }
-             */
-            jgen.writeStartObject();
-            jgen.writeFieldName("subreddits");
-            jgen.writeStartArray();
-
-            // Write the subreddits array
-            for (String sub : subreddits) {
-                jgen.writeStartObject();
-                jgen.writeStringField("name", sub);
-                jgen.writeEndObject();
-            }
-            jgen.writeEndArray();
-
-            jgen.writeStringField("visibility",
-                    priv ? "private" : "public");
-            jgen.writeEndObject();
-            jgen.close();
+            objectMapper.writeValue(out, creationData);
         } catch (IOException e) {
-            JrawUtils.logger().error("Could not create the JSON model", e);
+            JrawUtils.logger().error("Unable to create the data model", e);
+            return;
         }
 
         Request request = reddit.request()
@@ -234,5 +213,45 @@ public class MultiRedditManager implements NetworkAccessible<RedditClient> {
     @Override
     public RedditClient getCreator() {
         return reddit;
+    }
+
+    /**
+     * This class represents a Java object of the data sent to create a multireddit. When an instance of this class is
+     * turned into a JSON string, the output will look like this:
+     *
+     * <pre>
+     * {@code
+     * {
+     *     "subreddits": [
+     *         {"name": <sub>},
+     *         ...
+     *     ],
+     *     "visibility": ["public" | "private"]
+     * }
+     * }
+     * </pre>
+     */
+    private final class MultiRedditJsonModel {
+        private final List<Map<String, String>> subreddits;
+        private final String visibility;
+
+        public MultiRedditJsonModel(List<String> subs, boolean isPrivate) {
+            this.visibility = isPrivate ? "private" : "public";
+
+            this.subreddits = new ArrayList<>(subs.size());
+            for (String sub : subs) {
+                HashMap<String, String> subredditMap = new HashMap<>();
+                subredditMap.put("name", sub);
+                subreddits.add(subredditMap);
+            }
+        }
+
+        public List<Map<String, String>> getSubreddits() {
+            return subreddits;
+        }
+
+        public String getVisibility() {
+            return visibility;
+        }
     }
 }
