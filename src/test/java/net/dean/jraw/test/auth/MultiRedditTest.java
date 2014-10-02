@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
@@ -62,6 +63,30 @@ public class MultiRedditTest extends AuthenticatedRedditTest {
                 handle(e);
             }
         } catch (NetworkException e) {
+            handle(e);
+        }
+    }
+
+    @Test(dependsOnMethods = "testCreate")
+    public void testUpdate() {
+        try {
+            if (!multiExists(MULTI_NAME)) {
+                manager.create(MULTI_NAME, MULTI_INITIAL_SUBS, true);
+            }
+
+            List<String> updatedSubreddits = new ArrayList<>(MULTI_INITIAL_SUBS);
+            updatedSubreddits.add("programming");
+            updatedSubreddits.add("java");
+
+            manager.update(MULTI_NAME, updatedSubreddits, true);
+
+            MultiReddit multi = manager.get(MULTI_NAME);
+
+            assertEquals(multi.getSubreddits().size(), updatedSubreddits.size());
+            for (String subreddit : multi.getSubreddits()) {
+                assertTrue(multi.getSubreddits().contains(subreddit), "Did not find updated subreddit \"" + subreddit + "\"");
+            }
+        } catch (ApiException | NetworkException e) {
             handle(e);
         }
     }
@@ -149,7 +174,7 @@ public class MultiRedditTest extends AuthenticatedRedditTest {
             }
         }
 
-        // We should have been able to find 3 multireddit links searching through 75 pages...
+        // We should have been able to find 3 multireddit links searching through 75 entries...
         assertTrue(multiReddits.size() == amount);
 
         // Test each MultiReddit

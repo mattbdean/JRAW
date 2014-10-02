@@ -2,9 +2,11 @@ package net.dean.jraw;
 
 import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.Request;
+import com.squareup.okhttp.RequestBody;
 import net.dean.jraw.http.NetworkAccessible;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.RedditResponse;
+import net.dean.jraw.http.RequestBuilder;
 import net.dean.jraw.models.LoggedInAccount;
 import net.dean.jraw.models.MultiReddit;
 import net.dean.jraw.models.RenderStringPair;
@@ -59,16 +61,46 @@ public class MultiRedditManager implements NetworkAccessible<RedditClient> {
     }
 
     /**
+     * Updates a multireddit, or creates one if it does not exist
+     *
+     * @param name The name of the multireddit
+     * @param subreddits The subreddits that make up this multireddit
+     * @param priv If this multireddit is private
+     * @throws NetworkException If the request was not successful
+     * @throws ApiException If the Reddit API returned an error
+     */
+    @EndpointImplementation(Endpoints.MULTI_MULTIPATH_PUT)
+    public void update(String name, List<String> subreddits, boolean priv) throws NetworkException, ApiException {
+        updateMultiReddit(false, name, subreddits, priv);
+    }
+
+    /**
      * Creates a new multireddit
      *
      * @param name The name of the new multireddit
      * @param subreddits The subreddits that make up this multireddit
      * @param priv If this multireddit is private
-     * @throws NetworkException If the status code was not 201 Created
+     * @throws NetworkException If the request was not successful
      * @throws ApiException If a multireddit of that name already exists
      */
     @EndpointImplementation(Endpoints.MULTI_MULTIPATH_POST)
     public void create(String name, List<String> subreddits, boolean priv) throws NetworkException, ApiException {
+        updateMultiReddit(true, name, subreddits, priv);
+    }
+
+    /**
+     * Creates or updates a multireddit
+     * @param post True for a POST request, false for a PUT request. POST will only create, while PUT will update or create
+     *             if one does not exist
+     * @param name The name of the multireddit
+     * @param subreddits The subreddits that make up this multireddit
+     * @param priv If this multireddit is private
+     * @throws NetworkException If the request was not successful
+     * @throws ApiException If the Reddit API returned an error
+     */
+    private void updateMultiReddit(boolean post, String name, List<String> subreddits, boolean priv)
+        throws NetworkException, ApiException {
+
         StringWriter out = new StringWriter();
         MultiRedditJsonModel creationData = new MultiRedditJsonModel(subreddits, priv);
         try {
@@ -78,15 +110,21 @@ public class MultiRedditManager implements NetworkAccessible<RedditClient> {
             return;
         }
 
-        Request request = reddit.request()
-                .endpoint(Endpoints.MULTI_MULTIPATH_POST, name)
-                .post(new FormEncodingBuilder()
-                        .add("model", out.toString())
-                        .add("multipath", getMultiPath(name))
-                        .build()
-                ).build();
+        RequestBody body = new FormEncodingBuilder()
+                    .add("model", out.toString())
+                    .add("multipath", getMultiPath(name))
+                    .build();
 
-        RedditResponse response = reddit.execute(request);
+        RequestBuilder request = reddit.request()
+                .endpoint(Endpoints.MULTI_MULTIPATH_POST, name);
+
+        if (post) {
+            request.post(body);
+        } else {
+            request.put(body);
+        }
+
+        RedditResponse response = reddit.execute(request.build());
         JsonNode result = response.getJson();
         checkForError(result);
     }
