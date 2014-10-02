@@ -3,7 +3,6 @@ package net.dean.jraw.models;
 import net.dean.jraw.models.core.Thing;
 import org.codehaus.jackson.JsonNode;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,11 +69,11 @@ public class MultiReddit extends Thing implements Created {
     }
 
     /**
-     * Gets the relative path to this multireddit
+     * Gets the relative path to this multireddit. It will be in the format of {@code /user/{username}/m/{multiname}}
      * @return The relative path
      */
     @JsonInteraction
-    public URI getPath() {
-        return data("path", URI.class);
+    public String getPath() {
+        return data("path");
     }
 }

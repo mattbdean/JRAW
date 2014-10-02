@@ -1,7 +1,10 @@
 package net.dean.jraw.test.auth;
 
+import net.dean.jraw.ApiException;
 import net.dean.jraw.JrawUtils;
+import net.dean.jraw.MultiRedditManager;
 import net.dean.jraw.http.NetworkException;
+import net.dean.jraw.models.MultiReddit;
 import net.dean.jraw.models.core.Listing;
 import net.dean.jraw.models.core.Submission;
 import net.dean.jraw.models.core.Thing;
@@ -100,6 +103,14 @@ public class PaginationTest extends AuthenticatedRedditTest {
             AllSubredditsPaginator paginator = new AllSubredditsPaginator(reddit, where);
             commonTest(paginator);
         }
+    }
+
+    @Test
+    public void testMultiRedditPaginator() throws NetworkException, ApiException {
+        MultiReddit multi = new MultiRedditManager(account).mine().get(0);
+
+        MultiRedditPaginator paginator = new MultiRedditPaginator(reddit, multi);
+        commonTest(paginator);
     }
 
     @Test(expectedExceptions = IllegalStateException.class)
