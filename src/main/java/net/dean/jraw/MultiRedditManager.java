@@ -75,6 +75,51 @@ public class MultiRedditManager implements NetworkAccessible<RedditClient> {
     }
 
     /**
+     * Adds a subreddit to a multireddit.
+     *
+     * @param multiName The name of the multireddit
+     * @param subreddit The subreddit to add
+     * @throws NetworkException If the request was not successful
+     * @throws ApiException If the Reddit API returned an error
+     */
+    @EndpointImplementation(Endpoints.MULTI_MULTIPATH_R_SRNAME_PUT)
+    public void addSubreddit(String multiName, String subreddit) throws NetworkException, ApiException {
+        MultiRedditSubredditModel data = new MultiRedditSubredditModel(subreddit);
+
+        Request request = reddit.request()
+                .endpoint(Endpoints.MULTI_MULTIPATH_R_SRNAME_PUT, multiName, subreddit)
+                .put(new FormEncodingBuilder()
+                        .add("model", toJson(data))
+                        .add("multipath", getMultiPath(multiName))
+                        .add("srname", subreddit)
+                        .build())
+                .build();
+
+        reddit.execute(request);
+    }
+
+    /**
+     * Removes a subreddit from a multireddit
+     *
+     * @param multiName The name of the multireddit
+     * @param subreddit The subreddit to remove
+     * @throws NetworkException If the request was not successful
+     * @throws ApiException If the Reddit API returned an error
+     */
+    @EndpointImplementation(Endpoints.MULTI_MULTIPATH_R_SRNAME_DELETE)
+    public void removeSubreddit(String multiName, String subreddit) throws NetworkException, ApiException {
+        Request request = reddit.request()
+                .endpoint(Endpoints.MULTI_MULTIPATH_R_SRNAME_DELETE, getMultiPath(multiName).substring(1), subreddit)
+                .query(
+                        "multipath", getMultiPath(multiName),
+                        "srname", subreddit
+                ).delete()
+                .build();
+
+        reddit.execute(request);
+    }
+
+    /**
      * Creates a new multireddit
      *
      * @param name The name of the new multireddit
@@ -101,17 +146,10 @@ public class MultiRedditManager implements NetworkAccessible<RedditClient> {
     private void updateMultiReddit(boolean post, String name, List<String> subreddits, boolean priv)
         throws NetworkException, ApiException {
 
-        StringWriter out = new StringWriter();
         MultiRedditJsonModel creationData = new MultiRedditJsonModel(subreddits, priv);
-        try {
-            objectMapper.writeValue(out, creationData);
-        } catch (IOException e) {
-            JrawUtils.logger().error("Unable to create the data model", e);
-            return;
-        }
 
         RequestBody body = new FormEncodingBuilder()
-                    .add("model", out.toString())
+                    .add("model", toJson(creationData))
                     .add("multipath", getMultiPath(name))
                     .build();
 
@@ -235,6 +273,18 @@ public class MultiRedditManager implements NetworkAccessible<RedditClient> {
         return String.format("/user/%s/m/%s", owner, multiName);
     }
 
+    private String toJson(Object o) {
+        StringWriter out = new StringWriter();
+        try {
+            objectMapper.writeValue(out, o);
+        } catch (IOException e) {
+            JrawUtils.logger().error("Unable to create the data model", e);
+            return null;
+        }
+
+        return out.toString();
+    }
+
     /**
      * Checks if there was an error returned by a /api/multi/* request, since those endpoints return errors differently
      * than the rest of the API
@@ -273,8 +323,8 @@ public class MultiRedditManager implements NetworkAccessible<RedditClient> {
         private final List<Map<String, String>> subreddits;
         private final String visibility;
 
-        public MultiRedditJsonModel(List<String> subs, boolean isPrivate) {
-            this.visibility = isPrivate ? "private" : "public";
+        public MultiRedditJsonModel(List<String> subs, boolean priv) {
+            this.visibility = priv ? "private" : "public";
 
             this.subreddits = new ArrayList<>(subs.size());
             for (String sub : subs) {
@@ -290,6 +340,18 @@ public class MultiRedditManager implements NetworkAccessible<RedditClient> {
 
         public String getVisibility() {
             return visibility;
+        }
+    }
+
+    private final class MultiRedditSubredditModel {
+        private String name;
+
+        private MultiRedditSubredditModel(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
         }
     }
 }

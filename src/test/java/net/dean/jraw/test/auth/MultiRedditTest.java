@@ -81,13 +81,95 @@ public class MultiRedditTest extends AuthenticatedRedditTest {
             manager.update(MULTI_NAME, updatedSubreddits, true);
 
             MultiReddit multi = manager.get(MULTI_NAME);
-
-            assertEquals(multi.getSubreddits().size(), updatedSubreddits.size());
-            for (String subreddit : multi.getSubreddits()) {
-                assertTrue(multi.getSubreddits().contains(subreddit), "Did not find updated subreddit \"" + subreddit + "\"");
-            }
+            compareLists(multi.getSubreddits(), updatedSubreddits);
         } catch (ApiException | NetworkException e) {
             handle(e);
+        }
+    }
+
+    @Test
+    public void testAddSubreddit() {
+        try {
+            // Create the multi if it doesn't exist
+            if (!multiExists(MULTI_NAME)) {
+                try {
+                    // Create if does not exist
+                    if (!multiExists(MULTI_NAME)) {
+                        manager.create(MULTI_NAME, MULTI_INITIAL_SUBS, true);
+                    }
+                } catch (ApiException e) {
+                    if (!e.getCode().equals("MULTI_EXISTS")) {
+                        handle(e);
+                    }
+                } catch (NetworkException e) {
+                    handle(e);
+                }
+            }
+
+            String newSubreddit = "programming";
+            MultiReddit beforeAddition = manager.get(MULTI_NAME);
+
+            List<String> expectedSubreddits = new ArrayList<>(beforeAddition.getSubreddits());
+
+            // Remove the subreddit from the multi if it is already included
+            if (beforeAddition.getSubreddits().contains(newSubreddit)) {
+                manager.removeSubreddit(MULTI_NAME, newSubreddit);
+            } else {
+                expectedSubreddits.add(newSubreddit);
+            }
+
+            // Add the subreddit to the multi
+            manager.addSubreddit(MULTI_NAME, newSubreddit);
+
+            MultiReddit afterAddition = manager.get(MULTI_NAME);
+
+            // Make sure the addition took hold
+            compareLists(afterAddition.getSubreddits(), expectedSubreddits);
+        } catch (ApiException | NetworkException e) {
+            handle(e);
+        }
+    }
+
+    @Test
+    public void testRemoveSubreddit() {
+        try {
+            // Create the multi if it doesn't exist
+            if (!multiExists(MULTI_NAME)) {
+                try {
+                    // Create if does not exist
+                    if (!multiExists(MULTI_NAME)) {
+                        manager.create(MULTI_NAME, MULTI_INITIAL_SUBS, true);
+                    }
+                } catch (ApiException e) {
+                    if (!e.getCode().equals("MULTI_EXISTS")) {
+                        handle(e);
+                    }
+                } catch (NetworkException e) {
+                    handle(e);
+                }
+            }
+
+            MultiReddit beforeRemoval = manager.get(MULTI_NAME);
+            assertTrue(beforeRemoval.getSubreddits().size() > 0, "Multireddit must contain at least one sub");
+
+            List<String> expectedSubreddits = new ArrayList<>(beforeRemoval.getSubreddits());
+            String oldSubreddit = expectedSubreddits.remove(0);
+
+            manager.removeSubreddit(MULTI_NAME, oldSubreddit);
+
+            MultiReddit afterRemoval = manager.get(MULTI_NAME);
+
+            compareLists(afterRemoval.getSubreddits(), expectedSubreddits);
+
+        } catch (ApiException | NetworkException e) {
+            handle(e);
+        }
+    }
+
+    private <T> void compareLists(List<T> actual, List<T> expected) {
+        assertEquals(actual.size(), expected.size());
+        for (T object : actual) {
+            assertTrue(expected.contains(object));
         }
     }
 
@@ -96,7 +178,6 @@ public class MultiRedditTest extends AuthenticatedRedditTest {
         try {
             // Create if does not exist
             if (!multiExists(MULTI_NAME)) {
-                JrawUtils.logger().info("Creating the multi so it can be deleted");
                 manager.create(MULTI_NAME, MULTI_INITIAL_SUBS, true);
             }
         } catch (ApiException e) {
