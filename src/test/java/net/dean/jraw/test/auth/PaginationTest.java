@@ -113,6 +113,12 @@ public class PaginationTest extends AuthenticatedRedditTest {
         commonTest(paginator);
     }
 
+    @Test
+    public void testCompoundSubredditPaginator() throws NetworkException {
+        CompoundSubredditPaginator paginator = new CompoundSubredditPaginator(reddit, Arrays.asList("programming", "java"));
+        commonTest(paginator);
+    }
+
     @Test(expectedExceptions = IllegalStateException.class)
     public void testChangeRequestParamters() {
         AllSubredditsPaginator paginator = new AllSubredditsPaginator(reddit, AllSubredditsPaginator.Where.NEW);
