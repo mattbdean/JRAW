@@ -89,7 +89,7 @@ public abstract class RestClient<T extends RestResponse> {
 
     /**
      * Creates a new RequestBuilder
-     * @param https Whether to execute this HTTP request over SSL
+     * @param https Whether to execute this HTTP request over SSL. Can be changed later.
      * @return A new RequestBuilder
      */
     public RequestBuilder request(boolean https) {
@@ -141,7 +141,7 @@ public abstract class RestClient<T extends RestResponse> {
      *
      * @param r The request to execute
      * @return A RestResponse from the resulting response
-     * @throws NetworkException If the status code was not "200 OK"
+     * @throws NetworkException If the request was not successful
      */
     public T execute(Request r) throws NetworkException {
         if (enforceRatelimit) {

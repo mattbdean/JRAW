@@ -17,7 +17,9 @@ import java.util.Map;
  *
  * @param <T> The type that the listings will contain
  */
-public abstract class Paginator<T extends Thing> implements Iterator<Listing<T>>, NetworkAccessible<RedditClient> {
+public abstract class Paginator<T extends Thing> implements Iterator<Listing<T>>,
+        NetworkAccessible<RedditResponse, RedditClient> {
+
     /** The default limit of Things to return */
     public static final int DEFAULT_LIMIT = 25;
     /** The default sorting */
@@ -87,11 +89,11 @@ public abstract class Paginator<T extends Thing> implements Iterator<Listing<T>>
             args.putAll(extraArgs);
         }
 
-        Request request = creator.request()
+        Request request = request()
                 .path(path)
                 .query(args)
                 .build();
-        Listing<T> listing = parseListing(creator.execute(request));
+        Listing<T> listing = parseListing(execute(request));
         this.current = listing;
         pageNumber++;
 

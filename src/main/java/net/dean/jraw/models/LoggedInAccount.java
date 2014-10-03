@@ -15,7 +15,7 @@ import org.codehaus.jackson.JsonNode;
 import java.net.URL;
 import java.util.Map;
 
-public class LoggedInAccount extends Account implements NetworkAccessible<RedditClient> {
+public class LoggedInAccount extends Account implements NetworkAccessible<RedditResponse, RedditClient> {
     private RedditClient creator;
 
     public LoggedInAccount(JsonNode data, RedditClient creator) {
@@ -79,7 +79,7 @@ public class LoggedInAccount extends Account implements NetworkAccessible<Reddit
             form.add(entry.getKey(), entry.getValue());
         }
 
-        RedditResponse response = genericPost(creator.request()
+        RedditResponse response = genericPost(request()
                 .endpoint(Endpoints.SUBMIT)
                 .post(form.build())
                 .build());
@@ -98,7 +98,7 @@ public class LoggedInAccount extends Account implements NetworkAccessible<Reddit
      */
     @EndpointImplementation(Endpoints.VOTE)
     public <T extends Thing & Votable> void vote(T s, VoteDirection voteDirection) throws NetworkException, ApiException {
-        genericPost(creator.request()
+        genericPost(request()
                 .endpoint(Endpoints.VOTE)
                 .post(new FormEncodingBuilder()
                         .add("api_type", "json")
@@ -120,7 +120,7 @@ public class LoggedInAccount extends Account implements NetworkAccessible<Reddit
     @EndpointImplementation({Endpoints.SAVE, Endpoints.UNSAVE})
     public RedditResponse setSaved(Submission s, boolean save) throws NetworkException, ApiException {
         // Send it to "/api/save" if save == true, "/api/unsave" if save == false
-        return genericPost(creator.request()
+        return genericPost(request()
                 .endpoint(save ? Endpoints.SAVE : Endpoints.UNSAVE)
                 .post(new FormEncodingBuilder()
                         .add("id", s.getFullName())
@@ -142,7 +142,7 @@ public class LoggedInAccount extends Account implements NetworkAccessible<Reddit
         if (!s.getAuthor().equals(getFullName())) {
             throw new IllegalArgumentException(String.format("Logged in user (%s) did not post this submission (by %s)", getFullName(), s.getAuthor()));
         }
-        return genericPost(creator.request()
+        return genericPost(request()
                 .endpoint(Endpoints.SENDREPLIES)
                 .post(new FormEncodingBuilder()
                         .add("id", s.getFullName())
@@ -165,7 +165,7 @@ public class LoggedInAccount extends Account implements NetworkAccessible<Reddit
         checkIfOwns(s);
 
         // "/api/marknsfw" if nsfw == true, "/api/unmarknsfw" if nsfw == false
-        return genericPost(creator.request()
+        return genericPost(request()
                 .endpoint(nsfw ? Endpoints.MARKNSFW : Endpoints.UNMARKNSFW)
                 .post(new FormEncodingBuilder()
                         .add("id", s.getFullName())
@@ -206,7 +206,7 @@ public class LoggedInAccount extends Account implements NetworkAccessible<Reddit
      */
     @EndpointImplementation(Endpoints.DEL)
     public RedditResponse delete(String id) throws NetworkException, ApiException {
-        return genericPost(creator.request()
+        return genericPost(request()
                 .endpoint(Endpoints.DEL)
                 .post(new FormEncodingBuilder()
                         .add("id", id)
@@ -243,7 +243,7 @@ public class LoggedInAccount extends Account implements NetworkAccessible<Reddit
     }
 
     private RedditResponse modifyDeveloperStatus(String clientId, String devName, boolean remove) throws NetworkException, ApiException {
-        return genericPost(creator.request()
+        return genericPost(request()
                 .endpoint(remove ? Endpoints.REMOVEDEVELOPER : Endpoints.ADDDEVELOPER)
                 .post(new FormEncodingBuilder()
                         .add("api_type", "json")
@@ -264,7 +264,7 @@ public class LoggedInAccount extends Account implements NetworkAccessible<Reddit
      */
     @EndpointImplementation({Endpoints.HIDE, Endpoints.UNHIDE})
     public RedditResponse hide(Submission s, boolean hide) throws NetworkException, ApiException {
-        return genericPost(creator.request()
+        return genericPost(request()
                 .endpoint(hide ? Endpoints.HIDE : Endpoints.UNHIDE)
                 .post(new FormEncodingBuilder()
                         .add("id", s.getFullName())
@@ -286,7 +286,7 @@ public class LoggedInAccount extends Account implements NetworkAccessible<Reddit
             throw new IllegalArgumentException("Request is not POST");
         }
 
-        RedditResponse response = creator.execute(r);
+        RedditResponse response = execute(r);
         if (response.hasErrors()) {
             throw response.getApiExceptions()[0];
         }
@@ -331,7 +331,7 @@ public class LoggedInAccount extends Account implements NetworkAccessible<Reddit
      */
     @EndpointImplementation(Endpoints.COMMENT)
     private String reply(String name, String text) throws NetworkException, ApiException {
-        RedditResponse response = genericPost(creator.request()
+        RedditResponse response = genericPost(request()
                 .endpoint(Endpoints.COMMENT)
                 .post(new FormEncodingBuilder()
                         .add("api_type", "json")

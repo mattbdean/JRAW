@@ -23,7 +23,7 @@ import java.util.Map;
 /**
  * This class provides the ability to perform CRUD operations on multireddits.
  */
-public class MultiRedditManager implements NetworkAccessible<RedditClient> {
+public class MultiRedditManager implements NetworkAccessible<RedditResponse, RedditClient> {
     private final LoggedInAccount account;
     private final RedditClient reddit;
     private final ObjectMapper objectMapper;
@@ -48,7 +48,7 @@ public class MultiRedditManager implements NetworkAccessible<RedditClient> {
     @EndpointImplementation(Endpoints.MULTI_MINE)
     public List<MultiReddit> mine() throws NetworkException, ApiException {
         List<MultiReddit> multis = new ArrayList<>();
-        JsonNode multiArray = reddit.execute(reddit.request()
+        JsonNode multiArray = execute(request()
                 .endpoint(Endpoints.MULTI_MINE)
                 .build()).getJson();
         checkForError(multiArray);
@@ -86,7 +86,7 @@ public class MultiRedditManager implements NetworkAccessible<RedditClient> {
     public void addSubreddit(String multiName, String subreddit) throws NetworkException, ApiException {
         MultiRedditSubredditModel data = new MultiRedditSubredditModel(subreddit);
 
-        Request request = reddit.request()
+        Request request = request()
                 .endpoint(Endpoints.MULTI_MULTIPATH_R_SRNAME_PUT, multiName, subreddit)
                 .put(new FormEncodingBuilder()
                         .add("model", toJson(data))
@@ -95,7 +95,7 @@ public class MultiRedditManager implements NetworkAccessible<RedditClient> {
                         .build())
                 .build();
 
-        reddit.execute(request);
+        execute(request);
     }
 
     /**
@@ -108,7 +108,7 @@ public class MultiRedditManager implements NetworkAccessible<RedditClient> {
      */
     @EndpointImplementation(Endpoints.MULTI_MULTIPATH_R_SRNAME_DELETE)
     public void removeSubreddit(String multiName, String subreddit) throws NetworkException, ApiException {
-        Request request = reddit.request()
+        Request request = request()
                 .endpoint(Endpoints.MULTI_MULTIPATH_R_SRNAME_DELETE, getMultiPath(multiName).substring(1), subreddit)
                 .query(
                         "multipath", getMultiPath(multiName),
@@ -116,7 +116,7 @@ public class MultiRedditManager implements NetworkAccessible<RedditClient> {
                 ).delete()
                 .build();
 
-        reddit.execute(request);
+        execute(request);
     }
 
     /**
@@ -153,7 +153,7 @@ public class MultiRedditManager implements NetworkAccessible<RedditClient> {
                     .add("multipath", getMultiPath(name))
                     .build();
 
-        RequestBuilder request = reddit.request()
+        RequestBuilder request = request()
                 .endpoint(Endpoints.MULTI_MULTIPATH_POST, name);
 
         if (post) {
@@ -162,7 +162,7 @@ public class MultiRedditManager implements NetworkAccessible<RedditClient> {
             request.put(body);
         }
 
-        RedditResponse response = reddit.execute(request.build());
+        RedditResponse response = execute(request.build());
         JsonNode result = response.getJson();
         checkForError(result);
     }
@@ -176,11 +176,11 @@ public class MultiRedditManager implements NetworkAccessible<RedditClient> {
      */
     @EndpointImplementation(Endpoints.MULTI_MULTIPATH_DELETE)
     public void delete(String name) throws NetworkException {
-        Request request = reddit.request()
+        Request request = request()
                 .endpoint(Endpoints.MULTI_MULTIPATH_DELETE, getMultiPath(name).substring(1))
                 .delete()
                 .build();
-        reddit.execute(request);
+        execute(request);
         // This endpoint does not return any JSON data, so we only have the HTTP code to go off of.
     }
 
@@ -209,7 +209,7 @@ public class MultiRedditManager implements NetworkAccessible<RedditClient> {
             Endpoints.MULTI_MULTIPATH_R_SRNAME_GET
     })
     public MultiReddit get(String owner, String multiName) throws NetworkException, ApiException {
-        JsonNode node = reddit.execute(reddit.request()
+        JsonNode node = execute(request()
                 .endpoint(Endpoints.MULTI_MULTIPATH_GET, getMultiPath(owner, multiName).substring(1))
                 .build()).getJson();
 
@@ -241,7 +241,7 @@ public class MultiRedditManager implements NetworkAccessible<RedditClient> {
      */
     @EndpointImplementation(Endpoints.MULTI_MULTIPATH_DESCRIPTION_GET)
     public RenderStringPair getDescription(String owner, String multiName) throws NetworkException, ApiException {
-        JsonNode node = reddit.execute(reddit.request()
+        JsonNode node = execute(request()
                 .endpoint(Endpoints.MULTI_MULTIPATH_DESCRIPTION_GET, getMultiPath(owner, multiName).substring(1))
                 .build()).getJson();
 
@@ -319,7 +319,7 @@ public class MultiRedditManager implements NetworkAccessible<RedditClient> {
      * }
      * </pre>
      */
-    public static final class MultiRedditJsonModel {
+    private static final class MultiRedditJsonModel {
         private final List<Map<String, String>> subreddits;
         private final String visibility;
 
