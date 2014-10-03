@@ -93,9 +93,7 @@ public abstract class RedditTest {
     }
 
     protected final <T extends JsonModel> void validateModels(Collection<T> models) {
-        for (JsonModel model : models) {
-            validateModel(model);
-        }
+        models.forEach(this::validateModel);
     }
 
     protected final <T extends JsonModel> void validateModel(T model) {

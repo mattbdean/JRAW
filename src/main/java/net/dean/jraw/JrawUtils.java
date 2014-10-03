@@ -6,6 +6,7 @@ import net.dean.jraw.models.RedditObject;
 import net.dean.jraw.models.ThingType;
 import net.dean.jraw.models.core.Comment;
 import net.dean.jraw.models.core.Submission;
+import net.dean.jraw.pagination.MultiHubPaginator;
 import org.codehaus.jackson.JsonNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -142,6 +143,9 @@ public final class JrawUtils {
                 default:
                     throw new IllegalArgumentException("Class " + thingClass.getName() + " is not applicable for Contribution");
             }
+        } else if (thingClass.equals(MultiHubPaginator.MultiRedditId.class)) {
+            return (T) new MultiHubPaginator.MultiRedditId(rootNode.get("owner").asText(),
+                    rootNode.get("name").asText());
         }
         try {
             // Instantiate a generic Thing

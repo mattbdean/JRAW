@@ -23,6 +23,7 @@ import static org.testng.Assert.assertTrue;
  * This class tests all concrete subclasses of {@link net.dean.jraw.pagination.Paginator}
  */
 public class PaginationTest extends AuthenticatedRedditTest {
+    private MultiRedditManager manager = new MultiRedditManager(account);
 
     @Test
     public void testSubredditPaginatorFrontPage() throws NetworkException {
@@ -107,7 +108,7 @@ public class PaginationTest extends AuthenticatedRedditTest {
 
     @Test
     public void testMultiRedditPaginator() throws NetworkException, ApiException {
-        MultiReddit multi = new MultiRedditManager(account).mine().get(0);
+        MultiReddit multi = manager.mine().get(0);
 
         MultiRedditPaginator paginator = new MultiRedditPaginator(reddit, multi);
         commonTest(paginator);
@@ -117,6 +118,20 @@ public class PaginationTest extends AuthenticatedRedditTest {
     public void testCompoundSubredditPaginator() throws NetworkException {
         CompoundSubredditPaginator paginator = new CompoundSubredditPaginator(reddit, Arrays.asList("programming", "java"));
         commonTest(paginator);
+    }
+
+    @Test
+    public void testMultiHubPaginator() throws NetworkException, ApiException {
+        MultiHubPaginator paginator = new MultiHubPaginator(reddit);
+
+        final int testLimit = 3;
+        Listing<MultiHubPaginator.MultiRedditId> ids = paginator.next();
+
+        for (int i = 0; i <= testLimit; i++) {
+            MultiHubPaginator.MultiRedditId id = ids.get(i);
+            MultiReddit multi = manager.get(id.getOwner(), id.getName());
+            validateModel(multi);
+        }
     }
 
     @Test(expectedExceptions = IllegalStateException.class)
@@ -149,11 +164,7 @@ public class PaginationTest extends AuthenticatedRedditTest {
         // Test that the paginator can retrieve the data
         List<Listing<T>> pages = new ArrayList<>();
         while (p.hasNext() && p.getPageIndex() <= numPages) {
-            try {
-                pages.add(p.next());
-            } catch (IllegalStateException e) {
-                System.out.println();
-            }
+            pages.add(p.next());
         }
 
         for (Listing<T> listing : pages) {
@@ -166,7 +177,6 @@ public class PaginationTest extends AuthenticatedRedditTest {
             } else {
                 JrawUtils.logger().warn("Listing was empty");
             }
-
         }
     }
 }

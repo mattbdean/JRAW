@@ -319,7 +319,7 @@ public class MultiRedditManager implements NetworkAccessible<RedditClient> {
      * }
      * </pre>
      */
-    private final class MultiRedditJsonModel {
+    public static final class MultiRedditJsonModel {
         private final List<Map<String, String>> subreddits;
         private final String visibility;
 
@@ -343,7 +343,7 @@ public class MultiRedditManager implements NetworkAccessible<RedditClient> {
         }
     }
 
-    private final class MultiRedditSubredditModel {
+    private static final class MultiRedditSubredditModel {
         private String name;
 
         private MultiRedditSubredditModel(String name) {

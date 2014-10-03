@@ -4,6 +4,7 @@ import com.squareup.okhttp.Request;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.NetworkAccessible;
 import net.dean.jraw.http.NetworkException;
+import net.dean.jraw.http.RedditResponse;
 import net.dean.jraw.models.core.Listing;
 import net.dean.jraw.models.core.Thing;
 
@@ -90,7 +91,7 @@ public abstract class Paginator<T extends Thing> implements Iterator<Listing<T>>
                 .path(path)
                 .query(args)
                 .build();
-        Listing<T> listing = creator.execute(request).asListing(thingType);
+        Listing<T> listing = parseListing(creator.execute(request));
         this.current = listing;
         pageNumber++;
 
@@ -99,6 +100,15 @@ public abstract class Paginator<T extends Thing> implements Iterator<Listing<T>>
         }
 
         return listing;
+    }
+
+    /**
+     * Responsible for turning a RedditResponse into a Thing
+     * @param response The response
+     * @return A new Listing from the given response
+     */
+    protected Listing<T> parseListing(RedditResponse response) {
+        return response.asListing(thingType);
     }
 
     @Override
