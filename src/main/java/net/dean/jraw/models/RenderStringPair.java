@@ -37,4 +37,22 @@ public class RenderStringPair {
     public String toString() {
         return markdown;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        RenderStringPair that = (RenderStringPair) o;
+
+        return !(html != null ? !html.equals(that.html) : that.html != null) &&
+                !(markdown != null ? !markdown.equals(that.markdown) : that.markdown != null);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = markdown != null ? markdown.hashCode() : 0;
+        result = 31 * result + (html != null ? html.hashCode() : 0);
+        return result;
+    }
 }

@@ -119,6 +119,46 @@ public class MultiRedditManager implements NetworkAccessible<RedditResponse, Red
         execute(request);
     }
 
+    @EndpointImplementation(Endpoints.MULTI_MULTIPATH_COPY)
+    public void copy(String sourceOwner, String sourceMulti, String destName) throws NetworkException, ApiException {
+        String from = getMultiPath(sourceOwner, sourceMulti);
+        String to = getMultiPath(destName);
+        Request request = request()
+                // Using .endpoint(Endpoints.MULTI_MULTIPATH_COPY) returns 400 Bad Request, use this path instead.
+                .path("/api/multi/copy")
+                .post(new FormEncodingBuilder()
+                        .add("from", from)
+                        .add("to", to)
+                        .build())
+                .build();
+
+        RedditResponse response = execute(request);
+        try {
+            checkForError(response.getJson());
+        } catch (ApiException e) {
+            // For some reason the API respons with a 409 Conflict when the multi already exists, and a "MULTI_EXISTS"
+            // API exception else. The copied multi is still created.
+            if (!e.getCode().equals("MULTI_EXISTS")) {
+                throw e;
+            }
+        }
+    }
+
+    @EndpointImplementation(Endpoints.MULTI_MULTIPATH_DESCRIPTION_PUT)
+    public RenderStringPair updateDescription(String multiName, String newDescription) throws NetworkException {
+        Request request = request()
+                .endpoint(Endpoints.MULTI_MULTIPATH_DESCRIPTION_PUT, getMultiPath(multiName))
+                .put(new FormEncodingBuilder()
+                        .add("model", String.format("{\"body_md\":\"%s\"}", newDescription))
+                        .add("multipath", getMultiPath(multiName))
+                        .build())
+                .build();
+        RedditResponse response = execute(request);
+        JsonNode dataNode = response.getJson().get("data");
+
+        return new RenderStringPair(dataNode.get("body_md").asText(), dataNode.get("body_html").asText());
+    }
+
     /**
      * Creates a new multireddit
      *

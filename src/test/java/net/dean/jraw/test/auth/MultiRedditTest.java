@@ -17,9 +17,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.*;
 
 /**
  * This class tests the {@link MultiRedditManager} class.
@@ -27,6 +25,8 @@ import static org.testng.Assert.assertTrue;
 public class MultiRedditTest extends AuthenticatedRedditTest {
     private static final String MULTI_NAME = "jraw_testing";
     private static final List<String> MULTI_INITIAL_SUBS = Arrays.asList("funny", "pics");
+    private static final String DESC1 = "description 1";
+    private static final String DESC2 = "description 2";
 
     private MultiRedditManager manager;
     private static String readOnlyMulti;
@@ -49,14 +49,14 @@ public class MultiRedditTest extends AuthenticatedRedditTest {
     public void testCreate() {
         try {
             // Delete if exists
-            if (multiExists(MULTI_NAME)) {
+            if (getMulti(MULTI_NAME) != null) {
                 JrawUtils.logger().info("Deleting existing multi");
                 manager.delete(MULTI_NAME);
             }
 
             manager.create(MULTI_NAME, MULTI_INITIAL_SUBS, true);
 
-            assertTrue(multiExists(MULTI_NAME));
+            assertTrue(getMulti(MULTI_NAME) != null);
         } catch (ApiException e) {
             if (!e.getCode().equals("MULTI_EXISTS")) {
                 // https://github.com/thatJavaNerd/JRAW/issues/7
@@ -69,11 +69,8 @@ public class MultiRedditTest extends AuthenticatedRedditTest {
 
     @Test(dependsOnMethods = "testCreate")
     public void testUpdate() {
+        createIfNotExists(MULTI_NAME);
         try {
-            if (!multiExists(MULTI_NAME)) {
-                manager.create(MULTI_NAME, MULTI_INITIAL_SUBS, true);
-            }
-
             List<String> updatedSubreddits = new ArrayList<>(MULTI_INITIAL_SUBS);
             updatedSubreddits.add("programming");
             updatedSubreddits.add("java");
@@ -90,21 +87,7 @@ public class MultiRedditTest extends AuthenticatedRedditTest {
     @Test
     public void testAddSubreddit() {
         try {
-            // Create the multi if it doesn't exist
-            if (!multiExists(MULTI_NAME)) {
-                try {
-                    // Create if does not exist
-                    if (!multiExists(MULTI_NAME)) {
-                        manager.create(MULTI_NAME, MULTI_INITIAL_SUBS, true);
-                    }
-                } catch (ApiException e) {
-                    if (!e.getCode().equals("MULTI_EXISTS")) {
-                        handle(e);
-                    }
-                } catch (NetworkException e) {
-                    handle(e);
-                }
-            }
+            createIfNotExists(MULTI_NAME);
 
             String newSubreddit = "programming";
             MultiReddit beforeAddition = manager.get(MULTI_NAME);
@@ -133,21 +116,7 @@ public class MultiRedditTest extends AuthenticatedRedditTest {
     @Test
     public void testRemoveSubreddit() {
         try {
-            // Create the multi if it doesn't exist
-            if (!multiExists(MULTI_NAME)) {
-                try {
-                    // Create if does not exist
-                    if (!multiExists(MULTI_NAME)) {
-                        manager.create(MULTI_NAME, MULTI_INITIAL_SUBS, true);
-                    }
-                } catch (ApiException e) {
-                    if (!e.getCode().equals("MULTI_EXISTS")) {
-                        handle(e);
-                    }
-                } catch (NetworkException e) {
-                    handle(e);
-                }
-            }
+            createIfNotExists(MULTI_NAME);
 
             MultiReddit beforeRemoval = manager.get(MULTI_NAME);
             assertTrue(beforeRemoval.getSubreddits().size() > 0, "Multireddit must contain at least one sub");
@@ -175,24 +144,14 @@ public class MultiRedditTest extends AuthenticatedRedditTest {
 
     @Test
     public void testDelete() {
-        try {
-            // Create if does not exist
-            if (!multiExists(MULTI_NAME)) {
-                manager.create(MULTI_NAME, MULTI_INITIAL_SUBS, true);
-            }
-        } catch (ApiException e) {
-            if (!e.getCode().equals("MULTI_EXISTS")) {
-                handle(e);
-            }
-        } catch (NetworkException e) {
-            handle(e);
-        }
+        // Create if does not exist
+        createIfNotExists(MULTI_NAME);
 
         try {
             // Actually test the method
             manager.delete(MULTI_NAME);
 
-            assertFalse(multiExists(MULTI_NAME));
+            assertNull(getMulti(MULTI_NAME));
         } catch (ApiException | NetworkException e) {
             handle(e);
         }
@@ -263,7 +222,48 @@ public class MultiRedditTest extends AuthenticatedRedditTest {
     }
 
     @Test
-    public void testDescription() {
+    public void testCopy() {
+        createIfNotExists(MULTI_NAME);
+
+        String newName = MULTI_NAME + "_copy";
+        try {
+            manager.copy(account.getFullName(), MULTI_NAME, newName);
+
+            MultiReddit original = getMulti(MULTI_NAME);
+            MultiReddit copied = getMulti(newName);
+
+            assertNotNull(getMulti(newName));
+            assertEquals(copied, original);
+        } catch (NetworkException | ApiException e) {
+            handle(e);
+        } finally {
+            try {
+                manager.delete(newName);
+            } catch (NetworkException e) {
+                JrawUtils.logger().warn("Unable to delete " + newName, e);
+            }
+        }
+    }
+
+    @Test
+    public void testUpdateDescription() {
+        try {
+            createIfNotExists(MULTI_NAME);
+            RenderStringPair desc = manager.getDescription(MULTI_NAME);
+
+            String expectedMd = desc.md().equals(DESC1) ? DESC2 : DESC1;
+            manager.updateDescription(MULTI_NAME, expectedMd);
+
+            RenderStringPair newDesc = manager.getDescription(MULTI_NAME);
+
+            assertEquals(newDesc.md(), expectedMd);
+        } catch (NetworkException | ApiException  e) {
+            handle(e);
+        }
+    }
+
+    @Test
+    public void testGetDescription() {
         try {
             initReadOnlyMulti();
             RenderStringPair desc = manager.getDescription(readOnlyMulti);
@@ -273,14 +273,33 @@ public class MultiRedditTest extends AuthenticatedRedditTest {
         }
     }
 
-    private boolean multiExists(String name) throws NetworkException, ApiException {
+    private MultiReddit createIfNotExists(String name) {
+        MultiReddit original = null;
+        try {
+            // Create if does not exist
+            original = getMulti(name);
+            if (original == null) {
+                manager.create(name, MULTI_INITIAL_SUBS, true);
+            }
+        } catch (ApiException e) {
+            if (!e.getCode().equals("MULTI_EXISTS")) {
+                handle(e);
+            }
+        } catch (NetworkException e) {
+            handle(e);
+        }
+
+        return original;
+    }
+
+    private MultiReddit getMulti(String name) throws NetworkException, ApiException {
         for (MultiReddit mine : manager.mine()) {
             if (mine.getFullName().equals(name)) {
-                return true;
+                return mine;
             }
         }
 
-        return false;
+        return null;
     }
 
     private void initReadOnlyMulti() throws NetworkException, ApiException {

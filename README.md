@@ -7,19 +7,18 @@
 ##Features
  - Mini-framework that wraps Square's OkHttp
  - (Optional) request management to prevent sending over 30 requests per minute
- - Ability to iterate through posts on the front page or specific subreddits, with support for limits, sortings (hot, new, top, etc.) and time periods when using 'top' (day, week, all, etc.)
- - Captcha support
- - Get posts, users, and subreddits by ID (or name, in case of a user)
+ - Full multireddit support
+ - Full captcha support
  - Basic wiki access
- - Get random posts
+ - Ability to iterate through posts on the front page or specific subreddits, with support for limits, sortings (hot, new, top, etc.) and time periods when using 'top' (day, week, all, etc.)
+ - Get random posts and subreddits
+ - Get trending subreddits
  - Get the submit text of a subreddit
  - Searching subreddits
- - Trending subreddits
  - Comment on/vote on/submit posts
  - Hide/unhide and save/unsave posts
  - Delete posts and comments
  - Reply to a post or comment
- - Get user's multi reddits
  - Adding/removing developers from [Reddit apps](https://ssl.reddit.com/prefs/apps/)
  - Iterate through new/popular subreddits
  - Get your subscribed subreddits
