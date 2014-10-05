@@ -1,4 +1,4 @@
-<!--- Generated 2014-10-05 at 12:56:01 EDT. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
+<!--- Generated 2014-10-05 at 13:30:49 EDT. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
 #Endpoints
 
 This file contains a list of all the endpoints (regardless of if they have been implemented) that can be found at the [official Reddit API docs](https://www.reddit.com/dev/api). To update this file, run `./gradlew endpoints:update`.
@@ -70,7 +70,7 @@ Method|Endpoint|Implemented?
 `POST`|[`/api/set_contest_mode`](https://www.reddit.com/dev/api#POST_api_set_contest_mode)|No
 `POST`|[`/api/set_subreddit_sticky`](https://www.reddit.com/dev/api#POST_api_set_subreddit_sticky)|No
 `POST`|[`/api/store_visits`](https://www.reddit.com/dev/api#POST_api_store_visits)|No
-`POST`|[`/api/comment`](https://www.reddit.com/dev/api#POST_api_comment)|[`LoggedInAccount.reply(String, String)`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/models/LoggedInAccount#reply-java.lang.String-java.lang.String-)
+`POST`|[`/api/comment`](https://www.reddit.com/dev/api#POST_api_comment)|[`LoggedInAccount.reply(Contribution, String)`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/models/LoggedInAccount#reply-net.dean.jraw.models.Contribution-java.lang.String-)
 `POST`|[`/api/del`](https://www.reddit.com/dev/api#POST_api_del)|[`LoggedInAccount.delete(String)`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/models/LoggedInAccount#delete-java.lang.String-)
 `POST`|[`/api/hide`](https://www.reddit.com/dev/api#POST_api_hide)|[`LoggedInAccount.hide(Submission, boolean)`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/models/LoggedInAccount#hide-net.dean.jraw.models.Submission-boolean-)
 `POST`|[`/api/marknsfw`](https://www.reddit.com/dev/api#POST_api_marknsfw)|[`LoggedInAccount.setNsfw(Submission, boolean)`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/models/LoggedInAccount#setNsfw-net.dean.jraw.models.Submission-boolean-)

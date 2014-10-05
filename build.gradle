@@ -47,7 +47,6 @@ dependencies {
 
 def generatedJavaSrcName = "generated-src"
 def generatedJavaSrc = file("$buildDir/$generatedJavaSrcName")
-def endpointsJsonMd5 = file("endpoints/src/main/resources/endpoints.json.md5")
 def releaseDest = new File((File) project.buildDir, "releases")
 def genJavaClass = file("$generatedJavaSrc/net/dean/jraw/Endpoints.java").absolutePath
 def genEndpointsMd = file("ENDPOINTS.md").absolutePath
@@ -72,7 +71,6 @@ project(':endpoints') {
         args = [
                 "java=$genJavaClass",
                 "md=$genEndpointsMd",
-                "md5sum=$endpointsJsonMd5"
         ]
     }
 }

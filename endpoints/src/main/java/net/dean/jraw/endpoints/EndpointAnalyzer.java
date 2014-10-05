@@ -1,6 +1,5 @@
 package net.dean.jraw.endpoints;
 
-import com.google.common.hash.Hashing;
 import net.dean.jraw.Endpoint;
 import net.dean.jraw.EndpointImplementation;
 import net.dean.jraw.Endpoints;
@@ -11,18 +10,16 @@ import org.reflections.scanners.MethodAnnotationsScanner;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
 
 /**
  * This class is responsible for parsing {@value #ALL_ENDPOINTS_FILE_NAME} into a Endpoint objects
  */
 public class EndpointAnalyzer {
-    private static final String KEY_MD5 = "md5sum";
     private static final String ALL_ENDPOINTS_FILE_NAME = "endpoints.json";
     private static final String KEY_GEN_MARKDOWN = "md";
     private static final String KEY_GEN_JAVA = "java";
@@ -36,7 +33,7 @@ public class EndpointAnalyzer {
     /**
      * Instantiates a new EndpointAnalysis
      */
-    public EndpointAnalyzer() {
+    private EndpointAnalyzer() {
         this.mapper = new ObjectMapper();
         try {
             this.jsonEndpoints = new File(EndpointAnalyzer.class.getResource("/" + ALL_ENDPOINTS_FILE_NAME).toURI());
@@ -130,10 +127,6 @@ public class EndpointAnalyzer {
         return endpoints;
     }
 
-    private static String getMd5Sum(File f) throws IOException {
-        return com.google.common.io.Files.hash(f, Hashing.md5()).toString();
-    }
-
     /**
      * This is the main method of the endpoints subproject.
      * @param args A String array consisting of three elements. It must contain {@code java=<file>} to specify a target
@@ -145,10 +138,9 @@ public class EndpointAnalyzer {
         System.out.println("Started " + EndpointAnalyzer.class.getSimpleName() + " using arguments " + Arrays.toString(args));
         String md = null;
         String java = null;
-        String jsonHash = null;
 
-        if (args.length != 3) {
-            throw new IllegalArgumentException("Must have three arguments (java=<file>, md=<file>, and md5sum=<file>");
+        if (args.length != 2) {
+            throw new IllegalArgumentException("Must have three arguments (java=<file> and md=<file>");
         }
 
         for (String arg : args) {
@@ -172,58 +164,19 @@ public class EndpointAnalyzer {
                 case KEY_GEN_JAVA:
                     java = kvPair[1];
                     break;
-                case KEY_MD5:
-                    jsonHash = kvPair[1];
-                    break;
                 default:
                     throw new IllegalArgumentException("No generator for \"" + kvPair[0] + "\"");
             }
         }
 
-        if (java == null || md == null || jsonHash == null) {
+        if (java == null || md == null) {
             System.err.println("Missing argument(s)");
             return;
         }
 
         EndpointAnalyzer endpointAnalyzer = new EndpointAnalyzer();
 
-        boolean runMd = false;
-        boolean runJava = false;
-
-        String md5 = getMd5Sum(endpointAnalyzer.jsonEndpoints);
-
-        File jsonHashFile = new File(jsonHash);
-        String md5Sum = new String(Files.readAllBytes(Paths.get(jsonHashFile.toURI()))).trim();
-        if (!md5Sum.equals(md5)) {
-            runMd = true;
-            runJava = true;
-
-            // Update the md5 file
-            BufferedWriter bw = Files.newBufferedWriter(Paths.get(jsonHashFile.toURI()));
-            bw.write(getMd5Sum(endpointAnalyzer.jsonEndpoints));
-            bw.close();
-        } else {
-            // Enable specific generators if their files don't exist
-            if (!new File(md).exists()) {
-                runMd = true;
-            }
-            if (!new File(java).exists()) {
-                runJava = true;
-            }
-        }
-
-
-        if (runMd || runJava) {
-            if (runMd) {
-                new MarkdownGenerator(endpointAnalyzer.getEndpoints()).generate(new File(md));
-            }
-            if (runJava) {
-                new JavaGenerator(endpointAnalyzer.getEndpoints()).generate(new File(java));
-            }
-        } else {
-            System.out.println(String.format("%s has not been modified and both files (\"%s\" and \"%s\") exist; not running.",
-                    endpointAnalyzer.jsonEndpoints.getName(), new File(md).getAbsolutePath(), new File(java).getAbsolutePath()));
-
-        }
+        new MarkdownGenerator(endpointAnalyzer.getEndpoints()).generate(new File(md));
+        new JavaGenerator(endpointAnalyzer.getEndpoints()).generate(new File(java));
     }
 }
