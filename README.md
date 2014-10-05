@@ -57,7 +57,7 @@ Add jCenter to your repositories (see [here](https://bintray.com/bintray/jcenter
 <dependency>
     <groupId>net.dean.jraw</groupId>
     <artifactId>JRAW</artifactId>
-    <version>0.3.0</version>
+    <version>0.4.0</version>
 </dependency>
 ```
 
@@ -105,7 +105,7 @@ me.setHidden(submission, true);
 
 For even more examples, see the [unit tests](https://github.com/thatJavaNerd/JRAW/tree/master/src/test/java/net/dean/jraw/test).
 
-Javadoc can be found [here](https://thatjavanerd.github.io/JRAW/docs/0.3.0/)
+Javadoc can be found [here](https://thatjavanerd.github.io/JRAW/docs/0.4.0/)
 
 ##Models
 ####Hierarchy
