@@ -15,18 +15,19 @@ public interface NetworkAccessible<U extends RestResponse, T extends RestClient<
     public T getCreator();
 
     /**
-     * Short for {@code getCreator().request()}
-     * @return A new RequestBuilder
-     * @see net.dean.jraw.http.RestClient#request()
+     * Creates a new RequestBuilder
+     * @return A new RequestBuilder, in which the host is {@link RestClient#getDefaultHost()} and HTTPS will be used if
+     * {@link RestClient#isHttpsDefault()} is true.
      */
     public default RequestBuilder request() {
         return getCreator().request();
     }
 
     /**
-     * Short for {@code getCreator().execute(request)}
-     * @param r The Request to execute
-     * @return A RestResponse
+     * Executes a RESTful HTTP request
+     *
+     * @param r The request to execute
+     * @return A RestResponse from the resulting response
      * @throws NetworkException If the request was not successful
      */
     public default U execute(Request r) throws NetworkException {

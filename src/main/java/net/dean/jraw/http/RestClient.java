@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * This class provides a way to send RESTful HTTP requests
  */
-public abstract class RestClient<T extends RestResponse> {
+public abstract class RestClient<T extends RestResponse> implements NetworkAccessible<T, RestClient<T>> {
     private final String defaultHost;
     private final RateLimiter rateLimiter;
     /** The OkHttpClient used to execute RESTful HTTP requests */
@@ -79,11 +79,7 @@ public abstract class RestClient<T extends RestResponse> {
         this.useHttpsDefault = useHttpsDefault;
     }
 
-    /**
-     * Creates a new RequestBuilder
-     * @return A new RequestBuilder, in which the host is {@link #getDefaultHost()} and HTTPS will be used if
-     * {@link #isHttpsDefault()} is true.
-     */
+    @Override
     public RequestBuilder request() {
         return addDefaultHeaders(new RequestBuilder()
                 .host(defaultHost)
@@ -128,20 +124,13 @@ public abstract class RestClient<T extends RestResponse> {
         return enforceRatelimit;
     }
 
-    /**
-     * Executes a RESTful HTTP request
-     *
-     * @param r The request to execute
-     * @return A RestResponse from the resulting response
-     * @throws NetworkException If the request was not successful
-     */
+    @Override
     public T execute(Request r) throws NetworkException {
         if (enforceRatelimit) {
             if (!rateLimiter.tryAcquire()) {
                 JrawUtils.logger().info("Slept for {} seconds", rateLimiter.acquire());
             }
         }
-
 
         try {
             Response response = http.newCall(r).execute();
@@ -158,6 +147,11 @@ public abstract class RestClient<T extends RestResponse> {
         } catch (IOException e) {
             throw new NetworkException("Could not execute the request: " + r, e);
         }
+    }
+
+    @Override
+    public RestClient<T> getCreator() {
+        return this;
     }
 
     /**
