@@ -6,16 +6,12 @@ import net.dean.jraw.MultiRedditManager;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.models.MultiReddit;
 import net.dean.jraw.models.RenderStringPair;
-import net.dean.jraw.models.core.Listing;
-import net.dean.jraw.models.core.Submission;
-import net.dean.jraw.pagination.SubredditPaginator;
+import net.dean.jraw.pagination.MultiHubPaginator;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static org.testng.Assert.*;
 
@@ -172,16 +168,7 @@ public class MultiRedditTest extends AuthenticatedRedditTest {
 
     @Test
     public void testUnownedMulti() { // aka public multis
-        // Matches a multireddit URL: see http://regexr.com/39j27
-        // Usernames must only contain alphanumeric characters, underscores, and hyphens with a max length of 20
-        // Source: https://github.com/reddit/reddit/blob/c86113850/r2/r2/lib/validator/validator.py#L1311
-        // Multireddits must only contain alphanumeric characters, underscores, and hyphens, and have a max length of 21
-        // Source: https://github.com/reddit/reddit/blob/3b7b74148/r2/r2/lib/validator/validator.py#L2622
-        Pattern multiRedditUrl = Pattern.compile("reddit\\.com/user/([a-zA-Z\\-_]*?)/m/([A-Za-z0-9][A-Za-z0-9_]{1,20})");
-        Matcher matcher = multiRedditUrl.matcher("");
-
-        // Parse mutlireddits from /r/multihub
-        SubredditPaginator multihub = new SubredditPaginator(reddit, "multihub");
+        MultiHubPaginator multihub = new MultiHubPaginator(reddit);
         final int amount = 3; // Amount of multireddits to find and test
         final int maxPages = 3; // Maximum amount of pages to look through
         List<MultiReddit> multiReddits = new ArrayList<>(amount);
@@ -189,27 +176,22 @@ public class MultiRedditTest extends AuthenticatedRedditTest {
         boolean fulfilled = false;
         // While we have less than 3 multireddits and haven't gone past page 3
         while (multihub.getPageIndex() <= maxPages && !fulfilled) {
-            Listing<Submission> submissions = multihub.next();
-            for (Submission potentialMultiLink : submissions) {
-                if (multiReddits.size() >= amount) {
-                    fulfilled = true;
-                    break;
-                }
-                matcher.reset(potentialMultiLink.getUrl().toExternalForm());
-                if (matcher.find(1) && matcher.find(2)) {
-                    // Found username and multi name
-                    try {
-                        multiReddits.add(manager.get(matcher.group(1), matcher.group(2)));
-                    } catch (NetworkException e) {
-                        if (e.getCode() != 404) {
-                            JrawUtils.logger().info("Got 404, multi was deleted or renamed");
-                            handle(e);
-                        }
-
-                        // Got 404 Not Found, that multi was renamed or deleted, continue on
-                    } catch (ApiException e) {
+            for (MultiHubPaginator.MultiRedditId id : multihub.next()) {
+                try {
+                    multiReddits.add(manager.get(id.getOwner(), id.getName()));
+                    if (multiReddits.size() >= amount) {
+                        fulfilled = true;
+                        break;
+                    }
+                } catch (NetworkException e) {
+                    if (e.getCode() != 404) {
+                        JrawUtils.logger().info("Got 404, multi was deleted or renamed");
                         handle(e);
                     }
+
+                    // Got 404 Not Found, that multi was renamed or deleted, continue on
+                } catch (ApiException e) {
+                    handle(e);
                 }
             }
         }
