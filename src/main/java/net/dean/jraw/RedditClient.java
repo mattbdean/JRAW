@@ -86,8 +86,9 @@ public class RedditClient extends RestClient<RedditResponse> {
      */
     @EndpointImplementation(Endpoints.LOGIN)
     public LoggedInAccount login(String username, String password) throws NetworkException, ApiException {
-        Request request = request(true)
+        Request request = request()
                 .host(HOST_HTTPS_SPECIAL)
+                .https(true) // Always HTTPS
                 .endpoint(Endpoints.LOGIN)
                 .post(new FormEncodingBuilder()
                                 .add("user", username)

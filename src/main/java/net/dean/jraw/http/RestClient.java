@@ -80,22 +80,14 @@ public abstract class RestClient<T extends RestResponse> {
     }
 
     /**
-     * Creates a new RequestBuilder that has HTTPS enabled by default if {@link #isHttpsDefault()} is true.
-     * @return A new RequestBuilder
+     * Creates a new RequestBuilder
+     * @return A new RequestBuilder, in which the host is {@link #getDefaultHost()} and HTTPS will be used if
+     * {@link #isHttpsDefault()} is true.
      */
     public RequestBuilder request() {
-        return request(useHttpsDefault);
-    }
-
-    /**
-     * Creates a new RequestBuilder
-     * @param https Whether to execute this HTTP request over SSL. Can be changed later.
-     * @return A new RequestBuilder
-     */
-    public RequestBuilder request(boolean https) {
         return addDefaultHeaders(new RequestBuilder()
                 .host(defaultHost)
-                .https(https));
+                .https(useHttpsDefault));
     }
 
     private RequestBuilder addDefaultHeaders(RequestBuilder builder) {

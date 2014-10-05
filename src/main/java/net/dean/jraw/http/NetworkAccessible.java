@@ -15,16 +15,6 @@ public interface NetworkAccessible<U extends RestResponse, T extends RestClient<
     public T getCreator();
 
     /**
-     * Short for {@code getCreator().request(https)}
-     * @param https Whether to execute the request with HTTPS. Can be changed later.
-     * @return A new RequestBuilder
-     * @see net.dean.jraw.http.RestClient#request(boolean)
-     */
-    public default RequestBuilder request(boolean https) {
-        return getCreator().request(https);
-    }
-
-    /**
      * Short for {@code getCreator().request()}
      * @return A new RequestBuilder
      * @see net.dean.jraw.http.RestClient#request()
