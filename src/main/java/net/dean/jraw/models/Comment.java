@@ -1,6 +1,5 @@
-package net.dean.jraw.models.core;
+package net.dean.jraw.models;
 
-import net.dean.jraw.models.*;
 import org.codehaus.jackson.JsonNode;
 
 import java.net.URL;
@@ -41,7 +40,7 @@ public class Comment extends Contribution {
     }
 
     /**
-     * The flair of the author. Subreddit specific.
+     * Gets the author's flair. Subreddit specific.
      * @return The subreddit-specific flair of the author
      */
     @JsonInteraction
@@ -78,8 +77,8 @@ public class Comment extends Contribution {
     }
 
     /**
-     * The edit date in UTC, or null if it has not been edited. Note: the Reddit API will return {@code true} for some
-     * old edited comments.
+     * The edit date in UTC, or null if it has not been edited. Note that the Reddit API will return a boolean value
+     * for some old edited comments, in which this method will return null.
      *
      * @return The edit date in UTC, or null if it has not been edited
      */
@@ -95,8 +94,7 @@ public class Comment extends Contribution {
     }
 
     /**
-     * Checks if the comment has been edited before. This method evaluates the value of the "edited" data node. If its
-     * value is a boolean, then it is returned. If its value is a long, {@code true} is returned. Null if else
+     * Checks if the comment has been edited.
      *
      * @return If this comment has been edited before
      */
@@ -108,7 +106,7 @@ public class Comment extends Contribution {
 
         JsonNode edited = data.get("edited");
         if (edited.isBoolean()) {
-            // If the node is a boolean, that means it's either true or false. If false, then the comment hasn't been edited.
+            // If false, then the comment hasn't been edited.
             // On very old comments, the API will return true if it has been edited
             return edited.getBooleanValue();
         } else if (edited.isLong()) {
@@ -130,7 +128,7 @@ public class Comment extends Contribution {
     }
 
     /**
-     * The author of the parent link, or null if this comment is not being displayed outside of its own thread
+     * Gets the author of the parent link
      * @return The author of the parent link, or null if this comment is not being displayed outside of its own thread
      */
     @JsonInteraction(nullable = true)
@@ -139,8 +137,8 @@ public class Comment extends Contribution {
     }
 
     /**
-     * The comments made in reply to this one
-     * @return The comments that have replied to this one
+     * Gets the comments made in reply to this one
+     * @return The comments made in reply to this one
      */
     @JsonInteraction(nullable = true)
     public Listing<Comment> getReplies() {
@@ -153,8 +151,8 @@ public class Comment extends Contribution {
     }
 
     /**
-     * The ID of the link this comment is in
-     * @return The ID of the link this comment is in
+     * Gets the ID of the submission this comment is located in
+     * @return The ID of the submission this comment is located in
      */
     @JsonInteraction
     public String getSubmissionId() {
@@ -171,8 +169,9 @@ public class Comment extends Contribution {
     }
 
     /**
-     * The author of the parent submission, or null if this comment is not being displayed outside of its own thread
-     * @return The author of the parent submission
+     * The author of the parent submission
+     * @return The author of the parent submission, or null if this comment is not being displayed outside of its own
+     * thread
      */
     @JsonInteraction(nullable = true)
     public URL getUrl() {
@@ -180,8 +179,8 @@ public class Comment extends Contribution {
     }
 
     /**
-     * The amount of times this comment has been reported, or null if not a mod
-     * @return The amount of times this comment has been reported
+     * The amount of times this comment has been reported
+     * @return The amount of times this comment has been reported, or null if not a mod
      */
     @JsonInteraction(nullable = true)
     public Integer getReportCount() {

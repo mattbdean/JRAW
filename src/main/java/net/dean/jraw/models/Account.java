@@ -1,8 +1,6 @@
-package net.dean.jraw.models.core;
+package net.dean.jraw.models;
 
-import net.dean.jraw.models.Created;
-import net.dean.jraw.models.JsonInteraction;
-import net.dean.jraw.models.ThingType;
+import net.dean.jraw.models.attr.Created;
 import org.codehaus.jackson.JsonNode;
 
 /**
@@ -52,7 +50,7 @@ public class Account extends Thing implements Created {
      * @return User has provided an email address and got it verified?
      */
     @JsonInteraction
-    public Boolean getHasVerifiedEmail() {
+    public Boolean hasVerifiedEmail() {
         return data("has_verified_email", Boolean.class);
     }
 
@@ -115,10 +113,6 @@ public class Account extends Thing implements Created {
         return ThingType.ACCOUNT;
     }
 
-    /**
-     * Returns the name of this account (i.e. "spladug")
-     * @return The name of this account
-     */
     @Override
     public String getFullName() {
         return super.getFullName();

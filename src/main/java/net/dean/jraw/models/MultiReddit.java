@@ -1,6 +1,6 @@
 package net.dean.jraw.models;
 
-import net.dean.jraw.models.core.Thing;
+import net.dean.jraw.models.attr.Created;
 import org.codehaus.jackson.JsonNode;
 
 import java.util.ArrayList;

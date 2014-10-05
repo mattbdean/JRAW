@@ -9,9 +9,9 @@ import net.dean.jraw.models.Captcha;
 import net.dean.jraw.models.LoggedInAccount;
 import net.dean.jraw.models.RenderStringPair;
 import net.dean.jraw.models.WikiPage;
-import net.dean.jraw.models.core.Account;
-import net.dean.jraw.models.core.Submission;
-import net.dean.jraw.models.core.Subreddit;
+import net.dean.jraw.models.Account;
+import net.dean.jraw.models.Submission;
+import net.dean.jraw.models.Subreddit;
 import net.dean.jraw.pagination.Sorting;
 import net.dean.jraw.pagination.SubredditPaginator;
 import org.codehaus.jackson.JsonNode;
@@ -100,7 +100,7 @@ public class RedditClient extends RestClient<RedditResponse> {
         RedditResponse loginResponse = execute(request);
 
         if (loginResponse.hasErrors()) {
-            throw loginResponse.getApiExceptions()[0];
+            throw loginResponse.getErrors()[0];
         }
 
         setHttpsDefault(loginResponse.getJson().get("json").get("data").get("need_https").asBoolean());
@@ -172,6 +172,7 @@ public class RedditClient extends RestClient<RedditResponse> {
      *
      * @return A new Captcha
      * @throws NetworkException If there was a problem executing the HTTP request
+     * @throws ApiException If the Reddit API returned an error
      */
     @EndpointImplementation(Endpoints.NEW_CAPTCHA)
     public Captcha getNewCaptcha() throws NetworkException, ApiException {
@@ -185,7 +186,7 @@ public class RedditClient extends RestClient<RedditResponse> {
 
             // Some strange response you got there, reddit...
             if (response.hasErrors()) {
-                throw response.getApiExceptions()[0];
+                throw response.getErrors()[0];
             }
             String id = response.getJson().get("json").get("data").get("iden").asText();
 

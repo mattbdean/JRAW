@@ -1,5 +1,7 @@
-package net.dean.jraw.models;
+package net.dean.jraw.models.attr;
 
+import net.dean.jraw.models.JsonInteraction;
+import net.dean.jraw.models.VoteDirection;
 import org.codehaus.jackson.JsonNode;
 
 /**
@@ -45,7 +47,7 @@ public interface Votable {
     }
 
     /**
-     * See {@link JsonModel#getDataNode()}
+     * See {@link net.dean.jraw.models.JsonModel#getDataNode()}
      * @return The JsonNode to use for methods annotated with @JsonInteraction
      */
     public JsonNode getDataNode();

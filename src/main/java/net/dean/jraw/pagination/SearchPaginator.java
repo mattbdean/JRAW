@@ -5,8 +5,8 @@ import net.dean.jraw.Endpoints;
 import net.dean.jraw.JrawUtils;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.NetworkException;
-import net.dean.jraw.models.core.Listing;
-import net.dean.jraw.models.core.Submission;
+import net.dean.jraw.models.Listing;
+import net.dean.jraw.models.Submission;
 
 import java.util.Map;
 

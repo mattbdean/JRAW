@@ -1,7 +1,9 @@
 package net.dean.jraw.http;
 
 /**
- * This Exception is thrown when an error is returned by Reddit's JSON API
+ * This Exception is thrown when an HTTP response is not successful
+ *
+ * @see com.squareup.okhttp.Response#isSuccessful()
  */
 public class NetworkException extends Exception {
     private final int code;
@@ -9,7 +11,7 @@ public class NetworkException extends Exception {
     /**
      * Instantiates a new NetworkException
      *
-     * @param message The message to print to the standard error
+     * @param message The detail message of this Exception
      */
     public NetworkException(String message) {
         super(message);
@@ -19,8 +21,8 @@ public class NetworkException extends Exception {
     /**
      * Instantiates a new NetworkException
      *
-     * @param message The message to print to the standard error
-     * @param cause   The cause of this exception
+     * @param message The detail message of this Exception
+     * @param cause   The cause of this Exception
      */
     public NetworkException(String message, Throwable cause) {
         super(message, cause);
@@ -28,7 +30,8 @@ public class NetworkException extends Exception {
     }
 
     /**
-     * Instantiates a new NetworkException with a desired HTTP code of 200
+     * Instantiates a NetworkException
+     *
      * @param httpCode The code that was returned from the request
      */
     public NetworkException(int httpCode) {
@@ -36,7 +39,8 @@ public class NetworkException extends Exception {
         this.code = httpCode;
     }
     /**
-     * Gets the status code returned by the HTTP request
+     * Gets the status code returned by the HTTP request. Will be -1 if a constructor other than
+     * {@link #NetworkException(int)} was used.
      * @return The status code
      */
     public int getCode() {

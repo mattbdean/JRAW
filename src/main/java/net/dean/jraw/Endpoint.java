@@ -10,6 +10,7 @@ import java.util.regex.Pattern;
  * This class represents a Reddit API endpoint such as "{@code POST /api/login}"
  */
 public class Endpoint {
+    /** This Pattern will match a URI parameter. For example, /api/{param1}/{param2} */
     public static final Pattern URI_PARAM_PATTERN = Pattern.compile("\\{([^\\}]+)\\}");
 
     private final String category;
@@ -22,9 +23,10 @@ public class Endpoint {
     protected final List<String> urlParams;
 
     /**
-     * Instantiates a new Endpoint. Used mostly for meta-programming in the <a href="https://github.com/thatJavaNerd/JRAW/tree/master/endpoints">endpoints</a>
-     * subproject.
-     * @param requestDescriptor A string consisting of two parts: the HTTP verb, and the URI. For example: "@{code POST /api/login}"
+     * Instantiates a new Endpoint. Used mostly for meta-programming in the
+     * <a href="https://github.com/thatJavaNerd/JRAW/tree/master/endpoints">endpoints</a> subproject and in the
+     * {@link net.dean.jraw.Endpoints} class.
+     * @param requestDescriptor A string consisting of two parts: the HTTP verb, and the URI. For example: "POST /api/login"
      */
     public Endpoint(String requestDescriptor) {
         this(requestDescriptor, null);
@@ -32,7 +34,7 @@ public class Endpoint {
 
     /**
      * Instantiates a new Endpoint
-     * @param requestDescriptor A string consisting of two parts: the HTTP verb, and the URI. For example: "@{code POST /api/login}"
+     * @param requestDescriptor A string consisting of two parts: the HTTP verb, and the URI. For example: "POST /api/login"
      * @param category This endpoint's category, such as "accounts". Can be found <a href="http://www.reddit.com/dev/api">here</a>
      */
     public Endpoint(String requestDescriptor, String category) {

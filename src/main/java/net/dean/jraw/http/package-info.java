@@ -1,4 +1,4 @@
 /**
- * Contains classes that deal with networking
+ * Contains all the classes which directly build off of OkHttp
  */
 package net.dean.jraw.http;

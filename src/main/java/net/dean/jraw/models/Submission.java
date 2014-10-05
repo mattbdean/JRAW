@@ -1,7 +1,6 @@
-package net.dean.jraw.models.core;
+package net.dean.jraw.models;
 
 import net.dean.jraw.JrawUtils;
-import net.dean.jraw.models.*;
 import org.codehaus.jackson.JsonNode;
 
 import java.net.URI;

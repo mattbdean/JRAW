@@ -5,7 +5,7 @@ import net.dean.jraw.Endpoints;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.models.Contribution;
-import net.dean.jraw.models.core.Listing;
+import net.dean.jraw.models.Listing;
 
 /**
  * This class is used to paginate through user posts or comments via {@code /user/{username}/{where}.json}

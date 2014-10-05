@@ -15,9 +15,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 
 /**
- * This class extends {@link com.squareup.okhttp.Request.Builder} to provide some Reddit-specific features. Because of
- * the way {@link Request.Builder} was designed, methods from this class must be called before classes belonging to its
- * superclasses.
+ * This class extends {@link com.squareup.okhttp.Request.Builder} to provide some Reddit-specific features.
  */
 public class RequestBuilder extends Request.Builder {
     private String host;
@@ -69,7 +67,7 @@ public class RequestBuilder extends Request.Builder {
      * then the given strings will be substituted in the order given. For example, if the endpoint was
      * {@code /api/multi/{multipath}/r/{srname}}, and the given strings were "myMulti" and "mySubreddit", then the
      * result would be {@code /api/multipath/myMulti/mySubreddit}. If {@link #path(String)} is also called, this method
-     * will take priority.
+     * will take priority, regardless of order.
      *
      * @param e The endpoint to use
      * @param positionalUrlParams The parameters to use. Must be equal to the size of the corresponding Endpoint's
@@ -84,7 +82,7 @@ public class RequestBuilder extends Request.Builder {
 
     /**
      * Sets the path of the request. For example, "/stylesheet". If {@link #endpoint(net.dean.jraw.Endpoints, String...)}
-     * is also called, that method will take priority.
+     * is also called, that method will take priority, regardless of order.
      *
      * @param path The path to use
      * @return This RequestBuilder
@@ -94,6 +92,11 @@ public class RequestBuilder extends Request.Builder {
         return this;
     }
 
+    /**
+     * Sets the request's host. For example, "www.reddit.com"
+     * @param host The new host
+     * @return This RequestBuilder
+     */
     public RequestBuilder host(String host) {
         this.host = host;
         return this;

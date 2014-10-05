@@ -1,54 +1,44 @@
 package net.dean.jraw.models;
 
 /**
- * Represents the status of a link poster. A JSON value of "moderator" means the poster is a moderator, "admin" if an admin,
- * or null if the poster is a normal user.
+ * Represents the status of a link or comment poster
  */
-public enum DistinguishedState {
-    /**
-     * Represents a normal user
-     */
+public enum DistinguishedStatus {
+    /** Represents a normal user */
     NORMAL("null"),
-    /**
-     * Represents a moderator
-     */
+    /** Represents a moderator */
     MODERATOR,
-    /**
-     * Represents an administrator
-     */
+    /** Represents an administrator */
     ADMIN,
-
     /**
      * Various other special distinguishes (most commonly seen as the darker red [Δ] "admin emeritus"
      * (<a href="http://www.reddit.com/r/bestof/comments/175prt/alilarter_connects_with_a_user_who_has_a/c82tlns">example</a>
      */
     SPECIAL;
 
-    /**
-     * The value that will be found if the key of "distinguished" is looked up
-     */
+    /** The value of the "distinguished" JSON field */
     private String jsonValue;
 
-    private DistinguishedState() {
+    private DistinguishedStatus() {
         this.jsonValue = this.name().toLowerCase();
     }
 
-    private DistinguishedState(String jsonValue) {
+    private DistinguishedStatus(String jsonValue) {
         this.jsonValue = jsonValue;
     }
 
     /**
-     * Searches for a DistinguishedState by its supposed JSON value
+     * Searches for a UserRole by its supposed JSON value
      *
      * @param jsonValue The value to look for
      * @return A DistinguishedState that has the same JSON value as the one given
      */
-    public static DistinguishedState getByJsonValue(String jsonValue) {
+    public static DistinguishedStatus getByJsonValue(String jsonValue) {
         if (jsonValue == null) {
             return NORMAL;
         }
 
-        for (DistinguishedState state : values()) {
+        for (DistinguishedStatus state : values()) {
             if (state.getJsonValue().equals(jsonValue)) {
                 return state;
             }

@@ -6,10 +6,10 @@ import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.models.Contribution;
 import net.dean.jraw.models.LoggedInAccount;
 import net.dean.jraw.models.VoteDirection;
-import net.dean.jraw.models.core.Comment;
-import net.dean.jraw.models.core.Listing;
-import net.dean.jraw.models.core.Submission;
-import net.dean.jraw.models.core.Subreddit;
+import net.dean.jraw.models.Comment;
+import net.dean.jraw.models.Listing;
+import net.dean.jraw.models.Submission;
+import net.dean.jraw.models.Subreddit;
 import net.dean.jraw.pagination.Paginator;
 import net.dean.jraw.pagination.UserContributionPaginator;
 import net.dean.jraw.pagination.UserSubredditsPaginator;
@@ -85,7 +85,7 @@ public class AuthenticatedUserTest extends AuthenticatedRedditTest {
                 // Nothing we can really do about this
                 handlePostingQuota(e);
             }
-            if (e.getCode().equals("BAD_CAPTCHA")) {
+            if (e.getReason().equals("BAD_CAPTCHA")) {
                 // What we want
                 throw e;
             }
@@ -286,7 +286,7 @@ public class AuthenticatedUserTest extends AuthenticatedRedditTest {
             // Actually test the method
             account.addDeveloper(CLIENT_ID, DEV_NAME);
         } catch (ApiException e) {
-            if (!e.getCode().equals("DEVELOPER_ALREADY_ADDED")) {
+            if (!e.getReason().equals("DEVELOPER_ALREADY_ADDED")) {
                 // https://github.com/thatJavaNerd/JRAW/issues/8
                 handle(e);
             }
@@ -302,7 +302,7 @@ public class AuthenticatedUserTest extends AuthenticatedRedditTest {
             account.addDeveloper(CLIENT_ID, DEV_NAME);
             JrawUtils.logger().info("Adding the developer so he/she can be removed");
         } catch (ApiException e) {
-            if (!e.getCode().equals("DEVELOPER_ALREADY_ADDED")) {
+            if (!e.getReason().equals("DEVELOPER_ALREADY_ADDED")) {
                 // Not ok
                 handle(e);
             }

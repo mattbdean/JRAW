@@ -19,7 +19,7 @@ public abstract class RedditObject extends JsonModel {
 
     /**
      * Gets the type of this RedditObject. Will always be constant for every class. For example, every
-     * {@link net.dean.jraw.models.core.Account} class will always return {@link net.dean.jraw.models.ThingType#ACCOUNT}.
+     * {@link Account} class will always return {@link net.dean.jraw.models.ThingType#ACCOUNT}.
      *
      * @return The type of this Thing
      */

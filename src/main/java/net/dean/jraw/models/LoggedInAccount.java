@@ -6,7 +6,7 @@ import net.dean.jraw.*;
 import net.dean.jraw.http.NetworkAccessible;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.RedditResponse;
-import net.dean.jraw.models.core.*;
+import net.dean.jraw.models.attr.Votable;
 import org.codehaus.jackson.JsonNode;
 
 import java.net.URL;
@@ -285,55 +285,29 @@ public class LoggedInAccount extends Account implements NetworkAccessible<Reddit
 
         RedditResponse response = execute(r);
         if (response.hasErrors()) {
-            throw response.getApiExceptions()[0];
+            throw response.getErrors()[0];
         }
 
         return response;
     }
 
     /**
-     * Sends a reply to a Submission.
-     *
-     * @param parent The submission to reply to
-     * @param text The body of the message, formatted in Markdown
-     * @return The full name of the newly created reply
-     * @throws NetworkException If there was an error making the HTTP request
-     * @throws ApiException If the Reddit API returned an error
-     */
-    public String reply(Submission parent, String text) throws NetworkException, ApiException {
-        return reply(parent.getFullName(), text);
-    }
-
-    /**
-     * Sends a reply to a Comment.
-     *
-     * @param parent The comment to reply to
-     * @param text The body of the message, formatted in Markdown
-     * @return The ID of the newly created reply
-     * @throws NetworkException If there was an error making the HTTP request
-     * @throws ApiException If the Reddit API returned an error
-     */
-    public String reply(Comment parent, String text) throws NetworkException, ApiException {
-        return reply(parent.getFullName(), text);
-    }
-
-    /**
      * Sends a reply to a Comment, Submission, or Message.
      *
-     * @param name The fullname of the comment, submission, or message
+     * @param contribution The contribution to reply to
      * @param text The body of the message, formatted in Markdown
      * @return The ID of the newly created reply
      * @throws NetworkException If there was an error making the HTTP request
      * @throws ApiException If the Reddit API returned an error
      */
     @EndpointImplementation(Endpoints.COMMENT)
-    private String reply(String name, String text) throws NetworkException, ApiException {
+    public <T extends Contribution> String reply(T contribution, String text) throws NetworkException, ApiException {
         RedditResponse response = genericPost(request()
                 .endpoint(Endpoints.COMMENT)
                 .post(new FormEncodingBuilder()
                         .add("api_type", "json")
                         .add("text", text)
-                        .add("thing_id", name)
+                        .add("thing_id", contribution.getFullName())
                         .build())
                 .build());
 

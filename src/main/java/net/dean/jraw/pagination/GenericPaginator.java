@@ -1,7 +1,7 @@
 package net.dean.jraw.pagination;
 
 import net.dean.jraw.RedditClient;
-import net.dean.jraw.models.core.Thing;
+import net.dean.jraw.models.Thing;
 
 /**
  * This class provides a template for Paginators that use only a "where" attribute, such as {@code /user/username/{where}}.

@@ -13,8 +13,8 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface JsonInteraction {
     /**
-     * Whether the return value of this method can be {@code null}
-     * @return If this method can return null
+     * Whether the return value of this method is allowed to be null
+     * @return If this method is allowed to return null
      */
     public boolean nullable() default false;
 }

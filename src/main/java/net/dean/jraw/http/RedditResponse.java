@@ -1,41 +1,32 @@
 package net.dean.jraw.http;
 
-import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.Response;
 import net.dean.jraw.ApiException;
 import net.dean.jraw.JrawUtils;
 import net.dean.jraw.models.RedditObject;
-import net.dean.jraw.models.core.Comment;
-import net.dean.jraw.models.core.Listing;
-import net.dean.jraw.models.core.Submission;
+import net.dean.jraw.models.Comment;
+import net.dean.jraw.models.Listing;
+import net.dean.jraw.models.Submission;
 import org.codehaus.jackson.JsonNode;
 
 /**
- * This class provides automatic parsing and handling of ApiExceptions, as well as quick RedditObject and Listing creation
+ * This class provides automatic parsing of ApiExceptions, as well as quick RedditObject and Listing
+ * creation. Note that constructing a RedditResponse will <em>not</em> throw an ApiException. This must be done by the
+ * implementer. To see if the response has any errors, use {@link #hasErrors()} and {@link #getErrors()}
  */
 public class RedditResponse extends RestResponse {
 
     private final ApiException[] apiExceptions;
 
     /**
-     * Instantiates a new RedditResponse.
+     * Instantiates a new RedditResponse
      *
-     * @param response The HttpResponse used to get the information
+     * @param response The Response that will be encapsulated by this object
      */
     public RedditResponse(Response response) {
-        this(response, MediaTypes.JSON.type());
-    }
+        super(response);
 
-    /**
-     * Instantiates a new RestResponse with an expected ContentType
-     *
-     * @param response The HttpResponse used to get the information
-     * @param expected The expected ContentType
-     */
-    public RedditResponse(Response response, MediaType expected) {
-        super(response, expected);
-
-        if (JrawUtils.typeComparison(expected, MediaTypes.HTML.type())) {
+        if (JrawUtils.typeComparison(type, MediaTypes.HTML.type())) {
             JrawUtils.logger().warn("Received HTML from Reddit API instead of JSON. Are you sure you have access to this document?");
         }
         ApiException[] errors = new ApiException[0];
@@ -102,7 +93,7 @@ public class RedditResponse extends RestResponse {
     /**
      * Checks if there were errors returned by the Reddit API
      * @return True if there were errors, false if else
-     * @see #getApiExceptions()
+     * @see #getErrors()
      */
     public boolean hasErrors() {
         return apiExceptions.length != 0;
@@ -112,10 +103,10 @@ public class RedditResponse extends RestResponse {
      * Gets the ApiExceptions returned from the Reddit API
      * @return An array of ApiExceptions
      */
-    public ApiException[] getApiExceptions() {
+    public ApiException[] getErrors() {
         ApiException[] localCopy = new ApiException[apiExceptions.length];
         for (int i = 0; i < apiExceptions.length; i++) {
-            localCopy[i] = new ApiException(apiExceptions[i].getCode(), apiExceptions[i].getExplanation());
+            localCopy[i] = new ApiException(apiExceptions[i].getReason(), apiExceptions[i].getExplanation());
         }
         return localCopy;
     }

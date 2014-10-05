@@ -6,11 +6,11 @@ import com.squareup.okhttp.MediaType;
  * A list of common MediaType objects used in JRAW
  */
 public enum MediaTypes {
-    /** Represents a JavaScript Object Notation file with a mimetype of "application/json" */
+    /** Represents a JavaScript Object Notation file with a MIME type of "application/json" */
     JSON("application/json"),
-    /** Represents a HyperText Markup Language file with a mimetype of "text/html" */
+    /** Represents a HyperText Markup Language file with a MIME type of "text/html" */
     HTML("text/html"),
-    /** Represents a Cascading Style Sheet file with a mimetype of "text/css" */
+    /** Represents a Cascading Style Sheet file with a MIME type of "text/css" */
     CSS("text/css");
 
     private MediaType type;

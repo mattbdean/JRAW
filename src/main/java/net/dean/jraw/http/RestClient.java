@@ -64,7 +64,8 @@ public abstract class RestClient<T extends RestResponse> implements NetworkAcces
     }
 
     /**
-     * Checks to see if RequestBuilders returned from {@link #request()} will be executed with HTTPS
+     * Checks to see if RequestBuilders returned from {@link #request()} will be executed with HTTPS. Note that this can
+     * be changed per request later.
      * @return If HTTPS will be used by default
      */
     public boolean isHttpsDefault() {
@@ -72,7 +73,8 @@ public abstract class RestClient<T extends RestResponse> implements NetworkAcces
     }
 
     /**
-     * Sets whether or not RequestBuilders returned from {@link #request()} will be executed with HTTPS
+     * Sets whether or not RequestBuilders returned from {@link #request()} will be executed with HTTPS. Note that this
+     * can be changed per request later
      * @param useHttpsDefault If HTTPS will be used by default
      */
     public void setHttpsDefault(boolean useHttpsDefault) {

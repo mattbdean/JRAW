@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * This class provides the ability to perform CRUD operations on multireddits.
+ * This class provides the ability to create, read, update, and delete multireddits
  */
 public class MultiRedditManager implements NetworkAccessible<RedditResponse, RedditClient> {
     private final LoggedInAccount account;
@@ -138,7 +138,7 @@ public class MultiRedditManager implements NetworkAccessible<RedditResponse, Red
         } catch (ApiException e) {
             // For some reason the API responds with a 409 Conflict when the multi already exists, and a "MULTI_EXISTS"
             // API code else. The copied multi is still created.
-            if (!e.getCode().equals("MULTI_EXISTS")) {
+            if (!e.getReason().equals("MULTI_EXISTS")) {
                 throw e;
             }
         }
@@ -162,7 +162,7 @@ public class MultiRedditManager implements NetworkAccessible<RedditResponse, Red
             checkForError(response.getJson());
         } catch (ApiException e) {
             // For some reason the API responds with a "MULTI_NOT_FOUND" code even if the multi was renamed
-            if (!e.getCode().equals("MULTI_NOT_FOUND")) {
+            if (!e.getReason().equals("MULTI_NOT_FOUND")) {
                 throw e;
             }
         }

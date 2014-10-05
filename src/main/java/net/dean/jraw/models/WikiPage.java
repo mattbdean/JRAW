@@ -1,6 +1,5 @@
 package net.dean.jraw.models;
 
-import net.dean.jraw.models.core.Account;
 import org.codehaus.jackson.JsonNode;
 
 import java.util.Date;
@@ -47,7 +46,7 @@ public class WikiPage extends RedditObject {
 
     /**
      * Gets the person who last revised this page
-     * @return The person ({@link net.dean.jraw.models.core.Account}) who last revised this page
+     * @return The person ({@link Account}) who last revised this page
      */
     @JsonInteraction
     public Account getRevisionBy() {

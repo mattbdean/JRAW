@@ -49,7 +49,7 @@ public abstract class RedditTest {
     }
 
     protected final boolean isRateLimit(ApiException e) {
-        return e.getCode().equals("QUOTA_FILLED") || e.getCode().equals("RATELIMIT");
+        return e.getReason().equals("QUOTA_FILLED") || e.getReason().equals("RATELIMIT");
     }
 
     protected void handlePostingQuota(ApiException e) {
@@ -60,7 +60,7 @@ public abstract class RedditTest {
         String msg = null;
         // toUpperCase just in case (no pun intended)
         String method = getCallingMethod();
-        switch (e.getCode().toUpperCase()) {
+        switch (e.getReason().toUpperCase()) {
             case "QUOTA_FILLED":
                 msg = String.format("Skipping %s(), link posting quota has been filled for this user", method);
                 break;

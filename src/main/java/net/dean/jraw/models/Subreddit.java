@@ -1,8 +1,5 @@
-package net.dean.jraw.models.core;
+package net.dean.jraw.models;
 
-import net.dean.jraw.models.JsonInteraction;
-import net.dean.jraw.models.RenderStringPair;
-import net.dean.jraw.models.ThingType;
 import org.codehaus.jackson.JsonNode;
 
 import java.awt.*;
@@ -238,7 +235,7 @@ public class Subreddit extends Thing {
         PRIVATE,
         /** Anyone can view, but only some are approved to submit links */
         RESTRICTED,
-        /** Only users with Reddit gold can post (?) */
+        /** Only users with Reddit gold can post */
         GOLD_RESTRICTED,
         ARCHIVED
     }

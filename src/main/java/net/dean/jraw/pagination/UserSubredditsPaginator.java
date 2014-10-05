@@ -4,8 +4,8 @@ import net.dean.jraw.EndpointImplementation;
 import net.dean.jraw.Endpoints;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.models.LoggedInAccount;
-import net.dean.jraw.models.core.Listing;
-import net.dean.jraw.models.core.Subreddit;
+import net.dean.jraw.models.Listing;
+import net.dean.jraw.models.Subreddit;
 
 /**
  * This paginator provides a way to iterate through the logged-in user's subreddits they interact with, whether that be

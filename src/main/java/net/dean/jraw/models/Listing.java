@@ -1,10 +1,7 @@
-package net.dean.jraw.models.core;
+package net.dean.jraw.models;
 
 import com.google.common.collect.ImmutableList;
 import net.dean.jraw.JrawUtils;
-import net.dean.jraw.models.JsonInteraction;
-import net.dean.jraw.models.RedditObject;
-import net.dean.jraw.models.ThingType;
 import org.codehaus.jackson.JsonNode;
 
 import java.util.Collection;
@@ -14,8 +11,8 @@ import java.util.ListIterator;
 
 /**
  * Represents a listing of Things. A Listing has four main keys: before, after, modhash, and its children. Listing uses
- * an ArrayList to implement the method inherited by {@link java.util.List}. Any method that attempts to change the data
- * (such as {@link List#remove(Object)}) will throw an UnsupportedOperationException.
+ * an {@link ImmutableList} to implement the method inherited by {@link java.util.List}. Any method that attempts to
+ * change the data (such as {@link List#remove(Object)}) will throw an UnsupportedOperationException.
  *
  * @param <T> The type of elements that will be in this listing
  * @author Matthew Dean
@@ -23,21 +20,13 @@ import java.util.ListIterator;
 @SuppressWarnings("deprecation")
 public class Listing<T extends RedditObject> extends RedditObject implements List<T> {
 
-    /**
-     * The class of the contents of the listing
-     */
     private final Class<T> thingClass;
-
     private final ImmutableList<T> children;
     private final More more;
-
-    /**
-     * Whether this listing contains a "more" element in its children
-     */
     private final boolean hasChildren;
 
     /**
-     * Instantiates a new listing
+     * Instantiates a new Listing
      *
      * @param dataNode   The node to get data from
      * @param thingClass The class which will be the type of the children in this listing

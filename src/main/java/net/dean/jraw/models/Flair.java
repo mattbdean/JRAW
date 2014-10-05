@@ -1,17 +1,10 @@
 package net.dean.jraw.models;
 
 /**
- * Represents the flair of either an author or a submission
+ * Represents the flair of an author or a submission
  */
 public class Flair {
-    /**
-     * The CSS class that will applied to the author's name or the submission
-     */
     private String cssClass;
-
-    /**
-     * The text of the flair
-     */
     private String text;
 
     /**

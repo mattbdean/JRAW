@@ -5,7 +5,7 @@ import net.dean.jraw.JrawUtils;
 import java.net.URL;
 
 /**
- * Represents a Captcha.
+ * Represents a Captcha
  */
 public class Captcha {
     private final String id;

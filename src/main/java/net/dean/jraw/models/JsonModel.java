@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
  */
 public abstract class JsonModel {
     protected final JsonNode data;
-    /** The maximum length of a result of a @JsonInteraction method in {@link #toString()} */
+    /** The maximum length of a result of a {@link net.dean.jraw.models.JsonInteraction} method in {@link #toString()} */
     private static final int MAX_STRING_LENGTH = 500;
     private static final String ELLIPSIS = "(...)";
 
@@ -41,15 +41,19 @@ public abstract class JsonModel {
 
     /**
      * Retrieves a value from the JSON node (provided in the constructor) of type T. When the class is Boolean, Double,
-     * Integer, Long, Float, or String, then it returns one of those objects using {@code JsonNode.asX()}. If class is URI, or
-     * URI, a new URL or URI is returned. If class is (java.util.)Date, then the JsonNode's value is assumed to be long.
-     * The value is multiplied by 1000 (since the value is assumed to be in seconds) and then passed to {@link Date#Date(long)}.
+     * Integer, Long, Float, or String, then it returns one of those objects using {@code JsonNode.asX()}. If the class
+     * is URI or URL, a new URL or URI (respectively) is returned. If class is {@link java.util.Date}, then the
+     * JsonNode's value is assumed to be long representing unix epoch seconds. The value is multiplied by 1000 since the
+     * value is assumed to be in seconds) and then passed to {@link Date#Date(long)}. If the class is
+     * {@link net.dean.jraw.models.RenderStringPair}, then the JSON field for the HTML is assumed to be the name with
+     * "_html" appended to the given name. If any other class is passed, then String is assumed.
      *
      * @param name The key to look up in the JSON node.
      * @param type The wanted return value. Supported values are any class representing a primitive data type, such as
      *             {@link Integer} or {@link Boolean}.
      * @param <T> The desired return data type
      * @return An object of type T in the JSON node
+     * @throws IllegalArgumentException If the class given was not one mentioned above
      */
     @SuppressWarnings("unchecked")
     public <T> T data(String name, Class<T> type) {
@@ -93,9 +97,11 @@ public abstract class JsonModel {
             returnVal = (T) new Date(seconds * 1000);
         } else if (type.equals(RenderStringPair.class)) {
             return (T) new RenderStringPair(data(name), data(name + "_html"));
-        } else
-            // Assume String
+        } else if (type.equals(String.class)) {
             returnVal = (T) String.valueOf(node.asText());
+        } else {
+            throw new IllegalArgumentException("Unrecognized class: " + type.getName());
+        }
 
         return returnVal;
     }

@@ -1,10 +1,10 @@
 package net.dean.jraw.test;
 
 import net.dean.jraw.http.NetworkException;
-import net.dean.jraw.models.core.Comment;
-import net.dean.jraw.models.core.Listing;
-import net.dean.jraw.models.core.Submission;
-import net.dean.jraw.models.core.Subreddit;
+import net.dean.jraw.models.Comment;
+import net.dean.jraw.models.Listing;
+import net.dean.jraw.models.Submission;
+import net.dean.jraw.models.Subreddit;
 import net.dean.jraw.pagination.SubredditPaginator;
 import org.testng.Assert;
 import org.testng.SkipException;

@@ -4,8 +4,8 @@ import net.dean.jraw.EndpointImplementation;
 import net.dean.jraw.Endpoints;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.NetworkException;
-import net.dean.jraw.models.core.Listing;
-import net.dean.jraw.models.core.Subreddit;
+import net.dean.jraw.models.Listing;
+import net.dean.jraw.models.Subreddit;
 
 /**
  * This paginator will iterate through either the newest or the most popular subreddits

@@ -54,7 +54,7 @@ public class MultiRedditTest extends AuthenticatedRedditTest {
 
             assertTrue(getMulti(MULTI_NAME) != null);
         } catch (ApiException e) {
-            if (!e.getCode().equals("MULTI_EXISTS")) {
+            if (!e.getReason().equals("MULTI_EXISTS")) {
                 // https://github.com/thatJavaNerd/JRAW/issues/7
                 handle(e);
             }
@@ -286,7 +286,7 @@ public class MultiRedditTest extends AuthenticatedRedditTest {
                 manager.create(name, MULTI_INITIAL_SUBS, true);
             }
         } catch (ApiException e) {
-            if (!e.getCode().equals("MULTI_EXISTS")) {
+            if (!e.getReason().equals("MULTI_EXISTS")) {
                 handle(e);
             }
         } catch (NetworkException e) {

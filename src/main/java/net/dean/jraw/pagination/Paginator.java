@@ -5,8 +5,8 @@ import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.NetworkAccessible;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.RedditResponse;
-import net.dean.jraw.models.core.Listing;
-import net.dean.jraw.models.core.Thing;
+import net.dean.jraw.models.Listing;
+import net.dean.jraw.models.Thing;
 
 import java.util.HashMap;
 import java.util.Iterator;

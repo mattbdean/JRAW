@@ -2,7 +2,7 @@ package net.dean.jraw.pagination;
 
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.models.MultiReddit;
-import net.dean.jraw.models.core.Submission;
+import net.dean.jraw.models.Submission;
 
 /**
  * Iterates through the posts in a multireddit.
