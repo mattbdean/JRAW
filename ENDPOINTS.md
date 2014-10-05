@@ -1,9 +1,9 @@
-<!--- Generated 2014-10-04 at 22:25:34 EDT. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
+<!--- Generated 2014-10-04 at 23:03:42 EDT. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
 #Endpoints
 
 This file contains a list of all the endpoints (regardless of if they have been implemented) that can be found at the [official Reddit API docs](https://www.reddit.com/dev/api). To update this file, run `./gradlew endpoints:update`.
 
-So far **63** endpoints (out of 184 total) have been implemented.
+So far **64** endpoints (out of 184 total) have been implemented.
 
 ##account
 Method|Endpoint|Implemented?
@@ -195,13 +195,13 @@ Method|Endpoint|Implemented?
 `GET`|[`/api/recommend/sr/{srnames}`](https://www.reddit.com/dev/api#GET_api_recommend_sr_%7Bsrnames%7D)|No
 `POST`|[`/api/site_admin`](https://www.reddit.com/dev/api#POST_api_site_admin)|No
 `POST`|[`/api/subreddit_stylesheet`](https://www.reddit.com/dev/api#POST_api_subreddit_stylesheet)|No
-`POST`|[`/api/subscribe`](https://www.reddit.com/dev/api#POST_api_subscribe)|No
 `POST`|[`/api/upload_sr_img`](https://www.reddit.com/dev/api#POST_api_upload_sr_img)|No
 `GET`|[`/r/{subreddit}/about/edit.json`](https://www.reddit.com/dev/api#GET_r_%7Bsubreddit%7D_about_edit.json)|No
 `GET`|[`/subreddits/search`](https://www.reddit.com/dev/api#GET_subreddits_search)|No
 `POST`|[`/api/search_reddit_names.json`](https://www.reddit.com/dev/api#POST_api_search_reddit_names.json)|[`RedditClient.searchSubreddits(String, boolean)`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/RedditClient#searchSubreddits-java.lang.String-boolean-)
 `GET`|[`/api/submit_text.json`](https://www.reddit.com/dev/api#GET_api_submit_text.json)|[`RedditClient.getSubmitText(String)`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/RedditClient#getSubmitText-java.lang.String-)
 `GET`|[`/api/subreddits_by_topic.json`](https://www.reddit.com/dev/api#GET_api_subreddits_by_topic.json)|[`RedditClient.getSubredditsByTopic(String)`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/RedditClient#getSubredditsByTopic-java.lang.String-)
+`POST`|[`/api/subscribe`](https://www.reddit.com/dev/api#POST_api_subscribe)|[`LoggedInAccount.setSubscribed(Subreddit, boolean)`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/models/LoggedInAccount#setSubscribed-net.dean.jraw.models.core.Subreddit-boolean-)
 `GET`|[`/r/{subreddit}/about.json`](https://www.reddit.com/dev/api#GET_r_%7Bsubreddit%7D_about.json)|[`RedditClient.getSubreddit(String)`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/RedditClient#getSubreddit-java.lang.String-)
 `GET`|[`/subreddits/mine/contributor`](https://www.reddit.com/dev/api#GET_subreddits_mine_contributor)|[`UserSubredditsPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/pagination/UserSubredditsPaginator#getListing-boolean-)
 `GET`|[`/subreddits/mine/moderator`](https://www.reddit.com/dev/api#GET_subreddits_mine_moderator)|[`UserSubredditsPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs//0.3.0/net/dean/jraw/pagination/UserSubredditsPaginator#getListing-boolean-)

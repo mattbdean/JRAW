@@ -9,7 +9,9 @@ import net.dean.jraw.models.VoteDirection;
 import net.dean.jraw.models.core.Comment;
 import net.dean.jraw.models.core.Listing;
 import net.dean.jraw.models.core.Submission;
+import net.dean.jraw.models.core.Subreddit;
 import net.dean.jraw.pagination.UserContributionPaginator;
+import net.dean.jraw.pagination.UserSubredditsPaginator;
 import org.testng.SkipException;
 import org.testng.annotations.Test;
 
@@ -328,7 +330,38 @@ public class AuthenticatedUserTest extends AuthenticatedRedditTest {
         } catch (NetworkException | ApiException e) {
             handle(e);
         }
+    }
 
+    @Test
+    public void testSubscribe() {
+        try {
+            Subreddit subreddit = reddit.getSubreddit("programming");
+            boolean isSubscribed = isSubscribed(subreddit.getDisplayName());
+            boolean expected = !isSubscribed;
+
+            account.setSubscribed(subreddit, expected);
+            boolean actual = isSubscribed(subreddit.getDisplayName());
+            assertEquals(actual, expected);
+        } catch (NetworkException e) {
+            handle(e);
+        }
+    }
+
+    private boolean isSubscribed(String subreddit) {
+        UserSubredditsPaginator paginator = new UserSubredditsPaginator(account, UserSubredditsPaginator.Where.SUBSCRIBER);
+        paginator.setLimit(100);
+
+        // Try to find the subreddit in the list of subscribed subs
+        while (paginator.hasNext()) {
+            Listing<Subreddit> subscribed = paginator.next();
+            for (Subreddit sub : subscribed) {
+                if (sub.getDisplayName().equals(subreddit)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     private UserContributionPaginator getPaginator(Where where) {

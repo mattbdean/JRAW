@@ -6,10 +6,7 @@ import net.dean.jraw.*;
 import net.dean.jraw.http.NetworkAccessible;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.RedditResponse;
-import net.dean.jraw.models.core.Account;
-import net.dean.jraw.models.core.Comment;
-import net.dean.jraw.models.core.Submission;
-import net.dean.jraw.models.core.Thing;
+import net.dean.jraw.models.core.*;
 import org.codehaus.jackson.JsonNode;
 
 import java.net.URL;
@@ -356,6 +353,23 @@ public class LoggedInAccount extends Account implements NetworkAccessible<Reddit
     @Override
     public RedditClient getCreator() {
         return creator;
+    }
+
+    /**
+     * Subscribe or unsubscribe to a subreddit
+     * @param subreddit The subreddit to (un)subscribe to
+     * @param sub Whether to subscribe (true) or unsubscribe (false)
+     * @throws NetworkException If the request was not successful
+     */
+    @EndpointImplementation(Endpoints.SUBSCRIBE)
+    public void setSubscribed(Subreddit subreddit, boolean sub) throws NetworkException {
+        execute(request()
+                .endpoint(Endpoints.SUBSCRIBE)
+                .post(new FormEncodingBuilder()
+                        .add("sr", subreddit.getFullName())
+                        .add("action", sub ? "sub" : "unsub")
+                        .build())
+                .build());
     }
 
     /**

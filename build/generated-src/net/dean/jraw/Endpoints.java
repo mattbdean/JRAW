@@ -307,8 +307,6 @@ public enum Endpoints {
     SITE_ADMIN("POST /api/site_admin"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_subreddit_stylesheet">{@code POST /api/subreddit_stylesheet}</a>" in the "subreddits" category */
     SUBREDDIT_STYLESHEET("POST /api/subreddit_stylesheet"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_subscribe">{@code POST /api/subscribe}</a>" in the "subreddits" category */
-    SUBSCRIBE("POST /api/subscribe"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_upload_sr_img">{@code POST /api/upload_sr_img}</a>" in the "subreddits" category */
     UPLOAD_SR_IMG("POST /api/upload_sr_img"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_r_%7Bsubreddit%7D_about_edit.json">{@code GET /r/{subreddit}/about/edit.json}</a>" in the "subreddits" category */
@@ -321,6 +319,8 @@ public enum Endpoints {
     SUBMIT_TEXT("GET /api/submit_text.json"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_api_subreddits_by_topic.json">{@code GET /api/subreddits_by_topic.json}</a>" in the "subreddits" category */
     SUBREDDITS_BY_TOPIC("GET /api/subreddits_by_topic.json"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_subscribe">{@code POST /api/subscribe}</a>" in the "subreddits" category */
+    SUBSCRIBE("POST /api/subscribe"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_r_%7Bsubreddit%7D_about.json">{@code GET /r/{subreddit}/about.json}</a>" in the "subreddits" category */
     SUBREDDIT_ABOUT("GET /r/{subreddit}/about.json"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_subreddits_mine_contributor">{@code GET /subreddits/mine/contributor}</a>" in the "subreddits" category */
