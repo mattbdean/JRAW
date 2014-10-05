@@ -10,6 +10,7 @@ import net.dean.jraw.models.core.Comment;
 import net.dean.jraw.models.core.Listing;
 import net.dean.jraw.models.core.Submission;
 import net.dean.jraw.models.core.Subreddit;
+import net.dean.jraw.pagination.Paginator;
 import net.dean.jraw.pagination.UserContributionPaginator;
 import net.dean.jraw.pagination.UserSubredditsPaginator;
 import org.testng.SkipException;
@@ -349,7 +350,7 @@ public class AuthenticatedUserTest extends AuthenticatedRedditTest {
 
     private boolean isSubscribed(String subreddit) {
         UserSubredditsPaginator paginator = new UserSubredditsPaginator(account, UserSubredditsPaginator.Where.SUBSCRIBER);
-        paginator.setLimit(100);
+        paginator.setLimit(Paginator.RECOMMENDED_MAX_LIMIT);
 
         // Try to find the subreddit in the list of subscribed subs
         while (paginator.hasNext()) {

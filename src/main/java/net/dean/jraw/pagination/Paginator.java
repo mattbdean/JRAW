@@ -22,6 +22,11 @@ public abstract class Paginator<T extends Thing> implements Iterator<Listing<T>>
 
     /** The default limit of Things to return */
     public static final int DEFAULT_LIMIT = 25;
+    /**
+     * The recommended maximum limit of Things to return. No client-side code is in place to ensure that the limit is
+     * not set over this number, but the Reddit API might error out if a limit is higher than this.
+     */
+    public static final int RECOMMENDED_MAX_LIMIT = 100;
     /** The default sorting */
     public static final Sorting DEFAULT_SORTING = Sorting.HOT;
     /** The default time period */
@@ -134,8 +139,8 @@ public abstract class Paginator<T extends Thing> implements Iterator<Listing<T>>
     }
 
     /**
-     * Generates the base URI. Parameters will be stacked after this URI to form a query. For example, SimplePaginator
-     * will return something like "/r/pics/new.json"
+     * Generates the base URI. Parameters will be stacked after this URI to form a query. For example,
+     * {@link net.dean.jraw.pagination.SubredditPaginator} will return something like "/r/pics/new.json"
      *
      * @return The base URI that will be used in queries
      */
