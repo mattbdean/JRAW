@@ -173,15 +173,20 @@ public class RedditClient extends RestClient<RedditResponse> {
      * @throws NetworkException If there was a problem executing the HTTP request
      */
     @EndpointImplementation(Endpoints.NEW_CAPTCHA)
-    public Captcha getNewCaptcha() throws NetworkException {
+    public Captcha getNewCaptcha() throws NetworkException, ApiException {
         try {
             RedditResponse response = execute(request()
                     .endpoint(Endpoints.NEW_CAPTCHA)
-                    .post(null)
+                    .post(new FormEncodingBuilder()
+                            .add("api_type", "json")
+                            .build())
                     .build());
 
             // Some strange response you got there, reddit...
-            String id = response.getJson().get("jquery").get(11).get(3).get(0).getTextValue();
+            if (response.hasErrors()) {
+                throw response.getApiExceptions()[0];
+            }
+            String id = response.getJson().get("json").get("data").get("iden").asText();
 
             return getCaptcha(id);
         } catch (NetworkException e) {
