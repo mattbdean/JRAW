@@ -136,9 +136,33 @@ public class MultiRedditManager implements NetworkAccessible<RedditResponse, Red
         try {
             checkForError(response.getJson());
         } catch (ApiException e) {
-            // For some reason the API respons with a 409 Conflict when the multi already exists, and a "MULTI_EXISTS"
-            // API exception else. The copied multi is still created.
+            // For some reason the API responds with a 409 Conflict when the multi already exists, and a "MULTI_EXISTS"
+            // API code else. The copied multi is still created.
             if (!e.getCode().equals("MULTI_EXISTS")) {
+                throw e;
+            }
+        }
+    }
+
+    @EndpointImplementation(Endpoints.MULTI_MULTIPATH_RENAME)
+    public void rename(String prevName, String newName) throws NetworkException, ApiException {
+        String from = getMultiPath(prevName);
+        String to = getMultiPath(newName);
+        Request request = request()
+                // Using .endpoint(Endpoints.MULTI_MULTIPATH_RENAME) returns 400 Bad Request, use this path instead.
+                .path("/api/multi/rename")
+                .post(new FormEncodingBuilder()
+                        .add("from", from)
+                        .add("to", to)
+                        .build())
+                .build();
+
+        RedditResponse response = execute(request);
+        try {
+            checkForError(response.getJson());
+        } catch (ApiException e) {
+            // For some reason the API responds with a "MULTI_NOT_FOUND" code even if the multi was renamed
+            if (!e.getCode().equals("MULTI_NOT_FOUND")) {
                 throw e;
             }
         }
@@ -165,7 +189,8 @@ public class MultiRedditManager implements NetworkAccessible<RedditResponse, Red
      * @param name The name of the new multireddit
      * @param subreddits The subreddits that make up this multireddit
      * @param priv If this multireddit is private
-     * @throws NetworkException If the request was not successful
+     * @throws NetworkException If the request was not successful. If a 400 Bad Request is returned, then most likely the
+     *                          name of the multireddit is invalid (over 20 characters or starts with underscore)
      * @throws ApiException If a multireddit of that name already exists
      */
     @EndpointImplementation(Endpoints.MULTI_MULTIPATH_POST)

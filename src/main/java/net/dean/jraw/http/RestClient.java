@@ -156,7 +156,7 @@ public abstract class RestClient<T extends RestResponse> {
             history.put(genericResponse, LocalDateTime.now());
             return genericResponse;
         } catch (IOException e) {
-            throw new NetworkException("Could not execute the request: " + r);
+            throw new NetworkException("Could not execute the request: " + r, e);
         }
     }
 

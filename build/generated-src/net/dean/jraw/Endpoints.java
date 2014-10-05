@@ -231,8 +231,6 @@ public enum Endpoints {
     FILTER_FILTERPATH_R_SRNAME_GET("GET /api/filter/{filterpath}/r/{srname}"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#PUT_api_filter_%7Bfilterpath%7D_r_%7Bsrname%7D">{@code PUT /api/filter/{filterpath}/r/{srname}}</a>" in the "multis" category */
     FILTER_FILTERPATH_R_SRNAME_PUT("PUT /api/filter/{filterpath}/r/{srname}"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_multi_%7Bmultipath%7D_rename">{@code POST /api/multi/{multipath}/rename}</a>" in the "multis" category */
-    MULTI_MULTIPATH_RENAME("POST /api/multi/{multipath}/rename"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_api_multi_mine">{@code GET /api/multi/mine}</a>" in the "multis" category */
     MULTI_MINE("GET /api/multi/mine"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#DELETE_api_multi_%7Bmultipath%7D">{@code DELETE /api/multi/{multipath}}</a>" in the "multis" category */
@@ -255,6 +253,8 @@ public enum Endpoints {
     MULTI_MULTIPATH_R_SRNAME_GET("GET /api/multi/{multipath}/r/{srname}"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#PUT_api_multi_%7Bmultipath%7D_r_%7Bsrname%7D">{@code PUT /api/multi/{multipath}/r/{srname}}</a>" in the "multis" category */
     MULTI_MULTIPATH_R_SRNAME_PUT("PUT /api/multi/{multipath}/r/{srname}"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_multi_%7Bmultipath%7D_rename">{@code POST /api/multi/{multipath}/rename}</a>" in the "multis" category */
+    MULTI_MULTIPATH_RENAME("POST /api/multi/{multipath}/rename"),
 
     ///////// private messages /////////
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_block">{@code POST /api/block}</a>" in the "private messages" category */

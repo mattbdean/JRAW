@@ -214,6 +214,7 @@ public class MultiRedditTest extends AuthenticatedRedditTest {
             MultiReddit original = getMulti(MULTI_NAME);
             MultiReddit copied = getMulti(newName);
 
+            assertTrue(copied.getFullName().equals(newName));
             assertNotNull(getMulti(newName));
             assertEquals(copied, original);
         } catch (NetworkException | ApiException e) {
@@ -225,6 +226,27 @@ public class MultiRedditTest extends AuthenticatedRedditTest {
                 JrawUtils.logger().warn("Unable to delete " + newName, e);
             }
         }
+    }
+
+    @Test
+    public void testRename() {
+        String newName = MULTI_NAME + "_after";
+        createIfNotExists(MULTI_NAME);
+
+        try {
+            manager.rename(MULTI_NAME, newName);
+            assertNotNull(getMulti(newName));
+            assertNull(getMulti(MULTI_NAME));
+        } catch (NetworkException | ApiException e) {
+            handle(e);
+        } finally {
+            try {
+                manager.rename(newName, MULTI_NAME);
+            } catch (NetworkException | ApiException e) {
+                JrawUtils.logger().warn("Could not return the multireddit to its original name");
+            }
+        }
+
     }
 
     @Test
