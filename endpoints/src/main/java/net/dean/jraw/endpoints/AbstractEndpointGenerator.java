@@ -96,9 +96,9 @@ public abstract class AbstractEndpointGenerator {
     }
 
     protected String getJavadocUrl(Endpoint endpoint) {
-        String base = "https://thatjavanerd.github.io/JRAW/docs/";
+        String base = "https://thatjavanerd.github.io/JRAW/docs";
         Method m = endpoint.getMethod();
-        // "/0.3.0"
+        // "/0.4.0"
         base += "/" + Version.get().formatted();
         // "/net/dean/jraw/ClassName.html"
         base += "/" + m.getDeclaringClass().getName().replace('.', '/');
