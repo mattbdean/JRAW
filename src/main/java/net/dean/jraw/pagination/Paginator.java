@@ -24,7 +24,7 @@ public abstract class Paginator<T extends Thing> implements Iterator<Listing<T>>
     public static final int DEFAULT_LIMIT = 25;
     /**
      * The recommended maximum limit of Things to return. No client-side code is in place to ensure that the limit is
-     * not set over this number, but the Reddit API might error out if a limit is higher than this.
+     * not set over this number, but the Reddit API might error out if a limit is set higher than this.
      */
     public static final int RECOMMENDED_MAX_LIMIT = 100;
     /** The default sorting */

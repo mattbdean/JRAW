@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * This class provides the ability to create, read, update, and delete multireddits
+ * This class provides the ability to create, read, update, and delete multireddits.
  */
 public class MultiRedditManager implements NetworkAccessible<RedditResponse, RedditClient> {
     private final LoggedInAccount account;
@@ -144,6 +144,15 @@ public class MultiRedditManager implements NetworkAccessible<RedditResponse, Red
         }
     }
 
+    /**
+     * Renames a multireddit
+     *
+     * @param prevName The original name of the multi
+     * @param newName The new name of the multi
+     * @throws NetworkException If the request was not successful. If the exception's HTTP code is 409 Conflict, that
+     *                          means that the user already has a multireddit of that name
+     * @throws ApiException If the Reddit API returns an error
+     */
     @EndpointImplementation(Endpoints.MULTI_MULTIPATH_RENAME)
     public void rename(String prevName, String newName) throws NetworkException, ApiException {
         String from = getMultiPath(prevName);
@@ -161,13 +170,21 @@ public class MultiRedditManager implements NetworkAccessible<RedditResponse, Red
         try {
             checkForError(response.getJson());
         } catch (ApiException e) {
-            // For some reason the API responds with a "MULTI_NOT_FOUND" code even if the multi was renamed
+            // For some reason the API responds with a "MULTI_NOT_FOUND" code even if the multi was successfully renamed
             if (!e.getReason().equals("MULTI_NOT_FOUND")) {
                 throw e;
             }
         }
     }
 
+    /**
+     * Updates a multireddit's description
+     *
+     * @param multiName The name of the multireddit
+     * @param newDescription The multireddit's new description, formatted in Markdown
+     * @return A RenderStringPair representing the new description
+     * @throws NetworkException If request was not successful
+     */
     @EndpointImplementation(Endpoints.MULTI_MULTIPATH_DESCRIPTION_PUT)
     public RenderStringPair updateDescription(String multiName, String newDescription) throws NetworkException {
         Request request = request()
