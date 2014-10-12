@@ -1,6 +1,6 @@
 package net.dean.jraw;
 
-/* This class is updated by running ./gradlew endpoints. Do not modify directly */
+/* This class is updated by running ./gradlew endpoints:update. Do not modify directly */
 /** This class is an automatically generated enumeration of Reddit's API endpoints */
 @SuppressWarnings("unused")
 public enum Endpoints {
@@ -130,10 +130,10 @@ public enum Endpoints {
     VOTE("POST /api/vote"),
 
     ///////// listings /////////
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_comments_%7Barticle%7D">{@code GET /comments/{article}}</a>" in the "listings" category */
-    COMMENTS_ARTICLE("GET /comments/{article}"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_by_id_%7Bnames%7D">{@code GET /by_id/{names}}</a>" in the "listings" category */
     BY_ID_NAMES("GET /by_id/{names}"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_comments_%7Barticle%7D">{@code GET /comments/{article}}</a>" in the "listings" category */
+    COMMENTS_ARTICLE("GET /comments/{article}"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_controversial">{@code GET /controversial}</a>" in the "listings" category */
     CONTROVERSIAL("GET /controversial"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_hot">{@code GET /hot}</a>" in the "listings" category */

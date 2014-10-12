@@ -4,21 +4,17 @@ import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
-import net.dean.jraw.http.*;
-import net.dean.jraw.models.Captcha;
-import net.dean.jraw.models.LoggedInAccount;
-import net.dean.jraw.models.RenderStringPair;
-import net.dean.jraw.models.WikiPage;
-import net.dean.jraw.models.Account;
-import net.dean.jraw.models.Submission;
-import net.dean.jraw.models.Subreddit;
+import net.dean.jraw.http.MediaTypes;
+import net.dean.jraw.http.NetworkException;
+import net.dean.jraw.http.RedditResponse;
+import net.dean.jraw.http.RestClient;
+import net.dean.jraw.models.*;
 import net.dean.jraw.pagination.Sorting;
 import net.dean.jraw.pagination.SubredditPaginator;
 import org.codehaus.jackson.JsonNode;
 
 import java.net.HttpCookie;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * This class provides access to the most basic Reddit features such as logging in. It is recommended that only one instance
@@ -237,10 +233,28 @@ public class RedditClient extends RestClient<RedditResponse> {
      * @throws NetworkException If the link does not exist or there was a problem making the request
      */
     public Submission getSubmission(String id) throws NetworkException {
+        return getSubmission(new SubmissionRequest(id));
+    }
+
+    @EndpointImplementation(Endpoints.COMMENTS_ARTICLE)
+    public Submission getSubmission(SubmissionRequest request) throws NetworkException {
+        Map<String, String> args = new HashMap<>();
+        if (request.depth.isPresent())
+            args.put("depth", Integer.toString(request.depth.get()));
+        if (request.context.isPresent())
+            args.put("context", Integer.toString(request.context.get()));
+        if (request.limit.isPresent())
+            args.put("limit", Integer.toString(request.limit.get()));
+        if (request.focus.isPresent() && !JrawUtils.isFullName(request.focus.get()))
+            args.put("comment", request.focus.get());
+        if (request.sort.isPresent())
+            args.put("sort", request.sort.get().name().toLowerCase());
+
         return execute(request()
-                .path(String.format("/%s.json", id))
-                .get()
+                .path(String.format("/comments/%s.json", request.id))
+                .query(args)
                 .build()).as(Submission.class);
+
     }
 
     /**
@@ -514,4 +528,98 @@ public class RedditClient extends RestClient<RedditResponse> {
             throw new NetworkException("You are not logged in! Use RedditClient.login(user, pass)");
         }
     }
+
+    /**
+     * This class is used by {@link #getSubmission(net.dean.jraw.RedditClient.SubmissionRequest)} to specify the
+     * parameters of the request.
+     */
+    public static class SubmissionRequest {
+        private final String id;
+        private Optional<Integer> depth;
+        private Optional<Integer> limit;
+        private Optional<Integer> context;
+        private Optional<CommentSort> sort;
+        private Optional<String> focus;
+
+        /**
+         * Instantiates a new SubmissionRequeslt
+         * @param id The link's ID, ex: "92dd8"
+         */
+        public SubmissionRequest(String id) {
+            this.id = id;
+            this.depth = Optional.empty();
+            this.limit = Optional.empty();
+            this.context = Optional.empty();
+            this.sort = Optional.empty();
+            this.focus = Optional.empty();
+        }
+
+        /**
+         * Sets the maximum amount of subtrees returned by this request. If the number is less than 1, it is ignored by
+         * the Reddit API and no depth restriction is enacted.
+         * @param depth The depth
+         * @return This SubmissionRequest
+         */
+        public SubmissionRequest depth(Integer depth) {
+            if (depth != null) {
+                this.depth = Optional.of(depth);
+            }
+            return this;
+        }
+
+        /**
+         * Sets the maximum amount of comments to return
+         * @param limit The limit
+         * @return This SubmissionRequest
+         */
+        public SubmissionRequest limit(Integer limit) {
+            if (limit != null) {
+                this.limit = Optional.of(limit);
+            }
+            return this;
+        }
+
+        /**
+         * Sets the number of parents shown in relation to the focused comment. For example, if the focused comment is
+         * in the eighth level of the comment tree (meaning there are seven replies above it), and the context is set to
+         * six, then the response will also contain the six direct parents of the given comment. For a better understanding,
+         * play with <a href="https://www.reddit.com/comments/92dd8?comment=c0b73aj&context=8>this link</a>.
+         *
+         * @param context The number of parent comments to return in relation to the focused comment.
+         * @return This SubmissionRequest
+         */
+        public SubmissionRequest context(Integer context) {
+            if (context != null) {
+                this.context = Optional.of(context);
+            }
+            return this;
+        }
+
+        /**
+         * Sets the sorting for the comments in the response
+         * @param sort The sorting
+         * @return This SubmissionRequest
+         */
+        public SubmissionRequest sort(CommentSort sort) {
+            if (sort != null) {
+                this.sort = Optional.of(sort);
+            }
+            return this;
+        }
+
+        /**
+         * Sets the ID of the comment to focus on. If this comment does not exist, then this parameter is ignored.
+         * Otherwise, only one comment tree is returned: the one in which the given comment resides.
+         *
+         * @param focus The ID of the comment to focus on. For example: "c0b6xx0".
+         * @return This SubmissionRequest
+         */
+        public SubmissionRequest focus(String focus) {
+            if (focus != null) {
+                this.focus = Optional.of(focus);
+            }
+            return this;
+        }
+    }
+
 }

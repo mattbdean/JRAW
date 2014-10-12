@@ -1,9 +1,9 @@
-<!--- Generated 2014-10-11 at 10:48:50 EDT. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
+<!--- Generated 2014-10-11 at 22:20:16 EDT. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
 #Endpoints
 
 This file contains a list of all the endpoints (regardless of if they have been implemented) that can be found at the [official Reddit API docs](https://www.reddit.com/dev/api). To update this file, run `./gradlew endpoints:update`.
 
-So far **64** endpoints (out of 184 total) have been implemented.
+So far **65** endpoints (out of 184 total) have been implemented.
 
 ##account
 Method|Endpoint|Implemented?
@@ -85,8 +85,8 @@ Method|Endpoint|Implemented?
 ##listings
 Method|Endpoint|Implemented?
 :----:|--------|------------
-`GET`|[`/comments/{article}`](https://www.reddit.com/dev/api#GET_comments_%7Barticle%7D)|No
 `GET`|[`/by_id/{names}`](https://www.reddit.com/dev/api#GET_by_id_%7Bnames%7D)|[`SpecificPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/pagination/SpecificPaginator#getListing-boolean-)
+`GET`|[`/comments/{article}`](https://www.reddit.com/dev/api#GET_comments_%7Barticle%7D)|[`RedditClient.getSubmission(SubmissionRequest)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/RedditClient#getSubmission-net.dean.jraw.RedditClient$SubmissionRequest-)
 `GET`|[`/controversial`](https://www.reddit.com/dev/api#GET_controversial)|[`SubredditPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/pagination/SubredditPaginator#getListing-boolean-)
 `GET`|[`/hot`](https://www.reddit.com/dev/api#GET_hot)|[`SubredditPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/pagination/SubredditPaginator#getListing-boolean-)
 `GET`|[`/new`](https://www.reddit.com/dev/api#GET_new)|[`SubredditPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/pagination/SubredditPaginator#getListing-boolean-)

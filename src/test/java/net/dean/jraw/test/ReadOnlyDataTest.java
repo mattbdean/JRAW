@@ -77,7 +77,7 @@ public class ReadOnlyDataTest extends RedditTest {
             validateModel(submission);
 
             Listing<Comment> comments = submission.getComments();
-            // This is the most upvoted link in reddit history, there's bound to be more than one comment
+            // This is one of the most upvoted links in reddit history, there's bound to be more than one comment
             assertFalse(comments.isEmpty());
 
             validateModels(comments);

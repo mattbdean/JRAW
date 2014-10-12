@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 public class JavaGenerator extends AbstractEndpointGenerator {
     private static final String INDENT = "    ";
     private static final String COMMENT_WARNING =
-            "/* This class is updated by running ./gradlew endpoints. Do not modify directly */";
+            "/* This class is updated by running ./gradlew endpoints:update. Do not modify directly */";
     private static final String JAVADOC_CLASS =
             "/** This class is an automatically generated enumeration of Reddit's API endpoints */";
     private static final String JAVADOC_ENUM =
