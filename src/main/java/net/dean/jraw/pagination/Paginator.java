@@ -249,4 +249,9 @@ public abstract class Paginator<T extends Thing> implements Iterator<Listing<T>>
     public RedditClient getCreator() {
         return creator;
     }
+
+    @Override
+    public void remove() {
+        throw new UnsupportedOperationException("Cannot modify listing data");
+    }
 }
