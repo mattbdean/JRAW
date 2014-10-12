@@ -10,26 +10,40 @@ import org.codehaus.jackson.JsonNode;
  * @see net.dean.jraw.models.VoteDirection
  */
 public interface Votable {
+
     /**
      * Gets the amount of upvotes the object has received
      *
      * @return The amount of upvotes the object has received
      */
     @JsonInteraction
-    default Integer getUpvotes() {
+    public default Integer getUpvotes() {
         return getDataNode().get("ups").getIntValue();
     }
 
     /**
-     * Gets the amount of downvotes the object has received. With recent changes in Reddit, this will always return 0.
-     * See <a href="https://github.com/reddit/reddit/commit/8c9ad4e">this commit</a> for more information.
+     * Gets the amount of downvotes the object has received.
      *
      * @return The amount of downvotes the post has received
+     * @deprecated With recent changes in Reddit, this will always return 0. See
+     * <a href="https://github.com/reddit/reddit/commit/8c9ad4e">this commit</a> for more information.
      */
     @JsonInteraction
-    default Integer getDownvotes() {
+    @Deprecated
+    public default Integer getDownvotes() {
         return getDataNode().get("downs").getIntValue();
     }
+
+    /**
+     * The net score of the link (upvotes minus downvotes)
+     *
+     * @return The link's net score
+     */
+    @JsonInteraction
+    public default Integer getScore() {
+        return getDataNode().get("score").getIntValue();
+    }
+
 
     /**
      * Gets the way in which the logged in user voted. If there is none, this method will always return

@@ -33,15 +33,15 @@ public abstract class RedditTest {
         return clazz.getSimpleName() + " for JRAW v" + Version.get().formatted();
     }
 
-    protected static final int randomInt() {
-        return random.nextInt(1_000_000_000);
+    protected final int randomInt() {
+        return random.nextInt(1_000_000_001);
     }
 
     protected void handle(Throwable t) {
         if (t instanceof NetworkException) {
             NetworkException e = (NetworkException) t;
-            if (e.getCode() == 504) {
-                throw new SkipException("Received 504, skipping");
+            if (e.getCode() >= 500 && e.getCode() < 600) {
+                throw new SkipException("Received " + e.getCode() + ", skipping");
             }
         }
         t.printStackTrace();

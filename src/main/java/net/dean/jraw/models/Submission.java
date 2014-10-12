@@ -98,17 +98,6 @@ public class Submission extends Contribution {
     }
 
     /**
-     * The net score of the link (upvotes minus downvotes). Note: the score is
-     * <a href="http://www.reddit.com/r/woahdude/comments/1vehg6/gopro_on_the_back_of_an_eagle/cersffj">fuzzed</a>
-     *
-     * @return The link's net score
-     */
-    @JsonInteraction
-    public Integer getScore() {
-        return data("score", Integer.class);
-    }
-
-    /**
      * The ratio of upvotes to downvotes
      * @return The ratio of upvotes to downvotes
      */
