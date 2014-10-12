@@ -119,15 +119,6 @@ public class Comment extends Contribution {
     }
 
     /**
-     * Gets the number of times this comment has received Reddit Gold
-     * @return The number of times this comment has received Reddit Gold
-     */
-    @JsonInteraction
-    public Integer getTimesGilded() {
-        return data("gilded", Integer.class);
-    }
-
-    /**
      * Gets the author of the parent link
      * @return The author of the parent link, or null if this comment is not being displayed outside of its own thread
      */

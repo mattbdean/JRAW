@@ -9,7 +9,7 @@ import org.codehaus.jackson.JsonNode;
  *
  * @see net.dean.jraw.models.VoteDirection
  */
-public interface Votable {
+public interface Votable extends JsonAttribute {
 
     /**
      * Gets the amount of upvotes the object has received
@@ -59,10 +59,4 @@ public interface Votable {
 
         return likes.getBooleanValue() ? VoteDirection.UPVOTE : VoteDirection.DOWNVOTE;
     }
-
-    /**
-     * See {@link net.dean.jraw.models.JsonModel#getDataNode()}
-     * @return The JsonNode to use for methods annotated with @JsonInteraction
-     */
-    public JsonNode getDataNode();
 }
