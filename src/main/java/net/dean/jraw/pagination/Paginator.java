@@ -1,10 +1,10 @@
 package net.dean.jraw.pagination;
 
-import com.squareup.okhttp.Request;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.NetworkAccessible;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.RedditResponse;
+import net.dean.jraw.http.RestRequest;
 import net.dean.jraw.models.Listing;
 import net.dean.jraw.models.Thing;
 
@@ -94,7 +94,7 @@ public abstract class Paginator<T extends Thing> implements Iterator<Listing<T>>
             args.putAll(extraArgs);
         }
 
-        Request request = request()
+        RestRequest request = request()
                 .path(path)
                 .query(args)
                 .build();

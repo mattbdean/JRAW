@@ -82,13 +82,13 @@ public abstract class RestClient<T extends RestResponse> implements NetworkAcces
     }
 
     @Override
-    public RequestBuilder request() {
-        return addDefaultHeaders(new RequestBuilder()
+    public RestRequest.Builder request() {
+        return addDefaultHeaders(new RestRequest.Builder()
                 .host(defaultHost)
                 .https(useHttpsDefault));
     }
 
-    private RequestBuilder addDefaultHeaders(RequestBuilder builder) {
+    private RestRequest.Builder addDefaultHeaders(RestRequest.Builder builder) {
         for (Map.Entry<String, String> entry : defaultHeaders.entrySet()) {
             builder.header(entry.getKey(), entry.getValue());
         }
@@ -127,19 +127,26 @@ public abstract class RestClient<T extends RestResponse> implements NetworkAcces
     }
 
     @Override
-    public T execute(Request r) throws NetworkException {
+    public T execute(RestRequest request) throws NetworkException {
         if (enforceRatelimit) {
             if (!rateLimiter.tryAcquire()) {
                 JrawUtils.logger().info("Slept for {} seconds", rateLimiter.acquire());
             }
         }
 
+        Request r = request.getRequest();
         try {
             Response response = http.newCall(r).execute();
 
             JrawUtils.logger().info("{} {}", r.method(), r.url());
             if (!response.isSuccessful()) {
                 throw new NetworkException(response.code());
+            }
+            if (request.getFormArgs() != null) {
+                for (Map.Entry<String, String> entry : request.getFormArgs().entrySet()) {
+                    String val = request.isSensitive(entry.getKey()) ? "<sensitive>" : entry.getValue();
+                    JrawUtils.logger().info("    {}={}", entry.getKey(), val);
+                }
             }
 
             T genericResponse = initResponse(http.newCall(r).execute());

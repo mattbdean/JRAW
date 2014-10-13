@@ -1,11 +1,10 @@
 package net.dean.jraw.models;
 
-import com.squareup.okhttp.FormEncodingBuilder;
-import com.squareup.okhttp.Request;
 import net.dean.jraw.*;
 import net.dean.jraw.http.NetworkAccessible;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.RedditResponse;
+import net.dean.jraw.http.RestRequest;
 import net.dean.jraw.models.attr.Votable;
 import org.codehaus.jackson.JsonNode;
 
@@ -71,14 +70,9 @@ public class LoggedInAccount extends Account implements NetworkAccessible<Reddit
             args.put("captcha", captchaAttempt);
         }
 
-        FormEncodingBuilder form = new FormEncodingBuilder();
-        for (Map.Entry<String, String> entry : args.entrySet()) {
-            form.add(entry.getKey(), entry.getValue());
-        }
-
         RedditResponse response = genericPost(request()
                 .endpoint(Endpoints.SUBMIT)
-                .post(form.build())
+                .post(args)
                 .build());
         return creator.getSubmission(response.getJson().get("json").get("data").get("id").asText());
     }
@@ -97,12 +91,11 @@ public class LoggedInAccount extends Account implements NetworkAccessible<Reddit
     public <T extends Thing & Votable> void vote(T s, VoteDirection voteDirection) throws NetworkException, ApiException {
         genericPost(request()
                 .endpoint(Endpoints.VOTE)
-                .post(new FormEncodingBuilder()
-                        .add("api_type", "json")
-                        .add("dir", Integer.toString(voteDirection.getValue()))
-                        .add("id", s.getFullName())
-                        .build())
-                .build());
+                .post(JrawUtils.args(
+                        "api_type", "json",
+                        "dir", voteDirection.getValue(),
+                        "id", s.getFullName())
+                ).build());
     }
 
     /**
@@ -119,10 +112,9 @@ public class LoggedInAccount extends Account implements NetworkAccessible<Reddit
         // Send it to "/api/save" if save == true, "/api/unsave" if save == false
         return genericPost(request()
                 .endpoint(save ? Endpoints.SAVE : Endpoints.UNSAVE)
-                .post(new FormEncodingBuilder()
-                        .add("id", s.getFullName())
-                        .build())
-                .build());
+                .post(JrawUtils.args(
+                        "id", s.getFullName()
+                )).build());
     }
 
     /**
@@ -141,11 +133,10 @@ public class LoggedInAccount extends Account implements NetworkAccessible<Reddit
         }
         return genericPost(request()
                 .endpoint(Endpoints.SENDREPLIES)
-                .post(new FormEncodingBuilder()
-                        .add("id", s.getFullName())
-                        .add("state", Boolean.toString(send))
-                        .build())
-                .build());
+                .post(JrawUtils.args(
+                        "id", s.getFullName(),
+                        "state", send
+                )).build());
     }
 
     /**
@@ -164,10 +155,9 @@ public class LoggedInAccount extends Account implements NetworkAccessible<Reddit
         // "/api/marknsfw" if nsfw == true, "/api/unmarknsfw" if nsfw == false
         return genericPost(request()
                 .endpoint(nsfw ? Endpoints.MARKNSFW : Endpoints.UNMARKNSFW)
-                .post(new FormEncodingBuilder()
-                        .add("id", s.getFullName())
-                        .build())
-                .build());
+                .post(JrawUtils.args(
+                        "id", s.getFullName()
+                )).build());
     }
 
     /**
@@ -205,10 +195,9 @@ public class LoggedInAccount extends Account implements NetworkAccessible<Reddit
     public RedditResponse delete(String id) throws NetworkException, ApiException {
         return genericPost(request()
                 .endpoint(Endpoints.DEL)
-                .post(new FormEncodingBuilder()
-                        .add("id", id)
-                        .build())
-                .build());
+                .post(JrawUtils.args(
+                        "id", id
+                )).build());
     }
 
     /**
@@ -242,12 +231,11 @@ public class LoggedInAccount extends Account implements NetworkAccessible<Reddit
     private RedditResponse modifyDeveloperStatus(String clientId, String devName, boolean remove) throws NetworkException, ApiException {
         return genericPost(request()
                 .endpoint(remove ? Endpoints.REMOVEDEVELOPER : Endpoints.ADDDEVELOPER)
-                .post(new FormEncodingBuilder()
-                        .add("api_type", "json")
-                        .add("client_id", clientId)
-                        .add("name", devName)
-                        .build())
-                .build());
+                .post(JrawUtils.args(
+                        "api_type", "json",
+                        "client_id", clientId,
+                        "name", devName
+                )).build());
     }
 
     /**
@@ -263,10 +251,9 @@ public class LoggedInAccount extends Account implements NetworkAccessible<Reddit
     public RedditResponse hide(Submission s, boolean hide) throws NetworkException, ApiException {
         return genericPost(request()
                 .endpoint(hide ? Endpoints.HIDE : Endpoints.UNHIDE)
-                .post(new FormEncodingBuilder()
-                        .add("id", s.getFullName())
-                        .build())
-                .build());
+                .post(JrawUtils.args(
+                        "id", s.getFullName()
+                )).build());
     }
 
     /**
@@ -278,8 +265,8 @@ public class LoggedInAccount extends Account implements NetworkAccessible<Reddit
      * @throws NetworkException If needsLogin is true and the user was not logged in, or there was an error making the
      *                          HTTP request.
      */
-    private RedditResponse genericPost(Request r) throws NetworkException, ApiException {
-        if (!r.method().equals("POST")) {
+    private RedditResponse genericPost(RestRequest r) throws NetworkException, ApiException {
+        if (!r.getMethod().equals("POST")) {
             throw new IllegalArgumentException("Request is not POST");
         }
 
@@ -304,12 +291,11 @@ public class LoggedInAccount extends Account implements NetworkAccessible<Reddit
     public <T extends Contribution> String reply(T contribution, String text) throws NetworkException, ApiException {
         RedditResponse response = genericPost(request()
                 .endpoint(Endpoints.COMMENT)
-                .post(new FormEncodingBuilder()
-                        .add("api_type", "json")
-                        .add("text", text)
-                        .add("thing_id", contribution.getFullName())
-                        .build())
-                .build());
+                .post(JrawUtils.args(
+                        "api_type", "json",
+                        "text", text,
+                        "thing_id", contribution.getFullName()
+                )).build());
 
         return response.getJson().get("json").get("data").get("things").get(0).get("data").get("id").asText();
     }
@@ -339,11 +325,10 @@ public class LoggedInAccount extends Account implements NetworkAccessible<Reddit
     public void setSubscribed(Subreddit subreddit, boolean sub) throws NetworkException {
         execute(request()
                 .endpoint(Endpoints.SUBSCRIBE)
-                .post(new FormEncodingBuilder()
-                        .add("sr", subreddit.getFullName())
-                        .add("action", sub ? "sub" : "unsub")
-                        .build())
-                .build());
+                .post(JrawUtils.args(
+                        "sr", subreddit.getFullName(),
+                        "action", sub ? "sub" : "unsub"
+                )).build());
     }
 
     /**

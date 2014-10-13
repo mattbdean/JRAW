@@ -1,13 +1,8 @@
 package net.dean.jraw;
 
-import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.MediaType;
-import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
-import net.dean.jraw.http.MediaTypes;
-import net.dean.jraw.http.NetworkException;
-import net.dean.jraw.http.RedditResponse;
-import net.dean.jraw.http.RestClient;
+import net.dean.jraw.http.*;
 import net.dean.jraw.models.*;
 import net.dean.jraw.pagination.Sorting;
 import net.dean.jraw.pagination.SubredditPaginator;
@@ -82,16 +77,16 @@ public class RedditClient extends RestClient<RedditResponse> {
      */
     @EndpointImplementation(Endpoints.LOGIN)
     public LoggedInAccount login(String username, String password) throws NetworkException, ApiException {
-        Request request = request()
+        RestRequest request = request()
                 .host(HOST_HTTPS_SPECIAL)
                 .https(true) // Always HTTPS
                 .endpoint(Endpoints.LOGIN)
-                .post(new FormEncodingBuilder()
-                                .add("user", username)
-                                .add("passwd", password)
-                                .add("api_type", "json")
-                                .build()
-                ).build();
+                .post(JrawUtils.args(
+                        "user", username,
+                        "passwd", password,
+                        "api_type", "json"
+                )).sensitiveArgs("passwd")
+                .build();
 
         RedditResponse loginResponse = execute(request);
 
@@ -175,10 +170,9 @@ public class RedditClient extends RestClient<RedditResponse> {
         try {
             RedditResponse response = execute(request()
                     .endpoint(Endpoints.NEW_CAPTCHA)
-                    .post(new FormEncodingBuilder()
-                            .add("api_type", "json")
-                            .build())
-                    .build());
+                    .post(JrawUtils.args(
+                            "api_type", "json"
+                    )).build());
 
             // Some strange response you got there, reddit...
             if (response.hasErrors()) {
@@ -202,12 +196,12 @@ public class RedditClient extends RestClient<RedditResponse> {
     @EndpointImplementation(Endpoints.CAPTCHA_IDEN)
     public Captcha getCaptcha(String id) throws NetworkException {
         // Use Request to format the URL
-        Request request = request()
+        RestRequest request = request()
                 .endpoint(Endpoints.CAPTCHA_IDEN, id)
                 .get()
                 .build();
 
-        return new Captcha(id, request.urlString());
+        return new Captcha(id, request.getUrl());
     }
 
     /**
@@ -348,7 +342,7 @@ public class RedditClient extends RestClient<RedditResponse> {
     public List<String> getSubredditsByTopic(String topic) throws NetworkException {
         List<String> subreddits = new ArrayList<>();
 
-        Request request = request()
+        RestRequest request = request()
                 .endpoint(Endpoints.SUBREDDITS_BY_TOPIC)
                 .query("query", topic)
                 .build();
@@ -373,13 +367,12 @@ public class RedditClient extends RestClient<RedditResponse> {
     public List<String> searchSubreddits(String start, boolean includeNsfw) throws NetworkException {
         List<String> subs = new ArrayList<>();
 
-        Request request = request()
+        RestRequest request = request()
                 .endpoint(Endpoints.SEARCH_REDDIT_NAMES)
-                .post(new FormEncodingBuilder()
-                        .add("query", start)
-                        .add("include_over_18", Boolean.toString(includeNsfw))
-                        .build())
-                .build();
+                .post(JrawUtils.args(
+                        "query", start,
+                        "include_over_18", includeNsfw
+                )).build();
         JsonNode node = execute(request).getJson();
 
         for (JsonNode name : node.get("names")) {
@@ -400,7 +393,7 @@ public class RedditClient extends RestClient<RedditResponse> {
     public String getStylesheet(String subreddit) throws NetworkException {
         String path = getSubredditPath(subreddit, "/stylesheet");
 
-        Request r = request()
+        RestRequest r = request()
                 .path(path)
                 .build();
         RedditResponse response = execute(r);
@@ -497,7 +490,7 @@ public class RedditClient extends RestClient<RedditResponse> {
     public WikiPage getWikiPage(String subreddit, String page) throws NetworkException {
         String path = getSubredditPath(subreddit, "/wiki/" + page + ".json");
 
-        Request r = request()
+        RestRequest r = request()
                 .path(path)
                 .build();
         return execute(r).as(WikiPage.class);
