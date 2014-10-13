@@ -19,7 +19,11 @@ public abstract class AuthenticatedRedditTest extends RedditTest {
 
     AuthenticatedRedditTest() {
         super();
-        this.account = login();
+        if (!reddit.isLoggedIn()) {
+            this.account = login();
+        } else {
+            this.account = me();
+        }
     }
 
     /**
@@ -31,6 +35,15 @@ public abstract class AuthenticatedRedditTest extends RedditTest {
             String[] creds = getCredentials();
             return reddit.login(creds[0], creds[1]);
         } catch (NetworkException | ApiException e) {
+            handle(e);
+            return null;
+        }
+    }
+
+    private LoggedInAccount me() {
+        try {
+            return reddit.me();
+        } catch (NetworkException e) {
             handle(e);
             return null;
         }
