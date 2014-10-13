@@ -3,6 +3,7 @@ package net.dean.jraw;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.Response;
 import net.dean.jraw.http.*;
+import net.dean.jraw.managers.AccountManager;
 import net.dean.jraw.models.*;
 import net.dean.jraw.pagination.Sorting;
 import net.dean.jraw.pagination.SubredditPaginator;
@@ -529,7 +530,7 @@ public class RedditClient extends RestClient<RedditResponse> {
         private Optional<Integer> depth;
         private Optional<Integer> limit;
         private Optional<Integer> context;
-        private Optional<CommentSort> sort;
+        private Optional<AccountManager.CommentSort> sort;
         private Optional<String> focus;
 
         /**
@@ -591,7 +592,7 @@ public class RedditClient extends RestClient<RedditResponse> {
          * @param sort The sorting
          * @return This SubmissionRequest
          */
-        public SubmissionRequest sort(CommentSort sort) {
+        public SubmissionRequest sort(AccountManager.CommentSort sort) {
             if (sort != null) {
                 this.sort = Optional.of(sort);
             }
