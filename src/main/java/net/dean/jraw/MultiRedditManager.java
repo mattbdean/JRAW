@@ -3,10 +3,7 @@ package net.dean.jraw;
 import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
-import net.dean.jraw.http.NetworkAccessible;
-import net.dean.jraw.http.NetworkException;
-import net.dean.jraw.http.RedditResponse;
-import net.dean.jraw.http.RequestBuilder;
+import net.dean.jraw.http.*;
 import net.dean.jraw.models.LoggedInAccount;
 import net.dean.jraw.models.MultiReddit;
 import net.dean.jraw.models.RenderStringPair;
@@ -23,9 +20,7 @@ import java.util.Map;
 /**
  * This class provides the ability to create, read, update, and delete multireddits.
  */
-public class MultiRedditManager implements NetworkAccessible<RedditResponse, RedditClient> {
-    private final LoggedInAccount account;
-    private final RedditClient reddit;
+public class MultiRedditManager extends AbstractManager {
     private final ObjectMapper objectMapper;
 
     /**
@@ -33,8 +28,7 @@ public class MultiRedditManager implements NetworkAccessible<RedditResponse, Red
      * @param account The account to use
      */
     public MultiRedditManager(LoggedInAccount account) {
-        this.account = account;
-        this.reddit = account.getCreator();
+        super(account);
         this.objectMapper = new ObjectMapper();
     }
 
@@ -378,11 +372,6 @@ public class MultiRedditManager implements NetworkAccessible<RedditResponse, Red
         if (root.has("explanation") && root.has("reason")) {
             throw new ApiException(root.get("reason").asText(), root.get("explanation").asText());
         }
-    }
-
-    @Override
-    public RedditClient getCreator() {
-        return reddit;
     }
 
     /**

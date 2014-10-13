@@ -10,7 +10,7 @@ import java.util.Date;
  *
  * @author Matthew Dean
  */
-public class Comment extends Contribution {
+public class Comment extends PublicContribution {
 
     /**
      * Instantiates a new Comment

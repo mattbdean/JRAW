@@ -1,11 +1,7 @@
 package net.dean.jraw;
 
 import com.squareup.okhttp.MediaType;
-import net.dean.jraw.models.Contribution;
-import net.dean.jraw.models.RedditObject;
-import net.dean.jraw.models.ThingType;
-import net.dean.jraw.models.Comment;
-import net.dean.jraw.models.Submission;
+import net.dean.jraw.models.*;
 import net.dean.jraw.pagination.MultiHubPaginator;
 import org.codehaus.jackson.JsonNode;
 import org.slf4j.Logger;
@@ -140,6 +136,8 @@ public final class JrawUtils {
                     return (T) new Submission(rootNode.get("data"));
                 case COMMENT:
                     return (T) new Comment(rootNode.get("data"));
+                case MESSAGE:
+                    return (T) new Message(rootNode.get("data"));
                 default:
                     throw new IllegalArgumentException("Class " + thingClass.getName() + " is not applicable for Contribution");
             }

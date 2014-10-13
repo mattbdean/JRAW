@@ -251,7 +251,7 @@ public abstract class Paginator<T extends Thing> implements Iterator<Listing<T>>
     }
 
     @Override
-    public void remove() {
+    public final void remove() {
         throw new UnsupportedOperationException("Cannot modify listing data");
     }
 }

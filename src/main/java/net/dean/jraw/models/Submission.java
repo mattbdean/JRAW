@@ -11,7 +11,7 @@ import java.util.Date;
  * Represents content that the user has submitted, whether that be a self post or a link. More information can be found
  * <a href="https://github.com/reddit/reddit/wiki/JSON#link-implements-votable--created">here</a>.
  */
-public class Submission extends Contribution {
+public class Submission extends PublicContribution {
     /**
      * The comments that belong to this link
      */

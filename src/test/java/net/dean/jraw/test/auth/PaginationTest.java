@@ -134,6 +134,14 @@ public class PaginationTest extends AuthenticatedRedditTest {
         }
     }
 
+    @Test
+    public void testInboxPaginator() {
+        for (InboxPaginator.Where where : InboxPaginator.Where.values()) {
+            InboxPaginator paginator = new InboxPaginator(account, where);
+            commonTest(paginator);
+        }
+    }
+
     @Test(expectedExceptions = IllegalStateException.class)
     public void testChangeRequestParamters() {
         AllSubredditsPaginator paginator = new AllSubredditsPaginator(reddit, AllSubredditsPaginator.Where.NEW);
@@ -159,23 +167,29 @@ public class PaginationTest extends AuthenticatedRedditTest {
     }
 
 
-    protected <T extends Thing> void commonTest(Paginator<T> p) throws NetworkException {
-        int numPages = 2;
-        // Test that the paginator can retrieve the data
-        List<Listing<T>> pages = new ArrayList<>();
-        while (p.hasNext() && p.getPageIndex() <= numPages) {
-            pages.add(p.next());
-        }
+    protected <T extends Thing> void commonTest(Paginator<T> p) {
+        try {
+            int numPages = 2;
+            // Test that the paginator can retrieve the data
+            List<Listing<T>> pages = new ArrayList<>();
+            while (p.hasNext() && p.getPageIndex() <= numPages) {
+                pages.add(p.next());
+            }
 
-        for (Listing<T> listing : pages) {
-            // Validate the Listing
-            validateModel(listing);
+            for (Listing<T> listing : pages) {
+                // Validate the Listing
+                validateModel(listing);
 
-            if (listing.size() > 0) {
-                // Validate Listing children
-                validateModels(listing);
-            } else {
-                JrawUtils.logger().warn("Listing was empty");
+                if (listing.size() > 0) {
+                    // Validate Listing children
+                    validateModels(listing);
+                } else {
+                    JrawUtils.logger().warn("Listing was empty");
+                }
+            }
+        } catch (IllegalStateException e) {
+            if (e.getCause().getClass().equals(NetworkException.class)) {
+                handle(e.getCause());
             }
         }
     }

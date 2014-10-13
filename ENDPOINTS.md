@@ -1,9 +1,9 @@
-<!--- Generated 2014-10-11 at 22:20:16 EDT. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
+<!--- Generated 2014-10-13 at 10:18:44 EDT. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
 #Endpoints
 
 This file contains a list of all the endpoints (regardless of if they have been implemented) that can be found at the [official Reddit API docs](https://www.reddit.com/dev/api). To update this file, run `./gradlew endpoints:update`.
 
-So far **65** endpoints (out of 184 total) have been implemented.
+So far **69** endpoints (out of 184 total) have been implemented.
 
 ##account
 Method|Endpoint|Implemented?
@@ -165,10 +165,10 @@ Method|Endpoint|Implemented?
 `POST`|[`/api/compose`](https://www.reddit.com/dev/api#POST_api_compose)|No
 `POST`|[`/api/read_message`](https://www.reddit.com/dev/api#POST_api_read_message)|No
 `POST`|[`/api/unread_message`](https://www.reddit.com/dev/api#POST_api_unread_message)|No
-`POST`|[`/message/inbox`](https://www.reddit.com/dev/api#POST_message_inbox)|No
-`GET`|[`/message/sent`](https://www.reddit.com/dev/api#GET_message_sent)|No
-`GET`|[`/message/unread`](https://www.reddit.com/dev/api#GET_message_unread)|No
-`GET`|[`/message/{where}`](https://www.reddit.com/dev/api#GET_message_%7Bwhere%7D)|No
+`POST`|[`/message/inbox`](https://www.reddit.com/dev/api#POST_message_inbox)|[`InboxPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/pagination/InboxPaginator#getListing-boolean-)
+`GET`|[`/message/sent`](https://www.reddit.com/dev/api#GET_message_sent)|[`InboxPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/pagination/InboxPaginator#getListing-boolean-)
+`GET`|[`/message/unread`](https://www.reddit.com/dev/api#GET_message_unread)|[`InboxPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/pagination/InboxPaginator#getListing-boolean-)
+`GET`|[`/message/{where}`](https://www.reddit.com/dev/api#GET_message_%7Bwhere%7D)|[`InboxPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/pagination/InboxPaginator#getListing-boolean-)
 
 ##reddit gold
 Method|Endpoint|Implemented?

@@ -1,16 +1,12 @@
 package net.dean.jraw.models;
 
 import net.dean.jraw.models.attr.Created;
-import net.dean.jraw.models.attr.Distinguishable;
-import net.dean.jraw.models.attr.Gildable;
-import net.dean.jraw.models.attr.Votable;
 import org.codehaus.jackson.JsonNode;
 
 /**
- * This class provides a way to wrap the {@link Submission} and {@link Comment}
- * classes together. Used mostly in {@link net.dean.jraw.pagination.UserContributionPaginator}.
+ * This class provides a way to wrap {@link Submission}, {@link Comment}, and {@link Message} together.
  */
-public abstract class Contribution extends Thing implements Created, Distinguishable, Gildable, Votable {
+public abstract class Contribution extends Thing implements Created {
 
     /**
      * Instantiates a new Contribution

@@ -7,7 +7,7 @@ import net.dean.jraw.models.Thing;
  * This class provides a template for Paginators that use only a "where" attribute, such as {@code /user/username/{where}}.
  * The way this class assembles the base URI ({@link #getBaseUri()}) works somewhat differently than other paginators.
  * The formula for creating this URI is as follows: {@code {prefix}{where.name().toLowerCase()}{postfix}}. So if {@link #getUriPrefix()}
- * resulted in "/user/username", the enum value's name was "SUBMITTED", and {@link #getUriPostfix()} resulted in ".json",
+ * resulted in "/user/username/", the enum value's name was "SUBMITTED", and {@link #getUriPostfix()} resulted in ".json",
  * then the base URI would be "/user/username/submitted.json".
  *
  * @param <T> The type of Thing that
@@ -34,7 +34,7 @@ public abstract class GenericPaginator<T extends Thing, U extends Enum<U>> exten
             pre += "/";
         }
 
-        return pre + where.name().toLowerCase() + getUriPostfix();
+        return pre + getAsString(where) + getUriPostfix();
     }
 
     /**
@@ -48,6 +48,10 @@ public abstract class GenericPaginator<T extends Thing, U extends Enum<U>> exten
      * @return The String that will come after all paths for this paginator
      */
     public String getUriPostfix() { return ".json"; }
+
+    public String getAsString(U where) {
+        return where.name().toLowerCase();
+    }
 
     /**
      * Gets the enum value that will be appended to the base URI
