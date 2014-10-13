@@ -206,6 +206,9 @@ public class RestRequest {
          * @return A query string
          */
         private String generateQueryString(Map<String, String> args) {
+            if (args.size() == 0) {
+                return "";
+            }
             StringBuilder url = new StringBuilder();
 
             // Create the query string (?foo=bar&key1=val1
