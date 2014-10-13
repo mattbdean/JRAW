@@ -31,14 +31,6 @@ allprojects {
         testCompile group: 'org.slf4j',            name: 'slf4j-simple',       version: '1.7.+'
         testCompile group: 'org.testng',           name: 'testng',             version: '6.1.1'
     }
-
-    test {
-        // TestNG instead of default JUnit
-        useTestNG()
-
-        // Show stderr and stdout (useful for exceptions)
-        testLogging.showStandardStreams = true
-    }
 }
 
 dependencies {
@@ -132,6 +124,15 @@ test {
                 }
             }
         }
+    }
+
+    testLogging {
+        // Show stderr and stdout (useful for exceptions)
+        showStandardStreams = true
+    }
+
+    beforeTest { descriptor ->
+        logger.lifecycle("Running test: ${descriptor.className}.${descriptor.name}")
     }
 }
 
