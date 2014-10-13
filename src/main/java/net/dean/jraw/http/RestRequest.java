@@ -53,7 +53,9 @@ public class RestRequest {
     }
 
     public String[] getSensitiveArgs() {
-        return sensitiveArgs;
+        String[] localCopy = new String[sensitiveArgs.length];
+        System.arraycopy(sensitiveArgs, 0, localCopy, 0, sensitiveArgs.length);
+        return localCopy;
     }
 
     public boolean isSensitive(String arg) {

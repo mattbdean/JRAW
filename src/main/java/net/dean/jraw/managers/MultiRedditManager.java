@@ -1,10 +1,10 @@
-package net.dean.jraw;
+package net.dean.jraw.managers;
 
+import net.dean.jraw.*;
 import net.dean.jraw.http.AbstractManager;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.RedditResponse;
 import net.dean.jraw.http.RestRequest;
-import net.dean.jraw.models.LoggedInAccount;
 import net.dean.jraw.models.MultiReddit;
 import net.dean.jraw.models.RenderStringPair;
 import org.codehaus.jackson.JsonNode;
@@ -25,10 +25,10 @@ public class MultiRedditManager extends AbstractManager {
 
     /**
      * Instantiates a new MultiRedditManager
-     * @param account The account to use
+     * @param client The RedditClient to use
      */
-    public MultiRedditManager(LoggedInAccount account) {
-        super(account);
+    public MultiRedditManager(RedditClient client) {
+        super(client);
         this.objectMapper = new ObjectMapper();
     }
 
@@ -37,7 +37,7 @@ public class MultiRedditManager extends AbstractManager {
      *
      * @return A list of your multireddits
      * @throws NetworkException If there was a problem sending the request
-     * @throws ApiException If the Reddit API returned an error
+     * @throws net.dean.jraw.ApiException If the Reddit API returned an error
      */
     @EndpointImplementation(Endpoints.MULTI_MINE)
     public List<MultiReddit> mine() throws NetworkException, ApiException {
@@ -264,7 +264,7 @@ public class MultiRedditManager extends AbstractManager {
      * @throws ApiException If the multi does not exist
      */
     public MultiReddit get(String name) throws NetworkException, ApiException {
-        return get(account.getFullName(), name);
+        return get(reddit.getAuthenticatedUser(), name);
     }
 
     /**
@@ -298,7 +298,7 @@ public class MultiRedditManager extends AbstractManager {
      */
     @EndpointImplementation(Endpoints.MULTI_MULTIPATH_DESCRIPTION_GET)
     public RenderStringPair getDescription(String multiName) throws NetworkException, ApiException {
-        return getDescription(account.getFullName(), multiName);
+        return getDescription(reddit.getAuthenticatedUser(), multiName);
     }
 
     /**
@@ -332,7 +332,7 @@ public class MultiRedditManager extends AbstractManager {
      * @return The multireddit's path
      */
     private String getMultiPath(String multiName) {
-        return getMultiPath(account.getFullName(), multiName);
+        return getMultiPath(reddit.getAuthenticatedUser(), multiName);
     }
 
     /**
@@ -368,6 +368,11 @@ public class MultiRedditManager extends AbstractManager {
         if (root.has("explanation") && root.has("reason")) {
             throw new ApiException(root.get("reason").asText(), root.get("explanation").asText());
         }
+    }
+
+    @Override
+    protected boolean requiresAuthentication() {
+        return true;
     }
 
     /**

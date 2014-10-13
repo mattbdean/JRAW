@@ -96,32 +96,32 @@ public abstract class AbstractEndpointGenerator {
     }
 
     protected String getJavadocUrl(Endpoint endpoint) {
-        String base = "https://thatjavanerd.github.io/JRAW/docs";
+        StringBuilder base = new StringBuilder("https://thatjavanerd.github.io/JRAW/docs");
         Method m = endpoint.getMethod();
         // "/0.4.0"
-        base += "/" + Version.get().formatted();
+        base.append("/").append(Version.get().formatted());
         // "/net/dean/jraw/ClassName.html"
-        base += "/" + m.getDeclaringClass().getName().replace('.', '/');
+        base.append("/").append(m.getDeclaringClass().getName().replace('.', '/'));
         // "#myMethod"
-        base += "#" + m.getName().replace('(', '-').replace(')', '-');
+        base.append('#').append(m.getName().replace('(', '-').replace(')', '-'));
 
         // Begin parameter types
-        base += '-';
+        base.append('-');
         Class<?>[] parameterTypes = m.getParameterTypes();
         int counter = 0;
         for (Class<?> parameterType : parameterTypes) {
-            base += parameterType.getName();
+            base.append(parameterType.getName());
             if (counter != parameterTypes.length - 1) {
                 // Parameters are separated with a hyphen
-                base += '-';
+                base.append('-');
             }
 
             counter++;
         }
 
         // End parameter types
-        base += '-';
-        return base;
+        base.append('-');
+        return base.toString();
     }
 
     /**

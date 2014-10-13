@@ -3,7 +3,7 @@ package net.dean.jraw.test.auth;
 import com.google.common.collect.ImmutableList;
 import net.dean.jraw.ApiException;
 import net.dean.jraw.JrawUtils;
-import net.dean.jraw.MultiRedditManager;
+import net.dean.jraw.managers.MultiRedditManager;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.models.MultiReddit;
 import net.dean.jraw.models.RenderStringPair;
@@ -34,7 +34,7 @@ public class MultiRedditTest extends AuthenticatedRedditTest {
     private static String readOnlyMulti;
 
     public MultiRedditTest() {
-        manager = new MultiRedditManager(account);
+        manager = new MultiRedditManager(reddit);
     }
 
     @BeforeClass
@@ -211,7 +211,7 @@ public class MultiRedditTest extends AuthenticatedRedditTest {
             MultiReddit multi = manager.get(readOnlyMulti);
             validateModel(multi);
 
-            validateRenderString(manager.getDescription(account.getFullName(), readOnlyMulti));
+            validateRenderString(manager.getDescription(reddit.getAuthenticatedUser(), readOnlyMulti));
         } catch (NetworkException | ApiException e) {
             handle(e);
         }
@@ -259,7 +259,7 @@ public class MultiRedditTest extends AuthenticatedRedditTest {
     public void testCopy() {
         String newName = MULTI_NAME + "_copy";
         try {
-            manager.copy(account.getFullName(), MULTI_NAME, newName);
+            manager.copy(reddit.getAuthenticatedUser(), MULTI_NAME, newName);
 
             MultiReddit original = getMulti(MULTI_NAME);
             MultiReddit copied = getMulti(newName);

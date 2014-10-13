@@ -1,15 +1,16 @@
-package net.dean.jraw;
+package net.dean.jraw.managers;
 
+import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.AbstractManager;
-import net.dean.jraw.models.LoggedInAccount;
 import net.dean.jraw.pagination.InboxPaginator;
 
 /**
  * This class is responsible for managing the user's inbox
  */
 public class InboxManager extends AbstractManager {
-    public InboxManager(LoggedInAccount account) {
-        super(account);
+
+    public InboxManager(RedditClient client) {
+        super(client);
     }
 
     /**
@@ -18,6 +19,12 @@ public class InboxManager extends AbstractManager {
      * @return A new InboxPaginator that iterates over the given location
      */
     public InboxPaginator iterate(InboxPaginator.Where where) {
-        return new InboxPaginator(account, where);
+        return new InboxPaginator(reddit, where);
+    }
+
+
+    @Override
+    protected boolean requiresAuthentication() {
+        return true;
     }
 }

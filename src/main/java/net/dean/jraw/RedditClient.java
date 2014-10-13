@@ -38,6 +38,8 @@ public class RedditClient extends RestClient<RedditResponse> {
     /** The amount of trending subreddits that will appear in each /r/trendingsubreddits post */
     private static final int NUM_TRENDING_SUBREDDITS = 5;
 
+    private String authenticatedUser;
+
     /**
      * Instantiates a new RedditClient and adds the given user agent to the default headers of the RestClient
      *
@@ -65,6 +67,13 @@ public class RedditClient extends RestClient<RedditResponse> {
         return new RedditResponse(r);
     }
 
+    /**
+     * Gets the name of the currently logged in user
+     * @return The name of the currently logged in user
+     */
+    public String getAuthenticatedUser() {
+        return authenticatedUser;
+    }
 
     /**
      * Logs in to an account and returns the data associated with it
@@ -102,7 +111,9 @@ public class RedditClient extends RestClient<RedditResponse> {
         // Add the X-Modhash header, or update it if it already exists
         defaultHeaders.put(HEADER_MODHASH, modhash);
 
-        return me();
+        LoggedInAccount me = me();
+        this.authenticatedUser = me.getFullName();
+        return me;
     }
 
     /**
@@ -113,13 +124,11 @@ public class RedditClient extends RestClient<RedditResponse> {
      */
     @EndpointImplementation(Endpoints.ME)
     public LoggedInAccount me() throws NetworkException {
-        loginCheck();
-
         RedditResponse response = execute(request()
                 .endpoint(Endpoints.ME)
                 .get()
                 .build());
-        return new LoggedInAccount(response.getJson().get("data"), this);
+        return new LoggedInAccount(response.getJson().get("data"));
     }
 
     /**
@@ -509,17 +518,6 @@ public class RedditClient extends RestClient<RedditResponse> {
         }
 
         return path;
-    }
-
-    /**
-     * Checks a user is logged in. If not, throws a RedditException
-     *
-     * @throws NetworkException If there is no logged in user
-     */
-    private void loginCheck() throws NetworkException {
-        if (!isLoggedIn()) {
-            throw new NetworkException("You are not logged in! Use RedditClient.login(user, pass)");
-        }
     }
 
     /**

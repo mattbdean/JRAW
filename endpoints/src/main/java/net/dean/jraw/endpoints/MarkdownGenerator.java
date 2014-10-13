@@ -6,13 +6,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.NavigableMap;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -28,7 +23,7 @@ import java.util.stream.Collectors;
  * </ol>
  */
 public class MarkdownGenerator extends AbstractEndpointGenerator {
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss z");
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss z");
 
     /**
      * Instantiates a new AbstractEndpointGenerator
@@ -42,8 +37,8 @@ public class MarkdownGenerator extends AbstractEndpointGenerator {
     @Override
     protected void _generate(File dest, BufferedWriter bw) throws IOException {
         // http://stackoverflow.com/a/4829998/1275092
-        bw.write(String.format("<!--- Generated %s. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->\n",
-                DATE_FORMAT.format(new Date())));
+        bw.write(String.format("<!--- Generated %s. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->%n",
+                dateFormat.format(new Date())));
 
         // Main header
         bw.write("#Endpoints\n\n");
@@ -52,7 +47,7 @@ public class MarkdownGenerator extends AbstractEndpointGenerator {
                 "run `./gradlew endpoints:update`.\n\n");
 
         // Summary
-        bw.write(String.format("So far **%s** endpoints (out of %s total) have been implemented.\n",
+        bw.write(String.format("So far **%s** endpoints (out of %s total) have been implemented.%n",
                 getImplementedEndpointsCount(), getTotalEndpoints()));
 
         for (Map.Entry<String, List<Endpoint>> category : endpoints.entrySet()) {

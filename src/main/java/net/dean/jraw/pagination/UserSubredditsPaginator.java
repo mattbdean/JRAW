@@ -2,8 +2,8 @@ package net.dean.jraw.pagination;
 
 import net.dean.jraw.EndpointImplementation;
 import net.dean.jraw.Endpoints;
+import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.NetworkException;
-import net.dean.jraw.models.LoggedInAccount;
 import net.dean.jraw.models.Listing;
 import net.dean.jraw.models.Subreddit;
 
@@ -16,11 +16,11 @@ public class UserSubredditsPaginator extends GenericPaginator<Subreddit, UserSub
     /**
      * Instantiates a new MySubredditsPaginator
      *
-     * @param account The LoggedInAccount whose RedditClient will be used to send HTTP requests
+     * @param client The RedditClient that will be used to send HTTP requests
      * @param where The criteria in which to return Subreddits
      */
-    public UserSubredditsPaginator(LoggedInAccount account, Where where) {
-        super(account.getCreator(), Subreddit.class, where);
+    public UserSubredditsPaginator(RedditClient client, Where where) {
+        super(client, Subreddit.class, where);
     }
 
     @Override

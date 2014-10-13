@@ -20,7 +20,7 @@ public class AuthenticationTest extends AuthenticatedRedditTest {
     @Test
     public void testCurrentUsernameNotAvailable() {
         try {
-            Assert.assertFalse(reddit.isUsernameAvailable(account.getFullName()), "Username was available");
+            Assert.assertFalse(reddit.isUsernameAvailable(reddit.getAuthenticatedUser()), "Username was available");
         } catch (NetworkException e) {
             handle(e);
         }

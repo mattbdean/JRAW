@@ -3,13 +3,8 @@ package net.dean.jraw.test.auth;
 import net.dean.jraw.ApiException;
 import net.dean.jraw.JrawUtils;
 import net.dean.jraw.http.NetworkException;
-import net.dean.jraw.models.Contribution;
-import net.dean.jraw.models.LoggedInAccount;
-import net.dean.jraw.models.VoteDirection;
-import net.dean.jraw.models.Comment;
-import net.dean.jraw.models.Listing;
-import net.dean.jraw.models.Submission;
-import net.dean.jraw.models.Subreddit;
+import net.dean.jraw.managers.AccountManager;
+import net.dean.jraw.models.*;
 import net.dean.jraw.pagination.Paginator;
 import net.dean.jraw.pagination.UserContributionPaginator;
 import net.dean.jraw.pagination.UserSubredditsPaginator;
@@ -25,7 +20,7 @@ import static org.testng.Assert.*;
 /**
  * This class tests methods that require authentication, such as voting, saving, hiding, and posting.
  */
-public class AuthenticatedUserTest extends AuthenticatedRedditTest {
+public class AccountManagerTest extends AuthenticatedRedditTest {
     private static final String SUBMISSION_ID = "262la4";
     private static final String COMMENT_ID = "cieys70";
     private static String CLIENT_ID = "0fehncPayYTIIg";
@@ -41,7 +36,7 @@ public class AuthenticatedUserTest extends AuthenticatedRedditTest {
             URL url = JrawUtils.newUrl("https://www.google.com/?q=" + number);
 
             Submission submission = account.submitContent(
-                    new LoggedInAccount.SubmissionBuilder(url, "jraw_testing2", "Link post test (random=" + number + ")"));
+                    new AccountManager.SubmissionBuilder(url, "jraw_testing2", "Link post test (random=" + number + ")"));
 
             assertTrue(!submission.isSelfPost());
             assertTrue(submission.getUrl().equals(url));
@@ -60,7 +55,7 @@ public class AuthenticatedUserTest extends AuthenticatedRedditTest {
             String content = reddit.getUserAgent();
 
             Submission submission = account.submitContent(
-                    new LoggedInAccount.SubmissionBuilder(content, "jraw_testing2", "Self post test (random=" + number + ")"));
+                    new AccountManager.SubmissionBuilder(content, "jraw_testing2", "Self post test (random=" + number + ")"));
 
             assertTrue(submission.isSelfPost());
             assertTrue(submission.getSelftext().md().equals(content));
@@ -77,7 +72,7 @@ public class AuthenticatedUserTest extends AuthenticatedRedditTest {
     public void testPostWithInvalidCaptcha() throws ApiException {
         try {
             account.submitContent(
-                    new LoggedInAccount.SubmissionBuilder("content", "jraw_testing2", "title"), reddit.getNewCaptcha(), "invalid captcha attempt");
+                    new AccountManager.SubmissionBuilder("content", "jraw_testing2", "title"), reddit.getNewCaptcha(), "invalid captcha attempt");
         } catch (NetworkException e) {
             handle(e);
         } catch (ApiException e) {
@@ -349,7 +344,7 @@ public class AuthenticatedUserTest extends AuthenticatedRedditTest {
     }
 
     private boolean isSubscribed(String subreddit) {
-        UserSubredditsPaginator paginator = new UserSubredditsPaginator(account, UserSubredditsPaginator.Where.SUBSCRIBER);
+        UserSubredditsPaginator paginator = new UserSubredditsPaginator(reddit, UserSubredditsPaginator.Where.SUBSCRIBER);
         paginator.setLimit(Paginator.RECOMMENDED_MAX_LIMIT);
 
         // Try to find the subreddit in the list of subscribed subs
@@ -366,6 +361,6 @@ public class AuthenticatedUserTest extends AuthenticatedRedditTest {
     }
 
     private UserContributionPaginator getPaginator(Where where) {
-        return new UserContributionPaginator(reddit, where, account.getFullName());
+        return new UserContributionPaginator(reddit, where, reddit.getAuthenticatedUser());
     }
 }

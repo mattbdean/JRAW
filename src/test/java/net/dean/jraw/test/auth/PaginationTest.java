@@ -2,7 +2,7 @@ package net.dean.jraw.test.auth;
 
 import net.dean.jraw.ApiException;
 import net.dean.jraw.JrawUtils;
-import net.dean.jraw.MultiRedditManager;
+import net.dean.jraw.managers.MultiRedditManager;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.models.MultiReddit;
 import net.dean.jraw.models.Listing;
@@ -23,7 +23,7 @@ import static org.testng.Assert.assertTrue;
  * This class tests all concrete subclasses of {@link net.dean.jraw.pagination.Paginator}
  */
 public class PaginationTest extends AuthenticatedRedditTest {
-    private MultiRedditManager manager = new MultiRedditManager(account);
+    private MultiRedditManager manager = new MultiRedditManager(reddit);
 
     @Test
     public void testSubredditPaginatorFrontPage() throws NetworkException {
@@ -83,7 +83,7 @@ public class PaginationTest extends AuthenticatedRedditTest {
     public void testUserContributionPaginator() throws NetworkException {
         // Test all Where values
         for (UserContributionPaginator.Where where : UserContributionPaginator.Where.values()) {
-            UserContributionPaginator paginator = new UserContributionPaginator(reddit, where, account.getFullName());
+            UserContributionPaginator paginator = new UserContributionPaginator(reddit, where, reddit.getAuthenticatedUser());
             commonTest(paginator);
         }
     }
@@ -92,7 +92,7 @@ public class PaginationTest extends AuthenticatedRedditTest {
     public void testUserSubredditsPaginator() throws NetworkException {
         // Test all Where values
         for (UserSubredditsPaginator.Where where : UserSubredditsPaginator.Where.values()) {
-            UserSubredditsPaginator paginator = new UserSubredditsPaginator(account, where);
+            UserSubredditsPaginator paginator = new UserSubredditsPaginator(reddit, where);
             commonTest(paginator);
         }
     }
@@ -137,7 +137,7 @@ public class PaginationTest extends AuthenticatedRedditTest {
     @Test
     public void testInboxPaginator() {
         for (InboxPaginator.Where where : InboxPaginator.Where.values()) {
-            InboxPaginator paginator = new InboxPaginator(account, where);
+            InboxPaginator paginator = new InboxPaginator(reddit, where);
             commonTest(paginator);
         }
     }

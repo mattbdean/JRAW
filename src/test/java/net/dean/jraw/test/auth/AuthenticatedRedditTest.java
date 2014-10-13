@@ -2,6 +2,7 @@ package net.dean.jraw.test.auth;
 
 import net.dean.jraw.ApiException;
 import net.dean.jraw.http.NetworkException;
+import net.dean.jraw.managers.AccountManager;
 import net.dean.jraw.models.LoggedInAccount;
 import net.dean.jraw.test.RedditTest;
 
@@ -15,15 +16,14 @@ import java.util.Scanner;
  */
 public abstract class AuthenticatedRedditTest extends RedditTest {
     private static String[] credentials;
-    protected final LoggedInAccount account;
+    protected final AccountManager account;
 
     AuthenticatedRedditTest() {
         super();
         if (!reddit.isLoggedIn()) {
-            this.account = login();
-        } else {
-            this.account = me();
+            login();
         }
+        this.account = new AccountManager(reddit);
     }
 
     /**
@@ -35,15 +35,6 @@ public abstract class AuthenticatedRedditTest extends RedditTest {
             String[] creds = getCredentials();
             return reddit.login(creds[0], creds[1]);
         } catch (NetworkException | ApiException e) {
-            handle(e);
-            return null;
-        }
-    }
-
-    private LoggedInAccount me() {
-        try {
-            return reddit.me();
-        } catch (NetworkException e) {
             handle(e);
             return null;
         }

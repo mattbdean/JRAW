@@ -28,33 +28,6 @@ public class Account extends Thing implements Created {
     }
 
     /**
-     * Checks if the user has unread mail. Returns null if the currently logged in account is not this one
-     * @return User has unread mail? Null if not your account
-     */
-    @JsonInteraction(nullable = true)
-    public Boolean hasMail() {
-        return data("has_mail", Boolean.class);
-    }
-
-    /**
-     * Checks if the user has mod mail
-     * @return User has unread mod mail?
-     */
-    @JsonInteraction(nullable = true)
-    public Boolean hasModMail() {
-        return data("has_mod_mail", Boolean.class);
-    }
-
-    /**
-     * Checks if the user has a verified email
-     * @return User has provided an email address and got it verified?
-     */
-    @JsonInteraction
-    public Boolean hasVerifiedEmail() {
-        return data("has_verified_email", Boolean.class);
-    }
-
-    /**
      * Checks whether or not the logged-in user has this user set as a friend
      * @return Whether the logged-in user has this user set as a friend
      */
@@ -88,15 +61,6 @@ public class Account extends Thing implements Created {
     @JsonInteraction
     public Integer getLinkKarma() {
         return data("link_karma", Integer.class);
-    }
-
-    /**
-     * Gets the current modhash
-     * @return Current modhash, or null if not your account
-     */
-    @JsonInteraction(nullable = true)
-    public String getModHash() {
-        return data("modhash");
     }
 
     /**
