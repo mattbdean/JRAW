@@ -137,7 +137,9 @@
     "private messages": [
         "POST /api/block",
         "POST /api/compose",
+        "POST /api/read_all_messages",
         "POST /api/read_message",
+        "POST /api/unblock_subreddit",
         "POST /api/unread_message",
         "POST /message/inbox",
         "GET /message/sent",
