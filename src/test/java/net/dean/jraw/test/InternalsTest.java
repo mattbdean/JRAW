@@ -23,8 +23,9 @@ import java.util.List;
 import static org.testng.Assert.*;
 
 public class InternalsTest extends RedditTest {
+	
     private static final ObjectMapper objectMapper = new ObjectMapper();
-
+    
     @Test(expectedExceptions = UnsupportedOperationException.class)
     public void testModifyListing() {
         Listing<Submission> submissions = new SubredditPaginator(reddit).next();
@@ -51,21 +52,34 @@ public class InternalsTest extends RedditTest {
     public void testModifyListingData() {
         final Listing<Submission> listing = new SubredditPaginator(reddit).next();
         List<CodeBlock> codeBlocks = new ArrayList<>();
-
+        
         // List of CodeBlocks that will modify the listing
+//        codeBlocks.addAll(Arrays.asList(
+//                () -> listing.add(null),
+//                () -> listing.add(0, null),
+//                () -> listing.addAll(0, null),
+//                () -> listing.addAll(null),
+//                listing::clear,
+//                () -> listing.remove(null),
+//                () -> listing.remove(0),
+//                () -> listing.removeAll(null),
+//                () -> listing.retainAll(null),
+//                () -> listing.set(0, null)
+//        ));
+        
         codeBlocks.addAll(Arrays.asList(
-                () -> listing.add(null),
-                () -> listing.add(0, null),
-                () -> listing.addAll(0, null),
-                () -> listing.addAll(null),
-                listing::clear,
-                () -> listing.remove(null),
-                () -> listing.remove(0),
-                () -> listing.removeAll(null),
-                () -> listing.retainAll(null),
-                () -> listing.set(0, null)
+        		new CodeBlock() { @Override public void execute() { listing.add(null); }},
+        		new CodeBlock() { @Override public void execute() { listing.add(0, null); }},
+        		new CodeBlock() { @Override public void execute() { listing.addAll(0, null); }},
+        		new CodeBlock() { @Override public void execute() { listing.addAll(null); }},
+        		new CodeBlock() { @Override public void execute() { listing.clear(); }},
+        		new CodeBlock() { @Override public void execute() { listing.remove(null); }},
+        		new CodeBlock() { @Override public void execute() { listing.remove(0); }},
+        		new CodeBlock() { @Override public void execute() { listing.removeAll(null); }},
+        		new CodeBlock() { @Override public void execute() { listing.retainAll(null); }},
+        		new CodeBlock() { @Override public void execute() { listing.set(0, null); }}
         ));
-
+        
         for (CodeBlock e : codeBlocks) {
             assertNotNull(getException(e));
         }
