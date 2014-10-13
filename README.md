@@ -27,12 +27,6 @@
  - Get a subreddit's stylesheet
  - Search for subreddits (by topic and by name)
 
-
-##Design Philosiphy
-JRAW was built off the principle that as few classes as possible should be able to access the internet. Therefore, only [`RestClient`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/http/RestClient.java) and its subclasses (most notably [`RedditClient`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/RedditClient.java)) can send HTTP requests. In order for other classes to send HTTP requests, they must acquire a `RestClient`, such as what [`Paginator`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/pagination/Paginator.java) does.
-
-All [models](https://github.com/thatJavaNerd/JRAW/tree/master/src/main/java/net/dean/jraw/models) are instantiated with a Jackson `JsonNode` parsed from responses from the Reddit API.
-
 ##Getting Started
 ####Adding the Dependency
 
@@ -61,69 +55,8 @@ Add jCenter to your repositories (see [here](https://bintray.com/bintray/jcenter
 </dependency>
 ```
 
-####Using the Library
 
-Get yourself a `RedditClient`
-
-```java
-RedditClient reddit = new RedditClient(MY_USER_AGENT);
-```
-
-Login (if necessary)
-
-```java
-LoggedInAccount me = reddit.login(MY_USERNAME, MY_PASSWORD);
-```
-
-Start using the library! Some examples:
-
-```java
-// Iterate through the front page
-SubredditPaginator frontPage = new SubredditPaginator(reddit); // Second parameter could be a subreddit
-while (frontPage.hasNext()) {
-    Listing<Submission> submissions = frontPage.next();
-
-    for (Submission submission : submissions) {
-        System.out.println(submission.getTitle());
-    }
-}
-
-// Post a link
-URL url = // ...
-me.submitContent(new LoggedInAccount.SubmissionBuilder(url, SUBREDDIT, TITLE));
-
-// Post a self-post
-String content = // ...
-me.submitContent(new LoggedInAccount.SubmissionBuilder(content, SUBREDDIT, TITLE));
-
-// Do stuff with a submission
-Submission submission = reddit.getSubmission("28d6vv"); // http://redd.it/28d6vv
-me.vote(submission, VoteDirection.UPVOTE);
-me.setSaved(submission, true);
-me.setHidden(submission, true);
-```
-
-For even more examples, see the [unit tests](https://github.com/thatJavaNerd/JRAW/tree/master/src/test/java/net/dean/jraw/test).
-
-Javadoc can be found [here](https://thatjavanerd.github.io/JRAW/docs/0.4.0/)
-
-##Models
-####Hierarchy
-[`JsonModel`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/models/JsonModel.java) is the superclass for all models in JRAW, including [`Thing`](https://github.com/thatJavaNerd/JRAW/blob/master/src/main/java/net/dean/jraw/models/core/Thing.java). All [core models](https://github.com/thatJavaNerd/JRAW/tree/master/src/main/java/net/dean/jraw/models/core) defined by the [Reddit wiki on GitHub](https://github.com/reddit/reddit/wiki/JSON) extend `Thing` (except for `Listing`, which extends `Thing`'s superclass, `RedditObject`
-
-An overview of the models looks like this:
-
-![UML](https://i.imgur.com/151gWff.png)
-
-####Data Retrieval
-
-The workings behind getter methods of models are not the same as most Java objects. All models are instantiated with a [Jackson](http://jackson.codehaus.org/) JsonNode. Each getter method retrieves a value from the "data" node (*see [here](http://www.reddit.com/user/way_fairer/about.json) for an example*) by using a key specific to that method.
-
-##API Endpoints
-See [`ENDPOINTS.md`](https://github.com/thatJavaNerd/JRAW/blob/master/ENDPOINTS.md) for full list of Reddit's API endpoints.
-
-####Updating Endpoints
-The subproject [`endpoints`](https://github.com/thatJavaNerd/JRAW/tree/master/endpoints) uses annotations and the Reflections library to find methods that implement different API endpoints and then compile them into `ENDPOINTS.md`. Running `./gradlew endpoints:update` will run the [`EndpointAnalyzer`](https://github.com/thatJavaNerd/JRAW/blob/master/endpoints/src/main/java/net/dean/jraw/endpoints/EndpointAnalyzer.java) class, which will in turn generate the endpoints markdown file.
+Javadoc can be found [here](https://thatjavanerd.github.io/JRAW/docs/latest/)
 
 ##Building
 
