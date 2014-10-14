@@ -55,8 +55,10 @@ Add jCenter to your repositories (see [here](https://bintray.com/bintray/jcenter
 </dependency>
 ```
 
+####Using the Library
+See [the wiki](https://github.com/thatJavaNerd/JRAW/wiki/Home) to get you up and running
 
-Javadoc can be found [here](https://thatjavanerd.github.io/JRAW/docs/latest/)
+Javadoc can be found [here](https://thatjavanerd.github.io/JRAW/)
 
 ##Building
 
