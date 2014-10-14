@@ -1,9 +1,9 @@
-<!--- Generated 2014-10-13 at 20:20:06 EDT. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
+<!--- Generated 2014-10-14 at 07:48:22 EDT. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
 #Endpoints
 
 This file contains a list of all the endpoints (regardless of if they have been implemented) that can be found at the [official Reddit API docs](https://www.reddit.com/dev/api). To update this file, run `./gradlew endpoints:update`.
 
-So far **71** endpoints (out of 184 total) have been implemented.
+So far **72** endpoints (out of 184 total) have been implemented.
 
 ##account
 Method|Endpoint|Implemented?
@@ -62,7 +62,6 @@ Method|Endpoint|Implemented?
 ##links & comments
 Method|Endpoint|Implemented?
 :----:|--------|------------
-`POST`|[`/api/editusertext`](https://www.reddit.com/dev/api#POST_api_editusertext)|No
 `GET`|[`/api/info`](https://www.reddit.com/dev/api#GET_api_info)|No
 `POST`|[`/api/morechildren`](https://www.reddit.com/dev/api#POST_api_morechildren)|No
 `POST`|[`/api/report`](https://www.reddit.com/dev/api#POST_api_report)|No
@@ -72,6 +71,7 @@ Method|Endpoint|Implemented?
 `POST`|[`/api/store_visits`](https://www.reddit.com/dev/api#POST_api_store_visits)|No
 `POST`|[`/api/comment`](https://www.reddit.com/dev/api#POST_api_comment)|[`AccountManager.reply(Contribution, String)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/managers/AccountManager#reply-net.dean.jraw.models.Contribution-java.lang.String-)
 `POST`|[`/api/del`](https://www.reddit.com/dev/api#POST_api_del)|[`AccountManager.delete(String)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/managers/AccountManager#delete-java.lang.String-)
+`POST`|[`/api/editusertext`](https://www.reddit.com/dev/api#POST_api_editusertext)|[`AccountManager.editUserText(Submission, String)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/managers/AccountManager#editUserText-net.dean.jraw.models.Submission-java.lang.String-)
 `POST`|[`/api/hide`](https://www.reddit.com/dev/api#POST_api_hide)|[`AccountManager.hide(Submission, boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/managers/AccountManager#hide-net.dean.jraw.models.Submission-boolean-)
 `POST`|[`/api/marknsfw`](https://www.reddit.com/dev/api#POST_api_marknsfw)|[`AccountManager.setNsfw(Submission, boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/managers/AccountManager#setNsfw-net.dean.jraw.models.Submission-boolean-)
 `POST`|[`/api/save`](https://www.reddit.com/dev/api#POST_api_save)|[`AccountManager.setSaved(Submission, boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/managers/AccountManager#setSaved-net.dean.jraw.models.Submission-boolean-)

@@ -3,6 +3,7 @@ package net.dean.jraw.test.auth;
 import net.dean.jraw.ApiException;
 import net.dean.jraw.JrawUtils;
 import net.dean.jraw.http.NetworkException;
+import net.dean.jraw.http.RedditResponse;
 import net.dean.jraw.managers.AccountManager;
 import net.dean.jraw.models.*;
 import net.dean.jraw.pagination.Paginator;
@@ -68,6 +69,21 @@ public class AccountManagerTest extends AuthenticatedRedditTest {
         }
     }
 
+    @Test
+    public void testEditUserText() {
+        String newText = "This is a new piece of text.";
+
+        Submission s = (Submission) getPaginator(Where.SUBMITTED).next().get(0);
+
+        try {
+            RedditResponse r = account.editUserText(s, newText);
+        } catch (NetworkException e) {
+            handle(e);
+        } catch (ApiException e) {
+            handle(e);
+        }
+    }
+
     @Test(expectedExceptions = {ApiException.class, SkipException.class})
     public void testPostWithInvalidCaptcha() throws ApiException {
         try {
@@ -118,7 +134,7 @@ public class AccountManagerTest extends AuthenticatedRedditTest {
             }
 
             assertNotNull(replyTo);
-            assertNotNull(account.reply(replyTo, ""+randomInt()));
+            assertNotNull(account.reply(replyTo, "" + randomInt()));
         } catch (NetworkException e) {
             handle(e);
         } catch (ApiException e) {

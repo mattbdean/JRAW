@@ -90,8 +90,6 @@ public enum Endpoints {
     SETFLAIRENABLED("POST /api/setflairenabled"),
 
     ///////// links & comments /////////
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_editusertext">{@code POST /api/editusertext}</a>" in the "links &amp; comments" category */
-    EDITUSERTEXT("POST /api/editusertext"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_api_info">{@code GET /api/info}</a>" in the "links &amp; comments" category */
     INFO("GET /api/info"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_morechildren">{@code POST /api/morechildren}</a>" in the "links &amp; comments" category */
@@ -110,6 +108,8 @@ public enum Endpoints {
     COMMENT("POST /api/comment"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_del">{@code POST /api/del}</a>" in the "links &amp; comments" category */
     DEL("POST /api/del"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_editusertext">{@code POST /api/editusertext}</a>" in the "links &amp; comments" category */
+    EDITUSERTEXT("POST /api/editusertext"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_hide">{@code POST /api/hide}</a>" in the "links &amp; comments" category */
     HIDE("POST /api/hide"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_marknsfw">{@code POST /api/marknsfw}</a>" in the "links &amp; comments" category */
