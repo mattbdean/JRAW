@@ -71,8 +71,8 @@ public class Message extends Contribution implements Distinguishable {
      * @return If this message is unread
      */
     @JsonInteraction
-    public Boolean isUnread() {
-        return data("new", Boolean.class);
+    public Boolean isRead() {
+        return !data("new", Boolean.class);
     }
 
     /**

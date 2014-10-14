@@ -41,15 +41,15 @@ public abstract class GenericPaginator<T extends Thing, U extends Enum<U>> exten
      * Gets the String that will come before all paths for this paginator
      * @return The String that will come before all paths for this paginator
      */
-    public abstract String getUriPrefix();
+    protected abstract String getUriPrefix();
 
     /**
      * Gets the String that will come after all paths for this paginator. The default value is ".json".
      * @return The String that will come after all paths for this paginator
      */
-    public String getUriPostfix() { return ".json"; }
+    protected String getUriPostfix() { return ".json"; }
 
-    public String getAsString(U where) {
+    protected String getAsString(U where) {
         return where.name().toLowerCase();
     }
 

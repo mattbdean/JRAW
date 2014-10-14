@@ -3,6 +3,7 @@ package net.dean.jraw.http;
 import com.google.common.collect.ImmutableMap;
 import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.Request;
+import com.squareup.okhttp.RequestBody;
 import net.dean.jraw.Endpoint;
 import net.dean.jraw.Endpoints;
 import net.dean.jraw.JrawUtils;
@@ -190,12 +191,16 @@ public class RestRequest {
         }
 
         private Builder formMethod(String method, Map<String, String> formArgs) {
-            FormEncodingBuilder formBuilder = new FormEncodingBuilder();
-            for (Map.Entry<String, String> entry : formArgs.entrySet()) {
-                formBuilder.add(entry.getKey(), entry.getValue());
+            RequestBody body = null;
+            if (formArgs != null) {
+                FormEncodingBuilder formBuilder = new FormEncodingBuilder();
+                for (Map.Entry<String, String> entry : formArgs.entrySet()) {
+                    formBuilder.add(entry.getKey(), entry.getValue());
+                }
+                body = formBuilder.build();
             }
 
-            builder.method(method, formBuilder.build());
+            builder.method(method, body);
 
             this.formArgs = formArgs;
             return this;

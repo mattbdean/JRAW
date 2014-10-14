@@ -1,7 +1,12 @@
 package net.dean.jraw.managers;
 
+import net.dean.jraw.EndpointImplementation;
+import net.dean.jraw.Endpoints;
+import net.dean.jraw.JrawUtils;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.AbstractManager;
+import net.dean.jraw.http.NetworkException;
+import net.dean.jraw.models.Message;
 import net.dean.jraw.pagination.InboxPaginator;
 
 /**
@@ -22,6 +27,16 @@ public class InboxManager extends AbstractManager {
         return new InboxPaginator(reddit, where);
     }
 
+    @EndpointImplementation({
+            Endpoints.READ_MESSAGE,
+            Endpoints.UNREAD_MESSAGE
+    })
+    public void setRead(Message m, boolean read) throws NetworkException {
+        execute(request()
+                .endpoint(read ? Endpoints.READ_MESSAGE : Endpoints.UNREAD_MESSAGE)
+                .post(JrawUtils.args("id", m.getFullName()))
+                .build());
+    }
 
     @Override
     protected boolean requiresAuthentication() {

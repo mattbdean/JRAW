@@ -19,12 +19,12 @@ public class InboxPaginator extends GenericPaginator<Message, InboxPaginator.Whe
     }
 
     @Override
-    public String getUriPrefix() {
+    protected String getUriPrefix() {
         return "/message";
     }
 
     @Override
-    public String getAsString(Where where) {
+    protected String getAsString(Where where) {
         return where.name().toLowerCase().replace('_', '/');
     }
 
