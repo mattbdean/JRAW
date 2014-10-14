@@ -1,4 +1,4 @@
-<!--- Generated 2014-10-13 at 20:05:37 EDT. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
+<!--- Generated 2014-10-13 at 20:20:06 EDT. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
 #Endpoints
 
 This file contains a list of all the endpoints (regardless of if they have been implemented) that can be found at the [official Reddit API docs](https://www.reddit.com/dev/api). To update this file, run `./gradlew endpoints:update`.
@@ -246,5 +246,5 @@ Method|Endpoint|Implemented?
 `GET`|[`/wiki/revisions`](https://www.reddit.com/dev/api#GET_wiki_revisions)|No
 `POST`|[`/wiki/revisions/{page}`](https://www.reddit.com/dev/api#POST_wiki_revisions_%7Bpage%7D)|No
 `GET`|[`/wiki/settings/{page}`](https://www.reddit.com/dev/api#GET_wiki_settings_%7Bpage%7D)|No
-`GET`|[`/wiki/pages`](https://www.reddit.com/dev/api#GET_wiki_pages)|[`RedditClient.getWikiPages(String)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/RedditClient#getWikiPages-java.lang.String-)
-`GET`|[`/wiki/{page}`](https://www.reddit.com/dev/api#GET_wiki_%7Bpage%7D)|[`RedditClient.getWikiPage(String, String)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/RedditClient#getWikiPage-java.lang.String-java.lang.String-)
+`GET`|[`/wiki/pages`](https://www.reddit.com/dev/api#GET_wiki_pages)|[`WikiManager.getWikiPages(String)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/managers/WikiManager#getWikiPages-java.lang.String-)
+`GET`|[`/wiki/{page}`](https://www.reddit.com/dev/api#GET_wiki_%7Bpage%7D)|[`WikiManager.getWikiPage(String, String)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/managers/WikiManager#getWikiPage-java.lang.String-java.lang.String-)
