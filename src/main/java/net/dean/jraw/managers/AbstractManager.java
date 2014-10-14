@@ -1,6 +1,10 @@
-package net.dean.jraw.http;
+package net.dean.jraw.managers;
 
 import net.dean.jraw.RedditClient;
+import net.dean.jraw.http.NetworkAccessible;
+import net.dean.jraw.http.NetworkException;
+import net.dean.jraw.http.RedditResponse;
+import net.dean.jraw.http.RestRequest;
 
 /**
  * This class serves as the base class for all "manager" classes, which have control over a certain section of the API,
@@ -20,7 +24,7 @@ public abstract class AbstractManager implements NetworkAccessible<RedditRespons
 
     @Override
     public final RedditResponse execute(RestRequest r) throws NetworkException {
-        if (requiresAuthentication() && !reddit.isLoggedIn()) {
+        if (requiresAuthentication(r) && !reddit.isLoggedIn()) {
             throw new IllegalStateException("This manager requires an authenticated user");
         }
 
@@ -32,5 +36,5 @@ public abstract class AbstractManager implements NetworkAccessible<RedditRespons
      * Checks if the RedditClient needs to be logged in in order to complete requests successfully
      * @return If there needs to be an authenticated user
      */
-    protected abstract boolean requiresAuthentication();
+    protected abstract boolean requiresAuthentication(RestRequest r);
 }

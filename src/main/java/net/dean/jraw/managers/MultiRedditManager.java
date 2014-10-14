@@ -1,7 +1,6 @@
 package net.dean.jraw.managers;
 
 import net.dean.jraw.*;
-import net.dean.jraw.http.AbstractManager;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.RedditResponse;
 import net.dean.jraw.http.RestRequest;
@@ -371,7 +370,7 @@ public class MultiRedditManager extends AbstractManager {
     }
 
     @Override
-    protected boolean requiresAuthentication() {
+    protected boolean requiresAuthentication(RestRequest r) {
         return true;
     }
 

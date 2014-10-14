@@ -23,18 +23,19 @@ public class RestRequest {
     private final Map<String, String> formArgs;
     private final String[] sensitiveArgs;
     private final Request request;
+    private final Endpoints endpoint;
 
     private RestRequest(Builder b) {
         this.request = b.builder.build();
         this.url = request.urlString();
         this.method = request.method();
         this.sensitiveArgs = b.sensitiveArgs;
+        this.endpoint = b.endpoint;
         if (b.formArgs != null) {
             this.formArgs = ImmutableMap.<String, String>builder().putAll(b.formArgs).build();
         } else {
             formArgs = null;
         }
-
     }
 
     public Request getRequest() {
@@ -57,6 +58,10 @@ public class RestRequest {
         String[] localCopy = new String[sensitiveArgs.length];
         System.arraycopy(sensitiveArgs, 0, localCopy, 0, sensitiveArgs.length);
         return localCopy;
+    }
+
+    public Endpoints getEndpoint() {
+        return endpoint;
     }
 
     public boolean isSensitive(String arg) {

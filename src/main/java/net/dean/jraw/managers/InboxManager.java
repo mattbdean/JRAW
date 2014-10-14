@@ -4,8 +4,8 @@ import net.dean.jraw.EndpointImplementation;
 import net.dean.jraw.Endpoints;
 import net.dean.jraw.JrawUtils;
 import net.dean.jraw.RedditClient;
-import net.dean.jraw.http.AbstractManager;
 import net.dean.jraw.http.NetworkException;
+import net.dean.jraw.http.RestRequest;
 import net.dean.jraw.models.Message;
 import net.dean.jraw.pagination.InboxPaginator;
 
@@ -39,7 +39,7 @@ public class InboxManager extends AbstractManager {
     }
 
     @Override
-    protected boolean requiresAuthentication() {
+    protected boolean requiresAuthentication(RestRequest r) {
         return true;
     }
 }

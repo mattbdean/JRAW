@@ -309,7 +309,7 @@ public class RedditClient extends RestClient<RedditResponse> {
      */
     @EndpointImplementation(Endpoints.RANDOM)
     public Submission getRandom(String subreddit) throws NetworkException  {
-        String path = getSubredditPath(subreddit, "/random.json");
+        String path = JrawUtils.getSubredditPath(subreddit, "/random.json");
 
         // Favor path() instead of endpoint() because we have already decided the path above
         return execute(request()
@@ -334,7 +334,7 @@ public class RedditClient extends RestClient<RedditResponse> {
      */
     @EndpointImplementation(Endpoints.SUBMIT_TEXT)
     public RenderStringPair getSubmitText(String subreddit) throws NetworkException {
-        String path = getSubredditPath(subreddit, "/api/submit_text.json");
+        String path = JrawUtils.getSubredditPath(subreddit, "/api/submit_text.json");
 
         JsonNode node = execute(request()
                 .path(path)
@@ -401,7 +401,7 @@ public class RedditClient extends RestClient<RedditResponse> {
      */
     @EndpointImplementation(Endpoints.STYLESHEET)
     public String getStylesheet(String subreddit) throws NetworkException {
-        String path = getSubredditPath(subreddit, "/stylesheet");
+        String path = JrawUtils.getSubredditPath(subreddit, "/stylesheet");
 
         RestRequest r = request()
                 .path(path)
@@ -442,83 +442,6 @@ public class RedditClient extends RestClient<RedditResponse> {
         }
 
         return subreddits;
-    }
-
-    /**
-     * Gets a list of names of wiki pages for Reddit
-     * @return A list of Reddit's wiki pages
-     * @throws NetworkException If there was a problem sending the HTTP request
-     */
-    public List<String> getWikiPages() throws NetworkException {
-        return getWikiPages(null);
-    }
-
-    /**
-     * Gets a list of names of wiki pages for a certain subreddit
-     * @param subreddit The subreddit to use
-     * @return A list of wiki pages for this subreddit
-     * @throws NetworkException If there was a problem sending the HTTP request
-     */
-    @EndpointImplementation(Endpoints.WIKI_PAGES)
-    public List<String> getWikiPages(String subreddit) throws NetworkException {
-        String path = getSubredditPath(subreddit, "/wiki/pages.json");
-
-        List<String> pages = new ArrayList<>();
-        JsonNode pagesNode = execute(request()
-                .path(path)
-                .build()).getJson().get("data");
-
-        for (JsonNode page : pagesNode) {
-            pages.add(page.asText());
-        }
-
-        return pages;
-    }
-
-    /**
-     * Gets a WikiPage that represents one of Reddit's main pages. See <a href="http://www.reddit.com/wiki/pages">here</a>
-     * for a list.
-     *
-     * @param page The page to get
-     * @return A WikiPage for the given page
-     * @throws NetworkException If there was a problem sending the HTTP request
-     *
-     * @see #getWikiPages()
-     */
-    public WikiPage getWikiPage(String page) throws NetworkException {
-        return getWikiPage(null, page);
-    }
-
-    /**
-     * Gets a WikiPage for a certain subreddit
-     * @param subreddit The subreddit to use
-     * @param page The page to get
-     * @return A WikiPage for the given page
-     * @throws NetworkException If there was a problem sending the HTTP request
-     */
-    @EndpointImplementation(Endpoints.WIKI_PAGE)
-    public WikiPage getWikiPage(String subreddit, String page) throws NetworkException {
-        String path = getSubredditPath(subreddit, "/wiki/" + page + ".json");
-
-        RestRequest r = request()
-                .path(path)
-                .build();
-        return execute(r).as(WikiPage.class);
-    }
-
-
-    /**
-     * Prepends "/r/{subreddit}" to {@code path} if {@code subreddit} is not null
-     * @param subreddit The subreddit to use
-     * @param path The path to use
-     * @return "/r/{subreddit}/{path}" if {@code subreddit} is not null, otherwise "{path}"
-     */
-    private String getSubredditPath(String subreddit, String path) {
-        if (subreddit != null) {
-            path = "/r/" + subreddit + path;
-        }
-
-        return path;
     }
 
     /**

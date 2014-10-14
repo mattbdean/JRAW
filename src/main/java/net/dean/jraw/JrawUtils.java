@@ -166,4 +166,18 @@ public final class JrawUtils {
     public static boolean typeComparison(MediaType t1, MediaType t2) {
         return t1.type().equals(t2.type()) && t1.subtype().equals(t2.subtype());
     }
+
+    /**
+     * Prepends "/r/{subreddit}" to {@code path} if {@code subreddit} is not null
+     * @param subreddit The subreddit to use
+     * @param path The path to use
+     * @return "/r/{subreddit}/{path}" if {@code subreddit} is not null, otherwise "{path}"
+     */
+    public static String getSubredditPath(String subreddit, String path) {
+        if (subreddit != null) {
+            path = "/r/" + subreddit + path;
+        }
+
+        return path;
+    }
 }
