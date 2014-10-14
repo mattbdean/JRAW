@@ -1,5 +1,6 @@
 package net.dean.jraw.managers;
 
+import com.squareup.okhttp.FormEncodingBuilder;
 import net.dean.jraw.*;
 import net.dean.jraw.http.AbstractManager;
 import net.dean.jraw.http.NetworkException;
@@ -255,6 +256,26 @@ public class AccountManager extends AbstractManager {
                 .endpoint(hide ? Endpoints.HIDE : Endpoints.UNHIDE)
                 .post(JrawUtils.args(
                         "id", s.getFullName()
+                )).build());
+    }
+
+    /**
+     * Changes the text of your
+     *
+     * @param submission The submission to that this method texts
+     * @param text The text that the post text will be edited to
+     * @return The response that the Reddit API returned
+     * @throws NetworkException If there was a problem sending the request
+     * @throws ApiException If the API returned an error
+     */
+    @EndpointImplementation(Endpoints.EDITUSERTEXT)
+    public RedditResponse editUserText(Submission submission, String text) throws NetworkException, ApiException
+    {
+        return genericPost(request().endpoint(Endpoints.EDITUSERTEXT)
+                .post(JrawUtils.args(
+                        "api_type", "json",
+                        "text", text,
+                        "thing_id", submission.getFullName()
                 )).build());
     }
 
