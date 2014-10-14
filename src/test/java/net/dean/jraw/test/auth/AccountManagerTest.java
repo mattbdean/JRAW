@@ -70,21 +70,16 @@ public class AccountManagerTest extends AuthenticatedRedditTest {
     }
 
     @Test
-    public void testEditUserText()
-    {
+    public void testEditUserText() {
         String newText = "This is a new piece of text.";
 
         Submission s = (Submission) getPaginator(Where.SUBMITTED).next().get(0);
 
-        try
-        {
+        try {
             RedditResponse r = account.editUserText(s, newText);
-            System.out.println(r.getRaw());
-        } catch (NetworkException e)
-        {
+        } catch (NetworkException e) {
             handle(e);
-        } catch (ApiException e)
-        {
+        } catch (ApiException e) {
             handle(e);
         }
     }
@@ -139,7 +134,7 @@ public class AccountManagerTest extends AuthenticatedRedditTest {
             }
 
             assertNotNull(replyTo);
-            assertNotNull(account.reply(replyTo, ""+randomInt()));
+            assertNotNull(account.reply(replyTo, "" + randomInt()));
         } catch (NetworkException e) {
             handle(e);
         } catch (ApiException e) {

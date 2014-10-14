@@ -262,8 +262,8 @@ public class AccountManager extends AbstractManager {
     /**
      * Changes the text of your
      *
-     * @param submission The submission to that this method texts
-     * @param text The text that the post text will be edited to
+     * @param submission The submission that that you would like to edit the text for
+     * @param text The new text that you want the post to have
      * @return The response that the Reddit API returned
      * @throws NetworkException If there was a problem sending the request
      * @throws ApiException If the API returned an error
