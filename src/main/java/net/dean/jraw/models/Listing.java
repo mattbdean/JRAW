@@ -138,8 +138,8 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
     }
 
     @Override
-    public boolean contains(Object o) {
-        return children.contains(o);
+    public boolean contains(Object object) {
+        return children.contains(object);
     }
 
     @Override
@@ -153,18 +153,18 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
     }
 
     @Override
-    public <T1> T1[] toArray(T1[] t1s) {
-        return children.toArray(t1s);
+    public <T1> T1[] toArray(T1[] array) {
+        return children.toArray(array);
     }
 
     @Override
-    public boolean add(T t) {
-        return children.add(t);
+    public boolean add(T object) {
+        return children.add(object);
     }
 
     @Override
-    public boolean remove(Object o) {
-        return children.remove(o);
+    public boolean remove(Object object) {
+        return children.remove(object);
     }
 
     @Override
@@ -173,13 +173,13 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
     }
 
     @Override
-    public boolean addAll(Collection<? extends T> ts) {
-        return children.addAll(ts);
+    public boolean addAll(Collection<? extends T> collection) {
+        return children.addAll(collection);
     }
 
     @Override
-    public boolean addAll(int i, Collection<? extends T> ts) {
-        return children.addAll(i, ts);
+    public boolean addAll(int i, Collection<? extends T> collection) {
+        return children.addAll(i, collection);
     }
 
     @Override
@@ -198,33 +198,33 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
     }
 
     @Override
-    public T get(int i) {
-        return children.get(i);
+    public T get(int index) {
+        return children.get(index);
     }
 
     @Override
-    public T set(int i, T t) {
-        return children.set(i, t);
+    public T set(int index, T object) {
+        return children.set(index, object);
     }
 
     @Override
-    public void add(int i, T t) {
-        children.add(i, t);
+    public void add(int index, T object) {
+        children.add(index, object);
     }
 
     @Override
-    public T remove(int i) {
-        return children.remove(i);
+    public T remove(int index) {
+        return children.remove(index);
     }
 
     @Override
-    public int indexOf(Object o) {
-        return children.indexOf(o);
+    public int indexOf(Object object) {
+        return children.indexOf(object);
     }
 
     @Override
-    public int lastIndexOf(Object o) {
-        return children.lastIndexOf(o);
+    public int lastIndexOf(Object object) {
+        return children.lastIndexOf(object);
     }
 
     @Override
@@ -233,13 +233,13 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
     }
 
     @Override
-    public ListIterator<T> listIterator(int i) {
-        return children.listIterator(i);
+    public ListIterator<T> listIterator(int index) {
+        return children.listIterator(index);
     }
 
     @Override
-    public List<T> subList(int i, int i2) {
-        return children.subList(i, i2);
+    public List<T> subList(int start, int end) {
+        return children.subList(start, end);
     }
 
 }

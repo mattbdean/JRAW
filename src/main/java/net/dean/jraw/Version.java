@@ -81,11 +81,11 @@ public class Version {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+    public boolean equals(Object other) {
+        if (this == other) return true;
+        if (other == null || getClass() != other.getClass()) return false;
 
-        Version version = (Version) o;
+        Version version = (Version) other;
 
         if (major != version.major) return false;
         if (minor != version.minor) return false;

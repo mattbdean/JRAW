@@ -26,7 +26,8 @@ public class Endpoint {
      * Instantiates a new Endpoint. Used mostly for meta-programming in the
      * <a href="https://github.com/thatJavaNerd/JRAW/tree/master/endpoints">endpoints</a> subproject and in the
      * {@link net.dean.jraw.Endpoints} class.
-     * @param requestDescriptor A string consisting of two parts: the HTTP verb, and the URI. For example: "POST /api/login"
+     * @param requestDescriptor A string consisting of two parts: the HTTP verb, and the URI. For example:
+     *                          "POST /api/login"
      */
     public Endpoint(String requestDescriptor) {
         this(requestDescriptor, null);
@@ -34,8 +35,10 @@ public class Endpoint {
 
     /**
      * Instantiates a new Endpoint
-     * @param requestDescriptor A string consisting of two parts: the HTTP verb, and the URI. For example: "POST /api/login"
-     * @param category This endpoint's category, such as "accounts". Can be found <a href="http://www.reddit.com/dev/api">here</a>
+     * @param requestDescriptor A string consisting of two parts: the HTTP verb, and the URI. For example:
+     *                          "POST /api/login"
+     * @param category This endpoint's category, such as "accounts". Can be found
+     *                 <a href="http://www.reddit.com/dev/api">here</a>
      */
     public Endpoint(String requestDescriptor, String category) {
         this.requestDescriptor = requestDescriptor;
@@ -71,7 +74,8 @@ public class Endpoint {
     }
 
     /**
-     * Gets this endpoint's category. Always null for normal library use. See <a href="http://www.reddit.com/dev/api">here</a>
+     * Gets this endpoint's category. Always null for normal library use. See
+     * <a href="http://www.reddit.com/dev/api">here</a>
      * for examples.
      *
      * @return This endpoint's category
@@ -81,8 +85,8 @@ public class Endpoint {
     }
 
     /**
-     * Checks if a {@link net.dean.jraw.EndpointImplementation} annotation with the corresponding {@link net.dean.jraw.Endpoints}
-     * enum has been registered. Always false for normal library use.
+     * Checks if a {@link net.dean.jraw.EndpointImplementation} annotation with the corresponding
+     * {@link net.dean.jraw.Endpoints} enum has been registered. Always false for normal library use.
      *
      * @return If this endpoint has been implemented
      */
@@ -119,11 +123,11 @@ public class Endpoint {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
 
-        Endpoint endpoint = (Endpoint) o;
+        Endpoint endpoint = (Endpoint) object;
 
         if (implemented != endpoint.implemented) return false;
         if (category != null ? !category.equals(endpoint.category) : endpoint.category != null) return false;

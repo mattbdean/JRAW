@@ -2,19 +2,31 @@ package net.dean.jraw;
 
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.Response;
-import net.dean.jraw.http.*;
+import net.dean.jraw.http.MediaTypes;
+import net.dean.jraw.http.NetworkException;
+import net.dean.jraw.http.RedditResponse;
+import net.dean.jraw.http.RestClient;
+import net.dean.jraw.http.RestRequest;
 import net.dean.jraw.managers.AccountManager;
-import net.dean.jraw.models.*;
+import net.dean.jraw.models.Account;
+import net.dean.jraw.models.Captcha;
+import net.dean.jraw.models.LoggedInAccount;
+import net.dean.jraw.models.RenderStringPair;
+import net.dean.jraw.models.Submission;
+import net.dean.jraw.models.Subreddit;
 import net.dean.jraw.pagination.Sorting;
 import net.dean.jraw.pagination.SubredditPaginator;
 import org.codehaus.jackson.JsonNode;
 
 import java.net.HttpCookie;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 /**
- * This class provides access to the most basic Reddit features such as logging in. It is recommended that only one instance
- * of this class is used at a time, unless you disable request management and implement your own.
+ * This class provides a gateway to the services this library provides
  */
 public class RedditClient extends RestClient<RedditResponse> {
 
@@ -64,8 +76,8 @@ public class RedditClient extends RestClient<RedditResponse> {
     }
 
     @Override
-    protected RedditResponse initResponse(Response r) {
-        return new RedditResponse(r);
+    protected RedditResponse initResponse(Response response) {
+        return new RedditResponse(response);
     }
 
     /**
@@ -133,7 +145,8 @@ public class RedditClient extends RestClient<RedditResponse> {
     }
 
     /**
-     * Tests if the user is logged in by checking if a cookie is set called "reddit_session" and its domain is "reddit.com"
+     * Tests if the user is logged in by checking if a cookie is set called "reddit_session" whose domain is
+     * "reddit.com"
      *
      * @return True if the user is logged in
      */
@@ -147,9 +160,9 @@ public class RedditClient extends RestClient<RedditResponse> {
     }
 
     /**
-     * Checks if the current user needs a captcha to do specific actions such as submit links and compose private messages.
-     * This will always be true if there is no logged in user. Usually, this method will return {@code true} if
-     * the current logged in user has more than 10 link karma
+     * Checks if the current user needs a captcha to do specific actions such as submit links and compose private
+     * messages. This will always be true if there is no logged in user. Usually, this method will return {@code true}
+     * if the current logged in user has more than 10 link karma
      *
      * @return True if the user needs a captcha to do a specific action, else if not or not logged in.
      * @throws NetworkException If there was an issue sending the HTTP request
@@ -343,7 +356,9 @@ public class RedditClient extends RestClient<RedditResponse> {
     }
 
     /**
-     * Gets a list of subreddit names by a topic. For example, the topic "programming" returns "programming", "ProgrammerHumor", etc.
+     * Gets a list of subreddit names by a topic. For example, the topic "programming" returns "programming",
+     * "ProgrammerHumor", etc.
+     *
      * @param topic The topic to use
      * @return A list of subreddits related to the given topic
      * @throws NetworkException If there was a problem executing the request
@@ -396,8 +411,8 @@ public class RedditClient extends RestClient<RedditResponse> {
      * Gets the contents of the CSS file affiliated with a given subreddit (or the front page)
      * @param subreddit The subreddit to use, or null for the front page.
      * @return The content of the raw CSS file
-     * @throws NetworkException If there was a problem sending the request, or the {@code Content-Type} header's value was
-     *                          not {@code text/css}.
+     * @throws NetworkException If there was a problem sending the request, or the {@code Content-Type} header's value
+     *                          was not {@code text/css}.
      */
     @EndpointImplementation(Endpoints.STYLESHEET)
     public String getStylesheet(String subreddit) throws NetworkException {
@@ -411,7 +426,8 @@ public class RedditClient extends RestClient<RedditResponse> {
         MediaType actual = response.getType();
         MediaType expected = MediaTypes.CSS.type();
         if (!JrawUtils.typeComparison(actual, MediaTypes.CSS.type())) {
-            throw new NetworkException(String.format("The request did not return a Content-Type of %s/%s (was \"%s/%s\")",
+            throw new NetworkException(String.format("The request did not return a Content-Type of %s/%s " +
+                            "(was \"%s/%s\")",
                     expected.type(), expected.subtype(), actual.type(), actual.subtype()));
         }
 
@@ -497,8 +513,9 @@ public class RedditClient extends RestClient<RedditResponse> {
         /**
          * Sets the number of parents shown in relation to the focused comment. For example, if the focused comment is
          * in the eighth level of the comment tree (meaning there are seven replies above it), and the context is set to
-         * six, then the response will also contain the six direct parents of the given comment. For a better understanding,
-         * play with <a href="https://www.reddit.com/comments/92dd8?comment=c0b73aj&context=8>this link</a>.
+         * six, then the response will also contain the six direct parents of the given comment. For a better
+         * understanding, play with
+         * <a href="https://www.reddit.com/comments/92dd8?comment=c0b73aj&context=8>this link</a>.
          *
          * @param context The number of parent comments to return in relation to the focused comment.
          * @return This SubmissionRequest

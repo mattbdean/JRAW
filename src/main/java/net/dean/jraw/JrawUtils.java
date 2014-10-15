@@ -1,7 +1,12 @@
 package net.dean.jraw;
 
 import com.squareup.okhttp.MediaType;
-import net.dean.jraw.models.*;
+import net.dean.jraw.models.Comment;
+import net.dean.jraw.models.Contribution;
+import net.dean.jraw.models.Message;
+import net.dean.jraw.models.RedditObject;
+import net.dean.jraw.models.Submission;
+import net.dean.jraw.models.ThingType;
 import net.dean.jraw.pagination.MultiHubPaginator;
 import org.codehaus.jackson.JsonNode;
 import org.slf4j.Logger;
@@ -139,7 +144,8 @@ public final class JrawUtils {
                 case MESSAGE:
                     return (T) new Message(rootNode.get("data"));
                 default:
-                    throw new IllegalArgumentException("Class " + thingClass.getName() + " is not applicable for Contribution");
+                    throw new IllegalArgumentException("Class " + thingClass.getName() +
+                            " is not applicable for Contribution");
             }
         } else if (thingClass.equals(MultiHubPaginator.MultiRedditId.class)) {
             return (T) new MultiHubPaginator.MultiRedditId(rootNode.get("owner").asText(),
@@ -149,7 +155,10 @@ public final class JrawUtils {
             // Instantiate a generic Thing
             Constructor<T> constructor = thingClass.getConstructor(JsonNode.class);
             return constructor.newInstance(rootNode.get("data"));
-        } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+        } catch (NoSuchMethodException |
+                InstantiationException |
+                IllegalAccessException |
+                InvocationTargetException e) {
             // Holy exceptions Batman!
             logger().error("Could not create the Thing ({})", thingClass.getName(), e);
         }
@@ -161,7 +170,8 @@ public final class JrawUtils {
      * Compares the type and subtype of two MediaTypes.
      * @param t1 The first MediaType
      * @param t2 The second MediaType
-     * @return True, if {@code t1.type().equals(t2.type())} and {@code t1.subtype().equals(t2.subtype())}, false if else.
+     * @return True, if {@code t1.type().equals(t2.type())} and {@code t1.subtype().equals(t2.subtype())}, false if
+     *         else.
      */
     public static boolean typeComparison(MediaType t1, MediaType t2) {
         return t1.type().equals(t2.type()) && t1.subtype().equals(t2.subtype());
