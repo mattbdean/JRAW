@@ -46,4 +46,19 @@ public class Captcha {
                 ", imageUrl=" + imageUrl +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Captcha captcha = (Captcha) o;
+
+        return !(id != null ? !id.equals(captcha.id) : captcha.id != null);
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
+    }
 }

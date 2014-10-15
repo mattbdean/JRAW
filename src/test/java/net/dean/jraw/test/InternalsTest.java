@@ -1,15 +1,19 @@
 package net.dean.jraw.test;
 
+import net.dean.jraw.ApiException;
 import net.dean.jraw.Endpoint;
 import net.dean.jraw.Version;
 import net.dean.jraw.http.NetworkException;
+import net.dean.jraw.models.Captcha;
+import net.dean.jraw.models.DistinguishedStatus;
 import net.dean.jraw.models.Flair;
 import net.dean.jraw.models.JsonInteraction;
 import net.dean.jraw.models.JsonModel;
-import net.dean.jraw.models.RenderStringPair;
 import net.dean.jraw.models.Listing;
 import net.dean.jraw.models.More;
+import net.dean.jraw.models.RenderStringPair;
 import net.dean.jraw.models.Submission;
+import net.dean.jraw.models.ThingType;
 import net.dean.jraw.pagination.SubredditPaginator;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -86,9 +90,10 @@ public class InternalsTest extends RedditTest {
     }
 
     @Test
-    public void testRenderStringToString() {
+    public void testRenderString() {
         RenderStringPair string = new RenderStringPair("md", "html");
-        assertEquals(string.md(), string.toString());
+        RenderStringPair string2 = new RenderStringPair("md", "html");
+        basicObjectTest(string, string2);
     }
 
     @Test
@@ -101,6 +106,23 @@ public class InternalsTest extends RedditTest {
 
         Flair f2 = new Flair(css, text);
         basicObjectTest(f, f2);
+    }
+
+    @Test
+    public void testDistinguishedStatus() {
+        DistinguishedStatus status = DistinguishedStatus.ADMIN;
+        assertEquals(status, DistinguishedStatus.getByJsonValue(status.getJsonValue()));
+    }
+
+    @Test
+    public void testCaptcha() {
+        try {
+            Captcha c = reddit.getNewCaptcha();
+            Captcha c2 = new Captcha(c.getId(), c.getImageUrl().toExternalForm());
+            basicObjectTest(c, c2);
+        } catch (NetworkException | ApiException e) {
+            handle(e);
+        }
     }
 
     @Test
@@ -118,6 +140,11 @@ public class InternalsTest extends RedditTest {
     }
 
     @Test
+    public void testThingTypeNull() {
+        assertNull(ThingType.getByPrefix(null));
+    }
+
+    @Test
     public void testVersion() {
         MockVersion v = new MockVersion(1, 2, 3);
         assertTrue(v.getMajor() == 1);
@@ -130,7 +157,7 @@ public class InternalsTest extends RedditTest {
     }
 
     /**
-     * Makes sure that equals(), hashCode(), and toString() were overridden
+     * Makes sure that equals(), hashCode(), and toString() were overridden and tests them
      *
      * @param o1 An object
      * @param o2 An object which is supposedly equal to o1
@@ -145,7 +172,6 @@ public class InternalsTest extends RedditTest {
     }
 
     private class MockVersion extends Version {
-
         protected MockVersion(int major, int minor, int patch) {
             super(major, minor, patch);
         }
