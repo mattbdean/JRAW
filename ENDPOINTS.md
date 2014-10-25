@@ -1,9 +1,9 @@
-<!--- Generated 2014-10-14 at 07:48:22 EDT. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
+<!--- Generated 2014-10-24 at 23:45:21 EDT. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
 #Endpoints
 
 This file contains a list of all the endpoints (regardless of if they have been implemented) that can be found at the [official Reddit API docs](https://www.reddit.com/dev/api). To update this file, run `./gradlew endpoints:update`.
 
-So far **72** endpoints (out of 184 total) have been implemented.
+So far **73** endpoints (out of 184 total) have been implemented.
 
 ##account
 Method|Endpoint|Implemented?
@@ -111,9 +111,9 @@ Method|Endpoint|Implemented?
 `POST`|[`/api/live/{thread}/strike_update`](https://www.reddit.com/dev/api#POST_api_live_%7Bthread%7D_strike_update)|No
 `POST`|[`/api/live/{thread}/update`](https://www.reddit.com/dev/api#POST_api_live_%7Bthread%7D_update)|No
 `GET`|[`/live/{thread}`](https://www.reddit.com/dev/api#GET_live_%7Bthread%7D)|No
-`GET`|[`/live/{thread}/about.json`](https://www.reddit.com/dev/api#GET_live_%7Bthread%7D_about.json)|No
 `GET`|[`/live/{thread}/contributors.json`](https://www.reddit.com/dev/api#GET_live_%7Bthread%7D_contributors.json)|No
 `GET`|[`/live/{thread}/discussions`](https://www.reddit.com/dev/api#GET_live_%7Bthread%7D_discussions)|No
+`GET`|[`/live/{thread}/about.json`](https://www.reddit.com/dev/api#GET_live_%7Bthread%7D_about.json)|[`RedditClient.getLiveThread(String)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/RedditClient#getLiveThread-java.lang.String-)
 
 ##moderation
 Method|Endpoint|Implemented?

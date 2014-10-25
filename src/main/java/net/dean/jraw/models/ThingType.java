@@ -30,7 +30,11 @@ public enum ThingType {
     /** Represents a MultiReddit */
     MULTI("LabeledMulti"),
     /** Represents a wiki page */
-    WIKI_PAGE("wikipage");
+    WIKI_PAGE("wikipage"),
+    /** Represents a live thread */
+    LIVE_THREAD("LiveUpdateEvent"),
+    /** Represents an update in a live thread */
+    LIVE_UPDATE("LiveUpdate");
 
 
     /**

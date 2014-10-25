@@ -10,6 +10,7 @@ import net.dean.jraw.http.RestRequest;
 import net.dean.jraw.managers.AccountManager;
 import net.dean.jraw.models.Account;
 import net.dean.jraw.models.Captcha;
+import net.dean.jraw.models.LiveThread;
 import net.dean.jraw.models.LoggedInAccount;
 import net.dean.jraw.models.RenderStringPair;
 import net.dean.jraw.models.Submission;
@@ -438,6 +439,19 @@ public class RedditClient extends RestClient<RedditResponse> {
         }
 
         return response.getRaw();
+    }
+
+    /**
+     * Gets a live thread by ID
+     * @param id The thread's ID
+     * @return Information about a LiveThread with the given ID
+     * @throws NetworkException If the request was not successful
+     */
+    @EndpointImplementation(Endpoints.LIVE_THREAD_ABOUT)
+    public LiveThread getLiveThread(String id) throws NetworkException {
+        return execute(request()
+                .endpoint(Endpoints.LIVE_THREAD_ABOUT, id)
+                .build()).as(LiveThread.class);
     }
 
     /**
