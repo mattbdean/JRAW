@@ -33,11 +33,7 @@ public class CaptchaTest extends RedditTest {
             Assert.assertNotNull(c.getImageUrl());
 
             // Test out the image URL
-            RestRequest imageRequest = reddit.request()
-                    .host(c.getImageUrl().getHost())
-                    .path(c.getImageUrl().getPath())
-                    .get()
-                    .build();
+            RestRequest imageRequest = RestRequest.from("GET", c.getImageUrl());
             RedditResponse response = reddit.execute(imageRequest);
 
             MediaType actual = response.getType();

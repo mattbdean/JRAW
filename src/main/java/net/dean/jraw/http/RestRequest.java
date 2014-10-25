@@ -9,6 +9,7 @@ import net.dean.jraw.Endpoints;
 import net.dean.jraw.JrawUtils;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
@@ -24,6 +25,29 @@ public class RestRequest {
     private final String[] sensitiveArgs;
     private final Request request;
     private final Endpoints endpoint;
+
+    /**
+     * Creates a RestRequest from the given URL
+     * @param method The HTTP verb to execute this RestRequest with
+     * @param url A valid URL
+     * @param formArgs An optional array of Strings to send as form data. See {@link JrawUtils#args(Object...)} for more
+     *                 info.
+     * @return A RestRequest that represents the given URL
+     */
+    public static RestRequest from(String method, URL url, String... formArgs) {
+        if (!url.getProtocol().matches("http[s]?")) {
+            throw new IllegalArgumentException("Only HTTP(S) supported");
+        }
+
+        Builder b = new Builder()
+                .https(url.getProtocol().equals("https"))
+                .host(url.getHost())
+                .path(url.getFile());
+        if (formArgs.length != 0) {
+            b.formMethod(method, JrawUtils.args(formArgs));
+        }
+        return b.build();
+    }
 
     private RestRequest(Builder b) {
         this.request = b.builder.build();
