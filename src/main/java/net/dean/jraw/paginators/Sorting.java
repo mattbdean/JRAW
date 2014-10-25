@@ -1,4 +1,4 @@
-package net.dean.jraw.pagination;
+package net.dean.jraw.paginators;
 
 /**
  * Represents how the Reddit API chooses what it returns in a Paginator

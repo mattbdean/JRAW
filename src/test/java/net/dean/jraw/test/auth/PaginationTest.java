@@ -8,7 +8,7 @@ import net.dean.jraw.models.MultiReddit;
 import net.dean.jraw.models.Listing;
 import net.dean.jraw.models.Submission;
 import net.dean.jraw.models.Thing;
-import net.dean.jraw.pagination.*;
+import net.dean.jraw.paginators.*;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -20,7 +20,7 @@ import java.util.List;
 import static org.testng.Assert.assertTrue;
 
 /**
- * This class tests all concrete subclasses of {@link net.dean.jraw.pagination.Paginator}
+ * This class tests all concrete subclasses of {@link net.dean.jraw.paginators.Paginator}
  */
 public class PaginationTest extends AuthenticatedRedditTest {
     private MultiRedditManager manager = new MultiRedditManager(reddit);

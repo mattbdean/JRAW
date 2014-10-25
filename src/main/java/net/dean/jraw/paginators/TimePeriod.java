@@ -1,4 +1,4 @@
-package net.dean.jraw.pagination;
+package net.dean.jraw.paginators;
 
 /**
  * Represents a time boundary in which the Reddit API will return models

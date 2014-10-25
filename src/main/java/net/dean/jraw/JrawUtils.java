@@ -7,7 +7,7 @@ import net.dean.jraw.models.Message;
 import net.dean.jraw.models.RedditObject;
 import net.dean.jraw.models.Submission;
 import net.dean.jraw.models.ThingType;
-import net.dean.jraw.pagination.MultiHubPaginator;
+import net.dean.jraw.paginators.MultiHubPaginator;
 import org.codehaus.jackson.JsonNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

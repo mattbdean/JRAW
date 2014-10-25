@@ -1,4 +1,4 @@
-package net.dean.jraw.pagination;
+package net.dean.jraw.paginators;
 
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.NetworkAccessible;
@@ -140,7 +140,7 @@ public abstract class Paginator<T extends Thing> implements Iterator<Listing<T>>
 
     /**
      * Generates the base URI. Parameters will be stacked after this URI to form a query. For example,
-     * {@link net.dean.jraw.pagination.SubredditPaginator} will return something like "/r/pics/new.json"
+     * {@link net.dean.jraw.paginators.SubredditPaginator} will return something like "/r/pics/new.json"
      *
      * @return The base URI that will be used in queries
      */

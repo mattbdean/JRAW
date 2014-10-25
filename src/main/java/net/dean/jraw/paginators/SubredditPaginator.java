@@ -1,4 +1,4 @@
-package net.dean.jraw.pagination;
+package net.dean.jraw.paginators;
 
 import net.dean.jraw.Endpoints;
 import net.dean.jraw.RedditClient;

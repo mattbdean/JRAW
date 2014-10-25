@@ -9,7 +9,7 @@ import net.dean.jraw.models.Listing;
 import net.dean.jraw.models.LiveThread;
 import net.dean.jraw.models.Submission;
 import net.dean.jraw.models.Subreddit;
-import net.dean.jraw.pagination.SubredditPaginator;
+import net.dean.jraw.paginators.SubredditPaginator;
 import org.testng.Assert;
 import org.testng.SkipException;
 import org.testng.annotations.Test;

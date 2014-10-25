@@ -3,7 +3,7 @@ package net.dean.jraw.test.auth;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.managers.InboxManager;
 import net.dean.jraw.models.Message;
-import net.dean.jraw.pagination.InboxPaginator;
+import net.dean.jraw.paginators.InboxPaginator;
 import org.testng.annotations.Test;
 import static org.testng.Assert.*;
 

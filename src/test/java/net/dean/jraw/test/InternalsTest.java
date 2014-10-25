@@ -14,7 +14,7 @@ import net.dean.jraw.models.More;
 import net.dean.jraw.models.RenderStringPair;
 import net.dean.jraw.models.Submission;
 import net.dean.jraw.models.ThingType;
-import net.dean.jraw.pagination.SubredditPaginator;
+import net.dean.jraw.paginators.SubredditPaginator;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.testng.annotations.Test;

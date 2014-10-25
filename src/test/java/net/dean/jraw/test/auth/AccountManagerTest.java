@@ -6,16 +6,16 @@ import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.RedditResponse;
 import net.dean.jraw.managers.AccountManager;
 import net.dean.jraw.models.*;
-import net.dean.jraw.pagination.Paginator;
-import net.dean.jraw.pagination.UserContributionPaginator;
-import net.dean.jraw.pagination.UserSubredditsPaginator;
+import net.dean.jraw.paginators.Paginator;
+import net.dean.jraw.paginators.UserContributionPaginator;
+import net.dean.jraw.paginators.UserSubredditsPaginator;
 import org.testng.SkipException;
 import org.testng.annotations.Test;
 
 import java.net.URL;
 import java.util.List;
 
-import static net.dean.jraw.pagination.UserContributionPaginator.Where;
+import static net.dean.jraw.paginators.UserContributionPaginator.Where;
 import static org.testng.Assert.*;
 
 /**

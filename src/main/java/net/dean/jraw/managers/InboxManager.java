@@ -7,7 +7,7 @@ import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.RestRequest;
 import net.dean.jraw.models.Message;
-import net.dean.jraw.pagination.InboxPaginator;
+import net.dean.jraw.paginators.InboxPaginator;
 
 /**
  * This class is responsible for managing the user's inbox

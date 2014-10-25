@@ -15,8 +15,8 @@ import net.dean.jraw.models.LoggedInAccount;
 import net.dean.jraw.models.RenderStringPair;
 import net.dean.jraw.models.Submission;
 import net.dean.jraw.models.Subreddit;
-import net.dean.jraw.pagination.Sorting;
-import net.dean.jraw.pagination.SubredditPaginator;
+import net.dean.jraw.paginators.Sorting;
+import net.dean.jraw.paginators.SubredditPaginator;
 import org.codehaus.jackson.JsonNode;
 
 import java.net.HttpCookie;
