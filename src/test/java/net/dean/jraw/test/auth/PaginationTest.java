@@ -135,6 +135,12 @@ public class PaginationTest extends AuthenticatedRedditTest {
     }
 
     @Test
+    public void testLiveThreadPaginator() {
+        LiveThreadPaginator paginator = new LiveThreadPaginator(reddit, "ts4r8m1g99ys");
+        commonTest(paginator);
+    }
+
+    @Test
     public void testInboxPaginator() {
         for (InboxPaginator.Where where : InboxPaginator.Where.values()) {
             InboxPaginator paginator = new InboxPaginator(reddit, where);
@@ -166,13 +172,12 @@ public class PaginationTest extends AuthenticatedRedditTest {
         paginator.next();
     }
 
-
     protected <T extends Thing> void commonTest(Paginator<T> p) {
         try {
             int numPages = 2;
             // Test that the paginator can retrieve the data
             List<Listing<T>> pages = new ArrayList<>();
-            while (p.hasNext() && p.getPageIndex() <= numPages) {
+            while (p.hasNext() && p.getPageIndex() < numPages) {
                 pages.add(p.next());
             }
 
@@ -190,6 +195,8 @@ public class PaginationTest extends AuthenticatedRedditTest {
         } catch (IllegalStateException e) {
             if (e.getCause().getClass().equals(NetworkException.class)) {
                 handle(e.getCause());
+            } else {
+                handle(e);
             }
         }
     }

@@ -3,6 +3,9 @@ package net.dean.jraw.models;
 import net.dean.jraw.models.attr.Created;
 import org.codehaus.jackson.JsonNode;
 
+/**
+ * Represents a live thread. See <a href="https://www.reddit.com/r/live/wiki/index">here</a> for more information.
+ */
 public class LiveThread extends RedditObject implements Created {
     /**
      * Instantiates a new LiveEvent

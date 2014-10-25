@@ -174,12 +174,12 @@ public enum Endpoints {
     LIVE_THREAD_STRIKE_UPDATE("POST /api/live/{thread}/strike_update"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_live_%7Bthread%7D_update">{@code POST /api/live/{thread}/update}</a>" in the "live threads" category */
     LIVE_THREAD_UPDATE("POST /api/live/{thread}/update"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_live_%7Bthread%7D">{@code GET /live/{thread}}</a>" in the "live threads" category */
-    LIVE_THREAD("GET /live/{thread}"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_live_%7Bthread%7D_contributors.json">{@code GET /live/{thread}/contributors.json}</a>" in the "live threads" category */
     LIVE_THREAD_CONTRIBUTORS("GET /live/{thread}/contributors.json"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_live_%7Bthread%7D_discussions">{@code GET /live/{thread}/discussions}</a>" in the "live threads" category */
     LIVE_THREAD_DISCUSSIONS("GET /live/{thread}/discussions"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_live_%7Bthread%7D">{@code GET /live/{thread}}</a>" in the "live threads" category */
+    LIVE_THREAD("GET /live/{thread}"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_live_%7Bthread%7D_about.json">{@code GET /live/{thread}/about.json}</a>" in the "live threads" category */
     LIVE_THREAD_ABOUT("GET /live/{thread}/about.json"),
 

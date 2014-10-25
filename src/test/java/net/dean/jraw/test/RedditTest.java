@@ -95,7 +95,7 @@ public abstract class RedditTest {
     protected final <T extends JsonModel> void validateModels(Collection<T> models) {
         //models.forEach(this::validateModel);
     	for (T model : models) {
-    		this.validateModel(model);
+    		validateModel(model);
     	}
     }
 
@@ -106,8 +106,9 @@ public abstract class RedditTest {
         try {
             for (Method method : jsonInteractionMethods) {
                 JsonInteraction jsonInteraction = method.getAnnotation(JsonInteraction.class);
+                Object returnVal = null;
                 try {
-                    method.invoke(model);
+                    returnVal = method.invoke(model);
                 } catch (InvocationTargetException e) {
                     // InvocationTargetException thrown when the method.invoke() returns null and @JsonInteraction "nullable"
                     // property is false
@@ -119,6 +120,9 @@ public abstract class RedditTest {
                         cause.printStackTrace();
                         Assert.fail(cause.getClass().getName() + ": " + cause.getMessage());
                     }
+                }
+                if (returnVal != null && returnVal instanceof JsonModel) {
+                    validateModel((JsonModel) returnVal);
                 }
             }
         } catch (IllegalAccessException e) {
