@@ -28,15 +28,13 @@ public abstract class AuthenticatedRedditTest extends RedditTest {
 
     /**
      * Creates a new LoggedInAccount by logging in using the credentials provided by {@link #getCredentials()}
-     * @return A LoggedInAccount to be used throughout the test class
      */
-    public LoggedInAccount login() {
+    public void login() {
         try {
             String[] creds = getCredentials();
-            return reddit.login(creds[0], creds[1]);
+            reddit.login(creds[0], creds[1]);
         } catch (NetworkException | ApiException e) {
             handle(e);
-            return null;
         }
     }
 

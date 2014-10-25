@@ -2,8 +2,10 @@ package net.dean.jraw.test.auth;
 
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.models.LoggedInAccount;
-import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
 
 /**
  * This class tests methods that deal with logging in and out, as well as testing the state.
@@ -11,16 +13,29 @@ import org.testng.annotations.Test;
 public class AuthenticationTest extends AuthenticatedRedditTest {
     @Test
     @Override
-    public LoggedInAccount login() {
+    public void login() {
         // Override this method to add @Test
-        return super.login();
+        super.login();
     }
 
+    @Test
+    public void testLogout() {
+        try {
+            reddit.logout();
+            assertFalse(reddit.isLoggedIn());
+        } catch (NetworkException e) {
+            handle(e);
+        } finally {
+            // Use try-catch-finally for this method only instead of the traditional setUp/tearDown testing methods
+            // because this is the only test that logs out
+            login();
+        }
+    }
 
     @Test
     public void testCurrentUsernameNotAvailable() {
         try {
-            Assert.assertFalse(reddit.isUsernameAvailable(reddit.getAuthenticatedUser()), "Username was available");
+            assertFalse(reddit.isUsernameAvailable(reddit.getAuthenticatedUser()), "Username was available");
         } catch (NetworkException e) {
             handle(e);
         }
@@ -37,6 +52,14 @@ public class AuthenticationTest extends AuthenticatedRedditTest {
 
     @Test
     public void testIsLoggedIn() {
-        Assert.assertTrue(reddit.isLoggedIn());
+        try {
+            LoggedInAccount acc = reddit.me();
+            // /api/me.json returns '{}' when there is no logged in user
+            boolean expected = acc.getDataNode() != null;
+
+            assertEquals(reddit.isLoggedIn(), expected);
+        } catch (NetworkException e) {
+            e.printStackTrace();
+        }
     }
 }

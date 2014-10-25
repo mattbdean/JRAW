@@ -129,6 +129,12 @@ public class RedditClient extends RestClient<RedditResponse> {
         return me;
     }
 
+    public void logout() throws NetworkException {
+        execute(request()
+                .path("/logout")
+                .post(null).build());
+    }
+
     /**
      * Gets the currently logged in account
      *
