@@ -76,7 +76,7 @@ public class AccountManagerTest extends AuthenticatedRedditTest {
         Submission s = (Submission) getPaginator(Where.SUBMITTED).next().get(0);
 
         try {
-            RedditResponse r = account.editUserText(s, newText);
+            RedditResponse r = account.updateSelfpost(s, newText);
         } catch (NetworkException e) {
             handle(e);
         } catch (ApiException e) {

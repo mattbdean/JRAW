@@ -48,8 +48,11 @@ public class WikiPage extends RedditObject {
      * Gets the person who last revised this page
      * @return The person ({@link Account}) who last revised this page
      */
-    @JsonInteraction
+    @JsonInteraction(nullable = true)
     public Account getRevisionBy() {
+        if (data.get("revision_by").isNull()) {
+            return null;
+        }
         return new Account(data.get("revision_by").get("data"));
     }
 

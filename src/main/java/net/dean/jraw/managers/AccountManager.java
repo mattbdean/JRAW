@@ -1,11 +1,20 @@
 package net.dean.jraw.managers;
 
-import com.squareup.okhttp.FormEncodingBuilder;
-import net.dean.jraw.*;
+import net.dean.jraw.ApiException;
+import net.dean.jraw.EndpointImplementation;
+import net.dean.jraw.Endpoints;
+import net.dean.jraw.JrawUtils;
+import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.RedditResponse;
 import net.dean.jraw.http.RestRequest;
-import net.dean.jraw.models.*;
+import net.dean.jraw.models.Captcha;
+import net.dean.jraw.models.Comment;
+import net.dean.jraw.models.Contribution;
+import net.dean.jraw.models.Submission;
+import net.dean.jraw.models.Subreddit;
+import net.dean.jraw.models.Thing;
+import net.dean.jraw.models.VoteDirection;
 import net.dean.jraw.models.attr.Votable;
 
 import java.net.URL;
@@ -268,8 +277,7 @@ public class AccountManager extends AbstractManager {
      * @throws ApiException If the API returned an error
      */
     @EndpointImplementation(Endpoints.EDITUSERTEXT)
-    public RedditResponse editUserText(Submission submission, String text) throws NetworkException, ApiException
-    {
+    public RedditResponse updateSelfpost(Submission submission, String text) throws NetworkException, ApiException {
         return genericPost(request().endpoint(Endpoints.EDITUSERTEXT)
                 .post(JrawUtils.args(
                         "api_type", "json",
@@ -343,11 +351,6 @@ public class AccountManager extends AbstractManager {
                         "sr", subreddit.getFullName(),
                         "action", sub ? "sub" : "unsub"
                 )).build());
-    }
-
-    @Override
-    protected boolean requiresAuthentication(RestRequest r) {
-        return true;
     }
 
     /**

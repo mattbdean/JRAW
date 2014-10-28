@@ -17,12 +17,6 @@ public class WikiManager extends AbstractManager {
         super(client);
     }
 
-    @Override
-    protected boolean requiresAuthentication(RestRequest r) {
-        return true;
-    }
-
-
     /**
      * Gets a list of names of wiki pages for Reddit
      * @return A list of Reddit's wiki pages
@@ -45,6 +39,7 @@ public class WikiManager extends AbstractManager {
         List<String> pages = new ArrayList<>();
         JsonNode pagesNode = execute(request()
                 .path(path)
+                .needsAuth(false)
                 .build()).getJson().get("data");
 
         for (JsonNode page : pagesNode) {
@@ -81,6 +76,7 @@ public class WikiManager extends AbstractManager {
 
         RestRequest r = request()
                 .path(path)
+                .needsAuth(false)
                 .build();
         return execute(r).as(WikiPage.class);
     }

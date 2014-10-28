@@ -1,6 +1,10 @@
 package net.dean.jraw.managers;
 
-import net.dean.jraw.*;
+import net.dean.jraw.ApiException;
+import net.dean.jraw.EndpointImplementation;
+import net.dean.jraw.Endpoints;
+import net.dean.jraw.JrawUtils;
+import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.RedditResponse;
 import net.dean.jraw.http.RestRequest;
@@ -281,6 +285,7 @@ public class MultiRedditManager extends AbstractManager {
     public MultiReddit get(String owner, String multiName) throws NetworkException, ApiException {
         JsonNode node = execute(request()
                 .endpoint(Endpoints.MULTI_MULTIPATH_GET, getMultiPath(owner, multiName).substring(1))
+                .needsAuth(false)
                 .build()).getJson();
 
         checkForError(node);
@@ -313,6 +318,7 @@ public class MultiRedditManager extends AbstractManager {
     public RenderStringPair getDescription(String owner, String multiName) throws NetworkException, ApiException {
         JsonNode node = execute(request()
                 .endpoint(Endpoints.MULTI_MULTIPATH_DESCRIPTION_GET, getMultiPath(owner, multiName).substring(1))
+                .needsAuth(!owner.equals(reddit.getAuthenticatedUser()))
                 .build()).getJson();
 
         checkForError(node);
@@ -367,11 +373,6 @@ public class MultiRedditManager extends AbstractManager {
         if (root.has("explanation") && root.has("reason")) {
             throw new ApiException(root.get("reason").asText(), root.get("explanation").asText());
         }
-    }
-
-    @Override
-    protected boolean requiresAuthentication(RestRequest r) {
-        return true;
     }
 
     /**

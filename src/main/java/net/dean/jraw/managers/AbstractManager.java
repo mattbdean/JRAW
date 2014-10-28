@@ -24,17 +24,17 @@ public abstract class AbstractManager implements NetworkAccessible<RedditRespons
 
     @Override
     public final RedditResponse execute(RestRequest r) throws NetworkException {
-        if (requiresAuthentication(r) && !reddit.isLoggedIn()) {
+        if (r.needsAuth() && !reddit.isLoggedIn()) {
             throw new IllegalStateException("This manager requires an authenticated user");
         }
 
         return reddit.execute(r);
     }
 
-
-    /**
-     * Checks if the RedditClient needs to be logged in in order to complete requests successfully
-     * @return If there needs to be an authenticated user
-     */
-    protected abstract boolean requiresAuthentication(RestRequest r);
+    @Override
+    public RestRequest.Builder request() {
+        RestRequest.Builder b = getCreator().request();
+        b.needsAuth(true); // Assuming needs authentication by default
+        return b;
+    }
 }

@@ -18,13 +18,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 
-public class RestRequest {
+public final class RestRequest {
     private final String url;
     private final String method;
     private final Map<String, String> formArgs;
     private final String[] sensitiveArgs;
     private final Request request;
     private final Endpoints endpoint;
+    private final boolean needsAuth;
 
     /**
      * Creates a RestRequest from the given URL
@@ -55,11 +56,20 @@ public class RestRequest {
         this.method = request.method();
         this.sensitiveArgs = b.sensitiveArgs;
         this.endpoint = b.endpoint;
+        this.needsAuth = b.auth;
         if (b.formArgs != null) {
             this.formArgs = ImmutableMap.<String, String>builder().putAll(b.formArgs).build();
         } else {
             formArgs = null;
         }
+    }
+
+    /**
+     * Checks if this request needs some sort of authentication to be sent successfully.
+     * @return True if this request needs authentication, false if else.
+     */
+    public boolean needsAuth() {
+        return needsAuth;
     }
 
     public Request getRequest() {
@@ -112,12 +122,14 @@ public class RestRequest {
         private Endpoints endpoint;
         private Map<String, String> formArgs;
         private String[] sensitiveArgs;
+        private boolean auth;
 
         /**
          * Instantiates a new RequestBuilder
          */
         public Builder() {
             this.https = false;
+            this.auth = false;
             this.builder = new Request.Builder();
         }
 
@@ -216,6 +228,16 @@ public class RestRequest {
 
         public Builder sensitiveArgs(String... args) {
             this.sensitiveArgs = args;
+            return this;
+        }
+
+        /**
+         * Sets whether or not this request will required authentication in order to complete successfully.
+         * @param auth If this request needs authentication
+         * @return This Builder
+         */
+        public Builder needsAuth(boolean auth) {
+            this.auth = auth;
             return this;
         }
 
