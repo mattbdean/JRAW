@@ -4,6 +4,7 @@ import net.dean.jraw.JrawUtils;
 import net.dean.jraw.http.MediaTypes;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.RedditResponse;
+import net.dean.jraw.http.RestRequest;
 import net.dean.jraw.models.Comment;
 import net.dean.jraw.models.Listing;
 import net.dean.jraw.models.LiveThread;
@@ -14,7 +15,6 @@ import org.testng.Assert;
 import org.testng.SkipException;
 import org.testng.annotations.Test;
 
-import java.net.URL;
 import java.util.List;
 
 import static org.testng.Assert.assertFalse;
@@ -87,12 +87,8 @@ public class ReadOnlyDataTest extends RedditTest {
 
             validateModels(comments);
 
-            URL shortUrl = submission.getShortURL();
-            RedditResponse response = reddit.execute(reddit.request()
-                    .get()
-                    .path(shortUrl.getPath())
-                    .host(shortUrl.getHost())
-                    .https(false)
+            RedditResponse response = reddit.execute(RestRequest.Builder.from("GET", submission.getShortURL())
+                    .expected(MediaTypes.HTML.type())
                     .build());
             assertTrue(JrawUtils.typeComparison(response.getType(), MediaTypes.HTML.type()));
         } catch (NetworkException e) {

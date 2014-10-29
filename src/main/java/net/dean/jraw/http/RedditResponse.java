@@ -26,9 +26,6 @@ public class RedditResponse extends RestResponse {
     public RedditResponse(Response response) {
         super(response);
 
-        if (JrawUtils.typeComparison(type, MediaTypes.HTML.type())) {
-            JrawUtils.logger().warn("Received HTML from Reddit API instead of JSON. Are you sure you have access to this document?");
-        }
         ApiException[] errors = new ApiException[0];
         if (JrawUtils.typeComparison(type, MediaTypes.JSON.type()) && !raw.isEmpty()) {
             // Parse the errors into ApiExceptions

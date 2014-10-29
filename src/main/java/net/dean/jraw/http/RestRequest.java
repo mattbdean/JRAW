@@ -2,6 +2,7 @@ package net.dean.jraw.http;
 
 import com.google.common.collect.ImmutableMap;
 import com.squareup.okhttp.FormEncodingBuilder;
+import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import net.dean.jraw.Endpoint;
@@ -26,6 +27,7 @@ public final class RestRequest {
     private final Request request;
     private final Endpoints endpoint;
     private final boolean needsAuth;
+    private final MediaType expected;
 
     /**
      * Creates a RestRequest from the given URL
@@ -36,18 +38,7 @@ public final class RestRequest {
      * @return A RestRequest that represents the given URL
      */
     public static RestRequest from(String method, URL url, String... formArgs) {
-        if (!url.getProtocol().matches("http[s]?")) {
-            throw new IllegalArgumentException("Only HTTP(S) supported");
-        }
-
-        Builder b = new Builder()
-                .https(url.getProtocol().equals("https"))
-                .host(url.getHost())
-                .path(url.getFile());
-        if (formArgs.length != 0) {
-            b.formMethod(method, JrawUtils.args(formArgs));
-        }
-        return b.build();
+        return Builder.from(method, url, formArgs).build();
     }
 
     private RestRequest(Builder b) {
@@ -57,6 +48,7 @@ public final class RestRequest {
         this.sensitiveArgs = b.sensitiveArgs;
         this.endpoint = b.endpoint;
         this.needsAuth = b.auth;
+        this.expected = b.expected;
         if (b.formArgs != null) {
             this.formArgs = ImmutableMap.<String, String>builder().putAll(b.formArgs).build();
         } else {
@@ -111,6 +103,10 @@ public final class RestRequest {
         return false;
     }
 
+    public MediaType getExpectedType() {
+        return expected;
+    }
+
     public static class Builder {
         private Request.Builder builder;
 
@@ -123,13 +119,28 @@ public final class RestRequest {
         private Map<String, String> formArgs;
         private String[] sensitiveArgs;
         private boolean auth;
+        private MediaType expected;
 
+        public static Builder from(String method, URL url, String... formArgs) {
+            if (!url.getProtocol().matches("http[s]?")) {
+                throw new IllegalArgumentException("Only HTTP(S) supported");
+            }
+            Builder b = new Builder()
+                    .https(url.getProtocol().equals("https"))
+                    .host(url.getHost())
+                    .path(url.getFile());
+            if (formArgs.length != 0) {
+                b.formMethod(method, JrawUtils.args(formArgs));
+            }
+            return b;
+        }
         /**
          * Instantiates a new RequestBuilder
          */
         public Builder() {
             this.https = false;
             this.auth = false;
+            this.expected = MediaTypes.JSON.type();
             this.builder = new Request.Builder();
         }
 
@@ -238,6 +249,11 @@ public final class RestRequest {
          */
         public Builder needsAuth(boolean auth) {
             this.auth = auth;
+            return this;
+        }
+
+        public Builder expected(MediaType type) {
+            this.expected = type;
             return this;
         }
 

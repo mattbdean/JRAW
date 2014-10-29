@@ -150,6 +150,11 @@ public abstract class RestClient<T extends RestResponse> implements NetworkAcces
             }
 
             T genericResponse = initResponse(http.newCall(r).execute());
+            if (!JrawUtils.typeComparison(genericResponse.getType(), request.getExpectedType())) {
+                throw new NetworkException(String.format("Expected Content-Type ('%s/%s') did not match actual Content-Type ('%s/%s')",
+                        request.getExpectedType().type(), request.getExpectedType().subtype(),
+                        genericResponse.getType().type(), genericResponse.getType().subtype()));
+            }
 
             history.put(genericResponse, LocalDateTime.now());
             return genericResponse;

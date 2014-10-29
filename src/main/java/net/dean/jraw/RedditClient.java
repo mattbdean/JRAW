@@ -1,6 +1,5 @@
 package net.dean.jraw;
 
-import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.Response;
 import net.dean.jraw.http.MediaTypes;
 import net.dean.jraw.http.NetworkException;
@@ -133,6 +132,7 @@ public class RedditClient extends RestClient<RedditResponse> {
     public void logout() throws NetworkException {
         execute(request()
                 .path("/logout")
+                .expected(MediaTypes.HTML.type())
                 .post(null).build());
     }
 
@@ -426,16 +426,9 @@ public class RedditClient extends RestClient<RedditResponse> {
 
         RestRequest r = request()
                 .path(path)
+                .expected(MediaTypes.CSS.type())
                 .build();
         RedditResponse response = execute(r);
-
-        MediaType actual = response.getType();
-        MediaType expected = MediaTypes.CSS.type();
-        if (!JrawUtils.typeComparison(actual, MediaTypes.CSS.type())) {
-            throw new NetworkException(String.format("The request did not return a Content-Type of %s/%s " +
-                            "(was \"%s/%s\")",
-                    expected.type(), expected.subtype(), actual.type(), actual.subtype()));
-        }
 
         return response.getRaw();
     }

@@ -2,7 +2,6 @@ package net.dean.jraw.test;
 
 import com.squareup.okhttp.MediaType;
 import net.dean.jraw.ApiException;
-import net.dean.jraw.JrawUtils;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.RedditResponse;
 import net.dean.jraw.http.RestRequest;
@@ -33,12 +32,10 @@ public class CaptchaTest extends RedditTest {
             Assert.assertNotNull(c.getImageUrl());
 
             // Test out the image URL
-            RestRequest imageRequest = RestRequest.from("GET", c.getImageUrl());
+            RestRequest imageRequest = RestRequest.Builder.from("GET", c.getImageUrl())
+                    .expected(MediaType.parse("image/png"))
+                    .build();
             RedditResponse response = reddit.execute(imageRequest);
-
-            MediaType actual = response.getType();
-            MediaType expected = MediaType.parse("image/png");
-            Assert.assertTrue(JrawUtils.typeComparison(actual, expected));
         } catch (NetworkException | ApiException e) {
             handle(e);
         }
