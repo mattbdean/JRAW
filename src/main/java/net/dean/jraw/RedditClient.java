@@ -95,7 +95,7 @@ public class RedditClient extends RestClient<RedditResponse> {
      * @param username The username to log in to
      * @param password The password of the username
      * @return An Account object that has the same username as the username parameter
-     * @throws NetworkException If there was a problem sending the request
+     * @throws NetworkException If the request was not successful
      * @throws ApiException If the API returned an error (most likely because of an incorrect password)
      */
     @EndpointImplementation(Endpoints.LOGIN)
@@ -140,7 +140,7 @@ public class RedditClient extends RestClient<RedditResponse> {
      * Gets the currently logged in account
      *
      * @return The currently logged in account
-     * @throws NetworkException If the user has not been logged in yet
+     * @throws NetworkException If the request was not successful
      */
     @EndpointImplementation(Endpoints.ME)
     public LoggedInAccount me() throws NetworkException {
@@ -172,7 +172,7 @@ public class RedditClient extends RestClient<RedditResponse> {
      * if the current logged in user has more than 10 link karma
      *
      * @return True if the user needs a captcha to do a specific action, else if not or not logged in.
-     * @throws NetworkException If there was an issue sending the HTTP request
+     * @throws NetworkException If the request was not successful
      */
     @EndpointImplementation(Endpoints.NEEDS_CAPTCHA)
     public boolean needsCaptcha() throws NetworkException {
@@ -192,7 +192,7 @@ public class RedditClient extends RestClient<RedditResponse> {
      * Fetches a new captcha from the API
      *
      * @return A new Captcha
-     * @throws NetworkException If there was a problem executing the HTTP request
+     * @throws NetworkException If the request was not successful
      * @throws ApiException If the Reddit API returned an error
      */
     @EndpointImplementation(Endpoints.NEW_CAPTCHA)
@@ -221,7 +221,7 @@ public class RedditClient extends RestClient<RedditResponse> {
      *
      * @param id The ID of the wanted captcha
      * @return A new Captcha object
-     * @throws NetworkException If there was a problem executing the HTTP request
+     * @throws NetworkException If the request was not successful
      */
     @EndpointImplementation(Endpoints.CAPTCHA_IDEN)
     public Captcha getCaptcha(String id) throws NetworkException {
@@ -239,7 +239,7 @@ public class RedditClient extends RestClient<RedditResponse> {
      *
      * @param username The name of the desired user
      * @return An Account whose name matches the given username
-     * @throws NetworkException If the user does not exist or there was a problem making the request
+     * @throws NetworkException If the request was not successful
      */
     @EndpointImplementation(Endpoints.USER_USERNAME_ABOUT)
     public Account getUser(String username) throws NetworkException {
@@ -254,7 +254,7 @@ public class RedditClient extends RestClient<RedditResponse> {
      *
      * @param id The link's ID, ex: "92dd8"
      * @return A new Link object
-     * @throws NetworkException If the link does not exist or there was a problem making the request
+     * @throws NetworkException If the request was not successful
      */
     public Submission getSubmission(String id) throws NetworkException {
         return getSubmission(new SubmissionRequest(id));
@@ -286,7 +286,7 @@ public class RedditClient extends RestClient<RedditResponse> {
      *
      * @param name The subreddit's name
      * @return A new Subreddit object
-     * @throws NetworkException If there was a problem executing the request
+     * @throws NetworkException If the request was not successful
      */
     @EndpointImplementation(Endpoints.SUBREDDIT_ABOUT)
     public Subreddit getSubreddit(String name) throws NetworkException {
@@ -300,7 +300,7 @@ public class RedditClient extends RestClient<RedditResponse> {
      *
      * @param name The username to test
      * @return True if that username is available for registration, false if else
-     * @throws NetworkException If there was a problem executing the request
+     * @throws NetworkException If the request was not successful
      */
     @EndpointImplementation(Endpoints.USERNAME_AVAILABLE)
     public boolean isUsernameAvailable(String name) throws NetworkException {
@@ -315,7 +315,7 @@ public class RedditClient extends RestClient<RedditResponse> {
     /**
      * Gets a random submission
      * @return A random submission
-     * @throws NetworkException If there was a problem executing the request
+     * @throws NetworkException If the request was not successful
      */
     public Submission getRandom() throws NetworkException {
         return getRandom(null);
@@ -325,7 +325,7 @@ public class RedditClient extends RestClient<RedditResponse> {
      * Gets a random submission from a specific subreddit
      * @param subreddit The subreddit to use
      * @return A random submission
-     * @throws NetworkException If there was a problem executing the request
+     * @throws NetworkException If the request was not successful
      */
     @EndpointImplementation(Endpoints.RANDOM)
     public Submission getRandom(String subreddit) throws NetworkException  {
@@ -340,7 +340,7 @@ public class RedditClient extends RestClient<RedditResponse> {
     /**
      * Gets a random subreddit
      * @return A random subreddit
-     * @throws NetworkException If there was a problem with the request
+     * @throws NetworkException If the request was not successful
      */
     public Subreddit getRandomSubreddit() throws NetworkException {
         return getSubreddit("random");
@@ -350,7 +350,7 @@ public class RedditClient extends RestClient<RedditResponse> {
      * Gets the text displayed in the "submit link" form.
      * @param subreddit The subreddit to use
      * @return The text displayed int he "submit link" form
-     * @throws NetworkException If there was a problem executing the request
+     * @throws NetworkException If the request was not successful
      */
     @EndpointImplementation(Endpoints.SUBMIT_TEXT)
     public RenderStringPair getSubmitText(String subreddit) throws NetworkException {
@@ -368,7 +368,7 @@ public class RedditClient extends RestClient<RedditResponse> {
      *
      * @param topic The topic to use
      * @return A list of subreddits related to the given topic
-     * @throws NetworkException If there was a problem executing the request
+     * @throws NetworkException If the request was not successful
      */
     @EndpointImplementation(Endpoints.SUBREDDITS_BY_TOPIC)
     public List<String> getSubredditsByTopic(String topic) throws NetworkException {
@@ -393,7 +393,7 @@ public class RedditClient extends RestClient<RedditResponse> {
      * @param start The begging of the subreddit to search for
      * @param includeNsfw Whether to include NSFW subreddits.
      * @return A list of subreddits that starts with the given string
-     * @throws NetworkException If there was a problem executing the request
+     * @throws NetworkException If the request was not successful
      */
     @EndpointImplementation(Endpoints.SEARCH_REDDIT_NAMES)
     public List<String> searchSubreddits(String start, boolean includeNsfw) throws NetworkException {
@@ -418,8 +418,7 @@ public class RedditClient extends RestClient<RedditResponse> {
      * Gets the contents of the CSS file affiliated with a given subreddit (or the front page)
      * @param subreddit The subreddit to use, or null for the front page.
      * @return The content of the raw CSS file
-     * @throws NetworkException If there was a problem sending the request, or the {@code Content-Type} header's value
-     *                          was not {@code text/css}.
+     * @throws NetworkException If the request was not successful or the Content-Type header was not {@code text/css}.
      */
     @EndpointImplementation(Endpoints.STYLESHEET)
     public String getStylesheet(String subreddit) throws NetworkException {

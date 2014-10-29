@@ -20,7 +20,7 @@ public class WikiManager extends AbstractManager {
     /**
      * Gets a list of names of wiki pages for Reddit
      * @return A list of Reddit's wiki pages
-     * @throws NetworkException If there was a problem sending the HTTP request
+     * @throws NetworkException If the request was not successful
      */
     public List<String> getWikiPages() throws NetworkException {
         return getWikiPages(null);
@@ -30,7 +30,7 @@ public class WikiManager extends AbstractManager {
      * Gets a list of names of wiki pages for a certain subreddit
      * @param subreddit The subreddit to use
      * @return A list of wiki pages for this subreddit
-     * @throws NetworkException If there was a problem sending the HTTP request
+     * @throws NetworkException If the request was not successful
      */
     @EndpointImplementation(Endpoints.WIKI_PAGES)
     public List<String> getWikiPages(String subreddit) throws NetworkException {
@@ -55,7 +55,7 @@ public class WikiManager extends AbstractManager {
      *
      * @param page The page to get
      * @return A WikiPage for the given page
-     * @throws NetworkException If there was a problem sending the HTTP request
+     * @throws NetworkException If the request was not successful
      *
      * @see #getWikiPages()
      */
@@ -68,7 +68,7 @@ public class WikiManager extends AbstractManager {
      * @param subreddit The subreddit to use
      * @param page The page to get
      * @return A WikiPage for the given page
-     * @throws NetworkException If there was a problem sending the HTTP request
+     * @throws NetworkException If the request was not successful
      */
     @EndpointImplementation(Endpoints.WIKI_PAGE)
     public WikiPage getWikiPage(String subreddit, String page) throws NetworkException {

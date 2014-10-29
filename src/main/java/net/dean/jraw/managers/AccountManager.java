@@ -33,7 +33,7 @@ public class AccountManager extends AbstractManager {
      *
      * @param b The SubmissionBuilder to gather data from
      * @return A representation of the newly submitted Submission
-     * @throws NetworkException If there was a problem sending the HTTP request
+     * @throws NetworkException If the request was not successful
      * @throws net.dean.jraw.ApiException If the Reddit API returned an error
      */
     public Submission submitContent(SubmissionBuilder b) throws NetworkException, ApiException {
@@ -47,7 +47,7 @@ public class AccountManager extends AbstractManager {
      * @param captcha The Captcha the user is attempting
      * @param captchaAttempt The user's guess at the captcha
      * @return A representation of the newly submitted Submission
-     * @throws NetworkException If there was a problem sending the HTTP request
+     * @throws NetworkException If the request was not successful
      * @throws net.dean.jraw.ApiException If the API returned an error
      */
     @EndpointImplementation(Endpoints.SUBMIT)
@@ -93,7 +93,7 @@ public class AccountManager extends AbstractManager {
      * @param s The submission to vote on
      * @param voteDirection How to vote
      * @param <T> The Votable Thing to vote on
-     * @throws NetworkException If there was a problem sending the HTTP request
+     * @throws NetworkException If the request was not successful
      * @throws ApiException If the API returned an error
      */
     @EndpointImplementation(Endpoints.VOTE)
@@ -113,7 +113,7 @@ public class AccountManager extends AbstractManager {
      * @param s The submission to save or unsave
      * @param save Whether or not to save the submission
      * @return The JSON response from the API
-     * @throws NetworkException If there was a problem sending the HTTP request
+     * @throws NetworkException If the request was not successful
      * @throws ApiException If the API returned an error
      */
     @EndpointImplementation({Endpoints.SAVE, Endpoints.UNSAVE})
@@ -132,7 +132,7 @@ public class AccountManager extends AbstractManager {
      * @param s The submission to modify
      * @param send Whether or not to send replies to your inbox
      * @return The response returned from the Reddit API
-     * @throws NetworkException If there was a problem sending the HTTP request
+     * @throws NetworkException If the request was not successful
      * @throws ApiException If the API returned an error
      */
     @EndpointImplementation(Endpoints.SENDREPLIES)
@@ -155,7 +155,7 @@ public class AccountManager extends AbstractManager {
      * @param s The submission to modify
      * @param nsfw Whether or not this submission is not safe for work
      * @return The response returned from the Reddit API
-     * @throws NetworkException If there was a problem sending the HTTP request
+     * @throws NetworkException If the request was not successful
      * @throws ApiException If the API returned an error
      */
     @EndpointImplementation({Endpoints.MARKNSFW, Endpoints.UNMARKNSFW})
@@ -175,7 +175,7 @@ public class AccountManager extends AbstractManager {
      * @param thing The submission to delete
      * @param <T> The Votable Thing to delete
      * @return The response that the Reddit API returned
-     * @throws NetworkException If there was a problem sending the request
+     * @throws NetworkException If the request was not successful
      * @throws ApiException If the API returned an error
      */
     public <T extends Thing & Votable> RedditResponse delete(T thing) throws NetworkException, ApiException {
@@ -199,7 +199,7 @@ public class AccountManager extends AbstractManager {
      * Deletes a comment or submission that you posted
      * @param id The ID of the submission or comment to delete
      * @return The response that the Reddit API returned
-     * @throws NetworkException If there was a problem sending the request
+     * @throws NetworkException If the request was not successful
      * @throws ApiException If the API returned an error
      */
     @EndpointImplementation(Endpoints.DEL)
@@ -217,7 +217,7 @@ public class AccountManager extends AbstractManager {
      * @param clientId Your application's client ID. You must be a developer of the app.
      * @param newDev The username of the new developer
      * @return The response that the Reddit API returned
-     * @throws NetworkException If there was a problem sending the request
+     * @throws NetworkException If the request was not successful
      * @throws ApiException If the API returned an error
      */
     @EndpointImplementation(Endpoints.ADDDEVELOPER)
@@ -231,7 +231,7 @@ public class AccountManager extends AbstractManager {
      * @param clientId Your application's client ID. You must be a developer of the app.
      * @param oldDev The username of the (soon-to-be) former developer
      * @return The response that the Reddit API returned
-     * @throws NetworkException If there was a problem sending the request
+     * @throws NetworkException If the request was not successful
      * @throws ApiException If the api returned an error
      */
     @EndpointImplementation(Endpoints.REMOVEDEVELOPER)
@@ -255,7 +255,7 @@ public class AccountManager extends AbstractManager {
      * @param s The submission to hide or unhide
      * @param hide If the submission is to be hidden
      * @return The response that the Reddit API returned
-     * @throws NetworkException If there was a problem sending the request
+     * @throws NetworkException If the request was not successful
      * @throws ApiException If the API returned an error
      */
     @EndpointImplementation({Endpoints.HIDE, Endpoints.UNHIDE})
@@ -273,7 +273,7 @@ public class AccountManager extends AbstractManager {
      * @param submission The submission that that you would like to edit the text for
      * @param text The new text that you want the post to have
      * @return The response that the Reddit API returned
-     * @throws NetworkException If there was a problem sending the request
+     * @throws NetworkException If the request was not successful
      * @throws ApiException If the API returned an error
      */
     @EndpointImplementation(Endpoints.EDITUSERTEXT)
@@ -292,7 +292,7 @@ public class AccountManager extends AbstractManager {
      *
      * @param r The request to execute
      * @return A representation of the response by the Reddit API
-     * @throws NetworkException If needsLogin is true and the user was not logged in, or there was an error making the
+     * @throws NetworkException If the request was not successful
      *                          HTTP request.
      */
     private RedditResponse genericPost(RestRequest r) throws NetworkException, ApiException {
@@ -314,7 +314,7 @@ public class AccountManager extends AbstractManager {
      * @param contribution The contribution to reply to
      * @param text The body of the message, formatted in Markdown
      * @return The ID of the newly created reply
-     * @throws NetworkException If there was an error making the HTTP request
+     * @throws NetworkException If the request was not successful
      * @throws ApiException If the Reddit API returned an error
      */
     @EndpointImplementation(Endpoints.COMMENT)

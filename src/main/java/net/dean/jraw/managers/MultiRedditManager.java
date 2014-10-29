@@ -39,7 +39,7 @@ public class MultiRedditManager extends AbstractManager {
      * Gets a list of your MultiReddits
      *
      * @return A list of your multireddits
-     * @throws NetworkException If there was a problem sending the request
+     * @throws NetworkException If the request was not successful
      * @throws net.dean.jraw.ApiException If the Reddit API returned an error
      */
     @EndpointImplementation(Endpoints.MULTI_MINE)
@@ -144,7 +144,7 @@ public class MultiRedditManager extends AbstractManager {
      *
      * @param prevName The original name of the multi
      * @param newName The new name of the multi
-     * @throws NetworkException If the request was not successful. If the exception's HTTP code is 409 Conflict, that
+     * @throws NetworkException If the request was not successful
      *                          means that the user already has a multireddit of that name
      * @throws ApiException If the Reddit API returns an error
      */
@@ -177,7 +177,7 @@ public class MultiRedditManager extends AbstractManager {
      * @param multiName The name of the multireddit
      * @param newDescription The multireddit's new description, formatted in Markdown
      * @return A RenderStringPair representing the new description
-     * @throws NetworkException If request was not successful
+     * @throws NetworkException If the request was not successful
      */
     @EndpointImplementation(Endpoints.MULTI_MULTIPATH_DESCRIPTION_PUT)
     public RenderStringPair updateDescription(String multiName, String newDescription) throws NetworkException {
@@ -199,7 +199,7 @@ public class MultiRedditManager extends AbstractManager {
      * @param name The name of the new multireddit
      * @param subreddits The subreddits that make up this multireddit
      * @param priv If this multireddit is private
-     * @throws NetworkException If the request was not successful. If a 400 Bad Request is returned, then most likely the
+     * @throws NetworkException If the request was not successful
      *                          name of the multireddit is invalid (over 20 characters or starts with underscore)
      * @throws ApiException If a multireddit of that name already exists
      */
@@ -246,7 +246,7 @@ public class MultiRedditManager extends AbstractManager {
      * that this operation completed successfully if no NetworkException was thrown.
      *
      * @param name The name of the multireddit
-     * @throws NetworkException If the status code was not 200
+     * @throws NetworkException If the request was not successful
      */
     @EndpointImplementation(Endpoints.MULTI_MULTIPATH_DELETE)
     public void delete(String name) throws NetworkException {
@@ -263,7 +263,7 @@ public class MultiRedditManager extends AbstractManager {
      *
      * @param name The name of the multireddit
      * @return A MultiReddit owned by the current user
-     * @throws NetworkException If there was a problem sending a request
+     * @throws NetworkException If the request was not successful
      * @throws ApiException If the multi does not exist
      */
     public MultiReddit get(String name) throws NetworkException, ApiException {
@@ -275,7 +275,7 @@ public class MultiRedditManager extends AbstractManager {
      * @param owner The owner of the multireddit
      * @param multiName The name of the multireddit
      * @return A MultiReddit
-     * @throws NetworkException If there was a problem making the request
+     * @throws NetworkException If the request was not successful
      * @throws ApiException If the Reddit API returned an error
      */
     @EndpointImplementation({
@@ -297,7 +297,7 @@ public class MultiRedditManager extends AbstractManager {
      *
      * @param multiName The name of the multireddit
      * @return A String array in which the first index is Markdown and the second is HTML
-     * @throws NetworkException If there was a problem sending the request
+     * @throws NetworkException If the request was not successful
      * @throws ApiException If the Reddit API returned an error
      */
     @EndpointImplementation(Endpoints.MULTI_MULTIPATH_DESCRIPTION_GET)
@@ -311,7 +311,7 @@ public class MultiRedditManager extends AbstractManager {
      * @param owner The owner of the multireddit
      * @param multiName The name of the multireddit
      * @return A String array in which the first index is Markdown and the second is HTML
-     * @throws NetworkException If there was a problem sending the request
+     * @throws NetworkException If the request was not successful
      * @throws ApiException If the Reddit API returned an error
      */
     @EndpointImplementation(Endpoints.MULTI_MULTIPATH_DESCRIPTION_GET)

@@ -67,7 +67,7 @@ public abstract class Paginator<T extends Thing> implements Iterator<Listing<T>>
      *
      * @param forwards If true, this method will return the next listing. If false, it will return the first listing.
      * @return A new listing
-     * @throws NetworkException If there was a problem sending the HTTP request
+     * @throws NetworkException If the request was not successful
      * @throws IllegalStateException If a setter method (such as {@link #setLimit(int)} was called after the first listing was
      *                               requested.
      */
