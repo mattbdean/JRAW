@@ -1,9 +1,9 @@
-<!--- Generated 2014-10-29 at 22:38:11 EDT. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
+<!--- Generated 2014-10-31 at 14:43:36 EDT. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
 #Endpoints
 
 This file contains a list of all the endpoints (regardless of if they have been implemented) that can be found at the [official Reddit API docs](https://www.reddit.com/dev/api). To update this file, run `./gradlew endpoints:update`.
 
-So far **80** endpoints (out of 184 total) have been implemented.
+So far **81** endpoints (out of 184 total) have been implemented.
 
 ##account
 Method|Endpoint|Implemented?
@@ -67,7 +67,6 @@ Method|Endpoint|Implemented?
 `POST`|[`/api/report`](https://www.reddit.com/dev/api#POST_api_report)|No
 `GET`|[`/api/saved_categories.json`](https://www.reddit.com/dev/api#GET_api_saved_categories.json)|No
 `POST`|[`/api/set_contest_mode`](https://www.reddit.com/dev/api#POST_api_set_contest_mode)|No
-`POST`|[`/api/set_subreddit_sticky`](https://www.reddit.com/dev/api#POST_api_set_subreddit_sticky)|No
 `POST`|[`/api/store_visits`](https://www.reddit.com/dev/api#POST_api_store_visits)|No
 `POST`|[`/api/comment`](https://www.reddit.com/dev/api#POST_api_comment)|[`AccountManager.reply(Contribution, String)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/managers/AccountManager#reply-net.dean.jraw.models.Contribution-java.lang.String-)
 `POST`|[`/api/del`](https://www.reddit.com/dev/api#POST_api_del)|[`AccountManager.delete(String)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/managers/AccountManager#delete-java.lang.String-)
@@ -76,6 +75,7 @@ Method|Endpoint|Implemented?
 `POST`|[`/api/marknsfw`](https://www.reddit.com/dev/api#POST_api_marknsfw)|[`AccountManager.setNsfw(Submission, boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/managers/AccountManager#setNsfw-net.dean.jraw.models.Submission-boolean-)
 `POST`|[`/api/save`](https://www.reddit.com/dev/api#POST_api_save)|[`AccountManager.setSaved(Submission, boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/managers/AccountManager#setSaved-net.dean.jraw.models.Submission-boolean-)
 `POST`|[`/api/sendreplies`](https://www.reddit.com/dev/api#POST_api_sendreplies)|[`AccountManager.setSendRepliesToInbox(Submission, boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/managers/AccountManager#setSendRepliesToInbox-net.dean.jraw.models.Submission-boolean-)
+`POST`|[`/api/set_subreddit_sticky`](https://www.reddit.com/dev/api#POST_api_set_subreddit_sticky)|[`AccountManager.setSticky(Submission, boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/managers/AccountManager#setSticky-net.dean.jraw.models.Submission-boolean-)
 `POST`|[`/api/submit`](https://www.reddit.com/dev/api#POST_api_submit)|[`AccountManager.submitContent(SubmissionBuilder, Captcha, String)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/managers/AccountManager#submitContent-net.dean.jraw.managers.AccountManager$SubmissionBuilder-net.dean.jraw.models.Captcha-java.lang.String-)
 `POST`|[`/api/unhide`](https://www.reddit.com/dev/api#POST_api_unhide)|[`AccountManager.hide(Submission, boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/managers/AccountManager#hide-net.dean.jraw.models.Submission-boolean-)
 `POST`|[`/api/unmarknsfw`](https://www.reddit.com/dev/api#POST_api_unmarknsfw)|[`AccountManager.setNsfw(Submission, boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/managers/AccountManager#setNsfw-net.dean.jraw.models.Submission-boolean-)
@@ -90,7 +90,7 @@ Method|Endpoint|Implemented?
 `GET`|[`/controversial`](https://www.reddit.com/dev/api#GET_controversial)|[`SubredditPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/paginators/SubredditPaginator#getListing-boolean-)
 `GET`|[`/hot`](https://www.reddit.com/dev/api#GET_hot)|[`SubredditPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/paginators/SubredditPaginator#getListing-boolean-)
 `GET`|[`/new`](https://www.reddit.com/dev/api#GET_new)|[`SubredditPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/paginators/SubredditPaginator#getListing-boolean-)
-`GET`|[`/random`](https://www.reddit.com/dev/api#GET_random)|[`RedditClient.getRandom(String)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/RedditClient#getRandom-java.lang.String-)
+`GET`|[`/random`](https://www.reddit.com/dev/api#GET_random)|[`RedditClient.getRandomSubmission(String)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/RedditClient#getRandomSubmission-java.lang.String-)
 `GET`|[`/sort`](https://www.reddit.com/dev/api#GET_sort)|[`SubredditPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/paginators/SubredditPaginator#getListing-boolean-)
 `GET`|[`/top`](https://www.reddit.com/dev/api#GET_top)|[`SubredditPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/paginators/SubredditPaginator#getListing-boolean-)
 

@@ -100,8 +100,6 @@ public enum Endpoints {
     SAVED_CATEGORIES("GET /api/saved_categories.json"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_set_contest_mode">{@code POST /api/set_contest_mode}</a>" in the "links &amp; comments" category */
     SET_CONTEST_MODE("POST /api/set_contest_mode"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_set_subreddit_sticky">{@code POST /api/set_subreddit_sticky}</a>" in the "links &amp; comments" category */
-    SET_SUBREDDIT_STICKY("POST /api/set_subreddit_sticky"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_store_visits">{@code POST /api/store_visits}</a>" in the "links &amp; comments" category */
     STORE_VISITS("POST /api/store_visits"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_comment">{@code POST /api/comment}</a>" in the "links &amp; comments" category */
@@ -118,6 +116,8 @@ public enum Endpoints {
     SAVE("POST /api/save"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_sendreplies">{@code POST /api/sendreplies}</a>" in the "links &amp; comments" category */
     SENDREPLIES("POST /api/sendreplies"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_set_subreddit_sticky">{@code POST /api/set_subreddit_sticky}</a>" in the "links &amp; comments" category */
+    SET_SUBREDDIT_STICKY("POST /api/set_subreddit_sticky"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_submit">{@code POST /api/submit}</a>" in the "links &amp; comments" category */
     SUBMIT("POST /api/submit"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_unhide">{@code POST /api/unhide}</a>" in the "links &amp; comments" category */

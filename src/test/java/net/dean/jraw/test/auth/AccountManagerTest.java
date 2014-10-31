@@ -7,6 +7,7 @@ import net.dean.jraw.http.RedditResponse;
 import net.dean.jraw.managers.AccountManager;
 import net.dean.jraw.models.*;
 import net.dean.jraw.paginators.Paginator;
+import net.dean.jraw.paginators.SubredditPaginator;
 import net.dean.jraw.paginators.UserContributionPaginator;
 import net.dean.jraw.paginators.UserSubredditsPaginator;
 import org.testng.SkipException;
@@ -356,6 +357,41 @@ public class AccountManagerTest extends AuthenticatedRedditTest {
             boolean actual = isSubscribed(subreddit.getDisplayName());
             assertEquals(actual, expected);
         } catch (NetworkException e) {
+            handle(e);
+        }
+    }
+
+    @Test
+    public void testSticky() {
+        Listing<Subreddit> moderatorOf = new UserSubredditsPaginator(reddit, UserSubredditsPaginator.Where.MODERATOR).next();
+        if (moderatorOf.size() == 0) {
+            throw new IllegalStateException("Must be a moderator of at least one subreddit");
+        }
+
+        SubredditPaginator paginator = new SubredditPaginator(reddit);
+        paginator.setSubreddit(moderatorOf.get(0).getDisplayName());
+
+        Submission submission = null;
+        Listing<Submission> submissions = paginator.next();
+        if (submissions.get(0).isStickied()) {
+            // There is already a stickied post
+            submission = submissions.get(0);
+        } else {
+            // Find the first self post
+            for (Submission s : submissions) {
+                if (s.isSelfPost()) {
+                    submission = s;
+                    break;
+                }
+            }
+        }
+        if (submission == null)
+            throw new IllegalStateException("No self posts in " + moderatorOf.get(0).getDisplayName());
+
+        boolean expected = !(submission.isStickied());
+        try {
+            account.setSticky(submission, expected);
+        } catch (NetworkException | ApiException e) {
             handle(e);
         }
     }

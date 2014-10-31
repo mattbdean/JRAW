@@ -89,7 +89,7 @@ Want to contribute? Follow these steps:
 
 ####Creating a user for unit testing
 1. Create a multireddit whose name is *not* "jraw_testing", containing at least one subreddit
-2. Have at least 10 link karma (otherwise you will have to use captchas)
+2. Be a moderator of at least one subreddit. See [here](https://www.reddit.com/subreddits/create) to create one.
 3. Submit at least one post (how about on [/r/jraw_testing2](http://www.reddit.com/r/jraw_testing2)?)
 
 

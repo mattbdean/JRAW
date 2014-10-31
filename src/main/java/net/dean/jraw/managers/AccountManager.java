@@ -357,6 +357,25 @@ public class AccountManager extends AbstractManager {
     }
 
     /**
+     * Set or unset a self post as a sticky. You must be a moderator of the subreddit the submission was posted in for
+     * this request to complete successfully.
+     * @param s The submission to set as a sticky. Must be a self post
+     * @param sticky Whether or not to set the submission as a stickied post
+     * @throws NetworkException If the request was not successful
+     * @throws ApiException If the Reddit API returned an error
+     */
+    @EndpointImplementation(Endpoints.SET_SUBREDDIT_STICKY)
+    public void setSticky(Submission s, boolean sticky) throws NetworkException, ApiException {
+        genericPost(request()
+                .endpoint(Endpoints.SET_SUBREDDIT_STICKY)
+                .post(JrawUtils.args(
+                        "api_type", "json",
+                        "id", s.getFullName(),
+                        "state", sticky
+                )).build());
+    }
+
+    /**
      * This class provides a way to configure posting parameters of a new submission
      */
     public static class SubmissionBuilder {

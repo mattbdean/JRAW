@@ -106,7 +106,10 @@ public class OEmbed extends JsonModel {
      */
     @JsonProperty(nullable = true)
     public Thumbnail getThumbnail() {
-        return new Thumbnail(JrawUtils.newUrl(data("thumbnail_url")),
+        if (!data.has("thumbnail_url")) {
+            return null;
+        }
+        return new Thumbnail(data("thumbnail_url", URL.class),
                 data("thumbnail_width", Integer.class),
                 data("thumbnail_height", Integer.class));
     }
