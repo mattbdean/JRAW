@@ -1,20 +1,13 @@
 package net.dean.jraw.paginators;
 
-import net.dean.jraw.JrawUtils;
+import com.google.common.collect.ImmutableList;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.RedditResponse;
-import net.dean.jraw.models.MultiReddit;
+import net.dean.jraw.models.FauxListing;
 import net.dean.jraw.models.Listing;
+import net.dean.jraw.models.MultiReddit;
 import net.dean.jraw.models.Submission;
-import org.codehaus.jackson.JsonFactory;
-import org.codehaus.jackson.JsonGenerator;
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.map.ObjectMapper;
 
-import java.io.IOException;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -38,12 +31,10 @@ public class MultiHubPaginator extends Paginator<MultiHubPaginator.MultiRedditId
             "http(s)?://(\\w.*\\.)?reddit\\.com/user/([a-zA-Z\\-_]*?)/m/([A-Za-z0-9][A-Za-z0-9_]{1,20})";
     private static final int BACKREF_USERNAME = 3;
     private static final int BACKREF_MULTINAME = 4;
-    private final ObjectMapper objectMapper;
     private final Matcher matcher;
 
     public MultiHubPaginator(RedditClient client) {
         super(client, MultiRedditId.class);
-        this.objectMapper = new ObjectMapper();
         // Blank matcher for now, reset(String) will be called later
         this.matcher = Pattern.compile(MULTIREDDIT_URL_REGEX).matcher("");
     }
@@ -55,7 +46,7 @@ public class MultiHubPaginator extends Paginator<MultiHubPaginator.MultiRedditId
 
     @Override
     protected Listing<MultiRedditId> parseListing(RedditResponse response) {
-        List<MultiRedditId> multiReddits = new ArrayList<>();
+        ImmutableList.Builder<MultiRedditId> multiReddits = ImmutableList.builder();
 
         Listing<Submission> submissions = response.asListing(Submission.class);
 
@@ -72,47 +63,8 @@ public class MultiHubPaginator extends Paginator<MultiHubPaginator.MultiRedditId
             }
         }
 
-        try (StringWriter writer = new StringWriter()) {
-            JsonGenerator gen = new JsonFactory().createJsonGenerator(writer);
-
-            // Start JSON
-            gen.writeStartObject();
-
-            // Write children
-            gen.writeArrayFieldStart("children");
-            for (MultiRedditId id : multiReddits) {
-                // {"name": <name>, "owner": <owner>}
-                gen.writeStartObject();
-                gen.writeStringField("name", id.getName());
-                gen.writeStringField("owner", id.getOwner());
-                gen.writeStringField("kind", getClass().getSimpleName());
-                gen.writeEndObject();
-            }
-            gen.writeEndArray();
-
-            // Write before, after, and modhash
-            writeNullableStringField(gen, "before", submissions.getBefore());
-            writeNullableStringField(gen, "after", submissions.getAfter());
-            writeNullableStringField(gen, "modhash", submissions.getModhash());
-
-            // End JSON
-            gen.writeEndObject();
-            gen.close();
-
-            JsonNode node = objectMapper.readTree(writer.toString());
-            return new Listing<>(node, MultiRedditId.class);
-        } catch (IOException e) {
-            JrawUtils.logger().error("Could not create JsonNode", e);
-            return null;
-        }
-    }
-
-    private void writeNullableStringField(JsonGenerator gen, String name, String str) throws IOException {
-        if (str == null) {
-            gen.writeNullField(name);
-        } else {
-            gen.writeStringField(name, str);
-        }
+        return new FauxListing<>(multiReddits.build(), submissions.getBefore(), submissions.getAfter(),
+                submissions.getModhash(), submissions.getMoreChildren());
     }
 
     /**

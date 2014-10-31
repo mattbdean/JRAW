@@ -286,18 +286,6 @@ public enum Endpoints {
     SEARCH("GET /search"),
 
     ///////// subreddits /////////
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_about_banned">{@code GET /about/banned}</a>" in the "subreddits" category */
-    ABOUT_BANNED("GET /about/banned"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_about_contributors">{@code GET /about/contributors}</a>" in the "subreddits" category */
-    ABOUT_CONTRIBUTORS("GET /about/contributors"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_about_moderators">{@code GET /about/moderators}</a>" in the "subreddits" category */
-    ABOUT_MODERATORS("GET /about/moderators"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_about_wikibanned">{@code GET /about/wikibanned}</a>" in the "subreddits" category */
-    ABOUT_WIKIBANNED("GET /about/wikibanned"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_about_wikicontributors">{@code GET /about/wikicontributors}</a>" in the "subreddits" category */
-    ABOUT_WIKICONTRIBUTORS("GET /about/wikicontributors"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_about_%7Bwhere%7D">{@code GET /about/{where}}</a>" in the "subreddits" category */
-    ABOUT_WHERE("GET /about/{where}"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_delete_sr_header">{@code POST /api/delete_sr_header}</a>" in the "subreddits" category */
     DELETE_SR_HEADER("POST /api/delete_sr_header"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_delete_sr_img">{@code POST /api/delete_sr_img}</a>" in the "subreddits" category */
@@ -314,6 +302,18 @@ public enum Endpoints {
     SUBREDDIT_ABOUT_EDIT("GET /r/{subreddit}/about/edit.json"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_subreddits_search">{@code GET /subreddits/search}</a>" in the "subreddits" category */
     SUBREDDITS_SEARCH("GET /subreddits/search"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_about_banned">{@code GET /about/banned}</a>" in the "subreddits" category */
+    ABOUT_BANNED("GET /about/banned"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_about_contributors">{@code GET /about/contributors}</a>" in the "subreddits" category */
+    ABOUT_CONTRIBUTORS("GET /about/contributors"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_about_moderators">{@code GET /about/moderators}</a>" in the "subreddits" category */
+    ABOUT_MODERATORS("GET /about/moderators"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_about_wikibanned">{@code GET /about/wikibanned}</a>" in the "subreddits" category */
+    ABOUT_WIKIBANNED("GET /about/wikibanned"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_about_wikicontributors">{@code GET /about/wikicontributors}</a>" in the "subreddits" category */
+    ABOUT_WIKICONTRIBUTORS("GET /about/wikicontributors"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_about_%7Bwhere%7D">{@code GET /about/{where}}</a>" in the "subreddits" category */
+    ABOUT_WHERE("GET /about/{where}"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_search_reddit_names.json">{@code POST /api/search_reddit_names.json}</a>" in the "subreddits" category */
     SEARCH_REDDIT_NAMES("POST /api/search_reddit_names.json"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_api_submit_text.json">{@code GET /api/submit_text.json}</a>" in the "subreddits" category */

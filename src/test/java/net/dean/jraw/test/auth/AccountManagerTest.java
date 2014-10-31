@@ -32,12 +32,12 @@ public class AccountManagerTest extends AuthenticatedRedditTest {
     @Test
     public void testPostLink() {
         try {
-            int number = randomInt();
+            long number = epochMillis();
 
-            URL url = JrawUtils.newUrl("https://www.google.com/?q=" + number);
+            URL url = JrawUtils.newUrl("https://www." + number + ".com");
 
             Submission submission = account.submitContent(
-                    new AccountManager.SubmissionBuilder(url, "jraw_testing2", "Link post test (random=" + number + ")"));
+                    new AccountManager.SubmissionBuilder(url, "jraw_testing2", "Link post test (epoch=" + number + ")"));
 
             assertTrue(!submission.isSelfPost());
             assertTrue(submission.getUrl().equals(url));
@@ -52,11 +52,11 @@ public class AccountManagerTest extends AuthenticatedRedditTest {
     @Test
     public void testPostSelfPost() {
         try {
-            int number = randomInt();
+            long number = epochMillis();
             String content = reddit.getUserAgent();
 
             Submission submission = account.submitContent(
-                    new AccountManager.SubmissionBuilder(content, "jraw_testing2", "Self post test (random=" + number + ")"));
+                    new AccountManager.SubmissionBuilder(content, "jraw_testing2", "Self post test (epoch=" + number + ")"));
 
             assertTrue(submission.isSelfPost());
             assertTrue(submission.getSelftext().md().equals(content));
@@ -77,9 +77,7 @@ public class AccountManagerTest extends AuthenticatedRedditTest {
 
         try {
             RedditResponse r = account.updateSelfpost(s, newText);
-        } catch (NetworkException e) {
-            handle(e);
-        } catch (ApiException e) {
+        } catch (NetworkException | ApiException e) {
             handle(e);
         }
     }
@@ -87,6 +85,9 @@ public class AccountManagerTest extends AuthenticatedRedditTest {
     @Test(expectedExceptions = {ApiException.class, SkipException.class})
     public void testPostWithInvalidCaptcha() throws ApiException {
         try {
+            if (!reddit.needsCaptcha()) {
+                throw new SkipException("No captcha needed, request will return successfully either way");
+            }
             account.submitContent(
                     new AccountManager.SubmissionBuilder("content", "jraw_testing2", "title"), reddit.getNewCaptcha(), "invalid captcha attempt");
         } catch (NetworkException e) {
@@ -108,7 +109,7 @@ public class AccountManagerTest extends AuthenticatedRedditTest {
     @Test
     public void testReplySubmission() {
         try {
-            String replyText = "" + randomInt();
+            String replyText = "" + epochMillis();
             Submission submission = reddit.getSubmission(SUBMISSION_ID);
 
             // Reply to a submission
@@ -134,7 +135,7 @@ public class AccountManagerTest extends AuthenticatedRedditTest {
             }
 
             assertNotNull(replyTo);
-            assertNotNull(account.reply(replyTo, "" + randomInt()));
+            assertNotNull(account.reply(replyTo, "" + epochMillis()));
         } catch (NetworkException e) {
             handle(e);
         } catch (ApiException e) {
@@ -148,7 +149,7 @@ public class AccountManagerTest extends AuthenticatedRedditTest {
             account.delete(newCommentId);
 
             for (Comment c : reddit.getSubmission(SUBMISSION_ID).getComments()) {
-                if (c.getId().equals(COMMENT_ID)) {
+                if (c.getId().equals(newCommentId)) {
                     fail("Found the (supposedly) deleted comment");
                 }
             }

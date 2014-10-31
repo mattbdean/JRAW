@@ -1,9 +1,9 @@
-<!--- Generated 2014-10-25 at 08:39:35 EDT. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
+<!--- Generated 2014-10-29 at 22:38:11 EDT. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
 #Endpoints
 
 This file contains a list of all the endpoints (regardless of if they have been implemented) that can be found at the [official Reddit API docs](https://www.reddit.com/dev/api). To update this file, run `./gradlew endpoints:update`.
 
-So far **74** endpoints (out of 184 total) have been implemented.
+So far **80** endpoints (out of 184 total) have been implemented.
 
 ##account
 Method|Endpoint|Implemented?
@@ -71,7 +71,7 @@ Method|Endpoint|Implemented?
 `POST`|[`/api/store_visits`](https://www.reddit.com/dev/api#POST_api_store_visits)|No
 `POST`|[`/api/comment`](https://www.reddit.com/dev/api#POST_api_comment)|[`AccountManager.reply(Contribution, String)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/managers/AccountManager#reply-net.dean.jraw.models.Contribution-java.lang.String-)
 `POST`|[`/api/del`](https://www.reddit.com/dev/api#POST_api_del)|[`AccountManager.delete(String)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/managers/AccountManager#delete-java.lang.String-)
-`POST`|[`/api/editusertext`](https://www.reddit.com/dev/api#POST_api_editusertext)|[`AccountManager.editUserText(Submission, String)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/managers/AccountManager#editUserText-net.dean.jraw.models.Submission-java.lang.String-)
+`POST`|[`/api/editusertext`](https://www.reddit.com/dev/api#POST_api_editusertext)|[`AccountManager.updateSelfpost(Submission, String)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/managers/AccountManager#updateSelfpost-net.dean.jraw.models.Submission-java.lang.String-)
 `POST`|[`/api/hide`](https://www.reddit.com/dev/api#POST_api_hide)|[`AccountManager.hide(Submission, boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/managers/AccountManager#hide-net.dean.jraw.models.Submission-boolean-)
 `POST`|[`/api/marknsfw`](https://www.reddit.com/dev/api#POST_api_marknsfw)|[`AccountManager.setNsfw(Submission, boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/managers/AccountManager#setNsfw-net.dean.jraw.models.Submission-boolean-)
 `POST`|[`/api/save`](https://www.reddit.com/dev/api#POST_api_save)|[`AccountManager.setSaved(Submission, boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/managers/AccountManager#setSaved-net.dean.jraw.models.Submission-boolean-)
@@ -184,12 +184,6 @@ Method|Endpoint|Implemented?
 ##subreddits
 Method|Endpoint|Implemented?
 :----:|--------|------------
-`GET`|[`/about/banned`](https://www.reddit.com/dev/api#GET_about_banned)|No
-`GET`|[`/about/contributors`](https://www.reddit.com/dev/api#GET_about_contributors)|No
-`GET`|[`/about/moderators`](https://www.reddit.com/dev/api#GET_about_moderators)|No
-`GET`|[`/about/wikibanned`](https://www.reddit.com/dev/api#GET_about_wikibanned)|No
-`GET`|[`/about/wikicontributors`](https://www.reddit.com/dev/api#GET_about_wikicontributors)|No
-`GET`|[`/about/{where}`](https://www.reddit.com/dev/api#GET_about_%7Bwhere%7D)|No
 `POST`|[`/api/delete_sr_header`](https://www.reddit.com/dev/api#POST_api_delete_sr_header)|No
 `POST`|[`/api/delete_sr_img`](https://www.reddit.com/dev/api#POST_api_delete_sr_img)|No
 `GET`|[`/api/recommend/sr/{srnames}`](https://www.reddit.com/dev/api#GET_api_recommend_sr_%7Bsrnames%7D)|No
@@ -198,6 +192,12 @@ Method|Endpoint|Implemented?
 `POST`|[`/api/upload_sr_img`](https://www.reddit.com/dev/api#POST_api_upload_sr_img)|No
 `GET`|[`/r/{subreddit}/about/edit.json`](https://www.reddit.com/dev/api#GET_r_%7Bsubreddit%7D_about_edit.json)|No
 `GET`|[`/subreddits/search`](https://www.reddit.com/dev/api#GET_subreddits_search)|No
+`GET`|[`/about/banned`](https://www.reddit.com/dev/api#GET_about_banned)|[`UserRecordPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/paginators/UserRecordPaginator#getListing-boolean-)
+`GET`|[`/about/contributors`](https://www.reddit.com/dev/api#GET_about_contributors)|[`UserRecordPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/paginators/UserRecordPaginator#getListing-boolean-)
+`GET`|[`/about/moderators`](https://www.reddit.com/dev/api#GET_about_moderators)|[`UserRecordPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/paginators/UserRecordPaginator#getListing-boolean-)
+`GET`|[`/about/wikibanned`](https://www.reddit.com/dev/api#GET_about_wikibanned)|[`UserRecordPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/paginators/UserRecordPaginator#getListing-boolean-)
+`GET`|[`/about/wikicontributors`](https://www.reddit.com/dev/api#GET_about_wikicontributors)|[`UserRecordPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/paginators/UserRecordPaginator#getListing-boolean-)
+`GET`|[`/about/{where}`](https://www.reddit.com/dev/api#GET_about_%7Bwhere%7D)|[`UserRecordPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/paginators/UserRecordPaginator#getListing-boolean-)
 `POST`|[`/api/search_reddit_names.json`](https://www.reddit.com/dev/api#POST_api_search_reddit_names.json)|[`RedditClient.searchSubreddits(String, boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/RedditClient#searchSubreddits-java.lang.String-boolean-)
 `GET`|[`/api/submit_text.json`](https://www.reddit.com/dev/api#GET_api_submit_text.json)|[`RedditClient.getSubmitText(String)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/RedditClient#getSubmitText-java.lang.String-)
 `GET`|[`/api/subreddits_by_topic.json`](https://www.reddit.com/dev/api#GET_api_subreddits_by_topic.json)|[`RedditClient.getSubredditsByTopic(String)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/RedditClient#getSubredditsByTopic-java.lang.String-)

@@ -14,6 +14,7 @@ import org.testng.SkipException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -33,8 +34,8 @@ public abstract class RedditTest {
         return clazz.getSimpleName() + " for JRAW v" + Version.get().formatted();
     }
 
-    protected final int randomInt() {
-        return random.nextInt(1_000_000_001);
+    public long epochMillis() {
+        return new Date().getTime();
     }
 
     protected void handle(Throwable t) {

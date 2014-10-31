@@ -120,7 +120,7 @@ public abstract class Paginator<T extends Thing> implements Iterator<Listing<T>>
 
     @Override
     public boolean hasNext() {
-        return current == null || current.getAfter() != null;
+        return (current != null && current.getAfter() != null) || !started;
     }
 
     /**

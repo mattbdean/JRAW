@@ -24,6 +24,7 @@ public abstract class GenericPaginator<T extends Thing, U extends Enum<U>> exten
      */
     protected GenericPaginator(RedditClient creator, Class<T> thingClass, U where) {
         super(creator, thingClass);
+        if (where == null) throw new NullPointerException("'where' cannot be null");
         this.where = where;
     }
 

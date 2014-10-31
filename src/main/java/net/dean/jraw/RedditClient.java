@@ -527,7 +527,7 @@ public class RedditClient extends RestClient<RedditResponse> {
          * in the eighth level of the comment tree (meaning there are seven replies above it), and the context is set to
          * six, then the response will also contain the six direct parents of the given comment. For a better
          * understanding, play with
-         * <a href="https://www.reddit.com/comments/92dd8?comment=c0b73aj&context=8>this link</a>.
+         * <a href="https://www.reddit.com/comments/92dd8?comment=c0b73aj&context=8">this link</a>.
          *
          * @param context The number of parent comments to return in relation to the focused comment.
          * @return This SubmissionRequest

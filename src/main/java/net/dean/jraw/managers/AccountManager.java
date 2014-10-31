@@ -5,6 +5,7 @@ import net.dean.jraw.EndpointImplementation;
 import net.dean.jraw.Endpoints;
 import net.dean.jraw.JrawUtils;
 import net.dean.jraw.RedditClient;
+import net.dean.jraw.http.MediaTypes;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.RedditResponse;
 import net.dean.jraw.http.RestRequest;
@@ -350,7 +351,9 @@ public class AccountManager extends AbstractManager {
                 .post(JrawUtils.args(
                         "sr", subreddit.getFullName(),
                         "action", sub ? "sub" : "unsub"
-                )).build());
+                // JSON is returned on subscribe, HTML is returned on unsubscribe
+                )).expected(sub ? MediaTypes.JSON.type() : MediaTypes.HTML.type())
+                .build());
     }
 
     /**
@@ -364,7 +367,7 @@ public class AccountManager extends AbstractManager {
         private final String title;
         private boolean saveAfter; // = false;
         private boolean sendRepliesToInbox; // = false;
-        private boolean resubmit; // = false;
+        private boolean resubmit = true;
 
         /**
          * Instantiates a new SubmissionBuilder that will result in a self post.

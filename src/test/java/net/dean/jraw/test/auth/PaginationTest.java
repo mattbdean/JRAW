@@ -2,13 +2,27 @@ package net.dean.jraw.test.auth;
 
 import net.dean.jraw.ApiException;
 import net.dean.jraw.JrawUtils;
-import net.dean.jraw.managers.MultiRedditManager;
 import net.dean.jraw.http.NetworkException;
-import net.dean.jraw.models.MultiReddit;
+import net.dean.jraw.managers.MultiRedditManager;
 import net.dean.jraw.models.Listing;
+import net.dean.jraw.models.MultiReddit;
 import net.dean.jraw.models.Submission;
+import net.dean.jraw.models.Subreddit;
 import net.dean.jraw.models.Thing;
-import net.dean.jraw.paginators.*;
+import net.dean.jraw.paginators.AllSubredditsPaginator;
+import net.dean.jraw.paginators.CompoundSubredditPaginator;
+import net.dean.jraw.paginators.InboxPaginator;
+import net.dean.jraw.paginators.LiveThreadPaginator;
+import net.dean.jraw.paginators.MultiHubPaginator;
+import net.dean.jraw.paginators.MultiRedditPaginator;
+import net.dean.jraw.paginators.Paginator;
+import net.dean.jraw.paginators.SearchPaginator;
+import net.dean.jraw.paginators.SpecificPaginator;
+import net.dean.jraw.paginators.SubredditPaginator;
+import net.dean.jraw.paginators.TimePeriod;
+import net.dean.jraw.paginators.UserContributionPaginator;
+import net.dean.jraw.paginators.UserRecordPaginator;
+import net.dean.jraw.paginators.UserSubredditsPaginator;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -144,6 +158,16 @@ public class PaginationTest extends AuthenticatedRedditTest {
     public void testInboxPaginator() {
         for (InboxPaginator.Where where : InboxPaginator.Where.values()) {
             InboxPaginator paginator = new InboxPaginator(reddit, where);
+            commonTest(paginator);
+        }
+    }
+
+    @Test
+    public void testUserRecordPaginator() {
+        Subreddit modOf = new UserSubredditsPaginator(reddit, UserSubredditsPaginator.Where.MODERATOR).next().get(0);
+
+        for (UserRecordPaginator.Where where : UserRecordPaginator.Where.values()) {
+            UserRecordPaginator paginator = new UserRecordPaginator(reddit, modOf.getDisplayName(), where);
             commonTest(paginator);
         }
     }

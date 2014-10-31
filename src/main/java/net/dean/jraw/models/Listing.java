@@ -23,7 +23,6 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
     private final Class<T> thingClass;
     private final ImmutableList<T> children;
     private final More more;
-    private final boolean hasChildren;
 
     /**
      * Instantiates a new Listing
@@ -35,12 +34,11 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
         super(dataNode);
 
         this.thingClass = thingClass;
-        this.hasChildren = data.has("children");
         this.children = initChildren();
         this.more = initMore();
     }
 
-    private ImmutableList<T> initChildren() {
+    protected ImmutableList<T> initChildren() {
         ImmutableList.Builder<T> children = ImmutableList.<T>builder();
 
         // children is a JSON array
@@ -53,7 +51,7 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
         return children.build();
     }
 
-    private More initMore() {
+    protected More initMore() {
         for (JsonNode childNode : data.get("children")) {
             if (childNode.get("kind").getTextValue().equalsIgnoreCase("more")) {
                 return new More(childNode.get("data"));
@@ -61,6 +59,10 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
         }
 
         return null;
+    }
+
+    public ImmutableList<T> getChildren() {
+        return children;
     }
 
     /**
@@ -121,7 +123,6 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
         int result = super.hashCode();
         result = 31 * result + thingClass.hashCode();
         result = 31 * result + children.hashCode();
-        result = 31 * result + (hasChildren ? 1 : 0);
         return result;
     }
 
@@ -129,117 +130,117 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
 
     @Override
     public int size() {
-        return children.size();
+        return getChildren().size();
     }
 
     @Override
     public boolean isEmpty() {
-        return children.isEmpty();
+        return getChildren().isEmpty();
     }
 
     @Override
     public boolean contains(Object object) {
-        return children.contains(object);
+        return getChildren().contains(object);
     }
 
     @Override
     public Iterator<T> iterator() {
-        return children.iterator();
+        return getChildren().iterator();
     }
 
     @Override
     public Object[] toArray() {
-        return children.toArray();
+        return getChildren().toArray();
     }
 
     @Override
     public <T1> T1[] toArray(T1[] array) {
-        return children.toArray(array);
+        return getChildren().toArray(array);
     }
 
     @Override
     public boolean add(T object) {
-        return children.add(object);
+        return getChildren().add(object);
     }
 
     @Override
     public boolean remove(Object object) {
-        return children.remove(object);
+        return getChildren().remove(object);
     }
 
     @Override
     public boolean containsAll(Collection<?> objects) {
-        return children.containsAll(objects);
+        return getChildren().containsAll(objects);
     }
 
     @Override
     public boolean addAll(Collection<? extends T> collection) {
-        return children.addAll(collection);
+        return getChildren().addAll(collection);
     }
 
     @Override
     public boolean addAll(int i, Collection<? extends T> collection) {
-        return children.addAll(i, collection);
+        return getChildren().addAll(i, collection);
     }
 
     @Override
     public boolean removeAll(Collection<?> objects) {
-        return children.removeAll(objects);
+        return getChildren().removeAll(objects);
     }
 
     @Override
     public boolean retainAll(Collection<?> objects) {
-        return children.removeAll(objects);
+        return getChildren().removeAll(objects);
     }
 
     @Override
     public void clear() {
-        children.clear();
+        getChildren().clear();
     }
 
     @Override
     public T get(int index) {
-        return children.get(index);
+        return getChildren().get(index);
     }
 
     @Override
     public T set(int index, T object) {
-        return children.set(index, object);
+        return getChildren().set(index, object);
     }
 
     @Override
     public void add(int index, T object) {
-        children.add(index, object);
+        getChildren().add(index, object);
     }
 
     @Override
     public T remove(int index) {
-        return children.remove(index);
+        return getChildren().remove(index);
     }
 
     @Override
     public int indexOf(Object object) {
-        return children.indexOf(object);
+        return getChildren().indexOf(object);
     }
 
     @Override
     public int lastIndexOf(Object object) {
-        return children.lastIndexOf(object);
+        return getChildren().lastIndexOf(object);
     }
 
     @Override
     public ListIterator<T> listIterator() {
-        return children.listIterator();
+        return getChildren().listIterator();
     }
 
     @Override
     public ListIterator<T> listIterator(int index) {
-        return children.listIterator(index);
+        return getChildren().listIterator(index);
     }
 
     @Override
     public List<T> subList(int start, int end) {
-        return children.subList(start, end);
+        return getChildren().subList(start, end);
     }
 
 }
