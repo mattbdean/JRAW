@@ -33,7 +33,7 @@ public abstract class RestClient<T extends RestResponse> implements NetworkAcces
     protected final Map<String, String> defaultHeaders;
     private boolean useHttpsDefault;
     private boolean enforceRatelimit;
-
+    private boolean saveResponseHistory;
 
     /**
      * Instantiates a new RestClient
@@ -49,6 +49,7 @@ public abstract class RestClient<T extends RestResponse> implements NetworkAcces
         this.enforceRatelimit = requestsPerMinute > 0;
         this.rateLimiter = enforceRatelimit ? RateLimiter.create((double) requestsPerMinute / 60) : null;
         this.http = new OkHttpClient();
+        this.saveResponseHistory = false;
         CookieManager manager = new CookieManager();
         manager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
         http.setCookieHandler(manager);
@@ -156,7 +157,9 @@ public abstract class RestClient<T extends RestResponse> implements NetworkAcces
                         genericResponse.getType().type(), genericResponse.getType().subtype()));
             }
 
-            history.put(genericResponse, LocalDateTime.now());
+            if (saveResponseHistory) {
+                history.put(genericResponse, LocalDateTime.now());
+            }
             return genericResponse;
         } catch (IOException e) {
             throw new NetworkException("Could not execute the request: " + r, e);
@@ -182,6 +185,32 @@ public abstract class RestClient<T extends RestResponse> implements NetworkAcces
      */
     public void setUserAgent(String userAgent) {
         defaultHeaders.put("User-Agent", userAgent);
+    }
+
+    /**
+     * Notifies the client to log every response received. You can access this data by using {@link #getHistory()}. This
+     * defaults to false unless it has been explicitly changed.
+     * @return Checks if this client is saving response history
+     */
+    public boolean isSavingResponseHistory() {
+        return saveResponseHistory;
+    }
+
+    /**
+     * Notifies the client to log every response received. You can access this data by using {@link #getHistory()}.
+     * @param saveResponseHistory Whether or not to save the HTTP responses received
+     */
+    public void setSaveResponseHistory(boolean saveResponseHistory) {
+        this.saveResponseHistory = saveResponseHistory;
+    }
+
+    /**
+     * Gets a map of responses to LocalDateTimes, in which the LocalDateTime refers to the time that the response was
+     * received. Will be empty unless changed using {@link #setSaveResponseHistory(boolean)}.
+     * @return The response history
+     */
+    public LinkedHashMap<T, LocalDateTime> getHistory() {
+        return history;
     }
 
     /**
