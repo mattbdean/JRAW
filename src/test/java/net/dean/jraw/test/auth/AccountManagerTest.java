@@ -41,7 +41,7 @@ public class AccountManagerTest extends AuthenticatedRedditTest {
                     new AccountManager.SubmissionBuilder(url, "jraw_testing2", "Link post test (epoch=" + number + ")"));
 
             assertTrue(!submission.isSelfPost());
-            assertTrue(submission.getUrl().equals(url));
+            assertTrue(submission.getUrl().equals(url.toExternalForm()));
             validateModel(submission);
         } catch (NetworkException e) {
             handle(e);

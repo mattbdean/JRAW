@@ -3,7 +3,6 @@ package net.dean.jraw.models;
 import net.dean.jraw.JrawUtils;
 import org.codehaus.jackson.JsonNode;
 
-import java.net.URI;
 import java.net.URL;
 import java.util.Date;
 
@@ -161,8 +160,8 @@ public class Submission extends PublicContribution {
      * @return The permalink of this submission
      */
     @JsonProperty
-    public URI getPermalink() {
-        return data("permalink", URI.class);
+    public String getPermalink() {
+        return data("permalink");
     }
 
     /**
@@ -207,13 +206,13 @@ public class Submission extends PublicContribution {
      * @return The URL to this submission's thumbnail
      */
     @JsonProperty(nullable = true)
-    public URL getThumbnail() {
+    public String getThumbnail() {
         String thumb = data.get("thumbnail").getTextValue();
         if (getThumbnailType() != ThumbnailType.URL) {
             return null;
         }
 
-        return JrawUtils.newUrl(thumb);
+        return thumb;
     }
 
     /**
@@ -257,8 +256,8 @@ public class Submission extends PublicContribution {
      * @return This submission's URL
      */
     @JsonProperty
-    public URL getUrl() {
-        return data("url", URL.class);
+    public String getUrl() {
+        return data("url");
     }
 
     /**

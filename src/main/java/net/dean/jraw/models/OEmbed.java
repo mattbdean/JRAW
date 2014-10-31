@@ -1,6 +1,5 @@
 package net.dean.jraw.models;
 
-import net.dean.jraw.JrawUtils;
 import org.codehaus.jackson.JsonNode;
 
 import java.net.URL;
@@ -69,8 +68,8 @@ public class OEmbed extends JsonModel {
      * @return The author's URL
      */
     @JsonProperty(nullable = true)
-    public URL getAuthorUrl() {
-        return data("author_url", URL.class);
+    public String getAuthorUrl() {
+        return data("author_url");
     }
 
     /**
@@ -87,8 +86,8 @@ public class OEmbed extends JsonModel {
      * @return The url of the resource provider.
      */
     @JsonProperty(nullable = true)
-    public URL getProviderUrl() {
-        return data("provider_url", URL.class);
+    public String getProviderUrl() {
+        return data("provider_url");
     }
 
     /**
@@ -142,10 +141,8 @@ public class OEmbed extends JsonModel {
      * @return The image's URL
      */
     @JsonProperty(nullable = true)
-    public URL getUrl() {
-        if (data.has("url"))
-            return JrawUtils.newUrl(data("url"));
-        return null;
+    public String getUrl() {
+        return data("url");
     }
 
     /**

@@ -52,7 +52,7 @@ public class MultiHubPaginator extends Paginator<MultiHubPaginator.MultiRedditId
 
         // Iterate over the submissions
         for (Submission potentialMultiLink : submissions) {
-            matcher.reset(potentialMultiLink.getUrl().toExternalForm());
+            matcher.reset(potentialMultiLink.getUrl());
             if (matcher.matches()) {
                 // Found a link to a multireddit, parse the info from the regex
                 String owner = matcher.group(BACKREF_USERNAME);

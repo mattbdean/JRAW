@@ -2,7 +2,6 @@ package net.dean.jraw.models;
 
 import org.codehaus.jackson.JsonNode;
 
-import java.net.URL;
 import java.util.Date;
 
 /**
@@ -165,8 +164,8 @@ public class Comment extends PublicContribution {
      * thread
      */
     @JsonProperty(nullable = true)
-    public URL getUrl() {
-        return data("link_url", URL.class);
+    public String getUrl() {
+        return data("link_url");
     }
 
     /**

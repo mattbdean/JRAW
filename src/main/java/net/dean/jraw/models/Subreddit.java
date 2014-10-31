@@ -3,8 +3,6 @@ package net.dean.jraw.models;
 import org.codehaus.jackson.JsonNode;
 
 import java.awt.*;
-import java.net.URI;
-import java.net.URL;
 
 /**
  * This class represents a Subreddit such as /r/pics.
@@ -61,8 +59,8 @@ public class Subreddit extends Thing {
      * @return The full URL to the header image
      */
     @JsonProperty(nullable = true)
-    public URL getHeaderImage() {
-        return data("header_img", URL.class);
+    public String getHeaderImage() {
+        return data("header_img");
     }
 
     /**
@@ -185,8 +183,8 @@ public class Subreddit extends Thing {
      * @return The relative URL of the subreddit
      */
     @JsonProperty
-    public URI getRelativeLocation() {
-        return data("url", URI.class);
+    public String getRelativeLocation() {
+        return data("url");
     }
 
     /**
