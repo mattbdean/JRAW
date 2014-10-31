@@ -317,8 +317,8 @@ public class RedditClient extends RestClient<RedditResponse> {
      * @return A random submission
      * @throws NetworkException If the request was not successful
      */
-    public Submission getRandom() throws NetworkException {
-        return getRandom(null);
+    public Submission getRandomSubmission() throws NetworkException {
+        return getRandomSubmission(null);
     }
 
     /**
@@ -328,7 +328,7 @@ public class RedditClient extends RestClient<RedditResponse> {
      * @throws NetworkException If the request was not successful
      */
     @EndpointImplementation(Endpoints.RANDOM)
-    public Submission getRandom(String subreddit) throws NetworkException  {
+    public Submission getRandomSubmission(String subreddit) throws NetworkException  {
         String path = JrawUtils.getSubredditPath(subreddit, "/random.json");
 
         // Favor path() instead of endpoint() because we have already decided the path above

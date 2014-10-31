@@ -100,11 +100,11 @@ public class ReadOnlyDataTest extends RedditTest {
     public void testRandomSubmission() {
         try {
             // From anywhere
-            Submission s = reddit.getRandom();
+            Submission s = reddit.getRandomSubmission();
             validateModel(s);
 
             // From /r/pics
-            s = reddit.getRandom("pics");
+            s = reddit.getRandomSubmission("pics");
             validateModel(s);
         } catch (NetworkException e) {
             handle(e);
