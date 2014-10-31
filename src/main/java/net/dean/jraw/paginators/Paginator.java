@@ -8,8 +8,10 @@ import net.dean.jraw.http.RestRequest;
 import net.dean.jraw.models.Listing;
 import net.dean.jraw.models.Thing;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -68,8 +70,8 @@ public abstract class Paginator<T extends Thing> implements Iterator<Listing<T>>
      * @param forwards If true, this method will return the next listing. If false, it will return the first listing.
      * @return A new listing
      * @throws NetworkException If the request was not successful
-     * @throws IllegalStateException If a setter method (such as {@link #setLimit(int)} was called after the first listing was
-     *                               requested.
+     * @throws IllegalStateException If a setter method (such as {@link #setLimit(int)} was called after the first
+     *                               listing was requested and {@link #reset()} was not called.
      */
     protected Listing<T> getListing(boolean forwards) throws NetworkException, IllegalStateException {
         if (started && changed) {
@@ -116,6 +118,38 @@ public abstract class Paginator<T extends Thing> implements Iterator<Listing<T>>
      */
     protected Listing<T> parseListing(RedditResponse response) {
         return response.asListing(thingType);
+    }
+
+    /**
+     * Creates a list of listings whose size is less than or equal to the given number of pages. The amount of time this
+     * method takes to return will grow linearly based on the maximum number of pages, and is therefore doubly important
+     * this this method be executed on another thread.
+     *
+     * @param maxPages The maximum amount of pages to retrieve
+     * @return A list of listings
+     * @throws NetworkException
+     */
+    public final List<Listing<T>> accumulate(int maxPages) throws NetworkException {
+        List<Listing<T>> listings = new ArrayList<>();
+        if (maxPages <= 0) {
+            throw new IllegalArgumentException("Pages must be greater than 0");
+        }
+
+        try {
+            while (hasNext() && getPageIndex() < maxPages) {
+                listings.add(next());
+            }
+        } catch (IllegalStateException e) {
+            // Most likely cause will be a NetworkException because next() throws a NetworkException as a cause of an
+            // IllegalStateException
+            if (e.getCause().getClass().equals(NetworkException.class)) {
+                throw (NetworkException) e.getCause();
+            } else {
+                throw e;
+            }
+        }
+
+        return listings;
     }
 
     @Override

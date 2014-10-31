@@ -26,7 +26,6 @@ import net.dean.jraw.paginators.UserSubredditsPaginator;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -200,10 +199,7 @@ public class PaginationTest extends AuthenticatedRedditTest {
         try {
             int numPages = 2;
             // Test that the paginator can retrieve the data
-            List<Listing<T>> pages = new ArrayList<>();
-            while (p.hasNext() && p.getPageIndex() < numPages) {
-                pages.add(p.next());
-            }
+            List<Listing<T>> pages = p.accumulate(numPages);
 
             for (Listing<T> listing : pages) {
                 // Validate the Listing
@@ -216,12 +212,8 @@ public class PaginationTest extends AuthenticatedRedditTest {
                     JrawUtils.logger().warn("Listing was empty");
                 }
             }
-        } catch (IllegalStateException e) {
-            if (e.getCause().getClass().equals(NetworkException.class)) {
-                handle(e.getCause());
-            } else {
-                handle(e);
-            }
+        } catch (NetworkException e) {
+            handle(e);
         }
     }
 }

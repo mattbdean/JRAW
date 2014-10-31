@@ -50,11 +50,21 @@ public class UserRecordPaginator extends GenericPaginator<UserRecord, UserRecord
         }
 
         JsonNode data = response.getJson().get("data");
-        // A moderator listing only has a 'children' key
-        String before = where == Where.MODERATORS ? null : data.get("before").asText();
-        String after = where == Where.MODERATORS ? null : data.get("after").asText();
-        String modhash = where == Where.MODERATORS ? null : data.get("modhash").asText();
-        return new FauxListing<>(list.build(), before, after, modhash);
+        return new FauxListing<>(list.build(), getJsonValue(data, "before"),
+                getJsonValue(data, "after"), getJsonValue(data, "after"));
+    }
+
+    private String getJsonValue(JsonNode data, String key) {
+        if (where == Where.MODERATORS) {
+            // A moderator listing only has a 'children' key
+            return null;
+        }
+
+        JsonNode node = data.get(key);
+        if (node.isNull()) {
+            return null;
+        }
+        return node.asText();
     }
 
     @Override
