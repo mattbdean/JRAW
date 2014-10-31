@@ -11,7 +11,7 @@ public class LoggedInAccount extends Account {
      * Checks if the user has unread mail. Returns null if the currently logged in account is not this one
      * @return User has unread mail? Null if not your account
      */
-    @JsonInteraction(nullable = true)
+    @JsonProperty(nullable = true)
     public Boolean hasMail() {
         return data("has_mail", Boolean.class);
     }
@@ -20,7 +20,7 @@ public class LoggedInAccount extends Account {
      * Checks if the user has mod mail
      * @return User has unread mod mail?
      */
-    @JsonInteraction(nullable = true)
+    @JsonProperty(nullable = true)
     public Boolean hasModMail() {
         return data("has_mod_mail", Boolean.class);
     }
@@ -29,7 +29,7 @@ public class LoggedInAccount extends Account {
      * Checks if the user has a verified email
      * @return User has provided an email address and got it verified?
      */
-    @JsonInteraction
+    @JsonProperty
     public Boolean hasVerifiedEmail() {
         return data("has_verified_email", Boolean.class);
     }
@@ -38,7 +38,7 @@ public class LoggedInAccount extends Account {
      * Gets the current modhash
      * @return Current modhash, or null if not your account
      */
-    @JsonInteraction(nullable = true)
+    @JsonProperty(nullable = true)
     public String getModHash() {
         return data("modhash");
     }

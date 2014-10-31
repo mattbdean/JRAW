@@ -20,7 +20,7 @@ public class LiveThread extends RedditObject implements Created {
      * Gets the thread's description
      * @return The thread's description
      */
-    @JsonInteraction
+    @JsonProperty
     public RenderStringPair getDescription() {
         return data("description", RenderStringPair.class);
     }
@@ -29,7 +29,7 @@ public class LiveThread extends RedditObject implements Created {
      * Gets the title of the thread
      * @return The title of the thread
      */
-    @JsonInteraction
+    @JsonProperty
     public String getTitle() {
         return data("title");
     }
@@ -38,7 +38,7 @@ public class LiveThread extends RedditObject implements Created {
      * Returns the WebSocket URL (wss://) to the thread
      * @return The WebSocket URL
      */
-    @JsonInteraction(nullable = true)
+    @JsonProperty(nullable = true)
     public String getWebsocketUrl() {
         return data("websocket_url");
     }
@@ -47,7 +47,7 @@ public class LiveThread extends RedditObject implements Created {
      * Checks if this live event is still active
      * @return If this event is still active
      */
-    @JsonInteraction
+    @JsonProperty
     public Boolean isActive() {
         return data("state").equals("live"); // 'complete' if not active
     }
@@ -56,7 +56,7 @@ public class LiveThread extends RedditObject implements Created {
      * Gets the amount of people watching this thread
      * @return The amount of viewers
      */
-    @JsonInteraction
+    @JsonProperty
     public Integer getViewerCount() {
         return data("viewer_count", Integer.class);
     }
@@ -65,7 +65,7 @@ public class LiveThread extends RedditObject implements Created {
      * Checks if the viewer count is "fuzzed". This most often happens when there are less than 100 viewers.
      * @return If the viewer count is fuzzed
      */
-    @JsonInteraction
+    @JsonProperty
     public Boolean isViewerCountFuzzed() {
         return data("viewer_count_fuzzed", Boolean.class);
     }
@@ -74,7 +74,7 @@ public class LiveThread extends RedditObject implements Created {
      * This LiveEvent's ID. Do not confuse this with {@link Thing#getId()}.
      * @return The thread's ID
      */
-    @JsonInteraction
+    @JsonProperty
     public String getId() {
         return data("id");
     }
@@ -83,7 +83,7 @@ public class LiveThread extends RedditObject implements Created {
      * Gets the data under the "resources" header displayed on the right side of the Reddit Live page.
      * @return The resources
      */
-    @JsonInteraction
+    @JsonProperty
     public String getResources() {
         return data("resources");
     }

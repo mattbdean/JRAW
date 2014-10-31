@@ -14,12 +14,12 @@ public class Message extends Contribution implements Distinguishable {
         super(dataNode);
     }
 
-    @JsonInteraction
+    @JsonProperty
     public String getAuthor() {
         return data("author");
     }
 
-    @JsonInteraction
+    @JsonProperty
     public RenderStringPair getBody() {
         return data("body", RenderStringPair.class);
     }
@@ -28,7 +28,7 @@ public class Message extends Contribution implements Distinguishable {
      * Gets the full name of the first message's ID
      * @return The first message
      */
-    @JsonInteraction
+    @JsonProperty
     public String getFirstMessage() {
         return data("first_message_name");
     }
@@ -38,7 +38,7 @@ public class Message extends Contribution implements Distinguishable {
      * If this message represents a private message, then this method will always return null.
      * @return The way in which the logged in user voted
      */
-    @JsonInteraction(nullable = true)
+    @JsonProperty(nullable = true)
     public VoteDirection getVote() {
         // If "was_comment" == false then "likes" will not exist
         if (!isComment()) {
@@ -57,7 +57,7 @@ public class Message extends Contribution implements Distinguishable {
      * Gets the title of the link this comment was posted in, or null if this message represents a private message
      * @return The parent link's title
      */
-    @JsonInteraction
+    @JsonProperty
     public String getLinkTitle() {
         if (!isComment()) {
             return null;
@@ -70,7 +70,7 @@ public class Message extends Contribution implements Distinguishable {
      * Checks if this message is unread
      * @return If this message is unread
      */
-    @JsonInteraction
+    @JsonProperty
     public Boolean isRead() {
         return !data("new", Boolean.class);
     }
@@ -80,7 +80,7 @@ public class Message extends Contribution implements Distinguishable {
      * or private message.
      * @return The ID of the message's parent
      */
-    @JsonInteraction(nullable = true)
+    @JsonProperty(nullable = true)
     public String getParentId() {
         return data("parent_id");
     }
@@ -89,7 +89,7 @@ public class Message extends Contribution implements Distinguishable {
      * Gets the subject of the message
      * @return The subject
      */
-    @JsonInteraction
+    @JsonProperty
     public String getSubject() {
         return data("subject");
     }
@@ -98,7 +98,7 @@ public class Message extends Contribution implements Distinguishable {
      * Gets the subreddit this was posted in, or null if this message is not a comment
      * @return The subreddit this was posted in
      */
-    @JsonInteraction(nullable = true)
+    @JsonProperty(nullable = true)
     public String getSubreddit() {
         return data("subreddit");
     }
@@ -107,7 +107,7 @@ public class Message extends Contribution implements Distinguishable {
      * Checks if this message is a comment
      * @return True if this message is a comment, false if it is a private message
      */
-    @JsonInteraction
+    @JsonProperty
     public Boolean isComment() {
         return data("was_comment", Boolean.class);
     }

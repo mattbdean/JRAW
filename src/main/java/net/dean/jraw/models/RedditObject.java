@@ -23,6 +23,6 @@ public abstract class RedditObject extends JsonModel {
      *
      * @return The type of this Thing
      */
-    @JsonInteraction
+    @JsonProperty
     public abstract ThingType getType();
 }

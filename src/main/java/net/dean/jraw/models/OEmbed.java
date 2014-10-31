@@ -24,7 +24,7 @@ public class OEmbed extends JsonModel {
      * The resource type
      * @return The resource type
      */
-    @JsonInteraction
+    @JsonProperty
     public MediaType getMediaType() {
         String typeString = data("type");
 
@@ -41,7 +41,7 @@ public class OEmbed extends JsonModel {
      * A text title, describing the resource
      * @return The title of the content
      */
-    @JsonInteraction(nullable = true)
+    @JsonProperty(nullable = true)
     public String getTitle() {
         return data("title");
     }
@@ -50,7 +50,7 @@ public class OEmbed extends JsonModel {
      * The oEmbed version number. This must be 1.0.
      * @return The oEmbed version number
      */
-    @JsonInteraction(nullable = true)
+    @JsonProperty(nullable = true)
     public String getVersion() {
         return data("version");
     }
@@ -59,7 +59,7 @@ public class OEmbed extends JsonModel {
      * The name of the author/owner of the resource.
      * @return The author of the resource
      */
-    @JsonInteraction(nullable = true)
+    @JsonProperty(nullable = true)
     public String getAuthorName() {
         return data("author_name");
     }
@@ -68,7 +68,7 @@ public class OEmbed extends JsonModel {
      * A URL for the author/owner of the resource.
      * @return The author's URL
      */
-    @JsonInteraction(nullable = true)
+    @JsonProperty(nullable = true)
     public URL getAuthorUrl() {
         return data("author_url", URL.class);
     }
@@ -77,7 +77,7 @@ public class OEmbed extends JsonModel {
      * The name of the resource provider.
      * @return The name of the resource provider.
      */
-    @JsonInteraction(nullable = true)
+    @JsonProperty(nullable = true)
     public String getProviderName() {
         return data("provider_name");
     }
@@ -86,7 +86,7 @@ public class OEmbed extends JsonModel {
      * The url of the resource provider.
      * @return The url of the resource provider.
      */
-    @JsonInteraction(nullable = true)
+    @JsonProperty(nullable = true)
     public URL getProviderUrl() {
         return data("provider_url", URL.class);
     }
@@ -95,7 +95,7 @@ public class OEmbed extends JsonModel {
      * The <i>suggested</i> cache lifetime for this resource, in seconds. Consumers may choose to use this value or not.
      * @return The suggest cache lifetime in seconds
      */
-    @JsonInteraction(nullable = true)
+    @JsonProperty(nullable = true)
     public Integer getCacheAge() {
         return data("cache_age", Integer.class);
     }
@@ -104,7 +104,7 @@ public class OEmbed extends JsonModel {
      * Gets the thumbnail associated with this resource
      * @return The thumbnail associated with this resource
      */
-    @JsonInteraction(nullable = true)
+    @JsonProperty(nullable = true)
     public Thumbnail getThumbnail() {
         return new Thumbnail(JrawUtils.newUrl(data("thumbnail_url")),
                 data("thumbnail_width", Integer.class),
@@ -117,7 +117,7 @@ public class OEmbed extends JsonModel {
      *
      * @return The width in pixels
      */
-    @JsonInteraction(nullable = true)
+    @JsonProperty(nullable = true)
     public Integer getWidth() {
         return data("width", Integer.class);
     }
@@ -128,7 +128,7 @@ public class OEmbed extends JsonModel {
      *
      * @return The height in pixels
      */
-    @JsonInteraction(nullable = true)
+    @JsonProperty(nullable = true)
     public Integer getHeight() {
         return data("height", Integer.class);
     }
@@ -138,7 +138,7 @@ public class OEmbed extends JsonModel {
      *
      * @return The image's URL
      */
-    @JsonInteraction(nullable = true)
+    @JsonProperty(nullable = true)
     public URL getUrl() {
         if (data.has("url"))
             return JrawUtils.newUrl(data("url"));
@@ -151,7 +151,7 @@ public class OEmbed extends JsonModel {
      *
      * @return The HTML required to embed a video player (if video) or display the resource (if rich)
      */
-    @JsonInteraction(nullable = true)
+    @JsonProperty(nullable = true)
     public String getHtml() {
         return data("html");
     }

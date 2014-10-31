@@ -1,7 +1,7 @@
 package net.dean.jraw.models.attr;
 
 import net.dean.jraw.models.DistinguishedStatus;
-import net.dean.jraw.models.JsonInteraction;
+import net.dean.jraw.models.JsonProperty;
 
 /**
  * Indicates this Thing was posted by a redditor of elevated role in the website, such as an administrator or moderator.
@@ -12,7 +12,7 @@ public interface Distinguishable extends JsonAttribute {
      * Gets the role of the poster of this Thing
      * @return The role of the poster of this Thing
      */
-    @JsonInteraction
+    @JsonProperty
     public default DistinguishedStatus getDistinguishedStatus() {
         String distinguished = getDataNode().get("distinguished").getTextValue();
 

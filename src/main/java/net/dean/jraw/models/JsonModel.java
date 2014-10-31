@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
  */
 public abstract class JsonModel {
     protected final JsonNode data;
-    /** The maximum length of a result of a {@link net.dean.jraw.models.JsonInteraction} method in {@link #toString()} */
+    /** The maximum length of a result of a {@link JsonProperty} method in {@link #toString()} */
     private static final int MAX_STRING_LENGTH = 500;
     private static final String ELLIPSIS = "(...)";
 
@@ -174,7 +174,7 @@ public abstract class JsonModel {
         Class<? extends JsonModel> clazz = getClass();
         StringBuilder sb = new StringBuilder(clazz.getSimpleName() + " {");
 
-        List<Method> jsonInteractionMethods = getJsonInteractionMethods(clazz);
+        List<Method> jsonInteractionMethods = getJsonProperties(clazz);
 
         // Sort the methods by name
         Collections.sort(jsonInteractionMethods, (o1, o2) -> o1.getName().compareTo(o2.getName()));
@@ -240,7 +240,7 @@ public abstract class JsonModel {
      * @param thingClass The class to search in
      * @return A list of fields that have the JsonInteraction annotation
      */
-    public static List<Method> getJsonInteractionMethods(Class<? extends JsonModel> thingClass) {
+    public static List<Method> getJsonProperties(Class<? extends JsonModel> thingClass) {
         List<Method> methods = new ArrayList<>();
 
         Class clazz = thingClass;
@@ -262,7 +262,7 @@ public abstract class JsonModel {
         }
 
         // Filter out the methods that don't have the JsonInteraction annotation
-        methods.addAll(toObserve.stream().filter(m -> m.isAnnotationPresent(JsonInteraction.class)).collect(Collectors.toList()));
+        methods.addAll(toObserve.stream().filter(m -> m.isAnnotationPresent(JsonProperty.class)).collect(Collectors.toList()));
 
         return methods;
     }

@@ -1,6 +1,6 @@
 package net.dean.jraw.models.attr;
 
-import net.dean.jraw.models.JsonInteraction;
+import net.dean.jraw.models.JsonProperty;
 import net.dean.jraw.models.VoteDirection;
 import org.codehaus.jackson.JsonNode;
 
@@ -16,7 +16,7 @@ public interface Votable extends JsonAttribute {
      *
      * @return The amount of upvotes the object has received
      */
-    @JsonInteraction
+    @JsonProperty
     public default Integer getUpvotes() {
         return getDataNode().get("ups").getIntValue();
     }
@@ -28,7 +28,7 @@ public interface Votable extends JsonAttribute {
      * @deprecated With recent changes in Reddit, this will always return 0. See
      * <a href="https://github.com/reddit/reddit/commit/8c9ad4e">this commit</a> for more information.
      */
-    @JsonInteraction
+    @JsonProperty
     @Deprecated
     public default Integer getDownvotes() {
         return getDataNode().get("downs").getIntValue();
@@ -39,7 +39,7 @@ public interface Votable extends JsonAttribute {
      *
      * @return The link's net score
      */
-    @JsonInteraction
+    @JsonProperty
     public default Integer getScore() {
         return getDataNode().get("score").getIntValue();
     }
@@ -50,7 +50,7 @@ public interface Votable extends JsonAttribute {
      * {@link net.dean.jraw.models.VoteDirection#NO_VOTE}.
      * @return The way in which the logged in user voted
      */
-    @JsonInteraction
+    @JsonProperty
     default VoteDirection getVote() {
         JsonNode likes = getDataNode().get("likes");
         if (likes.isNull()) {

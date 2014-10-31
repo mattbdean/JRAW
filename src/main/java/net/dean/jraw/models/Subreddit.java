@@ -24,7 +24,7 @@ public class Subreddit extends Thing {
      * Gets the amount of users active in the last 15 minutes
      * @return The number of active users
      */
-    @JsonInteraction
+    @JsonProperty
     public Integer getAccountsActive() {
         return data("accounts_active", Integer.class);
     }
@@ -33,7 +33,7 @@ public class Subreddit extends Thing {
      * Gets the number of minutes the subreddit initially hides comment scores
      * @return The number of minutes the subreddit initially hides comment scores
      */
-    @JsonInteraction
+    @JsonProperty
     public Integer getCommentScoreHideDuration() {
         return data("comment_score_hide_mins", Integer.class);
     }
@@ -42,7 +42,7 @@ public class Subreddit extends Thing {
      * Gets the subreddit's description
      * @return The subreddit's description
      */
-    @JsonInteraction
+    @JsonProperty
     public RenderStringPair getSidebar() {
         return data("description", RenderStringPair.class);
     }
@@ -51,7 +51,7 @@ public class Subreddit extends Thing {
      * Gets the "human" name of the subreddit (ex: "pics")
      * @return The subreddit's name
      */
-    @JsonInteraction
+    @JsonProperty
     public String getDisplayName() {
         return data("display_name");
     }
@@ -60,7 +60,7 @@ public class Subreddit extends Thing {
      * Gets the full URL to the header image, or null if one is not present.
      * @return The full URL to the header image
      */
-    @JsonInteraction(nullable = true)
+    @JsonProperty(nullable = true)
     public URL getHeaderImage() {
         return data("header_img", URL.class);
     }
@@ -69,7 +69,7 @@ public class Subreddit extends Thing {
      * Gets the dimensions of the header image, or null if the header does not exist
      * @return The dimensions of the header image
      */
-    @JsonInteraction(nullable = true)
+    @JsonProperty(nullable = true)
     public Dimension getHeaderSize() {
         JsonNode node = data.get("header_size");
         if (node.isNull()) {
@@ -83,7 +83,7 @@ public class Subreddit extends Thing {
      * not present
      * @return The header image's description
      */
-    @JsonInteraction(nullable = true)
+    @JsonProperty(nullable = true)
     public String getHeaderTitle() {
         return data("header_title");
     }
@@ -92,7 +92,7 @@ public class Subreddit extends Thing {
      * Checks if this subreddit is not safe for work
      * @return If this subreddit is NSFW
      */
-    @JsonInteraction
+    @JsonProperty
     public Boolean isNsfw() {
         return data("over18", Boolean.class);
     }
@@ -101,7 +101,7 @@ public class Subreddit extends Thing {
      * Gets the public description show in the subreddit search results
      * @return The public description
      */
-    @JsonInteraction
+    @JsonProperty
     public String getPublicDescription() {
         return data("public_description");
     }
@@ -110,7 +110,7 @@ public class Subreddit extends Thing {
      * Checks if the subreddit's traffic page is publicly accessible
      * @return If the subreddit's traffic page is publicly accessible
      */
-    @JsonInteraction
+    @JsonProperty
     public Boolean isTrafficPublic() {
         return data("public_traffic", Boolean.class);
     }
@@ -119,7 +119,7 @@ public class Subreddit extends Thing {
      * Gets the amount of users subscribed to this subreddit
      * @return The amount of users subscribed to this subreddit
      */
-    @JsonInteraction
+    @JsonProperty
     public Long getSubscriberCount() {
         return data("subscribers", Long.class);
     }
@@ -128,7 +128,7 @@ public class Subreddit extends Thing {
      * Checks if this subreddit allows self (text) posts
      * @return If this subreddit allows self posts
      */
-    @JsonInteraction
+    @JsonProperty
     public Boolean isAllowingSelfPosts() {
         String type = data("submission_type");
         return type.equals("self") || type.equals("all");
@@ -138,7 +138,7 @@ public class Subreddit extends Thing {
      * Checks if this subreddit allows link posts
      * @return If this subreddit allows link posts
      */
-    @JsonInteraction
+    @JsonProperty
     public Boolean isAllowingLinks() {
         String type = data("submission_type");
         return type.equals("link") || type.equals("all");
@@ -148,7 +148,7 @@ public class Subreddit extends Thing {
      * Gets the subreddit's custom label for the "submit link" button, if any
      * @return The subreddit's custom label for the "submit link" button
      */
-    @JsonInteraction
+    @JsonProperty
     public String getSubmitLinkLabel() {
         return data("submit_link_label");
     }
@@ -157,7 +157,7 @@ public class Subreddit extends Thing {
      * Gets the subreddit's custom label for the "submit text" button, if any
      * @return The subreddit's custom label for the "submit link" button
      */
-    @JsonInteraction
+    @JsonProperty
     public String getSubmitTextLabel() {
         return data("submit_text_label");
     }
@@ -166,7 +166,7 @@ public class Subreddit extends Thing {
      * Gets this subreddit's type
      * @return This subreddit's type
      */
-    @JsonInteraction
+    @JsonProperty
     public Type getSubredditType() {
         return Type.valueOf(data("subreddit_type").toUpperCase());
     }
@@ -175,7 +175,7 @@ public class Subreddit extends Thing {
      * Gets the title of the main page
      * @return The title of the main page
      */
-    @JsonInteraction
+    @JsonProperty
     public String getTitle() {
         return data("title");
     }
@@ -184,7 +184,7 @@ public class Subreddit extends Thing {
      * Gets the relative URL of the subreddit (ex: "/r/pics")
      * @return The relative URL of the subreddit
      */
-    @JsonInteraction
+    @JsonProperty
     public URI getRelativeLocation() {
         return data("url", URI.class);
     }
@@ -193,7 +193,7 @@ public class Subreddit extends Thing {
      * Checks if the logged-in-user is banned from this subreddit
      * @return If the logged-in-user is banned form this subreddit
      */
-    @JsonInteraction
+    @JsonProperty
     public Boolean isUserBanned() {
         return data("user_is_banned", Boolean.class);
     }
@@ -202,7 +202,7 @@ public class Subreddit extends Thing {
      * Checks if the logged-in-user contributes to this subreddit
      * @return If the logged-in-user contributes to this subreddit
      */
-    @JsonInteraction
+    @JsonProperty
     public Boolean isUserContributor() {
         return data("user_is_contributor", Boolean.class);
     }
@@ -211,7 +211,7 @@ public class Subreddit extends Thing {
      * Checks if the logged-in-user is a moderator of this subreddit
      * @return If the logged-in-user is a moderator of this subreddit
      */
-    @JsonInteraction
+    @JsonProperty
     public Boolean isUserModerator() {
         return data("user_is_moderator", Boolean.class);
     }
@@ -220,7 +220,7 @@ public class Subreddit extends Thing {
      * Checks if the logged-in-user is subscribed to this subreddit
      * @return If the logged-in-user is subscribed to this subreddit
      */
-    @JsonInteraction
+    @JsonProperty
     public Boolean isUserSubscriber() {
         return data("user_is_subscriber", Boolean.class);
     }

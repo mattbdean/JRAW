@@ -29,7 +29,7 @@ public class MultiReddit extends Thing implements Created {
      * Checks if the logged in user can edit this MultiReddit
      * @return If the logged in user can edit this MultiReddit
      */
-    @JsonInteraction
+    @JsonProperty
     public boolean canEdit() {
         return data("can_edit", Boolean.class);
     }
@@ -38,7 +38,7 @@ public class MultiReddit extends Thing implements Created {
      * Gets the name of the multireddit
      * @return The multireddit's name
      */
-    @JsonInteraction
+    @JsonProperty
     public String getFullName() {
         return data("name");
     }
@@ -47,7 +47,7 @@ public class MultiReddit extends Thing implements Created {
      * Gets the subreddits that are a part of this multireddit
      * @return A list of subreddits
      */
-    @JsonInteraction
+    @JsonProperty
     public List<String> getSubreddits() {
         List<String> subreddits = new ArrayList<>();
 
@@ -63,7 +63,7 @@ public class MultiReddit extends Thing implements Created {
      * Checks if this multireddit is restricted to its owner
      * @return If this mutlireddit is private
      */
-    @JsonInteraction
+    @JsonProperty
     public boolean isPrivate() {
         return data("visibility", Boolean.class);
     }
@@ -72,7 +72,7 @@ public class MultiReddit extends Thing implements Created {
      * Gets the relative path to this multireddit. It will be in the format of {@code /user/{username}/m/{multiname}}
      * @return The relative path
      */
-    @JsonInteraction
+    @JsonProperty
     public String getPath() {
         return data("path");
     }

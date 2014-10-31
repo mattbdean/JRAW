@@ -5,7 +5,7 @@ import net.dean.jraw.JrawUtils;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.Version;
 import net.dean.jraw.http.NetworkException;
-import net.dean.jraw.models.JsonInteraction;
+import net.dean.jraw.models.JsonProperty;
 import net.dean.jraw.models.JsonModel;
 import net.dean.jraw.models.RenderStringPair;
 import org.testng.Assert;
@@ -102,18 +102,18 @@ public abstract class RedditTest {
 
     protected final <T extends JsonModel> void validateModel(T model) {
         Assert.assertNotNull(model);
-        List<Method> jsonInteractionMethods = JsonModel.getJsonInteractionMethods(model.getClass());
+        List<Method> jsonInteractionMethods = JsonModel.getJsonProperties(model.getClass());
 
         try {
             for (Method method : jsonInteractionMethods) {
-                JsonInteraction jsonInteraction = method.getAnnotation(JsonInteraction.class);
+                JsonProperty jsonProperty = method.getAnnotation(JsonProperty.class);
                 Object returnVal = null;
                 try {
                     returnVal = method.invoke(model);
                 } catch (InvocationTargetException e) {
                     // InvocationTargetException thrown when the method.invoke() returns null and @JsonInteraction "nullable"
                     // property is false
-                    if (e.getCause().getClass().equals(NullPointerException.class) && !jsonInteraction.nullable()) {
+                    if (e.getCause().getClass().equals(NullPointerException.class) && !jsonProperty.nullable()) {
                         Assert.fail("Non-nullable JsonInteraction method returned null: " + model.getClass().getName() + "." + method.getName() + "()");
                     } else {
                         // Other reason for InvocationTargetException

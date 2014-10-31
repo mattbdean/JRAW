@@ -21,7 +21,7 @@ public class EmbeddedMedia extends JsonModel {
      *
      * @return Embedded HTML
      */
-    @JsonInteraction
+    @JsonProperty
     public String getContent() {
         return data("content");
     }
@@ -31,7 +31,7 @@ public class EmbeddedMedia extends JsonModel {
      *
      * @return The width of the frame
      */
-    @JsonInteraction
+    @JsonProperty
     public Integer getWidth() {
         return data("width", Integer.class);
     }
@@ -41,7 +41,7 @@ public class EmbeddedMedia extends JsonModel {
      *
      * @return The height of the frame
      */
-    @JsonInteraction
+    @JsonProperty
     public Integer getHeight() {
         return data("height", Integer.class);
     }
@@ -51,7 +51,7 @@ public class EmbeddedMedia extends JsonModel {
      *
      * @return If scrolling is allowed
      */
-    @JsonInteraction
+    @JsonProperty
     public Boolean doesAllowScrolling() {
         return data("scrolling", Boolean.class);
     }

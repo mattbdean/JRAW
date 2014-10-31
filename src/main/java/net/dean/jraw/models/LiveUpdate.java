@@ -21,7 +21,7 @@ public class LiveUpdate extends Thing implements Created {
      * The body text of this update
      * @return The body
      */
-    @JsonInteraction
+    @JsonProperty
     public RenderStringPair getBody() {
         return data("body", RenderStringPair.class);
     }
@@ -30,7 +30,7 @@ public class LiveUpdate extends Thing implements Created {
      * Gets the name of the user who created this update
      * @return The author
      */
-    @JsonInteraction
+    @JsonProperty
     public String getAuthor() {
         return data("author");
     }
@@ -41,7 +41,7 @@ public class LiveUpdate extends Thing implements Created {
      * Gets the Embeds found in this LiveUpdate. Will most likely only have zero or one element in the list.
      * @return A list of Embeds
      */
-    @JsonInteraction
+    @JsonProperty
     public ImmutableList<Embed> getEmbeds() {
         ImmutableList.Builder<Embed> builder = ImmutableList.<Embed>builder();
         for (JsonNode embedNode : data.get("embeds")) {
@@ -69,17 +69,17 @@ public class LiveUpdate extends Thing implements Created {
             super(dataNode);
         }
 
-        @JsonInteraction
+        @JsonProperty
         public String getUrl() {
             return data("url");
         }
 
-        @JsonInteraction
+        @JsonProperty
         public Integer getWidth() {
             return data("width", Integer.class);
         }
 
-        @JsonInteraction
+        @JsonProperty
         public Integer getHeight() {
             return data("height", Integer.class);
         }

@@ -25,7 +25,7 @@ public class Comment extends PublicContribution {
      * Gets who approved this comment, nor null if the logged in user is not a moderator
      * @return Who approved this comment
      */
-    @JsonInteraction(nullable = true)
+    @JsonProperty(nullable = true)
     public String getApprovedBy() {
         return data("approved_by");
     }
@@ -34,7 +34,7 @@ public class Comment extends PublicContribution {
      * Gets the name of the account that posted this comment
      * @return The name the account that posted this comment
      */
-    @JsonInteraction
+    @JsonProperty
     public String getAuthor() {
         return data("author");
     }
@@ -43,7 +43,7 @@ public class Comment extends PublicContribution {
      * Gets the author's flair. Subreddit specific.
      * @return The subreddit-specific flair of the author
      */
-    @JsonInteraction
+    @JsonProperty
     public Flair getAuthorFlair() {
         return new Flair(data("author_flair_css_class"),
                 data("author_flair_text"));
@@ -53,7 +53,7 @@ public class Comment extends PublicContribution {
      * If the comment is controversial (has a large number of both upvotes and downvotes)
      * @return If the comment is controversial
      */
-    @JsonInteraction
+    @JsonProperty
     public Boolean isControversial() {
         return data("controversiality", Integer.class) == 1;
     }
@@ -62,7 +62,7 @@ public class Comment extends PublicContribution {
      * Who removed this comment, or null if you are not a mod
      * @return Who removed this comment
      */
-    @JsonInteraction(nullable = true)
+    @JsonProperty(nullable = true)
     public String getBannedBy() {
         return data("banned_by");
     }
@@ -71,7 +71,7 @@ public class Comment extends PublicContribution {
      * Gets the body of the comment
      * @return The body of the comment
      */
-    @JsonInteraction
+    @JsonProperty
     public RenderStringPair getBody() {
         return data("body", RenderStringPair.class);
     }
@@ -82,7 +82,7 @@ public class Comment extends PublicContribution {
      *
      * @return The edit date in UTC, or null if it has not been edited
      */
-    @JsonInteraction
+    @JsonProperty
     public Date getEditedDate() {
         JsonNode edited = data.get("edited");
         if (edited.isBoolean()) {
@@ -98,7 +98,7 @@ public class Comment extends PublicContribution {
      *
      * @return If this comment has been edited before
      */
-    @JsonInteraction
+    @JsonProperty
     public Boolean hasBeenEdited() {
         if (!data.has("edited")) {
             return false;
@@ -122,7 +122,7 @@ public class Comment extends PublicContribution {
      * Gets the author of the parent link
      * @return The author of the parent link, or null if this comment is not being displayed outside of its own thread
      */
-    @JsonInteraction(nullable = true)
+    @JsonProperty(nullable = true)
     public String getSubmissionAuthor() {
         return data("link_author");
     }
@@ -131,7 +131,7 @@ public class Comment extends PublicContribution {
      * Gets the comments made in reply to this one
      * @return The comments made in reply to this one
      */
-    @JsonInteraction(nullable = true)
+    @JsonProperty(nullable = true)
     public Listing<Comment> getReplies() {
         // If it has no replies, the value for the replies key will be an empty string or null
         JsonNode replies = data.get("replies");
@@ -145,7 +145,7 @@ public class Comment extends PublicContribution {
      * Gets the ID of the submission this comment is located in
      * @return The ID of the submission this comment is located in
      */
-    @JsonInteraction
+    @JsonProperty
     public String getSubmissionId() {
         return data("link_id");
     }
@@ -154,7 +154,7 @@ public class Comment extends PublicContribution {
      * The title of the parent link, or null if this comment is not being displayed outside of its own thread
      * @return The title of the parent link
      */
-    @JsonInteraction(nullable = true)
+    @JsonProperty(nullable = true)
     public String getSubmissionTitle() {
         return data("link_title");
     }
@@ -164,7 +164,7 @@ public class Comment extends PublicContribution {
      * @return The author of the parent submission, or null if this comment is not being displayed outside of its own
      * thread
      */
-    @JsonInteraction(nullable = true)
+    @JsonProperty(nullable = true)
     public URL getUrl() {
         return data("link_url", URL.class);
     }
@@ -173,7 +173,7 @@ public class Comment extends PublicContribution {
      * The amount of times this comment has been reported
      * @return The amount of times this comment has been reported, or null if not a mod
      */
-    @JsonInteraction(nullable = true)
+    @JsonProperty(nullable = true)
     public Integer getReportCount() {
         return data("num_reports", Integer.class);
     }
@@ -182,7 +182,7 @@ public class Comment extends PublicContribution {
      * The ID of the comment or submission this comment is replying to
      * @return The ID of the comment or submission this comment is replying to
      */
-    @JsonInteraction
+    @JsonProperty
     public String getParentId() {
         return data("parent_id");
     }
@@ -191,7 +191,7 @@ public class Comment extends PublicContribution {
      * True if this post is saved by the logged in user, otherwise false
      * @return True if this post is saved by the logged in user, otherwise false
      */
-    @JsonInteraction
+    @JsonProperty
     public Boolean isSaved() {
         return data("saved", Boolean.class);
     }
@@ -200,7 +200,7 @@ public class Comment extends PublicContribution {
      * Whether the comment's score is currently hidden
      * @return True if the comment's score is hidden, false if not
      */
-    @JsonInteraction
+    @JsonProperty
     public Boolean isScoreHidden() {
         return data("score_hidden", Boolean.class);
     }
@@ -209,7 +209,7 @@ public class Comment extends PublicContribution {
      * The subreddit the comment was posted in, excluding the "/r/" prefix (ex: "pics")
      * @return The name of the subreddit the comment was posted in
      */
-    @JsonInteraction
+    @JsonProperty
     public String getSubredditName() {
         return data("subreddit");
     }
@@ -218,7 +218,7 @@ public class Comment extends PublicContribution {
      * The ID of the subreddit in which this comment was posted in
      * @return The ID of the subreddit in which this comment was posted in
      */
-    @JsonInteraction
+    @JsonProperty
     public String getSubredditId() {
         return data("subreddit_id");
     }

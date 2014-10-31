@@ -30,12 +30,12 @@ public class More extends Thing {
      * Gets the amount of IDs in this list
      * @return The amount of IDs in this list
      */
-    @JsonInteraction
+    @JsonProperty
     public Integer getCount() {
         return data("count", Integer.class);
     }
 
-    @JsonInteraction
+    @JsonProperty
     public String getParentId() {
         return data("parent_id");
     }
@@ -44,7 +44,7 @@ public class More extends Thing {
      * Gets a list of Thing IDs
      * @return a list of Thing IDs
      */
-    @JsonInteraction
+    @JsonProperty
     public List<String> getChildrenIds() {
         List<String> ids = new ArrayList<>();
         for (JsonNode child : data.get("children")) {

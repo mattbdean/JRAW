@@ -7,7 +7,7 @@ import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.models.Captcha;
 import net.dean.jraw.models.DistinguishedStatus;
 import net.dean.jraw.models.Flair;
-import net.dean.jraw.models.JsonInteraction;
+import net.dean.jraw.models.JsonProperty;
 import net.dean.jraw.models.JsonModel;
 import net.dean.jraw.models.Listing;
 import net.dean.jraw.models.More;
@@ -248,22 +248,22 @@ public class InternalsTest extends RedditTest {
             super(null);
         }
 
-        @JsonInteraction
+        @JsonProperty
         public String getFoo() {
             return "foo";
         }
 
-        @JsonInteraction
+        @JsonProperty
         public Float getBar() {
             return 0f;
         }
 
-        @JsonInteraction
+        @JsonProperty
         public String throwsException() {
             throw new UnsupportedOperationException("exception message");
         }
 
-        @JsonInteraction
+        @JsonProperty
         public JsonModel getSomeModel() {
             return new MockJsonModel();
         }

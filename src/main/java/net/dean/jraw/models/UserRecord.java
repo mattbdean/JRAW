@@ -28,7 +28,7 @@ public class UserRecord extends Thing {
      * return the date that the account was created.
      * @return The date most relevant to this record
      */
-    @JsonInteraction
+    @JsonProperty
     public Date getDate() {
         return data("date", Date.class);
     }
@@ -37,7 +37,7 @@ public class UserRecord extends Thing {
      * Gets a list of mod permissions. Only applicable if this record is referring to a moderator.
      * @return A list that this moderator has on this subreddit
      */
-    @JsonInteraction(nullable = true)
+    @JsonProperty(nullable = true)
     public List<ModPermission> getModPermissions() {
         if (!data.has("mod_permissions")) {
             return null;
@@ -58,7 +58,7 @@ public class UserRecord extends Thing {
      * Gets the reason why this user was banned. This is not visible to the user.
      * @return The explanation for the banning
      */
-    @JsonInteraction(nullable = true)
+    @JsonProperty(nullable = true)
     public String getNote() {
         return data("note");
     }

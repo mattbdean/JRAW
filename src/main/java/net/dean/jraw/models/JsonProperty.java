@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface JsonInteraction {
+public @interface JsonProperty {
     /**
      * Whether the return value of this method is allowed to be null
      * @return If this method is allowed to return null

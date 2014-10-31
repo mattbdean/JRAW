@@ -22,7 +22,7 @@ public class Account extends Thing implements Created {
      * Gets the user's comment karma
      * @return the user's comment karma
      */
-    @JsonInteraction
+    @JsonProperty
     public Integer getCommentKarma() {
         return data("comment_karma", Integer.class);
     }
@@ -31,7 +31,7 @@ public class Account extends Thing implements Created {
      * Checks whether or not the logged-in user has this user set as a friend
      * @return Whether the logged-in user has this user set as a friend
      */
-    @JsonInteraction
+    @JsonProperty
     public Boolean isFriend() {
         return data("is_friend", Boolean.class);
     }
@@ -40,7 +40,7 @@ public class Account extends Thing implements Created {
      * Checks if the user has Reddit Gold
      * @return Reddit gold status
      */
-    @JsonInteraction
+    @JsonProperty
     public Boolean hasGold() {
         return data("is_gold", Boolean.class);
     }
@@ -49,7 +49,7 @@ public class Account extends Thing implements Created {
      * Checks whether this account moderates any subreddits
      * @return True if this account moderates any subreddits
      */
-    @JsonInteraction
+    @JsonProperty
     public Boolean isMod() {
         return data("is_mod", Boolean.class);
     }
@@ -58,7 +58,7 @@ public class Account extends Thing implements Created {
      * Gets the user's link karma
      * @return The user's link karma
      */
-    @JsonInteraction
+    @JsonProperty
     public Integer getLinkKarma() {
         return data("link_karma", Integer.class);
     }
@@ -67,7 +67,7 @@ public class Account extends Thing implements Created {
      * Whether this account is set to be over 18
      * @return If this account is set to be over 18
      */
-    @JsonInteraction(nullable = true)
+    @JsonProperty(nullable = true)
     public Boolean isOver18() {
         return data("over_18", Boolean.class);
     }

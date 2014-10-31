@@ -21,7 +21,7 @@ public class WikiPage extends RedditObject {
      * Checks if the current user can edit this page
      * @return If the current user can edit this page
      */
-    @JsonInteraction
+    @JsonProperty
     public Boolean mayRevise() {
         return data("may_revise", Boolean.class);
     }
@@ -30,7 +30,7 @@ public class WikiPage extends RedditObject {
      * Gets the date of last revision (or creation?)
      * @return The date of last revision
      */
-    @JsonInteraction
+    @JsonProperty
     public Date getRevisionDate() {
         return data("revision_date", Date.class);
     }
@@ -39,7 +39,7 @@ public class WikiPage extends RedditObject {
      * Gets the content of this page
      * @return The content
      */
-    @JsonInteraction
+    @JsonProperty
     public RenderStringPair getContent() {
         return new RenderStringPair(data("content_md"), data("content_html"));
     }
@@ -48,7 +48,7 @@ public class WikiPage extends RedditObject {
      * Gets the person who last revised this page
      * @return The person ({@link Account}) who last revised this page
      */
-    @JsonInteraction(nullable = true)
+    @JsonProperty(nullable = true)
     public Account getRevisionBy() {
         if (data.get("revision_by").isNull()) {
             return null;

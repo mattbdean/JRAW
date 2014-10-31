@@ -70,7 +70,7 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
      *
      * @return A More object
      */
-    @JsonInteraction(nullable = true)
+    @JsonProperty(nullable = true)
     public More getMoreChildren() {
         return more;
     }
@@ -79,7 +79,7 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
      * The full name of the Thing that follows before this page, or null if there is no previous page
      * @return The full name of the Thing that comes before this one
      */
-    @JsonInteraction(nullable = true)
+    @JsonProperty(nullable = true)
     public String getBefore() {
         return data("before");
     }
@@ -88,7 +88,7 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
      * The full name of the Thing that follows after this page, or null if there is no following page
      * @return The full name of the Thing that comes after this page
      */
-    @JsonInteraction(nullable = true)
+    @JsonProperty(nullable = true)
     public String getAfter() {
         return data("after");
     }
@@ -97,7 +97,7 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
      * Not the same modhash provided upon login. You can reuse the modhash given upon login
      * @return A modhash
      */
-    @JsonInteraction
+    @JsonProperty
     public String getModhash() {
         return data("modhash");
     }

@@ -23,7 +23,7 @@ public abstract class Thing extends RedditObject {
      * Gets this Thing's full identifier, e.g. "8xwlg"
      * @return This Thing's full identifier
      */
-    @JsonInteraction
+    @JsonProperty
     public String getId() {
         return data("id");
     }
@@ -32,7 +32,7 @@ public abstract class Thing extends RedditObject {
      * Gets the full name of this Thing, e.g. "t1_c3v7f8u"
      * @return This Thing's full name
      */
-    @JsonInteraction
+    @JsonProperty
     public String getFullName() {
         return data("name");
     }

@@ -46,7 +46,7 @@ public class Submission extends PublicContribution {
      * The name of the poster, or null if this is a promotional link
      * @return The name of the poster
      */
-    @JsonInteraction
+    @JsonProperty
     public String getAuthor() {
         return data("author");
     }
@@ -55,7 +55,7 @@ public class Submission extends PublicContribution {
      * The flair used for the poster of the link (subreddit specific)
      * @return Poster's flair
      */
-    @JsonInteraction
+    @JsonProperty
     public Flair getAuthorFlair() {
         return new Flair(data("author_flair_css_class"),
                 data("author_flair_text"));
@@ -65,7 +65,7 @@ public class Submission extends PublicContribution {
      * Whether the user has clicked this link. Most likely false unless the user has Reddit Gold
      * @return If the user has clicked this link
      */
-    @JsonInteraction
+    @JsonProperty
     public Boolean isClicked() {
         return data("clicked", Boolean.class);
     }
@@ -74,7 +74,7 @@ public class Submission extends PublicContribution {
      * The domain of this link. Self posts will be "self.reddit.com". Other examples: "en.wikipedia.org" and "s3.amazon.com"
      * @return This link's domain
      */
-    @JsonInteraction
+    @JsonProperty
     public String getDomain() {
         return data("domain");
     }
@@ -83,7 +83,7 @@ public class Submission extends PublicContribution {
      * The type of submission
      * @return The type of submission
      */
-    @JsonInteraction
+    @JsonProperty
     public Boolean isSelfPost() {
         return data.get("is_self").getBooleanValue();
     }
@@ -92,7 +92,7 @@ public class Submission extends PublicContribution {
      * True if the post is hidden by the logged in user, false if not logged in or not hidden
      * @return True if the post is hidden by the logged in user, false if not logged in or not hidden
      */
-    @JsonInteraction
+    @JsonProperty
     public Boolean isHidden() {
         return data("hidden", Boolean.class);
     }
@@ -101,7 +101,7 @@ public class Submission extends PublicContribution {
      * The ratio of upvotes to downvotes
      * @return The ratio of upvotes to downvotes
      */
-    @JsonInteraction
+    @JsonProperty
     public Double getUpvoteRatio() {
         return data("upvote_ratio", Double.class);
     }
@@ -110,7 +110,7 @@ public class Submission extends PublicContribution {
      * This link's flair
      * @return This link's flair
      */
-    @JsonInteraction
+    @JsonProperty
     public Flair getSubmissionFlair() {
         return new Flair(data("link_flair_css_class"),
                 data("link_flair_text"));
@@ -121,7 +121,7 @@ public class Submission extends PublicContribution {
      * Gets a simplified version of the oEmbed data that includes embedded HTML
      * @return A simplified version of the oEmbed data
      */
-    @JsonInteraction(nullable = true)
+    @JsonProperty(nullable = true)
     public EmbeddedMedia getEmbeddedMedia() {
         return new EmbeddedMedia(data.get("media_embed"));
     }
@@ -130,7 +130,7 @@ public class Submission extends PublicContribution {
      * Gets the oEmbed data of this submission
      * @return The oEmbed data of this submission
      */
-    @JsonInteraction(nullable = true)
+    @JsonProperty(nullable = true)
     public OEmbed getOEmbedMedia() {
         if (!data.has("media")) return null;
         if (data.get("media").size() == 0) return null;
@@ -142,7 +142,7 @@ public class Submission extends PublicContribution {
      * The number of comments that belong to this submission. Includes removed comments.
      * @return The total number of comments that belong to this submission
      */
-    @JsonInteraction
+    @JsonProperty
     public Integer getCommentCount() {
         return data("num_comments", Integer.class);
     }
@@ -151,7 +151,7 @@ public class Submission extends PublicContribution {
      * Whether or not the post is tagged as NSFW (not safe for work)
      * @return If the post is tagged as NSFW
      */
-    @JsonInteraction
+    @JsonProperty
     public Boolean isNsfw() {
         return data("over_18", Boolean.class);
     }
@@ -160,7 +160,7 @@ public class Submission extends PublicContribution {
      * Relative URL (of reddit.com) of the permanent URL for this Submission
      * @return The permalink of this submission
      */
-    @JsonInteraction
+    @JsonProperty
     public URI getPermalink() {
         return data("permalink", URI.class);
     }
@@ -169,7 +169,7 @@ public class Submission extends PublicContribution {
      * True if saved by the logged in user
      * @return True if saved by the logged in user
      */
-    @JsonInteraction
+    @JsonProperty
     public Boolean isSaved() {
         return data("saved", Boolean.class);
     }
@@ -179,7 +179,7 @@ public class Submission extends PublicContribution {
      * HTML entities such as '&amp;lt;', '&amp;gt;', and '&amp;amp;' are escaped.
      * @return The raw text of the self post
      */
-    @JsonInteraction
+    @JsonProperty
     public RenderStringPair getSelftext() {
         return data("selftext", RenderStringPair.class);
     }
@@ -188,7 +188,7 @@ public class Submission extends PublicContribution {
      * The subreddit that the submission is posted in (ex: "pics", "funny")
      * @return The subreddit that the submission was posted in
      */
-    @JsonInteraction
+    @JsonProperty
     public String getSubredditName() {
         return data("subreddit");
     }
@@ -197,7 +197,7 @@ public class Submission extends PublicContribution {
      * The full name of the subreddit which the link is posted in (ex: "t5_2s5oq")
      * @return The full name of the subreddit
      */
-    @JsonInteraction
+    @JsonProperty
     public String getSubredditId() {
         return data("subreddit_id");
     }
@@ -206,7 +206,7 @@ public class Submission extends PublicContribution {
      * The full URL to the thumbnail for this submission
      * @return The URL to this submission's thumbnail
      */
-    @JsonInteraction(nullable = true)
+    @JsonProperty(nullable = true)
     public URL getThumbnail() {
         String thumb = data.get("thumbnail").getTextValue();
         if (getThumbnailType() != ThumbnailType.URL) {
@@ -222,7 +222,7 @@ public class Submission extends PublicContribution {
      * for this post.
      * @return This Submission's thumbnail type
      */
-    @JsonInteraction
+    @JsonProperty
     public ThumbnailType getThumbnailType() {
         String thumb = data.get("thumbnail").getTextValue();
 
@@ -247,7 +247,7 @@ public class Submission extends PublicContribution {
      * The title of the submission. May contain newlines (\n).
      * @return The title of the submission
      */
-    @JsonInteraction
+    @JsonProperty
     public String getTitle() {
         return data("title");
     }
@@ -256,7 +256,7 @@ public class Submission extends PublicContribution {
      * The URL of this post, or the permalink if this is a self post
      * @return This submission's URL
      */
-    @JsonInteraction
+    @JsonProperty
     public URL getUrl() {
         return data("url", URL.class);
     }
@@ -265,7 +265,7 @@ public class Submission extends PublicContribution {
      * Indicates if the link has been edited. Null if it has not.
      * @return The UTC date when this submission was edited, null if it has not been edited
      */
-    @JsonInteraction
+    @JsonProperty
     public Date getEdited() {
         JsonNode node = data.get("edited");
 
@@ -281,7 +281,7 @@ public class Submission extends PublicContribution {
      * Gets the comments of this Submission
      * @return This Submission's comments
      */
-    @JsonInteraction(nullable = true)
+    @JsonProperty(nullable = true)
     public Listing<Comment> getComments() {
         return comments;
     }
@@ -290,7 +290,7 @@ public class Submission extends PublicContribution {
      * True if the post is set as the sticky in its respective subreddit
      * @return If this submission is a sticky
      */
-    @JsonInteraction
+    @JsonProperty
     public Boolean isStickied() {
         return data("stickied", Boolean.class);
     }
