@@ -17,20 +17,28 @@ public class InboxManagerTest extends AuthenticatedRedditTest {
     @Test
     public void testRead() {
         try {
-            InboxPaginator paginator = inbox.iterate(InboxPaginator.Where.INBOX);
-            Message m1 = paginator.next().get(0);
+            Message m1 = getFirstNonCommentMessage();
             boolean expected = !m1.isRead();
-
             inbox.setRead(m1, expected);
-
-            paginator.reset();
-            Message m2 = paginator.next().get(0);
+            Message m2 = getFirstNonCommentMessage();
             assertEquals(m1.getFullName(), m2.getFullName());
             assertEquals(m2.isRead().booleanValue(), expected);
         } catch (NetworkException e) {
             handle(e);
         } catch (IllegalStateException e) {
+            // e.getCause() might be a NetworkException
             handle(e.getCause() != null ? e.getCause() : e);
         }
+    }
+
+    private Message getFirstNonCommentMessage() {
+        InboxPaginator paginator = inbox.iterate(InboxPaginator.Where.INBOX);
+        for (Message m : paginator.next()) {
+            if (!m.isComment()) {
+                return m;
+            }
+        }
+
+        return null;
     }
 }

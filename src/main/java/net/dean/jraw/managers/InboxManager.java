@@ -26,6 +26,14 @@ public class InboxManager extends AbstractManager {
         return new InboxPaginator(reddit, where);
     }
 
+    /**
+     * Sets the message as read or unread. This message must not be a comment (in other words, it must be a private
+     * message).
+     *
+     * @param m The message to mark as read or unread.
+     * @param read Whether the message will be marked (true) or unread (false)
+     * @throws NetworkException
+     */
     @EndpointImplementation({
             Endpoints.READ_MESSAGE,
             Endpoints.UNREAD_MESSAGE
