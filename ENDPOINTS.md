@@ -1,9 +1,9 @@
-<!--- Generated 2014-10-31 at 14:43:36 EDT. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
+<!--- Generated 2014-10-31 at 23:01:25 EDT. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
 #Endpoints
 
 This file contains a list of all the endpoints (regardless of if they have been implemented) that can be found at the [official Reddit API docs](https://www.reddit.com/dev/api). To update this file, run `./gradlew endpoints:update`.
 
-So far **81** endpoints (out of 184 total) have been implemented.
+So far **81** endpoints (out of 186 total) have been implemented.
 
 ##account
 Method|Endpoint|Implemented?
@@ -163,6 +163,8 @@ Method|Endpoint|Implemented?
 :----:|--------|------------
 `POST`|[`/api/block`](https://www.reddit.com/dev/api#POST_api_block)|No
 `POST`|[`/api/compose`](https://www.reddit.com/dev/api#POST_api_compose)|No
+`POST`|[`/api/read_all_messages`](https://www.reddit.com/dev/api#POST_api_read_all_messages)|No
+`POST`|[`/api/unblock_subreddit`](https://www.reddit.com/dev/api#POST_api_unblock_subreddit)|No
 `POST`|[`/api/read_message`](https://www.reddit.com/dev/api#POST_api_read_message)|[`InboxManager.setRead(Message, boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/managers/InboxManager#setRead-net.dean.jraw.models.Message-boolean-)
 `POST`|[`/api/unread_message`](https://www.reddit.com/dev/api#POST_api_unread_message)|[`InboxManager.setRead(Message, boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/managers/InboxManager#setRead-net.dean.jraw.models.Message-boolean-)
 `POST`|[`/message/inbox`](https://www.reddit.com/dev/api#POST_message_inbox)|[`InboxPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/paginators/InboxPaginator#getListing-boolean-)

@@ -262,6 +262,10 @@ public enum Endpoints {
     BLOCK("POST /api/block"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_compose">{@code POST /api/compose}</a>" in the "private messages" category */
     COMPOSE("POST /api/compose"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_read_all_messages">{@code POST /api/read_all_messages}</a>" in the "private messages" category */
+    READ_ALL_MESSAGES("POST /api/read_all_messages"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_unblock_subreddit">{@code POST /api/unblock_subreddit}</a>" in the "private messages" category */
+    UNBLOCK_SUBREDDIT("POST /api/unblock_subreddit"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_read_message">{@code POST /api/read_message}</a>" in the "private messages" category */
     READ_MESSAGE("POST /api/read_message"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_unread_message">{@code POST /api/unread_message}</a>" in the "private messages" category */

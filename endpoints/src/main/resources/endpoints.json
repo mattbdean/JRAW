@@ -141,7 +141,7 @@
         "POST /api/read_message",
         "POST /api/unblock_subreddit",
         "POST /api/unread_message",
-        "POST /message/inbox",
+        "GET /message/inbox",
         "GET /message/sent",
         "GET /message/unread",
         "GET /message/{where}"
