@@ -41,6 +41,7 @@ public abstract class Paginator<T extends Thing> implements Iterator<Listing<T>>
     protected Sorting sorting;
     protected TimePeriod timePeriod;
     protected int limit;
+    private boolean includeLimit;
     /** Current listing. Will get the next listing based on the current listing's "after" value */
     protected Listing<T> current;
     private int pageNumber;
@@ -62,6 +63,7 @@ public abstract class Paginator<T extends Thing> implements Iterator<Listing<T>>
         this.limit = DEFAULT_LIMIT;
         this.changed = false;
         this.started = false;
+        this.includeLimit = false;
     }
 
     /**
@@ -81,7 +83,8 @@ public abstract class Paginator<T extends Thing> implements Iterator<Listing<T>>
         String path = getBaseUri();
 
         Map<String, String> args = new HashMap<>();
-        args.put("limit", String.valueOf(limit));
+        if (includeLimit)
+            args.put("limit", String.valueOf(limit));
         if (current != null)
             if (forwards && current.getAfter() != null)
                 args.put("after", current.getAfter());
@@ -223,6 +226,7 @@ public abstract class Paginator<T extends Thing> implements Iterator<Listing<T>>
      */
     public void setLimit(int limit) {
         this.limit = limit;
+        this.includeLimit = true;
         invalidate();
     }
 
