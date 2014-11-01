@@ -34,6 +34,7 @@ public abstract class RestClient<T extends RestResponse> implements NetworkAcces
     private boolean useHttpsDefault;
     private boolean enforceRatelimit;
     private boolean saveResponseHistory;
+    private boolean requestLogging;
 
     /**
      * Instantiates a new RestClient
@@ -50,6 +51,7 @@ public abstract class RestClient<T extends RestResponse> implements NetworkAcces
         this.rateLimiter = enforceRatelimit ? RateLimiter.create((double) requestsPerMinute / 60) : null;
         this.http = new OkHttpClient();
         this.saveResponseHistory = false;
+        this.requestLogging = true;
         CookieManager manager = new CookieManager();
         manager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
         http.setCookieHandler(manager);
@@ -131,7 +133,9 @@ public abstract class RestClient<T extends RestResponse> implements NetworkAcces
     public T execute(RestRequest request) throws NetworkException {
         if (enforceRatelimit) {
             if (!rateLimiter.tryAcquire()) {
-                JrawUtils.logger().info("Slept for {} seconds", rateLimiter.acquire());
+                double time = rateLimiter.acquire();
+                if (requestLogging)
+                    JrawUtils.logger().info("Slept for {} seconds", time);
             }
         }
 
@@ -139,14 +143,17 @@ public abstract class RestClient<T extends RestResponse> implements NetworkAcces
         try {
             Response response = http.newCall(r).execute();
 
-            JrawUtils.logger().info("{} {}", r.method(), r.url());
+            if (requestLogging)
+                JrawUtils.logger().info("{} {}", r.method(), r.url());
             if (!response.isSuccessful()) {
                 throw new NetworkException(response.code());
             }
-            if (request.getFormArgs() != null) {
-                for (Map.Entry<String, String> entry : request.getFormArgs().entrySet()) {
-                    String val = request.isSensitive(entry.getKey()) ? "<sensitive>" : entry.getValue();
-                    JrawUtils.logger().info("    {}={}", entry.getKey(), val);
+            if (requestLogging) {
+                if (request.getFormArgs() != null) {
+                    for (Map.Entry<String, String> entry : request.getFormArgs().entrySet()) {
+                        String val = request.isSensitive(entry.getKey()) ? "<sensitive>" : entry.getValue();
+                        JrawUtils.logger().info("    {}={}", entry.getKey(), val);
+                    }
                 }
             }
 
@@ -190,6 +197,7 @@ public abstract class RestClient<T extends RestResponse> implements NetworkAcces
     /**
      * Notifies the client to log every response received. You can access this data by using {@link #getHistory()}. This
      * defaults to false unless it has been explicitly changed.
+     * 
      * @return Checks if this client is saving response history
      */
     public boolean isSavingResponseHistory() {
@@ -202,6 +210,26 @@ public abstract class RestClient<T extends RestResponse> implements NetworkAcces
      */
     public void setSaveResponseHistory(boolean saveResponseHistory) {
         this.saveResponseHistory = saveResponseHistory;
+    }
+
+    /**
+     * Checks if this RestClient is logging HTTP requests using SLF4J. The full URL, form data, and time spent sleeping
+     * are displayed also. Enabled by default.
+     *
+     * @return If requests are being logged
+     */
+    public boolean isLoggingRequests() {
+        return requestLogging;
+    }
+
+    /**
+     * Sets whether or not to log HTTP requests. The full URL, form data, and time spent sleeping are displayed also.
+     * Enabled by default.
+     *
+     * @param requestLogging Whether or not to log requests
+     */
+    public void setRequestLoggingEnabled(boolean requestLogging) {
+        this.requestLogging = requestLogging;
     }
 
     /**
