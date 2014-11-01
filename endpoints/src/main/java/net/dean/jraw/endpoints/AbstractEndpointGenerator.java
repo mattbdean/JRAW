@@ -17,6 +17,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.NavigableMap;
 
 /**
@@ -24,15 +25,19 @@ import java.util.NavigableMap;
  */
 public abstract class AbstractEndpointGenerator {
     protected final NavigableMap<String, List<Endpoint>> endpoints;
+    protected final boolean overwriteFile;
     private static final ClassPool CLASS_POOL = ClassPool.getDefault();
     private static final int LINE_NUM_OFFSET = -1;
 
     /**
      * Instantiates a new AbstractEndpointGenerator
      * @param endpoints A map of endpoints where the key is the category and the value is a list of endpoints in that category
+     * @param overwriteFile If true, then this generator is not re-creating the file, but instead updating it. The
+     *                      BufferedWriter in {@link #_generate(File, BufferedWriter)} will be null.
      */
-    public AbstractEndpointGenerator(NavigableMap<String, List<Endpoint>> endpoints) {
+    public AbstractEndpointGenerator(NavigableMap<String, List<Endpoint>> endpoints, boolean overwriteFile) {
         this.endpoints = Collections.unmodifiableNavigableMap(endpoints);
+        this.overwriteFile = overwriteFile;
     }
 
     /**
@@ -41,8 +46,14 @@ public abstract class AbstractEndpointGenerator {
      * @param dest The file to write to
      */
     public final void generate(File dest) {
-        System.out.println(String.format("Using %s to write to %s", getClass().getSimpleName(), dest.getAbsolutePath()));
-        try (BufferedWriter bw = Files.newBufferedWriter(Paths.get(dest.toURI()))) {
+        System.out.println(String.format("Using %s to %s %s", getClass().getSimpleName(),
+                overwriteFile ? "write to" : "update", dest.getAbsolutePath()));
+
+        BufferedWriter bw = null;
+        try {
+            if (overwriteFile) {
+                bw = Files.newBufferedWriter(Paths.get(dest.toURI()));
+            }
             if (!dest.exists()) {
                 if (!dest.mkdirs()) {
                     throw new IOException("Could not make directories for " + dest.getAbsolutePath());
@@ -54,6 +65,14 @@ public abstract class AbstractEndpointGenerator {
             _generate(dest, bw);
         } catch (IOException e) {
             JrawUtils.logger().error("Could not write the destination file: " + dest.getAbsolutePath(), e);
+        } finally {
+            if (bw != null) {
+                try {
+                    bw.close();
+                } catch (IOException e) {
+                    JrawUtils.logger().error("Could not close the BufferedWriter", e);
+                }
+            }
         }
     }
 
@@ -124,10 +143,34 @@ public abstract class AbstractEndpointGenerator {
         return base.toString();
     }
 
+    protected int getImplementedEndpointsCount() {
+        int counter = 0;
+        for (Map.Entry<String, List<Endpoint>> endpointsList : endpoints.entrySet()) {
+            for (Endpoint e : endpointsList.getValue()) {
+                if (e.isImplemented()) {
+                    counter++;
+                }
+            }
+        }
+
+        return counter;
+    }
+
+    protected int getTotalEndpoints() {
+        int counter = 0;
+
+        for (Map.Entry<String, List<Endpoint>> endpointsList : endpoints.entrySet()) {
+            counter += endpointsList.getValue().size();
+        }
+
+        return counter;
+    }
+
     /**
      * Called by {@link #generate(java.io.File)}. This method does the actual generation of files.
      * @param dest The file to write to
-     * @param bw A {@link BufferedWriter} that writes to dest.
+     * @param bw A {@link BufferedWriter} that writes to dest. Will be null if the value of overwriteFile in the
+     *           passed to the constructor was true.
      * @throws IOException If there was a problem writing to the file
      */
     protected abstract void _generate(File dest, BufferedWriter bw) throws IOException;

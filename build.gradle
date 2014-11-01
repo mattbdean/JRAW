@@ -63,6 +63,7 @@ project(':endpoints') {
         args = [
                 "java=$genJavaClass",
                 "md=$genEndpointsMd",
+                "readme=${file('../README.md')}"
         ]
     }
 }

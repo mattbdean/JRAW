@@ -31,7 +31,7 @@ public class MarkdownGenerator extends AbstractEndpointGenerator {
      * @param endpoints A map of endpoints where the key is the category and the value is a list of endpoints in that category
      */
     public MarkdownGenerator(NavigableMap<String, List<Endpoint>> endpoints) {
-        super(endpoints);
+        super(endpoints, true);
     }
 
     @Override
@@ -82,29 +82,6 @@ public class MarkdownGenerator extends AbstractEndpointGenerator {
         }
     }
 
-    private int getTotalEndpoints() {
-        int counter = 0;
-
-        for (Map.Entry<String, List<Endpoint>> endpoints : this.endpoints.entrySet()) {
-            counter += endpoints.getValue().size();
-        }
-
-        return counter;
-    }
-
-    private int getImplementedEndpointsCount() {
-        int counter = 0;
-        for (Map.Entry<String, List<Endpoint>> endpoints : this.endpoints.entrySet()) {
-            for (Endpoint e : endpoints.getValue()) {
-                if (e.isImplemented()) {
-                    counter++;
-                }
-            }
-        }
-
-        return counter;
-    }
-
     /**
      * Formats a method to be as succint as possible. The basic format is "{@code {class name}.{method name}()}". For example,
      * a method declared as "{@code public void com.foo.bar.MyClass.myMethod(String, String, int) throws IllegalArgumentException}"
@@ -114,10 +91,10 @@ public class MarkdownGenerator extends AbstractEndpointGenerator {
      * @return A condensed version of the given method
      */
     private String getStringRepresentation(Method m) {
-        return m.getDeclaringClass().getSimpleName() + "." + m.getName() + "(" + methodParameters(m) + ")";
+        return m.getDeclaringClass().getSimpleName() + "." + m.getName() + "(" + formatMethodParameters(m) + ")";
     }
     
-    private String methodParameters(Method m){
+    private String formatMethodParameters(Method m){
         if(m.getParameterCount() == 0){
             return "";
         }

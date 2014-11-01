@@ -23,6 +23,7 @@ public class EndpointAnalyzer {
     private static final String ALL_ENDPOINTS_FILE_NAME = "endpoints.json";
     private static final String KEY_GEN_MARKDOWN = "md";
     private static final String KEY_GEN_JAVA = "java";
+    private static final String KEY_UPD_README = "readme";
 
     /** The file that contains a JSON mapping of all the endpoints and their respective categories */
     private File jsonEndpoints;
@@ -138,9 +139,10 @@ public class EndpointAnalyzer {
         System.out.println("Started " + EndpointAnalyzer.class.getSimpleName() + " using arguments " + Arrays.toString(args));
         String md = null;
         String java = null;
+        String readme = null;
 
-        if (args.length != 2) {
-            throw new IllegalArgumentException("Must have three arguments (java=<file> and md=<file>");
+        if (args.length != 3) {
+            throw new IllegalArgumentException("Must have three arguments (java=<file>, md=<file>, and readme=<file>");
         }
 
         for (String arg : args) {
@@ -164,6 +166,9 @@ public class EndpointAnalyzer {
                 case KEY_GEN_JAVA:
                     java = kvPair[1];
                     break;
+                case KEY_UPD_README:
+                    readme = kvPair[1];
+                    break;
                 default:
                     throw new IllegalArgumentException("No generator for \"" + kvPair[0] + "\"");
             }
@@ -178,5 +183,6 @@ public class EndpointAnalyzer {
 
         new MarkdownGenerator(endpointAnalyzer.getEndpoints()).generate(new File(md));
         new JavaGenerator(endpointAnalyzer.getEndpoints()).generate(new File(java));
+        new ReadmeUpdater(endpointAnalyzer.getEndpoints()).generate(new File(readme));
     }
 }

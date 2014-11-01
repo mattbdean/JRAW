@@ -30,7 +30,7 @@ public class JavaGenerator extends AbstractEndpointGenerator {
      * @param endpoints A map of endpoints where the key is the category and the value is a list of endpoints in that category
      */
     public JavaGenerator(NavigableMap<String, List<Endpoint>> endpoints) {
-        super(endpoints);
+        super(endpoints, true);
     }
 
 
