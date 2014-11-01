@@ -31,6 +31,8 @@ public enum ThingType {
     MULTI("LabeledMulti"),
     /** Represents a wiki page */
     WIKI_PAGE("wikipage"),
+    /** Represents a wiki page's settings */
+    WIKI_PAGE_SETTINGS("wikipagesettings"),
     /** Represents a live thread */
     LIVE_THREAD("LiveUpdateEvent"),
     /** Represents an update in a live thread */

@@ -7,6 +7,7 @@ import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.RestRequest;
 import net.dean.jraw.models.WikiPage;
+import net.dean.jraw.models.WikiPageSettings;
 import org.codehaus.jackson.JsonNode;
 
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ public class WikiManager extends AbstractManager {
 
     /**
      * Gets a list of names of wiki pages for Reddit
+     *
      * @return A list of Reddit's wiki pages
      * @throws NetworkException If the request was not successful
      */
@@ -28,6 +30,7 @@ public class WikiManager extends AbstractManager {
 
     /**
      * Gets a list of names of wiki pages for a certain subreddit
+     *
      * @param subreddit The subreddit to use
      * @return A list of wiki pages for this subreddit
      * @throws NetworkException If the request was not successful
@@ -65,6 +68,7 @@ public class WikiManager extends AbstractManager {
 
     /**
      * Gets a WikiPage for a certain subreddit
+     *
      * @param subreddit The subreddit to use
      * @param page The page to get
      * @return A WikiPage for the given page
@@ -81,5 +85,31 @@ public class WikiManager extends AbstractManager {
         return execute(r).as(WikiPage.class);
     }
 
+    /**
+     * Gets the settings for a wiki page for the front page. Must be an admin.
+     *
+     * @param page The page to get
+     * @return A WikiPageSettings that represents the settings of the given wiki page
+     * @throws NetworkException If there request was not successful
+     */
+    public WikiPageSettings getSettings(String page) throws NetworkException {
+        return getSettings(null, page);
+    }
 
+    /**
+     * Gets the settings for a wiki page for a certain subreddit. Must be a moderator of that subreddit.
+     *
+     * @param subreddit The subreddit to use. Use null or an empty string for the front page.
+     * @param page The page to get
+     * @return A WikiPageSettings that represents the settings of the given wiki page
+     * @throws NetworkException If there request was not successful
+     */
+    @EndpointImplementation(Endpoints.WIKI_SETTINGS_PAGE)
+    public WikiPageSettings getSettings(String subreddit, String page) throws NetworkException {
+        String path = JrawUtils.getSubredditPath(subreddit, "/wiki/settings/" + page + ".json");
+
+        return execute(request()
+                .path(path)
+                .build()).as(WikiPageSettings.class);
+    }
 }

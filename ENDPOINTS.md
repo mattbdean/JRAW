@@ -1,9 +1,9 @@
-<!--- Generated 2014-10-31 at 23:57:17 EDT. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
+<!--- Generated 2014-11-01 at 09:24:15 EDT. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
 #Endpoints
 
 This file contains a list of all the endpoints (regardless of if they have been implemented) that can be found at the [official Reddit API docs](https://www.reddit.com/dev/api). To update this file, run `./gradlew endpoints:update`.
 
-So far **82** endpoints (out of 186 total) have been implemented.
+So far **83** endpoints (out of 186 total) have been implemented.
 
 ##account
 Method|Endpoint|Implemented?
@@ -247,6 +247,6 @@ Method|Endpoint|Implemented?
 `GET`|[`/wiki/discussions/{page}`](https://www.reddit.com/dev/api#GET_wiki_discussions_%7Bpage%7D)|No
 `GET`|[`/wiki/revisions`](https://www.reddit.com/dev/api#GET_wiki_revisions)|No
 `POST`|[`/wiki/revisions/{page}`](https://www.reddit.com/dev/api#POST_wiki_revisions_%7Bpage%7D)|No
-`GET`|[`/wiki/settings/{page}`](https://www.reddit.com/dev/api#GET_wiki_settings_%7Bpage%7D)|No
 `GET`|[`/wiki/pages`](https://www.reddit.com/dev/api#GET_wiki_pages)|[`WikiManager.getWikiPages(String)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/managers/WikiManager#getWikiPages-java.lang.String-)
+`GET`|[`/wiki/settings/{page}`](https://www.reddit.com/dev/api#GET_wiki_settings_%7Bpage%7D)|[`WikiManager.getSettings(String, String)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/managers/WikiManager#getSettings-java.lang.String-java.lang.String-)
 `GET`|[`/wiki/{page}`](https://www.reddit.com/dev/api#GET_wiki_%7Bpage%7D)|[`WikiManager.getWikiPage(String, String)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/managers/WikiManager#getWikiPage-java.lang.String-java.lang.String-)
