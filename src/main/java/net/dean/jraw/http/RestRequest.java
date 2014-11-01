@@ -121,7 +121,7 @@ public final class RestRequest {
         private boolean auth;
         private MediaType expected;
 
-        public static Builder from(String method, URL url, String... formArgs) {
+        public static Builder from(String method, URL url, Object... formArgs) {
             if (!url.getProtocol().matches("http[s]?")) {
                 throw new IllegalArgumentException("Only HTTP(S) supported");
             }
