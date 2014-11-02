@@ -186,8 +186,6 @@ public enum Endpoints {
     ///////// moderation /////////
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_about_log">{@code GET /about/log}</a>" in the "moderation" category */
     ABOUT_LOG("GET /about/log"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_about_%7Blocation%7D">{@code GET /about/{location}}</a>" in the "moderation" category */
-    ABOUT_LOCATION("GET /about/{location}"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_accept_moderator_invite">{@code POST /api/accept_moderator_invite}</a>" in the "moderation" category */
     ACCEPT_MODERATOR_INVITE("POST /api/accept_moderator_invite"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_approve">{@code POST /api/approve}</a>" in the "moderation" category */
@@ -214,6 +212,8 @@ public enum Endpoints {
     ABOUT_SPAM("GET /about/spam"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_about_unmoderated">{@code GET /about/unmoderated}</a>" in the "moderation" category */
     ABOUT_UNMODERATED("GET /about/unmoderated"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_about_%7Blocation%7D">{@code GET /about/{location}}</a>" in the "moderation" category */
+    ABOUT_LOCATION("GET /about/{location}"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_stylesheet">{@code GET /stylesheet}</a>" in the "moderation" category */
     STYLESHEET("GET /stylesheet"),
 

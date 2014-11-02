@@ -83,6 +83,7 @@ public class ModeratorPaginator extends GenericPaginator<PublicContribution, Mod
 
     @Override
     @EndpointImplementation({
+            Endpoints.ABOUT_LOCATION,
             Endpoints.ABOUT_REPORTS,
             Endpoints.ABOUT_SPAM,
             Endpoints.ABOUT_MODQUEUE,

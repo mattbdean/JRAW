@@ -1,9 +1,9 @@
-<!--- Generated 2014-11-02 at 09:42:22 EST. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
+<!--- Generated 2014-11-02 at 10:09:33 EST. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
 #Endpoints
 
 This file contains a list of all the endpoints (regardless of if they have been implemented) that can be found at the [official Reddit API docs](https://www.reddit.com/dev/api). To update this file, run `./gradlew endpoints:update`.
 
-So far **88** endpoints (out of 186 total) have been implemented.
+So far **89** endpoints (out of 186 total) have been implemented.
 
 ##account
 Method|Endpoint|Implemented?
@@ -119,7 +119,6 @@ Method|Endpoint|Implemented?
 Method|Endpoint|Implemented?
 :----:|--------|------------
 `GET`|[`/about/log`](https://www.reddit.com/dev/api#GET_about_log)|No
-`GET`|[`/about/{location}`](https://www.reddit.com/dev/api#GET_about_%7Blocation%7D)|No
 `POST`|[`/api/accept_moderator_invite`](https://www.reddit.com/dev/api#POST_api_accept_moderator_invite)|No
 `POST`|[`/api/approve`](https://www.reddit.com/dev/api#POST_api_approve)|No
 `POST`|[`/api/distinguish`](https://www.reddit.com/dev/api#POST_api_distinguish)|No
@@ -133,6 +132,7 @@ Method|Endpoint|Implemented?
 `GET`|[`/about/reports`](https://www.reddit.com/dev/api#GET_about_reports)|[`ModeratorPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/paginators/ModeratorPaginator#getListing-boolean-)
 `GET`|[`/about/spam`](https://www.reddit.com/dev/api#GET_about_spam)|[`ModeratorPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/paginators/ModeratorPaginator#getListing-boolean-)
 `GET`|[`/about/unmoderated`](https://www.reddit.com/dev/api#GET_about_unmoderated)|[`ModeratorPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/paginators/ModeratorPaginator#getListing-boolean-)
+`GET`|[`/about/{location}`](https://www.reddit.com/dev/api#GET_about_%7Blocation%7D)|[`ModeratorPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/paginators/ModeratorPaginator#getListing-boolean-)
 `GET`|[`/stylesheet`](https://www.reddit.com/dev/api#GET_stylesheet)|[`RedditClient.getStylesheet(String)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/RedditClient#getStylesheet-java.lang.String-)
 
 ##multis
