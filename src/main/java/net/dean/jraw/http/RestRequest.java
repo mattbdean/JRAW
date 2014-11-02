@@ -37,7 +37,7 @@ public final class RestRequest {
      *                 info.
      * @return A RestRequest that represents the given URL
      */
-    public static RestRequest from(String method, URL url, String... formArgs) {
+    public static RestRequest from(String method, URL url, Object... formArgs) {
         return Builder.from(method, url, formArgs).build();
     }
 

@@ -1,14 +1,18 @@
 package net.dean.jraw.endpoints;
 
+import com.google.common.base.Joiner;
 import net.dean.jraw.Endpoint;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.NavigableMap;
 
 /**
  * This class is responsible for the compilation of <a href="https://github.com/thatJavaNerd/JRAW/blob/master/ENDPOINTS.md">ENDPOINITS.md</a>,
@@ -94,13 +98,20 @@ public class MarkdownGenerator extends AbstractEndpointGenerator {
         return m.getDeclaringClass().getSimpleName() + "." + m.getName() + "(" + formatMethodParameters(m) + ")";
     }
     
-    private String formatMethodParameters(Method m){
-        if(m.getParameterCount() == 0){
+    private String formatMethodParameters(Method m) {
+        if (m.getParameterCount() == 0) {
             return "";
         }
-        return Arrays.asList(m.getParameters()).stream().map(
-            p -> p.getType().getSimpleName()).collect(Collectors.joining(", ")
-        );
+        Parameter[] params = m.getParameters();
+        String[] parameterClasses = new String[params.length];
+        for (int i = 0; i < params.length; i++) {
+            parameterClasses[i] = params[i].getType().getSimpleName();
+        }
+
+        return Joiner.on(", ").join(parameterClasses);
+//        return Arrays.asList(m.getParameters()).stream().map(
+//            p -> p.getType().getSimpleName()).collect(Collectors.joining(", ")
+//        );
     }
 
 }

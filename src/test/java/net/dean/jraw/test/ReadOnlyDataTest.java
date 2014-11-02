@@ -167,7 +167,6 @@ public class ReadOnlyDataTest extends RedditTest {
 
             assertTrue(subs.size() > 0);
             // Make sure the items aren't null
-//            subs.stream().forEach(Assert::assertNotNull);
             for (String s : subs) {
             	Assert.assertNotNull(s);
             }

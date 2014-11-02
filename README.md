@@ -4,8 +4,6 @@
 
 >JRAW is currently in an experimental stage, and therefore subject to application-breaking API changes that could occur at any time before v1.0.
 
->JRAW requires language features that are only available in Java 8 and above. Please adjust your project accordingly. Voice your opinion on the matter at [issue #12](https://github.com/thatJavaNerd/JRAW/issues/12).
-
 ##Features
  - Mini-framework that wraps Square's OkHttp
  - (Optional) request management to prevent sending over 30 requests per minute

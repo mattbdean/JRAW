@@ -2,7 +2,6 @@ package net.dean.jraw.models.attr;
 
 import net.dean.jraw.models.JsonProperty;
 import net.dean.jraw.models.VoteDirection;
-import org.codehaus.jackson.JsonNode;
 
 /**
  * Provides a way to show that this Thing is able to be voted on
@@ -17,9 +16,7 @@ public interface Votable extends JsonAttribute {
      * @return The amount of upvotes the object has received
      */
     @JsonProperty
-    public default Integer getUpvotes() {
-        return getDataNode().get("ups").getIntValue();
-    }
+    public Integer getUpvotes();
 
     /**
      * Gets the amount of downvotes the object has received.
@@ -30,9 +27,7 @@ public interface Votable extends JsonAttribute {
      */
     @JsonProperty
     @Deprecated
-    public default Integer getDownvotes() {
-        return getDataNode().get("downs").getIntValue();
-    }
+    public Integer getDownvotes();
 
     /**
      * The net score of the link (upvotes minus downvotes)
@@ -40,9 +35,7 @@ public interface Votable extends JsonAttribute {
      * @return The link's net score
      */
     @JsonProperty
-    public default Integer getScore() {
-        return getDataNode().get("score").getIntValue();
-    }
+    public Integer getScore();
 
 
     /**
@@ -51,12 +44,5 @@ public interface Votable extends JsonAttribute {
      * @return The way in which the logged in user voted
      */
     @JsonProperty
-    default VoteDirection getVote() {
-        JsonNode likes = getDataNode().get("likes");
-        if (likes.isNull()) {
-            return VoteDirection.NO_VOTE;
-        }
-
-        return likes.getBooleanValue() ? VoteDirection.UPVOTE : VoteDirection.DOWNVOTE;
-    }
+    public VoteDirection getVote();
 }

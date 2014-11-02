@@ -3,6 +3,8 @@ package net.dean.jraw.models;
 import net.dean.jraw.models.attr.Created;
 import org.codehaus.jackson.JsonNode;
 
+import java.util.Date;
+
 /**
  * Represents a live thread. See <a href="https://www.reddit.com/r/live/wiki/index">here</a> for more information.
  */
@@ -91,5 +93,15 @@ public class LiveThread extends RedditObject implements Created {
     @Override
     public ThingType getType() {
         return ThingType.LIVE_THREAD;
+    }
+
+    @Override
+    public Date getCreated() {
+        return _getCreated();
+    }
+
+    @Override
+    public Date getCreatedUtc() {
+        return _getCreatedUtc();
     }
 }

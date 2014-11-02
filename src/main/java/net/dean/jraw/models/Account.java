@@ -3,6 +3,8 @@ package net.dean.jraw.models;
 import net.dean.jraw.models.attr.Created;
 import org.codehaus.jackson.JsonNode;
 
+import java.util.Date;
+
 /**
  * Represents a redditor's account. See
  * <a href="https://github.com/reddit/reddit/wiki/JSON#account-implements-created">here</a> for more
@@ -80,5 +82,15 @@ public class Account extends Thing implements Created {
     @Override
     public String getFullName() {
         return super.getFullName();
+    }
+
+    @Override
+    public Date getCreated() {
+        return _getCreated();
+    }
+
+    @Override
+    public Date getCreatedUtc() {
+        return _getCreatedUtc();
     }
 }

@@ -13,18 +13,12 @@ public interface Created extends JsonAttribute {
      * @return Date created in local time
      */
     @JsonProperty
-    public default Date getCreated() {
-        // created in seconds, Date constructor wants milliseconds
-        return new Date(getDataNode().get("created").getLongValue() * 1000);
-    }
+    public Date getCreated();
 
     /**
      * Gets the date this object was created in UTC
      * @return Date created in UTC
      */
     @JsonProperty
-    public default Date getCreatedUtc() {
-        // created in seconds, Date constructor wants milliseconds
-        return new Date(getDataNode().get("created_utc").getLongValue() * 1000);
-    }
+    public Date getCreatedUtc();
 }

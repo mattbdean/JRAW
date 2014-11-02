@@ -5,8 +5,15 @@ import net.dean.jraw.Endpoint;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.NavigableMap;
+import java.util.Set;
+import java.util.TreeMap;
 
 /**
  * This class generates an enum called Endpoints.java.
@@ -126,7 +133,10 @@ public class JavaGenerator extends AbstractEndpointGenerator {
         TreeMap<String, List<String>> dupes = new TreeMap<>();
         for (Map.Entry<String, List<Endpoint>> entry : endpoints.entrySet()) {
 
-            List<String> uris = entry.getValue().stream().map(Endpoint::getUri).collect(Collectors.toList());
+            List<String> uris = new ArrayList<>();
+            for (Endpoint e : entry.getValue()) {
+                uris.add(e.getUri());
+            }
             dupes.put(entry.getKey(), findDuplicates(uris));
         }
 
@@ -145,7 +155,7 @@ public class JavaGenerator extends AbstractEndpointGenerator {
 
         List<T> returnList = new ArrayList<>(duplicates.size());
 
-        returnList.addAll(duplicates.stream().collect(Collectors.toList()));
+        returnList.addAll(duplicates);
 
         return returnList;
     }

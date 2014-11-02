@@ -4,6 +4,8 @@ import com.google.common.collect.ImmutableList;
 import net.dean.jraw.models.attr.Created;
 import org.codehaus.jackson.JsonNode;
 
+import java.util.Date;
+
 /**
  * Represents an update in a live thread
  */
@@ -53,6 +55,16 @@ public class LiveUpdate extends Thing implements Created {
     @Override
     public ThingType getType() {
         return ThingType.LIVE_UPDATE;
+    }
+
+    @Override
+    public Date getCreated() {
+        return _getCreated();
+    }
+
+    @Override
+    public Date getCreatedUtc() {
+        return _getCreatedUtc();
     }
 
     /**

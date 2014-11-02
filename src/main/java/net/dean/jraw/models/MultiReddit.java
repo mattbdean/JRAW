@@ -4,6 +4,7 @@ import net.dean.jraw.models.attr.Created;
 import org.codehaus.jackson.JsonNode;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -75,5 +76,15 @@ public class MultiReddit extends Thing implements Created {
     @JsonProperty
     public String getPath() {
         return data("path");
+    }
+
+    @Override
+    public Date getCreated() {
+        return _getCreated();
+    }
+
+    @Override
+    public Date getCreatedUtc() {
+        return _getCreatedUtc();
     }
 }

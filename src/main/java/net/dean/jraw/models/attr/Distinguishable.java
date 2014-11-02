@@ -13,13 +13,5 @@ public interface Distinguishable extends JsonAttribute {
      * @return The role of the poster of this Thing
      */
     @JsonProperty
-    public default DistinguishedStatus getDistinguishedStatus() {
-        String distinguished = getDataNode().get("distinguished").getTextValue();
-
-        if (distinguished == null) {
-            return DistinguishedStatus.NORMAL;
-        }
-
-        return DistinguishedStatus.getByJsonValue(distinguished);
-    }
+    public DistinguishedStatus getDistinguishedStatus();
 }

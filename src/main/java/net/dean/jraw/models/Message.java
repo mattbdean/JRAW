@@ -116,4 +116,9 @@ public class Message extends Contribution implements Distinguishable {
     public ThingType getType() {
         return ThingType.MESSAGE;
     }
+
+    @Override
+    public DistinguishedStatus getDistinguishedStatus() {
+        return _getDistinguishedStatus();
+    }
 }

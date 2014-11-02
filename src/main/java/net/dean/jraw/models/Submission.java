@@ -302,6 +302,46 @@ public class Submission extends PublicContribution {
         return JrawUtils.newUrl("http://redd.it/" + getId());
     }
 
+    @Override
+    public Date getCreated() {
+        return _getCreated();
+    }
+
+    @Override
+    public Date getCreatedUtc() {
+        return _getCreatedUtc();
+    }
+
+    @Override
+    public DistinguishedStatus getDistinguishedStatus() {
+        return _getDistinguishedStatus();
+    }
+
+    @Override
+    public Integer getTimesGilded() {
+        return _getTimesGilded();
+    }
+
+    @Override
+    public Integer getUpvotes() {
+        return _getUpvotes();
+    }
+
+    @Override
+    public Integer getDownvotes() {
+        return _getDownvotes();
+    }
+
+    @Override
+    public Integer getScore() {
+        return _getScore();
+    }
+
+    @Override
+    public VoteDirection getVote() {
+        return _getVote();
+    }
+
     /**
      * Represents a list of possible return values for the "thumbnail" JsonNode. All of the values in this enum can be
      * returned by the Reddit API, except for {@link #URL} and {@link #NONE}. If {@code URL} is returned, then Reddit

@@ -7,8 +7,12 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URL;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
 
 /**
  * This class provides an abstract model for retrieving data from a JSON node, although not necessarily relating to the
@@ -177,7 +181,12 @@ public abstract class JsonModel {
         List<Method> jsonInteractionMethods = getJsonProperties(clazz);
 
         // Sort the methods by name
-        Collections.sort(jsonInteractionMethods, (o1, o2) -> o1.getName().compareTo(o2.getName()));
+        Collections.sort(jsonInteractionMethods, new Comparator<Method>() {
+            @Override
+            public int compare(Method o1, Method o2) {
+                return o1.getName().compareTo(o2.getName());
+            }
+        });
 
         int counter = 0;
         for (Method m : jsonInteractionMethods) {
@@ -261,8 +270,12 @@ public abstract class JsonModel {
             clazz = clazz.getSuperclass();
         }
 
-        // Filter out the methods that don't have the JsonInteraction annotation
-        methods.addAll(toObserve.stream().filter(m -> m.isAnnotationPresent(JsonProperty.class)).collect(Collectors.toList()));
+        // Filter out the methods that don't have the JsonProperty annotation
+        for (Method m : toObserve) {
+            if (m.isAnnotationPresent(JsonProperty.class)) {
+                methods.add(m);
+            }
+        }
 
         return methods;
     }

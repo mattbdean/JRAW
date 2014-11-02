@@ -14,7 +14,15 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.URISyntaxException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 
 /**
  * This class is responsible for parsing {@value #ALL_ENDPOINTS_FILE_NAME} into a Endpoint objects
@@ -44,16 +52,19 @@ public class EndpointAnalyzer {
 
         List<Endpoint> endpoints = findEndpoints();
         // Sort by if it was implemented, then by URI, then by HTTP method
-        Collections.sort(endpoints, (Endpoint endpoint, Endpoint endpoint2) -> {
-            int implComp = Boolean.compare(endpoint.isImplemented(), endpoint2.isImplemented());
-            if (implComp != 0) {
-                return implComp;
-            } else {
-                int nameComp = endpoint.getUri().compareTo(endpoint2.getUri());
-                if (nameComp != 0) {
-                    return nameComp;
+        Collections.sort(endpoints, new Comparator<Endpoint>() {
+            @Override
+            public int compare(Endpoint endpoint, Endpoint endpoint2) {
+                int implComp = Boolean.compare(endpoint.isImplemented(), endpoint2.isImplemented());
+                if (implComp != 0) {
+                    return implComp;
                 } else {
-                    return endpoint.getVerb().compareTo(endpoint2.getVerb());
+                    int nameComp = endpoint.getUri().compareTo(endpoint2.getUri());
+                    if (nameComp != 0) {
+                        return nameComp;
+                    } else {
+                        return endpoint.getVerb().compareTo(endpoint2.getVerb());
+                    }
                 }
             }
         });
@@ -72,7 +83,7 @@ public class EndpointAnalyzer {
         TreeMap<String, List<Endpoint>> map = new TreeMap<>();
         for (Endpoint e : endpoints) {
             if (map.get(e.getCategory()) == null) {
-                map.put(e.getCategory(), new ArrayList<>());
+                map.put(e.getCategory(), new ArrayList<Endpoint>());
             }
 
             map.get(e.getCategory()).add(e);
@@ -106,13 +117,17 @@ public class EndpointAnalyzer {
 
             Set<Method> methods = reflections.getMethodsAnnotatedWith(EndpointImplementation.class);
 
-            for (Method m : methods) {
+            for (final Method m : methods) {
                 EndpointImplementation endpointImpl = m.getAnnotation(EndpointImplementation.class);
-                for (Endpoints e : endpointImpl.value()) {
-                    endpoints.stream().filter(endpoint -> endpoint.getRequestDescriptor().equals(e.getEndpoint().getRequestDescriptor())).forEach(endpoint -> {
-                        endpoint.setMethod(m);
-                        endpoint.setImplemented(true);
-                    });
+                for (final Endpoints e : endpointImpl.value()) {
+
+                    for (Endpoint endpoint : endpoints) {
+                        if (endpoint.getRequestDescriptor().equals(e.getEndpoint().getRequestDescriptor())) {
+                            endpoint.setMethod(m);
+                            endpoint.setImplemented(true);
+                            break;
+                        }
+                    }
                 }
             }
 

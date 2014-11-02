@@ -238,9 +238,11 @@ public class AccountManagerTest extends AuthenticatedRedditTest {
             List<Contribution> saved = paginator.next();
 
             // Fail if we find the submission in the list
-            saved.stream().filter(s -> s.getId().equals(submission.getId())).forEach(s ->
-                    fail("Found the submission after it was unsaved"));
-
+            for (Contribution s : saved) {
+                if (s.getId().equals(submission.getId())) {
+                    fail("Found the submission after it was unsaved");
+                }
+            }
         } catch (NetworkException | ApiException e) {
             handle(e);
         }
