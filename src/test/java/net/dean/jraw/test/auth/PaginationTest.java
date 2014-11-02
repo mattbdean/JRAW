@@ -17,6 +17,7 @@ import net.dean.jraw.paginators.MultiHubPaginator;
 import net.dean.jraw.paginators.MultiRedditPaginator;
 import net.dean.jraw.paginators.Paginator;
 import net.dean.jraw.paginators.SearchPaginator;
+import net.dean.jraw.paginators.Sorting;
 import net.dean.jraw.paginators.SpecificPaginator;
 import net.dean.jraw.paginators.SubredditPaginator;
 import net.dean.jraw.paginators.TimePeriod;
@@ -55,6 +56,7 @@ public class PaginationTest extends AuthenticatedRedditTest {
         final long millisecondsInAnHour = 60 * 60 * 1000;
 
         SubredditPaginator frontPage = new SubredditPaginator(reddit);
+        frontPage.setSorting(Sorting.TOP);
         frontPage.setTimePeriod(TimePeriod.HOUR);
         Listing<Submission> submissions = frontPage.next();
 
