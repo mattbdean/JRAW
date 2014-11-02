@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * This class provides a way to send RESTful HTTP requests
  */
-public abstract class RestClient<T extends RestResponse> implements NetworkAccessible<T, RestClient<T>> {
+public abstract class RestClient<T extends RestResponse> implements HttpClient<T>, NetworkAccessible<T, RestClient<T>> {
     private final String defaultHost;
     private final RateLimiter rateLimiter;
     /** The OkHttpClient used to execute RESTful HTTP requests */
@@ -145,9 +145,8 @@ public abstract class RestClient<T extends RestResponse> implements NetworkAcces
 
             if (requestLogging)
                 JrawUtils.logger().info("{} {}", r.method(), r.url());
-            if (!response.isSuccessful()) {
+            if (!response.isSuccessful())
                 throw new NetworkException(response.code());
-            }
             if (requestLogging) {
                 if (request.getFormArgs() != null) {
                     for (Map.Entry<String, String> entry : request.getFormArgs().entrySet()) {
@@ -164,9 +163,8 @@ public abstract class RestClient<T extends RestResponse> implements NetworkAcces
                         genericResponse.getType().type(), genericResponse.getType().subtype()));
             }
 
-            if (saveResponseHistory) {
+            if (saveResponseHistory)
                 history.put(genericResponse, LocalDateTime.now());
-            }
             return genericResponse;
         } catch (IOException e) {
             throw new NetworkException("Could not execute the request: " + r, e);
@@ -174,7 +172,7 @@ public abstract class RestClient<T extends RestResponse> implements NetworkAcces
     }
 
     @Override
-    public RestClient<T> getCreator() {
+    public RestClient<T> getHttpClient() {
         return this;
     }
 

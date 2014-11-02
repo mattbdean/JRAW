@@ -35,7 +35,7 @@ public abstract class Paginator<T extends Thing> implements Iterator<Listing<T>>
     public static final TimePeriod DEFAULT_TIME_PERIOD = TimePeriod.DAY;
 
     /** The client that created this */
-    protected final RedditClient creator;
+    protected final RedditClient reddit;
     protected final Class<T> thingType;
 
     protected Sorting sorting;
@@ -52,11 +52,11 @@ public abstract class Paginator<T extends Thing> implements Iterator<Listing<T>>
     /**
      * Instantiates a new Paginator
      *
-     * @param creator The RedditClient that will be used to send HTTP requests
+     * @param reddit The RedditClient that will be used to send HTTP requests
      * @param thingType The type of Thing that this Paginator will return
      */
-    public Paginator(RedditClient creator, Class<T> thingType) {
-        this.creator = creator;
+    public Paginator(RedditClient reddit, Class<T> thingType) {
+        this.reddit = reddit;
         this.thingType = thingType;
         this.sorting = DEFAULT_SORTING;
         this.timePeriod = DEFAULT_TIME_PERIOD;
@@ -99,11 +99,11 @@ public abstract class Paginator<T extends Thing> implements Iterator<Listing<T>>
             args.putAll(extraArgs);
         }
 
-        RestRequest request = request()
+        RestRequest request = getHttpClient().request()
                 .path(path)
                 .query(args)
                 .build();
-        Listing<T> listing = parseListing(execute(request));
+        Listing<T> listing = parseListing(getHttpClient().execute(request));
         this.current = listing;
         pageNumber++;
 
@@ -284,8 +284,8 @@ public abstract class Paginator<T extends Thing> implements Iterator<Listing<T>>
     }
 
     @Override
-    public RedditClient getCreator() {
-        return creator;
+    public RedditClient getHttpClient() {
+        return reddit;
     }
 
     @Override

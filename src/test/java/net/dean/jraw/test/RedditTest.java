@@ -5,8 +5,8 @@ import net.dean.jraw.JrawUtils;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.Version;
 import net.dean.jraw.http.NetworkException;
-import net.dean.jraw.models.JsonProperty;
 import net.dean.jraw.models.JsonModel;
+import net.dean.jraw.models.JsonProperty;
 import net.dean.jraw.models.RenderStringPair;
 import org.testng.Assert;
 import org.testng.SkipException;
@@ -16,14 +16,12 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import java.util.Random;
 
 /**
  * This class is the base class of all JRAW test classes. It provides dynamic User-Agents based on the name of the class
  * and several utility methods.
  */
 public abstract class RedditTest {
-    protected static final Random random = new Random();
     protected static final RedditClient reddit = new RedditClient("");
 
     protected RedditTest() {

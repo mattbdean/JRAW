@@ -1,6 +1,7 @@
 package net.dean.jraw.managers;
 
 import net.dean.jraw.RedditClient;
+import net.dean.jraw.http.HttpClient;
 import net.dean.jraw.http.NetworkAccessible;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.RedditResponse;
@@ -10,16 +11,12 @@ import net.dean.jraw.http.RestRequest;
  * This class serves as the base class for all "manager" classes, which have control over a certain section of the API,
  * such as multireddits, wikis, or messages
  */
-public abstract class AbstractManager implements NetworkAccessible<RedditResponse, RedditClient> {
+public abstract class AbstractManager implements HttpClient<RedditResponse>,
+        NetworkAccessible<RedditResponse, RedditClient> {
     protected final RedditClient reddit;
 
     protected AbstractManager(RedditClient reddit) {
         this.reddit = reddit;
-    }
-
-    @Override
-    public RedditClient getCreator() {
-        return reddit;
     }
 
     @Override
@@ -32,9 +29,14 @@ public abstract class AbstractManager implements NetworkAccessible<RedditRespons
     }
 
     @Override
-    public RestRequest.Builder request() {
-        RestRequest.Builder b = getCreator().request();
+    public final RestRequest.Builder request() {
+        RestRequest.Builder b = getHttpClient().request();
         b.needsAuth(true); // Assuming needs authentication by default
         return b;
+    }
+
+    @Override
+    public final RedditClient getHttpClient() {
+        return reddit;
     }
 }
