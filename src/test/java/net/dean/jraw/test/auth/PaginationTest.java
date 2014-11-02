@@ -7,12 +7,12 @@ import net.dean.jraw.managers.MultiRedditManager;
 import net.dean.jraw.models.Listing;
 import net.dean.jraw.models.MultiReddit;
 import net.dean.jraw.models.Submission;
-import net.dean.jraw.models.Subreddit;
 import net.dean.jraw.models.Thing;
 import net.dean.jraw.paginators.AllSubredditsPaginator;
 import net.dean.jraw.paginators.CompoundSubredditPaginator;
 import net.dean.jraw.paginators.InboxPaginator;
 import net.dean.jraw.paginators.LiveThreadPaginator;
+import net.dean.jraw.paginators.ModeratorPaginator;
 import net.dean.jraw.paginators.MultiHubPaginator;
 import net.dean.jraw.paginators.MultiRedditPaginator;
 import net.dean.jraw.paginators.Paginator;
@@ -165,11 +165,37 @@ public class PaginationTest extends AuthenticatedRedditTest {
 
     @Test
     public void testUserRecordPaginator() {
-        Subreddit modOf = new UserSubredditsPaginator(reddit, UserSubredditsPaginator.Where.MODERATOR).next().get(0);
+        String modOf = getModeratedSubreddit().getDisplayName();
 
         for (UserRecordPaginator.Where where : UserRecordPaginator.Where.values()) {
-            UserRecordPaginator paginator = new UserRecordPaginator(reddit, modOf.getDisplayName(), where);
+            UserRecordPaginator paginator = new UserRecordPaginator(reddit, modOf, where);
             commonTest(paginator);
+        }
+    }
+
+    @Test
+    public void testModeratorPaginator() {
+        String modOf = getModeratedSubreddit().getDisplayName();
+
+        for (ModeratorPaginator.Where where : ModeratorPaginator.Where.values()) {
+            ModeratorPaginator paginator = new ModeratorPaginator(reddit, modOf, where);
+            // Test no filters
+            commonTest(paginator);
+
+            // Test only comments
+            paginator.reset();
+            paginator.setIncludeComments(true);
+            commonTest(paginator);
+
+            // Test only submissions
+            paginator.reset();
+            paginator.setIncludeSubmissions(true);
+            commonTest(paginator);
+
+            // Test both comments and submissions
+            paginator.reset();
+            paginator.setIncludeComments(true);
+            paginator.setIncludeSubmissions(true);
         }
     }
 

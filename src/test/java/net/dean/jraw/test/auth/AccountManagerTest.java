@@ -365,13 +365,9 @@ public class AccountManagerTest extends AuthenticatedRedditTest {
 
     @Test
     public void testSticky() {
-        Listing<Subreddit> moderatorOf = new UserSubredditsPaginator(reddit, UserSubredditsPaginator.Where.MODERATOR).next();
-        if (moderatorOf.size() == 0) {
-            throw new IllegalStateException("Must be a moderator of at least one subreddit");
-        }
-
         SubredditPaginator paginator = new SubredditPaginator(reddit);
-        paginator.setSubreddit(moderatorOf.get(0).getDisplayName());
+        String modOf = getModeratedSubreddit().getDisplayName();
+        paginator.setSubreddit(modOf);
 
         Submission submission = null;
         Listing<Submission> submissions = paginator.next();
@@ -388,7 +384,7 @@ public class AccountManagerTest extends AuthenticatedRedditTest {
             }
         }
         if (submission == null)
-            throw new IllegalStateException("No self posts in " + moderatorOf.get(0).getDisplayName());
+            throw new IllegalStateException("No self posts in " + modOf);
 
         boolean expected = !(submission.isStickied());
         try {

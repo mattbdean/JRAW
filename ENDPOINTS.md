@@ -1,9 +1,9 @@
-<!--- Generated 2014-11-01 at 20:48:07 EDT. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
+<!--- Generated 2014-11-02 at 09:42:22 EST. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
 #Endpoints
 
 This file contains a list of all the endpoints (regardless of if they have been implemented) that can be found at the [official Reddit API docs](https://www.reddit.com/dev/api). To update this file, run `./gradlew endpoints:update`.
 
-So far **83** endpoints (out of 186 total) have been implemented.
+So far **88** endpoints (out of 186 total) have been implemented.
 
 ##account
 Method|Endpoint|Implemented?
@@ -118,12 +118,7 @@ Method|Endpoint|Implemented?
 ##moderation
 Method|Endpoint|Implemented?
 :----:|--------|------------
-`GET`|[`/about/edited`](https://www.reddit.com/dev/api#GET_about_edited)|No
 `GET`|[`/about/log`](https://www.reddit.com/dev/api#GET_about_log)|No
-`GET`|[`/about/modqueue`](https://www.reddit.com/dev/api#GET_about_modqueue)|No
-`GET`|[`/about/reports`](https://www.reddit.com/dev/api#GET_about_reports)|No
-`GET`|[`/about/spam`](https://www.reddit.com/dev/api#GET_about_spam)|No
-`GET`|[`/about/unmoderated`](https://www.reddit.com/dev/api#GET_about_unmoderated)|No
 `GET`|[`/about/{location}`](https://www.reddit.com/dev/api#GET_about_%7Blocation%7D)|No
 `POST`|[`/api/accept_moderator_invite`](https://www.reddit.com/dev/api#POST_api_accept_moderator_invite)|No
 `POST`|[`/api/approve`](https://www.reddit.com/dev/api#POST_api_approve)|No
@@ -133,6 +128,11 @@ Method|Endpoint|Implemented?
 `POST`|[`/api/leavemoderator`](https://www.reddit.com/dev/api#POST_api_leavemoderator)|No
 `POST`|[`/api/remove`](https://www.reddit.com/dev/api#POST_api_remove)|No
 `POST`|[`/api/unignore_reports`](https://www.reddit.com/dev/api#POST_api_unignore_reports)|No
+`GET`|[`/about/edited`](https://www.reddit.com/dev/api#GET_about_edited)|[`ModeratorPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/paginators/ModeratorPaginator#getListing-boolean-)
+`GET`|[`/about/modqueue`](https://www.reddit.com/dev/api#GET_about_modqueue)|[`ModeratorPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/paginators/ModeratorPaginator#getListing-boolean-)
+`GET`|[`/about/reports`](https://www.reddit.com/dev/api#GET_about_reports)|[`ModeratorPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/paginators/ModeratorPaginator#getListing-boolean-)
+`GET`|[`/about/spam`](https://www.reddit.com/dev/api#GET_about_spam)|[`ModeratorPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/paginators/ModeratorPaginator#getListing-boolean-)
+`GET`|[`/about/unmoderated`](https://www.reddit.com/dev/api#GET_about_unmoderated)|[`ModeratorPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/paginators/ModeratorPaginator#getListing-boolean-)
 `GET`|[`/stylesheet`](https://www.reddit.com/dev/api#GET_stylesheet)|[`RedditClient.getStylesheet(String)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/RedditClient#getStylesheet-java.lang.String-)
 
 ##multis
@@ -151,7 +151,7 @@ Method|Endpoint|Implemented?
 `POST`|[`/api/multi/{multipath}`](https://www.reddit.com/dev/api#POST_api_multi_%7Bmultipath%7D)|[`MultiRedditManager.create(String, List, boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/managers/MultiRedditManager#create-java.lang.String-java.util.List-boolean-)
 `PUT`|[`/api/multi/{multipath}`](https://www.reddit.com/dev/api#PUT_api_multi_%7Bmultipath%7D)|[`MultiRedditManager.update(String, List, boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/managers/MultiRedditManager#update-java.lang.String-java.util.List-boolean-)
 `POST`|[`/api/multi/{multipath}/copy`](https://www.reddit.com/dev/api#POST_api_multi_%7Bmultipath%7D_copy)|[`MultiRedditManager.copy(String, String, String)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/managers/MultiRedditManager#copy-java.lang.String-java.lang.String-java.lang.String-)
-`GET`|[`/api/multi/{multipath}/description`](https://www.reddit.com/dev/api#GET_api_multi_%7Bmultipath%7D_description)|[`MultiRedditManager.getDescription(String, String)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/managers/MultiRedditManager#getDescription-java.lang.String-java.lang.String-)
+`GET`|[`/api/multi/{multipath}/description`](https://www.reddit.com/dev/api#GET_api_multi_%7Bmultipath%7D_description)|[`MultiRedditManager.getDescription(String)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/managers/MultiRedditManager#getDescription-java.lang.String-)
 `PUT`|[`/api/multi/{multipath}/description`](https://www.reddit.com/dev/api#PUT_api_multi_%7Bmultipath%7D_description)|[`MultiRedditManager.updateDescription(String, String)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/managers/MultiRedditManager#updateDescription-java.lang.String-java.lang.String-)
 `DELETE`|[`/api/multi/{multipath}/r/{srname}`](https://www.reddit.com/dev/api#DELETE_api_multi_%7Bmultipath%7D_r_%7Bsrname%7D)|[`MultiRedditManager.removeSubreddit(String, String)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/managers/MultiRedditManager#removeSubreddit-java.lang.String-java.lang.String-)
 `GET`|[`/api/multi/{multipath}/r/{srname}`](https://www.reddit.com/dev/api#GET_api_multi_%7Bmultipath%7D_r_%7Bsrname%7D)|[`MultiRedditManager.get(String, String)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/managers/MultiRedditManager#get-java.lang.String-java.lang.String-)
@@ -167,7 +167,7 @@ Method|Endpoint|Implemented?
 `POST`|[`/api/compose`](https://www.reddit.com/dev/api#POST_api_compose)|[`InboxManager.compose(String, String, String, String)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/managers/InboxManager#compose-java.lang.String-java.lang.String-java.lang.String-java.lang.String-)
 `POST`|[`/api/read_message`](https://www.reddit.com/dev/api#POST_api_read_message)|[`InboxManager.setRead(Message, boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/managers/InboxManager#setRead-net.dean.jraw.models.Message-boolean-)
 `POST`|[`/api/unread_message`](https://www.reddit.com/dev/api#POST_api_unread_message)|[`InboxManager.setRead(Message, boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/managers/InboxManager#setRead-net.dean.jraw.models.Message-boolean-)
-`POST`|[`/message/inbox`](https://www.reddit.com/dev/api#POST_message_inbox)|[`InboxPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/paginators/InboxPaginator#getListing-boolean-)
+`GET`|[`/message/inbox`](https://www.reddit.com/dev/api#GET_message_inbox)|[`InboxPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/paginators/InboxPaginator#getListing-boolean-)
 `GET`|[`/message/sent`](https://www.reddit.com/dev/api#GET_message_sent)|[`InboxPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/paginators/InboxPaginator#getListing-boolean-)
 `GET`|[`/message/unread`](https://www.reddit.com/dev/api#GET_message_unread)|[`InboxPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/paginators/InboxPaginator#getListing-boolean-)
 `GET`|[`/message/{where}`](https://www.reddit.com/dev/api#GET_message_%7Bwhere%7D)|[`InboxPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.4.0/net/dean/jraw/paginators/InboxPaginator#getListing-boolean-)

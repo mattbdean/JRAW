@@ -1,6 +1,7 @@
 package net.dean.jraw.paginators;
 
 import net.dean.jraw.Endpoints;
+import net.dean.jraw.JrawUtils;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.EndpointImplementation;
 import net.dean.jraw.http.NetworkException;
@@ -47,13 +48,7 @@ public class SubredditPaginator extends Paginator<Submission> {
     @Override
     protected String getBaseUri() {
         String path = "/" + sorting.name().toLowerCase() + ".json";
-        // "/new.json"
-        if (subreddit != null) {
-            path = "/r/" + subreddit + path;
-            // "/r/pics/new.json"
-        }
-
-        return path;
+        return JrawUtils.getSubredditPath(subreddit, path);
     }
 
     /**

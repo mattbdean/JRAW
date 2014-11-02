@@ -4,6 +4,7 @@ import com.squareup.okhttp.MediaType;
 import net.dean.jraw.models.Comment;
 import net.dean.jraw.models.Contribution;
 import net.dean.jraw.models.Message;
+import net.dean.jraw.models.PublicContribution;
 import net.dean.jraw.models.RedditObject;
 import net.dean.jraw.models.Submission;
 import net.dean.jraw.models.ThingType;
@@ -150,6 +151,16 @@ public final class JrawUtils {
         } else if (thingClass.equals(MultiHubPaginator.MultiRedditId.class)) {
             return (T) new MultiHubPaginator.MultiRedditId(rootNode.get("owner").asText(),
                     rootNode.get("name").asText());
+        } else if (thingClass.equals(PublicContribution.class)) {
+            switch (ThingType.getByPrefix(rootNode.get("kind").asText())) {
+                case LINK:
+                    return (T) new Submission(rootNode.get("data"));
+                case COMMENT:
+                    return (T) new Comment(rootNode.get("data"));
+                default:
+                    throw new IllegalArgumentException("Class " + thingClass.getName() +
+                            " is not applicable for Contribution");
+            }
         }
         try {
             // Instantiate a generic Thing

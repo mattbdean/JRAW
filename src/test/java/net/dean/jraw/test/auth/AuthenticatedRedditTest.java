@@ -3,7 +3,10 @@ package net.dean.jraw.test.auth;
 import net.dean.jraw.ApiException;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.managers.AccountManager;
+import net.dean.jraw.models.Listing;
 import net.dean.jraw.models.LoggedInAccount;
+import net.dean.jraw.models.Subreddit;
+import net.dean.jraw.paginators.UserSubredditsPaginator;
 import net.dean.jraw.test.RedditTest;
 
 import java.io.FileNotFoundException;
@@ -45,7 +48,7 @@ public abstract class AuthenticatedRedditTest extends RedditTest {
      * is the password.
      * @return A string array whose first element is a username and second is a password
      */
-    public String[] getCredentials() {
+    protected final String[] getCredentials() {
         if (credentials != null) {
             return credentials;
         }
@@ -72,5 +75,18 @@ public abstract class AuthenticatedRedditTest extends RedditTest {
             handle(e);
             return null;
         }
+    }
+
+    /**
+     * Gets a subreddit that the testing user moderates
+     * @return A subreddit
+     */
+    protected final Subreddit getModeratedSubreddit() {
+        Listing<Subreddit> moderatorOf = new UserSubredditsPaginator(reddit, UserSubredditsPaginator.Where.MODERATOR).next();
+        if (moderatorOf.size() == 0) {
+            throw new IllegalStateException("Must be a moderator of at least one subreddit");
+        }
+
+        return moderatorOf.get(0);
     }
 }

@@ -5,7 +5,6 @@ import net.dean.jraw.managers.WikiManager;
 import net.dean.jraw.models.Subreddit;
 import net.dean.jraw.models.WikiPage;
 import net.dean.jraw.models.WikiPageSettings;
-import net.dean.jraw.paginators.UserSubredditsPaginator;
 import org.testng.annotations.Test;
 
 import java.util.List;
@@ -33,7 +32,7 @@ public class WikiManagerTest extends AuthenticatedRedditTest {
 
     @Test
     public void testWikiSettings() throws NetworkException {
-        Subreddit modOf = new UserSubredditsPaginator(reddit, UserSubredditsPaginator.Where.MODERATOR).next().get(0);
+        Subreddit modOf = getModeratedSubreddit();
         String page = manager.getWikiPages(modOf.getDisplayName()).get(0);
         WikiPageSettings settings = manager.getSettings(modOf.getDisplayName(), page);
         validateModel(settings);

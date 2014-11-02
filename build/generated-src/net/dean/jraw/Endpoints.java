@@ -184,18 +184,8 @@ public enum Endpoints {
     LIVE_THREAD_ABOUT("GET /live/{thread}/about.json"),
 
     ///////// moderation /////////
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_about_edited">{@code GET /about/edited}</a>" in the "moderation" category */
-    ABOUT_EDITED("GET /about/edited"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_about_log">{@code GET /about/log}</a>" in the "moderation" category */
     ABOUT_LOG("GET /about/log"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_about_modqueue">{@code GET /about/modqueue}</a>" in the "moderation" category */
-    ABOUT_MODQUEUE("GET /about/modqueue"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_about_reports">{@code GET /about/reports}</a>" in the "moderation" category */
-    ABOUT_REPORTS("GET /about/reports"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_about_spam">{@code GET /about/spam}</a>" in the "moderation" category */
-    ABOUT_SPAM("GET /about/spam"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_about_unmoderated">{@code GET /about/unmoderated}</a>" in the "moderation" category */
-    ABOUT_UNMODERATED("GET /about/unmoderated"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_about_%7Blocation%7D">{@code GET /about/{location}}</a>" in the "moderation" category */
     ABOUT_LOCATION("GET /about/{location}"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_accept_moderator_invite">{@code POST /api/accept_moderator_invite}</a>" in the "moderation" category */
@@ -214,6 +204,16 @@ public enum Endpoints {
     REMOVE("POST /api/remove"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_unignore_reports">{@code POST /api/unignore_reports}</a>" in the "moderation" category */
     UNIGNORE_REPORTS("POST /api/unignore_reports"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_about_edited">{@code GET /about/edited}</a>" in the "moderation" category */
+    ABOUT_EDITED("GET /about/edited"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_about_modqueue">{@code GET /about/modqueue}</a>" in the "moderation" category */
+    ABOUT_MODQUEUE("GET /about/modqueue"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_about_reports">{@code GET /about/reports}</a>" in the "moderation" category */
+    ABOUT_REPORTS("GET /about/reports"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_about_spam">{@code GET /about/spam}</a>" in the "moderation" category */
+    ABOUT_SPAM("GET /about/spam"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_about_unmoderated">{@code GET /about/unmoderated}</a>" in the "moderation" category */
+    ABOUT_UNMODERATED("GET /about/unmoderated"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_stylesheet">{@code GET /stylesheet}</a>" in the "moderation" category */
     STYLESHEET("GET /stylesheet"),
 
@@ -270,8 +270,8 @@ public enum Endpoints {
     READ_MESSAGE("POST /api/read_message"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_unread_message">{@code POST /api/unread_message}</a>" in the "private messages" category */
     UNREAD_MESSAGE("POST /api/unread_message"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_message_inbox">{@code POST /message/inbox}</a>" in the "private messages" category */
-    MESSAGE_INBOX("POST /message/inbox"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_message_inbox">{@code GET /message/inbox}</a>" in the "private messages" category */
+    MESSAGE_INBOX("GET /message/inbox"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_message_sent">{@code GET /message/sent}</a>" in the "private messages" category */
     MESSAGE_SENT("GET /message/sent"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_message_unread">{@code GET /message/unread}</a>" in the "private messages" category */
