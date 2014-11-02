@@ -4,28 +4,15 @@
 
 >JRAW is currently in an experimental stage, and therefore subject to application-breaking API changes that could occur at any time before v1.0.
 
-##Features
- - Mini-framework that wraps Square's OkHttp
- - (Optional) request management to prevent sending over 30 requests per minute
+##Notable Features
+ - Java 7 compatible
+ - Mini HTTP framework that wraps OkHttp
+ - Basic site actions (login, vote, submit, comment, read inbox, etc.)
  - Full multireddit support
  - Full captcha support
- - Basic wiki access
- - Ability to iterate through posts on the front page or specific subreddits, with support for limits, sortings (hot, new, top, etc.) and time periods when using 'top' (day, week, all, etc.)
- - Get random posts and subreddits
  - Get trending subreddits
- - Get the submit text of a subreddit
- - Searching subreddits
- - Comment on/vote on/submit posts
- - Hide/unhide and save/unsave posts
- - Delete posts and comments
- - Reply to a post or comment
- - Adding/removing developers from [Reddit apps](https://ssl.reddit.com/prefs/apps/)
- - Iterate through new/popular subreddits
- - Get your subscribed subreddits
- - Iterate through your posts/comments/saved/hidden posts and comments, etc.
- - Lots of smaller features not mentioned here
- - Get a subreddit's stylesheet
- - Search for subreddits (by topic and by name)
+ - Get random posts and subreddits
+ - Use HTTPS by default based on [preferences](https://www.reddit.com/prefs/security)
 
 ##Getting Started
 ####Adding the Dependency
