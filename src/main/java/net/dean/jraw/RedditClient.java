@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * This class provides a gateway to the services this library provides
@@ -263,16 +262,16 @@ public class RedditClient extends RestClient<RedditResponse> {
     @EndpointImplementation(Endpoints.COMMENTS_ARTICLE)
     public Submission getSubmission(SubmissionRequest request) throws NetworkException {
         Map<String, String> args = new HashMap<>();
-        if (request.depth.isPresent())
-            args.put("depth", Integer.toString(request.depth.get()));
-        if (request.context.isPresent())
-            args.put("context", Integer.toString(request.context.get()));
-        if (request.limit.isPresent())
-            args.put("limit", Integer.toString(request.limit.get()));
-        if (request.focus.isPresent() && !JrawUtils.isFullName(request.focus.get()))
-            args.put("comment", request.focus.get());
-        if (request.sort.isPresent())
-            args.put("sort", request.sort.get().name().toLowerCase());
+        if (request.depth != null)
+            args.put("depth", Integer.toString(request.depth));
+        if (request.context != null)
+            args.put("context", Integer.toString(request.context));
+        if (request.limit != null)
+            args.put("limit", Integer.toString(request.limit));
+        if (request.focus != null && !JrawUtils.isFullName(request.focus))
+            args.put("comment", request.focus);
+        if (request.sort != null)
+            args.put("sort", request.sort.name().toLowerCase());
 
         return execute(request()
                 .path(String.format("/comments/%s.json", request.id))
@@ -478,11 +477,11 @@ public class RedditClient extends RestClient<RedditResponse> {
      */
     public static class SubmissionRequest {
         private final String id;
-        private Optional<Integer> depth;
-        private Optional<Integer> limit;
-        private Optional<Integer> context;
-        private Optional<AccountManager.CommentSort> sort;
-        private Optional<String> focus;
+        private Integer depth;
+        private Integer limit;
+        private Integer context;
+        private AccountManager.CommentSort sort;
+        private String focus;
 
         /**
          * Instantiates a new SubmissionRequeslt
@@ -490,11 +489,6 @@ public class RedditClient extends RestClient<RedditResponse> {
          */
         public SubmissionRequest(String id) {
             this.id = id;
-            this.depth = Optional.empty();
-            this.limit = Optional.empty();
-            this.context = Optional.empty();
-            this.sort = Optional.empty();
-            this.focus = Optional.empty();
         }
 
         /**
@@ -504,9 +498,7 @@ public class RedditClient extends RestClient<RedditResponse> {
          * @return This SubmissionRequest
          */
         public SubmissionRequest depth(Integer depth) {
-            if (depth != null) {
-                this.depth = Optional.of(depth);
-            }
+            this.depth = depth;
             return this;
         }
 
@@ -516,9 +508,7 @@ public class RedditClient extends RestClient<RedditResponse> {
          * @return This SubmissionRequest
          */
         public SubmissionRequest limit(Integer limit) {
-            if (limit != null) {
-                this.limit = Optional.of(limit);
-            }
+            this.limit = limit;
             return this;
         }
 
@@ -533,9 +523,7 @@ public class RedditClient extends RestClient<RedditResponse> {
          * @return This SubmissionRequest
          */
         public SubmissionRequest context(Integer context) {
-            if (context != null) {
-                this.context = Optional.of(context);
-            }
+            this.context = context;
             return this;
         }
 
@@ -545,9 +533,7 @@ public class RedditClient extends RestClient<RedditResponse> {
          * @return This SubmissionRequest
          */
         public SubmissionRequest sort(AccountManager.CommentSort sort) {
-            if (sort != null) {
-                this.sort = Optional.of(sort);
-            }
+            this.sort = sort;
             return this;
         }
 
@@ -559,9 +545,7 @@ public class RedditClient extends RestClient<RedditResponse> {
          * @return This SubmissionRequest
          */
         public SubmissionRequest focus(String focus) {
-            if (focus != null) {
-                this.focus = Optional.of(focus);
-            }
+            this.focus = focus;
             return this;
         }
     }

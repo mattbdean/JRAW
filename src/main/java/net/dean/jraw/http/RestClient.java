@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
 import java.net.CookieStore;
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -28,7 +28,7 @@ public abstract class RestClient<T extends RestResponse> implements HttpClient<T
     protected final CookieStore cookieJar;
 
     /** A list of Requests sent in the past */
-    protected final LinkedHashMap<T, LocalDateTime> history;
+    protected final LinkedHashMap<T, Date> history;
     /** A list of headers to be sent for request */
     protected final Map<String, String> defaultHeaders;
     private boolean useHttpsDefault;
@@ -164,7 +164,7 @@ public abstract class RestClient<T extends RestResponse> implements HttpClient<T
             }
 
             if (saveResponseHistory)
-                history.put(genericResponse, LocalDateTime.now());
+                history.put(genericResponse, new Date());
             return genericResponse;
         } catch (IOException e) {
             throw new NetworkException("Could not execute the request: " + r, e);
@@ -235,7 +235,7 @@ public abstract class RestClient<T extends RestResponse> implements HttpClient<T
      * received. Will be empty unless changed using {@link #setSaveResponseHistory(boolean)}.
      * @return The response history
      */
-    public LinkedHashMap<T, LocalDateTime> getHistory() {
+    public LinkedHashMap<T, Date> getHistory() {
         return history;
     }
 
