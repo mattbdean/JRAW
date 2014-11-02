@@ -13,9 +13,9 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
@@ -36,7 +36,7 @@ public abstract class AbstractEndpointGenerator {
      *                      BufferedWriter in {@link #_generate(File, BufferedWriter)} will be null.
      */
     public AbstractEndpointGenerator(NavigableMap<String, List<Endpoint>> endpoints, boolean overwriteFile) {
-        this.endpoints = Collections.unmodifiableNavigableMap(endpoints);
+        this.endpoints = endpoints;
         this.overwriteFile = overwriteFile;
     }
 
@@ -52,7 +52,7 @@ public abstract class AbstractEndpointGenerator {
         BufferedWriter bw = null;
         try {
             if (overwriteFile) {
-                bw = Files.newBufferedWriter(Paths.get(dest.toURI()));
+                bw = Files.newBufferedWriter(Paths.get(dest.toURI()), StandardCharsets.UTF_8);
             }
             if (!dest.exists()) {
                 if (!dest.mkdirs()) {

@@ -59,8 +59,8 @@ public class PaginationTest extends AuthenticatedRedditTest {
         Listing<Submission> submissions = frontPage.next();
 
         for (Submission post : submissions) {
-            long epochPosted = post.getCreatedUtc().toInstant().getEpochSecond();
-            long epochNow = new Date().toInstant().getEpochSecond();
+            long epochPosted = post.getCreatedUtc().getTime();
+            long epochNow = new Date().getTime();
 
             // Make sure the submissions have been posted in the past hour
             assertTrue(epochPosted > epochNow - millisecondsInAnHour);

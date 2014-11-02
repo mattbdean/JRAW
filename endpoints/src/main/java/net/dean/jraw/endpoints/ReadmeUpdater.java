@@ -38,7 +38,7 @@ public class ReadmeUpdater extends AbstractEndpointGenerator {
         String readme = new String(encoded, StandardCharsets.UTF_8);
         readme = readme.replaceFirst(SEARCH_REGEX, url);
 
-        try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(dest.toURI()))) {
+        try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(dest.toURI()), StandardCharsets.UTF_8)) {
             writer.write(readme);
         }
     }
