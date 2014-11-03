@@ -249,12 +249,13 @@ public class MultiRedditManager extends AbstractManager {
      * @throws NetworkException If the request was not successful
      */
     @EndpointImplementation(Endpoints.MULTI_MULTIPATH_DELETE)
-    public void delete(String name) throws NetworkException {
+    public void delete(String name) throws NetworkException, ApiException {
         RestRequest request = request()
                 .endpoint(Endpoints.MULTI_MULTIPATH_DELETE, getMultiPath(name).substring(1))
                 .delete()
                 .build();
-        execute(request);
+        checkForError(execute(request).getJson());
+
         // This endpoint does not return any JSON data, so we only have the HTTP code to go off of.
     }
 

@@ -35,7 +35,7 @@ public class ModeratorPaginator extends GenericPaginator<PublicContribution, Mod
      * filtering.
      *
      * @return If this ModeratorPaginator is including submissions
-     * @see {@link Where#supportsFilter()}
+     * @see Where#supportsFilter()
      */
     public boolean isIncludingSubmissions() {
         return includeSubmissions;
@@ -46,7 +46,7 @@ public class ModeratorPaginator extends GenericPaginator<PublicContribution, Mod
      * Where given supports filtering.
      *
      * @param includeSubmissions If this ModeratorPaginator is including submissions
-     * @see {@link Where#supportsFilter()}
+     * @see Where#supportsFilter()
      */
     public void setIncludeSubmissions(boolean includeSubmissions) {
         this.includeSubmissions = includeSubmissions;
@@ -106,7 +106,7 @@ public class ModeratorPaginator extends GenericPaginator<PublicContribution, Mod
         return args;
     }
 
-    public enum Where {
+    public static enum Where {
         /** Submissions that have been reported. Supports filtering. */
         REPORTS(true),
         /** Submissions that have been marked as spam. Supports filtering. */

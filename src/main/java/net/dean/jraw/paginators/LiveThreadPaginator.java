@@ -8,6 +8,10 @@ import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.models.Listing;
 import net.dean.jraw.models.LiveUpdate;
 
+/**
+ * Provides a way to iterate through the updates in a live thread. See <a href="https://www.reddit.com/live">here</a>
+ * for more.
+ */
 public class LiveThreadPaginator extends Paginator<LiveUpdate> {
     private final String threadId;
 
