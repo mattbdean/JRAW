@@ -18,7 +18,7 @@ allprojects {
     apply plugin: 'java'
     sourceCompatibility = 1.7
     group = 'net.dean.jraw'
-    version = '0.4.0'
+    version = '0.5.0'
 
     repositories {
         mavenCentral()
