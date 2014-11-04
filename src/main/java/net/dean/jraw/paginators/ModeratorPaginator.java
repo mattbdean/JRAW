@@ -58,7 +58,7 @@ public class ModeratorPaginator extends GenericPaginator<PublicContribution, Mod
      * filtering.
      *
      * @return If this ModeratorPaginator is including comments
-     * @see {@link Where#supportsFilter()}
+     * @see Where#supportsFilter()
      */
     public boolean isIncludingComments() {
         return includeComments;
@@ -69,7 +69,7 @@ public class ModeratorPaginator extends GenericPaginator<PublicContribution, Mod
      * Where given supports filtering.
      *
      * @param includeComments If this ModeratorPaginator is including comments
-     * @see {@link Where#supportsFilter()}
+     * @see Where#supportsFilter()
      */
     public void setIncludeComments(boolean includeComments) {
         this.includeComments = includeComments;

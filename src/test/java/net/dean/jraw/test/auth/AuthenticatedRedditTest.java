@@ -8,8 +8,8 @@ import net.dean.jraw.models.LoggedInAccount;
 import net.dean.jraw.models.Subreddit;
 import net.dean.jraw.paginators.UserSubredditsPaginator;
 import net.dean.jraw.test.RedditTest;
+import net.dean.jraw.test.SetupRequiredException;
 
-import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Scanner;
 
@@ -61,7 +61,7 @@ public abstract class AuthenticatedRedditTest extends RedditTest {
                 String[] details = new String[2];
                 InputStream in = AuthenticatedRedditTest.class.getResourceAsStream("/credentials.txt");
                 if (in == null) {
-                    throw new FileNotFoundException("credentials.txt could not be found. See " +
+                    throw new SetupRequiredException("credentials.txt could not be found. See " +
                             "https://github.com/thatJavaNerd/JRAW#contributing for more information.");
                 }
                 Scanner s = new Scanner(in);

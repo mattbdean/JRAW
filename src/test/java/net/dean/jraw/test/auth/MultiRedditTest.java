@@ -1,169 +1,84 @@
 package net.dean.jraw.test.auth;
 
-import com.google.common.collect.ImmutableList;
 import net.dean.jraw.ApiException;
 import net.dean.jraw.JrawUtils;
-import net.dean.jraw.managers.MultiRedditManager;
 import net.dean.jraw.http.NetworkException;
+import net.dean.jraw.managers.MultiRedditManager;
 import net.dean.jraw.models.MultiReddit;
 import net.dean.jraw.models.RenderStringPair;
-import net.dean.jraw.paginators.MultiHubPaginator;
-import net.dean.jraw.paginators.Paginator;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.AfterTest;
-import org.testng.annotations.BeforeClass;
+import net.dean.jraw.test.SetupRequiredException;import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
 
 /**
  * This class tests the {@link MultiRedditManager} class.
  */
 public class MultiRedditTest extends AuthenticatedRedditTest {
     private static final String MULTI_NAME = "jraw_testing";
-    private static final List<String> MULTI_INITIAL_SUBS = ImmutableList.<String>builder()
-                                                                    .add("funny", "pics")
-                                                                    .build();
-    private static final String DESC1 = "description 1";
-    private static final String DESC2 = "description 2";
+    private static final List<String> INITIAL_MULTIS = Arrays.asList("programming", "java", "git");
 
     private MultiRedditManager manager;
-    private static String readOnlyMulti;
+    private String testingMulti;
 
     public MultiRedditTest() {
         manager = new MultiRedditManager(reddit);
     }
 
-    @BeforeClass
+    @BeforeMethod
     public void setUp() {
         try {
-            manager.update(MULTI_NAME, MULTI_INITIAL_SUBS, true);
+            manager.createOrUpdate(MULTI_NAME, INITIAL_MULTIS, false);
+        } catch (NetworkException | ApiException e) {
+            JrawUtils.logger().warn("Could not set up the test", e);
+        }
+    }
 
-            // Initialize the read-only multireddit name
-            List<MultiReddit> mine = manager.mine();
-            // Get the name of a multireddit that is NOT the one that will be created/deleted (MULTI_NAME)
-            String name = null;
-            for (MultiReddit multi : mine) {
-                if (!multi.getFullName().equals(MULTI_NAME)) {
-                    name = multi.getFullName();
-                    break;
-                }
-            }
-
-            if (name == null) {
-                throw new IllegalStateException("You must create a multireddit. See https://github.com/thatJavaNerd/JRAW#contributing");
-            }
-
-            readOnlyMulti = name;
-        } catch (ApiException e) {
-            if (!e.getReason().equals("MULTI_EXISTS")) {
-                // https://github.com/thatJavaNerd/JRAW/issues/7
-                handle(e);
-            }
-        } catch (NetworkException e) {
+    @Test
+    public void testMine() {
+        try {
+            validateModels(manager.mine());
+        } catch (NetworkException | ApiException e) {
             handle(e);
         }
     }
 
-    @AfterTest
-    public void reset() {
+    @Test
+    public void testGet() {
         try {
-            manager.update(MULTI_NAME, MULTI_INITIAL_SUBS, true);
+            validateModel(manager.get(getReadOnlyMulti().getFullName()));
         } catch (NetworkException | ApiException e) {
             e.printStackTrace();
         }
     }
 
-    @AfterClass
-    public void deleteMulti() {
-        try {
-            manager.delete(MULTI_NAME);
-        } catch (NetworkException e) {
-            if (e.getCode() != 404) {
-                JrawUtils.logger().warn("Could not delete the testing multireddit (" + MULTI_NAME + ")");
-            }
-        } catch (ApiException e) {
-            handle(e);
-        }
-    }
-
     @Test
-    public void testMyMultis() {
+    public void testGetDescription() {
         try {
-            List<MultiReddit> multis = manager.mine();
-            validateModels(multis);
+            validateRenderString(manager.getDescription(manager.mine().get(0).getFullName()));
         } catch (NetworkException | ApiException e) {
             handle(e);
         }
     }
 
     @Test
-    public void testCreate() {
+    public void testUpdateDescription() {
+        String desc1 = "desc1";
+        String desc2 = "desc2";
+
         try {
-            // Delete if exists
-            if (multiExists(MULTI_NAME)) {
-                manager.delete(MULTI_NAME);
-            }
+            RenderStringPair before = manager.getDescription(MULTI_NAME);
+            String expected = before.md().equals(desc1) ? desc2 : desc1;
 
-            manager.create(MULTI_NAME, MULTI_INITIAL_SUBS, true);
-        } catch (ApiException e) {
-            if (!e.getReason().equals("MULTI_EXISTS")) {
-                // https://github.com/thatJavaNerd/JRAW/issues/7
-                handle(e);
-            }
-        } catch (NetworkException e) {
-            handle(e);
-        }
-    }
+            manager.updateDescription(MULTI_NAME, expected);
 
-    @Test(dependsOnMethods = "testCreate")
-    public void testUpdate() {
-        try {
-            List<String> updatedSubreddits = new ArrayList<>(MULTI_INITIAL_SUBS);
-            updatedSubreddits.add("programming");
-            updatedSubreddits.add("java");
-
-            manager.update(MULTI_NAME, updatedSubreddits, true);
-        } catch (ApiException | NetworkException e) {
-            handle(e);
-        }
-    }
-
-    @Test
-    public void testAddSubreddit() {
-        try {
-            String newSubreddit = "programming";
-            MultiReddit beforeAddition = manager.get(MULTI_NAME);
-
-            List<String> expectedSubreddits = new ArrayList<>(beforeAddition.getSubreddits());
-
-            // Remove the subreddit from the multi if it is already included
-            if (beforeAddition.getSubreddits().contains(newSubreddit)) {
-                manager.removeSubreddit(MULTI_NAME, newSubreddit);
-            } else {
-                expectedSubreddits.add(newSubreddit);
-            }
-
-            // Add the subreddit to the multi
-            manager.addSubreddit(MULTI_NAME, newSubreddit);
-        } catch (ApiException | NetworkException e) {
-            handle(e);
-        }
-    }
-
-    @Test
-    public void testRemoveSubreddit() {
-        try {
-            MultiReddit beforeRemoval = manager.get(MULTI_NAME);
-
-            List<String> expectedSubreddits = new ArrayList<>(beforeRemoval.getSubreddits());
-            String oldSubreddit = expectedSubreddits.remove(0);
-
-            manager.removeSubreddit(MULTI_NAME, oldSubreddit);
-        } catch (ApiException | NetworkException e) {
+            assertEquals(manager.getDescription(MULTI_NAME).md(), expected);
+        } catch (NetworkException | ApiException e) {
             handle(e);
         }
     }
@@ -171,137 +86,105 @@ public class MultiRedditTest extends AuthenticatedRedditTest {
     @Test
     public void testDelete() {
         try {
-            // Actually test the method
             manager.delete(MULTI_NAME);
-        } catch (ApiException | NetworkException e) {
+        } catch (NetworkException e) {
             handle(e);
-        } finally {
-            try {
-                manager.update(MULTI_NAME, MULTI_INITIAL_SUBS, true);
-            } catch (NetworkException | ApiException e) {
-                JrawUtils.logger().warn("Could not re-create the deleted multireddit", e);
+        } catch (ApiException e) {
+            if (!e.getReason().equals("MULTI_NOT_FOUND")) {
+                handle(e);
             }
         }
     }
 
     @Test
-    public void testMulti() {
+    public void testCreateOrUpdate() {
         try {
-            MultiReddit multi = manager.get(readOnlyMulti);
-            validateModel(multi);
-
-            validateRenderString(manager.getDescription(reddit.getAuthenticatedUser(), readOnlyMulti));
+            manager.delete(MULTI_NAME);
+            assertFalse(multiExists(MULTI_NAME));
+            validateModel(manager.createOrUpdate(MULTI_NAME, INITIAL_MULTIS, true));
+            assertTrue(multiExists(MULTI_NAME));
         } catch (NetworkException | ApiException e) {
             handle(e);
         }
     }
 
     @Test
-    public void testUnownedMulti() { // aka public multis
-        MultiHubPaginator multihub = new MultiHubPaginator(reddit);
-        multihub.setLimit(Paginator.RECOMMENDED_MAX_LIMIT);
-        final int amount = 3; // Amount of multireddits to find and test
-        final int maxPages = 3; // Maximum amount of pages to look through
-        List<MultiReddit> multiReddits = new ArrayList<>(amount);
-
-        boolean fulfilled = false;
-        // While we have less than 3 multireddits and haven't gone past page 3
-        while (multihub.getPageIndex() <= maxPages && !fulfilled) {
-            for (MultiHubPaginator.MultiRedditId id : multihub.next()) {
-                try {
-                    multiReddits.add(manager.get(id.getOwner(), id.getName()));
-                    if (multiReddits.size() >= amount) {
-                        fulfilled = true;
-                        break;
-                    }
-                } catch (NetworkException e) {
-                    if (e.getCode() != 404) {
-                        JrawUtils.logger().info("Got 404, multi was deleted or renamed");
-                        handle(e);
-                    }
-
-                    // Got 404 Not Found, that multi was renamed or deleted, continue on
-                } catch (ApiException e) {
-                    handle(e);
-                }
+    public void testRename() {
+        String newName = MULTI_NAME + "_new";
+        try {
+            manager.rename(MULTI_NAME, newName);
+            assertTrue(multiExists(newName));
+        } catch (NetworkException | ApiException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                manager.delete(newName);
+            } catch (NetworkException | ApiException e) {
+                JrawUtils.logger().warn("Could not delete multi that was renamed", e);
             }
         }
-
-        // We should have been able to find 3 multireddit links searching through 75 entries...
-        assertTrue(multiReddits.size() == amount);
-
-        // Test each MultiReddit
-        validateModels(multiReddits);
     }
 
     @Test
     public void testCopy() {
-        String newName = MULTI_NAME + "_copy";
+        String newName = MULTI_NAME + "_new";
         try {
-            manager.copy(reddit.getAuthenticatedUser(), MULTI_NAME, newName);
+            manager.copy(MULTI_NAME, newName);
+            assertTrue(multiExists(newName));
         } catch (NetworkException | ApiException e) {
             handle(e);
         } finally {
             try {
                 manager.delete(newName);
             } catch (NetworkException | ApiException e) {
-                JrawUtils.logger().warn("Unable to delete " + newName, e);
+                JrawUtils.logger().warn("Could not delete multi that was renamed", e);
             }
         }
     }
 
     @Test
-    public void testRename() {
-        String newName = MULTI_NAME + "_after";
-
+    public void testAddSubreddit() {
         try {
-            manager.rename(MULTI_NAME, newName);
-        } catch (NetworkException | ApiException e) {
-            handle(e);
-        } finally {
-            try {
-                manager.rename(newName, MULTI_NAME);
-            } catch (NetworkException | ApiException e) {
-                JrawUtils.logger().warn("Could not return the multireddit to its original name");
-                e.printStackTrace();
-            }
-        }
-
-    }
-
-    @Test
-    public void testUpdateDescription() {
-        try {
-            RenderStringPair desc = manager.getDescription(MULTI_NAME);
-
-            String expectedMd = desc.md().equals(DESC1) ? DESC2 : DESC1;
-            manager.updateDescription(MULTI_NAME, expectedMd);
-        } catch (NetworkException | ApiException  e) {
-            handle(e);
-        }
-    }
-
-    @Test
-    public void testGetDescription() {
-        try {
-            RenderStringPair desc = manager.getDescription(readOnlyMulti);
-            validateRenderString(desc);
+            manager.addSubreddit(MULTI_NAME, "funny");
         } catch (NetworkException | ApiException e) {
             handle(e);
         }
     }
 
-    private MultiReddit getMulti(String name) throws NetworkException, ApiException {
-        for (MultiReddit mine : manager.mine()) {
-            if (mine.getFullName().equals(name)) {
-                return mine;
-            }
+    @Test
+    public void testRemoveSubreddit() {
+        try {
+            manager.removeSubreddit(MULTI_NAME, INITIAL_MULTIS.get(0));
+        } catch (NetworkException | ApiException e) {
+            handle(e);
         }
-
-        return null;
     }
 
-    private boolean multiExists(String name) throws NetworkException, ApiException {
-        return getMulti(name) != null;
+    private boolean multiExists(String name) {
+        try {
+            manager.get(name);
+            return true;
+        } catch (NetworkException | ApiException e) {
+            return false;
+        }
+    }
+
+    private MultiReddit getReadOnlyMulti() {
+        try {
+            if (testingMulti != null) {
+                return manager.get(testingMulti);
+            }
+
+            for (MultiReddit m : manager.mine()) {
+                if (!m.getFullName().equals(MULTI_NAME)) {
+                    this.testingMulti = m.getFullName();
+                    return m;
+                }
+            }
+        } catch (NetworkException | ApiException e) {
+            handle(e);
+        }
+
+        throw new SetupRequiredException("Create a multireddit NOT named " + MULTI_NAME);
     }
 }

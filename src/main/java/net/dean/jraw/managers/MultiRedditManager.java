@@ -58,17 +58,32 @@ public class MultiRedditManager extends AbstractManager {
     }
 
     /**
-     * Updates a multireddit, or creates one if it does not exist
+     * Updates a multireddit or creates one if it does not exist
      *
      * @param name The name of the multireddit
      * @param subreddits The subreddits that make up this multireddit
      * @param priv If this multireddit is private
      * @throws NetworkException If the request was not successful
      * @throws ApiException If the Reddit API returned an error
+     * @return The updated MultiReddit
      */
-    @EndpointImplementation(Endpoints.MULTI_MULTIPATH_PUT)
-    public void update(String name, List<String> subreddits, boolean priv) throws NetworkException, ApiException {
-        updateMultiReddit(false, name, subreddits, priv);
+    @EndpointImplementation({Endpoints.MULTI_MULTIPATH_PUT, Endpoints.MULTI_MULTIPATH_POST})
+    public MultiReddit createOrUpdate(String name, List<String> subreddits, boolean priv) throws NetworkException, ApiException {
+
+        MultiRedditJsonModel creationData = new MultiRedditJsonModel(subreddits, priv);
+
+        Map<String, String> args = new HashMap<>();
+        args.put("model", toJson(creationData));
+
+        RestRequest.Builder request = request()
+                .endpoint(Endpoints.MULTI_MULTIPATH_POST, getMultiPath(name).substring(1));
+
+        request.put(args);
+
+        RedditResponse response = execute(request.build());
+        JsonNode result = response.getJson();
+        checkForError(result);
+        return new MultiReddit(result.get("data"));
     }
 
     /**
@@ -115,6 +130,29 @@ public class MultiRedditManager extends AbstractManager {
         execute(request);
     }
 
+    /**
+     * Copies a multireddit belonging to the authenticated user
+     *
+     * @param sourceName The name of the source multireddit
+     * @param destName The name of the new multireddit
+     * @throws NetworkException If the request was not successful. Most likely error code will be 409 Conflict, in which
+     *                          case the authenticated user already has a multireddit of that name.
+     * @throws ApiException If the Reddit API returned an error
+     */
+    public void copy(String sourceName, String destName) throws NetworkException, ApiException {
+        copy(reddit.getAuthenticatedUser(), sourceName, destName);
+    }
+
+    /**
+     * Copies a multireddit (granted you have rights to view it) to your own multireddits.
+     *
+     * @param sourceOwner The owner of the source multireddit
+     * @param sourceMulti The name of the source multireddit
+     * @param destName The name of the new multireddit
+     * @throws NetworkException If the request was not successful. Most likely error code will be 409 Conflict, in which
+     *                          case the authenticated user already has a multireddit of that name.
+     * @throws ApiException If the Reddit API returned an error
+     */
     @EndpointImplementation(Endpoints.MULTI_MULTIPATH_COPY)
     public void copy(String sourceOwner, String sourceMulti, String destName) throws NetworkException, ApiException {
         String from = getMultiPath(sourceOwner, sourceMulti);
@@ -182,7 +220,7 @@ public class MultiRedditManager extends AbstractManager {
     @EndpointImplementation(Endpoints.MULTI_MULTIPATH_DESCRIPTION_PUT)
     public RenderStringPair updateDescription(String multiName, String newDescription) throws NetworkException {
         RestRequest request = request()
-                .endpoint(Endpoints.MULTI_MULTIPATH_DESCRIPTION_PUT, getMultiPath(multiName))
+                .endpoint(Endpoints.MULTI_MULTIPATH_DESCRIPTION_PUT, getMultiPath(multiName).substring(1))
                 .put(JrawUtils.args(
                         "model", String.format("{\"body_md\":\"%s\"}", newDescription),
                         "multipath", getMultiPath(multiName)
@@ -191,54 +229,6 @@ public class MultiRedditManager extends AbstractManager {
         JsonNode dataNode = response.getJson().get("data");
 
         return new RenderStringPair(dataNode.get("body_md").asText(), dataNode.get("body_html").asText());
-    }
-
-    /**
-     * Creates a new multireddit
-     *
-     * @param name The name of the new multireddit
-     * @param subreddits The subreddits that make up this multireddit
-     * @param priv If this multireddit is private
-     * @throws NetworkException If the request was not successful
-     *                          name of the multireddit is invalid (over 20 characters or starts with underscore)
-     * @throws ApiException If a multireddit of that name already exists
-     */
-    @EndpointImplementation(Endpoints.MULTI_MULTIPATH_POST)
-    public void create(String name, List<String> subreddits, boolean priv) throws NetworkException, ApiException {
-        updateMultiReddit(true, name, subreddits, priv);
-    }
-
-    /**
-     * Creates or updates a multireddit
-     * @param post True for a POST request, false for a PUT request. POST will only create, while PUT will update or create
-     *             if one does not exist
-     * @param name The name of the multireddit
-     * @param subreddits The subreddits that make up this multireddit
-     * @param priv If this multireddit is private
-     * @throws NetworkException If the request was not successful
-     * @throws ApiException If the Reddit API returned an error
-     */
-    private void updateMultiReddit(boolean post, String name, List<String> subreddits, boolean priv)
-        throws NetworkException, ApiException {
-
-        MultiRedditJsonModel creationData = new MultiRedditJsonModel(subreddits, priv);
-
-        Map<String, String> args = new HashMap<>();
-        args.put("model", toJson(creationData));
-        args.put("multipath", getMultiPath(name));
-
-        RestRequest.Builder request = request()
-                .endpoint(Endpoints.MULTI_MULTIPATH_POST, name);
-
-        if (post) {
-            request.post(args);
-        } else {
-            request.put(args);
-        }
-
-        RedditResponse response = execute(request.build());
-        JsonNode result = response.getJson();
-        checkForError(result);
     }
 
     /**
@@ -254,7 +244,7 @@ public class MultiRedditManager extends AbstractManager {
                 .endpoint(Endpoints.MULTI_MULTIPATH_DELETE, getMultiPath(name).substring(1))
                 .delete()
                 .build();
-        checkForError(execute(request).getJson());
+        execute(request).getJson();
 
         // This endpoint does not return any JSON data, so we only have the HTTP code to go off of.
     }
@@ -286,7 +276,7 @@ public class MultiRedditManager extends AbstractManager {
     public MultiReddit get(String owner, String multiName) throws NetworkException, ApiException {
         JsonNode node = execute(request()
                 .endpoint(Endpoints.MULTI_MULTIPATH_GET, getMultiPath(owner, multiName).substring(1))
-                .needsAuth(false)
+                .needsAuth(!owner.equals(reddit.getAuthenticatedUser()))
                 .build()).getJson();
 
         checkForError(node);
