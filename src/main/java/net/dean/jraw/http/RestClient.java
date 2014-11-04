@@ -17,12 +17,12 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
- * This class provides a way to send RESTful HTTP requests
+ * This class provides a high-level API to send REST-oriented HTTP requests with.
  */
 public abstract class RestClient<T extends RestResponse> implements HttpClient<T>, NetworkAccessible<T, RestClient<T>> {
     private final String defaultHost;
     private final RateLimiter rateLimiter;
-    /** The OkHttpClient used to execute RESTful HTTP requests */
+    /** The OkHttpClient used to execute HTTP requests */
     protected final OkHttpClient http;
     /** The CookieStore that will contain all the cookies saved by {@link #http} */
     protected final CookieStore cookieJar;
@@ -62,6 +62,10 @@ public abstract class RestClient<T extends RestResponse> implements HttpClient<T
         defaultHeaders.put("User-Agent", userAgent);
     }
 
+    /**
+     * Gets the host that will be used by default when creating new RestRequest.Builders.
+     * @return The default host
+     */
     public String getDefaultHost() {
         return defaultHost;
     }
@@ -107,7 +111,7 @@ public abstract class RestClient<T extends RestResponse> implements HttpClient<T
     }
 
     /**
-     * Gets the time in milliseconds the HTTP client will wait before timing out
+     * Gets the length in milliseconds the internal HTTP client will wait before timing out
      * @return Timeout length in milliseconds
      */
     public long getTimeoutLength() {
@@ -116,8 +120,9 @@ public abstract class RestClient<T extends RestResponse> implements HttpClient<T
 
     /**
      * Whether to automatically manage the execution of HTTP requests based on time (enabled by default). If there has
-     * been more than 30 requests in the last minute, this class will wait to execute the next request in order to
-     * minimize the chance of getting IP banned by Reddit, or simply having the API return a 403.
+     * been more than a certain amount of requests in the last minute (30 for normal API, 60 for OAuth), this class will
+     * wait to execute the next request in order to minimize the chance of Reddit IP banning this client or simply
+     * returning a 403 Forbidden.
      *
      * @param enabled Whether to enable request management
      */
@@ -125,6 +130,11 @@ public abstract class RestClient<T extends RestResponse> implements HttpClient<T
         this.enforceRatelimit = enabled;
     }
 
+    /**
+     * Checks if the rate limit is being enforced. If true, then thread that {@link #execute(RestRequest)} is called on
+     * will block until enough time has passed
+     * @return If the rate limit is being enforced.
+     */
     public boolean isEnforcingRatelimit() {
         return enforceRatelimit;
     }
@@ -177,7 +187,7 @@ public abstract class RestClient<T extends RestResponse> implements HttpClient<T
     }
 
     /**
-     * Gets the User-Agent header for this RestClient
+     * Gets the value of the User-Agent header for this RestClient
      * @return The value of the User-Agent header
      */
     public String getUserAgent() {
@@ -194,7 +204,7 @@ public abstract class RestClient<T extends RestResponse> implements HttpClient<T
 
     /**
      * Notifies the client to log every response received. You can access this data by using {@link #getHistory()}. This
-     * defaults to false unless it has been explicitly changed.
+     * defaults to false.
      * 
      * @return Checks if this client is saving response history
      */
@@ -212,9 +222,10 @@ public abstract class RestClient<T extends RestResponse> implements HttpClient<T
 
     /**
      * Checks if this RestClient is logging HTTP requests using SLF4J. The full URL, form data, and time spent sleeping
-     * are displayed also. Enabled by default.
+     * are displayed also (unless it has been marked as sensitive). Enabled by default.
      *
      * @return If requests are being logged
+     * @see RestRequest#getSensitiveArgs()
      */
     public boolean isLoggingRequests() {
         return requestLogging;
@@ -225,6 +236,7 @@ public abstract class RestClient<T extends RestResponse> implements HttpClient<T
      * Enabled by default.
      *
      * @param requestLogging Whether or not to log requests
+     * @see RestRequest#getSensitiveArgs()
      */
     public void setRequestLoggingEnabled(boolean requestLogging) {
         this.requestLogging = requestLogging;

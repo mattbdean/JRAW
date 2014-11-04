@@ -11,7 +11,7 @@ import net.dean.jraw.models.Message;
 import net.dean.jraw.paginators.InboxPaginator;
 
 /**
- * This class is responsible for managing the user's inbox
+ * This class is responsible for managing a user's inbox
  */
 public class InboxManager extends AbstractManager {
 

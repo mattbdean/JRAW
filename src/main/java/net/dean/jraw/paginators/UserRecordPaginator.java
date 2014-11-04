@@ -11,6 +11,9 @@ import net.dean.jraw.models.Listing;
 import net.dean.jraw.models.UserRecord;
 import org.codehaus.jackson.JsonNode;
 
+/**
+ * This class provides a way to iterate over the users that have been banned, marked as contributors, etc.
+ */
 public class UserRecordPaginator extends GenericPaginator<UserRecord, UserRecordPaginator.Where> {
     private String subreddit;
 

@@ -2,6 +2,10 @@ package net.dean.jraw.models;
 
 import com.google.common.collect.ImmutableList;
 
+/**
+ * This class is a "hacky" way to represent a Listing
+ * @param <T> The type of elements that will be in this listing
+ */
 public final class FauxListing<T extends RedditObject> extends Listing<T> {
     private final ImmutableList<T> children;
     private final String before;

@@ -3,7 +3,7 @@ package net.dean.jraw.http;
 import com.squareup.okhttp.MediaType;
 
 /**
- * A list of common MediaType objects used in JRAW
+ * A list of common MediaType objects used throughout the project
  */
 public enum MediaTypes {
     /** Represents a JavaScript Object Notation file with a MIME type of "application/json" */

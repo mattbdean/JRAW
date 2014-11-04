@@ -10,7 +10,6 @@ import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.RedditResponse;
 import net.dean.jraw.http.RestRequest;
 import net.dean.jraw.models.Captcha;
-import net.dean.jraw.models.Comment;
 import net.dean.jraw.models.Contribution;
 import net.dean.jraw.models.Submission;
 import net.dean.jraw.models.Subreddit;
@@ -49,7 +48,7 @@ public class AccountManager extends AbstractManager {
      * @param captchaAttempt The user's guess at the captcha
      * @return A representation of the newly submitted Submission
      * @throws NetworkException If the request was not successful
-     * @throws net.dean.jraw.ApiException If the API returned an error
+     * @throws ApiException If the API returned an error
      */
     @EndpointImplementation(Endpoints.SUBMIT)
     public Submission submitContent(SubmissionBuilder b, Captcha captcha, String captchaAttempt) throws NetworkException, ApiException {
@@ -138,10 +137,6 @@ public class AccountManager extends AbstractManager {
      */
     @EndpointImplementation(Endpoints.SENDREPLIES)
     public RedditResponse setSendRepliesToInbox(Submission s, boolean send) throws NetworkException, ApiException {
-        if (!s.getAuthor().equals(reddit.getAuthenticatedUser())) {
-            throw new IllegalArgumentException(String.format("Logged in user (%s) did not post this submission (by %s)",
-                    reddit.getAuthenticatedUser(), s.getAuthor()));
-        }
         return genericPost(request()
                 .endpoint(Endpoints.SENDREPLIES)
                 .post(JrawUtils.args(
@@ -161,8 +156,6 @@ public class AccountManager extends AbstractManager {
      */
     @EndpointImplementation({Endpoints.MARKNSFW, Endpoints.UNMARKNSFW})
     public RedditResponse setNsfw(Submission s, boolean nsfw) throws NetworkException, ApiException {
-        checkIfOwns(s);
-
         // "/api/marknsfw" if nsfw == true, "/api/unmarknsfw" if nsfw == false
         return genericPost(request()
                 .endpoint(nsfw ? Endpoints.MARKNSFW : Endpoints.UNMARKNSFW)
@@ -180,18 +173,6 @@ public class AccountManager extends AbstractManager {
      * @throws ApiException If the API returned an error
      */
     public <T extends Thing & Votable> RedditResponse delete(T thing) throws NetworkException, ApiException {
-        if (thing instanceof Submission) {
-            checkIfOwns((Submission) thing);
-        } else if (thing instanceof Comment) {
-            Comment c = (Comment) thing;
-            if (!c.getAuthor().equals(reddit.getAuthenticatedUser())) {
-                throw new IllegalArgumentException(String.format("Logged in user (%s) did not post this comment (by %s)",
-                        reddit.getAuthenticatedUser(), c.getAuthor()));
-            }
-        } else {
-            throw new IllegalArgumentException("Unknown Votable: " + thing.getClass());
-        }
-
         return delete(thing.getFullName());
     }
 
@@ -329,13 +310,6 @@ public class AccountManager extends AbstractManager {
                 )).build());
 
         return response.getJson().get("json").get("data").get("things").get(0).get("data").get("id").asText();
-    }
-
-    private void checkIfOwns(Submission s) {
-        if (!s.getAuthor().equals(reddit.getAuthenticatedUser())) {
-            throw new IllegalArgumentException(String.format("Logged in user (%s) did not post this submission (by %s)",
-                    reddit.getAuthenticatedUser(), s.getAuthor()));
-        }
     }
 
     /**

@@ -13,6 +13,9 @@ import org.codehaus.jackson.JsonNode;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class is responsible for managing a wiki
+ */
 public class WikiManager extends AbstractManager {
     public WikiManager(RedditClient client) {
         super(client);
@@ -24,8 +27,8 @@ public class WikiManager extends AbstractManager {
      * @return A list of Reddit's wiki pages
      * @throws NetworkException If the request was not successful
      */
-    public List<String> getWikiPages() throws NetworkException {
-        return getWikiPages(null);
+    public List<String> getPages() throws NetworkException {
+        return getPages(null);
     }
 
     /**
@@ -36,7 +39,7 @@ public class WikiManager extends AbstractManager {
      * @throws NetworkException If the request was not successful
      */
     @EndpointImplementation(Endpoints.WIKI_PAGES)
-    public List<String> getWikiPages(String subreddit) throws NetworkException {
+    public List<String> getPages(String subreddit) throws NetworkException {
         String path = JrawUtils.getSubredditPath(subreddit, "/wiki/pages.json");
 
         List<String> pages = new ArrayList<>();
@@ -60,10 +63,10 @@ public class WikiManager extends AbstractManager {
      * @return A WikiPage for the given page
      * @throws NetworkException If the request was not successful
      *
-     * @see #getWikiPages()
+     * @see #getPages()
      */
-    public WikiPage getWikiPage(String page) throws NetworkException {
-        return getWikiPage(null, page);
+    public WikiPage get(String page) throws NetworkException {
+        return get(null, page);
     }
 
     /**
@@ -75,7 +78,7 @@ public class WikiManager extends AbstractManager {
      * @throws NetworkException If the request was not successful
      */
     @EndpointImplementation(Endpoints.WIKI_PAGE)
-    public WikiPage getWikiPage(String subreddit, String page) throws NetworkException {
+    public WikiPage get(String subreddit, String page) throws NetworkException {
         String path = JrawUtils.getSubredditPath(subreddit, "/wiki/" + page + ".json");
 
         RestRequest r = request()

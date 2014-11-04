@@ -2,6 +2,9 @@ package net.dean.jraw.models;
 
 import org.codehaus.jackson.JsonNode;
 
+/**
+ * Represents a the authenticated user's account
+ */
 public class LoggedInAccount extends Account {
     public LoggedInAccount(JsonNode data) {
         super(data);

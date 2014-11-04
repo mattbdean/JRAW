@@ -51,11 +51,11 @@ public class RedditResponse extends RestResponse {
     /**
      * This method is a convenience method for turning the JsonNode associated with this data into a RedditObject. Make
      * sure that the appropriate class is used. No exception will be thrown if the "wrong" class is used, but you will
-     * receive many NullPointerExceptions down the road.
+     * receive many NullPointerExceptions down the road when trying to use getter methods that rely on the JSON data.
      *
-     * @param thingClass The class that will be used to instantiate the T
+     * @param thingClass The class that will be used to instantiate the RedditObject
      * @param <T> The type of object to be created
-     * @return A new RedditObject
+     * @return A new generic RedditObject
      */
     @SuppressWarnings("unchecked")
     public <T extends RedditObject> T as(Class<T> thingClass) {
@@ -77,7 +77,7 @@ public class RedditResponse extends RestResponse {
     }
 
     /**
-     * This method is essentially the same as {@link #as(Class)}, except for {@link Listing}s.
+     * This method will return a Listing that represents this JSON response
      *
      * @param thingClass The class of T
      * @param <T> The type of object that the listing will contain

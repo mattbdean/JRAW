@@ -33,7 +33,7 @@ public class WikiManagerTest extends AuthenticatedRedditTest {
     @Test
     public void testWikiSettings() throws NetworkException {
         Subreddit modOf = getModeratedSubreddit();
-        String page = manager.getWikiPages(modOf.getDisplayName()).get(0);
+        String page = manager.getPages(modOf.getDisplayName()).get(0);
         WikiPageSettings settings = manager.getSettings(modOf.getDisplayName(), page);
         validateModel(settings);
     }
@@ -41,10 +41,10 @@ public class WikiManagerTest extends AuthenticatedRedditTest {
     private void testWikiPages(String subreddit) throws NetworkException {
         int limit = 3;
 
-        List<String> pages = manager.getWikiPages(subreddit);
+        List<String> pages = manager.getPages(subreddit);
         int counter = 0;
         for (String page : pages) {
-            WikiPage wikiPage = manager.getWikiPage(subreddit, page);
+            WikiPage wikiPage = manager.get(subreddit, page);
             validateModel(wikiPage);
 
             counter++;

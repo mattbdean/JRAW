@@ -3,6 +3,9 @@ package net.dean.jraw.models;
 import net.dean.jraw.models.attr.Distinguishable;
 import org.codehaus.jackson.JsonNode;
 
+/**
+ * This class represents a private message sent from one user to another
+ */
 public class Message extends Contribution implements Distinguishable {
 
     /**

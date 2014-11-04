@@ -5,18 +5,18 @@ import net.dean.jraw.models.JsonProperty;
 import java.util.Date;
 
 /**
- * Indicates that this object was created
+ * Indicates that this model was created
  */
 public interface Created extends JsonAttribute {
     /**
-     * Gets the date this object was created in local time
+     * Gets the date this model was created in local time
      * @return Date created in local time
      */
     @JsonProperty
     public Date getCreated();
 
     /**
-     * Gets the date this object was created in UTC
+     * Gets the date this model was created in UTC
      * @return Date created in UTC
      */
     @JsonProperty

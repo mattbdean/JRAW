@@ -19,6 +19,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 
+/**
+ * This class is responsible for representing a RESTful HTTP request
+ */
 public final class RestRequest {
     private final String url;
     private final String method;
@@ -64,32 +67,60 @@ public final class RestRequest {
         return needsAuth;
     }
 
+    /**
+     * Gets the OkHttp request being wrapped by this object.
+     * @return The OkHttp request
+     */
     public Request getRequest() {
         return request;
     }
 
+    /**
+     * The fully-qualified URL that this request will be sent to
+     * @return The URL that this request will be sent to
+     */
     public String getUrl() {
         return url;
     }
 
+    /**
+     * The HTTP method to use (GET, POST, PUT, DELETE, etc.)
+     * @return The HTTP method to use
+     */
     public String getMethod() {
         return method;
     }
 
+    /**
+     * The data to send as URL-encoded form data with a POST or similar request
+     * @return The data to send in the form body
+     */
     public Map<String, String> getFormArgs() {
         return formArgs;
     }
 
+    /**
+     * An array of the names of sensitive form data arguments. These values of these arguments should be concealed.
+     * @return An array of keys whose values are sensitive
+     */
     public String[] getSensitiveArgs() {
         String[] localCopy = new String[sensitiveArgs.length];
         System.arraycopy(sensitiveArgs, 0, localCopy, 0, sensitiveArgs.length);
         return localCopy;
     }
 
+    /**
+     * The endpoint that this request is being sent to
+     */
     public Endpoints getEndpoint() {
         return endpoint;
     }
 
+    /**
+     * Checks if the given key in the form data is sensitive
+     * @param arg A key
+     * @return True, if the key's value has been marked as sensitive. False if else
+     */
     public boolean isSensitive(String arg) {
         if (sensitiveArgs == null || sensitiveArgs.length == 0) {
             return false;
@@ -103,10 +134,16 @@ public final class RestRequest {
         return false;
     }
 
+    /**
+     * The expected Content-Type
+     */
     public MediaType getExpectedType() {
         return expected;
     }
 
+    /**
+     * This class is responsible for creating new RestRequests
+     */
     public static class Builder {
         private Request.Builder builder;
 
@@ -121,6 +158,13 @@ public final class RestRequest {
         private boolean auth;
         private MediaType expected;
 
+        /**
+         * Creates a new Builder that will result in a RestRequest whose URL will match the one given
+         * @param method The HTTP verb
+         * @param url The URL to parse
+         * @param formArgs An optional array of Strings to send as form data
+         * @return A new Builder that represents the given URL
+         */
         public static Builder from(String method, URL url, Object... formArgs) {
             if (!url.getProtocol().matches("http[s]?")) {
                 throw new IllegalArgumentException("Only HTTP(S) supported");
@@ -135,7 +179,7 @@ public final class RestRequest {
             return b;
         }
         /**
-         * Instantiates a new RequestBuilder
+         * Instantiates a new Builder
          */
         public Builder() {
             this.https = false;
@@ -147,7 +191,7 @@ public final class RestRequest {
         /**
          * Enables or disables HTTP over SSL
          * @param https Whether this request should be executed securely
-         * @return This RequestBuilder
+         * @return This Builder
          */
         public Builder https(boolean https) {
             this.https = https;
@@ -158,7 +202,7 @@ public final class RestRequest {
          * Sets the query string arguments. The given parameters are passed into {@link JrawUtils#args(Object...)} and then
          * given to {@link #query(java.util.Map)}.
          * @param args The parameters that will be found in the query string
-         * @return This RequestBuilder
+         * @return This Builder
          */
         public Builder query(Object... args) {
             return query(JrawUtils.args(args));
@@ -167,7 +211,7 @@ public final class RestRequest {
         /**
          * Sets the query string arguments
          * @param args The parameters that will be found in the query string
-         * @return This RequestBuilder
+         * @return This Builder
          */
         public Builder query(Map<String, String> args) {
             this.query = args;
@@ -184,7 +228,7 @@ public final class RestRequest {
          * @param e The endpoint to use
          * @param positionalUrlParams The parameters to use. Must be equal to the size of the corresponding Endpoint's
          * {@link net.dean.jraw.Endpoint#getUrlParams()} list.
-         * @return This RequestBuilder
+         * @return This Builder
          */
         public Builder endpoint(Endpoints e, String... positionalUrlParams) {
             this.endpoint = e;
@@ -197,7 +241,7 @@ public final class RestRequest {
          * is also called, that method will take priority, regardless of order.
          *
          * @param path The path to use
-         * @return This RequestBuilder
+         * @return This Builder
          */
         public Builder path(String path) {
             this.path = path;
@@ -207,36 +251,61 @@ public final class RestRequest {
         /**
          * Sets the request's host. For example, "www.reddit.com"
          * @param host The new host
-         * @return This RequestBuilder
+         * @return This Builder
          */
         public Builder host(String host) {
             this.host = host;
             return this;
         }
 
+        /**
+         * Marks this Builder as being sent as a GET request
+         * @return This Builder
+         */
         public Builder get() {
             builder.get();
             return this;
         }
 
+        /**
+         * Marks this Builder as being sent as a DELETE request
+         * @return This Builder
+         */
         public Builder delete() {
             builder.delete();
             return this;
         }
 
+        /**
+         * Marks this Builder as being sent as a POST request
+         * @return This Builder
+         */
         public Builder post(Map<String, String> formArgs) {
             return formMethod("POST", formArgs);
         }
 
+        /**
+         * Marks this Builder as being sent as a PUT request
+         * @return This Builder
+         */
         public Builder put(Map<String, String> formArgs) {
             return formMethod("PUT", formArgs);
         }
 
+        /**
+         * Adds a header to the request
+         * @return This Builder
+         */
         public Builder header(String key, String value) {
             builder.header(key, value);
             return this;
         }
 
+        /**
+         * Sets the keys of form data that have sensitive arguments
+         * @param args The keys
+         * @return This Builder
+         */
         public Builder sensitiveArgs(String... args) {
             this.sensitiveArgs = args;
             return this;
@@ -252,6 +321,9 @@ public final class RestRequest {
             return this;
         }
 
+        /**
+         * Sets the expected content type
+         */
         public Builder expected(MediaType type) {
             this.expected = type;
             return this;

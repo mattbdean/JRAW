@@ -9,7 +9,7 @@ import net.dean.jraw.http.RestRequest;
 
 /**
  * This class serves as the base class for all "manager" classes, which have control over a certain section of the API,
- * such as multireddits, wikis, or messages
+ * such as multireddits, wikis, and messages
  */
 public abstract class AbstractManager implements HttpClient<RedditResponse>,
         NetworkAccessible<RedditResponse, RedditClient> {

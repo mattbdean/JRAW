@@ -1,4 +1,4 @@
 /**
- * Contains classes used to paginate through various models such as submissions on the front page
+ * Contains classes used to iterate through models
  */
 package net.dean.jraw.paginators;

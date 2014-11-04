@@ -1,15 +1,15 @@
 package net.dean.jraw.http;
 
 /**
- * This interface provides a way to distinguish classes that can make HTTP requests
+ * This interface provides a way to mark classes that can make HTTP requests
  * @param <U> The type of response returned by the RestClient
  */
 public interface HttpClient<U extends RestResponse> {
 
     /**
-     * Creates a new RequestBuilder
+     * Creates a new builder object that can be used to model HTTP requests
      *
-     * @return A new RestRequest Builder
+     * @return A new RestRequest.Builder
      */
     public RestRequest.Builder request();
 
