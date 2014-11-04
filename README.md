@@ -38,7 +38,7 @@ Add jCenter to your repositories (see [here](https://bintray.com/bintray/jcenter
 <dependency>
     <groupId>net.dean.jraw</groupId>
     <artifactId>JRAW</artifactId>
-    <version>0.4.0</version>
+    <version>0.5.0</version>
 </dependency>
 ```
 
