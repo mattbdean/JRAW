@@ -1,6 +1,8 @@
 package net.dean.jraw;
 
 import com.squareup.okhttp.Response;
+import net.dean.jraw.http.AuthenticationMethod;
+import net.dean.jraw.http.Credentials;
 import net.dean.jraw.http.MediaTypes;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.RedditResponse;
@@ -18,7 +20,6 @@ import net.dean.jraw.paginators.Sorting;
 import net.dean.jraw.paginators.SubredditPaginator;
 import org.codehaus.jackson.JsonNode;
 
-import java.net.HttpCookie;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,14 +35,14 @@ public class RedditClient extends RestClient<RedditResponse> {
 
     /**
      * The host that will be used to execute OAuth requests, with the exception of authorization, in which case
-     * {@link #HOST_HTTPS_SPECIAL} will be used
+     * {@link #HOST_SPECIAL} will be used
      */
     public static final String HOST_OAUTH = "oauth.reddit.com";
 
     /** The host that will be used for logging in, OAuth authorizations, and preferences */
-    public static final String HOST_HTTPS_SPECIAL = "ssl.reddit.com";
+    public static final String HOST_SPECIAL = "ssl.reddit.com";
 
-    /** The name of the header that will be assigned upon a successful login */
+    /** The name of the header that will be assigned upon a successful standard login */
     private static final String HEADER_MODHASH = "X-Modhash";
 
     /** The amount of requests allowed per minute without using OAuth */
@@ -50,7 +51,9 @@ public class RedditClient extends RestClient<RedditResponse> {
     /** The amount of trending subreddits that will appear in each /r/trendingsubreddits post */
     private static final int NUM_TRENDING_SUBREDDITS = 5;
 
-    private String authenticatedUser;
+    protected String authenticatedUser;
+
+    protected AuthenticationMethod authMethod;
 
     /**
      * Instantiates a new RedditClient and adds the given user agent to the default headers of the RestClient
@@ -72,6 +75,7 @@ public class RedditClient extends RestClient<RedditResponse> {
      */
     public RedditClient(String userAgent) {
         super(HOST, userAgent, REQUESTS_PER_MINUTE);
+        this.authMethod = AuthenticationMethod.NONE;
     }
 
     @Override
@@ -90,21 +94,20 @@ public class RedditClient extends RestClient<RedditResponse> {
     /**
      * Logs in to an account and returns the data associated with it
      *
-     * @param username The username to log in to
-     * @param password The password of the username
+     * @param credentials The credentials to use to log in
      * @return An Account object that has the same username as the username parameter
      * @throws NetworkException If the request was not successful
      * @throws ApiException If the API returned an error (most likely because of an incorrect password)
      */
     @EndpointImplementation(Endpoints.LOGIN)
-    public LoggedInAccount login(String username, String password) throws NetworkException, ApiException {
+    public LoggedInAccount login(Credentials credentials) throws NetworkException, ApiException {
         RestRequest request = request()
-                .host(HOST_HTTPS_SPECIAL)
                 .https(true) // Always HTTPS
+                .host(HOST_SPECIAL)
                 .endpoint(Endpoints.LOGIN)
                 .post(JrawUtils.args(
-                        "user", username,
-                        "passwd", password,
+                        "user", credentials.getUsername(),
+                        "passwd", credentials.getPassword(),
                         "api_type", "json"
                 )).sensitiveArgs("passwd")
                 .build();
@@ -116,7 +119,6 @@ public class RedditClient extends RestClient<RedditResponse> {
         }
 
         setHttpsDefault(loginResponse.getJson().get("json").get("data").get("need_https").asBoolean());
-        setHttpsDefault(true);
 
         String modhash = loginResponse.getJson().get("json").get("data").get("modhash").getTextValue();
 
@@ -125,6 +127,7 @@ public class RedditClient extends RestClient<RedditResponse> {
 
         LoggedInAccount me = me();
         this.authenticatedUser = me.getFullName();
+        this.authMethod = AuthenticationMethod.STANDARD;
         return me;
     }
 
@@ -133,6 +136,16 @@ public class RedditClient extends RestClient<RedditResponse> {
                 .path("/logout")
                 .expected(MediaTypes.HTML.type())
                 .post(null).build());
+        defaultHeaders.remove(HEADER_MODHASH);
+        authMethod = AuthenticationMethod.NONE;
+    }
+
+    /**
+     * Checks if the user is logged in
+     * @return True if the user is logged in
+     */
+    public boolean isLoggedIn() {
+        return authMethod != AuthenticationMethod.NONE;
     }
 
     /**
@@ -145,24 +158,8 @@ public class RedditClient extends RestClient<RedditResponse> {
     public LoggedInAccount me() throws NetworkException {
         RedditResponse response = execute(request()
                 .endpoint(Endpoints.ME)
-                .get()
                 .build());
         return new LoggedInAccount(response.getJson().get("data"));
-    }
-
-    /**
-     * Tests if the user is logged in by checking if a cookie is set called "reddit_session" whose domain is
-     * "reddit.com"
-     *
-     * @return True if the user is logged in
-     */
-    public boolean isLoggedIn() {
-        for (HttpCookie cookie : cookieJar.getCookies()) {
-            if (cookie.getName().equals("reddit_session") && cookie.getDomain().equals("reddit.com")) {
-                return true;
-            }
-        }
-        return false;
     }
 
     /**

@@ -4,8 +4,10 @@ jdk:
 - openjdk7
 env:
   global:
-    - secure: u0Gmfx91ndH4u32msTaMtMcKSluz6VzQE1mxpwjFha2+mRw7bGmLlkEh6CNfbv9lio2cHP1RN+zmAXq28iQQ4qiOSW5HdfC2M2RzzD9IxQ8rrg4rnHjl3QagfWBltm7QhmgSwVA3gyK1EHNnhUehYhwbSZLD1velBt6je6vQp78=
-    - USERNAME=jraw_test
-    - TERM=dumb
-script: ./gradlew test
-after_success: ./gradlew jacocoTestReport coveralls
+  - secure: u0Gmfx91ndH4u32msTaMtMcKSluz6VzQE1mxpwjFha2+mRw7bGmLlkEh6CNfbv9lio2cHP1RN+zmAXq28iQQ4qiOSW5HdfC2M2RzzD9IxQ8rrg4rnHjl3QagfWBltm7QhmgSwVA3gyK1EHNnhUehYhwbSZLD1velBt6je6vQp78=
+  - secure: a3xjjnJSZPDb8N1ddUGjckZmtLdembXcrFEdYNH1bQn/3r3Fy3nKaO0sBLJdOPvaEtNLAvYAuw/IDNxRFNCIbvqyowyLjBnKalMrn/0aJa2aadklZwbN/LrNm8Vs10o9lDXvmAaypZyjQF8VUtJJTxeydnEWBWOgHPQkA5VFLr4=
+  - USERNAME=jraw_test
+  - CLIENT_ID=QrrG0OYBpyxgIQ
+  - TERM=dumb
+script: "./gradlew test"
+after_success: "./gradlew jacocoTestReport coveralls"

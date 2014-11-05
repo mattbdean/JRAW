@@ -59,7 +59,8 @@ public class AuthenticationTest extends AuthenticatedRedditTest {
 
             assertEquals(reddit.isLoggedIn(), expected);
         } catch (NetworkException e) {
-            e.printStackTrace();
+            handle(e);
         }
     }
+
 }

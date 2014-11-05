@@ -80,11 +80,6 @@ public class Account extends Thing implements Created {
     }
 
     @Override
-    public String getFullName() {
-        return super.getFullName();
-    }
-
-    @Override
     public Date getCreated() {
         return _getCreated();
     }

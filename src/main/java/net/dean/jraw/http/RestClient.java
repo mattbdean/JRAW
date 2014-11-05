@@ -1,6 +1,7 @@
 package net.dean.jraw.http;
 
 import com.google.common.util.concurrent.RateLimiter;
+import com.squareup.okhttp.Authenticator;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
@@ -55,11 +56,12 @@ public abstract class RestClient<T extends RestResponse> implements HttpClient<T
         CookieManager manager = new CookieManager();
         manager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
         http.setCookieHandler(manager);
+
         this.cookieJar = manager.getCookieStore();
         this.history = new LinkedHashMap<>();
         this.useHttpsDefault = false;
         this.defaultHeaders = new HashMap<>();
-        defaultHeaders.put("User-Agent", userAgent);
+        setUserAgent(userAgent);
     }
 
     /**
@@ -137,6 +139,17 @@ public abstract class RestClient<T extends RestResponse> implements HttpClient<T
      */
     public boolean isEnforcingRatelimit() {
         return enforceRatelimit;
+    }
+
+    @Override
+    public T executeWithBasicAuth(RestRequest request, String username, String password) throws NetworkException {
+        Authenticator prevAuthenticator = http.getAuthenticator();
+        // Create a BasicAuthenticator for this request
+        http.setAuthenticator(new BasicAuthenticator(username, password));
+        T response = execute(request);
+        // Reset the Authenticator
+        http.setAuthenticator(prevAuthenticator);
+        return response;
     }
 
     @Override
