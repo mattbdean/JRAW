@@ -1,17 +1,9 @@
-apply plugin: 'idea'
-apply plugin: 'maven-publish'
-apply plugin: 'findbugs'
-apply plugin: 'jacoco'
-apply plugin: 'com.github.kt3k.coveralls'
-
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-
-    dependencies {
-        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.0.0'
-    }
+plugins {
+    id 'idea'
+    id 'maven-publish'
+    id 'findbugs'
+    id 'jacoco'
+    id 'com.github.kt3k.coveralls' version '2.0.1'
 }
 
 allprojects {
