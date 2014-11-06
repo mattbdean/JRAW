@@ -42,13 +42,13 @@ public class JavaGenerator extends AbstractEndpointGenerator {
 
     @Override
     protected void _generate(File dest, IndentAwareFileWriter writer) throws IOException {
-        writer.write("package net.dean.jraw;");
+        writer.writeLine("package net.dean.jraw;");
         writer.newline();
 
-        writer.write(COMMENT_WARNING);
-        writer.write(JAVADOC_CLASS);
-        writer.write("@SuppressWarnings(\"unused\")");
-        writer.write("public enum Endpoints {");
+        writer.writeLine(COMMENT_WARNING);
+        writer.writeLine(JAVADOC_CLASS);
+        writer.writeLine("@SuppressWarnings(\"unused\")");
+        writer.writeLine("public enum Endpoints {");
         writer.incIndent();
 
         List<String> duplicateUris = findDuplicateUris(endpoints);
@@ -60,14 +60,13 @@ public class JavaGenerator extends AbstractEndpointGenerator {
         for (Map.Entry<String, List<Endpoint>> entry : sorted.entrySet()) {
 
             writer.newline();
-            writer.write("///////// " + entry.getKey() + " /////////");
+            writer.writeLine("///////// " + entry.getKey() + " /////////");
 
             int endpointCounter = 0;
             for (Endpoint endpoint : entry.getValue()) {
-                writer.write(String.format(JAVADOC_ENUM, getRedditDocUrl(endpoint), endpoint.getRequestDescriptor(), endpoint.getScope().replace("&", "&amp;")));
-                writer.write(String.format("%s(\"%s\")%s", generateEnumName(endpoint, duplicateUris.contains(endpoint.getUri())), endpoint.getRequestDescriptor(),
+                writer.writeLine(String.format(JAVADOC_ENUM, getRedditDocUrl(endpoint), endpoint.getRequestDescriptor(), endpoint.getScope().replace("&", "&amp;")));
+                writer.writeLine(String.format("%s(\"%s\")%s", generateEnumName(endpoint, duplicateUris.contains(endpoint.getUri())), endpoint.getRequestDescriptor(),
                         catCounter == sorted.size() - 1 && endpointCounter == entry.getValue().size() - 1 ? ";" : ","));
-
                 endpointCounter++;
             }
 
@@ -75,34 +74,34 @@ public class JavaGenerator extends AbstractEndpointGenerator {
         }
 
         writer.newline();
-        writer.write("private final net.dean.jraw.Endpoint endpoint;");
+        writer.writeLine("private final net.dean.jraw.Endpoint endpoint;");
         writer.newline();
-        writer.write("private Endpoints(String requestDescriptor) {");
+        writer.writeLine("private Endpoints(java.lang.String requestDescriptor) {");
         writer.incIndent();
-        writer.write("this.endpoint = new Endpoint(requestDescriptor);");
+        writer.writeLine("this.endpoint = new net.dean.jraw.Endpoint(requestDescriptor);");
         writer.decIndent();
-        writer.write("}");
+        writer.writeLine("}");
         writer.newline();
-        writer.write("/**");
-        writer.write("  * " + JAVADOC_GET_ENDPOINT);
-        writer.write("  * @return " + JAVADOC_GET_ENDPOINT_RETURN);
-        writer.write("  */");
-        writer.write("public final net.dean.jraw.Endpoint getEndpoint() {");
+        writer.writeLine("/**");
+        writer.writeLine("  * " + JAVADOC_GET_ENDPOINT);
+        writer.writeLine("  * @return " + JAVADOC_GET_ENDPOINT_RETURN);
+        writer.writeLine("  */");
+        writer.writeLine("public final net.dean.jraw.Endpoint getEndpoint() {");
         writer.incIndent();
-        writer.write("return endpoint;");
+        writer.writeLine("return endpoint;");
         writer.decIndent();
-        writer.write("}");
+        writer.writeLine("}");
 
         writer.newline();
 
-        writer.write("@Override");
-        writer.write("public java.lang.String toString() {");
+        writer.writeLine("@Override");
+        writer.writeLine("public java.lang.String toString() {");
         writer.incIndent();
-        writer.write("return endpoint.toString();");
+        writer.writeLine("return endpoint.toString();");
         writer.decIndent();
-        writer.write("}");
+        writer.writeLine("}");
         writer.decIndent();
-        writer.write("}");
+        writer.writeLine("}");
     }
 
     private String generateEnumName(Endpoint ep, boolean isDuplicate) {

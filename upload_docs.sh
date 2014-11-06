@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 
 set -e
 shopt -s extglob
@@ -24,7 +24,7 @@ OUT_DIR="docs/git/$COMMIT_SHA"
 ## Location of the latest git commit docs
 OUT_DIR_LATEST="docs/git/latest"
 
-rm -r "$BUILD_DOC" # Remove all old javadoc
+rm -rf "$BUILD_DOC" # Remove all old javadoc
 # Build the javadoc and give it a more descriptive title
 ./gradlew javadoc -Djavadoc-version="commit $COMMIT_SHA ($LATEST_TAG+)"
 cp -r "$BUILD_DOC" -r .. # Move the javadoc out of git's reach
