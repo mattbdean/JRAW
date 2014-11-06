@@ -9,11 +9,11 @@ import java.util.regex.Pattern;
 /**
  * This class represents a Reddit API endpoint such as "{@code POST /api/login}"
  */
-public class Endpoint {
+public class Endpoint implements Comparable<Endpoint> {
     /** This Pattern will match a URI parameter. For example, /api/{param1}/{param2} */
     public static final Pattern URI_PARAM_PATTERN = Pattern.compile("\\{([^\\}]+)\\}");
 
-    private final String category;
+    private final String scope;
     private boolean implemented;
     private Method method;
 
@@ -37,10 +37,10 @@ public class Endpoint {
      * Instantiates a new Endpoint
      * @param requestDescriptor A string consisting of two parts: the HTTP verb, and the URI. For example:
      *                          "POST /api/login"
-     * @param category This endpoint's category, such as "accounts". Can be found
+     * @param scope This endpoint's scope, such as "accounts". Can be found
      *                 <a href="http://www.reddit.com/dev/api">here</a>
      */
-    public Endpoint(String requestDescriptor, String category) {
+    public Endpoint(String requestDescriptor, String scope) {
         this.requestDescriptor = requestDescriptor;
         String[] parts = requestDescriptor.split(" ");
         if (parts.length != 2) {
@@ -50,7 +50,7 @@ public class Endpoint {
         this.verb = parts[0].toUpperCase();
         this.uri = parts[1];
         this.urlParams = parseUrlParams(uri);
-        this.category = category;
+        this.scope = scope;
         this.implemented = false;
     }
 
@@ -74,14 +74,14 @@ public class Endpoint {
     }
 
     /**
-     * Gets this endpoint's category. Always null for normal library use. See
+     * Gets this endpoint's OAuth2 scope. Always null for normal library use. See
      * <a href="http://www.reddit.com/dev/api">here</a>
      * for examples.
      *
-     * @return This endpoint's category
+     * @return This endpoint's scope
      */
-    public String getCategory() {
-        return category;
+    public String getScope() {
+        return scope;
     }
 
     /**
@@ -94,8 +94,9 @@ public class Endpoint {
         return implemented;
     }
 
-    public void setImplemented(boolean implemented) {
-        this.implemented = implemented;
+    public void implement(Method implementer) {
+        this.method = implementer;
+        this.implemented = true;
     }
 
     /**
@@ -130,7 +131,7 @@ public class Endpoint {
         Endpoint endpoint = (Endpoint) object;
 
         if (implemented != endpoint.implemented) return false;
-        if (category != null ? !category.equals(endpoint.category) : endpoint.category != null) return false;
+        if (scope != null ? !scope.equals(endpoint.scope) : endpoint.scope != null) return false;
         if (!requestDescriptor.equals(endpoint.requestDescriptor)) return false;
         if (method != null ? !method.equals(endpoint.method) : endpoint.method != null) return false;
 
@@ -139,7 +140,7 @@ public class Endpoint {
 
     @Override
     public int hashCode() {
-        int result = category != null ? category.hashCode() : 0;
+        int result = scope != null ? scope.hashCode() : 0;
         result = 31 * result + (implemented ? 1 : 0);
         result = 31 * result + (method != null ? method.hashCode() : 0);
         result = 31 * result + requestDescriptor.hashCode();
@@ -149,7 +150,7 @@ public class Endpoint {
     @Override
     public String toString() {
         return "Endpoint {" +
-                "category='" + category + '\'' +
+                "scope='" + scope + '\'' +
                 ", implemented=" + implemented +
                 ", method=" + method +
                 ", verb='" + verb + '\'' +
@@ -157,5 +158,20 @@ public class Endpoint {
                 ", requestDescriptor='" + requestDescriptor + '\'' +
                 ", urlParams=" + urlParams +
                 '}';
+    }
+
+    @Override
+    public int compareTo(Endpoint other) {
+        int implComp = Boolean.compare(implemented, other.implemented);
+        if (implComp != 0) {
+            return implComp;
+        } else {
+            int nameComp = uri.compareTo(other.uri);
+            if (nameComp != 0) {
+                return nameComp;
+            } else {
+                return verb.compareTo(other.verb);
+            }
+        }
     }
 }

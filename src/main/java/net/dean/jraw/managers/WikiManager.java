@@ -107,7 +107,7 @@ public class WikiManager extends AbstractManager {
      * @return A WikiPageSettings that represents the settings of the given wiki page
      * @throws NetworkException If there request was not successful
      */
-    @EndpointImplementation(Endpoints.WIKI_SETTINGS_PAGE)
+    @EndpointImplementation(Endpoints.WIKI_SETTINGS_PAGE_GET)
     public WikiPageSettings getSettings(String subreddit, String page) throws NetworkException {
         String path = JrawUtils.getSubredditPath(subreddit, "/wiki/settings/" + page + ".json");
 

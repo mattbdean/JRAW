@@ -10,7 +10,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.util.List;
-import java.util.NavigableMap;
 
 public class ReadmeUpdater extends AbstractEndpointGenerator {
     private static final String SEARCH_REGEX =
@@ -21,15 +20,15 @@ public class ReadmeUpdater extends AbstractEndpointGenerator {
     /**
      * Instantiates a new AbstractEndpointGenerator
      *
-     * @param endpoints A map of endpoints where the key is the category and the value is a list of endpoints in that category
+     * @param endpoints A list of endpoints
      */
-    public ReadmeUpdater(NavigableMap<String, List<Endpoint>> endpoints) {
+    public ReadmeUpdater(List<Endpoint> endpoints) {
         super(endpoints, false);
         this.format = new DecimalFormat("#.##");
     }
 
     @Override
-    protected void _generate(File dest, BufferedWriter bw) throws IOException {
+    protected void _generate(File dest, IndentAwareFileWriter bw) throws IOException {
         double percentage = (getImplementedEndpointsCount() / (double) getTotalEndpoints()) * 100;
         String percentageString = format.format(percentage) + "%";
         String url = String.format("https://img.shields.io/badge/api--coverage-%s-blue.svg", percentageString);

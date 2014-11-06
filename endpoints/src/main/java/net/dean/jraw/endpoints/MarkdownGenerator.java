@@ -3,7 +3,6 @@ package net.dean.jraw.endpoints;
 import com.google.common.base.Joiner;
 import net.dean.jraw.Endpoint;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -11,19 +10,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.NavigableMap;
 
 /**
- * This class is responsible for the compilation of <a href="https://github.com/thatJavaNerd/JRAW/blob/master/ENDPOINTS.md">ENDPOINITS.md</a>,
- * which is a collection of implemented and unimplemented Reddit API endpoints.<br>
- *
- * Here is a basic outline of how the class works:
- * <ol>
- *     <li>Read all the endpoints from endpoints.json
- *     <li>Determine if the endpoints are implemented
- *     <li>Find the corresponding methods for implemented methods
- *     <li>Output as table
- * </ol>
+ * This class is responsible for the compilation of
+ * <a href="https://github.com/thatJavaNerd/JRAW/blob/master/ENDPOINTS.md">ENDPOINITS.md</a>, which is a collection of
+ * implemented and unimplemented Reddit API endpoints.
  */
 public class MarkdownGenerator extends AbstractEndpointGenerator {
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss z");
@@ -33,35 +24,35 @@ public class MarkdownGenerator extends AbstractEndpointGenerator {
      *
      * @param endpoints A map of endpoints where the key is the category and the value is a list of endpoints in that category
      */
-    public MarkdownGenerator(NavigableMap<String, List<Endpoint>> endpoints) {
+    public MarkdownGenerator(List<Endpoint> endpoints) {
         super(endpoints, true);
     }
 
     @Override
-    protected void _generate(File dest, BufferedWriter bw) throws IOException {
+    protected void _generate(File dest, IndentAwareFileWriter bw) throws IOException {
         // http://stackoverflow.com/a/4829998/1275092
         bw.write(String.format("<!--- Generated %s. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->%n",
                 dateFormat.format(new Date())));
 
         // Main header
-        bw.write("#Endpoints\n\n");
-        bw.write("This file contains a list of all the endpoints (regardless of if they have been implemented) that " +
+        bw.writeLine("#Endpoints\n");
+        bw.writeLine("This file contains a list of all the endpoints (regardless of if they have been implemented) that " +
                 "can be found at the [official Reddit API docs](https://www.reddit.com/dev/api). To update this file, " +
-                "run `./gradlew endpoints:update`.\n\n");
+                "run `./gradlew endpoints:update`.\n");
 
         // Summary
-        bw.write(String.format("So far **%s** endpoints (out of %s total) have been implemented.%n",
+        bw.writeLine(String.format("So far **%s** endpoints (out of %s total) have been implemented.",
                 getImplementedEndpointsCount(), getTotalEndpoints()));
 
-        for (Map.Entry<String, List<Endpoint>> category : endpoints.entrySet()) {
+        for (Map.Entry<String, List<Endpoint>> category : sortEndpoints(endpoints).entrySet()) {
             String catName = category.getKey();
             List<Endpoint> endpointList = category.getValue();
 
             // Category header
-            bw.write("\n##" + catName + "\n");
+            bw.writeLine("\n##" + catName);
             // Start table
-            bw.write("Method|Endpoint|Implemented?\n");
-            bw.write(":----:|--------|------------\n");
+            bw.writeLine("Method|Endpoint|Implemented?");
+            bw.writeLine(":----:|--------|------------");
 
             for (Endpoint e : endpointList) {
                 StringBuilder sb = new StringBuilder();
@@ -78,9 +69,9 @@ public class MarkdownGenerator extends AbstractEndpointGenerator {
 
                 sb.append('`').append(e.getVerb()).append("`|")
                         .append("[`").append(e.getUri()).append("`](").append(getRedditDocUrl(e)).append(")|")
-                        .append(implString).append('\n');
+                        .append(implString);
 
-                bw.write(sb.toString());
+                bw.writeLine(sb.toString());
             }
         }
     }

@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
 import java.util.Set;
-import java.util.TreeMap;
 
 /**
  * This class generates an enum called Endpoints.java.
@@ -25,7 +24,7 @@ public class JavaGenerator extends AbstractEndpointGenerator {
     private static final String JAVADOC_CLASS =
             "/** This class is an automatically generated enumeration of Reddit's API endpoints */";
     private static final String JAVADOC_ENUM =
-            "/** Represents the endpoint \"<a href=\"%s\">{@code %s}</a>\" in the \"%s\" category */";
+            "/** Represents the endpoint \"<a href=\"%s\">{@code %s}</a>\" included in the \"%s\" scope */";
     private static final String JAVADOC_GET_ENDPOINT = "Gets the Endpoint object associated with this enumeration";
     private static final String JAVADOC_GET_ENDPOINT_RETURN = "The Endpoint object";
     private static final Map<String, String> PREFIX_SUBSTITUTIONS;
@@ -36,34 +35,38 @@ public class JavaGenerator extends AbstractEndpointGenerator {
      *
      * @param endpoints A map of endpoints where the key is the category and the value is a list of endpoints in that category
      */
-    public JavaGenerator(NavigableMap<String, List<Endpoint>> endpoints) {
+    public JavaGenerator(List<Endpoint> endpoints) {
         super(endpoints, true);
     }
 
 
     @Override
-    protected void _generate(File dest, BufferedWriter bw) throws IOException {
-        write(bw, "package net.dean.jraw;");
-        newLine(bw);
-        write(bw, COMMENT_WARNING);
-        write(bw, JAVADOC_CLASS);
-        write(bw, "@SuppressWarnings(\"unused\")");
-        write(bw, "public enum Endpoints {");
+    protected void _generate(File dest, IndentAwareFileWriter writer) throws IOException {
+        writer.write("package net.dean.jraw;");
+        writer.newline();
 
-        NavigableMap<String, List<String>> duplicateUris = findDuplicateUris(endpoints);
+        writer.write(COMMENT_WARNING);
+        writer.write(JAVADOC_CLASS);
+        writer.write("@SuppressWarnings(\"unused\")");
+        writer.write("public enum Endpoints {");
+        writer.incIndent();
+
+        List<String> duplicateUris = findDuplicateUris(endpoints);
 
         int catCounter = 0;
-        for (Map.Entry<String, List<Endpoint>> entry : endpoints.entrySet()) {
-            List<String> duplicates = duplicateUris.get(entry.getKey());
 
-            bw.write('\n');
-            write(bw, 1, "///////// " + entry.getKey() + " /////////");
+        NavigableMap<String, List<Endpoint>> sorted = sortEndpoints(endpoints);
+
+        for (Map.Entry<String, List<Endpoint>> entry : sorted.entrySet()) {
+
+            writer.newline();
+            writer.write("///////// " + entry.getKey() + " /////////");
 
             int endpointCounter = 0;
             for (Endpoint endpoint : entry.getValue()) {
-                write(bw, 1, String.format(JAVADOC_ENUM, getRedditDocUrl(endpoint), endpoint.getRequestDescriptor(), endpoint.getCategory().replace("&", "&amp;")));
-                write(bw, 1, String.format("%s(\"%s\")%s", generateEnumName(endpoint, duplicates.contains(endpoint.getUri())), endpoint.getRequestDescriptor(),
-                        catCounter == endpoints.size() - 1 && endpointCounter == entry.getValue().size() - 1 ? ";" : ","));
+                writer.write(String.format(JAVADOC_ENUM, getRedditDocUrl(endpoint), endpoint.getRequestDescriptor(), endpoint.getScope().replace("&", "&amp;")));
+                writer.write(String.format("%s(\"%s\")%s", generateEnumName(endpoint, duplicateUris.contains(endpoint.getUri())), endpoint.getRequestDescriptor(),
+                        catCounter == sorted.size() - 1 && endpointCounter == entry.getValue().size() - 1 ? ";" : ","));
 
                 endpointCounter++;
             }
@@ -71,28 +74,35 @@ public class JavaGenerator extends AbstractEndpointGenerator {
             catCounter++;
         }
 
-        newLine(bw);
-        write(bw, 1, "private final net.dean.jraw.Endpoint endpoint;");
-        newLine(bw);
-        write(bw, 1, "private Endpoints(String requestDescriptor) {");
-        write(bw, 2, "this.endpoint = new Endpoint(requestDescriptor);");
-        write(bw, 1, "}");
-        newLine(bw);
-        write(bw, 1, "/**");
-        write(bw, 1, "  * " + JAVADOC_GET_ENDPOINT);
-        write(bw, 1, "  * @return " + JAVADOC_GET_ENDPOINT_RETURN);
-        write(bw, 1, "  */");
-        write(bw, 1, "public final net.dean.jraw.Endpoint getEndpoint() {");
-        write(bw, 2, "return endpoint;");
-        write(bw, 1, "}");
+        writer.newline();
+        writer.write("private final net.dean.jraw.Endpoint endpoint;");
+        writer.newline();
+        writer.write("private Endpoints(String requestDescriptor) {");
+        writer.incIndent();
+        writer.write("this.endpoint = new Endpoint(requestDescriptor);");
+        writer.decIndent();
+        writer.write("}");
+        writer.newline();
+        writer.write("/**");
+        writer.write("  * " + JAVADOC_GET_ENDPOINT);
+        writer.write("  * @return " + JAVADOC_GET_ENDPOINT_RETURN);
+        writer.write("  */");
+        writer.write("public final net.dean.jraw.Endpoint getEndpoint() {");
+        writer.incIndent();
+        writer.write("return endpoint;");
+        writer.decIndent();
+        writer.write("}");
 
-        newLine(bw);
+        writer.newline();
 
-        write(bw, 1, "@Override");
-        write(bw, 1, "public java.lang.String toString() {");
-        write(bw, 2, "return endpoint.toString();");
-        write(bw, 1, "}");
-        write(bw, "}");
+        writer.write("@Override");
+        writer.write("public java.lang.String toString() {");
+        writer.incIndent();
+        writer.write("return endpoint.toString();");
+        writer.decIndent();
+        writer.write("}");
+        writer.decIndent();
+        writer.write("}");
     }
 
     private String generateEnumName(Endpoint ep, boolean isDuplicate) {
@@ -129,16 +139,14 @@ public class JavaGenerator extends AbstractEndpointGenerator {
         return enumName;
     }
 
-    private NavigableMap<String, List<String>> findDuplicateUris(NavigableMap<String, List<Endpoint>> endpoints) {
-        TreeMap<String, List<String>> dupes = new TreeMap<>();
-        for (Map.Entry<String, List<Endpoint>> entry : endpoints.entrySet()) {
+    private List<String> findDuplicateUris(List<Endpoint> endpoints) {
+        List<String> dupes = new ArrayList<>();
 
-            List<String> uris = new ArrayList<>();
-            for (Endpoint e : entry.getValue()) {
-                uris.add(e.getUri());
-            }
-            dupes.put(entry.getKey(), findDuplicates(uris));
+        List<String> uris = new ArrayList<>();
+        for (Endpoint e : endpoints) {
+            uris.add(e.getUri());
         }
+        dupes.addAll(findDuplicates(uris));
 
         return dupes;
     }
@@ -169,14 +177,6 @@ public class JavaGenerator extends AbstractEndpointGenerator {
         sb.append('\n');
 
         bw.write(sb.toString());
-    }
-
-    private void write(BufferedWriter bw, String msg) throws IOException {
-        write(bw, 0, msg);
-    }
-
-    private void newLine(BufferedWriter bw) throws IOException {
-        bw.write('\n');
     }
 
     static {

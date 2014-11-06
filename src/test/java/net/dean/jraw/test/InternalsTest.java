@@ -221,7 +221,7 @@ public class InternalsTest extends RedditTest {
         String category = "cat";
 
         Endpoint e = new Endpoint(requestDescriptor, category);
-        assertEquals(e.getCategory(), "cat");
+        assertEquals(e.getScope(), "cat");
         assertEquals(e.getUri(), "/api/{foo}/{bar}/baz");
         assertEquals(e.getVerb(), "GET");
         assertEquals(e.getUrlParams(), Arrays.asList("{foo}", "{bar}"));

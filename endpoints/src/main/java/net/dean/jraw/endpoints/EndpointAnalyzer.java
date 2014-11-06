@@ -3,6 +3,7 @@ package net.dean.jraw.endpoints;
 import net.dean.jraw.Endpoint;
 import net.dean.jraw.EndpointImplementation;
 import net.dean.jraw.Endpoints;
+import net.dean.jraw.JrawUtils;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.reflections.Reflections;
@@ -17,15 +18,13 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 
 /**
- * This class is responsible for parsing {@value #ALL_ENDPOINTS_FILE_NAME} into a Endpoint objects
+ * This class is responsible for parsing {@value EndpointAnalyzer#ALL_ENDPOINTS_FILE_NAME} into Endpoint objects
  */
 public class EndpointAnalyzer {
     private static final String ALL_ENDPOINTS_FILE_NAME = "endpoints.json";
@@ -37,7 +36,7 @@ public class EndpointAnalyzer {
     private File jsonEndpoints;
     /** The ObjectMapper used to read {@value #ALL_ENDPOINTS_FILE_NAME} file */
     private ObjectMapper mapper;
-    private TreeMap<String, List<Endpoint>> endpoints;
+    private List<Endpoint> endpoints;
 
     /**
      * Instantiates a new EndpointAnalysis
@@ -47,49 +46,14 @@ public class EndpointAnalyzer {
         try {
             this.jsonEndpoints = new File(EndpointAnalyzer.class.getResource("/" + ALL_ENDPOINTS_FILE_NAME).toURI());
         } catch (URISyntaxException e) {
-            e.printStackTrace();
+            JrawUtils.logger().error("Could not find endpoints.json", e);
         }
 
         List<Endpoint> endpoints = findEndpoints();
         // Sort by if it was implemented, then by URI, then by HTTP method
-        Collections.sort(endpoints, new Comparator<Endpoint>() {
-            @Override
-            public int compare(Endpoint endpoint, Endpoint endpoint2) {
-                int implComp = Boolean.compare(endpoint.isImplemented(), endpoint2.isImplemented());
-                if (implComp != 0) {
-                    return implComp;
-                } else {
-                    int nameComp = endpoint.getUri().compareTo(endpoint2.getUri());
-                    if (nameComp != 0) {
-                        return nameComp;
-                    } else {
-                        return endpoint.getVerb().compareTo(endpoint2.getVerb());
-                    }
-                }
-            }
-        });
+        Collections.sort(endpoints);
 
-        this.endpoints = categorizeEndpoints(endpoints);
-    }
-
-    /**
-     * Places a list of Endpoints into a map where the key is the category and the value is the list of endpoints that are
-     * in that category
-     *
-     * @param endpoints The Endpoints to use
-     * @return A map of the given endpoints
-     */
-    private TreeMap<String, List<Endpoint>> categorizeEndpoints(List<Endpoint> endpoints) {
-        TreeMap<String, List<Endpoint>> map = new TreeMap<>();
-        for (Endpoint e : endpoints) {
-            if (map.get(e.getCategory()) == null) {
-                map.put(e.getCategory(), new ArrayList<Endpoint>());
-            }
-
-            map.get(e.getCategory()).add(e);
-        }
-
-        return map;
+        this.endpoints = endpoints;
     }
 
     /**
@@ -123,8 +87,7 @@ public class EndpointAnalyzer {
 
                     for (Endpoint endpoint : endpoints) {
                         if (endpoint.getRequestDescriptor().equals(e.getEndpoint().getRequestDescriptor())) {
-                            endpoint.setMethod(m);
-                            endpoint.setImplemented(true);
+                            endpoint.implement(m);
                             break;
                         }
                     }
@@ -139,7 +102,7 @@ public class EndpointAnalyzer {
         return null;
     }
 
-    public TreeMap<String, List<Endpoint>> getEndpoints() {
+    public List<Endpoint> getEndpoints() {
         return endpoints;
     }
 

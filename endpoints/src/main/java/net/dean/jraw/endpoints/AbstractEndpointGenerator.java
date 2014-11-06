@@ -7,35 +7,32 @@ import net.dean.jraw.Endpoint;
 import net.dean.jraw.JrawUtils;
 import net.dean.jraw.Version;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
 import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.NavigableMap;
+import java.util.TreeMap;
 
 /**
  * This class provides a template for a class that generates a file based off of {@link Endpoint} objects.
  */
 public abstract class AbstractEndpointGenerator {
-    protected final NavigableMap<String, List<Endpoint>> endpoints;
+    protected final List<Endpoint> endpoints;
     protected final boolean overwriteFile;
     private static final ClassPool CLASS_POOL = ClassPool.getDefault();
     private static final int LINE_NUM_OFFSET = -1;
 
     /**
      * Instantiates a new AbstractEndpointGenerator
-     * @param endpoints A map of endpoints where the key is the category and the value is a list of endpoints in that category
+     * @param endpoints A list of endpoints
      * @param overwriteFile If true, then this generator is not re-creating the file, but instead updating it. The
-     *                      BufferedWriter in {@link #_generate(File, BufferedWriter)} will be null.
+     *                      BufferedWriter in {@link #_generate(File, IndentAwareFileWriter)} will be null.
      */
-    public AbstractEndpointGenerator(NavigableMap<String, List<Endpoint>> endpoints, boolean overwriteFile) {
+    public AbstractEndpointGenerator(List<Endpoint> endpoints, boolean overwriteFile) {
         this.endpoints = endpoints;
         this.overwriteFile = overwriteFile;
     }
@@ -49,10 +46,10 @@ public abstract class AbstractEndpointGenerator {
         System.out.println(String.format("Using %s to %s %s", getClass().getSimpleName(),
                 overwriteFile ? "write to" : "update", dest.getAbsolutePath()));
 
-        BufferedWriter bw = null;
+        IndentAwareFileWriter writer = null;
         try {
             if (overwriteFile) {
-                bw = Files.newBufferedWriter(Paths.get(dest.toURI()), StandardCharsets.UTF_8);
+                writer = new IndentAwareFileWriter(dest, 4);
             }
             if (!dest.exists()) {
                 if (!dest.mkdirs()) {
@@ -62,19 +59,41 @@ public abstract class AbstractEndpointGenerator {
             if (!dest.isFile()) {
                 throw new IllegalArgumentException("The destination must be a file");
             }
-            _generate(dest, bw);
+            _generate(dest, writer);
         } catch (IOException e) {
             JrawUtils.logger().error("Could not write the destination file: " + dest.getAbsolutePath(), e);
         } finally {
-            if (bw != null) {
+            if (writer != null) {
                 try {
-                    bw.close();
+                    writer.close();
                 } catch (IOException e) {
-                    JrawUtils.logger().error("Could not close the BufferedWriter", e);
+                    JrawUtils.logger().error("Could not close the IndentAwareFildWriter", e);
                 }
             }
         }
     }
+
+    /**
+     * Looks through a list of Endpoint objects and puts them in a map in which the key is the OAuth2 scope and the
+     * value is a list of Endpoints that have that scope
+     *
+     * @param endpoints A list of endpoints
+     * @return A map of endpoints
+     */
+    protected NavigableMap<String, List<Endpoint>> sortEndpoints(List<Endpoint> endpoints) {
+        TreeMap<String, List<Endpoint>> sorted = new TreeMap<>();
+
+        for (Endpoint e : endpoints) {
+            if (!sorted.containsKey(e.getScope())) {
+                sorted.put(e.getScope(), new ArrayList<Endpoint>());
+            }
+
+            sorted.get(e.getScope()).add(e);
+        }
+
+        return sorted;
+    }
+
 
     /**
      * Gets a link to Reddit's official API documentation for a specific endpoint
@@ -145,11 +164,9 @@ public abstract class AbstractEndpointGenerator {
 
     protected int getImplementedEndpointsCount() {
         int counter = 0;
-        for (Map.Entry<String, List<Endpoint>> endpointsList : endpoints.entrySet()) {
-            for (Endpoint e : endpointsList.getValue()) {
-                if (e.isImplemented()) {
-                    counter++;
-                }
+        for (Endpoint e : endpoints) {
+            if (e.isImplemented()) {
+                counter++;
             }
         }
 
@@ -157,21 +174,15 @@ public abstract class AbstractEndpointGenerator {
     }
 
     protected int getTotalEndpoints() {
-        int counter = 0;
-
-        for (Map.Entry<String, List<Endpoint>> endpointsList : endpoints.entrySet()) {
-            counter += endpointsList.getValue().size();
-        }
-
-        return counter;
+        return endpoints.size();
     }
 
     /**
      * Called by {@link #generate(java.io.File)}. This method does the actual generation of files.
      * @param dest The file to write to
-     * @param bw A {@link BufferedWriter} that writes to dest. Will be null if the value of overwriteFile in the
-     *           passed to the constructor was true.
+     * @param writer An {@link IndentAwareFileWriter} that writes to dest. Will be null if the value of overwriteFile
+     *               in the passed to the constructor was true.
      * @throws IOException If there was a problem writing to the file
      */
-    protected abstract void _generate(File dest, BufferedWriter bw) throws IOException;
+    protected abstract void _generate(File dest, IndentAwareFileWriter writer) throws IOException;
 }
