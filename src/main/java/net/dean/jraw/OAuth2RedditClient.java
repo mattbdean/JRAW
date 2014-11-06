@@ -15,6 +15,7 @@ public class OAuth2RedditClient extends RedditClient {
     private String[] scopes;
     private Date tokenExpiration;
     private String accessToken;
+    private boolean hasRefreshed;
 
     /**
      * Instantiates a new OAuth2RedditClient
@@ -36,6 +37,7 @@ public class OAuth2RedditClient extends RedditClient {
      */
     public OAuth2RedditClient(String userAgent) {
         super(userAgent);
+        this.hasRefreshed = false;
         setHttpsDefault(true);
     }
 
@@ -95,6 +97,31 @@ public class OAuth2RedditClient extends RedditClient {
                 .build());
         // Usually we would use response.as(), but /api/v1/me does not return a "data" or "kind" node.
         return new LoggedInAccount(response.getJson());
+    }
+
+    @Override
+    public void logout() throws NetworkException {
+        throw new UnsupportedOperationException("Use revokeToken(Credentials) to logout");
+    }
+
+    /**
+     * Revokes the OAuth2 access token. You will need to login again to continue using this client correctly.
+     * @param creds The credentials to use. The username and password are irrelevant; only the client ID and secret will
+     *              be used.
+     * @throws NetworkException If the request was not successful
+     */
+    public void revokeToken(Credentials creds) throws NetworkException {
+        executeWithBasicAuth(request()
+                .host(HOST_SPECIAL)
+                .path("/api/v1/revoke_token")
+                .post(JrawUtils.args(
+                        "token", accessToken,
+                        "token_type_hint", hasRefreshed ? "refresh_token" : "access_token"
+                )).build(),
+                creds.getClientId(), creds.getClientSecret());
+
+        accessToken = null;
+        authMethod = AuthenticationMethod.NONE;
     }
 
     /**

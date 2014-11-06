@@ -20,7 +20,7 @@ public class OAuth2Test extends AuthenticatedRedditTest {
     @Test
     public void testLoginScript() {
         try {
-            redditOAuth.logout();
+            redditOAuth.revokeToken(getCredentials());
             validateModel(redditOAuth.login(getCredentials()));
         } catch (NetworkException | ApiException e) {
             handle(e);

@@ -1,6 +1,7 @@
 package net.dean.jraw.test.auth;
 
 import net.dean.jraw.ApiException;
+import net.dean.jraw.http.AuthenticationMethod;
 import net.dean.jraw.http.Credentials;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.managers.AccountManager;
@@ -46,7 +47,8 @@ public abstract class AuthenticatedRedditTest extends RedditTest {
 
     /**
      * Gets a Credentials object that represents the properties found in credentials.json
-     * (located at /src/test/resources)
+     * (located at /src/test/resources). The Credential's AuthenticationMethod will always be
+     * {@link AuthenticationMethod#OAUTH2_SCRIPT}
      *
      * @return A Credentials object parsed form credentials.json
      */
