@@ -10,4 +10,4 @@ env:
   - CLIENT_ID=QrrG0OYBpyxgIQ
   - TERM=dumb
 script: "./gradlew test"
-after_success: "./gradlew jacocoTestReport coveralls"
+after_success: "./gradlew jacocoTestReport coveralls; ./upload_docs.sh"
