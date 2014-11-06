@@ -90,6 +90,12 @@ task release(type: Jar, dependsOn: ['fatJar', 'javadocJar', 'sourcesJar']) {
     destinationDir = releaseDest
 }
 
+javadoc {
+    def overrideVersion = System.properties.'javadoc-version'
+    def version = overrideVersion != null ? overrideVersion : project.version
+    title = "${project.name} $version API"
+}
+
 test {
     useTestNG {
         def travisPR = true
