@@ -13,7 +13,6 @@ import org.testng.SkipException;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -91,9 +90,8 @@ public abstract class RedditTest {
         return elements[3].getMethodName();
     }
 
-    protected final <T extends JsonModel> void validateModels(Collection<T> models) {
-        //models.forEach(this::validateModel);
-    	for (T model : models) {
+    protected final <T extends JsonModel> void validateModels(Iterable<T> iterable) {
+    	for (T model : iterable) {
     		validateModel(model);
     	}
     }
