@@ -100,12 +100,12 @@ public enum Endpoints {
     USER_USERNAME_WHERE("GET /user/{username}/where"),
 
     ///////// identity /////////
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_api_v1_me_prefs">{@code GET /api/v1/me/prefs}</a>" included in the "identity" scope */
-    OAUTH_ME_PREFS_GET("GET /api/v1/me/prefs"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_api_v1_me_trophies">{@code GET /api/v1/me/trophies}</a>" included in the "identity" scope */
     OAUTH_ME_TROPHIES("GET /api/v1/me/trophies"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_api_v1_me">{@code GET /api/v1/me}</a>" included in the "identity" scope */
     OAUTH_ME("GET /api/v1/me"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_api_v1_me_prefs">{@code GET /api/v1/me/prefs}</a>" included in the "identity" scope */
+    OAUTH_ME_PREFS_GET("GET /api/v1/me/prefs"),
 
     ///////// livemanage /////////
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_live_%7Bthread%7D_accept_contributor_invite">{@code POST /api/live/{thread}/accept_contributor_invite}</a>" included in the "livemanage" scope */

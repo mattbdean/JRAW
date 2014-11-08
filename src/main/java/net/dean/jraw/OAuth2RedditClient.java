@@ -1,10 +1,12 @@
 package net.dean.jraw;
 
+import com.google.common.base.Joiner;
 import net.dean.jraw.http.AuthenticationMethod;
 import net.dean.jraw.http.Credentials;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.RedditResponse;
 import net.dean.jraw.http.RestRequest;
+import net.dean.jraw.models.AccountPreferences;
 import net.dean.jraw.models.LoggedInAccount;
 import org.codehaus.jackson.JsonNode;
 
@@ -126,6 +128,16 @@ public class OAuth2RedditClient extends RedditClient {
 
         accessToken = null;
         authMethod = AuthenticationMethod.NONE;
+    }
+
+    @EndpointImplementation(Endpoints.OAUTH_ME_PREFS_GET)
+    public AccountPreferences getPreferences(String... names) throws NetworkException {
+        String csv = Joiner.on(',').join(names);
+        RedditResponse response = execute(request()
+                .endpoint(Endpoints.OAUTH_ME_PREFS_GET)
+                .query("fields", csv)
+                .build());
+        return new AccountPreferences(response.getJson());
     }
 
     /**

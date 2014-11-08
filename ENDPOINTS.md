@@ -1,9 +1,9 @@
-<!--- Generated 2014-11-08 at 12:43:06 EST. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
+<!--- Generated 2014-11-08 at 16:20:47 EST. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
 #Endpoints
 
 This file contains a list of all the endpoints (regardless of if they have been implemented) that can be found at the [official Reddit API docs](https://www.reddit.com/dev/api). To update this file, run `./gradlew endpoints:update`.
 
-So far **90** endpoints (out of 183 total) have been implemented.
+So far **91** endpoints (out of 183 total) have been implemented.
 
 ##(any scope)
 Method|Endpoint|Implemented?
@@ -76,9 +76,9 @@ Method|Endpoint|Implemented?
 ##identity
 Method|Endpoint|Implemented?
 :----:|--------|------------
-`GET`|[`/api/v1/me/prefs`](https://www.reddit.com/dev/api#GET_api_v1_me_prefs)|No
 `GET`|[`/api/v1/me/trophies`](https://www.reddit.com/dev/api#GET_api_v1_me_trophies)|No
 `GET`|[`/api/v1/me`](https://www.reddit.com/dev/api#GET_api_v1_me)|[`OAuth2RedditClient.me()`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/OAuth2RedditClient#me())
+`GET`|[`/api/v1/me/prefs`](https://www.reddit.com/dev/api#GET_api_v1_me_prefs)|[`OAuth2RedditClient.getPreferences(String[])`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/OAuth2RedditClient#getPreferences([Ljava.lang.String;))
 
 ##livemanage
 Method|Endpoint|Implemented?
