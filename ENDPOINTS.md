@@ -1,9 +1,9 @@
-<!--- Generated 2014-11-08 at 16:20:47 EST. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
+<!--- Generated 2014-11-08 at 16:38:38 EST. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
 #Endpoints
 
 This file contains a list of all the endpoints (regardless of if they have been implemented) that can be found at the [official Reddit API docs](https://www.reddit.com/dev/api). To update this file, run `./gradlew endpoints:update`.
 
-So far **91** endpoints (out of 183 total) have been implemented.
+So far **92** endpoints (out of 183 total) have been implemented.
 
 ##(any scope)
 Method|Endpoint|Implemented?
@@ -148,7 +148,7 @@ Method|Endpoint|Implemented?
 Method|Endpoint|Implemented?
 :----:|--------|------------
 `GET`|[`/api/v1/me/friends/{username}`](https://www.reddit.com/dev/api#GET_api_v1_me_friends_%7Busername%7D)|No
-`GET`|[`/api/v1/me/karma`](https://www.reddit.com/dev/api#GET_api_v1_me_karma)|No
+`GET`|[`/api/v1/me/karma`](https://www.reddit.com/dev/api#GET_api_v1_me_karma)|[`OAuth2RedditClient.getKarmaBreakdown()`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/OAuth2RedditClient#getKarmaBreakdown())
 `GET`|[`/subreddits/mine/contributor`](https://www.reddit.com/dev/api#GET_subreddits_mine_contributor)|[`UserSubredditsPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/paginators/UserSubredditsPaginator#getListing(boolean))
 `GET`|[`/subreddits/mine/moderator`](https://www.reddit.com/dev/api#GET_subreddits_mine_moderator)|[`UserSubredditsPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/paginators/UserSubredditsPaginator#getListing(boolean))
 `GET`|[`/subreddits/mine/subscriber`](https://www.reddit.com/dev/api#GET_subreddits_mine_subscriber)|[`UserSubredditsPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/paginators/UserSubredditsPaginator#getListing(boolean))

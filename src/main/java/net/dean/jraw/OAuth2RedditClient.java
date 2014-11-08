@@ -7,6 +7,7 @@ import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.RedditResponse;
 import net.dean.jraw.http.RestRequest;
 import net.dean.jraw.models.AccountPreferences;
+import net.dean.jraw.models.KarmaBreakdown;
 import net.dean.jraw.models.LoggedInAccount;
 import org.codehaus.jackson.JsonNode;
 
@@ -144,6 +145,14 @@ public class OAuth2RedditClient extends RedditClient {
                 .query(query)
                 .build());
         return new AccountPreferences(response.getJson());
+    }
+
+    @EndpointImplementation(Endpoints.OAUTH_ME_KARMA)
+    public KarmaBreakdown getKarmaBreakdown() throws NetworkException {
+        RedditResponse response = execute(request()
+                .endpoint(Endpoints.OAUTH_ME_KARMA)
+                .build());
+        return new KarmaBreakdown(response.getJson().get("data"));
     }
 
     /**

@@ -4,6 +4,7 @@ import net.dean.jraw.ApiException;
 import net.dean.jraw.OAuth2RedditClient;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.models.AccountPreferences;
+import net.dean.jraw.models.KarmaBreakdown;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.*;
@@ -44,6 +45,17 @@ public class OAuth2Test extends AuthenticatedRedditTest {
 
             // Anything else should be null
             assertNull(prefs.getLanguage());
+        } catch (NetworkException e) {
+            handle(e);
+        }
+    }
+
+    @Test
+    public void testKarmaBreakdown() {
+        try {
+            KarmaBreakdown breakdown = redditOAuth.getKarmaBreakdown();
+            validateModel(breakdown);
+            validateModels(breakdown.getSummaries());
         } catch (NetworkException e) {
             handle(e);
         }
