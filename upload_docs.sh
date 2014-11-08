@@ -6,8 +6,10 @@ shopt -s extglob
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd "$DIR"
 
-# Make sure we're on master before we try to invoke any Gradle scripts
-git checkout master
+if [[ ! "$TRAVIS_PULL_REQUEST" = "" ]]; then
+    echo "Travis-CI pull request detected, exiting."
+    exit
+fi
 
 ## Where the docs will be found after building them in master
 BUILD_DOC="build/docs/javadoc/"
@@ -24,18 +26,36 @@ OUT_DIR="docs/git/$COMMIT_SHA"
 ## Location of the latest git commit docs
 OUT_DIR_LATEST="docs/git/latest"
 
+export TERM=dumb
+
+# Fetch the other branches since Travis only clones gh-pages
+git fetch origin gh-pages:gh-pages
+
 rm -rf "$BUILD_DOC" # Remove all old javadoc
 # Build the javadoc and give it a more descriptive title
 ./gradlew javadoc -Djavadoc-version="commit $COMMIT_SHA ($LATEST_TAG+)"
 cp -r "$BUILD_DOC" -r .. # Move the javadoc out of git's reach
 
 git checkout gh-pages
+if [ -d "$OUT_DIR" ]; then
+    echo "Docs already uploaded. Exiting"
+    exit
+fi
+
 mkdir -p "$OUT_DIR"
 mv ../$DOC_FOLDER/* "$OUT_DIR" # Move the javadoc to its corresponding folder
 cp -r "$OUT_DIR" "$OUT_DIR_LATEST"
 rm -r ../$DOC_FOLDER/
 
-git commit -am "$COMMIT_MSG"
-git push
+# Configure git
+git config user.name "$GIT_NAME"
+git config user.email "$GIT_EMAIL"
+git config credential.helper "store --file=.git/credentials"
+
+echo "https://$GIT_USER:$GIT_PASS@github.com" > .git/credentials
+
+git add docs/
+git commit -m "$COMMIT_MSG"
+git push --set-upstream origin gh-pages
 git checkout master
 
