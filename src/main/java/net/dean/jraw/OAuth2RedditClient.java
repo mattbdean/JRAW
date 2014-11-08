@@ -11,6 +11,8 @@ import net.dean.jraw.models.LoggedInAccount;
 import org.codehaus.jackson.JsonNode;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This class provides a way to interact with the Reddit API using OAuth2. Before the program has exited, it is
@@ -132,10 +134,14 @@ public class OAuth2RedditClient extends RedditClient {
 
     @EndpointImplementation(Endpoints.OAUTH_ME_PREFS_GET)
     public AccountPreferences getPreferences(String... names) throws NetworkException {
-        String csv = Joiner.on(',').join(names);
+        Map<String, String> query = new HashMap<>();
+        if (names.length > 0) {
+            query.put("fields", Joiner.on(',').join(names));
+        }
+
         RedditResponse response = execute(request()
                 .endpoint(Endpoints.OAUTH_ME_PREFS_GET)
-                .query("fields", csv)
+                .query(query)
                 .build());
         return new AccountPreferences(response.getJson());
     }
