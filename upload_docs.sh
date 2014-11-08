@@ -23,6 +23,11 @@ OUT_DIR_LATEST="docs/git/latest"
 
 export TERM=dumb
 
+# Travis uses the git:// URL. When pushing, GitHub will return an error.
+# Use the HTTPS version instead
+# See http://stackoverflow.com/q/7548661/1275092
+git remote set-url origin https://github.com/thatJavaNerd/JRAW
+
 # Fetch the other branches since Travis only clones gh-pages
 git fetch origin gh-pages:gh-pages
 
