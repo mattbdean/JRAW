@@ -114,7 +114,7 @@ public abstract class AbstractEndpointGenerator {
     }
 
     /**
-     * Gets a URL linking to a given method on GitHub.
+     * Gets a URL linking to a given method's line number on GitHub.
      *
      * @param m The method to use
      * @return A URL
@@ -135,31 +135,35 @@ public abstract class AbstractEndpointGenerator {
 
     protected String getJavadocUrl(Endpoint endpoint) {
         StringBuilder base = new StringBuilder("https://thatjavanerd.github.io/JRAW/docs");
+
         Method m = endpoint.getMethod();
-        // "/0.4.0"
+        // "/0.5.0"
         base.append("/").append(Version.get().formatted());
-        // "/net/dean/jraw/ClassName.html"
-        base.append("/").append(m.getDeclaringClass().getName().replace('.', '/'));
-        // "#myMethod"
-        base.append('#').append(m.getName().replace('(', '-').replace(')', '-'));
+        // "/net/dean/jraw/ClassName.html#"
+        base.append("/")
+                .append(m.getDeclaringClass().getName().replace('.', '/'))
+                .append('#');
+        StringBuilder ref = new StringBuilder();
+        // "myMethod"
+        ref.append(m.getName());
 
         // Begin parameter types
-        base.append('-');
+        ref.append('(');
         Class<?>[] parameterTypes = m.getParameterTypes();
         int counter = 0;
         for (Class<?> parameterType : parameterTypes) {
-            base.append(parameterType.getName());
+            ref.append(parameterType.getName());
             if (counter != parameterTypes.length - 1) {
                 // Parameters are separated with a hyphen
-                base.append('-');
+                ref.append(", ");
             }
 
             counter++;
         }
 
         // End parameter types
-        base.append('-');
-        return base.toString();
+        ref.append(')');
+        return base + ref.toString();
     }
 
     protected int getImplementedEndpointsCount() {
