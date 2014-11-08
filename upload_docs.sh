@@ -6,11 +6,6 @@ shopt -s extglob
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd "$DIR"
 
-if [[ ! "$TRAVIS_PULL_REQUEST" = "" ]]; then
-    echo "Travis-CI pull request detected, exiting."
-    exit
-fi
-
 ## Where the docs will be found after building them in master
 BUILD_DOC="build/docs/javadoc/"
 ## Name of the 'javadoc' folder
