@@ -15,7 +15,7 @@ public class AccountPreferences extends JsonModel {
     /**
      * Gets the language that Reddit will use in its interface. For example, "en", "en-us", "fr"
      */
-    @JsonProperty(nullable = false)
+    @JsonProperty(nullable = true)
     public String getLanguage() {
         return data("lang");
     }
@@ -23,7 +23,7 @@ public class AccountPreferences extends JsonModel {
     /**
      * Gets whether the user uses the Reddit toolbar to look at links on the website
      */
-    @JsonProperty(nullable = false)
+    @JsonProperty(nullable = true)
     public Boolean isUsingToolbar() {
         return data("frame", Boolean.class);
     }
@@ -31,7 +31,7 @@ public class AccountPreferences extends JsonModel {
     /**
      * Gets whether links will open in a new tab (left click will function as a middle click)
      */
-    @JsonProperty(nullable = false)
+    @JsonProperty(nullable = true)
     public Boolean isUsingNewWindow() {
         return data("newwindow", Boolean.class);
     }
@@ -39,7 +39,7 @@ public class AccountPreferences extends JsonModel {
     /**
      * Gets the user's preference on how thumbnails should be displayed
      */
-    @JsonProperty(nullable = false)
+    @JsonProperty(nullable = true)
     public ThumbnailDisplayPreference getThumbnailDisplayPreference() {
         return ThumbnailDisplayPreference.valueOf(data("media").toUpperCase());
     }
