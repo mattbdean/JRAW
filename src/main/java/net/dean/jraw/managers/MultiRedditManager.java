@@ -271,7 +271,7 @@ public class MultiRedditManager extends AbstractManager {
      */
     @EndpointImplementation({
             Endpoints.MULTI_MULTIPATH_GET,
-            Endpoints.MULTI_MULTIPATH_R_SRNAME_GET
+            Endpoints.MULTI_MULTIPATH_R_SRNAME
     })
     public MultiReddit get(String owner, String multiName) throws NetworkException, ApiException {
         JsonNode node = execute(request()

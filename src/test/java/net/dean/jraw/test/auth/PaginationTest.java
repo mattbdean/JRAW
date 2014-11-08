@@ -32,6 +32,7 @@ import java.util.Date;
 import java.util.List;
 
 import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.fail;
 
 /**
  * This class tests all concrete subclasses of {@link net.dean.jraw.paginators.Paginator}
@@ -136,16 +137,32 @@ public class PaginationTest extends AuthenticatedRedditTest {
     }
 
     @Test
-    public void testMultiHubPaginator() throws NetworkException, ApiException {
+    public void testMultiHubPaginator() {
         MultiHubPaginator paginator = new MultiHubPaginator(reddit);
 
-        final int testLimit = 3;
+        final int threshold = 3;
+        int valid = 0;
+        int invalid = 0;
+
         Listing<MultiHubPaginator.MultiRedditId> ids = paginator.next();
 
-        for (int i = 0; i <= testLimit; i++) {
-            MultiHubPaginator.MultiRedditId id = ids.get(i);
-            MultiReddit multi = manager.get(id.getOwner(), id.getName());
-            validateModel(multi);
+        for (MultiHubPaginator.MultiRedditId id : ids) {
+            try {
+                MultiReddit multi = manager.get(id.getOwner(), id.getName());
+                validateModel(multi);
+                valid++;
+            } catch (NetworkException | ApiException e) {
+                invalid++;
+            }
+
+            if (valid >= threshold) {
+                // Test passed
+                break;
+            }
+            if (invalid >= threshold) {
+                // More than the acceptable amount failed, something is probably broken
+                fail("Failed to get " + threshold + " separate multireddits");
+            }
         }
     }
 

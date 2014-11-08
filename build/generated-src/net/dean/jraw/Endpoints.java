@@ -239,7 +239,7 @@ public enum Endpoints {
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_api_filter_%7Bfilterpath%7D">{@code GET /api/filter/{filterpath}}</a>" included in the "read" scope */
     FILTER_FILTERPATH_GET("GET /api/filter/{filterpath}"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_api_filter_%7Bfilterpath%7D_r_srname">{@code GET /api/filter/{filterpath}/r/srname}</a>" included in the "read" scope */
-    FILTER_FILTERPATH_R_SRNAME_GET("GET /api/filter/{filterpath}/r/srname"),
+    FILTER_FILTERPATH_R_SRNAME("GET /api/filter/{filterpath}/r/srname"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_api_info">{@code GET /api/info}</a>" included in the "read" scope */
     INFO("GET /api/info"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_morechildren">{@code POST /api/morechildren}</a>" included in the "read" scope */
@@ -252,10 +252,10 @@ public enum Endpoints {
     OAUTH_ME_FRIENDS("GET /api/v1/me/friends"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_api_v1_user_username_trophies">{@code GET /api/v1/user/username/trophies}</a>" included in the "read" scope */
     OAUTH_USER_USERNAME_TROPHIES("GET /api/v1/user/username/trophies"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_live_thread_contributors.json">{@code GET /live/thread/contributors.json}</a>" included in the "read" scope */
-    LIVE_THREAD_CONTRIBUTORS("GET /live/thread/contributors.json"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_live_thread_discussions">{@code GET /live/thread/discussions}</a>" included in the "read" scope */
-    LIVE_THREAD_DISCUSSIONS("GET /live/thread/discussions"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_live_%7Bthread%7D_contributors.json">{@code GET /live/{thread}/contributors.json}</a>" included in the "read" scope */
+    LIVE_THREAD_CONTRIBUTORS("GET /live/{thread}/contributors.json"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_live_%7Bthread%7D_discussions">{@code GET /live/{thread}/discussions}</a>" included in the "read" scope */
+    LIVE_THREAD_DISCUSSIONS("GET /live/{thread}/discussions"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_prefs_blocked">{@code GET /prefs/blocked}</a>" included in the "read" scope */
     PREFS_BLOCKED("GET /prefs/blocked"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_prefs_friends">{@code GET /prefs/friends}</a>" included in the "read" scope */
@@ -297,7 +297,7 @@ public enum Endpoints {
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#PUT_api_multi_%7Bmultipath%7D_description">{@code PUT /api/multi/{multipath}/description}</a>" included in the "read" scope */
     MULTI_MULTIPATH_DESCRIPTION_PUT("PUT /api/multi/{multipath}/description"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_api_multi_%7Bmultipath%7D_r_srname">{@code GET /api/multi/{multipath}/r/srname}</a>" included in the "read" scope */
-    MULTI_MULTIPATH_R_SRNAME_GET("GET /api/multi/{multipath}/r/srname"),
+    MULTI_MULTIPATH_R_SRNAME("GET /api/multi/{multipath}/r/srname"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_search_reddit_names.json">{@code POST /api/search_reddit_names.json}</a>" included in the "read" scope */
     SEARCH_REDDIT_NAMES("POST /api/search_reddit_names.json"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_api_subreddits_by_topic.json">{@code GET /api/subreddits_by_topic.json}</a>" included in the "read" scope */
@@ -310,10 +310,10 @@ public enum Endpoints {
     CONTROVERSIAL("GET /controversial"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_hot">{@code GET /hot}</a>" included in the "read" scope */
     HOT("GET /hot"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_live_thread">{@code GET /live/thread}</a>" included in the "read" scope */
-    LIVE_THREAD("GET /live/thread"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_live_thread_about.json">{@code GET /live/thread/about.json}</a>" included in the "read" scope */
-    LIVE_THREAD_ABOUT("GET /live/thread/about.json"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_live_%7Bthread%7D">{@code GET /live/{thread}}</a>" included in the "read" scope */
+    LIVE_THREAD("GET /live/{thread}"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_live_%7Bthread%7D_about.json">{@code GET /live/{thread}/about.json}</a>" included in the "read" scope */
+    LIVE_THREAD_ABOUT("GET /live/{thread}/about.json"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_new">{@code GET /new}</a>" included in the "read" scope */
     NEW("GET /new"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_r_subreddit_about.json">{@code GET /r/subreddit/about.json}</a>" included in the "read" scope */
@@ -372,10 +372,10 @@ public enum Endpoints {
     FILTER_FILTERPATH_DELETE("DELETE /api/filter/{filterpath}"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#PUT_api_filter_%7Bfilterpath%7D">{@code PUT /api/filter/{filterpath}}</a>" included in the "subscribe" scope */
     FILTER_FILTERPATH_PUT("PUT /api/filter/{filterpath}"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#DELETE_api_filter_%7Bfilterpath%7D_r_srname">{@code DELETE /api/filter/{filterpath}/r/srname}</a>" included in the "subscribe" scope */
-    FILTER_FILTERPATH_R_SRNAME_DELETE("DELETE /api/filter/{filterpath}/r/srname"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#PUT_api_filter_%7Bfilterpath%7D_r_srname">{@code PUT /api/filter/{filterpath}/r/srname}</a>" included in the "subscribe" scope */
-    FILTER_FILTERPATH_R_SRNAME_PUT("PUT /api/filter/{filterpath}/r/srname"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#DELETE_api_filter_%7Bfilterpath%7D_r_%7Bsrname%7D">{@code DELETE /api/filter/{filterpath}/r/{srname}}</a>" included in the "subscribe" scope */
+    FILTER_FILTERPATH_R_SRNAME_DELETE("DELETE /api/filter/{filterpath}/r/{srname}"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#PUT_api_filter_%7Bfilterpath%7D_r_%7Bsrname%7D">{@code PUT /api/filter/{filterpath}/r/{srname}}</a>" included in the "subscribe" scope */
+    FILTER_FILTERPATH_R_SRNAME_PUT("PUT /api/filter/{filterpath}/r/{srname}"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_multi_%7Bfilterpath%7D">{@code POST /api/multi/{filterpath}}</a>" included in the "subscribe" scope */
     MULTI_FILTERPATH("POST /api/multi/{filterpath}"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#DELETE_api_v1_me_friends_username">{@code DELETE /api/v1/me/friends/username}</a>" included in the "subscribe" scope */
@@ -390,10 +390,10 @@ public enum Endpoints {
     MULTI_MULTIPATH_PUT("PUT /api/multi/{multipath}"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_multi_%7Bmultipath%7D_copy">{@code POST /api/multi/{multipath}/copy}</a>" included in the "subscribe" scope */
     MULTI_MULTIPATH_COPY("POST /api/multi/{multipath}/copy"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#DELETE_api_multi_%7Bmultipath%7D_r_srname">{@code DELETE /api/multi/{multipath}/r/srname}</a>" included in the "subscribe" scope */
-    MULTI_MULTIPATH_R_SRNAME_DELETE("DELETE /api/multi/{multipath}/r/srname"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#PUT_api_multi_%7Bmultipath%7D_r_srname">{@code PUT /api/multi/{multipath}/r/srname}</a>" included in the "subscribe" scope */
-    MULTI_MULTIPATH_R_SRNAME_PUT("PUT /api/multi/{multipath}/r/srname"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#DELETE_api_multi_%7Bmultipath%7D_r_%7Bsrname%7D">{@code DELETE /api/multi/{multipath}/r/{srname}}</a>" included in the "subscribe" scope */
+    MULTI_MULTIPATH_R_SRNAME_DELETE("DELETE /api/multi/{multipath}/r/{srname}"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#PUT_api_multi_%7Bmultipath%7D_r_%7Bsrname%7D">{@code PUT /api/multi/{multipath}/r/{srname}}</a>" included in the "subscribe" scope */
+    MULTI_MULTIPATH_R_SRNAME_PUT("PUT /api/multi/{multipath}/r/{srname}"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_multi_%7Bmultipath%7D_rename">{@code POST /api/multi/{multipath}/rename}</a>" included in the "subscribe" scope */
     MULTI_MULTIPATH_RENAME("POST /api/multi/{multipath}/rename"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_subscribe">{@code POST /api/subscribe}</a>" included in the "subscribe" scope */

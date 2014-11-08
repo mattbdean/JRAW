@@ -45,18 +45,47 @@ public class RedditClient extends RestClient<RedditResponse> {
     /** The name of the header that will be assigned upon a successful standard login */
     private static final String HEADER_MODHASH = "X-Modhash";
 
-    /** The amount of requests allowed per minute without using OAuth */
-    private static final int REQUESTS_PER_MINUTE = 30;
+    /** The amount of requests allowed per minute without using OAuth2 */
+    public static final int REQUESTS_PER_MINUTE = 30;
+
+    /** The amount of requests allowed per minute when using OAuth2 */
+    public static final int REQUESTS_PER_MINUTE_OAUTH2 = 60;
 
     /** The amount of trending subreddits that will appear in each /r/trendingsubreddits post */
     private static final int NUM_TRENDING_SUBREDDITS = 5;
 
+    /** The username of the user who is currently authenticated */
     protected String authenticatedUser;
 
+    /** The method of authentication currently being used */
     protected AuthenticationMethod authMethod;
 
     /**
-     * Instantiates a new RedditClient and adds the given user agent to the default headers of the RestClient
+     * Instantiates a new RedditClient and adds the given user agent to the default headers
+     *
+     * @param userAgent The User-Agent header that will be sent with all the HTTP requests.
+     *                  <blockquote>Change your client's
+     *                  User-Agent string to something unique and descriptive, preferably referencing your reddit
+     *                  username. From the <a href="https://github.com/reddit/reddit/wiki/API">Reddit Wiki on Github</a>:
+     *                  <ul>
+     *                  <li>Many default User-Agents (like "Python/urllib" or "Java") are drastically limited to
+     *                  encourage unique and descriptive user-agent strings.</li>
+     *                  <li>If you're making an application for others to use, please include a version number in
+     *                  the user agent. This allows us to block buggy versions without blocking all versions of
+     *                  your app.</li>
+     *                  <li>NEVER lie about your user-agent. This includes spoofing popular browsers and spoofing
+     *                  other bots. We will ban liars with extreme prejudice.</li>
+     *                  </ul>
+     *                  </blockquote>
+     * @param requestsPerMinute The amount of requests per minute to send
+     */
+    public RedditClient(String userAgent, int requestsPerMinute) {
+        super(HOST, userAgent, requestsPerMinute);
+        this.authMethod = AuthenticationMethod.NONE;
+    }
+
+    /**
+     * Instantiates a new RedditClient and adds the given user agent to the default headers
      *
      * @param userAgent The User-Agent header that will be sent with all the HTTP requests.
      *                  <blockquote>Change your client's
@@ -74,8 +103,7 @@ public class RedditClient extends RestClient<RedditResponse> {
      *                  </blockquote>
      */
     public RedditClient(String userAgent) {
-        super(HOST, userAgent, REQUESTS_PER_MINUTE);
-        this.authMethod = AuthenticationMethod.NONE;
+        this(userAgent, REQUESTS_PER_MINUTE);
     }
 
     @Override
@@ -131,6 +159,10 @@ public class RedditClient extends RestClient<RedditResponse> {
         return me;
     }
 
+    /**
+     * Logs out of Reddit.
+     * @throws NetworkException If the request was not successful
+     */
     public void logout() throws NetworkException {
         execute(request()
                 .path("/logout")

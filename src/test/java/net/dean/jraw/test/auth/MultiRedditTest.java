@@ -6,15 +6,14 @@ import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.managers.MultiRedditManager;
 import net.dean.jraw.models.MultiReddit;
 import net.dean.jraw.models.RenderStringPair;
-import net.dean.jraw.test.SetupRequiredException;import org.testng.annotations.BeforeMethod;
+import net.dean.jraw.test.SetupRequiredException;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.*;
 
 /**
  * This class tests the {@link MultiRedditManager} class.

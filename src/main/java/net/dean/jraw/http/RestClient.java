@@ -22,7 +22,6 @@ import java.util.concurrent.TimeUnit;
  */
 public abstract class RestClient<T extends RestResponse> implements HttpClient<T>, NetworkAccessible<T, RestClient<T>> {
     private final String defaultHost;
-    private final RateLimiter rateLimiter;
     /** The OkHttpClient used to execute HTTP requests */
     protected final OkHttpClient http;
     /** The CookieStore that will contain all the cookies saved by {@link #http} */
@@ -32,6 +31,7 @@ public abstract class RestClient<T extends RestResponse> implements HttpClient<T
     protected final LinkedHashMap<T, Date> history;
     /** A list of headers to be sent for request */
     protected final Map<String, String> defaultHeaders;
+    private RateLimiter rateLimiter;
     private boolean useHttpsDefault;
     private boolean enforceRatelimit;
     private boolean saveResponseHistory;
@@ -43,25 +43,22 @@ public abstract class RestClient<T extends RestResponse> implements HttpClient<T
      * @param defaultHost The host on which to operate
      * @param userAgent The User-Agent header which will be sent with all requests
      * @param requestsPerMinute The amount of HTTP requests that can be sent in one minute. A value greater than 0 will
-     *                          enable rate limit enforcing, one less than or equal to 0 will disable it. This value cannot
-     *                          be changed aft
+     *                          enable rate limit enforcing, one less than or equal to 0 will disable it.
      */
     public RestClient(String defaultHost, String userAgent, int requestsPerMinute) {
         this.defaultHost = defaultHost;
-        this.enforceRatelimit = requestsPerMinute > 0;
-        this.rateLimiter = enforceRatelimit ? RateLimiter.create((double) requestsPerMinute / 60) : null;
         this.http = new OkHttpClient();
         this.saveResponseHistory = false;
         this.requestLogging = true;
         CookieManager manager = new CookieManager();
         manager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
         http.setCookieHandler(manager);
-
         this.cookieJar = manager.getCookieStore();
         this.history = new LinkedHashMap<>();
         this.useHttpsDefault = false;
         this.defaultHeaders = new HashMap<>();
         setUserAgent(userAgent);
+        setEnforceRatelimit(requestsPerMinute);
     }
 
     /**
@@ -126,10 +123,12 @@ public abstract class RestClient<T extends RestResponse> implements HttpClient<T
      * wait to execute the next request in order to minimize the chance of Reddit IP banning this client or simply
      * returning a 403 Forbidden.
      *
-     * @param enabled Whether to enable request management
+     * @param requestsPerMinute The amount of HTTP requests that can be sent in one minute. A value greater than 0 will
+     *                          enable rate limit enforcing, one less than or equal to 0 will disable it.
      */
-    public void setEnforceRatelimit(boolean enabled) {
-        this.enforceRatelimit = enabled;
+    public void setEnforceRatelimit(int requestsPerMinute) {
+        this.enforceRatelimit = requestsPerMinute > 0;
+        this.rateLimiter = enforceRatelimit ? RateLimiter.create((double) requestsPerMinute / 60) : null;
     }
 
     /**

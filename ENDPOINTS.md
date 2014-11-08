@@ -1,4 +1,4 @@
-<!--- Generated 2014-11-06 at 18:12:26 EST. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
+<!--- Generated 2014-11-08 at 11:27:18 EST. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
 #Endpoints
 
 This file contains a list of all the endpoints (regardless of if they have been implemented) that can be found at the [official Reddit API docs](https://www.reddit.com/dev/api). To update this file, run `./gradlew endpoints:update`.
@@ -179,8 +179,8 @@ Method|Endpoint|Implemented?
 `GET`|[`/api/v1/me/blocked`](https://www.reddit.com/dev/api#GET_api_v1_me_blocked)|No
 `GET`|[`/api/v1/me/friends`](https://www.reddit.com/dev/api#GET_api_v1_me_friends)|No
 `GET`|[`/api/v1/user/username/trophies`](https://www.reddit.com/dev/api#GET_api_v1_user_username_trophies)|No
-`GET`|[`/live/thread/contributors.json`](https://www.reddit.com/dev/api#GET_live_thread_contributors.json)|No
-`GET`|[`/live/thread/discussions`](https://www.reddit.com/dev/api#GET_live_thread_discussions)|No
+`GET`|[`/live/{thread}/contributors.json`](https://www.reddit.com/dev/api#GET_live_%7Bthread%7D_contributors.json)|No
+`GET`|[`/live/{thread}/discussions`](https://www.reddit.com/dev/api#GET_live_%7Bthread%7D_discussions)|No
 `GET`|[`/prefs/blocked`](https://www.reddit.com/dev/api#GET_prefs_blocked)|No
 `GET`|[`/prefs/friends`](https://www.reddit.com/dev/api#GET_prefs_friends)|No
 `GET`|[`/prefs/where`](https://www.reddit.com/dev/api#GET_prefs_where)|No
@@ -208,8 +208,8 @@ Method|Endpoint|Implemented?
 `GET`|[`/comments/article`](https://www.reddit.com/dev/api#GET_comments_article)|[`RedditClient.getSubmission(SubmissionRequest)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/RedditClient#getSubmission-net.dean.jraw.RedditClient$SubmissionRequest-)
 `GET`|[`/controversial`](https://www.reddit.com/dev/api#GET_controversial)|[`SubredditPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/paginators/SubredditPaginator#getListing-boolean-)
 `GET`|[`/hot`](https://www.reddit.com/dev/api#GET_hot)|[`SubredditPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/paginators/SubredditPaginator#getListing-boolean-)
-`GET`|[`/live/thread`](https://www.reddit.com/dev/api#GET_live_thread)|[`LiveThreadPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/paginators/LiveThreadPaginator#getListing-boolean-)
-`GET`|[`/live/thread/about.json`](https://www.reddit.com/dev/api#GET_live_thread_about.json)|[`RedditClient.getLiveThread(String)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/RedditClient#getLiveThread-java.lang.String-)
+`GET`|[`/live/{thread}`](https://www.reddit.com/dev/api#GET_live_%7Bthread%7D)|[`LiveThreadPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/paginators/LiveThreadPaginator#getListing-boolean-)
+`GET`|[`/live/{thread}/about.json`](https://www.reddit.com/dev/api#GET_live_%7Bthread%7D_about.json)|[`RedditClient.getLiveThread(String)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/RedditClient#getLiveThread-java.lang.String-)
 `GET`|[`/new`](https://www.reddit.com/dev/api#GET_new)|[`SubredditPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/paginators/SubredditPaginator#getListing-boolean-)
 `GET`|[`/r/subreddit/about.json`](https://www.reddit.com/dev/api#GET_r_subreddit_about.json)|[`RedditClient.getSubreddit(String)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/RedditClient#getSubreddit-java.lang.String-)
 `GET`|[`/random`](https://www.reddit.com/dev/api#GET_random)|[`RedditClient.getRandomSubmission(String)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/RedditClient#getRandomSubmission-java.lang.String-)
@@ -251,8 +251,8 @@ Method|Endpoint|Implemented?
 :----:|--------|------------
 `DELETE`|[`/api/filter/{filterpath}`](https://www.reddit.com/dev/api#DELETE_api_filter_%7Bfilterpath%7D)|No
 `PUT`|[`/api/filter/{filterpath}`](https://www.reddit.com/dev/api#PUT_api_filter_%7Bfilterpath%7D)|No
-`DELETE`|[`/api/filter/{filterpath}/r/srname`](https://www.reddit.com/dev/api#DELETE_api_filter_%7Bfilterpath%7D_r_srname)|No
-`PUT`|[`/api/filter/{filterpath}/r/srname`](https://www.reddit.com/dev/api#PUT_api_filter_%7Bfilterpath%7D_r_srname)|No
+`DELETE`|[`/api/filter/{filterpath}/r/{srname}`](https://www.reddit.com/dev/api#DELETE_api_filter_%7Bfilterpath%7D_r_%7Bsrname%7D)|No
+`PUT`|[`/api/filter/{filterpath}/r/{srname}`](https://www.reddit.com/dev/api#PUT_api_filter_%7Bfilterpath%7D_r_%7Bsrname%7D)|No
 `POST`|[`/api/multi/{filterpath}`](https://www.reddit.com/dev/api#POST_api_multi_%7Bfilterpath%7D)|No
 `DELETE`|[`/api/v1/me/friends/username`](https://www.reddit.com/dev/api#DELETE_api_v1_me_friends_username)|No
 `PUT`|[`/api/v1/me/friends/username`](https://www.reddit.com/dev/api#PUT_api_v1_me_friends_username)|No
@@ -260,8 +260,8 @@ Method|Endpoint|Implemented?
 `POST`|[`/api/multi/{multipath}`](https://www.reddit.com/dev/api#POST_api_multi_%7Bmultipath%7D)|[`MultiRedditManager.createOrUpdate(String, List, boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/managers/MultiRedditManager#createOrUpdate-java.lang.String-java.util.List-boolean-)
 `PUT`|[`/api/multi/{multipath}`](https://www.reddit.com/dev/api#PUT_api_multi_%7Bmultipath%7D)|[`MultiRedditManager.createOrUpdate(String, List, boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/managers/MultiRedditManager#createOrUpdate-java.lang.String-java.util.List-boolean-)
 `POST`|[`/api/multi/{multipath}/copy`](https://www.reddit.com/dev/api#POST_api_multi_%7Bmultipath%7D_copy)|[`MultiRedditManager.copy(String, String, String)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/managers/MultiRedditManager#copy-java.lang.String-java.lang.String-java.lang.String-)
-`DELETE`|[`/api/multi/{multipath}/r/srname`](https://www.reddit.com/dev/api#DELETE_api_multi_%7Bmultipath%7D_r_srname)|[`MultiRedditManager.removeSubreddit(String, String)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/managers/MultiRedditManager#removeSubreddit-java.lang.String-java.lang.String-)
-`PUT`|[`/api/multi/{multipath}/r/srname`](https://www.reddit.com/dev/api#PUT_api_multi_%7Bmultipath%7D_r_srname)|[`MultiRedditManager.addSubreddit(String, String)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/managers/MultiRedditManager#addSubreddit-java.lang.String-java.lang.String-)
+`DELETE`|[`/api/multi/{multipath}/r/{srname}`](https://www.reddit.com/dev/api#DELETE_api_multi_%7Bmultipath%7D_r_%7Bsrname%7D)|[`MultiRedditManager.removeSubreddit(String, String)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/managers/MultiRedditManager#removeSubreddit-java.lang.String-java.lang.String-)
+`PUT`|[`/api/multi/{multipath}/r/{srname}`](https://www.reddit.com/dev/api#PUT_api_multi_%7Bmultipath%7D_r_%7Bsrname%7D)|[`MultiRedditManager.addSubreddit(String, String)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/managers/MultiRedditManager#addSubreddit-java.lang.String-java.lang.String-)
 `POST`|[`/api/multi/{multipath}/rename`](https://www.reddit.com/dev/api#POST_api_multi_%7Bmultipath%7D_rename)|[`MultiRedditManager.rename(String, String)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/managers/MultiRedditManager#rename-java.lang.String-java.lang.String-)
 `POST`|[`/api/subscribe`](https://www.reddit.com/dev/api#POST_api_subscribe)|[`AccountManager.setSubscribed(Subreddit, boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/managers/AccountManager#setSubscribed-net.dean.jraw.models.Subreddit-boolean-)
 

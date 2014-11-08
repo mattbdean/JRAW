@@ -10,6 +10,10 @@ import org.codehaus.jackson.JsonNode;
 
 import java.util.Date;
 
+/**
+ * This class provides a way to interact with the Reddit API using OAuth2. Before the program has exited, it is
+ * recommended to revoke the access token (see {@link #revokeToken(Credentials)}).
+ */
 public class OAuth2RedditClient extends RedditClient {
     private static final String HEADER_AUTHORIZATION = "Authorization";
     private String[] scopes;
@@ -36,7 +40,7 @@ public class OAuth2RedditClient extends RedditClient {
      *                  </blockquote>
      */
     public OAuth2RedditClient(String userAgent) {
-        super(userAgent);
+        super(userAgent, REQUESTS_PER_MINUTE_OAUTH2);
         this.hasRefreshed = false;
         setHttpsDefault(true);
     }
