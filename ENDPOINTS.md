@@ -1,9 +1,9 @@
-<!--- Generated 2014-11-09 at 15:19:39 EST. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
+<!--- Generated 2014-11-09 at 15:33:43 EST. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
 #Endpoints
 
 This file contains a list of all the endpoints (regardless of if they have been implemented) that can be found at the [official Reddit API docs](https://www.reddit.com/dev/api). To update this file, run `./gradlew endpoints:update`.
 
-So far **96** endpoints (out of 183 total) have been implemented.
+So far **97** endpoints (out of 183 total) have been implemented.
 
 ##(any scope)
 Method|Endpoint|Implemented?
@@ -179,7 +179,6 @@ Method|Endpoint|Implemented?
 `GET`|[`/api/v1/user/username/trophies`](https://www.reddit.com/dev/api#GET_api_v1_user_username_trophies)|No
 `GET`|[`/live/{thread}/contributors.json`](https://www.reddit.com/dev/api#GET_live_%7Bthread%7D_contributors.json)|No
 `GET`|[`/live/{thread}/discussions`](https://www.reddit.com/dev/api#GET_live_%7Bthread%7D_discussions)|No
-`GET`|[`/prefs/where`](https://www.reddit.com/dev/api#GET_prefs_where)|No
 `GET`|[`/subreddits/search`](https://www.reddit.com/dev/api#GET_subreddits_search)|No
 `GET`|[`/about/banned`](https://www.reddit.com/dev/api#GET_about_banned)|[`UserRecordPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/paginators/UserRecordPaginator#getListing(boolean))
 `GET`|[`/about/contributors`](https://www.reddit.com/dev/api#GET_about_contributors)|[`UserRecordPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/paginators/UserRecordPaginator#getListing(boolean))
@@ -211,6 +210,7 @@ Method|Endpoint|Implemented?
 `GET`|[`/new`](https://www.reddit.com/dev/api#GET_new)|[`SubredditPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/paginators/SubredditPaginator#getListing(boolean))
 `GET`|[`/prefs/blocked`](https://www.reddit.com/dev/api#GET_prefs_blocked)|[`ImportantUserPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/paginators/ImportantUserPaginator#getListing(boolean))
 `GET`|[`/prefs/friends`](https://www.reddit.com/dev/api#GET_prefs_friends)|[`ImportantUserPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/paginators/ImportantUserPaginator#getListing(boolean))
+`GET`|[`/prefs/where`](https://www.reddit.com/dev/api#GET_prefs_where)|[`ImportantUserPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/paginators/ImportantUserPaginator#getListing(boolean))
 `GET`|[`/r/subreddit/about.json`](https://www.reddit.com/dev/api#GET_r_subreddit_about.json)|[`RedditClient.getSubreddit(String)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/RedditClient#getSubreddit(java.lang.String))
 `GET`|[`/random`](https://www.reddit.com/dev/api#GET_random)|[`RedditClient.getRandomSubmission(String)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/RedditClient#getRandomSubmission(java.lang.String))
 `GET`|[`/search`](https://www.reddit.com/dev/api#GET_search)|[`SearchPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/paginators/SearchPaginator#getListing(boolean))

@@ -23,6 +23,7 @@ public class ImportantUserPaginator extends GenericUserRecordPaginator {
 
     @Override
     @EndpointImplementation({
+            Endpoints.PREFS_WHERE,
             Endpoints.PREFS_BLOCKED,
             Endpoints.PREFS_FRIENDS,
             Endpoints.OAUTH_ME_BLOCKED,

@@ -252,8 +252,6 @@ public enum Endpoints {
     LIVE_THREAD_CONTRIBUTORS("GET /live/{thread}/contributors.json"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_live_%7Bthread%7D_discussions">{@code GET /live/{thread}/discussions}</a>" included in the "read" scope */
     LIVE_THREAD_DISCUSSIONS("GET /live/{thread}/discussions"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_prefs_where">{@code GET /prefs/where}</a>" included in the "read" scope */
-    PREFS_WHERE("GET /prefs/where"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_subreddits_search">{@code GET /subreddits/search}</a>" included in the "read" scope */
     SUBREDDITS_SEARCH("GET /subreddits/search"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_about_banned">{@code GET /about/banned}</a>" included in the "read" scope */
@@ -316,6 +314,8 @@ public enum Endpoints {
     PREFS_BLOCKED("GET /prefs/blocked"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_prefs_friends">{@code GET /prefs/friends}</a>" included in the "read" scope */
     PREFS_FRIENDS("GET /prefs/friends"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_prefs_where">{@code GET /prefs/where}</a>" included in the "read" scope */
+    PREFS_WHERE("GET /prefs/where"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_r_subreddit_about.json">{@code GET /r/subreddit/about.json}</a>" included in the "read" scope */
     SUBREDDIT_ABOUT("GET /r/subreddit/about.json"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_random">{@code GET /random}</a>" included in the "read" scope */
