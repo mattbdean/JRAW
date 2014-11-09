@@ -2,6 +2,8 @@ package net.dean.jraw.models;
 
 import com.google.common.collect.ImmutableList;
 
+import java.util.List;
+
 /**
  * This class is a "hacky" way to represent a Listing
  * @param <T> The type of elements that will be in this listing
@@ -13,13 +15,13 @@ public final class FauxListing<T extends RedditObject> extends Listing<T> {
     private final String modhash;
     private final More more;
 
-    public FauxListing(ImmutableList<T> children, String before, String after, String modhash) {
+    public FauxListing(List<T> children, String before, String after, String modhash) {
         this(children, before, after, modhash, null);
     }
 
-    public FauxListing(ImmutableList<T> children, String before, String after, String modhash, More more) {
+    public FauxListing(List<T> children, String before, String after, String modhash, More more) {
         super(null, null);
-        this.children = children;
+        this.children = ImmutableList.<T>builder().addAll(children).build();
         this.before = before;
         this.after = after;
         this.more = more;

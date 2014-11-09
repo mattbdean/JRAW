@@ -133,6 +133,13 @@ public class OAuth2RedditClient extends RedditClient {
         authMethod = AuthenticationMethod.NONE;
     }
 
+    /**
+     * Gets the preferences for this account
+     * @param names The specific names of the desired preferences. These can be found
+     *              <a href="https://www.reddit.com/dev/api#GET_api_v1_me_prefs">here</a>.
+     * @return An AccountPreferences that represent this account's preferences
+     * @throws NetworkException If the request was not successful
+     */
     @EndpointImplementation(Endpoints.OAUTH_ME_PREFS_GET)
     public AccountPreferences getPreferences(String... names) throws NetworkException {
         Map<String, String> query = new HashMap<>();
@@ -147,6 +154,11 @@ public class OAuth2RedditClient extends RedditClient {
         return new AccountPreferences(response.getJson());
     }
 
+    /**
+     * Gets a breakdown of link and comment karma by subreddit
+     * @return A KarmaBreakdown for this account
+     * @throws NetworkException If the request was not successful
+     */
     @EndpointImplementation(Endpoints.OAUTH_ME_KARMA)
     public KarmaBreakdown getKarmaBreakdown() throws NetworkException {
         RedditResponse response = execute(request()

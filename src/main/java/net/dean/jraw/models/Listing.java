@@ -39,7 +39,7 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
     }
 
     protected ImmutableList<T> initChildren() {
-        ImmutableList.Builder<T> children = ImmutableList.<T>builder();
+        ImmutableList.Builder<T> children = ImmutableList.builder();
 
         // children is a JSON array
         for (JsonNode childNode : data.get("children")) {

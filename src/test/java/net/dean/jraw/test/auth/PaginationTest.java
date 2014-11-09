@@ -2,6 +2,7 @@ package net.dean.jraw.test.auth;
 
 import net.dean.jraw.ApiException;
 import net.dean.jraw.JrawUtils;
+import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.managers.MultiRedditManager;
 import net.dean.jraw.models.Listing;
@@ -10,6 +11,7 @@ import net.dean.jraw.models.Submission;
 import net.dean.jraw.models.Thing;
 import net.dean.jraw.paginators.AllSubredditsPaginator;
 import net.dean.jraw.paginators.CompoundSubredditPaginator;
+import net.dean.jraw.paginators.ImportantUserPaginator;
 import net.dean.jraw.paginators.InboxPaginator;
 import net.dean.jraw.paginators.LiveThreadPaginator;
 import net.dean.jraw.paginators.ModeratorPaginator;
@@ -187,6 +189,17 @@ public class PaginationTest extends AuthenticatedRedditTest {
         for (UserRecordPaginator.Where where : UserRecordPaginator.Where.values()) {
             UserRecordPaginator paginator = new UserRecordPaginator(reddit, modOf, where);
             commonTest(paginator);
+        }
+    }
+
+    @Test
+    public void testImportantUserPaginator() {
+        RedditClient[] clientsToTest = {reddit, redditOAuth2};
+        for (RedditClient client : clientsToTest) {
+            for (ImportantUserPaginator.Where where : ImportantUserPaginator.Where.values()) {
+                ImportantUserPaginator paginator = new ImportantUserPaginator(client, where);
+                commonTest(paginator);
+            }
         }
     }
 

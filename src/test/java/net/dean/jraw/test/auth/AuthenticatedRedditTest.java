@@ -1,6 +1,7 @@
 package net.dean.jraw.test.auth;
 
 import net.dean.jraw.ApiException;
+import net.dean.jraw.OAuth2RedditClient;
 import net.dean.jraw.http.AuthenticationMethod;
 import net.dean.jraw.http.Credentials;
 import net.dean.jraw.http.NetworkException;
@@ -24,25 +25,23 @@ public abstract class AuthenticatedRedditTest extends RedditTest {
     private static Credentials credentials;
     private static ObjectMapper objectMapper = new ObjectMapper();
     protected final AccountManager account;
+    protected static final OAuth2RedditClient redditOAuth2 = new OAuth2RedditClient("");
 
     AuthenticatedRedditTest() {
         super();
-        if (!reddit.isLoggedIn()) {
-            login();
-        }
-        this.account = new AccountManager(reddit);
-    }
-
-    /**
-     * Logs in using the credentials provided by {@link #getCredentials()}
-     */
-    public void login() {
+        redditOAuth2.setUserAgent(getUserAgent(getClass()));
+        Credentials creds = getCredentials();
         try {
-            Credentials creds = getCredentials();
-            reddit.login(Credentials.standard(creds.getUsername(), creds.getPassword()));
+            if (!reddit.isLoggedIn()) {
+                reddit.login(Credentials.standard(creds.getUsername(), creds.getPassword()));
+            }
+            if (!redditOAuth2.isLoggedIn()) {
+                redditOAuth2.login(credentials);
+            }
         } catch (NetworkException | ApiException e) {
             handle(e);
         }
+        this.account = new AccountManager(reddit);
     }
 
     /**

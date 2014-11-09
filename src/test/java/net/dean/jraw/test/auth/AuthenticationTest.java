@@ -1,5 +1,6 @@
 package net.dean.jraw.test.auth;
 
+import net.dean.jraw.ApiException;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.models.LoggedInAccount;
 import org.testng.annotations.Test;
@@ -11,12 +12,6 @@ import static org.testng.Assert.assertFalse;
  * This class tests methods that deal with logging in and out, as well as testing the state.
  */
 public class AuthenticationTest extends AuthenticatedRedditTest {
-    @Test
-    @Override
-    public void login() {
-        // Override this method to add @Test
-        super.login();
-    }
 
     @Test
     public void testLogout() {
@@ -28,7 +23,11 @@ public class AuthenticationTest extends AuthenticatedRedditTest {
         } finally {
             // Use try-catch-finally for this method only instead of the traditional setUp/tearDown testing methods
             // because this is the only test that logs out
-            login();
+            try {
+                reddit.login(getCredentials());
+            } catch (NetworkException | ApiException e) {
+                handle(e);
+            }
         }
     }
 

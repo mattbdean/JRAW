@@ -8,7 +8,7 @@ import java.util.List;
 
 /**
  * This class represents a small bit of data relevant to moderation logs such as banned users, accepted contributors,
- * and moderators.
+ * and moderators. Also used when using friends and blocked users.
  */
 public class UserRecord extends Thing {
 
@@ -25,7 +25,8 @@ public class UserRecord extends Thing {
      * This property has multiple meanings depending on the context. If this record is referring to a user being banned
      * from or being added as a contributor to either the subreddit or the wiki, then this will return the date they
      * were banned or added as a contributor. If this record is referring to a contributor or moderator, then this will
-     * return the date that the account was created.
+     * return the date that the account was created. If this record is referring to a friend or a blocked user, then
+     * this will be the date that they were added as a friend or blocked.
      * @return The date most relevant to this record
      */
     @JsonProperty

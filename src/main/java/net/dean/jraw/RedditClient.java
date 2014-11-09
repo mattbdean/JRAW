@@ -501,6 +501,14 @@ public class RedditClient extends RestClient<RedditResponse> {
     }
 
     /**
+     * Returns how the user was authenticated
+     * @return How the user was authenticated
+     */
+    public AuthenticationMethod getAuthenticationMethod() {
+        return authMethod;
+    }
+
+    /**
      * This class is used by {@link #getSubmission(net.dean.jraw.RedditClient.SubmissionRequest)} to specify the
      * parameters of the request.
      */

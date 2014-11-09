@@ -246,20 +246,12 @@ public enum Endpoints {
     MORECHILDREN("POST /api/morechildren"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_api_recommend_sr_srnames">{@code GET /api/recommend/sr/srnames}</a>" included in the "read" scope */
     RECOMMEND_SR_SRNAMES("GET /api/recommend/sr/srnames"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_api_v1_me_blocked">{@code GET /api/v1/me/blocked}</a>" included in the "read" scope */
-    OAUTH_ME_BLOCKED("GET /api/v1/me/blocked"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_api_v1_me_friends">{@code GET /api/v1/me/friends}</a>" included in the "read" scope */
-    OAUTH_ME_FRIENDS("GET /api/v1/me/friends"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_api_v1_user_username_trophies">{@code GET /api/v1/user/username/trophies}</a>" included in the "read" scope */
     OAUTH_USER_USERNAME_TROPHIES("GET /api/v1/user/username/trophies"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_live_%7Bthread%7D_contributors.json">{@code GET /live/{thread}/contributors.json}</a>" included in the "read" scope */
     LIVE_THREAD_CONTRIBUTORS("GET /live/{thread}/contributors.json"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_live_%7Bthread%7D_discussions">{@code GET /live/{thread}/discussions}</a>" included in the "read" scope */
     LIVE_THREAD_DISCUSSIONS("GET /live/{thread}/discussions"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_prefs_blocked">{@code GET /prefs/blocked}</a>" included in the "read" scope */
-    PREFS_BLOCKED("GET /prefs/blocked"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_prefs_friends">{@code GET /prefs/friends}</a>" included in the "read" scope */
-    PREFS_FRIENDS("GET /prefs/friends"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_prefs_where">{@code GET /prefs/where}</a>" included in the "read" scope */
     PREFS_WHERE("GET /prefs/where"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_subreddits_search">{@code GET /subreddits/search}</a>" included in the "read" scope */
@@ -302,6 +294,10 @@ public enum Endpoints {
     SEARCH_REDDIT_NAMES("POST /api/search_reddit_names.json"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_api_subreddits_by_topic.json">{@code GET /api/subreddits_by_topic.json}</a>" included in the "read" scope */
     SUBREDDITS_BY_TOPIC("GET /api/subreddits_by_topic.json"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_api_v1_me_blocked">{@code GET /api/v1/me/blocked}</a>" included in the "read" scope */
+    OAUTH_ME_BLOCKED("GET /api/v1/me/blocked"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_api_v1_me_friends">{@code GET /api/v1/me/friends}</a>" included in the "read" scope */
+    OAUTH_ME_FRIENDS("GET /api/v1/me/friends"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_by_id_names">{@code GET /by_id/names}</a>" included in the "read" scope */
     BY_ID_NAMES("GET /by_id/names"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_comments_article">{@code GET /comments/article}</a>" included in the "read" scope */
@@ -316,6 +312,10 @@ public enum Endpoints {
     LIVE_THREAD_ABOUT("GET /live/{thread}/about.json"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_new">{@code GET /new}</a>" included in the "read" scope */
     NEW("GET /new"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_prefs_blocked">{@code GET /prefs/blocked}</a>" included in the "read" scope */
+    PREFS_BLOCKED("GET /prefs/blocked"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_prefs_friends">{@code GET /prefs/friends}</a>" included in the "read" scope */
+    PREFS_FRIENDS("GET /prefs/friends"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_r_subreddit_about.json">{@code GET /r/subreddit/about.json}</a>" included in the "read" scope */
     SUBREDDIT_ABOUT("GET /r/subreddit/about.json"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_random">{@code GET /random}</a>" included in the "read" scope */

@@ -1,20 +1,16 @@
 package net.dean.jraw.paginators;
 
-import com.google.common.collect.ImmutableList;
 import net.dean.jraw.EndpointImplementation;
 import net.dean.jraw.Endpoints;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.NetworkException;
-import net.dean.jraw.http.RedditResponse;
-import net.dean.jraw.models.FauxListing;
 import net.dean.jraw.models.Listing;
 import net.dean.jraw.models.UserRecord;
-import org.codehaus.jackson.JsonNode;
 
 /**
  * This class provides a way to iterate over the users that have been banned, marked as contributors, etc.
  */
-public class UserRecordPaginator extends GenericPaginator<UserRecord, UserRecordPaginator.Where> {
+public class UserRecordPaginator extends GenericUserRecordPaginator<UserRecordPaginator.Where> {
     private String subreddit;
 
     /**
@@ -42,32 +38,6 @@ public class UserRecordPaginator extends GenericPaginator<UserRecord, UserRecord
     protected Listing<UserRecord> getListing(boolean forwards) throws NetworkException {
         // Just call super so that we can add the @EndpointImplementation annotation
         return super.getListing(forwards);
-    }
-
-    @Override
-    protected Listing<UserRecord> parseListing(RedditResponse response) {
-        ImmutableList.Builder<UserRecord> list = ImmutableList.builder();
-
-        for (JsonNode child : response.getJson().get("data").get("children")) {
-            list.add(new UserRecord(child));
-        }
-
-        JsonNode data = response.getJson().get("data");
-        return new FauxListing<>(list.build(), getJsonValue(data, "before"),
-                getJsonValue(data, "after"), getJsonValue(data, "after"));
-    }
-
-    private String getJsonValue(JsonNode data, String key) {
-        if (where == Where.MODERATORS) {
-            // A moderator listing only has a 'children' key
-            return null;
-        }
-
-        JsonNode node = data.get(key);
-        if (node.isNull()) {
-            return null;
-        }
-        return node.asText();
     }
 
     @Override

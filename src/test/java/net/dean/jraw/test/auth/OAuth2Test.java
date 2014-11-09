@@ -1,31 +1,21 @@
 package net.dean.jraw.test.auth;
 
 import net.dean.jraw.ApiException;
-import net.dean.jraw.OAuth2RedditClient;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.models.AccountPreferences;
 import net.dean.jraw.models.KarmaBreakdown;
 import org.testng.annotations.Test;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
 
 public class OAuth2Test extends AuthenticatedRedditTest {
-    private OAuth2RedditClient redditOAuth;
-
-    public OAuth2Test() {
-        this.redditOAuth = new OAuth2RedditClient(getUserAgent(getClass()));
-        try {
-            redditOAuth.login(getCredentials());
-        } catch (NetworkException | ApiException e) {
-            handle(e);
-        }
-    }
 
     @Test
     public void testLoginScript() {
         try {
-            redditOAuth.revokeToken(getCredentials());
-            validateModel(redditOAuth.login(getCredentials()));
+            redditOAuth2.revokeToken(getCredentials());
+            validateModel(redditOAuth2.login(getCredentials()));
         } catch (NetworkException | ApiException e) {
             handle(e);
         }
@@ -34,10 +24,10 @@ public class OAuth2Test extends AuthenticatedRedditTest {
     @Test
     public void testGetPreferences() {
         try {
-            AccountPreferences prefs = redditOAuth.getPreferences();
+            AccountPreferences prefs = redditOAuth2.getPreferences();
             validateModel(prefs);
 
-            prefs = redditOAuth.getPreferences("over_18", "research", "hide_from_robots");
+            prefs = redditOAuth2.getPreferences("over_18", "research", "hide_from_robots");
             // Only these three should be not null
             assertNotNull(prefs.isOver18());
             assertNotNull(prefs.isResearchable());
@@ -53,7 +43,7 @@ public class OAuth2Test extends AuthenticatedRedditTest {
     @Test
     public void testKarmaBreakdown() {
         try {
-            KarmaBreakdown breakdown = redditOAuth.getKarmaBreakdown();
+            KarmaBreakdown breakdown = redditOAuth2.getKarmaBreakdown();
             validateModel(breakdown);
             validateModels(breakdown.getSummaries());
         } catch (NetworkException e) {
