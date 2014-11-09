@@ -141,7 +141,7 @@
         "GET /api/subreddits_by_topic.json",
         "GET /api/v1/me/blocked",
         "GET /api/v1/me/friends",
-        "GET /api/v1/user/username/trophies",
+        "GET /api/v1/user/{username}/trophies",
         "GET /by_id/names",
         "GET /comments/article",
         "GET /controversial",
@@ -162,7 +162,7 @@
         "GET /subreddits/search",
         "GET /subreddits/where",
         "GET /top",
-        "GET /user/username/about.json",
+        "GET /user/{username}/about.json",
         "GET /sort"],
     "report": [
         "POST /api/hide",
@@ -194,8 +194,8 @@
         "PUT /api/filter/{filterpath}/r/{srname}",
         "POST /api/multi/{multipath}/rename",
         "POST /api/subscribe",
-        "DELETE /api/v1/me/friends/username",
-        "PUT /api/v1/me/friends/username"],
+        "DELETE /api/v1/me/friends/{username}",
+        "PUT /api/v1/me/friends/{username}"],
     "vote": [
         "POST /api/vote"],
     "wikiedit": [
