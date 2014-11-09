@@ -27,7 +27,7 @@ public class SearchPaginator extends Paginator<Submission> {
      * @param creator The RedditClient that will be used to send HTTP requests
      * @param query   What to search for
      */
-    public SearchPaginator(RedditClient creator, String query) {
+    SearchPaginator(RedditClient creator, String query) {
         super(creator, Submission.class);
         this.query = query;
         this.sorting = DEFAULT_SORTING;

@@ -10,14 +10,14 @@ import net.dean.jraw.models.Message;
 /**
  * Provides a way to iterate over a user's inbox
  */
-public class InboxPaginator extends GenericPaginator<Message, InboxPaginator.Where> {
+public class InboxPaginator extends GenericPaginator<Message> {
     /**
      * Instantiates a new InboxPaginator
      *
      * @param reddit The client to send requests with
      * @param where  The "where" enum value to use
      */
-    public InboxPaginator(RedditClient reddit, Where where) {
+    InboxPaginator(RedditClient reddit, String where) {
         super(reddit, Message.class, where);
     }
 
@@ -27,8 +27,8 @@ public class InboxPaginator extends GenericPaginator<Message, InboxPaginator.Whe
     }
 
     @Override
-    protected String getAsString(Where where) {
-        return where.name().toLowerCase().replace('_', '/');
+    public String[] getWhereValues() {
+        return new String[] {"inbox", "unread", "messages", "sent", "moderator", "moderator/unread"};
     }
 
     @Override
@@ -41,14 +41,5 @@ public class InboxPaginator extends GenericPaginator<Message, InboxPaginator.Whe
     protected Listing<Message> getListing(boolean forwards) throws NetworkException {
         // Just call super so that we can add the @EndpointImplementation annotation
         return super.getListing(forwards);
-    }
-
-    public enum Where {
-        INBOX,
-        UNREAD,
-        MESSAGES,
-        SENT,
-        MODERATOR,
-        MODERATOR_UNREAD
     }
 }

@@ -10,7 +10,7 @@ import net.dean.jraw.models.UserRecord;
 /**
  * This class provides a way to iterate over the users that have been banned, marked as contributors, etc.
  */
-public class UserRecordPaginator extends GenericUserRecordPaginator<UserRecordPaginator.Where> {
+public class UserRecordPaginator extends GenericUserRecordPaginator {
     private String subreddit;
 
     /**
@@ -21,8 +21,8 @@ public class UserRecordPaginator extends GenericUserRecordPaginator<UserRecordPa
      *                  subreddit.
      * @param where What to iterate
      */
-    public UserRecordPaginator(RedditClient creator, String subreddit, Where where) {
-        super(creator, UserRecord.class, where);
+    UserRecordPaginator(RedditClient creator, String subreddit, String where) {
+        super(creator, where);
         this.subreddit = subreddit;
     }
 
@@ -45,6 +45,11 @@ public class UserRecordPaginator extends GenericUserRecordPaginator<UserRecordPa
         return "/r/" + subreddit + "/about/";
     }
 
+    @Override
+    public String[] getWhereValues() {
+        return new String[] {"banned", "wikibanned", "contributors", "wikicontributors", "moderators"};
+    }
+
     public String getSubreddit() {
         return subreddit;
     }
@@ -52,13 +57,5 @@ public class UserRecordPaginator extends GenericUserRecordPaginator<UserRecordPa
     public void setSubreddit(String subreddit) {
         this.subreddit = subreddit;
         invalidate();
-    }
-
-    public enum Where {
-        BANNED,
-        WIKIBANNED,
-        CONTRIBUTORS,
-        WIKICONTRIBUTORS,
-        MODERATORS
     }
 }

@@ -3,6 +3,8 @@ package net.dean.jraw.paginators;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.models.Thing;
 
+import java.util.Arrays;
+
 /**
  * This class provides a template for Paginators that use only a "where" attribute, such as {@code /user/username/{where}}.
  * The way this class assembles the base URI ({@link #getBaseUri()}) works somewhat differently than other paginators.
@@ -11,10 +13,9 @@ import net.dean.jraw.models.Thing;
  * then the base URI would be "/user/username/submitted.json".
  *
  * @param <T> The type of Thing that
- * @param <U> The type of enum that will be used in place of the "where" parameter.
  */
-public abstract class GenericPaginator<T extends Thing, U extends Enum<U>> extends Paginator<T> {
-    protected U where;
+public abstract class GenericPaginator<T extends Thing> extends Paginator<T> {
+    protected String where;
 
     /**
      * Instantiates a new GenericPaginator
@@ -22,9 +23,11 @@ public abstract class GenericPaginator<T extends Thing, U extends Enum<U>> exten
      * @param thingClass The type of Thing to return
      * @param where The "where" enum value to use
      */
-    protected GenericPaginator(RedditClient creator, Class<T> thingClass, U where) {
+    protected GenericPaginator(RedditClient creator, Class<T> thingClass, String where) {
         super(creator, thingClass);
-        if (where == null) throw new NullPointerException("'where' cannot be null");
+        if (!isValidWhereVal(where))
+            throw new IllegalArgumentException(String.format("Invalid 'where' value: \"%s\". Expecting one of %s",
+                    where, Arrays.toString(getWhereValues())));
         this.where = where;
     }
 
@@ -35,7 +38,7 @@ public abstract class GenericPaginator<T extends Thing, U extends Enum<U>> exten
             pre += "/";
         }
 
-        return pre + getAsString(where) + getUriPostfix();
+        return pre + where + getUriPostfix();
     }
 
     /**
@@ -50,20 +53,42 @@ public abstract class GenericPaginator<T extends Thing, U extends Enum<U>> exten
      */
     protected String getUriPostfix() { return ".json"; }
 
-    protected String getAsString(U where) {
-        return where.name().toLowerCase();
-    }
-
     /**
      * Gets the enum value that will be appended to the base URI
      * @return The enum value that will be appended to the base URI
      */
-    public final U getWhere() {
+    public final String getWhere() {
         return where;
     }
 
-    public void setWhere(U where) {
+    public void setWhere(String where) {
         this.where = where;
         invalidate();
+    }
+
+    /**
+     * Gets all the acceptable values of the 'where' value for this GenericPaginator
+     * @return A String array of possible 'where' values
+     */
+    public abstract String[] getWhereValues();
+
+    /**
+     * Checks if the given String is a valid 'where' value
+     * @param where The String to test
+     * @return True if the given String is found in the array returned by {@link #getWhereValues()} (ignoring case),
+     *         false if else
+     */
+    public final boolean isValidWhereVal(String where) {
+        if (where == null) {
+            return false;
+        }
+        String[] wheres = getWhereValues();
+        for (String str : wheres) {
+            if (str.equalsIgnoreCase(where)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

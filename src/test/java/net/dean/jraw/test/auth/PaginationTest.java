@@ -13,11 +13,11 @@ import net.dean.jraw.paginators.AllSubredditsPaginator;
 import net.dean.jraw.paginators.CompoundSubredditPaginator;
 import net.dean.jraw.paginators.ImportantUserPaginator;
 import net.dean.jraw.paginators.InboxPaginator;
-import net.dean.jraw.paginators.LiveThreadPaginator;
 import net.dean.jraw.paginators.ModeratorPaginator;
 import net.dean.jraw.paginators.MultiHubPaginator;
 import net.dean.jraw.paginators.MultiRedditPaginator;
 import net.dean.jraw.paginators.Paginator;
+import net.dean.jraw.paginators.Paginators;
 import net.dean.jraw.paginators.SearchPaginator;
 import net.dean.jraw.paginators.Sorting;
 import net.dean.jraw.paginators.SpecificPaginator;
@@ -44,7 +44,7 @@ public class PaginationTest extends AuthenticatedRedditTest {
 
     @Test
     public void testSubredditPaginatorFrontPage() throws NetworkException {
-        SubredditPaginator frontPage = new SubredditPaginator(reddit);
+        SubredditPaginator frontPage = Paginators.frontPage(reddit);
         commonTest(frontPage);
     }
 
@@ -58,7 +58,7 @@ public class PaginationTest extends AuthenticatedRedditTest {
     public void testPaginatorTimePeriod() {
         final long millisecondsInAnHour = 60 * 60 * 1000;
 
-        SubredditPaginator frontPage = new SubredditPaginator(reddit);
+        SubredditPaginator frontPage = Paginators.frontPage(reddit);
         frontPage.setSorting(Sorting.TOP);
         frontPage.setTimePeriod(TimePeriod.HOUR);
         Listing<Submission> submissions = frontPage.next();
@@ -74,7 +74,7 @@ public class PaginationTest extends AuthenticatedRedditTest {
 
     @Test
     public void testSearchPaginator() throws NetworkException {
-        SearchPaginator paginator = new SearchPaginator(reddit, "test");
+        SearchPaginator paginator = Paginators.search(reddit, "test");
         String subreddit = "AskReddit";
         paginator.setSubreddit(subreddit);
         commonTest(paginator);
@@ -89,7 +89,7 @@ public class PaginationTest extends AuthenticatedRedditTest {
     public void testSpecificPaginator() throws NetworkException {
         // It would be easier to declare fullNames as an array, but we want to use List.contains()
         List<String> fullNames = Arrays.asList("t3_92dd8", "t3_290287", "t3_28zy98", "t3_28zh9i");
-        SpecificPaginator paginator = new SpecificPaginator(reddit, fullNames.toArray(new String[fullNames.size()]));
+        SpecificPaginator paginator = Paginators.byId(reddit, fullNames.toArray(new String[fullNames.size()]));
 
         Listing<Submission> submissions = paginator.next();
         for (Submission s : submissions) {
@@ -100,17 +100,21 @@ public class PaginationTest extends AuthenticatedRedditTest {
     @Test
     public void testUserContributionPaginator() throws NetworkException {
         // Test all Where values
-        for (UserContributionPaginator.Where where : UserContributionPaginator.Where.values()) {
-            UserContributionPaginator paginator = new UserContributionPaginator(reddit, where, reddit.getAuthenticatedUser());
+        String[] wheres = Paginators.contributions(reddit, "", "overview").getWhereValues();
+
+        for (String where : wheres) {
+            UserContributionPaginator paginator = Paginators.contributions(reddit, reddit.getAuthenticatedUser(), where);
             commonTest(paginator);
         }
     }
 
     @Test
     public void testUserSubredditsPaginator() throws NetworkException {
+        String[] wheres = Paginators.mySubreddits(reddit, "subscriber").getWhereValues();
         // Test all Where values
-        for (UserSubredditsPaginator.Where where : UserSubredditsPaginator.Where.values()) {
-            UserSubredditsPaginator paginator = new UserSubredditsPaginator(reddit, where);
+
+        for (String where : wheres) {
+            UserSubredditsPaginator paginator = Paginators.mySubreddits(reddit, where);
             commonTest(paginator);
         }
     }
@@ -118,8 +122,8 @@ public class PaginationTest extends AuthenticatedRedditTest {
     @Test
     public void testAllSubredditsPaginator() throws NetworkException {
         // Test all Where values
-        for (AllSubredditsPaginator.Where where : AllSubredditsPaginator.Where.values()) {
-            AllSubredditsPaginator paginator = new AllSubredditsPaginator(reddit, where);
+        for (String where : new String[] {"popular", "new"}) {
+            AllSubredditsPaginator paginator = Paginators.allSubreddits(reddit, where);
             commonTest(paginator);
         }
     }
@@ -128,19 +132,22 @@ public class PaginationTest extends AuthenticatedRedditTest {
     public void testMultiRedditPaginator() throws NetworkException, ApiException {
         MultiReddit multi = manager.mine().get(0);
 
-        MultiRedditPaginator paginator = new MultiRedditPaginator(reddit, multi);
+        MultiRedditPaginator paginator = Paginators.multireddit(reddit, multi);
         commonTest(paginator);
     }
 
     @Test
     public void testCompoundSubredditPaginator() throws NetworkException {
-        CompoundSubredditPaginator paginator = new CompoundSubredditPaginator(reddit, Arrays.asList("programming", "java"));
+        SubredditPaginator paginator = Paginators.subreddit(reddit, "programming", "java");
+        // Paginators.subreddit() should have detected the additional subreddit and returned a CompoundSubreddit instead
+        // of a normal SubredditPaginator
+        assertTrue(paginator.getClass().equals(CompoundSubredditPaginator.class));
         commonTest(paginator);
     }
 
     @Test
     public void testMultiHubPaginator() {
-        MultiHubPaginator paginator = new MultiHubPaginator(reddit);
+        MultiHubPaginator paginator = Paginators.multihub(reddit);
 
         final int threshold = 3;
         int valid = 0;
@@ -170,24 +177,25 @@ public class PaginationTest extends AuthenticatedRedditTest {
 
     @Test
     public void testLiveThreadPaginator() {
-        LiveThreadPaginator paginator = new LiveThreadPaginator(reddit, "ts4r8m1g99ys");
-        commonTest(paginator);
+        commonTest(Paginators.liveThread(reddit, "ts4r8m1g99ys"));
     }
 
     @Test
     public void testInboxPaginator() {
-        for (InboxPaginator.Where where : InboxPaginator.Where.values()) {
-            InboxPaginator paginator = new InboxPaginator(reddit, where);
+        String[] wheres = Paginators.inbox(reddit, "inbox").getWhereValues();
+        for (String where : wheres) {
+            InboxPaginator paginator = Paginators.inbox(reddit, where);
             commonTest(paginator);
         }
     }
 
     @Test
     public void testUserRecordPaginator() {
+        String[] wheres = Paginators.modRecords(reddit, "", "banned").getWhereValues();
         String modOf = getModeratedSubreddit().getDisplayName();
 
-        for (UserRecordPaginator.Where where : UserRecordPaginator.Where.values()) {
-            UserRecordPaginator paginator = new UserRecordPaginator(reddit, modOf, where);
+        for (String where : wheres) {
+            UserRecordPaginator paginator = Paginators.modRecords(reddit, modOf, where);
             commonTest(paginator);
         }
     }
@@ -196,8 +204,8 @@ public class PaginationTest extends AuthenticatedRedditTest {
     public void testImportantUserPaginator() {
         RedditClient[] clientsToTest = {reddit, redditOAuth2};
         for (RedditClient client : clientsToTest) {
-            for (ImportantUserPaginator.Where where : ImportantUserPaginator.Where.values()) {
-                ImportantUserPaginator paginator = new ImportantUserPaginator(client, where);
+            for (String where : new String[] {"friends", "blocked"}) {
+                ImportantUserPaginator paginator = Paginators.importantUsers(client, where);
                 commonTest(paginator);
             }
         }
@@ -206,9 +214,10 @@ public class PaginationTest extends AuthenticatedRedditTest {
     @Test
     public void testModeratorPaginator() {
         String modOf = getModeratedSubreddit().getDisplayName();
+        String[] wheres = Paginators.moderator(reddit, "", "reports").getWhereValues();
 
-        for (ModeratorPaginator.Where where : ModeratorPaginator.Where.values()) {
-            ModeratorPaginator paginator = new ModeratorPaginator(reddit, modOf, where);
+        for (String where : wheres) {
+            ModeratorPaginator paginator = Paginators.moderator(reddit, modOf, where);
             // Test no filters
             commonTest(paginator);
 
@@ -231,7 +240,7 @@ public class PaginationTest extends AuthenticatedRedditTest {
 
     @Test(expectedExceptions = IllegalStateException.class)
     public void testChangeRequestParamters() {
-        AllSubredditsPaginator paginator = new AllSubredditsPaginator(reddit, AllSubredditsPaginator.Where.NEW);
+        AllSubredditsPaginator paginator = Paginators.allSubreddits(reddit, "new");
         paginator.next();
         // Modifying the request parameters after the initial request, without calling reset
         paginator.setLimit(Paginator.DEFAULT_LIMIT);
@@ -241,7 +250,7 @@ public class PaginationTest extends AuthenticatedRedditTest {
 
     @Test
     public void testResetRequestParameters() {
-        AllSubredditsPaginator paginator = new AllSubredditsPaginator(reddit, AllSubredditsPaginator.Where.NEW);
+        AllSubredditsPaginator paginator = Paginators.allSubreddits(reddit, "new");
         paginator.next();
         paginator.setLimit(Paginator.DEFAULT_LIMIT);
         // We know it has already started, but just making sure this method works as expected

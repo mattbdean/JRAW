@@ -16,7 +16,7 @@ public class MultiRedditPaginator extends Paginator<Submission> {
      * @param creator The RedditClient that will be used to send HTTP requests
      * @param multi The multireddit to iterate
      */
-    public MultiRedditPaginator(RedditClient creator, MultiReddit multi) {
+    MultiRedditPaginator(RedditClient creator, MultiReddit multi) {
         super(creator, Submission.class);
         this.multiReddit = multi;
     }

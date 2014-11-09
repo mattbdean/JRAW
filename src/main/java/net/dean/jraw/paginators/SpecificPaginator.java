@@ -21,7 +21,7 @@ public class SpecificPaginator extends Paginator<Submission> {
      * @param creator The RedditClient that will be used to send HTTP requests
      * @param submissionFullNames A list of fullnames of Submissions
      */
-    public SpecificPaginator(RedditClient creator, String... submissionFullNames) {
+    SpecificPaginator(RedditClient creator, String... submissionFullNames) {
         super(creator, Submission.class);
         setSubmissions(submissionFullNames);
     }

@@ -9,7 +9,7 @@ import net.dean.jraw.managers.AccountManager;
 import net.dean.jraw.models.Listing;
 import net.dean.jraw.models.LoggedInAccount;
 import net.dean.jraw.models.Subreddit;
-import net.dean.jraw.paginators.UserSubredditsPaginator;
+import net.dean.jraw.paginators.Paginators;
 import net.dean.jraw.test.RedditTest;
 import net.dean.jraw.test.SetupRequiredException;
 import org.codehaus.jackson.JsonNode;
@@ -90,7 +90,7 @@ public abstract class AuthenticatedRedditTest extends RedditTest {
      * @return A subreddit
      */
     protected final Subreddit getModeratedSubreddit() {
-        Listing<Subreddit> moderatorOf = new UserSubredditsPaginator(reddit, UserSubredditsPaginator.Where.MODERATOR).next();
+        Listing<Subreddit> moderatorOf = Paginators.mySubreddits(reddit, "moderator").next();
         if (moderatorOf.size() == 0) {
             throw new IllegalStateException("Must be a moderator of at least one subreddit");
         }

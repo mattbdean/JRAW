@@ -10,6 +10,7 @@ import net.dean.jraw.models.Listing;
 import net.dean.jraw.models.LiveThread;
 import net.dean.jraw.models.Submission;
 import net.dean.jraw.models.Subreddit;
+import net.dean.jraw.paginators.Paginators;
 import net.dean.jraw.paginators.SubredditPaginator;
 import org.testng.Assert;
 import org.testng.SkipException;
@@ -29,7 +30,7 @@ public class ReadOnlyDataTest extends RedditTest {
     @Test
     public void testOEmbed() {
         try {
-            SubredditPaginator frontPage = new SubredditPaginator(reddit);
+            SubredditPaginator frontPage = Paginators.frontPage(reddit);
             Listing<Submission> submissions = frontPage.next();
 
             int count = 0;
@@ -54,7 +55,7 @@ public class ReadOnlyDataTest extends RedditTest {
     @Test
     public void testEmbeddedMedia() {
         try {
-            SubredditPaginator frontPage = new SubredditPaginator(reddit);
+            SubredditPaginator frontPage = Paginators.frontPage(reddit);
             Listing<Submission> submissions = frontPage.next();
 
             int count = 0;

@@ -10,16 +10,15 @@ import org.codehaus.jackson.JsonNode;
 
 /**
  * This class provides the basic framework required to create a Paginator that returns listings of UserRecords
- * @param <T> The generic "where" value to use
  */
-public abstract class GenericUserRecordPaginator<T extends Enum<T>> extends GenericPaginator<UserRecord, T> {
+public abstract class GenericUserRecordPaginator extends GenericPaginator<UserRecord> {
     /**
      * Instantiates a new GenericUserRecordPaginator
      *
      * @param creator The RedditClient that will be used to send requests
      * @param where   The "where" enum value to use
      */
-    protected GenericUserRecordPaginator(RedditClient creator, T where) {
+    protected GenericUserRecordPaginator(RedditClient creator, String where) {
         super(creator, UserRecord.class, where);
     }
 

@@ -8,7 +8,6 @@ import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.RedditResponse;
 import net.dean.jraw.models.Message;
-import net.dean.jraw.paginators.InboxPaginator;
 
 /**
  * This class is responsible for managing a user's inbox
@@ -17,15 +16,6 @@ public class InboxManager extends AbstractManager {
 
     public InboxManager(RedditClient client) {
         super(client);
-    }
-
-    /**
-     * Instantiates a new InboxPaginator that can iterate the given user's messages
-     * @param where What to iterate
-     * @return A new InboxPaginator that iterates over the given location
-     */
-    public InboxPaginator iterate(InboxPaginator.Where where) {
-        return new InboxPaginator(reddit, where);
     }
 
     /**

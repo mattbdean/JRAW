@@ -18,7 +18,7 @@ public class SubredditPaginator extends Paginator<Submission> {
      * Instantiates a new SubredditPaginator
      * @param creator The RedditClient that will be used to send HTTP requests
      */
-    public SubredditPaginator(RedditClient creator) {
+    SubredditPaginator(RedditClient creator) {
         super(creator, Submission.class);
     }
     

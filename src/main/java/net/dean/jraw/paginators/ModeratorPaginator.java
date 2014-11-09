@@ -14,7 +14,7 @@ import java.util.Map;
  * This class provides a way to iterate over submissions and comments relevant to moderators, such as those reported
  * and marked as spam.
  */
-public class ModeratorPaginator extends GenericPaginator<PublicContribution, ModeratorPaginator.Where> {
+public class ModeratorPaginator extends GenericPaginator<PublicContribution> {
     private String subreddit;
     private boolean includeSubmissions;
     private boolean includeComments;
@@ -25,7 +25,7 @@ public class ModeratorPaginator extends GenericPaginator<PublicContribution, Mod
      * @param subreddit The subreddit to view. Must be a moderator.
      * @param where What to paginate
      */
-    public ModeratorPaginator(RedditClient creator, String subreddit, Where where) {
+    ModeratorPaginator(RedditClient creator, String subreddit, String where) {
         super(creator, PublicContribution.class, where);
         this.subreddit = subreddit;
     }
@@ -82,6 +82,11 @@ public class ModeratorPaginator extends GenericPaginator<PublicContribution, Mod
     }
 
     @Override
+    public String[] getWhereValues() {
+        return new String[] {"reports", "spam", "modqueue", "unmoderated", "edited"};
+    }
+
+    @Override
     @EndpointImplementation({
             Endpoints.ABOUT_LOCATION,
             Endpoints.ABOUT_REPORTS,
@@ -98,6 +103,8 @@ public class ModeratorPaginator extends GenericPaginator<PublicContribution, Mod
     @Override
     protected Map<String, String> getExtraQueryArgs() {
         Map<String, String> args = new HashMap<>(1);
+
+        Where where = Where.valueOf(this.where.toUpperCase());
         if (!(!includeComments && !includeSubmissions) && !(includeComments && includeSubmissions) && where.supportsFilter()) {
             // Including only comments or only submissions AND filtering is available
             args.put("only", includeSubmissions ? "links" : "comments");
@@ -106,7 +113,7 @@ public class ModeratorPaginator extends GenericPaginator<PublicContribution, Mod
         return args;
     }
 
-    public static enum Where {
+    private static enum Where {
         /** Submissions that have been reported. Supports filtering. */
         REPORTS(true),
         /** Submissions that have been marked as spam. Supports filtering. */

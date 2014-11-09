@@ -5,8 +5,14 @@ import net.dean.jraw.JrawUtils;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.RedditResponse;
 import net.dean.jraw.managers.AccountManager;
-import net.dean.jraw.models.*;
+import net.dean.jraw.models.Comment;
+import net.dean.jraw.models.Contribution;
+import net.dean.jraw.models.Listing;
+import net.dean.jraw.models.Submission;
+import net.dean.jraw.models.Subreddit;
+import net.dean.jraw.models.VoteDirection;
 import net.dean.jraw.paginators.Paginator;
+import net.dean.jraw.paginators.Paginators;
 import net.dean.jraw.paginators.SubredditPaginator;
 import net.dean.jraw.paginators.UserContributionPaginator;
 import net.dean.jraw.paginators.UserSubredditsPaginator;
@@ -16,7 +22,6 @@ import org.testng.annotations.Test;
 import java.net.URL;
 import java.util.List;
 
-import static net.dean.jraw.paginators.UserContributionPaginator.Where;
 import static org.testng.Assert.*;
 
 /**
@@ -74,7 +79,7 @@ public class AccountManagerTest extends AuthenticatedRedditTest {
     public void testEditUserText() {
         String newText = "This is a new piece of text.";
 
-        Submission s = (Submission) getPaginator(Where.SUBMITTED).next().get(0);
+        Submission s = (Submission) getPaginator("submitted").next().get(0);
 
         try {
             RedditResponse r = account.updateSelfpost(s, newText);
@@ -180,7 +185,7 @@ public class AccountManagerTest extends AuthenticatedRedditTest {
     @Test
     public void testSendRepliesToInbox() throws ApiException {
         try {
-            Submission s = (Submission) getPaginator(Where.SUBMITTED).next().get(0);
+            Submission s = (Submission) getPaginator("submitted").next().get(0);
             account.setSendRepliesToInbox(s, true);
         } catch (NetworkException e) {
             handle(e);
@@ -211,7 +216,7 @@ public class AccountManagerTest extends AuthenticatedRedditTest {
             Submission submission = reddit.getSubmission("28d6vv");
             account.setSaved(submission, true);
 
-            UserContributionPaginator paginator = getPaginator(Where.SAVED);
+            UserContributionPaginator paginator = getPaginator("saved");
             List<Contribution> saved = paginator.next();
 
             for (Contribution c : saved) {
@@ -234,7 +239,7 @@ public class AccountManagerTest extends AuthenticatedRedditTest {
             Submission submission = reddit.getSubmission("28d6vv");
             account.setSaved(submission, false);
 
-            UserContributionPaginator paginator = getPaginator(Where.SAVED);
+            UserContributionPaginator paginator = getPaginator("saved");
             List<Contribution> saved = paginator.next();
 
             // Fail if we find the submission in the list
@@ -254,7 +259,7 @@ public class AccountManagerTest extends AuthenticatedRedditTest {
             Submission submission = reddit.getSubmission("28d6vv");
             account.hide(submission, true);
 
-            UserContributionPaginator paginator = getPaginator(Where.HIDDEN);
+            UserContributionPaginator paginator = getPaginator("hidden");
             List<Contribution> hidden = paginator.next();
 
             for (Contribution c : hidden) {
@@ -276,7 +281,7 @@ public class AccountManagerTest extends AuthenticatedRedditTest {
             Submission submission = reddit.getSubmission("28d6vv");
             account.hide(submission, false);
 
-            UserContributionPaginator paginator = getPaginator(Where.HIDDEN);
+            UserContributionPaginator paginator = getPaginator("hidden");
             List<Contribution> hidden = paginator.next();
 
             for (Contribution c : hidden) {
@@ -335,7 +340,7 @@ public class AccountManagerTest extends AuthenticatedRedditTest {
     @Test
     public void testSetNsfw() {
         try {
-            Submission s = (Submission) getPaginator(Where.SUBMITTED).next().get(0);
+            Submission s = (Submission) getPaginator("submitted").next().get(0);
             boolean newVal = !s.isNsfw();
 
             account.setNsfw(s, newVal);
@@ -365,9 +370,8 @@ public class AccountManagerTest extends AuthenticatedRedditTest {
 
     @Test
     public void testSticky() {
-        SubredditPaginator paginator = new SubredditPaginator(reddit);
         String modOf = getModeratedSubreddit().getDisplayName();
-        paginator.setSubreddit(modOf);
+        SubredditPaginator paginator = Paginators.subreddit(reddit, modOf);
 
         Submission submission = null;
         Listing<Submission> submissions = paginator.next();
@@ -395,7 +399,7 @@ public class AccountManagerTest extends AuthenticatedRedditTest {
     }
 
     private boolean isSubscribed(String subreddit) {
-        UserSubredditsPaginator paginator = new UserSubredditsPaginator(reddit, UserSubredditsPaginator.Where.SUBSCRIBER);
+        UserSubredditsPaginator paginator = Paginators.mySubreddits(reddit, "subscriber");
         paginator.setLimit(Paginator.RECOMMENDED_MAX_LIMIT);
 
         // Try to find the subreddit in the list of subscribed subs
@@ -411,7 +415,7 @@ public class AccountManagerTest extends AuthenticatedRedditTest {
         return false;
     }
 
-    private UserContributionPaginator getPaginator(Where where) {
-        return new UserContributionPaginator(reddit, where, reddit.getAuthenticatedUser());
+    private UserContributionPaginator getPaginator(String where) {
+        return Paginators.contributions(reddit, reddit.getAuthenticatedUser(), where);
     }
 }

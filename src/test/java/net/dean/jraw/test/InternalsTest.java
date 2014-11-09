@@ -7,14 +7,14 @@ import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.models.Captcha;
 import net.dean.jraw.models.DistinguishedStatus;
 import net.dean.jraw.models.Flair;
-import net.dean.jraw.models.JsonProperty;
 import net.dean.jraw.models.JsonModel;
+import net.dean.jraw.models.JsonProperty;
 import net.dean.jraw.models.Listing;
 import net.dean.jraw.models.More;
 import net.dean.jraw.models.RenderStringPair;
 import net.dean.jraw.models.Submission;
 import net.dean.jraw.models.ThingType;
-import net.dean.jraw.paginators.SubredditPaginator;
+import net.dean.jraw.paginators.Paginators;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.testng.annotations.Test;
@@ -32,7 +32,7 @@ public class InternalsTest extends RedditTest {
     
     @Test(expectedExceptions = UnsupportedOperationException.class)
     public void testModifyListing() {
-        Listing<Submission> submissions = new SubredditPaginator(reddit).next();
+        Listing<Submission> submissions = Paginators.frontPage(reddit).next();
         submissions.remove(0);
     }
 
@@ -54,7 +54,7 @@ public class InternalsTest extends RedditTest {
 
     @Test
     public void testModifyListingData() {
-        final Listing<Submission> listing = new SubredditPaginator(reddit).next();
+        final Listing<Submission> listing = Paginators.frontPage(reddit).next();
         List<CodeBlock> codeBlocks = new ArrayList<>();
         
         // List of CodeBlocks that will modify the listing

@@ -10,15 +10,15 @@ import net.dean.jraw.models.UserRecord;
 /**
  * This class provides the ability to paginate over a user's friends and blocked users
  */
-public class ImportantUserPaginator extends GenericUserRecordPaginator<ImportantUserPaginator.Where> {
+public class ImportantUserPaginator extends GenericUserRecordPaginator {
     /**
      * Instantiates a new ImportantUserPaginator
      *
-     * @param creator    The RedditClient that will be used to send requests
-     * @param where      The "where" enum value to use
+     * @param creator The RedditClient that will be used to send requests
+     * @param where   What to look up
      */
-    public ImportantUserPaginator(RedditClient creator, Where where) {
-        super(creator, UserRecord.class, where);
+    ImportantUserPaginator(RedditClient creator, String where) {
+        super(creator, where);
     }
 
     @Override
@@ -37,8 +37,8 @@ public class ImportantUserPaginator extends GenericUserRecordPaginator<Important
         return "/prefs/";
     }
 
-    public static enum Where {
-        FRIENDS,
-        BLOCKED
+    @Override
+    public String[] getWhereValues() {
+        return new String[] {"friends", "blocked"};
     }
 }

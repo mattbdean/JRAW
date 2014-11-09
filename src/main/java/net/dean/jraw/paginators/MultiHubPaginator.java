@@ -33,7 +33,7 @@ public class MultiHubPaginator extends Paginator<MultiHubPaginator.MultiRedditId
     private static final int BACKREF_MULTINAME = 4;
     private final Matcher matcher;
 
-    public MultiHubPaginator(RedditClient client) {
+    MultiHubPaginator(RedditClient client) {
         super(client, MultiRedditId.class);
         // Blank matcher for now, reset(String) will be called later
         this.matcher = Pattern.compile(MULTIREDDIT_URL_REGEX).matcher("");

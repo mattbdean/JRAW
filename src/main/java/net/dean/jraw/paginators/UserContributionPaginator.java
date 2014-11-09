@@ -10,7 +10,7 @@ import net.dean.jraw.models.Listing;
 /**
  * This class is used to paginate through user posts or comments via {@code /user/{username}/{where}.json}
  */
-public class UserContributionPaginator extends GenericPaginator<Contribution, UserContributionPaginator.Where> {
+public class UserContributionPaginator extends GenericPaginator<Contribution> {
     private String username;
 
     /**
@@ -19,7 +19,7 @@ public class UserContributionPaginator extends GenericPaginator<Contribution, Us
      * @param where The criteria in which to return Subreddits
      * @param username The user to view
      */
-    public UserContributionPaginator(RedditClient creator, Where where, String username) {
+    UserContributionPaginator(RedditClient creator, String where, String username) {
         super(creator, Contribution.class, where);
         this.username = username;
     }
@@ -46,38 +46,16 @@ public class UserContributionPaginator extends GenericPaginator<Contribution, Us
         return "/user/" + username;
     }
 
+    @Override
+    public String[] getWhereValues() {
+        return new String[] {"overview", "gilded", "submitted", "liked", "disliked", "hidden", "saved", "comments"};
+    }
+
     /**
      * Gets the name whose submitted links you are iterating over
      * @return The username
      */
     public String getUsername() {
         return username;
-    }
-
-    /**
-     * Used by UserPaginatorSubmission to fill in the "where" in {@code /user/{username}/{where}}
-     */
-    public static enum Where {
-        // Both submissions and comments
-        /** Represents the user overview. Contains both submissions and comments */
-        OVERVIEW,
-        /** Represents the user's gilded submissions and comments */
-        GILDED,
-
-        // Only submissions
-        /** Represents the user's submitted links */
-        SUBMITTED,
-        /** Represents the user's liked (upvoted) submissions */
-        LIKED,
-        /** Represents the user's disliked (downvoted) submissions */
-        DISLIKED,
-        /** Represents the user's hidden submissions */
-        HIDDEN,
-        /** Represents the user's saved submissions */
-        SAVED,
-
-        // Only comments
-        /** Represents the user's comments */
-        COMMENTS
     }
 }

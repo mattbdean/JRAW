@@ -11,7 +11,7 @@ import net.dean.jraw.models.Subreddit;
  * This paginator provides a way to iterate through the logged-in user's subreddits they interact with, whether that be
  * through being a contributor of, a moderator of, or are subscribed to
  */
-public class UserSubredditsPaginator extends GenericPaginator<Subreddit, UserSubredditsPaginator.Where> {
+public class UserSubredditsPaginator extends GenericPaginator<Subreddit> {
 
     /**
      * Instantiates a new MySubredditsPaginator
@@ -19,13 +19,18 @@ public class UserSubredditsPaginator extends GenericPaginator<Subreddit, UserSub
      * @param client The RedditClient that will be used to send HTTP requests
      * @param where The criteria in which to return Subreddits
      */
-    public UserSubredditsPaginator(RedditClient client, Where where) {
+    UserSubredditsPaginator(RedditClient client, String where) {
         super(client, Subreddit.class, where);
     }
 
     @Override
     public String getUriPrefix() {
         return "/subreddits/mine/";
+    }
+
+    @Override
+    public String[] getWhereValues() {
+        return new String[] {"subscriber", "contributor", "moderator"};
     }
 
     @Override
@@ -38,14 +43,5 @@ public class UserSubredditsPaginator extends GenericPaginator<Subreddit, UserSub
     protected Listing<Subreddit> getListing(boolean forwards) throws NetworkException {
         // Just call super so that we can add the @EndpointImplementation annotation
         return super.getListing(forwards);
-    }
-
-    public static enum Where {
-        /** Subreddits you are subscribed to  */
-        SUBSCRIBER,
-        /** Subreddits that you contribute to */
-        CONTRIBUTOR,
-        /** Subreddits that you moderate */
-        MODERATOR
     }
 }

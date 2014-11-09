@@ -5,9 +5,8 @@ import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.managers.InboxManager;
 import net.dean.jraw.models.Message;
 import net.dean.jraw.paginators.InboxPaginator;
+import net.dean.jraw.paginators.Paginators;
 import org.testng.annotations.Test;
-
-import static org.testng.Assert.assertEquals;
 
 public class InboxManagerTest extends AuthenticatedRedditTest {
     private InboxManager inbox;
@@ -19,7 +18,7 @@ public class InboxManagerTest extends AuthenticatedRedditTest {
     @Test
     public void testRead() {
         try {
-            InboxPaginator paginator = inbox.iterate(InboxPaginator.Where.MESSAGES);
+            InboxPaginator paginator = Paginators.inbox(reddit, "messages");
 
             Message m1 = paginator.next().get(0);
             boolean expected = !m1.isRead();

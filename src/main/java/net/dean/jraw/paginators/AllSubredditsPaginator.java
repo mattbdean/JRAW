@@ -10,8 +10,7 @@ import net.dean.jraw.models.Subreddit;
 /**
  * This paginator will iterate through either the newest or the most popular subreddits
  */
-public class AllSubredditsPaginator extends GenericPaginator<Subreddit, AllSubredditsPaginator.Where> {
-
+public class AllSubredditsPaginator extends GenericPaginator<Subreddit> {
 
     /**
      * Instantiates a new AllSubredditsPaginator
@@ -19,7 +18,7 @@ public class AllSubredditsPaginator extends GenericPaginator<Subreddit, AllSubre
      * @param creator The RedditClient that will be used to send HTTP requests
      * @param where The criteria in which to return Subreddits
      */
-    public AllSubredditsPaginator(RedditClient creator, Where where) {
+    AllSubredditsPaginator(RedditClient creator, String where) {
         super(creator, Subreddit.class, where);
     }
 
@@ -39,8 +38,8 @@ public class AllSubredditsPaginator extends GenericPaginator<Subreddit, AllSubre
         return "/subreddits/";
     }
 
-    public static enum Where {
-        POPULAR,
-        NEW
+    @Override
+    public String[] getWhereValues() {
+        return new String[] {"popular", "new"};
     }
 }

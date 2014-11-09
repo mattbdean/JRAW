@@ -16,6 +16,7 @@ import net.dean.jraw.models.LoggedInAccount;
 import net.dean.jraw.models.RenderStringPair;
 import net.dean.jraw.models.Submission;
 import net.dean.jraw.models.Subreddit;
+import net.dean.jraw.paginators.Paginators;
 import net.dean.jraw.paginators.Sorting;
 import net.dean.jraw.paginators.SubredditPaginator;
 import org.codehaus.jackson.JsonNode;
@@ -479,8 +480,7 @@ public class RedditClient extends RestClient<RedditResponse> {
      * @return A list of trending subreddits' names
      */
     public List<String> getTrendingSubreddits() {
-        SubredditPaginator paginator = new SubredditPaginator(this);
-        paginator.setSubreddit("trendingsubreddits");
+        SubredditPaginator paginator = Paginators.subreddit(this, "trendingsubreddits");
         paginator.setSorting(Sorting.NEW);
 
         Submission latest = paginator.next().get(0);
