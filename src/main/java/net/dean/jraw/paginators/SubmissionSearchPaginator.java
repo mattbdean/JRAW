@@ -15,7 +15,7 @@ import java.util.Map;
  * uses a special enum for sorting the values retrieved called {@link SearchSort}. To set this new sorting, use
  * {@link #setSearchSorting(SearchSort)}.
  */
-public class SearchPaginator extends Paginator<Submission> {
+public class SubmissionSearchPaginator extends Paginator<Submission> {
     public static final SearchSort DEFAULT_SORTING = SearchSort.RELEVANCE;
     private SearchSort sorting;
     private String subreddit;
@@ -27,7 +27,7 @@ public class SearchPaginator extends Paginator<Submission> {
      * @param creator The RedditClient that will be used to send HTTP requests
      * @param query   What to search for
      */
-    SearchPaginator(RedditClient creator, String query) {
+    SubmissionSearchPaginator(RedditClient creator, String query) {
         super(creator, Submission.class);
         this.query = query;
         this.sorting = DEFAULT_SORTING;

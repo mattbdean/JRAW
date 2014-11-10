@@ -18,10 +18,11 @@ import net.dean.jraw.paginators.MultiHubPaginator;
 import net.dean.jraw.paginators.MultiRedditPaginator;
 import net.dean.jraw.paginators.Paginator;
 import net.dean.jraw.paginators.Paginators;
-import net.dean.jraw.paginators.SearchPaginator;
+import net.dean.jraw.paginators.SubmissionSearchPaginator;
 import net.dean.jraw.paginators.Sorting;
 import net.dean.jraw.paginators.SpecificPaginator;
 import net.dean.jraw.paginators.SubredditPaginator;
+import net.dean.jraw.paginators.SubredditSearchPaginator;
 import net.dean.jraw.paginators.TimePeriod;
 import net.dean.jraw.paginators.UserContributionPaginator;
 import net.dean.jraw.paginators.UserRecordPaginator;
@@ -74,7 +75,7 @@ public class PaginationTest extends AuthenticatedRedditTest {
 
     @Test
     public void testSearchPaginator() throws NetworkException {
-        SearchPaginator paginator = Paginators.search(reddit, "test");
+        SubmissionSearchPaginator paginator = Paginators.searchPosts(reddit, "test");
         String subreddit = "AskReddit";
         paginator.setSubreddit(subreddit);
         commonTest(paginator);
@@ -236,6 +237,12 @@ public class PaginationTest extends AuthenticatedRedditTest {
             paginator.setIncludeComments(true);
             paginator.setIncludeSubmissions(true);
         }
+    }
+
+    @Test
+    public void testSubredditSearchPaginator() {
+        SubredditSearchPaginator paginator = Paginators.searchSubreddits(reddit, "programming");
+        commonTest(paginator);
     }
 
     @Test(expectedExceptions = IllegalStateException.class)

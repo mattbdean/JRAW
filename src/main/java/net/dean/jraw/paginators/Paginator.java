@@ -95,7 +95,7 @@ public abstract class Paginator<T extends Thing> implements Iterator<Listing<T>>
         }
 
         Map<String, String> extraArgs = getExtraQueryArgs();
-        if (extraArgs != null) {
+        if (extraArgs != null && extraArgs.size() > 0) {
             args.putAll(extraArgs);
         }
 
@@ -243,7 +243,7 @@ public abstract class Paginator<T extends Thing> implements Iterator<Listing<T>>
      * @return A map of paginator-implementation-specific arguments
      */
     protected Map<String, String> getExtraQueryArgs() {
-        return null;
+        return new HashMap<>();
     }
 
     /**

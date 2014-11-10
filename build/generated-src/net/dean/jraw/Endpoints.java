@@ -252,8 +252,6 @@ public enum Endpoints {
     LIVE_THREAD_CONTRIBUTORS("GET /live/{thread}/contributors.json"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_live_%7Bthread%7D_discussions">{@code GET /live/{thread}/discussions}</a>" included in the "read" scope */
     LIVE_THREAD_DISCUSSIONS("GET /live/{thread}/discussions"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_subreddits_search">{@code GET /subreddits/search}</a>" included in the "read" scope */
-    SUBREDDITS_SEARCH("GET /subreddits/search"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_about_banned">{@code GET /about/banned}</a>" included in the "read" scope */
     ABOUT_BANNED("GET /about/banned"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_about_contributors">{@code GET /about/contributors}</a>" included in the "read" scope */
@@ -328,6 +326,8 @@ public enum Endpoints {
     SUBREDDITS_NEW("GET /subreddits/new"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_subreddits_popular">{@code GET /subreddits/popular}</a>" included in the "read" scope */
     SUBREDDITS_POPULAR("GET /subreddits/popular"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_subreddits_search">{@code GET /subreddits/search}</a>" included in the "read" scope */
+    SUBREDDITS_SEARCH("GET /subreddits/search"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_subreddits_where">{@code GET /subreddits/where}</a>" included in the "read" scope */
     SUBREDDITS_WHERE("GET /subreddits/where"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_top">{@code GET /top}</a>" included in the "read" scope */

@@ -116,18 +116,28 @@ public final class Paginators {
      * @param query What to search for
      * @return A new SearchPaginator
      */
-    public static SearchPaginator search(RedditClient reddit, String query) {
-        return new SearchPaginator(reddit, query);
+    public static SubmissionSearchPaginator searchPosts(RedditClient reddit, String query) {
+        return new SubmissionSearchPaginator(reddit, query);
     }
 
     /**
-     * Creates a SpecificPaginator
+     * Creates a new SpecificPaginator
      * @param reddit The RedditClient to send requests with
      * @param fullNames An array of full names of submissions
      * @return A SpecificPaginator
      */
     public static SpecificPaginator byId(RedditClient reddit, String... fullNames) {
         return new SpecificPaginator(reddit, fullNames);
+    }
+
+    /**
+     * Creates a new SubredditSearchPaginator
+     * @param reddit The RedditClient to send requests with
+     * @param query What to search for
+     * @return A new SubredditSearchPaginator
+     */
+    public static SubredditSearchPaginator searchSubreddits(RedditClient reddit, String query) {
+        return new SubredditSearchPaginator(reddit, query);
     }
 
     /**
