@@ -94,7 +94,6 @@ public abstract class AbstractEndpointGenerator {
         return sorted;
     }
 
-
     /**
      * Gets a link to Reddit's official API documentation for a specific endpoint
      *
@@ -102,15 +101,21 @@ public abstract class AbstractEndpointGenerator {
      * @return A URL pointing to the given endpoint
      */
     protected String getRedditDocUrl(Endpoint endpoint) {
-        String base = endpoint.getVerb() + endpoint.getUri().replace('/', '_');
+        String ref = endpoint.getVerb() + endpoint.getUri().replace('/', '_');
 
         try {
-            base = URLEncoder.encode(base, "UTF-8");
+            ref = URLEncoder.encode(ref, "UTF-8");
         } catch (UnsupportedEncodingException e) {
-            JrawUtils.logger().error("Could not URL-encode " + base, e);
-            // Just leave filePath alone
+            JrawUtils.logger().error("Could not URL-encode " + ref, e);
         }
-        return "https://www.reddit.com/dev/api#" + base;
+
+        String base = "https://www.reddit.com/dev/api";
+        if (!endpoint.getScope().equals("(not available through oauth)")) {
+            base += "/oauth";
+        }
+        base += "#";
+
+        return base + ref;
     }
 
     /**
