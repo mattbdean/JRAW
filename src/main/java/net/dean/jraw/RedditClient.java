@@ -8,11 +8,13 @@ import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.RedditResponse;
 import net.dean.jraw.http.RestClient;
 import net.dean.jraw.http.RestRequest;
-import net.dean.jraw.managers.AccountManager;
 import net.dean.jraw.models.Account;
 import net.dean.jraw.models.Captcha;
+import net.dean.jraw.models.CommentSort;
+import net.dean.jraw.models.CompactComment;
 import net.dean.jraw.models.LiveThread;
 import net.dean.jraw.models.LoggedInAccount;
+import net.dean.jraw.models.More;
 import net.dean.jraw.models.RenderStringPair;
 import net.dean.jraw.models.Submission;
 import net.dean.jraw.models.Subreddit;
@@ -501,6 +503,48 @@ public class RedditClient extends RestClient<RedditResponse> {
     }
 
     /**
+     * Retrieves more comments from the comment tree
+     *
+     * @param submission The submission where the desired 'more' object is found
+     * @param sort How to sort the returned comments
+     * @param more The More object to retrieve the children of
+     * @return A list of CompactComments that the More object represents
+     * @throws NetworkException
+     * @throws ApiException
+     */
+    @EndpointImplementation(Endpoints.MORECHILDREN)
+    public List<CompactComment> getMoreChildren(Submission submission, CommentSort sort, More more)
+            throws NetworkException, ApiException {
+
+        List<String> moreIds = more.getChildrenIds();
+        StringBuilder ids = new StringBuilder(moreIds.get(0));
+        for (int i = 1; i < moreIds.size(); i++) {
+            String other = moreIds.get(i);
+            ids.append(',').append(other);
+        }
+
+        RedditResponse response = execute(request()
+                .endpoint(Endpoints.MORECHILDREN)
+                .post(JrawUtils.args(
+                        "children", ids.toString(),
+                        "link_id", submission.getFullName(),
+                        "sort", sort.name().toLowerCase(),
+                        "api_type", "json"
+                )).build());
+        if (response.hasErrors()) {
+            throw response.getErrors()[0];
+        }
+
+        JsonNode things = response.getJson().get("json").get("data").get("things");
+        List<CompactComment> commentList = new ArrayList<>(things.size());
+        for (JsonNode node : things) {
+            commentList.add(new CompactComment(node.get("data")));
+        }
+
+        return commentList;
+    }
+
+    /**
      * Returns how the user was authenticated
      * @return How the user was authenticated
      */
@@ -517,7 +561,7 @@ public class RedditClient extends RestClient<RedditResponse> {
         private Integer depth;
         private Integer limit;
         private Integer context;
-        private AccountManager.CommentSort sort;
+        private CommentSort sort;
         private String focus;
 
         /**
@@ -569,7 +613,7 @@ public class RedditClient extends RestClient<RedditResponse> {
          * @param sort The sorting
          * @return This SubmissionRequest
          */
-        public SubmissionRequest sort(AccountManager.CommentSort sort) {
+        public SubmissionRequest sort(CommentSort sort) {
             this.sort = sort;
             return this;
         }

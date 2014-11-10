@@ -1,9 +1,9 @@
-<!--- Generated 2014-11-09 at 21:00:59 EST. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
+<!--- Generated 2014-11-09 at 22:52:10 EST. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
 #Endpoints
 
 This file contains a list of all the endpoints (regardless of if they have been implemented) that can be found at the [official Reddit API docs](https://www.reddit.com/dev/api). To update this file, run `./gradlew endpoints:update`.
 
-So far **98** endpoints (out of 183 total) have been implemented.
+So far **99** endpoints (out of 183 total) have been implemented.
 
 ##(any scope)
 Method|Endpoint|Implemented?
@@ -174,9 +174,8 @@ Method|Endpoint|Implemented?
 `GET`|[`/api/filter/{filterpath}`](https://www.reddit.com/dev/api#GET_api_filter_%7Bfilterpath%7D)|No
 `GET`|[`/api/filter/{filterpath}/r/srname`](https://www.reddit.com/dev/api#GET_api_filter_%7Bfilterpath%7D_r_srname)|No
 `GET`|[`/api/info`](https://www.reddit.com/dev/api#GET_api_info)|No
-`POST`|[`/api/morechildren`](https://www.reddit.com/dev/api#POST_api_morechildren)|No
 `GET`|[`/api/recommend/sr/srnames`](https://www.reddit.com/dev/api#GET_api_recommend_sr_srnames)|No
-`GET`|[`/api/v1/user/username/trophies`](https://www.reddit.com/dev/api#GET_api_v1_user_username_trophies)|No
+`GET`|[`/api/v1/user/{username}/trophies`](https://www.reddit.com/dev/api#GET_api_v1_user_%7Busername%7D_trophies)|No
 `GET`|[`/live/{thread}/contributors.json`](https://www.reddit.com/dev/api#GET_live_%7Bthread%7D_contributors.json)|No
 `GET`|[`/live/{thread}/discussions`](https://www.reddit.com/dev/api#GET_live_%7Bthread%7D_discussions)|No
 `GET`|[`/about/banned`](https://www.reddit.com/dev/api#GET_about_banned)|[`UserRecordPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/paginators/UserRecordPaginator#getListing(boolean))
@@ -191,6 +190,7 @@ Method|Endpoint|Implemented?
 `GET`|[`/about/wikicontributors`](https://www.reddit.com/dev/api#GET_about_wikicontributors)|[`UserRecordPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/paginators/UserRecordPaginator#getListing(boolean))
 `GET`|[`/about/{location}`](https://www.reddit.com/dev/api#GET_about_%7Blocation%7D)|[`ModeratorPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/paginators/ModeratorPaginator#getListing(boolean))
 `GET`|[`/about/{where}`](https://www.reddit.com/dev/api#GET_about_%7Bwhere%7D)|[`UserRecordPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/paginators/UserRecordPaginator#getListing(boolean))
+`POST`|[`/api/morechildren`](https://www.reddit.com/dev/api#POST_api_morechildren)|[`RedditClient.getMoreChildren(Submission, CommentSort, More)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/RedditClient#getMoreChildren(net.dean.jraw.models.Submission, net.dean.jraw.models.CommentSort, net.dean.jraw.models.More))
 `GET`|[`/api/multi/mine`](https://www.reddit.com/dev/api#GET_api_multi_mine)|[`MultiRedditManager.mine()`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/managers/MultiRedditManager#mine())
 `GET`|[`/api/multi/{multipath}`](https://www.reddit.com/dev/api#GET_api_multi_%7Bmultipath%7D)|[`MultiRedditManager.get(String, String)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/managers/MultiRedditManager#get(java.lang.String, java.lang.String))
 `GET`|[`/api/multi/{multipath}/description`](https://www.reddit.com/dev/api#GET_api_multi_%7Bmultipath%7D_description)|[`MultiRedditManager.getDescription(String)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/managers/MultiRedditManager#getDescription(java.lang.String))
@@ -219,7 +219,7 @@ Method|Endpoint|Implemented?
 `GET`|[`/subreddits/search`](https://www.reddit.com/dev/api#GET_subreddits_search)|[`SubredditSearchPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/paginators/SubredditSearchPaginator#getListing(boolean))
 `GET`|[`/subreddits/where`](https://www.reddit.com/dev/api#GET_subreddits_where)|[`AllSubredditsPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/paginators/AllSubredditsPaginator#getListing(boolean))
 `GET`|[`/top`](https://www.reddit.com/dev/api#GET_top)|[`SubredditPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/paginators/SubredditPaginator#getListing(boolean))
-`GET`|[`/user/username/about.json`](https://www.reddit.com/dev/api#GET_user_username_about.json)|[`RedditClient.getUser(String)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/RedditClient#getUser(java.lang.String))
+`GET`|[`/user/{username}/about.json`](https://www.reddit.com/dev/api#GET_user_%7Busername%7D_about.json)|[`RedditClient.getUser(String)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/RedditClient#getUser(java.lang.String))
 
 ##report
 Method|Endpoint|Implemented?
@@ -254,8 +254,8 @@ Method|Endpoint|Implemented?
 `DELETE`|[`/api/filter/{filterpath}/r/{srname}`](https://www.reddit.com/dev/api#DELETE_api_filter_%7Bfilterpath%7D_r_%7Bsrname%7D)|No
 `PUT`|[`/api/filter/{filterpath}/r/{srname}`](https://www.reddit.com/dev/api#PUT_api_filter_%7Bfilterpath%7D_r_%7Bsrname%7D)|No
 `POST`|[`/api/multi/{filterpath}`](https://www.reddit.com/dev/api#POST_api_multi_%7Bfilterpath%7D)|No
-`DELETE`|[`/api/v1/me/friends/username`](https://www.reddit.com/dev/api#DELETE_api_v1_me_friends_username)|No
-`PUT`|[`/api/v1/me/friends/username`](https://www.reddit.com/dev/api#PUT_api_v1_me_friends_username)|No
+`DELETE`|[`/api/v1/me/friends/{username}`](https://www.reddit.com/dev/api#DELETE_api_v1_me_friends_%7Busername%7D)|No
+`PUT`|[`/api/v1/me/friends/{username}`](https://www.reddit.com/dev/api#PUT_api_v1_me_friends_%7Busername%7D)|No
 `DELETE`|[`/api/multi/{multipath}`](https://www.reddit.com/dev/api#DELETE_api_multi_%7Bmultipath%7D)|[`MultiRedditManager.delete(String)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/managers/MultiRedditManager#delete(java.lang.String))
 `POST`|[`/api/multi/{multipath}`](https://www.reddit.com/dev/api#POST_api_multi_%7Bmultipath%7D)|[`MultiRedditManager.createOrUpdate(String, List, boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/managers/MultiRedditManager#createOrUpdate(java.lang.String, java.util.List, boolean))
 `PUT`|[`/api/multi/{multipath}`](https://www.reddit.com/dev/api#PUT_api_multi_%7Bmultipath%7D)|[`MultiRedditManager.createOrUpdate(String, List, boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/managers/MultiRedditManager#createOrUpdate(java.lang.String, java.util.List, boolean))

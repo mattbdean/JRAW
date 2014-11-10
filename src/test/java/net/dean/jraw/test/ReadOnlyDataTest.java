@@ -1,13 +1,17 @@
 package net.dean.jraw.test;
 
+import net.dean.jraw.ApiException;
 import net.dean.jraw.JrawUtils;
 import net.dean.jraw.http.MediaTypes;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.RedditResponse;
 import net.dean.jraw.http.RestRequest;
 import net.dean.jraw.models.Comment;
+import net.dean.jraw.models.CommentSort;
+import net.dean.jraw.models.CompactComment;
 import net.dean.jraw.models.Listing;
 import net.dean.jraw.models.LiveThread;
+import net.dean.jraw.models.More;
 import net.dean.jraw.models.Submission;
 import net.dean.jraw.models.Subreddit;
 import net.dean.jraw.paginators.Paginators;
@@ -93,6 +97,24 @@ public class ReadOnlyDataTest extends RedditTest {
                     .build());
             assertTrue(JrawUtils.typeComparison(response.getType(), MediaTypes.HTML.type()));
         } catch (NetworkException e) {
+            handle(e);
+        }
+    }
+
+    @Test
+    public void testMoreChildren() {
+        try {
+            Submission submission = reddit.getSubmission("92dd8");
+            More more = submission.getComments().getMoreChildren();
+
+            // Top-comments in the "more" node at the end of the thread "id" should be the fullname of the submission
+            List<CompactComment> comments = reddit.getMoreChildren(submission, CommentSort.TOP, more);
+
+            for (CompactComment com : comments) {
+                validateModel(com);
+                validateRenderString(com.getContent());
+            }
+        } catch (NetworkException | ApiException e) {
             handle(e);
         }
     }

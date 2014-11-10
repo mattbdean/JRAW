@@ -2,8 +2,8 @@ package net.dean.jraw.test;
 
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.NetworkException;
-import net.dean.jraw.managers.AccountManager;
 import net.dean.jraw.models.Comment;
+import net.dean.jraw.models.CommentSort;
 import net.dean.jraw.models.Submission;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -58,7 +58,7 @@ public class SubmissionRequestTest extends RedditTest {
 
     @Test
     public void testSort() {
-        request.sort(AccountManager.CommentSort.TOP);
+        request.sort(CommentSort.TOP);
         s = get();
         int prevScore = s.getComments().get(0).getUpvotes();
         for (int i = 1; i < 5; i++) {
