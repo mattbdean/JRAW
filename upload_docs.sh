@@ -20,8 +20,16 @@ COMMIT_MSG="Update Javadoc to commit $COMMIT_SHA"
 OUT_DIR="docs/git/$COMMIT_SHA"
 ## Location of the latest git commit docs
 OUT_DIR_LATEST="docs/git/latest"
+## Use 'dumb' Gradle output
+TERM=dumb
 
-export TERM=dumb
+# See if the docs are already uploaded by querying GitHub Pages
+status=$(curl -s -o /dev/null -w "%{http_code}" -L -I \
+    http://thatjavanerd.github.io/JRAW/docs/git/$COMMIT_SHA/index.html)
+if [[ $status == "200" ]]; then
+    echo "Docs already uploaded. Exiting"
+    exit
+fi
 
 # Travis uses the git:// URL. When pushing, GitHub will return an error.
 # Use the HTTPS version instead
