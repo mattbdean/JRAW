@@ -163,12 +163,8 @@ public abstract class RestClient<T extends RestResponse> implements HttpClient<T
 
         Request r = request.getRequest();
         try {
-            Response response = http.newCall(r).execute();
-
             if (requestLogging)
                 JrawUtils.logger().info("{} {}", r.method(), r.url());
-            if (!response.isSuccessful())
-                throw new NetworkException(response.code());
             if (requestLogging) {
                 if (request.getFormArgs() != null) {
                     for (Map.Entry<String, String> entry : request.getFormArgs().entrySet()) {
@@ -177,6 +173,10 @@ public abstract class RestClient<T extends RestResponse> implements HttpClient<T
                     }
                 }
             }
+
+            Response response = http.newCall(r).execute();
+            if (!response.isSuccessful())
+                throw new NetworkException(response.code());
 
             T genericResponse = initResponse(http.newCall(r).execute());
             if (!JrawUtils.typeComparison(genericResponse.getType(), request.getExpectedType())) {
