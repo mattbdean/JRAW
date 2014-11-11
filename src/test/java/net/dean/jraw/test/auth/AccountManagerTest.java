@@ -42,7 +42,7 @@ public class AccountManagerTest extends AuthenticatedRedditTest {
 
             URL url = JrawUtils.newUrl("https://www." + number + ".com");
 
-            Submission submission = account.submitContent(
+            Submission submission = account.submit(
                     new AccountManager.SubmissionBuilder(url, "jraw_testing2", "Link post test (epoch=" + number + ")"));
 
             assertTrue(!submission.isSelfPost());
@@ -61,7 +61,7 @@ public class AccountManagerTest extends AuthenticatedRedditTest {
             long number = epochMillis();
             String content = reddit.getUserAgent();
 
-            Submission submission = account.submitContent(
+            Submission submission = account.submit(
                     new AccountManager.SubmissionBuilder(content, "jraw_testing2", "Self post test (epoch=" + number + ")"));
 
             assertTrue(submission.isSelfPost());
@@ -94,7 +94,7 @@ public class AccountManagerTest extends AuthenticatedRedditTest {
             if (!reddit.needsCaptcha()) {
                 throw new SkipException("No captcha needed, request will return successfully either way");
             }
-            account.submitContent(
+            account.submit(
                     new AccountManager.SubmissionBuilder("content", "jraw_testing2", "title"), reddit.getNewCaptcha(), "invalid captcha attempt");
         } catch (NetworkException e) {
             handle(e);
@@ -186,7 +186,7 @@ public class AccountManagerTest extends AuthenticatedRedditTest {
     public void testSendRepliesToInbox() throws ApiException {
         try {
             Submission s = (Submission) getPaginator("submitted").next().get(0);
-            account.setSendRepliesToInbox(s, true);
+            account.sendRepliesToInbox(s, true);
         } catch (NetworkException e) {
             handle(e);
         }
@@ -214,7 +214,7 @@ public class AccountManagerTest extends AuthenticatedRedditTest {
     public void testSaveSubmission() {
         try {
             Submission submission = reddit.getSubmission("28d6vv");
-            account.setSaved(submission, true);
+            account.save(submission);
 
             UserContributionPaginator paginator = getPaginator("saved");
             List<Contribution> saved = paginator.next();
@@ -237,7 +237,7 @@ public class AccountManagerTest extends AuthenticatedRedditTest {
     public void testUnsaveSubmission() {
         try {
             Submission submission = reddit.getSubmission("28d6vv");
-            account.setSaved(submission, false);
+            account.unsave(submission);
 
             UserContributionPaginator paginator = getPaginator("saved");
             List<Contribution> saved = paginator.next();
@@ -353,7 +353,11 @@ public class AccountManagerTest extends AuthenticatedRedditTest {
             boolean isSubscribed = isSubscribed(subreddit.getDisplayName());
             boolean expected = !isSubscribed;
 
-            account.setSubscribed(subreddit, expected);
+            if (isSubscribed) {
+                account.unsubscribe(subreddit);
+            } else {
+                account.subscribe(subreddit);
+            }
             boolean actual = isSubscribed(subreddit.getDisplayName());
             assertEquals(actual, expected);
         } catch (NetworkException e) {

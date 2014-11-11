@@ -36,8 +36,8 @@ public class AccountManager extends AbstractManager {
      * @throws NetworkException If the request was not successful
      * @throws net.dean.jraw.ApiException If the Reddit API returned an error
      */
-    public Submission submitContent(SubmissionBuilder b) throws NetworkException, ApiException {
-        return submitContent(b, null, null);
+    public Submission submit(SubmissionBuilder b) throws NetworkException, ApiException {
+        return submit(b, null, null);
     }
 
     /**
@@ -51,7 +51,7 @@ public class AccountManager extends AbstractManager {
      * @throws ApiException If the API returned an error
      */
     @EndpointImplementation(Endpoints.SUBMIT)
-    public Submission submitContent(SubmissionBuilder b, Captcha captcha, String captchaAttempt) throws NetworkException, ApiException {
+    public Submission submit(SubmissionBuilder b, Captcha captcha, String captchaAttempt) throws NetworkException, ApiException {
         Map<String, String> args = JrawUtils.args(
                 "api_type", "json",
                 "extension", "json",
@@ -107,6 +107,14 @@ public class AccountManager extends AbstractManager {
                 ).build());
     }
 
+    public void save(Submission s) throws NetworkException, ApiException {
+        setSaved(s, true);
+    }
+
+    public void unsave(Submission s) throws NetworkException, ApiException {
+        setSaved(s, false);
+    }
+
     /**
      * Saves or unsaves a submission.
      *
@@ -117,7 +125,7 @@ public class AccountManager extends AbstractManager {
      * @throws ApiException If the API returned an error
      */
     @EndpointImplementation({Endpoints.SAVE, Endpoints.UNSAVE})
-    public RedditResponse setSaved(Submission s, boolean save) throws NetworkException, ApiException {
+    private RedditResponse setSaved(Submission s, boolean save) throws NetworkException, ApiException {
         // Send it to "/api/save" if save == true, "/api/unsave" if save == false
         return genericPost(request()
                 .endpoint(save ? Endpoints.SAVE : Endpoints.UNSAVE)
@@ -136,7 +144,7 @@ public class AccountManager extends AbstractManager {
      * @throws ApiException If the API returned an error
      */
     @EndpointImplementation(Endpoints.SENDREPLIES)
-    public RedditResponse setSendRepliesToInbox(Submission s, boolean send) throws NetworkException, ApiException {
+    public RedditResponse sendRepliesToInbox(Submission s, boolean send) throws NetworkException, ApiException {
         return genericPost(request()
                 .endpoint(Endpoints.SENDREPLIES)
                 .post(JrawUtils.args(
@@ -317,6 +325,24 @@ public class AccountManager extends AbstractManager {
     }
 
     /**
+     * Subscribes to a subreddit
+     * @param subreddit The subreddit to subscribe to
+     * @throws NetworkException
+     */
+    public void subscribe(Subreddit subreddit) throws NetworkException {
+        setSubscribed(subreddit, true);
+    }
+
+    /**
+     * Unsubscribes from a subreddit
+     * @param subreddit The subreddit to unsubscribe to
+     * @throws NetworkException If the request was not successful
+     */
+    public void unsubscribe(Subreddit subreddit) throws NetworkException {
+        setSubscribed(subreddit, false);
+    }
+
+    /**
      * Subscribe or unsubscribe to a subreddit
      *
      * @param subreddit The subreddit to (un)subscribe to
@@ -324,7 +350,7 @@ public class AccountManager extends AbstractManager {
      * @throws NetworkException If the request was not successful
      */
     @EndpointImplementation(Endpoints.SUBSCRIBE)
-    public void setSubscribed(Subreddit subreddit, boolean sub) throws NetworkException {
+    private void setSubscribed(Subreddit subreddit, boolean sub) throws NetworkException {
         execute(request()
                 .endpoint(Endpoints.SUBSCRIBE)
                 .post(JrawUtils.args(
