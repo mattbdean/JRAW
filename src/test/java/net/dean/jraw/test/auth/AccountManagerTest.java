@@ -301,16 +301,10 @@ public class AccountManagerTest extends AuthenticatedRedditTest {
             // Remove the developer to prevent /api/adddeveloper from returning a DEVELOPER_ALREADY_ADDED error.
             // /api/removedeveloper doesn't seem to return an error if the given name isn't in the list of current devs,
             // so this call will (probably) never fail.
-            JrawUtils.logger().info("Removing developer if he/she is one so he/she can be added again");
             account.removeDeveloper(CLIENT_ID, DEV_NAME);
             // Actually test the method
             account.addDeveloper(CLIENT_ID, DEV_NAME);
-        } catch (ApiException e) {
-            if (!e.getReason().equals("DEVELOPER_ALREADY_ADDED")) {
-                // https://github.com/thatJavaNerd/JRAW/issues/8
-                handle(e);
-            }
-        } catch (NetworkException e) {
+        } catch (ApiException | NetworkException e) {
             handle(e);
         }
     }
@@ -320,7 +314,6 @@ public class AccountManagerTest extends AuthenticatedRedditTest {
         // Add the developer if they're not already one
         try {
             account.addDeveloper(CLIENT_ID, DEV_NAME);
-            JrawUtils.logger().info("Adding the developer so he/she can be removed");
         } catch (ApiException e) {
             if (!e.getReason().equals("DEVELOPER_ALREADY_ADDED")) {
                 // Not ok

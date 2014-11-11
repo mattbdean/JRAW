@@ -198,13 +198,19 @@ public class AccountManager extends AbstractManager {
      *
      * @param clientId Your application's client ID. You must be a developer of the app.
      * @param newDev The username of the new developer
-     * @return The response that the Reddit API returned
      * @throws NetworkException If the request was not successful
      * @throws ApiException If the API returned an error
      */
     @EndpointImplementation(Endpoints.ADDDEVELOPER)
-    public RedditResponse addDeveloper(String clientId, String newDev) throws NetworkException, ApiException {
-        return modifyDeveloperStatus(clientId, newDev, false);
+    public void addDeveloper(String clientId, String newDev) throws NetworkException, ApiException {
+        try {
+            modifyDeveloperStatus(clientId, newDev, false);
+        } catch (ApiException e) {
+            if (!e.getReason().equals("DEVELOPER_ALREADY_ADDED")) {
+                // This seems to be the response for /api/adddeveloper no matter what user is given
+                throw e;
+            }
+        }
     }
 
     /**
@@ -212,13 +218,12 @@ public class AccountManager extends AbstractManager {
      *
      * @param clientId Your application's client ID. You must be a developer of the app.
      * @param oldDev The username of the (soon-to-be) former developer
-     * @return The response that the Reddit API returned
      * @throws NetworkException If the request was not successful
      * @throws ApiException If the api returned an error
      */
     @EndpointImplementation(Endpoints.REMOVEDEVELOPER)
-    public RedditResponse removeDeveloper(String clientId, String oldDev) throws NetworkException, ApiException {
-        return modifyDeveloperStatus(clientId, oldDev, true);
+    public void removeDeveloper(String clientId, String oldDev) throws NetworkException, ApiException {
+        modifyDeveloperStatus(clientId, oldDev, true);
     }
 
     private RedditResponse modifyDeveloperStatus(String clientId, String devName, boolean remove) throws NetworkException, ApiException {
@@ -229,20 +234,19 @@ public class AccountManager extends AbstractManager {
                         "client_id", clientId,
                         "name", devName
                 )).build());
-    }
+}
 
     /**
      * Sets whether or not a submission is hidd
      *
      * @param s The submission to hide or unhide
      * @param hide If the submission is to be hidden
-     * @return The response that the Reddit API returned
      * @throws NetworkException If the request was not successful
      * @throws ApiException If the API returned an error
      */
     @EndpointImplementation({Endpoints.HIDE, Endpoints.UNHIDE})
-    public RedditResponse hide(Submission s, boolean hide) throws NetworkException, ApiException {
-        return genericPost(request()
+    public void hide(Submission s, boolean hide) throws NetworkException, ApiException {
+        genericPost(request()
                 .endpoint(hide ? Endpoints.HIDE : Endpoints.UNHIDE)
                 .post(JrawUtils.args(
                         "id", s.getFullName()
@@ -314,6 +318,7 @@ public class AccountManager extends AbstractManager {
 
     /**
      * Subscribe or unsubscribe to a subreddit
+     *
      * @param subreddit The subreddit to (un)subscribe to
      * @param sub Whether to subscribe (true) or unsubscribe (false)
      * @throws NetworkException If the request was not successful
@@ -333,6 +338,7 @@ public class AccountManager extends AbstractManager {
     /**
      * Set or unset a self post as a sticky. You must be a moderator of the subreddit the submission was posted in for
      * this request to complete successfully.
+     *
      * @param s The submission to set as a sticky. Must be a self post
      * @param sticky Whether or not to set the submission as a stickied post
      * @throws NetworkException If the request was not successful

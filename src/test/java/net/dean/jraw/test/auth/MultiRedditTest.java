@@ -52,7 +52,7 @@ public class MultiRedditTest extends AuthenticatedRedditTest {
         try {
             validateModel(manager.get(getReadOnlyMulti().getFullName()));
         } catch (NetworkException | ApiException e) {
-            e.printStackTrace();
+            handle(e);
         }
     }
 
@@ -114,7 +114,7 @@ public class MultiRedditTest extends AuthenticatedRedditTest {
             manager.rename(MULTI_NAME, newName);
             assertTrue(multiExists(newName));
         } catch (NetworkException | ApiException e) {
-            e.printStackTrace();
+            handle(e);
         } finally {
             try {
                 manager.delete(newName);
