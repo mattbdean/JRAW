@@ -120,14 +120,13 @@ public class AccountManager extends AbstractManager {
      *
      * @param s The submission to save or unsave
      * @param save Whether or not to save the submission
-     * @return The JSON response from the API
      * @throws NetworkException If the request was not successful
      * @throws ApiException If the API returned an error
      */
     @EndpointImplementation({Endpoints.SAVE, Endpoints.UNSAVE})
-    private RedditResponse setSaved(Submission s, boolean save) throws NetworkException, ApiException {
+    private void setSaved(Submission s, boolean save) throws NetworkException, ApiException {
         // Send it to "/api/save" if save == true, "/api/unsave" if save == false
-        return genericPost(request()
+        genericPost(request()
                 .endpoint(save ? Endpoints.SAVE : Endpoints.UNSAVE)
                 .post(JrawUtils.args(
                         "id", s.getFullName()
@@ -139,13 +138,12 @@ public class AccountManager extends AbstractManager {
      *
      * @param s The submission to modify
      * @param send Whether or not to send replies to your inbox
-     * @return The response returned from the Reddit API
      * @throws NetworkException If the request was not successful
      * @throws ApiException If the API returned an error
      */
     @EndpointImplementation(Endpoints.SENDREPLIES)
-    public RedditResponse sendRepliesToInbox(Submission s, boolean send) throws NetworkException, ApiException {
-        return genericPost(request()
+    public void sendRepliesToInbox(Submission s, boolean send) throws NetworkException, ApiException {
+        genericPost(request()
                 .endpoint(Endpoints.SENDREPLIES)
                 .post(JrawUtils.args(
                         "id", s.getFullName(),
@@ -158,14 +156,13 @@ public class AccountManager extends AbstractManager {
      *
      * @param s The submission to modify
      * @param nsfw Whether or not this submission is not safe for work
-     * @return The response returned from the Reddit API
      * @throws NetworkException If the request was not successful
      * @throws ApiException If the API returned an error
      */
     @EndpointImplementation({Endpoints.MARKNSFW, Endpoints.UNMARKNSFW})
-    public RedditResponse setNsfw(Submission s, boolean nsfw) throws NetworkException, ApiException {
+    public void setNsfw(Submission s, boolean nsfw) throws NetworkException, ApiException {
         // "/api/marknsfw" if nsfw == true, "/api/unmarknsfw" if nsfw == false
-        return genericPost(request()
+        genericPost(request()
                 .endpoint(nsfw ? Endpoints.MARKNSFW : Endpoints.UNMARKNSFW)
                 .post(JrawUtils.args(
                         "id", s.getFullName()
@@ -176,25 +173,23 @@ public class AccountManager extends AbstractManager {
      * Deletes a submission that you posted
      * @param thing The submission to delete
      * @param <T> The Votable Thing to delete
-     * @return The response that the Reddit API returned
      * @throws NetworkException If the request was not successful
      * @throws ApiException If the API returned an error
      */
-    public <T extends Thing & Votable> RedditResponse delete(T thing) throws NetworkException, ApiException {
-        return delete(thing.getFullName());
+    public <T extends Thing & Votable> void delete(T thing) throws NetworkException, ApiException {
+        delete(thing.getFullName());
     }
 
 
     /**
      * Deletes a comment or submission that you posted
      * @param id The ID of the submission or comment to delete
-     * @return The response that the Reddit API returned
      * @throws NetworkException If the request was not successful
      * @throws ApiException If the API returned an error
      */
     @EndpointImplementation(Endpoints.DEL)
-    public RedditResponse delete(String id) throws NetworkException, ApiException {
-        return genericPost(request()
+    public void delete(String id) throws NetworkException, ApiException {
+        genericPost(request()
                 .endpoint(Endpoints.DEL)
                 .post(JrawUtils.args(
                         "id", id
@@ -234,8 +229,8 @@ public class AccountManager extends AbstractManager {
         modifyDeveloperStatus(clientId, oldDev, true);
     }
 
-    private RedditResponse modifyDeveloperStatus(String clientId, String devName, boolean remove) throws NetworkException, ApiException {
-        return genericPost(request()
+    private void modifyDeveloperStatus(String clientId, String devName, boolean remove) throws NetworkException, ApiException {
+        genericPost(request()
                 .endpoint(remove ? Endpoints.REMOVEDEVELOPER : Endpoints.ADDDEVELOPER)
                 .post(JrawUtils.args(
                         "api_type", "json",
@@ -266,13 +261,12 @@ public class AccountManager extends AbstractManager {
      *
      * @param submission The submission that that you would like to edit the text for
      * @param text The new text that you want the post to have
-     * @return The response that the Reddit API returned
      * @throws NetworkException If the request was not successful
      * @throws ApiException If the API returned an error
      */
     @EndpointImplementation(Endpoints.EDITUSERTEXT)
-    public RedditResponse updateSelfpost(Submission submission, String text) throws NetworkException, ApiException {
-        return genericPost(request().endpoint(Endpoints.EDITUSERTEXT)
+    public void updateSelfpost(Submission submission, String text) throws NetworkException, ApiException {
+        genericPost(request().endpoint(Endpoints.EDITUSERTEXT)
                 .post(JrawUtils.args(
                         "api_type", "json",
                         "text", text,

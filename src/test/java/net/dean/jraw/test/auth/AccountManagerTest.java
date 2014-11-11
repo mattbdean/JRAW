@@ -3,7 +3,6 @@ package net.dean.jraw.test.auth;
 import net.dean.jraw.ApiException;
 import net.dean.jraw.JrawUtils;
 import net.dean.jraw.http.NetworkException;
-import net.dean.jraw.http.RedditResponse;
 import net.dean.jraw.managers.AccountManager;
 import net.dean.jraw.models.Comment;
 import net.dean.jraw.models.Contribution;
@@ -79,10 +78,24 @@ public class AccountManagerTest extends AuthenticatedRedditTest {
     public void testEditUserText() {
         String newText = "This is a new piece of text.";
 
-        Submission s = (Submission) getPaginator("submitted").next().get(0);
+        UserContributionPaginator p = getPaginator("submitted");
+        p.setLimit(Paginator.RECOMMENDED_MAX_LIMIT);
+
+        Listing<Contribution> submissions = p.next();
+        Submission toEdit = null;
+        for (Contribution c : submissions) {
+            Submission s = (Submission) c;
+            if (s.isSelfPost()) {
+                toEdit = s;
+            }
+        }
+
+        if (toEdit == null) {
+            throw new IllegalStateException("Could not find any recent self posts");
+        }
 
         try {
-            RedditResponse r = account.updateSelfpost(s, newText);
+            account.updateSelfpost(toEdit, newText);
         } catch (NetworkException | ApiException e) {
             handle(e);
         }
