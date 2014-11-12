@@ -1,7 +1,7 @@
 package net.dean.jraw.models;
 
 /**
- * Represents the flair of an author or a submission
+ * Represents the effective flair of an author or a submission
  */
 public class Flair {
     private String cssClass;

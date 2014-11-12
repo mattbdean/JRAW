@@ -1,5 +1,6 @@
 package net.dean.jraw.managers;
 
+import com.google.common.collect.ImmutableList;
 import net.dean.jraw.ApiException;
 import net.dean.jraw.EndpointImplementation;
 import net.dean.jraw.Endpoints;
@@ -11,13 +12,17 @@ import net.dean.jraw.http.RedditResponse;
 import net.dean.jraw.http.RestRequest;
 import net.dean.jraw.models.Captcha;
 import net.dean.jraw.models.Contribution;
+import net.dean.jraw.models.FlairTemplate;
 import net.dean.jraw.models.Submission;
 import net.dean.jraw.models.Subreddit;
 import net.dean.jraw.models.Thing;
 import net.dean.jraw.models.VoteDirection;
 import net.dean.jraw.models.attr.Votable;
+import org.codehaus.jackson.JsonNode;
 
 import java.net.URL;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -179,7 +184,6 @@ public class AccountManager extends AbstractManager {
     public <T extends Thing & Votable> void delete(T thing) throws NetworkException, ApiException {
         delete(thing.getFullName());
     }
-
 
     /**
      * Deletes a comment or submission that you posted
@@ -350,7 +354,7 @@ public class AccountManager extends AbstractManager {
                 .post(JrawUtils.args(
                         "sr", subreddit.getFullName(),
                         "action", sub ? "sub" : "unsub"
-                // JSON is returned on subscribe, HTML is returned on unsubscribe
+                        // JSON is returned on subscribe, HTML is returned on unsubscribe
                 )).expected(sub ? MediaTypes.JSON.type() : MediaTypes.HTML.type())
                 .build());
     }
@@ -373,6 +377,77 @@ public class AccountManager extends AbstractManager {
                         "id", s.getFullName(),
                         "state", sticky
                 )).build());
+    }
+
+    /**
+     * Gets a list of possible flair templates for this subreddit. See also: {@link #getFlairChoices(Submission)},
+     * {@link #getCurrentFlair(String)}, {@link #getCurrentFlair(Submission)}
+     *
+     * @param subreddit The subreddit to look up
+     * @return A list of flair templates
+     * @throws NetworkException If the request was not successful
+     * @throws ApiException If the Reddit API returned an error
+     */
+    @EndpointImplementation(Endpoints.FLAIRSELECTOR)
+    public List<FlairTemplate> getFlairChoices(String subreddit) throws NetworkException, ApiException {
+        ImmutableList.Builder<FlairTemplate> templates = ImmutableList.builder();
+        for (JsonNode choiceNode : getFlairChoicesRootNode(subreddit, null).get("choices")) {
+            templates.add(new FlairTemplate(choiceNode));
+        }
+
+        return templates.build();
+    }
+
+    /**
+     * Gets a list of possible flair templates for this submission
+     * @param link The submission to look up
+     * @return A list of flair templates
+     * @throws NetworkException If the request was not successful
+     * @throws ApiException If the Reddit API returned an error
+     */
+    public List<FlairTemplate> getFlairChoices(Submission link) throws NetworkException, ApiException {
+        ImmutableList.Builder<FlairTemplate> templates = ImmutableList.builder();
+        for (JsonNode choiceNode : getFlairChoicesRootNode(link.getSubredditName(), link).get("choices")) {
+            templates.add(new FlairTemplate(choiceNode));
+        }
+
+        return templates.build();
+    }
+
+    /**
+     * Gets the current user flair for this subreddit
+     * @param subreddit The subreddit to look up
+     * @return The flair template that is being used by the authenticated user
+     * @throws NetworkException If the request was not successful
+     * @throws ApiException If the Reddit API returned an error
+     */
+    public FlairTemplate getCurrentFlair(String subreddit) throws NetworkException, ApiException {
+        return new FlairTemplate(getFlairChoicesRootNode(subreddit, null).get("current"));
+    }
+
+    /**
+     * Gets the current user flair for this subreddit
+     * @param link The submission to look up
+     * @return The given submission's current flair
+     * @throws NetworkException If the request was not successful
+     * @throws ApiException If the Reddit API returned an error
+     */
+    public FlairTemplate getCurrentFlair(Submission link) throws NetworkException, ApiException {
+        return new FlairTemplate(getFlairChoicesRootNode(link.getSubredditName(), link).get("current"));
+    }
+
+    private JsonNode getFlairChoicesRootNode(String subreddit, Submission link) throws NetworkException, ApiException {
+        String linkFullname = link != null ? link.getFullName() : null;
+        Map<String, String> formArgs = new HashMap<>();
+        if (linkFullname != null) {
+            formArgs.put("link", linkFullname);
+        }
+
+        RedditResponse response = genericPost(request()
+                .path("/r/" + subreddit + Endpoints.FLAIRSELECTOR.getEndpoint().getUri() + ".json")
+                .post(formArgs.isEmpty() ? null : formArgs)
+                .build());
+        return response.getJson();
     }
 
     /**

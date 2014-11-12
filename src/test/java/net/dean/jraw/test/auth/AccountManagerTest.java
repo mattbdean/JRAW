@@ -6,6 +6,7 @@ import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.managers.AccountManager;
 import net.dean.jraw.models.Comment;
 import net.dean.jraw.models.Contribution;
+import net.dean.jraw.models.FlairTemplate;
 import net.dean.jraw.models.Listing;
 import net.dean.jraw.models.Submission;
 import net.dean.jraw.models.Subreddit;
@@ -403,6 +404,19 @@ public class AccountManagerTest extends AuthenticatedRedditTest {
         boolean expected = !(submission.isStickied());
         try {
             account.setSticky(submission, expected);
+        } catch (NetworkException | ApiException e) {
+            handle(e);
+        }
+    }
+
+    @Test
+    public void testGetFlairChoices() {
+        try {
+            String subreddit = "pcmasterrace"; // Glorious!
+            List<FlairTemplate> templates = account.getFlairChoices(subreddit);
+            validateModels(templates);
+
+            validateModel(account.getCurrentFlair(subreddit));
         } catch (NetworkException | ApiException e) {
             handle(e);
         }

@@ -72,12 +72,12 @@ public enum Endpoints {
     SENDREPLIES("POST /api/sendreplies"),
 
     ///////// flair /////////
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#POST_api_flairselector">{@code POST /api/flairselector}</a>" included in the "flair" scope */
-    FLAIRSELECTOR("POST /api/flairselector"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#POST_api_selectflair">{@code POST /api/selectflair}</a>" included in the "flair" scope */
     SELECTFLAIR("POST /api/selectflair"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#POST_api_setflairenabled">{@code POST /api/setflairenabled}</a>" included in the "flair" scope */
     SETFLAIRENABLED("POST /api/setflairenabled"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#POST_api_flairselector">{@code POST /api/flairselector}</a>" included in the "flair" scope */
+    FLAIRSELECTOR("POST /api/flairselector"),
 
     ///////// history /////////
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_user_%7Busername%7D_comments">{@code GET /user/{username}/comments}</a>" included in the "history" scope */
