@@ -123,23 +123,16 @@ public class Subreddit extends Thing {
     }
 
     /**
-     * Checks if this subreddit allows self (text) posts
+     * Gets the types of submissions allowed to be posted on this subreddit
      * @return If this subreddit allows self posts
      */
     @JsonProperty
-    public Boolean isAllowingSelfPosts() {
-        String type = data("submission_type");
-        return type.equals("self") || type.equals("all");
-    }
-
-    /**
-     * Checks if this subreddit allows link posts
-     * @return If this subreddit allows link posts
-     */
-    @JsonProperty
-    public Boolean isAllowingLinks() {
-        String type = data("submission_type");
-        return type.equals("link") || type.equals("all");
+    public SubmissionType getAllowedSubmissionType() {
+        JsonNode submissionType = data.get("submission_type");
+        if (submissionType.isNull()) {
+            return SubmissionType.NONE;
+        }
+        return SubmissionType.valueOf(submissionType.asText().toUpperCase());
     }
 
     /**
@@ -236,6 +229,17 @@ public class Subreddit extends Thing {
         /** Only users with Reddit gold can post */
         GOLD_RESTRICTED,
         ARCHIVED
+    }
+
+    public static enum SubmissionType {
+        /** Links and self posts */
+        ANY,
+        /** Only links */
+        LINK,
+        /** Only self posts */
+        SELF,
+        /** Restricted subreddit */
+        NONE
     }
 
     @Override
