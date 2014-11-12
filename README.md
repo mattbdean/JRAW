@@ -64,19 +64,21 @@ Some references:
  - [reddit/reddit's 'JSON' wiki page](https://github.com/reddit/reddit/wiki/JSON): Shows the data structure of the objects returned by the API
  - And of course, don't forget the [official Reddit API documentation](https://www.reddit.com/dev/api)
 
-Want to contribute? Follow these steps:
+####Want to contribute? Follow these steps:
 
 1. Fork the repository
-2. Put your testing user's credentials in `/src/test/java/resources/credentials.txt`. The first line should be the username, and the second should be its password.
-3. Add your code. Implement an API endpoint, make the code prettier, or even just fix up some whitespace or documentation.
-4. Write some TestNG unit tests relevant to your changes
+2. Put your testing user's credentials in `/src/test/java/resources/credentials.json`. It should be in [this format](https://gist.github.com/thatJavaNerd/e393a7af4c3a8c564833)
+3. Add your code. Implement an endpoint, make the code prettier, or even just fix up some whitespace or documentation.
+4. Write TestNG tests covering your changes
 5. Test your code by executing `./gradlew test`
 6. Update `ENDPOINTS.md` and `Endpoints.java` by running `./gradlew endpoints:update`
-6. Send the pull request
+7. Send the pull request
 
 ####Creating a user for unit testing
-1. Create a multireddit whose name is *not* "jraw_testing", containing at least one subreddit
-2. Be a moderator of at least one subreddit. See [here](https://www.reddit.com/subreddits/create) to create one.
-3. Submit at least one post (how about on [/r/jraw_testing2](http://www.reddit.com/r/jraw_testing2)?)
+1. It is recommended to create an entire new user for the unit testing, since this library aims to test *all* endpoints (including moderation tasks and submitting and deleting submissions and comments).
+2. Create a multireddit whose name is *not* "jraw_testing", containing at least one subreddit
+3. Create a [Reddit app](https://ssl.reddit.com/prefs/apps). The type is recommended to be 'script'.
+4. Be a moderator of at least one subreddit. See [here](https://www.reddit.com/subreddits/create) to create one.
+5. Submit at least one selfpost (how about on [/r/jraw_testing2](https://www.reddit.com/r/jraw_testing2)?)
 
 
