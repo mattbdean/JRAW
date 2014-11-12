@@ -1,4 +1,4 @@
-<!--- Generated 2014-11-11 at 23:02:23 EST. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
+<!--- Generated 2014-11-11 at 23:54:18 EST. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
 #Endpoints
 
 This file contains a list of all the endpoints (regardless of if they have been implemented) that can be found at the [official Reddit API docs](https://www.reddit.com/dev/api). To update this file, run `./gradlew endpoints:update`.
@@ -263,7 +263,7 @@ Method|Endpoint|Implemented?
 `DELETE`|[`/api/multi/{multipath}/r/{srname}`](https://www.reddit.com/dev/api/oauth#DELETE_api_multi_%7Bmultipath%7D_r_%7Bsrname%7D)|[`MultiRedditManager.removeSubreddit(String, String)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/managers/MultiRedditManager#removeSubreddit(java.lang.String, java.lang.String))
 `PUT`|[`/api/multi/{multipath}/r/{srname}`](https://www.reddit.com/dev/api/oauth#PUT_api_multi_%7Bmultipath%7D_r_%7Bsrname%7D)|[`MultiRedditManager.addSubreddit(String, String)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/managers/MultiRedditManager#addSubreddit(java.lang.String, java.lang.String))
 `POST`|[`/api/multi/{multipath}/rename`](https://www.reddit.com/dev/api/oauth#POST_api_multi_%7Bmultipath%7D_rename)|[`MultiRedditManager.rename(String, String)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/managers/MultiRedditManager#rename(java.lang.String, java.lang.String))
-`POST`|[`/api/subscribe`](https://www.reddit.com/dev/api/oauth#POST_api_subscribe)|[`AccountManager.setSubscribed(Subreddit, boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/managers/AccountManager#setSubscribed(net.dean.jraw.models.Subreddit, boolean))
+`POST`|[`/api/subscribe`](https://www.reddit.com/dev/api/oauth#POST_api_subscribe)|[`AccountManager.subscribe(Subreddit)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/managers/AccountManager#subscribe(net.dean.jraw.models.Subreddit))
 
 ##vote
 Method|Endpoint|Implemented?

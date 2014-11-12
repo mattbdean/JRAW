@@ -325,8 +325,10 @@ public class AccountManager extends AbstractManager {
     /**
      * Subscribes to a subreddit
      * @param subreddit The subreddit to subscribe to
-     * @throws NetworkException
+     * @throws NetworkException If the request was not successful
+     * @see #unsubscribe(Subreddit)
      */
+    @EndpointImplementation(Endpoints.SUBSCRIBE)
     public void subscribe(Subreddit subreddit) throws NetworkException {
         setSubscribed(subreddit, true);
     }
@@ -335,6 +337,7 @@ public class AccountManager extends AbstractManager {
      * Unsubscribes from a subreddit
      * @param subreddit The subreddit to unsubscribe to
      * @throws NetworkException If the request was not successful
+     * @see #subscribe(Subreddit)
      */
     public void unsubscribe(Subreddit subreddit) throws NetworkException {
         setSubscribed(subreddit, false);
@@ -347,7 +350,6 @@ public class AccountManager extends AbstractManager {
      * @param sub Whether to subscribe (true) or unsubscribe (false)
      * @throws NetworkException If the request was not successful
      */
-    @EndpointImplementation(Endpoints.SUBSCRIBE)
     private void setSubscribed(Subreddit subreddit, boolean sub) throws NetworkException {
         execute(request()
                 .endpoint(Endpoints.SUBSCRIBE)
