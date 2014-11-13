@@ -6,7 +6,6 @@ import net.dean.jraw.EndpointImplementation;
 import net.dean.jraw.Endpoints;
 import net.dean.jraw.JrawUtils;
 import net.dean.jraw.RedditClient;
-import net.dean.jraw.http.MediaTypes;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.RedditResponse;
 import net.dean.jraw.http.RestRequest;
@@ -357,8 +356,7 @@ public class AccountManager extends AbstractManager {
                         "sr", subreddit.getFullName(),
                         "action", sub ? "sub" : "unsub"
                         // JSON is returned on subscribe, HTML is returned on unsubscribe
-                )).expected(sub ? MediaTypes.JSON.type() : MediaTypes.HTML.type())
-                .build());
+                )).build());
     }
 
     /**

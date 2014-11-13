@@ -26,7 +26,7 @@ public abstract class RestClient<T extends RestResponse> implements HttpClient<T
     protected final OkHttpClient http;
     /** The CookieStore that will contain all the cookies saved by {@link #http} */
     protected final CookieStore cookieJar;
-
+    protected final HttpLogger logger;
     /** A list of Requests sent in the past */
     protected final LinkedHashMap<T, Date> history;
     /** A list of headers to be sent for request */
@@ -49,6 +49,7 @@ public abstract class RestClient<T extends RestResponse> implements HttpClient<T
         this.defaultHost = defaultHost;
         this.http = new OkHttpClient();
         this.saveResponseHistory = false;
+        this.logger = new HttpLogger(JrawUtils.logger());
         this.requestLogging = true;
         CookieManager manager = new CookieManager();
         manager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
@@ -156,29 +157,27 @@ public abstract class RestClient<T extends RestResponse> implements HttpClient<T
         if (enforceRatelimit) {
             if (!rateLimiter.tryAcquire()) {
                 double time = rateLimiter.acquire();
-                if (requestLogging)
+                if (requestLogging) {
                     JrawUtils.logger().info("Slept for {} seconds", time);
+                    JrawUtils.logger().info("");
+                }
             }
         }
 
         Request r = request.getRequest();
         try {
-            if (requestLogging)
-                JrawUtils.logger().info("{} {}", r.method(), r.url());
             if (requestLogging) {
-                if (request.getFormArgs() != null) {
-                    for (Map.Entry<String, String> entry : request.getFormArgs().entrySet()) {
-                        String val = request.isSensitive(entry.getKey()) ? "<sensitive>" : entry.getValue();
-                        JrawUtils.logger().info("    {}={}", entry.getKey(), val);
-                    }
-                }
+                logger.log(request);
             }
 
             Response response = http.newCall(r).execute();
+            T genericResponse = initResponse(response);
+            if (requestLogging)
+                logger.log(genericResponse);
+
             if (!response.isSuccessful())
                 throw new NetworkException(response.code());
 
-            T genericResponse = initResponse(response);
             if (!JrawUtils.typeComparison(genericResponse.getType(), request.getExpectedType())) {
                 throw new NetworkException(String.format("Expected Content-Type ('%s/%s') did not match actual Content-Type ('%s/%s')",
                         request.getExpectedType().type(), request.getExpectedType().subtype(),

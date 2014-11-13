@@ -15,6 +15,7 @@ import java.io.IOException;
 public class RestResponse {
     /** The ObjectMapper used to read a JSON tree into a JsonNode */
     private static final ObjectMapper objectMapper = new ObjectMapper();
+    protected final Response response;
     /** A list of all the headers received from the server */
     protected final Headers headers;
     /** The root node of the JSON */
@@ -30,6 +31,7 @@ public class RestResponse {
      * @param response The Response that will be encapsulated by this object
      */
     public RestResponse(Response response) {
+        this.response = response;
         this.headers = response.headers();
         this.raw = readContent(response);
         this.type = MediaType.parse(response.header("Content-Type"));
@@ -82,6 +84,10 @@ public class RestResponse {
      */
     public String getRaw() {
         return raw;
+    }
+
+    public Response getOkHttpResponse() {
+        return response;
     }
 
     @Override

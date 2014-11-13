@@ -104,6 +104,9 @@ public final class RestRequest {
      * @return An array of keys whose values are sensitive
      */
     public String[] getSensitiveArgs() {
+        if (sensitiveArgs == null) {
+            return new String[0];
+        }
         String[] localCopy = new String[sensitiveArgs.length];
         System.arraycopy(sensitiveArgs, 0, localCopy, 0, sensitiveArgs.length);
         return localCopy;
@@ -132,6 +135,10 @@ public final class RestRequest {
         }
 
         return false;
+    }
+
+    public Request getOkHttpRequest() {
+        return request;
     }
 
     /**
