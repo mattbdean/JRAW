@@ -178,7 +178,7 @@ public abstract class RestClient<T extends RestResponse> implements HttpClient<T
             if (!response.isSuccessful())
                 throw new NetworkException(response.code());
 
-            T genericResponse = initResponse(http.newCall(r).execute());
+            T genericResponse = initResponse(response);
             if (!JrawUtils.typeComparison(genericResponse.getType(), request.getExpectedType())) {
                 throw new NetworkException(String.format("Expected Content-Type ('%s/%s') did not match actual Content-Type ('%s/%s')",
                         request.getExpectedType().type(), request.getExpectedType().subtype(),
