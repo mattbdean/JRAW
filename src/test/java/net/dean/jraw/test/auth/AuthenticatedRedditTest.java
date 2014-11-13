@@ -1,7 +1,7 @@
 package net.dean.jraw.test.auth;
 
 import net.dean.jraw.ApiException;
-import net.dean.jraw.OAuth2RedditClient;
+import net.dean.jraw.RedditOAuth2Client;
 import net.dean.jraw.http.AuthenticationMethod;
 import net.dean.jraw.http.Credentials;
 import net.dean.jraw.http.NetworkException;
@@ -25,7 +25,7 @@ public abstract class AuthenticatedRedditTest extends RedditTest {
     private static Credentials credentials;
     private static ObjectMapper objectMapper = new ObjectMapper();
     protected final AccountManager account;
-    protected static final OAuth2RedditClient redditOAuth2 = new OAuth2RedditClient("");
+    protected static final RedditOAuth2Client redditOAuth2 = new RedditOAuth2Client("");
 
     AuthenticatedRedditTest() {
         super();

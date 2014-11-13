@@ -19,7 +19,7 @@ import java.util.Map;
  * This class provides a way to interact with the Reddit API using OAuth2. Before the program has exited, it is
  * recommended to revoke the access token (see {@link #revokeToken(Credentials)}).
  */
-public class OAuth2RedditClient extends RedditClient {
+public class RedditOAuth2Client extends RedditClient {
     private static final String HEADER_AUTHORIZATION = "Authorization";
     private String[] scopes;
     private Date tokenExpiration;
@@ -44,7 +44,7 @@ public class OAuth2RedditClient extends RedditClient {
      *                  </ul>
      *                  </blockquote>
      */
-    public OAuth2RedditClient(String userAgent) {
+    public RedditOAuth2Client(String userAgent) {
         super(userAgent, REQUESTS_PER_MINUTE_OAUTH2);
         this.hasRefreshed = false;
         setHttpsDefault(true);
