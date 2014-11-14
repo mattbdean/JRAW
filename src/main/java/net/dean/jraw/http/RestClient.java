@@ -166,9 +166,8 @@ public abstract class RestClient<T extends RestResponse> implements HttpClient<T
 
         Request r = request.getRequest();
         try {
-            if (requestLogging) {
+            if (requestLogging)
                 logger.log(request);
-            }
 
             Response response = http.newCall(r).execute();
             T genericResponse = initResponse(response);

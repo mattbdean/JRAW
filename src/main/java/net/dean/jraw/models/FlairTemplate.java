@@ -27,7 +27,7 @@ public class FlairTemplate extends JsonModel {
      * Gets the ID of this flair template
      */
     @JsonProperty(nullable = true)
-    public String getTemplateId() {
+    public String getId() {
         return flairData("template_id");
     }
 

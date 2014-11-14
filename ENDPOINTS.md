@@ -1,9 +1,9 @@
-<!--- Generated 2014-11-11 at 23:54:18 EST. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
+<!--- Generated 2014-11-13 at 21:24:18 EST. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
 #Endpoints
 
 This file contains a list of all the endpoints (regardless of if they have been implemented) that can be found at the [official Reddit API docs](https://www.reddit.com/dev/api). To update this file, run `./gradlew endpoints:update`.
 
-So far **100** endpoints (out of 183 total) have been implemented.
+So far **101** endpoints (out of 183 total) have been implemented.
 
 ##(any scope)
 Method|Endpoint|Implemented?
@@ -56,9 +56,9 @@ Method|Endpoint|Implemented?
 ##flair
 Method|Endpoint|Implemented?
 :----:|--------|------------
-`POST`|[`/api/selectflair`](https://www.reddit.com/dev/api/oauth#POST_api_selectflair)|No
 `POST`|[`/api/setflairenabled`](https://www.reddit.com/dev/api/oauth#POST_api_setflairenabled)|No
 `POST`|[`/api/flairselector`](https://www.reddit.com/dev/api/oauth#POST_api_flairselector)|[`AccountManager.getFlairChoices(String)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/managers/AccountManager#getFlairChoices(java.lang.String))
+`POST`|[`/api/selectflair`](https://www.reddit.com/dev/api/oauth#POST_api_selectflair)|[`AccountManager.setFlair(String, FlairTemplate, String, Submission, String)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/managers/AccountManager#setFlair(java.lang.String, net.dean.jraw.models.FlairTemplate, java.lang.String, net.dean.jraw.models.Submission, java.lang.String))
 
 ##history
 Method|Endpoint|Implemented?
@@ -77,8 +77,8 @@ Method|Endpoint|Implemented?
 Method|Endpoint|Implemented?
 :----:|--------|------------
 `GET`|[`/api/v1/me/trophies`](https://www.reddit.com/dev/api/oauth#GET_api_v1_me_trophies)|No
-`GET`|[`/api/v1/me`](https://www.reddit.com/dev/api/oauth#GET_api_v1_me)|[`OAuth2RedditClient.me()`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/OAuth2RedditClient#me())
-`GET`|[`/api/v1/me/prefs`](https://www.reddit.com/dev/api/oauth#GET_api_v1_me_prefs)|[`OAuth2RedditClient.getPreferences(String[])`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/OAuth2RedditClient#getPreferences([Ljava.lang.String;))
+`GET`|[`/api/v1/me`](https://www.reddit.com/dev/api/oauth#GET_api_v1_me)|[`RedditOAuth2Client.me()`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/RedditOAuth2Client#me())
+`GET`|[`/api/v1/me/prefs`](https://www.reddit.com/dev/api/oauth#GET_api_v1_me_prefs)|[`RedditOAuth2Client.getPreferences(String[])`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/RedditOAuth2Client#getPreferences([Ljava.lang.String;))
 
 ##livemanage
 Method|Endpoint|Implemented?
@@ -148,7 +148,7 @@ Method|Endpoint|Implemented?
 Method|Endpoint|Implemented?
 :----:|--------|------------
 `GET`|[`/api/v1/me/friends/{username}`](https://www.reddit.com/dev/api/oauth#GET_api_v1_me_friends_%7Busername%7D)|No
-`GET`|[`/api/v1/me/karma`](https://www.reddit.com/dev/api/oauth#GET_api_v1_me_karma)|[`OAuth2RedditClient.getKarmaBreakdown()`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/OAuth2RedditClient#getKarmaBreakdown())
+`GET`|[`/api/v1/me/karma`](https://www.reddit.com/dev/api/oauth#GET_api_v1_me_karma)|[`RedditOAuth2Client.getKarmaBreakdown()`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/RedditOAuth2Client#getKarmaBreakdown())
 `GET`|[`/subreddits/mine/contributor`](https://www.reddit.com/dev/api/oauth#GET_subreddits_mine_contributor)|[`UserSubredditsPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/paginators/UserSubredditsPaginator#getListing(boolean))
 `GET`|[`/subreddits/mine/moderator`](https://www.reddit.com/dev/api/oauth#GET_subreddits_mine_moderator)|[`UserSubredditsPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/paginators/UserSubredditsPaginator#getListing(boolean))
 `GET`|[`/subreddits/mine/subscriber`](https://www.reddit.com/dev/api/oauth#GET_subreddits_mine_subscriber)|[`UserSubredditsPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/paginators/UserSubredditsPaginator#getListing(boolean))

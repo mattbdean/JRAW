@@ -6,6 +6,7 @@ import net.dean.jraw.EndpointImplementation;
 import net.dean.jraw.Endpoints;
 import net.dean.jraw.JrawUtils;
 import net.dean.jraw.RedditClient;
+import net.dean.jraw.http.AuthenticationMethod;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.RedditResponse;
 import net.dean.jraw.http.RestRequest;
@@ -434,6 +435,99 @@ public class AccountManager extends AbstractManager {
      */
     public FlairTemplate getCurrentFlair(Submission link) throws NetworkException, ApiException {
         return new FlairTemplate(getFlairChoicesRootNode(link.getSubredditName(), link).get("current"));
+    }
+
+    /**
+     * Sets the flair for the currently authenticated user
+     * @param template The template to use
+     * @param text Optional text that will be used if the FlairTemplate's text is editable. If this is null and the
+     *             template is editable, the template's default text will be used.
+     * @throws NetworkException If the request was not successful
+     */
+    public void setFlair(String subreddit, FlairTemplate template, String text) throws NetworkException, ApiException {
+        setFlair(subreddit, template, text, (String) null);
+    }
+
+    /**
+     * Sets the flair for a certain user. Must be a moderator of the subreddit if the user is not the currently
+     * authenticated user.
+     *
+     * @param template The template to use
+     * @param text Optional text that will be used if the FlairTemplate's text is editable. If this is null and the
+     *             template is editable, the template's default text will be used.
+     * @throws NetworkException If the request was not successful
+     */
+    public void setFlair(String subreddit, FlairTemplate template, String text, String username) throws NetworkException, ApiException {
+        setFlair(subreddit, template, text, null, username);
+    }
+
+    /**
+     * Sets the flair for a certain submission. If the currently authenticated user is <em>not</em> a moderator of the
+     * subreddit where the submission was posted, then the user must have posted the submission.
+     *
+     * @param template The template to use
+     * @param text Optional text that will be used if the FlairTemplate's text is editable. If this is null and the
+     *             template is editable, the template's default text will be used.
+     * @param submission The submission to set the flair for
+     * @throws NetworkException If the request was not successful
+     */
+    public void setFlair(String subreddit, FlairTemplate template, String text, Submission submission) throws NetworkException, ApiException {
+        setFlair(subreddit, template, text, submission, null);
+    }
+
+    /**
+     * Sets either a user's flair or a submission's flair. If the submission and username are both non-null, then the
+     * submission will be used in the request. If they are both null and there is no authenticated user, then an
+     * IllegalArgumentException will be thrown.
+     *
+     * @param subreddit The subreddit where the flair will take effect
+     * @param template The template to use
+     * @param text Optional text that will be used if the FlairTemplate's text is editable. If this is null and the
+     *             template is editable, the template's default text will be used.
+     * @param submission The submission to set the flair for
+     * @param username The name of the user to set the flair for. If this is null the authenticated user's name will be
+     *                 used.
+     * @throws IllegalArgumentException If both the submission and the username are null
+     * @throws NetworkException If the request was not successful
+     */
+    @EndpointImplementation(Endpoints.SELECTFLAIR)
+    private void setFlair(String subreddit, FlairTemplate template, String text, Submission submission, String username)
+            throws IllegalArgumentException, NetworkException, ApiException {
+        if (subreddit == null) {
+            throw new IllegalArgumentException("subreddit cannot be null");
+        }
+        Map<String, String> args = JrawUtils.args(
+                "api_type", "json",
+                "flair_template_id", template.getId()
+        );
+
+        if (submission != null) {
+            args.put("link", submission.getFullName());
+        } else {
+            if (username == null) {
+                if (reddit.getAuthenticationMethod() == AuthenticationMethod.NONE) {
+                    throw new IllegalArgumentException("Not logged in and both submission and username were null");
+                }
+                username = reddit.getAuthenticatedUser();
+            }
+            args.put("name", username);
+        }
+
+        if (template.isTextEditable()) {
+            if (text == null) {
+                // Set default text flair if none is provided
+                text = template.getText();
+            }
+            args.put("text", text);
+        }
+
+        RedditResponse response = execute(request()
+                .post(args)
+                .path("/r/" + subreddit + Endpoints.SELECTFLAIR.getEndpoint().getUri())
+                .build());
+        if (response.hasErrors()) {
+            throw response.getErrors()[0];
+        }
     }
 
     private JsonNode getFlairChoicesRootNode(String subreddit, Submission link) throws NetworkException, ApiException {

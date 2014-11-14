@@ -422,6 +422,18 @@ public class AccountManagerTest extends AuthenticatedRedditTest {
         }
     }
 
+    @Test
+    public void testSetFlair() {
+        try {
+            String subreddit = "jraw_testing2";
+            FlairTemplate template = account.getFlairChoices(subreddit).get(0);
+
+            account.setFlair(subreddit, template, null);
+        } catch (NetworkException | ApiException e) {
+            handle(e);
+        }
+    }
+
     private boolean isSubscribed(String subreddit) {
         UserSubredditsPaginator paginator = Paginators.mySubreddits(reddit, "subscriber");
         paginator.setLimit(Paginator.RECOMMENDED_MAX_LIMIT);
