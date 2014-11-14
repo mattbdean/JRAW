@@ -88,8 +88,10 @@ public final class JrawUtils {
      * </pre>
      *
      * @param keysAndValues A list of objects to be turned into strings and condensed into a map. Must be of even length
+     *                      and all values must be non-null
      * @return A map of the given keys and values array
      * @throws IllegalArgumentException If the amount of parameters is not even
+     * @throws NullPointerException If an element in the array was null
      */
     public static Map<String, String> args(Object... keysAndValues) {
         if (keysAndValues.length % 2 != 0) {

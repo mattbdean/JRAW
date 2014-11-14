@@ -57,7 +57,7 @@ public class RedditOAuth2Client extends RedditClient {
 
     @Override
     public LoggedInAccount login(Credentials credentials) throws NetworkException, ApiException {
-        if (credentials.getAuthenticationMethod() != AuthenticationMethod.OAUTH2_SCRIPT) {
+        if (credentials.getAuthenticationMethod() != AuthenticationMethod.SCRIPT) {
             throw new IllegalArgumentException("Only 'script' app types supported at this moment");
         }
 
@@ -80,7 +80,7 @@ public class RedditOAuth2Client extends RedditClient {
     }
 
     private RedditResponse getAccessResponse(Credentials credentials) throws NetworkException {
-        if (credentials.getAuthenticationMethod() != AuthenticationMethod.OAUTH2_SCRIPT) {
+        if (credentials.getAuthenticationMethod() != AuthenticationMethod.SCRIPT) {
             throw new IllegalArgumentException("This method authenticates only 'script' apps");
         }
 

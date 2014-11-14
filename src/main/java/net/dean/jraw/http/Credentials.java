@@ -73,7 +73,7 @@ public final class Credentials {
     public static Credentials oauth2App(String username, String password, String clientId) {
         // Use an empty string as the client secret because "The 'password' for non-confidential clients
         // (installed apps) is an empty string". See https://github.com/reddit/reddit/wiki/OAuth2#token-retrieval
-        return new Credentials(AuthenticationMethod.OAUTH2_APP, username, password, clientId, "");
+        return new Credentials(AuthenticationMethod.APP, username, password, clientId, "");
     }
 
     /**
@@ -85,7 +85,7 @@ public final class Credentials {
      * @return A new Credentials
      */
     public static Credentials oauth2Script(String username, String password, String clientId, String clientSecret) {
-        return new Credentials(AuthenticationMethod.OAUTH2_SCRIPT, username, password, clientId, clientSecret);
+        return new Credentials(AuthenticationMethod.SCRIPT, username, password, clientId, clientSecret);
     }
 
     /**
@@ -97,6 +97,6 @@ public final class Credentials {
      * @return A new Credentials
      */
     public static Credentials oauth2Webapp(String username, String password, String clientId, String clientSecret) {
-        return new Credentials(AuthenticationMethod.OAUTH2_WEBAPP, username, password, clientId, clientSecret);
+        return new Credentials(AuthenticationMethod.WEBAPP, username, password, clientId, clientSecret);
     }
 }

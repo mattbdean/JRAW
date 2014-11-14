@@ -47,7 +47,7 @@ public abstract class AuthenticatedRedditTest extends RedditTest {
     /**
      * Gets a Credentials object that represents the properties found in credentials.json
      * (located at /src/test/resources). The Credential's AuthenticationMethod will always be
-     * {@link AuthenticationMethod#OAUTH2_SCRIPT}
+     * {@link AuthenticationMethod#SCRIPT}
      *
      * @return A Credentials object parsed form credentials.json
      */

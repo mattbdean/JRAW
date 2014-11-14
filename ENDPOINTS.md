@@ -1,9 +1,9 @@
-<!--- Generated 2014-11-13 at 21:24:18 EST. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
+<!--- Generated 2014-11-13 at 22:08:53 EST. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
 #Endpoints
 
 This file contains a list of all the endpoints (regardless of if they have been implemented) that can be found at the [official Reddit API docs](https://www.reddit.com/dev/api). To update this file, run `./gradlew endpoints:update`.
 
-So far **101** endpoints (out of 183 total) have been implemented.
+So far **103** endpoints (out of 183 total) have been implemented.
 
 ##(any scope)
 Method|Endpoint|Implemented?
@@ -16,7 +16,6 @@ Method|Endpoint|Implemented?
 Method|Endpoint|Implemented?
 :----:|--------|------------
 `POST`|[`/api/clear_sessions`](https://www.reddit.com/dev/api#POST_api_clear_sessions)|No
-`POST`|[`/api/deleteapp`](https://www.reddit.com/dev/api#POST_api_deleteapp)|No
 `POST`|[`/api/register`](https://www.reddit.com/dev/api#POST_api_register)|No
 `POST`|[`/api/revokeapp`](https://www.reddit.com/dev/api#POST_api_revokeapp)|No
 `POST`|[`/api/set_force_https`](https://www.reddit.com/dev/api#POST_api_set_force_https)|No
@@ -26,11 +25,12 @@ Method|Endpoint|Implemented?
 `POST`|[`/api/update`](https://www.reddit.com/dev/api#POST_api_update)|No
 `POST`|[`/api/update_email`](https://www.reddit.com/dev/api#POST_api_update_email)|No
 `POST`|[`/api/update_password`](https://www.reddit.com/dev/api#POST_api_update_password)|No
-`POST`|[`/api/updateapp`](https://www.reddit.com/dev/api#POST_api_updateapp)|No
 `POST`|[`/api/adddeveloper`](https://www.reddit.com/dev/api#POST_api_adddeveloper)|[`AccountManager.addDeveloper(String, String)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/managers/AccountManager#addDeveloper(java.lang.String, java.lang.String))
+`POST`|[`/api/deleteapp`](https://www.reddit.com/dev/api#POST_api_deleteapp)|[`AccountManager.deleteApp(String)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/managers/AccountManager#deleteApp(java.lang.String))
 `POST`|[`/api/login`](https://www.reddit.com/dev/api#POST_api_login)|[`RedditClient.login(Credentials)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/RedditClient#login(net.dean.jraw.http.Credentials))
 `GET`|[`/api/me.json`](https://www.reddit.com/dev/api#GET_api_me.json)|[`RedditClient.me()`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/RedditClient#me())
 `POST`|[`/api/removedeveloper`](https://www.reddit.com/dev/api#POST_api_removedeveloper)|[`AccountManager.removeDeveloper(String, String)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/managers/AccountManager#removeDeveloper(java.lang.String, java.lang.String))
+`POST`|[`/api/updateapp`](https://www.reddit.com/dev/api#POST_api_updateapp)|[`AccountManager.createOrUpdateApp(String, String, AppType, String, String, String)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/managers/AccountManager#createOrUpdateApp(java.lang.String, java.lang.String, net.dean.jraw.AppType, java.lang.String, java.lang.String, java.lang.String))
 `GET`|[`/api/username_available.json`](https://www.reddit.com/dev/api#GET_api_username_available.json)|[`RedditClient.isUsernameAvailable(String)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/RedditClient#isUsernameAvailable(java.lang.String))
 
 ##account

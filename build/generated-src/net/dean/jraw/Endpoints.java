@@ -16,8 +16,6 @@ public enum Endpoints {
     ///////// (not available through oauth) /////////
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_clear_sessions">{@code POST /api/clear_sessions}</a>" included in the "(not available through oauth)" scope */
     CLEAR_SESSIONS("POST /api/clear_sessions"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_deleteapp">{@code POST /api/deleteapp}</a>" included in the "(not available through oauth)" scope */
-    DELETEAPP("POST /api/deleteapp"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_register">{@code POST /api/register}</a>" included in the "(not available through oauth)" scope */
     REGISTER("POST /api/register"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_revokeapp">{@code POST /api/revokeapp}</a>" included in the "(not available through oauth)" scope */
@@ -36,16 +34,18 @@ public enum Endpoints {
     UPDATE_EMAIL("POST /api/update_email"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_update_password">{@code POST /api/update_password}</a>" included in the "(not available through oauth)" scope */
     UPDATE_PASSWORD("POST /api/update_password"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_updateapp">{@code POST /api/updateapp}</a>" included in the "(not available through oauth)" scope */
-    UPDATEAPP("POST /api/updateapp"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_adddeveloper">{@code POST /api/adddeveloper}</a>" included in the "(not available through oauth)" scope */
     ADDDEVELOPER("POST /api/adddeveloper"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_deleteapp">{@code POST /api/deleteapp}</a>" included in the "(not available through oauth)" scope */
+    DELETEAPP("POST /api/deleteapp"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_login">{@code POST /api/login}</a>" included in the "(not available through oauth)" scope */
     LOGIN("POST /api/login"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_api_me.json">{@code GET /api/me.json}</a>" included in the "(not available through oauth)" scope */
     ME("GET /api/me.json"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_removedeveloper">{@code POST /api/removedeveloper}</a>" included in the "(not available through oauth)" scope */
     REMOVEDEVELOPER("POST /api/removedeveloper"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_updateapp">{@code POST /api/updateapp}</a>" included in the "(not available through oauth)" scope */
+    UPDATEAPP("POST /api/updateapp"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_api_username_available.json">{@code GET /api/username_available.json}</a>" included in the "(not available through oauth)" scope */
     USERNAME_AVAILABLE("GET /api/username_available.json"),
 

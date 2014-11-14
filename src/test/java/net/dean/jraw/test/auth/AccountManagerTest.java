@@ -1,6 +1,7 @@
 package net.dean.jraw.test.auth;
 
 import net.dean.jraw.ApiException;
+import net.dean.jraw.AppType;
 import net.dean.jraw.JrawUtils;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.managers.AccountManager;
@@ -343,6 +344,26 @@ public class AccountManagerTest extends AuthenticatedRedditTest {
             handle(e);
         }
     }
+
+    @Test
+    public void testCreateOrUpdateApp() {
+        try {
+            account.createOrUpdateApp(null,
+                    "Test app for " + getClass().getSimpleName(),
+                    AppType.SCRIPT,
+                    "description goes here",
+                    "https://github.com/thatJavaNerd/JRAW",
+                    "https://github.com/thatJavaNerd/JRAW");
+        } catch (NetworkException | ApiException e) {
+            handle(e);
+        }
+    }
+
+    /*
+    Note: It is impossible to test account.deleteApp(String) because there is no way (to my knowledge) to get the ID of
+          any of your own apps, including the one created using account.createOrUpdateApp(null, <...>) because the
+          response does not contain any of that data
+     */
 
     @Test
     public void testSetNsfw() {
