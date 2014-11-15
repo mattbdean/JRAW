@@ -365,6 +365,11 @@ public final class RestRequest {
             return this;
         }
 
+        public Builder customBody(String method, MediaType mediaType, String content) {
+            builder.method(method, RequestBody.create(mediaType, content));
+            return this;
+        }
+
         private Builder formMethod(String method, Map<String, String> formArgs) {
             RequestBody body = null;
             if (formArgs != null) {

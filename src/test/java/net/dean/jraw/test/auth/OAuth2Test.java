@@ -4,6 +4,9 @@ import net.dean.jraw.ApiException;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.models.AccountPreferences;
 import net.dean.jraw.models.KarmaBreakdown;
+import net.dean.jraw.models.Listing;
+import net.dean.jraw.models.UserRecord;
+import net.dean.jraw.paginators.Paginators;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertNotNull;
@@ -59,5 +62,42 @@ public class OAuth2Test extends AuthenticatedRedditTest {
         } catch (NetworkException e) {
             handle(e);
         }
+    }
+
+    @Test
+    public void testGetFriend() {
+        try {
+            validateModel(redditOAuth2.getFriend(getFriend().getFullName()));
+        } catch (NetworkException e) {
+            handle(e);
+        }
+    }
+
+    @Test
+    public void testAddFriend() {
+        try {
+            validateModel(redditOAuth2.updateFriend("thatJavaNerd"));
+        } catch (NetworkException e) {
+            handle(e);
+        }
+    }
+
+    @Test
+    public void testDeleteFriend() {
+        try {
+            redditOAuth2.deleteFriend(getFriend().getFullName());
+        } catch (NetworkException | ApiException e) {
+            handle(e);
+        }
+    }
+
+    private UserRecord getFriend() throws NetworkException {
+        Listing<UserRecord> friends = Paginators.importantUsers(redditOAuth2, "friends").next();
+        if (friends.size() == 0) {
+            redditOAuth2.updateFriend("thatJavaNerd");
+            return getFriend();
+        }
+
+        return friends.get(0);
     }
 }

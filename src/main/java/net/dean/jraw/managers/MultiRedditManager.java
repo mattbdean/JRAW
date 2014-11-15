@@ -11,10 +11,7 @@ import net.dean.jraw.http.RestRequest;
 import net.dean.jraw.models.MultiReddit;
 import net.dean.jraw.models.RenderStringPair;
 import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.map.ObjectMapper;
 
-import java.io.IOException;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,7 +21,6 @@ import java.util.Map;
  * This class provides the ability to create, read, update, and delete multireddits.
  */
 public class MultiRedditManager extends AbstractManager {
-    private final ObjectMapper objectMapper;
 
     /**
      * Instantiates a new MultiRedditManager
@@ -32,7 +28,6 @@ public class MultiRedditManager extends AbstractManager {
      */
     public MultiRedditManager(RedditClient client) {
         super(client);
-        this.objectMapper = new ObjectMapper();
     }
 
     /**
@@ -73,7 +68,7 @@ public class MultiRedditManager extends AbstractManager {
         MultiRedditJsonModel creationData = new MultiRedditJsonModel(subreddits, priv);
 
         Map<String, String> args = new HashMap<>();
-        args.put("model", toJson(creationData));
+        args.put("model", JrawUtils.toJson(creationData));
 
         RestRequest.Builder request = request()
                 .endpoint(Endpoints.MULTI_MULTIPATH_POST, getMultiPath(name).substring(1));
@@ -101,7 +96,7 @@ public class MultiRedditManager extends AbstractManager {
         RestRequest request = request()
                 .endpoint(Endpoints.MULTI_MULTIPATH_R_SRNAME_PUT, multiName, subreddit)
                 .put(JrawUtils.args(
-                        "model", toJson(data),
+                        "model", JrawUtils.toJson(data),
                         "multipath", getMultiPath(multiName),
                         "srname", subreddit
                 )).build();
@@ -339,18 +334,6 @@ public class MultiRedditManager extends AbstractManager {
      */
     private String getMultiPath(String owner, String multiName) {
         return String.format("/user/%s/m/%s", owner, multiName);
-    }
-
-    private String toJson(Object o) {
-        StringWriter out = new StringWriter();
-        try {
-            objectMapper.writeValue(out, o);
-        } catch (IOException e) {
-            JrawUtils.logger().error("Unable to create the data model", e);
-            return null;
-        }
-
-        return out.toString();
     }
 
     /**

@@ -75,6 +75,5 @@ public class InboxManager extends AbstractManager {
         if (response.hasErrors()) {
             throw response.getErrors()[0];
         }
-        System.out.println();
     }
 }

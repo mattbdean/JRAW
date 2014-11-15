@@ -10,9 +10,12 @@ import net.dean.jraw.models.Submission;
 import net.dean.jraw.models.ThingType;
 import net.dean.jraw.paginators.MultiHubPaginator;
 import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.io.StringWriter;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
@@ -26,6 +29,8 @@ import java.util.Map;
  * A collection of utility methods
  */
 public final class JrawUtils {
+    private static final ObjectMapper mapper = new ObjectMapper();
+
     private JrawUtils() {
         // no instances
     }
@@ -203,4 +208,17 @@ public final class JrawUtils {
 
         return path;
     }
+
+    public static String toJson(Object o) {
+        StringWriter out = new StringWriter();
+        try {
+            mapper.writeValue(out, o);
+        } catch (IOException e) {
+            JrawUtils.logger().error("Unable to create the data model", e);
+            return null;
+        }
+
+        return out.toString();
+    }
+
 }

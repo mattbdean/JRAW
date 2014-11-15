@@ -3,6 +3,7 @@ package net.dean.jraw;
 import com.google.common.base.Joiner;
 import net.dean.jraw.http.AuthenticationMethod;
 import net.dean.jraw.http.Credentials;
+import net.dean.jraw.http.MediaTypes;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.RedditResponse;
 import net.dean.jraw.http.RestRequest;
@@ -11,6 +12,7 @@ import net.dean.jraw.http.oauth.OAuthHelper;
 import net.dean.jraw.models.AccountPreferences;
 import net.dean.jraw.models.KarmaBreakdown;
 import net.dean.jraw.models.LoggedInAccount;
+import net.dean.jraw.models.UserRecord;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -181,6 +183,48 @@ public class RedditOAuth2Client extends RedditClient {
     }
 
     /**
+     * Removes a friend
+     * @param friend The username of the friend
+     * @throws NetworkException If the request was not successful
+     */
+    @EndpointImplementation(Endpoints.OAUTH_ME_FRIENDS_USERNAME_DELETE)
+    public void deleteFriend(String friend) throws NetworkException, ApiException {
+        execute(request()
+                .delete()
+                .endpoint(Endpoints.OAUTH_ME_FRIENDS_USERNAME_DELETE, friend)
+                .build());
+    }
+
+    /**
+     * Gets a user record pertaining to a particular relationship
+     * @param name The name of the user
+     * @return A UserRecord representing the relationship
+     * @throws NetworkException
+     */
+    @EndpointImplementation(Endpoints.OAUTH_ME_FRIENDS_USERNAME_GET)
+    public UserRecord getFriend(String name) throws NetworkException {
+        RedditResponse response = execute(request()
+                .endpoint(Endpoints.OAUTH_ME_FRIENDS_USERNAME_GET, name)
+                .build());
+        return new UserRecord(response.getJson());
+    }
+
+    /**
+     * Adds of updates a friend
+     * @param name The name of the user
+     * @throws NetworkException If the request was not successful
+     * @return A UserRecord representing the new or updated relationship
+     */
+    @EndpointImplementation(Endpoints.OAUTH_ME_FRIENDS_USERNAME_PUT)
+    public UserRecord updateFriend(String name) throws NetworkException {
+        RedditResponse response = execute(request()
+                .customBody("PUT", MediaTypes.JSON.type(), JrawUtils.toJson(new FriendModel(name)))
+                .endpoint(Endpoints.OAUTH_ME_FRIENDS_USERNAME_PUT, name)
+                .build());
+        return new UserRecord(response.getJson());
+    }
+
+    /**
      * Gets the object that will help clients authenticate users with their Reddit app
      */
     public OAuthHelper getOAuthHelper() {
@@ -192,5 +236,17 @@ public class RedditOAuth2Client extends RedditClient {
      */
     public AuthData getAuthData() {
         return authData;
+    }
+
+    private static final class FriendModel {
+        private final String name;
+
+        private FriendModel(String name) {
+            this.name = name == null ? "" : name;
+        }
+
+        public String getName() {
+            return name;
+        }
     }
 }

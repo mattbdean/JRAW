@@ -1,9 +1,9 @@
-<!--- Generated 2014-11-15 at 13:16:07 EST. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
+<!--- Generated 2014-11-15 at 13:59:46 EST. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
 #Endpoints
 
 This file contains a list of all the endpoints (regardless of if they have been implemented) that can be found at the [official Reddit API docs](https://www.reddit.com/dev/api). To update this file, run `./gradlew endpoints:update`.
 
-So far **104** endpoints (out of 183 total) have been implemented.
+So far **107** endpoints (out of 183 total) have been implemented.
 
 ##(any scope)
 Method|Endpoint|Implemented?
@@ -147,7 +147,7 @@ Method|Endpoint|Implemented?
 ##mysubreddits
 Method|Endpoint|Implemented?
 :----:|--------|------------
-`GET`|[`/api/v1/me/friends/{username}`](https://www.reddit.com/dev/api/oauth#GET_api_v1_me_friends_%7Busername%7D)|No
+`GET`|[`/api/v1/me/friends/{username}`](https://www.reddit.com/dev/api/oauth#GET_api_v1_me_friends_%7Busername%7D)|[`RedditOAuth2Client.getFriend(String)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/RedditOAuth2Client#getFriend(java.lang.String))
 `GET`|[`/api/v1/me/karma`](https://www.reddit.com/dev/api/oauth#GET_api_v1_me_karma)|[`RedditOAuth2Client.getKarmaBreakdown()`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/RedditOAuth2Client#getKarmaBreakdown())
 `GET`|[`/subreddits/mine/contributor`](https://www.reddit.com/dev/api/oauth#GET_subreddits_mine_contributor)|[`UserSubredditsPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/paginators/UserSubredditsPaginator#getListing(boolean))
 `GET`|[`/subreddits/mine/moderator`](https://www.reddit.com/dev/api/oauth#GET_subreddits_mine_moderator)|[`UserSubredditsPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/paginators/UserSubredditsPaginator#getListing(boolean))
@@ -254,8 +254,6 @@ Method|Endpoint|Implemented?
 `DELETE`|[`/api/filter/{filterpath}/r/{srname}`](https://www.reddit.com/dev/api/oauth#DELETE_api_filter_%7Bfilterpath%7D_r_%7Bsrname%7D)|No
 `PUT`|[`/api/filter/{filterpath}/r/{srname}`](https://www.reddit.com/dev/api/oauth#PUT_api_filter_%7Bfilterpath%7D_r_%7Bsrname%7D)|No
 `POST`|[`/api/multi/{filterpath}`](https://www.reddit.com/dev/api/oauth#POST_api_multi_%7Bfilterpath%7D)|No
-`DELETE`|[`/api/v1/me/friends/{username}`](https://www.reddit.com/dev/api/oauth#DELETE_api_v1_me_friends_%7Busername%7D)|No
-`PUT`|[`/api/v1/me/friends/{username}`](https://www.reddit.com/dev/api/oauth#PUT_api_v1_me_friends_%7Busername%7D)|No
 `DELETE`|[`/api/multi/{multipath}`](https://www.reddit.com/dev/api/oauth#DELETE_api_multi_%7Bmultipath%7D)|[`MultiRedditManager.delete(String)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/managers/MultiRedditManager#delete(java.lang.String))
 `POST`|[`/api/multi/{multipath}`](https://www.reddit.com/dev/api/oauth#POST_api_multi_%7Bmultipath%7D)|[`MultiRedditManager.createOrUpdate(String, List, boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/managers/MultiRedditManager#createOrUpdate(java.lang.String, java.util.List, boolean))
 `PUT`|[`/api/multi/{multipath}`](https://www.reddit.com/dev/api/oauth#PUT_api_multi_%7Bmultipath%7D)|[`MultiRedditManager.createOrUpdate(String, List, boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/managers/MultiRedditManager#createOrUpdate(java.lang.String, java.util.List, boolean))
@@ -264,6 +262,8 @@ Method|Endpoint|Implemented?
 `PUT`|[`/api/multi/{multipath}/r/{srname}`](https://www.reddit.com/dev/api/oauth#PUT_api_multi_%7Bmultipath%7D_r_%7Bsrname%7D)|[`MultiRedditManager.addSubreddit(String, String)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/managers/MultiRedditManager#addSubreddit(java.lang.String, java.lang.String))
 `POST`|[`/api/multi/{multipath}/rename`](https://www.reddit.com/dev/api/oauth#POST_api_multi_%7Bmultipath%7D_rename)|[`MultiRedditManager.rename(String, String)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/managers/MultiRedditManager#rename(java.lang.String, java.lang.String))
 `POST`|[`/api/subscribe`](https://www.reddit.com/dev/api/oauth#POST_api_subscribe)|[`AccountManager.subscribe(Subreddit)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/managers/AccountManager#subscribe(net.dean.jraw.models.Subreddit))
+`DELETE`|[`/api/v1/me/friends/{username}`](https://www.reddit.com/dev/api/oauth#DELETE_api_v1_me_friends_%7Busername%7D)|[`RedditOAuth2Client.removeFriend(String)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/RedditOAuth2Client#removeFriend(java.lang.String))
+`PUT`|[`/api/v1/me/friends/{username}`](https://www.reddit.com/dev/api/oauth#PUT_api_v1_me_friends_%7Busername%7D)|[`RedditOAuth2Client.addFriend(String, String)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/RedditOAuth2Client#addFriend(java.lang.String, java.lang.String))
 
 ##vote
 Method|Endpoint|Implemented?

@@ -378,10 +378,6 @@ public enum Endpoints {
     FILTER_FILTERPATH_R_SRNAME_PUT("PUT /api/filter/{filterpath}/r/{srname}"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#POST_api_multi_%7Bfilterpath%7D">{@code POST /api/multi/{filterpath}}</a>" included in the "subscribe" scope */
     MULTI_FILTERPATH("POST /api/multi/{filterpath}"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#DELETE_api_v1_me_friends_%7Busername%7D">{@code DELETE /api/v1/me/friends/{username}}</a>" included in the "subscribe" scope */
-    OAUTH_ME_FRIENDS_USERNAME_DELETE("DELETE /api/v1/me/friends/{username}"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#PUT_api_v1_me_friends_%7Busername%7D">{@code PUT /api/v1/me/friends/{username}}</a>" included in the "subscribe" scope */
-    OAUTH_ME_FRIENDS_USERNAME_PUT("PUT /api/v1/me/friends/{username}"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#DELETE_api_multi_%7Bmultipath%7D">{@code DELETE /api/multi/{multipath}}</a>" included in the "subscribe" scope */
     MULTI_MULTIPATH_DELETE("DELETE /api/multi/{multipath}"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#POST_api_multi_%7Bmultipath%7D">{@code POST /api/multi/{multipath}}</a>" included in the "subscribe" scope */
@@ -398,6 +394,10 @@ public enum Endpoints {
     MULTI_MULTIPATH_RENAME("POST /api/multi/{multipath}/rename"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#POST_api_subscribe">{@code POST /api/subscribe}</a>" included in the "subscribe" scope */
     SUBSCRIBE("POST /api/subscribe"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#DELETE_api_v1_me_friends_%7Busername%7D">{@code DELETE /api/v1/me/friends/{username}}</a>" included in the "subscribe" scope */
+    OAUTH_ME_FRIENDS_USERNAME_DELETE("DELETE /api/v1/me/friends/{username}"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#PUT_api_v1_me_friends_%7Busername%7D">{@code PUT /api/v1/me/friends/{username}}</a>" included in the "subscribe" scope */
+    OAUTH_ME_FRIENDS_USERNAME_PUT("PUT /api/v1/me/friends/{username}"),
 
     ///////// vote /////////
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#POST_api_vote">{@code POST /api/vote}</a>" included in the "vote" scope */
