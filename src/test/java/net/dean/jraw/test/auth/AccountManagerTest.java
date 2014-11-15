@@ -179,7 +179,7 @@ public class AccountManagerTest extends AuthenticatedRedditTest {
         }
     }
 
-    @Test(dependsOnMethods = "testPostSelfPost")
+    @Test(dependsOnMethods = "testPostLink")
     public void testDeletePost() {
         try {
             account.delete(newSubmssionId);
