@@ -66,7 +66,7 @@ public abstract class AbstractEndpointGenerator {
                 try {
                     writer.close();
                 } catch (IOException e) {
-                    JrawUtils.logger().error("Could not close the IndentAwareFildWriter", e);
+                    JrawUtils.logger().error("Could not close the IndentAwareFileWriter", e);
                 }
             }
         }

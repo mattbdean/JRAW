@@ -152,7 +152,7 @@ public class EndpointAnalyzer {
             }
         }
 
-        if (java == null || md == null) {
+        if (java == null || md == null || readme == null) {
             System.err.println("Missing argument(s)");
             return;
         }
