@@ -5,7 +5,6 @@ import javassist.CtMethod;
 import javassist.NotFoundException;
 import net.dean.jraw.Endpoint;
 import net.dean.jraw.JrawUtils;
-import net.dean.jraw.Version;
 
 import java.io.File;
 import java.io.IOException;
@@ -139,11 +138,9 @@ public abstract class AbstractEndpointGenerator {
     }
 
     protected String getJavadocUrl(Endpoint endpoint) {
-        StringBuilder base = new StringBuilder("https://thatjavanerd.github.io/JRAW/docs");
+        StringBuilder base = new StringBuilder("https://thatjavanerd.github.io/JRAW/docs/git/latest");
 
         Method m = endpoint.getMethod();
-        // "/0.5.0"
-        base.append("/").append(Version.get().formatted());
         // "/net/dean/jraw/ClassName.html#"
         base.append("/")
                 .append(m.getDeclaringClass().getName().replace('.', '/'))
