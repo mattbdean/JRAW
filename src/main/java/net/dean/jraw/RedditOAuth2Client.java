@@ -10,6 +10,7 @@ import net.dean.jraw.http.RestRequest;
 import net.dean.jraw.http.oauth.AuthData;
 import net.dean.jraw.http.oauth.OAuthHelper;
 import net.dean.jraw.models.AccountPreferences;
+import net.dean.jraw.models.Captcha;
 import net.dean.jraw.models.KarmaBreakdown;
 import net.dean.jraw.models.LoggedInAccount;
 import net.dean.jraw.models.UserRecord;
@@ -105,6 +106,11 @@ public class RedditOAuth2Client extends RedditClient {
     @Deprecated
     public void logout() throws NetworkException {
         throw new UnsupportedOperationException("Use revokeToken(Credentials) to logout");
+    }
+
+    @Override
+    public LoggedInAccount register(String username, String password, String email, Captcha captcha, String captchaAttempt) throws NetworkException, ApiException {
+        throw new UnsupportedOperationException("Not available through OAuth2");
     }
 
     /**

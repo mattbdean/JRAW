@@ -458,7 +458,7 @@ public class AccountManagerTest extends AuthenticatedRedditTest {
     @Test
     public void testEnableFlair() {
         try {
-            account.setFlairEnabled("jraw_testing2", false);
+            account.setFlairEnabled("jraw_testing2", true);
         } catch (NetworkException | ApiException e) {
             handle(e);
         }

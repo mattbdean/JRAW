@@ -16,8 +16,6 @@ public enum Endpoints {
     ///////// (not available through oauth) /////////
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_clear_sessions">{@code POST /api/clear_sessions}</a>" included in the "(not available through oauth)" scope */
     CLEAR_SESSIONS("POST /api/clear_sessions"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_register">{@code POST /api/register}</a>" included in the "(not available through oauth)" scope */
-    REGISTER("POST /api/register"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_revokeapp">{@code POST /api/revokeapp}</a>" included in the "(not available through oauth)" scope */
     REVOKEAPP("POST /api/revokeapp"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_set_force_https">{@code POST /api/set_force_https}</a>" included in the "(not available through oauth)" scope */
@@ -42,6 +40,8 @@ public enum Endpoints {
     LOGIN("POST /api/login"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_api_me.json">{@code GET /api/me.json}</a>" included in the "(not available through oauth)" scope */
     ME("GET /api/me.json"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_register">{@code POST /api/register}</a>" included in the "(not available through oauth)" scope */
+    REGISTER("POST /api/register"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_removedeveloper">{@code POST /api/removedeveloper}</a>" included in the "(not available through oauth)" scope */
     REMOVEDEVELOPER("POST /api/removedeveloper"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_updateapp">{@code POST /api/updateapp}</a>" included in the "(not available through oauth)" scope */

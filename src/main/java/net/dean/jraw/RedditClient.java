@@ -176,6 +176,53 @@ public class RedditClient extends RestClient<RedditResponse> {
     }
 
     /**
+     * Registers a new account
+     * @param username The username
+     * @param password The password
+     * @param email The email to use. Can be null.
+     * @param captcha The captcha being answered
+     * @param captchaAttempt The attempt at the captcha
+     * @throws NetworkException If the request was not successful
+     * @throws ApiException If the API returned an error
+     */
+    @EndpointImplementation(Endpoints.REGISTER)
+    public LoggedInAccount register(String username, String password, String email, Captcha captcha, String captchaAttempt) throws NetworkException, ApiException {
+        Map<String, String> args = JrawUtils.args(
+                "api_type", "json",
+                "captcha", captchaAttempt,
+                "iden", captcha.getId(),
+                "passwd", password,
+                "passwd2", password,
+                "user", username
+        );
+        if (email != null && !email.isEmpty()) {
+            args.put("email", email);
+        }
+        RedditResponse response = execute(request()
+                .https(true)
+                .host(HOST_SPECIAL)
+                .endpoint(Endpoints.REGISTER)
+                .post(args)
+                .sensitiveArgs("passwd", "passwd2")
+                .build());
+        if (response.hasErrors()) {
+            throw response.getErrors()[0];
+        }
+
+        setHttpsDefault(response.getJson().get("json").get("data").get("need_https").asBoolean());
+
+        String modhash = response.getJson().get("json").get("data").get("modhash").getTextValue();
+
+        // Add the X-Modhash header, or update it if it already exists
+        defaultHeaders.put(HEADER_MODHASH, modhash);
+
+        LoggedInAccount me = me();
+        this.authenticatedUser = me.getFullName();
+        this.authMethod = AuthenticationMethod.STANDARD;
+        return me;
+    }
+
+    /**
      * Checks if the user is logged in
      * @return True if the user is logged in
      */
@@ -235,7 +282,6 @@ public class RedditClient extends RestClient<RedditResponse> {
                             "api_type", "json"
                     )).build());
 
-            // Some strange response you got there, reddit...
             if (response.hasErrors()) {
                 throw response.getErrors()[0];
             }
