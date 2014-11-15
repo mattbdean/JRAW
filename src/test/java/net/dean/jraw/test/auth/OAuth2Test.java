@@ -21,6 +21,16 @@ public class OAuth2Test extends AuthenticatedRedditTest {
         }
     }
 
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void testRefreshToken() {
+        try {
+            // We're using script auth, which uses no refresh token
+            redditOAuth2.refreshToken(getCredentials());
+        } catch (NetworkException e) {
+            handle(e);
+        }
+    }
+
     @Test
     public void testGetPreferences() {
         try {

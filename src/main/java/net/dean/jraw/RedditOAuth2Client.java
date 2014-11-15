@@ -21,7 +21,6 @@ import java.util.Map;
  */
 public class RedditOAuth2Client extends RedditClient {
     private static final String HEADER_AUTHORIZATION = "Authorization";
-    private boolean hasRefreshed;
     private AuthData authData;
     private OAuthHelper authHelper;
 
@@ -45,7 +44,6 @@ public class RedditOAuth2Client extends RedditClient {
      */
     public RedditOAuth2Client(String userAgent) {
         super(userAgent, REQUESTS_PER_MINUTE_OAUTH2);
-        this.hasRefreshed = false;
         this.authHelper = new OAuthHelper(this);
         setHttpsDefault(true);
     }
@@ -119,12 +117,33 @@ public class RedditOAuth2Client extends RedditClient {
                 .path("/api/v1/revoke_token")
                 .post(JrawUtils.args(
                         "token", authData.getAccessToken(),
-                        "token_type_hint", hasRefreshed ? "refresh_token" : "access_token"
+                        "token_type_hint", "access_token"
                 )).build(),
                 creds.getClientId(), creds.getClientSecret());
 
         authData = null;
         authMethod = AuthenticationMethod.NONE;
+    }
+
+    /**
+     * Refreshes the current access token
+     * @param creds The credentials to use. The username and password are irrelevant; only the client ID and secret will
+     *              be used.
+     * @throws NetworkException If the request was not successful
+     */
+    public void refreshToken(Credentials creds) throws NetworkException {
+        if (authData.getRefreshToken() == null) {
+            throw new IllegalArgumentException("No refresh token was requested, therefore no refresh can be performed");
+        }
+        RedditResponse response = executeWithBasicAuth(request()
+                .https(true)
+                .host(RedditClient.HOST_SPECIAL)
+                .path("/api/v1/access_token")
+                .post(JrawUtils.args(
+                        "grant_type", "refresh_token",
+                        "refresh_token", authData.getRefreshToken()
+                )).build(), creds.getClientId(), creds.getClientSecret());
+        this.authData = new AuthData(response.getJson());
     }
 
     /**
