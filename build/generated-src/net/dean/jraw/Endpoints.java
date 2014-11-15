@@ -72,12 +72,12 @@ public enum Endpoints {
     SENDREPLIES("POST /api/sendreplies"),
 
     ///////// flair /////////
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#POST_api_setflairenabled">{@code POST /api/setflairenabled}</a>" included in the "flair" scope */
-    SETFLAIRENABLED("POST /api/setflairenabled"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#POST_api_flairselector">{@code POST /api/flairselector}</a>" included in the "flair" scope */
     FLAIRSELECTOR("POST /api/flairselector"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#POST_api_selectflair">{@code POST /api/selectflair}</a>" included in the "flair" scope */
     SELECTFLAIR("POST /api/selectflair"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#POST_api_setflairenabled">{@code POST /api/setflairenabled}</a>" included in the "flair" scope */
+    SETFLAIRENABLED("POST /api/setflairenabled"),
 
     ///////// history /////////
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_user_%7Busername%7D_comments">{@code GET /user/{username}/comments}</a>" included in the "history" scope */
@@ -238,12 +238,12 @@ public enum Endpoints {
     ///////// read /////////
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_api_filter_%7Bfilterpath%7D">{@code GET /api/filter/{filterpath}}</a>" included in the "read" scope */
     FILTER_FILTERPATH_GET("GET /api/filter/{filterpath}"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_api_filter_%7Bfilterpath%7D_r_srname">{@code GET /api/filter/{filterpath}/r/srname}</a>" included in the "read" scope */
-    FILTER_FILTERPATH_R_SRNAME("GET /api/filter/{filterpath}/r/srname"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_api_filter_%7Bfilterpath%7D_r_%7Bsrname%7D">{@code GET /api/filter/{filterpath}/r/{srname}}</a>" included in the "read" scope */
+    FILTER_FILTERPATH_R_SRNAME_GET("GET /api/filter/{filterpath}/r/{srname}"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_api_info">{@code GET /api/info}</a>" included in the "read" scope */
     INFO("GET /api/info"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_api_recommend_sr_srnames">{@code GET /api/recommend/sr/srnames}</a>" included in the "read" scope */
-    RECOMMEND_SR_SRNAMES("GET /api/recommend/sr/srnames"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_api_recommend_sr_%7Bsrnames%7D">{@code GET /api/recommend/sr/{srnames}}</a>" included in the "read" scope */
+    RECOMMEND_SR_SRNAMES("GET /api/recommend/sr/{srnames}"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_api_v1_user_%7Busername%7D_trophies">{@code GET /api/v1/user/{username}/trophies}</a>" included in the "read" scope */
     OAUTH_USER_USERNAME_TROPHIES("GET /api/v1/user/{username}/trophies"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_live_%7Bthread%7D_contributors.json">{@code GET /live/{thread}/contributors.json}</a>" included in the "read" scope */
@@ -284,8 +284,8 @@ public enum Endpoints {
     MULTI_MULTIPATH_DESCRIPTION_GET("GET /api/multi/{multipath}/description"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#PUT_api_multi_%7Bmultipath%7D_description">{@code PUT /api/multi/{multipath}/description}</a>" included in the "read" scope */
     MULTI_MULTIPATH_DESCRIPTION_PUT("PUT /api/multi/{multipath}/description"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_api_multi_%7Bmultipath%7D_r_srname">{@code GET /api/multi/{multipath}/r/srname}</a>" included in the "read" scope */
-    MULTI_MULTIPATH_R_SRNAME("GET /api/multi/{multipath}/r/srname"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_api_multi_%7Bmultipath%7D_r_%7Bsrname%7D">{@code GET /api/multi/{multipath}/r/{srname}}</a>" included in the "read" scope */
+    MULTI_MULTIPATH_R_SRNAME_GET("GET /api/multi/{multipath}/r/{srname}"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#POST_api_search_reddit_names.json">{@code POST /api/search_reddit_names.json}</a>" included in the "read" scope */
     SEARCH_REDDIT_NAMES("POST /api/search_reddit_names.json"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_api_subreddits_by_topic.json">{@code GET /api/subreddits_by_topic.json}</a>" included in the "read" scope */

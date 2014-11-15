@@ -166,7 +166,7 @@
         "GET /sort"],
     "report": [
         "POST /api/hide",
-        "POST /api/live/thread/report",
+        "POST /api/live/{thread}/report",
         "POST /api/report",
         "POST /api/unhide"],
     "save": [
@@ -177,7 +177,7 @@
     "submit": [
         "POST /api/comment",
         "POST /api/live/create",
-        "POST /api/live/thread/update",
+        "POST /api/live/{thread}/update",
         "POST /api/submit",
         "GET /api/submit_text.json"],
     "subscribe": [

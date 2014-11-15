@@ -582,6 +582,24 @@ public class AccountManager extends AbstractManager {
         }
     }
 
+    /**
+     * Enables or disables user flair on a subreddit
+     * @throws NetworkException If the request was not successful
+     */
+    @EndpointImplementation(Endpoints.SETFLAIRENABLED)
+    public void setFlairEnabled(String subreddit, boolean enabled) throws NetworkException, ApiException {
+        RedditResponse response = execute(request()
+                .path("/r/" + subreddit + Endpoints.SETFLAIRENABLED.getEndpoint().getUri())
+                .post(JrawUtils.args(
+                        "api_type", "json",
+                        "enabled", enabled
+                ))
+                .build());
+        if (response.hasErrors()) {
+            throw response.getErrors()[0];
+        }
+    }
+
     private JsonNode getFlairChoicesRootNode(String subreddit, Submission link) throws NetworkException, ApiException {
         String linkFullname = link != null ? link.getFullName() : null;
         Map<String, String> formArgs = new HashMap<>();
