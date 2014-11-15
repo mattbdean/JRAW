@@ -3,12 +3,16 @@ jdk:
 - oraclejdk7
 env:
   global:
+  # PASS
   - secure: u0Gmfx91ndH4u32msTaMtMcKSluz6VzQE1mxpwjFha2+mRw7bGmLlkEh6CNfbv9lio2cHP1RN+zmAXq28iQQ4qiOSW5HdfC2M2RzzD9IxQ8rrg4rnHjl3QagfWBltm7QhmgSwVA3gyK1EHNnhUehYhwbSZLD1velBt6je6vQp78=
-  - secure: a3xjjnJSZPDb8N1ddUGjckZmtLdembXcrFEdYNH1bQn/3r3Fy3nKaO0sBLJdOPvaEtNLAvYAuw/IDNxRFNCIbvqyowyLjBnKalMrn/0aJa2aadklZwbN/LrNm8Vs10o9lDXvmAaypZyjQF8VUtJJTxeydnEWBWOgHPQkA5VFLr4=
+  # CLIENT_SECRET
+  - secure: eVEF25F8JtKBF/R/Z7bfdYr9M7EVTF4o0mU5C4JWWcnBQqGPupLw87LDe7ba9LcHWvaeHhRbkLlkZVLb1WV+qvpyqwZ9k2ruOxRxnC8uKpbR7BwkFS+JjUzekoFQz+l0a6q0hkxao9lMhxiqNzmMLQgEMgBl7KZtR42T6vMRUzM=
   - USERNAME=jraw_test
-  - CLIENT_ID=QrrG0OYBpyxgIQ
+  - CLIENT_ID=vaKy4eunw4y18A
   - TERM=dumb
+  # GIT_NAME and GIT_EMAIL
   - secure: Jn+ssE7+DEnpqxH3BiY5u6b37Uf6op7nrhS30bZ4FsxGSeh4yNBCd4oj8vQn4eG/GDHSL5HmDCpeHMw0Wo6cDYAv/n1ft9IcghO5WGTSYoa2LBrtF4t0468RR447adBOT367PPBD8H/kOFZyyiRaYniA3Bax9K69uVe4B/aUyKI=
+  # GIT_USER and GIT_PASS
   - secure: KtdoQLj2zDTkysWyXVj+H5xY65dDo58+070SQM68Tg6EYiB2tx9EV1IOJ1UallaDWGCyPfZvM2eTXs0selM5+S9GzskWePsY1uhFv+tnbGMUMcwiioq+yIxpK3zq8LLodIuiI5wv/4QigC/hsXSlUzV7hDUXWkdHieYig44p2Vs=
 script: "./gradlew test"
 after_success: "./gradlew jacocoTestReport coveralls; ./upload_docs.sh"
