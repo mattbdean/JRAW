@@ -49,6 +49,7 @@ public class AccountManagerTest extends AuthenticatedRedditTest {
             assertTrue(!submission.isSelfPost());
             assertTrue(submission.getUrl().equals(url.toExternalForm()));
             validateModel(submission);
+            this.newSubmssionId = submission.getFullName();
         } catch (NetworkException e) {
             handle(e);
         } catch (ApiException e) {
@@ -68,7 +69,6 @@ public class AccountManagerTest extends AuthenticatedRedditTest {
             assertTrue(submission.isSelfPost());
             assertTrue(submission.getSelftext().md().equals(content));
             validateModel(submission);
-            this.newSubmssionId = submission.getFullName();
         } catch (NetworkException e) {
             handle(e);
         } catch (ApiException e) {
@@ -401,24 +401,27 @@ public class AccountManagerTest extends AuthenticatedRedditTest {
     }
 
     @Test
-    public void testSticky() {
+    public void testSticky() throws NetworkException {
         String modOf = getModeratedSubreddit().getDisplayName();
         SubredditPaginator paginator = Paginators.subreddit(reddit, modOf);
 
         Submission submission = null;
-        Listing<Submission> submissions = paginator.next();
-        if (submissions.get(0).isStickied()) {
-            // There is already a stickied post
-            submission = submissions.get(0);
-        } else {
-            // Find the first self post
-            for (Submission s : submissions) {
-                if (s.isSelfPost()) {
-                    submission = s;
-                    break;
+        List<Listing<Submission>> listingList = paginator.accumulate(3);
+        for (Listing<Submission> submissions : listingList) {
+            if (submissions.get(0).isStickied()) {
+                // There is already a stickied post
+                submission = submissions.get(0);
+            } else {
+                // Find the first self post
+                for (Submission s : submissions) {
+                    if (s.isSelfPost()) {
+                        submission = s;
+                        break;
+                    }
                 }
             }
         }
+
         if (submission == null)
             throw new IllegalStateException("No self posts in " + modOf);
 
