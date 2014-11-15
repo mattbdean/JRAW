@@ -10,12 +10,16 @@ import net.dean.jraw.http.RestRequest;
 import net.dean.jraw.http.oauth.AuthData;
 import net.dean.jraw.http.oauth.OAuthHelper;
 import net.dean.jraw.models.AccountPreferences;
+import net.dean.jraw.models.Award;
 import net.dean.jraw.models.Captcha;
 import net.dean.jraw.models.KarmaBreakdown;
 import net.dean.jraw.models.LoggedInAccount;
 import net.dean.jraw.models.UserRecord;
+import org.codehaus.jackson.JsonNode;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -173,6 +177,44 @@ public class RedditOAuth2Client extends RedditClient {
                 .query(query)
                 .build());
         return new AccountPreferences(response.getJson());
+    }
+
+    /**
+     * Gets the trophies for the currently authenticated user
+     * @throws NetworkException If the request was not successful
+     */
+    public List<Award> getTrophies() throws NetworkException {
+        return getTrophies(null);
+    }
+
+    /**
+     * Gets the trophies for a specific user
+     * @param username The username to find the trophies for
+     * @throws NetworkException If the request was not successful
+     */
+    @EndpointImplementation({
+            Endpoints.OAUTH_ME_TROPHIES,
+            Endpoints.OAUTH_USER_USERNAME_TROPHIES
+    })
+    public List<Award> getTrophies(String username) throws NetworkException {
+        if (username == null || username.isEmpty()) {
+            if (authMethod == AuthenticationMethod.NONE) {
+                throw new IllegalArgumentException("No username given and not logged in");
+            }
+
+            username = authenticatedUser;
+        }
+
+        RedditResponse response = execute(request()
+                .endpoint(Endpoints.OAUTH_USER_USERNAME_TROPHIES, username)
+                .build());
+
+        List<Award> awards = new ArrayList<>();
+        for (JsonNode awardNode : response.getJson().get("data").get("trophies")) {
+            awards.add(new Award(awardNode.get("data")));
+        }
+
+        return awards;
     }
 
     /**

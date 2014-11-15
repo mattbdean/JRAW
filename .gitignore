@@ -12,7 +12,7 @@ build/
 out/
 
 # Testing account credentials
-src/test/resources/credentials.txt
+src/test/resources/credentials.json
 
 # Local todo list
 todo.txt

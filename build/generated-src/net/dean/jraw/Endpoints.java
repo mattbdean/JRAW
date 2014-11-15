@@ -100,12 +100,12 @@ public enum Endpoints {
     USER_USERNAME_WHERE("GET /user/{username}/where"),
 
     ///////// identity /////////
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_api_v1_me_trophies">{@code GET /api/v1/me/trophies}</a>" included in the "identity" scope */
-    OAUTH_ME_TROPHIES("GET /api/v1/me/trophies"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_api_v1_me">{@code GET /api/v1/me}</a>" included in the "identity" scope */
     OAUTH_ME("GET /api/v1/me"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_api_v1_me_prefs">{@code GET /api/v1/me/prefs}</a>" included in the "identity" scope */
     OAUTH_ME_PREFS_GET("GET /api/v1/me/prefs"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_api_v1_me_trophies">{@code GET /api/v1/me/trophies}</a>" included in the "identity" scope */
+    OAUTH_ME_TROPHIES("GET /api/v1/me/trophies"),
 
     ///////// livemanage /////////
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#POST_api_live_%7Bthread%7D_accept_contributor_invite">{@code POST /api/live/{thread}/accept_contributor_invite}</a>" included in the "livemanage" scope */
@@ -244,8 +244,6 @@ public enum Endpoints {
     INFO("GET /api/info"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_api_recommend_sr_%7Bsrnames%7D">{@code GET /api/recommend/sr/{srnames}}</a>" included in the "read" scope */
     RECOMMEND_SR_SRNAMES("GET /api/recommend/sr/{srnames}"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_api_v1_user_%7Busername%7D_trophies">{@code GET /api/v1/user/{username}/trophies}</a>" included in the "read" scope */
-    OAUTH_USER_USERNAME_TROPHIES("GET /api/v1/user/{username}/trophies"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_live_%7Bthread%7D_contributors.json">{@code GET /live/{thread}/contributors.json}</a>" included in the "read" scope */
     LIVE_THREAD_CONTRIBUTORS("GET /live/{thread}/contributors.json"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_live_%7Bthread%7D_discussions">{@code GET /live/{thread}/discussions}</a>" included in the "read" scope */
@@ -294,6 +292,8 @@ public enum Endpoints {
     OAUTH_ME_BLOCKED("GET /api/v1/me/blocked"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_api_v1_me_friends">{@code GET /api/v1/me/friends}</a>" included in the "read" scope */
     OAUTH_ME_FRIENDS("GET /api/v1/me/friends"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_api_v1_user_%7Busername%7D_trophies">{@code GET /api/v1/user/{username}/trophies}</a>" included in the "read" scope */
+    OAUTH_USER_USERNAME_TROPHIES("GET /api/v1/user/{username}/trophies"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_by_id_names">{@code GET /by_id/names}</a>" included in the "read" scope */
     BY_ID_NAMES("GET /by_id/names"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_comments_article">{@code GET /comments/article}</a>" included in the "read" scope */

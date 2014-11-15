@@ -54,6 +54,16 @@ public class OAuth2Test extends AuthenticatedRedditTest {
     }
 
     @Test
+    public void testGetTrophies() {
+        try {
+            validateModels(redditOAuth2.getTrophies());
+            validateModels(redditOAuth2.getTrophies("spladug"));
+        } catch (NetworkException e) {
+            handle(e);
+        }
+    }
+
+    @Test
     public void testKarmaBreakdown() {
         try {
             KarmaBreakdown breakdown = redditOAuth2.getKarmaBreakdown();

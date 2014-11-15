@@ -1,9 +1,9 @@
-<!--- Generated 2014-11-15 at 16:02:41 EST. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
+<!--- Generated 2014-11-15 at 16:40:18 EST. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
 #Endpoints
 
 This file contains a list of all the endpoints (regardless of if they have been implemented) that can be found at the [official Reddit API docs](https://www.reddit.com/dev/api). To update this file, run `./gradlew endpoints:update`.
 
-So far **109** endpoints (out of 183 total) have been implemented.
+So far **111** endpoints (out of 183 total) have been implemented.
 
 ##(any scope)
 Method|Endpoint|Implemented?
@@ -76,9 +76,9 @@ Method|Endpoint|Implemented?
 ##identity
 Method|Endpoint|Implemented?
 :----:|--------|------------
-`GET`|[`/api/v1/me/trophies`](https://www.reddit.com/dev/api/oauth#GET_api_v1_me_trophies)|No
 `GET`|[`/api/v1/me`](https://www.reddit.com/dev/api/oauth#GET_api_v1_me)|[`RedditOAuth2Client.me()`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/RedditOAuth2Client#me())
 `GET`|[`/api/v1/me/prefs`](https://www.reddit.com/dev/api/oauth#GET_api_v1_me_prefs)|[`RedditOAuth2Client.getPreferences(String[])`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/RedditOAuth2Client#getPreferences([Ljava.lang.String;))
+`GET`|[`/api/v1/me/trophies`](https://www.reddit.com/dev/api/oauth#GET_api_v1_me_trophies)|[`RedditOAuth2Client.getTrophies(String)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/RedditOAuth2Client#getTrophies(java.lang.String))
 
 ##livemanage
 Method|Endpoint|Implemented?
@@ -175,7 +175,6 @@ Method|Endpoint|Implemented?
 `GET`|[`/api/filter/{filterpath}/r/{srname}`](https://www.reddit.com/dev/api/oauth#GET_api_filter_%7Bfilterpath%7D_r_%7Bsrname%7D)|No
 `GET`|[`/api/info`](https://www.reddit.com/dev/api/oauth#GET_api_info)|No
 `GET`|[`/api/recommend/sr/{srnames}`](https://www.reddit.com/dev/api/oauth#GET_api_recommend_sr_%7Bsrnames%7D)|No
-`GET`|[`/api/v1/user/{username}/trophies`](https://www.reddit.com/dev/api/oauth#GET_api_v1_user_%7Busername%7D_trophies)|No
 `GET`|[`/live/{thread}/contributors.json`](https://www.reddit.com/dev/api/oauth#GET_live_%7Bthread%7D_contributors.json)|No
 `GET`|[`/live/{thread}/discussions`](https://www.reddit.com/dev/api/oauth#GET_live_%7Bthread%7D_discussions)|No
 `GET`|[`/about/banned`](https://www.reddit.com/dev/api/oauth#GET_about_banned)|[`UserRecordPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/paginators/UserRecordPaginator#getListing(boolean))
@@ -200,6 +199,7 @@ Method|Endpoint|Implemented?
 `GET`|[`/api/subreddits_by_topic.json`](https://www.reddit.com/dev/api/oauth#GET_api_subreddits_by_topic.json)|[`RedditClient.getSubredditsByTopic(String)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/RedditClient#getSubredditsByTopic(java.lang.String))
 `GET`|[`/api/v1/me/blocked`](https://www.reddit.com/dev/api/oauth#GET_api_v1_me_blocked)|[`ImportantUserPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/paginators/ImportantUserPaginator#getListing(boolean))
 `GET`|[`/api/v1/me/friends`](https://www.reddit.com/dev/api/oauth#GET_api_v1_me_friends)|[`ImportantUserPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/paginators/ImportantUserPaginator#getListing(boolean))
+`GET`|[`/api/v1/user/{username}/trophies`](https://www.reddit.com/dev/api/oauth#GET_api_v1_user_%7Busername%7D_trophies)|[`RedditOAuth2Client.getTrophies(String)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/RedditOAuth2Client#getTrophies(java.lang.String))
 `GET`|[`/by_id/names`](https://www.reddit.com/dev/api/oauth#GET_by_id_names)|[`SpecificPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/paginators/SpecificPaginator#getListing(boolean))
 `GET`|[`/comments/article`](https://www.reddit.com/dev/api/oauth#GET_comments_article)|[`RedditClient.getSubmission(SubmissionRequest)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/RedditClient#getSubmission(net.dean.jraw.RedditClient$SubmissionRequest))
 `GET`|[`/controversial`](https://www.reddit.com/dev/api/oauth#GET_controversial)|[`SubredditPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/paginators/SubredditPaginator#getListing(boolean))
