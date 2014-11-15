@@ -38,7 +38,9 @@ public enum ThingType {
     /** Represents an update in a live thread */
     LIVE_UPDATE("LiveUpdate"),
     /** Represents a breakdown of karma by subreddit */
-    KARMA_LIST("KarmaList");
+    KARMA_LIST("KarmaList"),
+    /** Represents an administrative action on behalf of a moderator of a subreddit */
+    MODACTION("modaction");
 
 
     /**

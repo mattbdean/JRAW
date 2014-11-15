@@ -1,9 +1,9 @@
-<!--- Generated 2014-11-13 at 22:08:53 EST. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
+<!--- Generated 2014-11-15 at 13:00:06 EST. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
 #Endpoints
 
 This file contains a list of all the endpoints (regardless of if they have been implemented) that can be found at the [official Reddit API docs](https://www.reddit.com/dev/api). To update this file, run `./gradlew endpoints:update`.
 
-So far **103** endpoints (out of 183 total) have been implemented.
+So far **104** endpoints (out of 183 total) have been implemented.
 
 ##(any scope)
 Method|Endpoint|Implemented?
@@ -118,7 +118,7 @@ Method|Endpoint|Implemented?
 ##modlog
 Method|Endpoint|Implemented?
 :----:|--------|------------
-`GET`|[`/about/log`](https://www.reddit.com/dev/api/oauth#GET_about_log)|No
+`GET`|[`/about/log`](https://www.reddit.com/dev/api/oauth#GET_about_log)|[`ModLogPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/paginators/ModLogPaginator#getListing(boolean))
 
 ##modposts
 Method|Endpoint|Implemented?
@@ -193,7 +193,7 @@ Method|Endpoint|Implemented?
 `POST`|[`/api/morechildren`](https://www.reddit.com/dev/api/oauth#POST_api_morechildren)|[`RedditClient.getMoreChildren(Submission, CommentSort, More)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/RedditClient#getMoreChildren(net.dean.jraw.models.Submission, net.dean.jraw.models.CommentSort, net.dean.jraw.models.More))
 `GET`|[`/api/multi/mine`](https://www.reddit.com/dev/api/oauth#GET_api_multi_mine)|[`MultiRedditManager.mine()`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/managers/MultiRedditManager#mine())
 `GET`|[`/api/multi/{multipath}`](https://www.reddit.com/dev/api/oauth#GET_api_multi_%7Bmultipath%7D)|[`MultiRedditManager.get(String, String)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/managers/MultiRedditManager#get(java.lang.String, java.lang.String))
-`GET`|[`/api/multi/{multipath}/description`](https://www.reddit.com/dev/api/oauth#GET_api_multi_%7Bmultipath%7D_description)|[`MultiRedditManager.getDescription(String)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/managers/MultiRedditManager#getDescription(java.lang.String))
+`GET`|[`/api/multi/{multipath}/description`](https://www.reddit.com/dev/api/oauth#GET_api_multi_%7Bmultipath%7D_description)|[`MultiRedditManager.getDescription(String, String)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/managers/MultiRedditManager#getDescription(java.lang.String, java.lang.String))
 `PUT`|[`/api/multi/{multipath}/description`](https://www.reddit.com/dev/api/oauth#PUT_api_multi_%7Bmultipath%7D_description)|[`MultiRedditManager.updateDescription(String, String)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/managers/MultiRedditManager#updateDescription(java.lang.String, java.lang.String))
 `GET`|[`/api/multi/{multipath}/r/srname`](https://www.reddit.com/dev/api/oauth#GET_api_multi_%7Bmultipath%7D_r_srname)|[`MultiRedditManager.get(String, String)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/managers/MultiRedditManager#get(java.lang.String, java.lang.String))
 `POST`|[`/api/search_reddit_names.json`](https://www.reddit.com/dev/api/oauth#POST_api_search_reddit_names.json)|[`RedditClient.searchSubreddits(String, boolean)`](https://thatjavanerd.github.io/JRAW/docs/0.5.0/net/dean/jraw/RedditClient#searchSubreddits(java.lang.String, boolean))

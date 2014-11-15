@@ -92,6 +92,16 @@ public final class Paginators {
     }
 
     /**
+     * Creates a new ModLogPaginator
+     * @param reddit The RedditClient to send requests with
+     * @param subreddit The subreddit whose moderator actions will be observed
+     * @return A new ModLogPaginator
+     */
+    public static ModLogPaginator modlog(RedditClient reddit, String subreddit) {
+        return new ModLogPaginator(reddit, subreddit);
+    }
+
+    /**
      * Creates a new MultiHubPaginator, not to be confused with MultiRedditPaginator
      * @param reddit The RedditClient to send requests with
      * @return A new MultiHubPaginator.

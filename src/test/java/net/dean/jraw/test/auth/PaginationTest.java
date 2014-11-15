@@ -13,6 +13,7 @@ import net.dean.jraw.paginators.AllSubredditsPaginator;
 import net.dean.jraw.paginators.CompoundSubredditPaginator;
 import net.dean.jraw.paginators.ImportantUserPaginator;
 import net.dean.jraw.paginators.InboxPaginator;
+import net.dean.jraw.paginators.ModLogPaginator;
 import net.dean.jraw.paginators.ModeratorPaginator;
 import net.dean.jraw.paginators.MultiHubPaginator;
 import net.dean.jraw.paginators.MultiRedditPaginator;
@@ -269,6 +270,12 @@ public class PaginationTest extends AuthenticatedRedditTest {
         paginator.next();
     }
 
+    @Test
+    public void testModLog() {
+        ModLogPaginator paginator = Paginators.modlog(reddit, getModeratedSubreddit().getDisplayName());
+        commonTest(paginator);
+    }
+
     protected <T extends Thing> void commonTest(Paginator<T> p) {
         try {
             int numPages = 2;
@@ -276,7 +283,7 @@ public class PaginationTest extends AuthenticatedRedditTest {
             List<Listing<T>> pages = p.accumulate(numPages);
 
             for (Listing<T> listing : pages) {
-                // Validate the Listing
+                // Validate the Listing (not its children)
                 validateModel(listing);
 
                 if (listing.size() > 0) {
