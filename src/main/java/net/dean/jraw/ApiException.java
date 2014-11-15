@@ -19,6 +19,12 @@ public class ApiException extends Exception {
         this.explanation = explanation;
     }
 
+    public ApiException(String message, Throwable cause) {
+        super(message, cause);
+        this.reason = null;
+        this.explanation = null;
+    }
+
     /**
      * Gets the reason error string. A full list can be found
      * <a href="https://github.com/reddit/reddit/blob/master/r2/r2/lib/errors.py">here</a>.

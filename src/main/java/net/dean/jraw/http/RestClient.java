@@ -143,6 +143,9 @@ public abstract class RestClient<T extends RestResponse> implements HttpClient<T
 
     @Override
     public T executeWithBasicAuth(RestRequest request, String username, String password) throws NetworkException {
+        if (!request.getUrl().startsWith("https://")) {
+            throw new IllegalArgumentException("Credentials sent over basic auth must use HTTPS");
+        }
         Authenticator prevAuthenticator = http.getAuthenticator();
         // Create a BasicAuthenticator for this request
         http.setAuthenticator(new BasicAuthenticator(username, password));

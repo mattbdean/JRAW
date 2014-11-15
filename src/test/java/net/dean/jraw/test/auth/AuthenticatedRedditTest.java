@@ -60,7 +60,7 @@ public abstract class AuthenticatedRedditTest extends RedditTest {
             // If running locally, use credentials file
             // If running with Travis-CI, use env variables
             if (System.getenv("TRAVIS") != null && Boolean.parseBoolean(System.getenv("TRAVIS"))) {
-                credentials = Credentials.oauth2Script(System.getenv("USERNAME"),
+                credentials = Credentials.script(System.getenv("USERNAME"),
                         System.getenv("PASS"),
                         System.getenv("CLIENT_ID"),
                         System.getenv("CLIENT_SECRET"));
@@ -73,7 +73,7 @@ public abstract class AuthenticatedRedditTest extends RedditTest {
                 }
 
                 JsonNode data = objectMapper.readTree(in);
-                credentials = Credentials.oauth2Script(data.get("username").asText(),
+                credentials = Credentials.script(data.get("username").asText(),
                         data.get("password").asText(),
                         data.get("client_id").asText(),
                         data.get("client_secret").asText());

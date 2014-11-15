@@ -39,7 +39,7 @@ public class LoggedInAccount extends Account {
 
     /**
      * Gets the current modhash
-     * @return Current modhash, or null if not your account
+     * @return Current modhash, or null if not your account or using OAuth2
      */
     @JsonProperty(nullable = true)
     public String getModHash() {

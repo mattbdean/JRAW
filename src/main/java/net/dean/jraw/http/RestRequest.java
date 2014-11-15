@@ -11,9 +11,11 @@ import net.dean.jraw.JrawUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +28,7 @@ public final class RestRequest {
     private final String url;
     private final String method;
     private final Map<String, String> formArgs;
+    private final Map<String, String> query;
     private final String[] sensitiveArgs;
     private final Request request;
     private final Endpoints endpoint;
@@ -52,6 +55,11 @@ public final class RestRequest {
         this.endpoint = b.endpoint;
         this.needsAuth = b.auth;
         this.expected = b.expected;
+        if (b.query != null) {
+            this.query = b.query;
+        } else {
+            query = null;
+        }
         if (b.formArgs != null) {
             this.formArgs = ImmutableMap.<String, String>builder().putAll(b.formArgs).build();
         } else {
@@ -97,6 +105,10 @@ public final class RestRequest {
      */
     public Map<String, String> getFormArgs() {
         return formArgs;
+    }
+
+    public Map<String, String> getQuery() {
+        return query;
     }
 
     /**
@@ -176,15 +188,32 @@ public final class RestRequest {
             if (!url.getProtocol().matches("http[s]?")) {
                 throw new IllegalArgumentException("Only HTTP(S) supported");
             }
+
+            Map<String, String> query = new HashMap<>();
+
+            if (url.getQuery() != null) {
+                try {
+                    String[] queryKeysValues = URLDecoder.decode(url.getQuery(), "UTF-8").split("&");
+                    for (String keyValuePair : queryKeysValues) {
+                        String[] parts = keyValuePair.split("=");
+                        query.put(parts[0], parts[1]);
+                    }
+                } catch (UnsupportedEncodingException e) {
+                    throw new RuntimeException("UTF-8 not supported");
+                }
+            }
+
             Builder b = new Builder()
-                    .https(url.getProtocol().equals("https"))
-                    .host(url.getHost())
-                    .path(url.getFile());
+                        .https(url.getProtocol().equals("https"))
+                        .host(url.getHost())
+                        .path(url.getFile())
+                        .query(query);
             if (formArgs.length != 0) {
                 b.formMethod(method, JrawUtils.args(formArgs));
             }
             return b;
         }
+
         /**
          * Instantiates a new Builder
          */
