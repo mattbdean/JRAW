@@ -66,8 +66,8 @@ public class RedditOAuth2Client extends RedditClient {
             throw new IllegalArgumentException("Credentials are not for OAuth2");
         }
         if (credentials.getAuthenticationMethod() != AuthenticationMethod.SCRIPT) {
-            throw new IllegalArgumentException("Only 'script' app types supported on this method. Please use" +
-                    "getOAuthHelper() instead to");
+            throw new IllegalArgumentException("Only 'script' app types supported on this method. Please use " +
+                    "getOAuthHelper() instead to log in.");
         }
 
         return onAuthorized(authHelper.doScriptApp(credentials), credentials);
@@ -175,6 +175,21 @@ public class RedditOAuth2Client extends RedditClient {
         RedditResponse response = execute(request()
                 .endpoint(Endpoints.OAUTH_ME_PREFS_GET)
                 .query(query)
+                .build());
+        return new AccountPreferences(response.getJson());
+    }
+
+    /**
+     * Updates the preferences for this account
+     * @param prefs The preferences
+     * @return The preferences after they were updated
+     * @throws NetworkException If the request was not successful
+     */
+    @EndpointImplementation(Endpoints.OAUTH_ME_PREFS_PATCH)
+    public AccountPreferences updatePreferences(AccountPreferencesEditor prefs) throws NetworkException {
+        RedditResponse response = execute(request()
+                .endpoint(Endpoints.OAUTH_ME_PREFS_PATCH)
+                .customBody("PATCH", MediaTypes.JSON.type(), JrawUtils.toJson(prefs.getArgs()))
                 .build());
         return new AccountPreferences(response.getJson());
     }

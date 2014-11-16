@@ -1,5 +1,6 @@
 package net.dean.jraw.test.auth;
 
+import net.dean.jraw.AccountPreferencesEditor;
 import net.dean.jraw.ApiException;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.models.AccountPreferences;
@@ -44,10 +45,21 @@ public class OAuth2Test extends AuthenticatedRedditTest {
             // Only these three should be not null
             assertNotNull(prefs.isOver18());
             assertNotNull(prefs.isResearchable());
-            assertNotNull(prefs.isHiddenFromSearches());
+            assertNotNull(prefs.isHiddenFromSearchEngines());
 
             // Anything else should be null
             assertNull(prefs.getLanguage());
+        } catch (NetworkException e) {
+            handle(e);
+        }
+    }
+
+    @Test
+    public void testUpdatePreferences() {
+        try {
+            AccountPreferences original = redditOAuth2.getPreferences();
+            AccountPreferencesEditor prefs = new AccountPreferencesEditor(original);
+            validateModel(redditOAuth2.updatePreferences(prefs));
         } catch (NetworkException e) {
             handle(e);
         }

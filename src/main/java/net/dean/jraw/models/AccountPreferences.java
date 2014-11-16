@@ -246,7 +246,7 @@ public class AccountPreferences extends JsonModel {
      * Checks if the user's profile will be hidden from search engines
      */
     @JsonProperty(nullable = true)
-    public Boolean isHiddenFromSearches() {
+    public Boolean isHiddenFromSearchEngines() {
         return data("hide_from_robots", Boolean.class);
     }
 }
