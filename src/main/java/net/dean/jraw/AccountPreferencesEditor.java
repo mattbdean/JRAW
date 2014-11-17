@@ -44,8 +44,6 @@ public class AccountPreferencesEditor {
             return node.asBoolean();
         if (node.isInt())
             return node.asInt();
-        if (node.isDouble())
-            return node.asDouble();
         if (node.isTextual())
             return node.asText();
         if (node.isArray() && node.size() == 1)
@@ -137,7 +135,6 @@ public class AccountPreferencesEditor {
         args.put("numsites", val);
         return this;
     }
-
 
     /**
      * Sets the minimum submission score required to be shown to the user.

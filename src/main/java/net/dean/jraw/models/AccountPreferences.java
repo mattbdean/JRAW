@@ -193,7 +193,7 @@ public class AccountPreferences extends JsonModel {
      * Checks if user flair will be shown
      */
     @JsonProperty(nullable = true)
-    public Boolean isUserFlairShown() {
+    public Boolean isShowingUserFlair() {
         return data("show_flair", Boolean.class);
     }
 
@@ -201,7 +201,7 @@ public class AccountPreferences extends JsonModel {
      * Checks if link flair will be shown
      */
     @JsonProperty(nullable = true)
-    public Boolean isLinkFlairShown() {
+    public Boolean isShowingLinkFlair() {
         return data("show_link_flair", Boolean.class);
     }
 

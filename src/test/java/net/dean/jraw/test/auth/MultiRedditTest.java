@@ -88,10 +88,6 @@ public class MultiRedditTest extends AuthenticatedRedditTest {
             manager.delete(MULTI_NAME);
         } catch (NetworkException e) {
             handle(e);
-        } catch (ApiException e) {
-            if (!e.getReason().equals("MULTI_NOT_FOUND")) {
-                handle(e);
-            }
         }
     }
 
@@ -118,7 +114,7 @@ public class MultiRedditTest extends AuthenticatedRedditTest {
         } finally {
             try {
                 manager.delete(newName);
-            } catch (NetworkException | ApiException e) {
+            } catch (NetworkException e) {
                 JrawUtils.logger().warn("Could not delete multi that was renamed", e);
             }
         }
@@ -135,7 +131,7 @@ public class MultiRedditTest extends AuthenticatedRedditTest {
         } finally {
             try {
                 manager.delete(newName);
-            } catch (NetworkException | ApiException e) {
+            } catch (NetworkException e) {
                 JrawUtils.logger().warn("Could not delete multi that was renamed", e);
             }
         }
@@ -145,7 +141,7 @@ public class MultiRedditTest extends AuthenticatedRedditTest {
     public void testAddSubreddit() {
         try {
             manager.addSubreddit(MULTI_NAME, "funny");
-        } catch (NetworkException | ApiException e) {
+        } catch (NetworkException e) {
             handle(e);
         }
     }
@@ -154,7 +150,7 @@ public class MultiRedditTest extends AuthenticatedRedditTest {
     public void testRemoveSubreddit() {
         try {
             manager.removeSubreddit(MULTI_NAME, INITIAL_MULTIS.get(0));
-        } catch (NetworkException | ApiException e) {
+        } catch (NetworkException e) {
             handle(e);
         }
     }

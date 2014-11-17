@@ -10,7 +10,7 @@ import java.util.Map;
  * Thrown when an error relating to authenticing with OAuth2 presents itself
  */
 public class OAuthException extends ApiException {
-    static final Map<String, String> reasons = ImmutableMap.copyOf(JrawUtils.args(
+    public static final Map<String, String> REASONS = ImmutableMap.copyOf(JrawUtils.args(
             "access_denied", "User chose not to grant permission",
             "unsupported_response_type", "Invalid 'response_type' parameter in initial authorization",
             "invalid_scope", "Invalid scope",
@@ -23,16 +23,7 @@ public class OAuthException extends ApiException {
      * @param reason Why the exception was thrown
      */
     public OAuthException(String reason) {
-        super(reason, reasons.containsKey(reason) ? reasons.get(reason) : "(no reason given)");
-    }
-
-    /**
-     * Instantiates a new OAuthException
-     * @param reason Why the exception was thrown
-     * @param explanation A more detailed explanation
-     */
-    public OAuthException(String reason, String explanation) {
-        super(reason, explanation);
+        super(reason, REASONS.containsKey(reason) ? REASONS.get(reason) : "(no reason given)");
     }
 
     /**

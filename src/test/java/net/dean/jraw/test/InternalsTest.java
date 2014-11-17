@@ -4,6 +4,8 @@ import net.dean.jraw.ApiException;
 import net.dean.jraw.Endpoint;
 import net.dean.jraw.Version;
 import net.dean.jraw.http.NetworkException;
+import net.dean.jraw.http.oauth.OAuthException;
+import net.dean.jraw.http.oauth.OAuthHelper;
 import net.dean.jraw.models.Captcha;
 import net.dean.jraw.models.DistinguishedStatus;
 import net.dean.jraw.models.Flair;
@@ -20,6 +22,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -58,19 +61,6 @@ public class InternalsTest extends RedditTest {
         List<CodeBlock> codeBlocks = new ArrayList<>();
         
         // List of CodeBlocks that will modify the listing
-//        codeBlocks.addAll(Arrays.asList(
-//                () -> listing.add(null),
-//                () -> listing.add(0, null),
-//                () -> listing.addAll(0, null),
-//                () -> listing.addAll(null),
-//                listing::clear,
-//                () -> listing.remove(null),
-//                () -> listing.remove(0),
-//                () -> listing.removeAll(null),
-//                () -> listing.retainAll(null),
-//                () -> listing.set(0, null)
-//        ));
-        
         codeBlocks.addAll(Arrays.asList(
         		new CodeBlock() { @Override public void execute() { listing.add(null); }},
         		new CodeBlock() { @Override public void execute() { listing.add(0, null); }},
@@ -137,6 +127,26 @@ public class InternalsTest extends RedditTest {
         NullPointerException cause = new NullPointerException();
         ex = new NetworkException("message", cause);
         assertEquals(ex.getCause(), cause);
+    }
+
+    @Test
+    public void testOAuthException() {
+        OAuthException e = new OAuthException("invalid_scope");
+        assertEquals(e.getExplanation(), OAuthException.REASONS.get("invalid_scope"));
+
+        e = new OAuthException("test");
+        assertEquals(e.getReason(), "test");
+        assertEquals(e.getExplanation(), "(no reason given)");
+
+        NullPointerException cause = new NullPointerException();
+        e = new OAuthException("test", cause);
+        assertEquals(e.getCause(), cause);
+    }
+
+    @Test
+    public void testOAuthHelper() throws MalformedURLException {
+        OAuthHelper helper = new OAuthHelper(reddit);
+        assertNotNull(helper.getAuthorizationUrl("client ID", "http://www.example.com", true, "test", "test2"));
     }
 
     @Test
