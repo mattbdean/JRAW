@@ -206,6 +206,7 @@ public class RedditOAuth2Client extends RedditClient {
      * Gets the trophies for a specific user
      * @param username The username to find the trophies for
      * @throws NetworkException If the request was not successful
+     * @return A list of awards
      */
     @EndpointImplementation({
             Endpoints.OAUTH_ME_TROPHIES,
@@ -251,7 +252,7 @@ public class RedditOAuth2Client extends RedditClient {
      * @throws NetworkException If the request was not successful
      */
     @EndpointImplementation(Endpoints.OAUTH_ME_FRIENDS_USERNAME_DELETE)
-    public void deleteFriend(String friend) throws NetworkException, ApiException {
+    public void deleteFriend(String friend) throws NetworkException {
         execute(request()
                 .delete()
                 .endpoint(Endpoints.OAUTH_ME_FRIENDS_USERNAME_DELETE, friend)
@@ -262,7 +263,7 @@ public class RedditOAuth2Client extends RedditClient {
      * Gets a user record pertaining to a particular relationship
      * @param name The name of the user
      * @return A UserRecord representing the relationship
-     * @throws NetworkException
+     * @throws NetworkException If the request was not successful
      */
     @EndpointImplementation(Endpoints.OAUTH_ME_FRIENDS_USERNAME_GET)
     public UserRecord getFriend(String name) throws NetworkException {

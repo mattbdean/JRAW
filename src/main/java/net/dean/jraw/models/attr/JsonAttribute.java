@@ -3,7 +3,10 @@ package net.dean.jraw.models.attr;
 import net.dean.jraw.models.JsonProperty;
 import org.codehaus.jackson.JsonNode;
 
-interface JsonAttribute {
+/**
+ * This interface is the base class for all model interfaces
+ */
+public interface JsonAttribute {
 
     /**
      * See {@link net.dean.jraw.models.JsonModel#getDataNode()}

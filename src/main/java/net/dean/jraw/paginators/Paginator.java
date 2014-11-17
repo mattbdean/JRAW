@@ -130,7 +130,7 @@ public abstract class Paginator<T extends Thing> implements Iterator<Listing<T>>
      *
      * @param maxPages The maximum amount of pages to retrieve
      * @return A list of listings
-     * @throws NetworkException
+     * @throws NetworkException If the request was not successful
      */
     public final List<Listing<T>> accumulate(int maxPages) throws NetworkException {
         List<Listing<T>> listings = new ArrayList<>();

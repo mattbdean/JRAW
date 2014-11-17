@@ -15,6 +15,10 @@ public abstract class AbstractManager implements HttpClient<RedditResponse>,
         NetworkAccessible<RedditResponse, RedditClient> {
     protected final RedditClient reddit;
 
+    /**
+     * Instantiates a new AbstractManager
+     * @param reddit The RedditClient to use
+     */
     protected AbstractManager(RedditClient reddit) {
         this.reddit = reddit;
     }

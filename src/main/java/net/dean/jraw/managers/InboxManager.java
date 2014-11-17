@@ -14,6 +14,10 @@ import net.dean.jraw.models.Message;
  */
 public class InboxManager extends AbstractManager {
 
+    /**
+     * Instantiates a new InboxManager
+     * @param client The RedditClient to use
+     */
     public InboxManager(RedditClient client) {
         super(client);
     }
@@ -24,7 +28,7 @@ public class InboxManager extends AbstractManager {
      *
      * @param m The message to mark as read or unread.
      * @param read Whether the message will be marked (true) or unread (false)
-     * @throws NetworkException
+     * @throws NetworkException If the request was not successful
      */
     @EndpointImplementation({
             Endpoints.READ_MESSAGE,

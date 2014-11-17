@@ -35,7 +35,7 @@ public class MultiRedditManager extends AbstractManager {
      *
      * @return A list of your multireddits
      * @throws NetworkException If the request was not successful
-     * @throws net.dean.jraw.ApiException If the Reddit API returned an error
+     * @throws ApiException If the Reddit API returned an error
      */
     @EndpointImplementation(Endpoints.MULTI_MINE)
     public List<MultiReddit> mine() throws NetworkException, ApiException {
@@ -87,10 +87,9 @@ public class MultiRedditManager extends AbstractManager {
      * @param multiName The name of the multireddit
      * @param subreddit The subreddit to add
      * @throws NetworkException If the request was not successful
-     * @throws ApiException If the Reddit API returned an error
      */
     @EndpointImplementation(Endpoints.MULTI_MULTIPATH_R_SRNAME_PUT)
-    public void addSubreddit(String multiName, String subreddit) throws NetworkException, ApiException {
+    public void addSubreddit(String multiName, String subreddit) throws NetworkException {
         MultiRedditSubredditModel data = new MultiRedditSubredditModel(subreddit);
 
         RestRequest request = request()
@@ -110,10 +109,9 @@ public class MultiRedditManager extends AbstractManager {
      * @param multiName The name of the multireddit
      * @param subreddit The subreddit to remove
      * @throws NetworkException If the request was not successful
-     * @throws ApiException If the Reddit API returned an error
      */
     @EndpointImplementation(Endpoints.MULTI_MULTIPATH_R_SRNAME_DELETE)
-    public void removeSubreddit(String multiName, String subreddit) throws NetworkException, ApiException {
+    public void removeSubreddit(String multiName, String subreddit) throws NetworkException {
         RestRequest request = request()
                 .endpoint(Endpoints.MULTI_MULTIPATH_R_SRNAME_DELETE, getMultiPath(multiName).substring(1), subreddit)
                 .query(
@@ -234,7 +232,7 @@ public class MultiRedditManager extends AbstractManager {
      * @throws NetworkException If the request was not successful
      */
     @EndpointImplementation(Endpoints.MULTI_MULTIPATH_DELETE)
-    public void delete(String name) throws NetworkException, ApiException {
+    public void delete(String name) throws NetworkException {
         RestRequest request = request()
                 .endpoint(Endpoints.MULTI_MULTIPATH_DELETE, getMultiPath(name).substring(1))
                 .delete()

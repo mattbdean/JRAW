@@ -7,6 +7,9 @@ import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.models.Listing;
 import net.dean.jraw.models.ModAction;
 
+/**
+ * This class allows the iteration of the log of moderation actions on a particular subreddit
+ */
 public class ModLogPaginator extends Paginator<ModAction> {
     private String subreddit;
 

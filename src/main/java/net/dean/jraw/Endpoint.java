@@ -94,6 +94,10 @@ public class Endpoint implements Comparable<Endpoint> {
         return implemented;
     }
 
+    /**
+     * Sets the method which implements the endpoint and sets the endpoint as implemented
+     * @param implementer The method that implements this endpoint
+     */
     public void implement(Method implementer) {
         this.method = implementer;
         this.implemented = true;
@@ -130,12 +134,11 @@ public class Endpoint implements Comparable<Endpoint> {
 
         Endpoint endpoint = (Endpoint) object;
 
-        if (implemented != endpoint.implemented) return false;
-        if (scope != null ? !scope.equals(endpoint.scope) : endpoint.scope != null) return false;
-        if (!requestDescriptor.equals(endpoint.requestDescriptor)) return false;
-        if (method != null ? !method.equals(endpoint.method) : endpoint.method != null) return false;
+        return implemented == endpoint.implemented &&
+                !(scope != null ? !scope.equals(endpoint.scope) : endpoint.scope != null) &&
+                requestDescriptor.equals(endpoint.requestDescriptor) &&
+                !(method != null ? !method.equals(endpoint.method) : endpoint.method != null);
 
-        return true;
     }
 
     @Override

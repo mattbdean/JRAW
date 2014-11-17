@@ -10,6 +10,9 @@ import net.dean.jraw.models.Subreddit;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * This class provides a way to search for subreddits by both name and description
+ */
 public class SubredditSearchPaginator extends Paginator<Subreddit> {
     private String query;
 

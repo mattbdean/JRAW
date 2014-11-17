@@ -45,6 +45,10 @@ public class OAuthHelper implements NetworkAccessible<RedditResponse, RedditClie
     private boolean started;
     private RedditClient reddit;
 
+    /**
+     * Instantiates a new OAuthHelper
+     * @param reddit The RedditClient to use to help authenticate
+     */
     public OAuthHelper(RedditClient reddit) {
         this.reddit = reddit;
     }
@@ -55,6 +59,9 @@ public class OAuthHelper implements NetworkAccessible<RedditResponse, RedditClie
      * @param redirectUri The app's redirect URI. Must match exactly as in the app settings.
      * @param permanent Whether or not to request a 'refresh' token which can be exchanged for an additional
      *                  Authorization token in the future.
+     * @param scope The first scope. A full list of scopes can be found
+     *              <a href="https://www.reddit.com/dev/api/oauth>here</a>
+     * @param otherScopes Any other additional scopes
      * @return The URL clients are sent to in order to authorize themselves
      */
     public String getAuthorizationUrl(String clientId, String redirectUri, boolean permanent, String scope, String... otherScopes) {
@@ -99,6 +106,7 @@ public class OAuthHelper implements NetworkAccessible<RedditResponse, RedditClie
      * @throws IllegalStateException If the state last generated with
      *                               {@link #getAuthorizationUrl(String, String, boolean, String, String...)} did not
      *                               match the value of the 'state' query parameter.
+     * @return An AuthData that holds the new access token among other things
      */
     public AuthData onUserChallenge(String finalUrl, String redirectUri, Credentials creds) throws NetworkException,
             OAuthException, IllegalStateException, MalformedURLException {

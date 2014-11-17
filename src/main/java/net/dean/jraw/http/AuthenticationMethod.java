@@ -3,6 +3,9 @@ package net.dean.jraw.http;
 import net.dean.jraw.AppType;
 import net.dean.jraw.RedditClient;
 
+/**
+ * A list of ways a client can authenticate themselves using Reddit's API
+ */
 public enum AuthenticationMethod {
     /** No authentication, uses the non-OAuth2 API */
     NONE,
@@ -23,6 +26,10 @@ public enum AuthenticationMethod {
         this.appType = appType;
     }
 
+    /**
+     * Checks if this AuthenticationMethod is to be used in conjunction with OAuth2
+     * @return If this uses OAuth2
+     */
     public boolean isOAuth2() {
         return appType != null;
     }

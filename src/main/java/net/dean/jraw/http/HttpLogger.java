@@ -9,6 +9,12 @@ import java.util.Map;
 
 import static net.dean.jraw.http.HttpLogger.Component.*;
 
+/**
+ * This class is responsible for logging HTTP requests and responses, particularly the {@link RestRequest} and
+ * {@link RestResponse} classes. The parts of the request and response are broken into parts called {@link Component}s.
+ * By default, all of these components are enabled (except for {@link Component#RESPONSE_BODY_ALWAYS_FULL}. To enable or
+ * disable a Component, you can use {@link #enable(Component)} or {@link #disable(Component)} respectively.
+ */
 public class HttpLogger {
     private static final String INDENT = "    ";
     private static final String ELLIPSIS = "...";
@@ -16,6 +22,10 @@ public class HttpLogger {
     private final Logger l;
     private Map<Component, Boolean> components;
 
+    /**
+     * Instantiates a new HttpLogger
+     * @param logger The SLF4J logger to use
+     */
     public HttpLogger(Logger logger) {
         this.l = logger;
         this.components = new HashMap<>();
@@ -25,14 +35,27 @@ public class HttpLogger {
         disable(RESPONSE_BODY_ALWAYS_FULL); // Short response bodies by default
     }
 
+    /**
+     * Checks if a specific Component is enabled
+     * @param c The component to check
+     * @return True, if the component is being logged, false if else
+     */
     public boolean isEnabled(Component c) {
         return components.get(c);
     }
 
+    /**
+     * Enables a given Component
+     * @param c The component to enable
+     */
     public void enable(Component c) {
         components.put(c, true);
     }
 
+    /**
+     * Disables a given component
+     * @param c The component to disable
+     */
     public void disable(Component c) {
         components.put(c, false);
     }

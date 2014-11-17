@@ -87,12 +87,11 @@ public class Version {
 
         Version version = (Version) other;
 
-        if (major != version.major) return false;
-        if (minor != version.minor) return false;
-        if (patch != version.patch) return false;
-        if (snapshot != version.snapshot) return false;
+        return major == version.major &&
+                minor == version.minor &&
+                patch == version.patch &&
+                snapshot == version.snapshot;
 
-        return true;
     }
 
     @Override

@@ -231,6 +231,9 @@ public class Subreddit extends Thing {
         ARCHIVED
     }
 
+    /**
+     * A list of how a subreddit can restrict the type of submissions that can be posted
+     */
     public static enum SubmissionType {
         /** Links and self posts */
         ANY,

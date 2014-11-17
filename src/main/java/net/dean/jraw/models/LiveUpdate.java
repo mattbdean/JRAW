@@ -45,7 +45,7 @@ public class LiveUpdate extends Thing implements Created {
      */
     @JsonProperty
     public ImmutableList<Embed> getEmbeds() {
-        ImmutableList.Builder<Embed> builder = ImmutableList.<Embed>builder();
+        ImmutableList.Builder<Embed> builder = ImmutableList.builder();
         for (JsonNode embedNode : data.get("embeds")) {
             builder.add(new Embed(embedNode));
         }

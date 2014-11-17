@@ -15,10 +15,25 @@ public final class FauxListing<T extends RedditObject> extends Listing<T> {
     private final String modhash;
     private final More more;
 
+    /**
+     * Instantiates a new FauxListing
+     * @param children The children
+     * @param before What comes before this listing
+     * @param after What comes after this listing
+     * @param modhash The modhash. May be null.
+     */
     public FauxListing(List<T> children, String before, String after, String modhash) {
         this(children, before, after, modhash, null);
     }
 
+    /**
+     * Instantiates a new FauxListing
+     * @param children The children
+     * @param before What comes before this listing
+     * @param after What comes after this listing
+     * @param modhash The modhash. May be null.
+     * @param more The More object for this listing
+     */
     public FauxListing(List<T> children, String before, String after, String modhash, More more) {
         super(null, null);
         this.children = ImmutableList.<T>builder().addAll(children).build();

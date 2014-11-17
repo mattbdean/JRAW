@@ -30,6 +30,10 @@ import java.util.Map;
  * This class manages common user actions, such as voting, commenting, saving, etc.
  */
 public class AccountManager extends AbstractManager {
+    /**
+     * Instantiates a new AccountManager
+     * @param client The RedditClient to use
+     */
     public AccountManager(RedditClient client) {
         super(client);
     }
@@ -113,10 +117,22 @@ public class AccountManager extends AbstractManager {
                 ).build());
     }
 
+    /**
+     * Saves a given submission
+     * @param s The submission to save
+     * @throws NetworkException If the request was not successful
+     * @throws ApiException If the API returned an error
+     */
     public void save(Submission s) throws NetworkException, ApiException {
         setSaved(s, true);
     }
 
+    /**
+     * Unsaves a given submission
+     * @param s The submission to unsave
+     * @throws NetworkException If the request was not successful
+     * @throws ApiException If the API returned an error
+     */
     public void unsave(Submission s) throws NetworkException, ApiException {
         setSaved(s, false);
     }
@@ -254,6 +270,7 @@ public class AccountManager extends AbstractManager {
      * @param redirectUrl Used in OAuth2 authorization. Parameters to obtain an OAuth2 Authorization token will be sent
      *                    to this URI as part of the query.
      * @throws NetworkException If the request was not successful
+     * @throws ApiException If the API returned an error
      */
     @EndpointImplementation(Endpoints.UPDATEAPP)
     public void createOrUpdateApp(String clientId, String name, AppType appType, String description, String aboutUrl, String redirectUrl) throws NetworkException, ApiException {
@@ -491,10 +508,12 @@ public class AccountManager extends AbstractManager {
 
     /**
      * Sets the flair for the currently authenticated user
+     * @param subreddit The subreddit to set the flair on
      * @param template The template to use
      * @param text Optional text that will be used if the FlairTemplate's text is editable. If this is null and the
      *             template is editable, the template's default text will be used.
      * @throws NetworkException If the request was not successful
+     * @throws ApiException If the API returned an error
      */
     public void setFlair(String subreddit, FlairTemplate template, String text) throws NetworkException, ApiException {
         setFlair(subreddit, template, text, (String) null);
@@ -504,10 +523,14 @@ public class AccountManager extends AbstractManager {
      * Sets the flair for a certain user. Must be a moderator of the subreddit if the user is not the currently
      * authenticated user.
      *
+     * @param subreddit The subreddit to set the flair on
      * @param template The template to use
      * @param text Optional text that will be used if the FlairTemplate's text is editable. If this is null and the
      *             template is editable, the template's default text will be used.
+     * @param username The name of the user to set the flair for. If this is null the authenticated user's name will be
+     *                 used.
      * @throws NetworkException If the request was not successful
+     * @throws ApiException If the API returned an error
      */
     public void setFlair(String subreddit, FlairTemplate template, String text, String username) throws NetworkException, ApiException {
         setFlair(subreddit, template, text, null, username);
@@ -517,11 +540,13 @@ public class AccountManager extends AbstractManager {
      * Sets the flair for a certain submission. If the currently authenticated user is <em>not</em> a moderator of the
      * subreddit where the submission was posted, then the user must have posted the submission.
      *
+     * @param subreddit The subreddit to set the flair on
      * @param template The template to use
      * @param text Optional text that will be used if the FlairTemplate's text is editable. If this is null and the
      *             template is editable, the template's default text will be used.
      * @param submission The submission to set the flair for
      * @throws NetworkException If the request was not successful
+     * @throws ApiException If the API returned an error
      */
     public void setFlair(String subreddit, FlairTemplate template, String text, Submission submission) throws NetworkException, ApiException {
         setFlair(subreddit, template, text, submission, null);
@@ -584,7 +609,10 @@ public class AccountManager extends AbstractManager {
 
     /**
      * Enables or disables user flair on a subreddit
+     * @param subreddit The subreddit to enable or disable flair on
+     * @param enabled If user flair is enabled
      * @throws NetworkException If the request was not successful
+     * @throws ApiException If the API returned an error
      */
     @EndpointImplementation(Endpoints.SETFLAIRENABLED)
     public void setFlairEnabled(String subreddit, boolean enabled) throws NetworkException, ApiException {

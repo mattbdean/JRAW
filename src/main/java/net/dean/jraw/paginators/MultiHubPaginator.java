@@ -33,6 +33,10 @@ public class MultiHubPaginator extends Paginator<MultiHubPaginator.MultiRedditId
     private static final int BACKREF_MULTINAME = 4;
     private final Matcher matcher;
 
+    /**
+     * Instantiates a new MultiHubPaginator
+     * @param client The RedditClient to use
+     */
     MultiHubPaginator(RedditClient client) {
         super(client, MultiRedditId.class);
         // Blank matcher for now, reset(String) will be called later
@@ -77,6 +81,11 @@ public class MultiHubPaginator extends Paginator<MultiHubPaginator.MultiRedditId
         private final String owner;
         private final String name;
 
+        /**
+         * Instantiates a new MutliRedditId
+         * @param owner The owner of the multireddit
+         * @param name The name of the multireddit
+         */
         public MultiRedditId(String owner, String name) {
             super(null);
             this.owner = owner;

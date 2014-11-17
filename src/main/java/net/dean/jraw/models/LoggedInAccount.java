@@ -3,9 +3,13 @@ package net.dean.jraw.models;
 import org.codehaus.jackson.JsonNode;
 
 /**
- * Represents a the authenticated user's account
+ * Represents an account with additional information visible only to that user
  */
 public class LoggedInAccount extends Account {
+    /**
+     * Instantiates a new LoggedInAccount
+     * @param data The node to parse data from
+     */
     public LoggedInAccount(JsonNode data) {
         super(data);
     }

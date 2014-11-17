@@ -2,6 +2,9 @@ package net.dean.jraw.models;
 
 import org.codehaus.jackson.JsonNode;
 
+/**
+ * This class provides a model for a user's preferences
+ */
 public class AccountPreferences extends JsonModel {
     /**
      * Instantiates a new AccountPreferences

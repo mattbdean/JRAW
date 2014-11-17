@@ -209,6 +209,10 @@ public final class JrawUtils {
         return path;
     }
 
+    /**
+     * Serializes an object to a JSON string
+     * @return The JSON interpretation of the object
+     */
     public static String toJson(Object o) {
         StringWriter out = new StringWriter();
         try {

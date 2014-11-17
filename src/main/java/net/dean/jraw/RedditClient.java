@@ -184,6 +184,7 @@ public class RedditClient extends RestClient<RedditResponse> {
      * @param captchaAttempt The attempt at the captcha
      * @throws NetworkException If the request was not successful
      * @throws ApiException If the API returned an error
+     * @return The account that was just created
      */
     @EndpointImplementation(Endpoints.REGISTER)
     public LoggedInAccount register(String username, String password, String email, Captcha captcha, String captchaAttempt) throws NetworkException, ApiException {
@@ -298,10 +299,9 @@ public class RedditClient extends RestClient<RedditResponse> {
      *
      * @param id The ID of the wanted captcha
      * @return A new Captcha object
-     * @throws NetworkException If the request was not successful
      */
     @EndpointImplementation(Endpoints.CAPTCHA_IDEN)
-    public Captcha getCaptcha(String id) throws NetworkException {
+    public Captcha getCaptcha(String id) {
         // Use Request to format the URL
         RestRequest request = request()
                 .endpoint(Endpoints.CAPTCHA_IDEN, id)

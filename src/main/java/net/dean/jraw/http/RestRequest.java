@@ -314,6 +314,7 @@ public final class RestRequest {
 
         /**
          * Marks this Builder as being sent as a POST request
+         * @param formArgs The arguments to send in the body. Will be URL encoded.
          * @return This Builder
          */
         public Builder post(Map<String, String> formArgs) {
@@ -322,6 +323,7 @@ public final class RestRequest {
 
         /**
          * Marks this Builder as being sent as a PUT request
+         * @param formArgs The arguments to send in the body. Will be URL encoded.
          * @return This Builder
          */
         public Builder put(Map<String, String> formArgs) {
@@ -330,6 +332,8 @@ public final class RestRequest {
 
         /**
          * Adds a header to the request
+         * @param key The name of the header
+         * @param value The header's value
          * @return This Builder
          */
         public Builder header(String key, String value) {
@@ -359,12 +363,21 @@ public final class RestRequest {
 
         /**
          * Sets the expected content type
+         * @param type The expected content type
+         * @return This Builder
          */
         public Builder expected(MediaType type) {
             this.expected = type;
             return this;
         }
 
+        /**
+         * Sets a custom request body
+         * @param method The HTTP verb to execute this request with
+         * @param mediaType The Content-Type of the body
+         * @param content The content to send
+         * @return This Builder
+         */
         public Builder customBody(String method, MediaType mediaType, String content) {
             builder.method(method, RequestBody.create(mediaType, content));
             return this;
@@ -446,6 +459,10 @@ public final class RestRequest {
             return updatedUri;
         }
 
+        /**
+         * Builds this Builder into a fully-fledged RestRequest that mirrors the given parameters exactly
+         * @return A new RestRequest
+         */
         public RestRequest build() {
             if (host == null || host.isEmpty()) {
                 throw new IllegalStateException("No host given");

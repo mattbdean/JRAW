@@ -15,10 +15,17 @@ import java.util.Map;
 public class AccountPreferencesEditor {
     private final Map<String, Object> args;
 
+    /**
+     * Instantiates a new AccountPreferencesEditor
+     */
     public AccountPreferencesEditor() {
         this(null);
     }
 
+    /**
+     * Instantiates a new AccountPreferencesEditor
+     * @param original Uses the data found in this object to define default values for the preferences
+     */
     public AccountPreferencesEditor(AccountPreferences original) {
         this.args = new HashMap<>();
 

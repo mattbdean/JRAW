@@ -8,7 +8,7 @@ public class ApiException extends Exception {
     private final String explanation;
 
     /**
-     * Instantiates a new ApiException from the Reddit API
+     * Instantiates a new ApiException
      *
      * @param reason The reason error string
      * @param explanation The localized explanation
@@ -19,6 +19,11 @@ public class ApiException extends Exception {
         this.explanation = explanation;
     }
 
+    /**
+     * Instantiates a new ApiException
+     * @param message The reason this error was thrown
+     * @param cause What caused the error
+     */
     public ApiException(String message, Throwable cause) {
         super(message, cause);
         this.reason = null;

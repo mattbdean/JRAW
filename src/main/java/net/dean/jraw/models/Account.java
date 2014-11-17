@@ -6,8 +6,7 @@ import org.codehaus.jackson.JsonNode;
 import java.util.Date;
 
 /**
- * Represents a redditor's account. See
- * <a href="https://github.com/reddit/reddit/wiki/JSON#account-implements-created">here</a> for more
+ * Represents a redditor's account.
  *
  * @author Matthew Dean
  */

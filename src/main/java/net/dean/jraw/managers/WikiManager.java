@@ -17,6 +17,10 @@ import java.util.List;
  * This class is responsible for managing a wiki
  */
 public class WikiManager extends AbstractManager {
+    /**
+     * Instantiates a new WikiManager
+     * @param client The RedditClient to use
+     */
     public WikiManager(RedditClient client) {
         super(client);
     }

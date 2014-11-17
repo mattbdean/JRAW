@@ -153,6 +153,7 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
         return getChildren().toArray();
     }
 
+    @SuppressWarnings("unckecked")
     @Override
     public <T1> T1[] toArray(T1[] array) {
         return getChildren().toArray(array);

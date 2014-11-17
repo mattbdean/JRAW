@@ -5,6 +5,9 @@ import org.codehaus.jackson.JsonNode;
 
 import java.util.List;
 
+/**
+ * Represents a breakdown of link and comment karma by subreddit. Only accessible with OAuth2
+ */
 public class KarmaBreakdown extends RedditObject {
     /**
      * Instantiates a new KarmaBreakdown

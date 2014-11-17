@@ -106,6 +106,9 @@ public class SubmissionSearchPaginator extends Paginator<Submission> {
         return sorting;
     }
 
+    /**
+     * How the search results can be sorted
+     */
     public static enum SearchSort {
         NEW,
         HOT,

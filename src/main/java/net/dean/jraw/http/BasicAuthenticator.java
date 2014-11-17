@@ -16,6 +16,11 @@ public class BasicAuthenticator implements Authenticator {
     private final String username;
     private final String password;
 
+    /**
+     * Instantiates a new BasicAuthenticator
+     * @param username The username
+     * @param password The password
+     */
     public BasicAuthenticator(String username, String password) {
         this.username = username;
         this.password = password;
