@@ -1,4 +1,5 @@
 plugins {
+    id 'java'
     id 'idea'
     id 'maven-publish'
     id 'findbugs'
@@ -6,8 +7,14 @@ plugins {
     id 'com.github.kt3k.coveralls' version '2.0.1'
 }
 
+ext {
+    releaseDest = new File((File) project.buildDir, "releases")
+
+    generatedJavaSrcName = "generated-src"
+    generatedJavaSrc = file("$buildDir/$generatedJavaSrcName")
+}
+
 allprojects {
-    apply plugin: 'java'
     sourceCompatibility = 1.7
     group = 'net.dean.jraw'
     version = '0.6.0'
@@ -15,54 +22,19 @@ allprojects {
     repositories {
         mavenCentral()
     }
-
-    dependencies {
-        compile     group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.+'
-        compile     group: 'com.google.guava',     name: 'guava',              version: '18.0'
-        compile     group: 'org.slf4j',            name: 'slf4j-api',          version: '1.7.+'
-        testCompile group: 'org.slf4j',            name: 'slf4j-simple',       version: '1.7.+'
-        testCompile group: 'org.testng',           name: 'testng',             version: '6.1.1'
-    }
 }
 
 dependencies {
-    compile group: 'com.squareup.okhttp', name: 'okhttp', version: '2.0.0'
+    compile     group: 'com.squareup.okhttp',  name: 'okhttp',             version: '2.0.0'
+    compile     group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.+'
+    compile     group: 'com.google.guava',     name: 'guava',              version: '18.0'
+    compile     group: 'org.slf4j',            name: 'slf4j-api',          version: '1.7.+'
+    testCompile group: 'org.slf4j',            name: 'slf4j-simple',       version: '1.7.+'
+    testCompile group: 'org.testng',           name: 'testng',             version: '6.1.1'
 }
-
-def generatedJavaSrcName = "generated-src"
-def generatedJavaSrc = file("$buildDir/$generatedJavaSrcName")
-def releaseDest = new File((File) project.buildDir, "releases")
-def genJavaClass = file("$generatedJavaSrc/net/dean/jraw/Endpoints.java").absolutePath
-def genEndpointsMd = file("ENDPOINTS.md").absolutePath
 
 // Add the generated source to the main Java source directories
-sourceSets.main.java.srcDir generatedJavaSrc
-
-project(':endpoints') {
-    dependencies {
-        compile 'org.javassist:javassist:3.18.2-GA'
-        compile 'org.reflections:reflections:0.9.8'
-        compile project(':')
-    }
-
-    task update(type: JavaExec, dependsOn: compileJava) {
-        main = "net.dean.jraw.endpoints.EndpointAnalyzer"
-        classpath = sourceSets.main.runtimeClasspath
-
-        File parent = file(genJavaClass).parentFile
-
-        parent.exists() || parent.mkdirs()
-        args = [
-                "java=$genJavaClass",
-                "md=$genEndpointsMd",
-                "readme=${file('../README.md')}"
-        ]
-    }
-}
-
-clean {
-    delete generatedJavaSrc
-}
+sourceSets.main.java.srcDir ext.generatedJavaSrc
 
 task fatJar(type: Jar, dependsOn: assemble) {
     classifier = 'fat'
@@ -109,7 +81,9 @@ test {
         def testPackage = "net.dean.jraw.test" // Defaults to just non-auth tests
 
         if (travisPR) {
-            println "Build detected as a Travis-CI build for a pull request. Only tests that do not require authentication will run."
+            println "Build detected as a Travis-CI pull request build."
+            println "Only tests that do not require authentication will run."
+            println "Expect a major decrease in code coverage."
         } else {
             // Include all tests
             testPackage += ".*"
