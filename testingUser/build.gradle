@@ -1,0 +1,35 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:0.9.66"
+    }
+}
+
+apply plugin: "kotlin"
+apply plugin: "application"
+
+mainClassName = "net.dean.jraw.testinguser.CreateTestingUser"
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile group: 'org.jetbrains.kotlin',         name: 'kotlin-stdlib',         version: '0.9.66'
+//    compile group: 'org.slf4j',                    name: 'slf4j-api',             version: '1.7.+'
+//    compile group: 'org.slf4j',                    name: 'slf4j-simple',          version: '1.7.+'
+    compile group: 'org.codehaus.jackson',         name: 'jackson-mapper-asl',    version: '1.9.+'
+    compile group: 'com.fasterxml.jackson.module', name: 'jackson-module-kotlin', version:'2.4.3'
+    compile project(':')
+}
+
+run {
+    standardInput = System.in
+    args = [file('../src/test/resources/credentials.json')]
+}
+
+repositories {
+    jcenter()
+}
