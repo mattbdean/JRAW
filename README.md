@@ -75,10 +75,12 @@ Some references:
 7. Send the pull request
 
 ####Creating a user for unit testing
-1. It is recommended to create an entire new user for the unit testing, since this library aims to test *all* endpoints (including moderation tasks and submitting and deleting submissions and comments).
-2. Create a multireddit whose name is *not* "jraw_testing", containing at least one subreddit
-3. Create a [Reddit app](https://ssl.reddit.com/prefs/apps). The type is recommended to be 'script'.
-4. Be a moderator of at least one subreddit. See [here](https://www.reddit.com/subreddits/create) to create one.
-5. Submit at least one selfpost (how about on [/r/jraw_testing2](https://www.reddit.com/r/jraw_testing2)?)
 
+The [`:testingUser`](https://github.com/thatJavaNerd/JRAW/tree/master/testingUser) subproject is a script to help you get set up with JRAW. To run it, execute `TERM=dumb ./gradlew testingUser:run`. This script will:
 
+1. Register a new user
+2. Create an OAuth2 app
+3. Record the username, password, client ID, and client secret in `credentials.json`
+4. Create a subreddit
+5. Create a multireddit
+6. Submit a self post to /r/jraw_testing2
