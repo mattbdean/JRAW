@@ -26,7 +26,7 @@ repositories {
 }
 
 dependencies {
-    compile(group: 'net.dean.jraw', name: 'JRAW', version: '0.6.0')
+    compile(group: 'net.dean.jraw', name: 'JRAW', version: '0.6.1')
 }
 ```
 
@@ -38,7 +38,7 @@ Add jCenter to your repositories (see [here](https://bintray.com/bintray/jcenter
 <dependency>
     <groupId>net.dean.jraw</groupId>
     <artifactId>JRAW</artifactId>
-    <version>0.6.0</version>
+    <version>0.6.1</version>
 </dependency>
 ```
 
