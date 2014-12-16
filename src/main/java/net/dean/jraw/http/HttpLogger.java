@@ -132,7 +132,7 @@ public class HttpLogger {
             if (isEnabled(REQUEST_DESCRIPTOR)) {
                 l.info("{} {}", r.getMethod(), r.getUrl());
             }
-            if (isEnabled(REQUEST_FORM_DATA) && HttpMethod.hasRequestBody(r.getMethod())) {
+            if (isEnabled(REQUEST_FORM_DATA) && HttpMethod.permitsRequestBody(r.getMethod())) {
                 logMap("form-data", r.getFormArgs(), r.getSensitiveArgs());
             }
             if (isEnabled(REQUEST_HEADERS)) {
