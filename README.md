@@ -26,7 +26,7 @@ repositories {
 }
 
 dependencies {
-    compile(group: 'net.dean.jraw', name: 'JRAW', version: '0.6.1')
+    compile 'net.dean.jraw:JRAW:0.6.1'
 }
 ```
 
