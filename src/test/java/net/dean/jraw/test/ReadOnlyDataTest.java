@@ -20,6 +20,8 @@ import org.testng.Assert;
 import org.testng.SkipException;
 import org.testng.annotations.Test;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 
 import static org.testng.Assert.assertFalse;
@@ -92,11 +94,11 @@ public class ReadOnlyDataTest extends RedditTest {
 
             validateModels(comments);
 
-            RedditResponse response = reddit.execute(RestRequest.Builder.from("GET", submission.getShortURL())
+            RedditResponse response = reddit.execute(RestRequest.Builder.from("GET", new URL(submission.getShortURL()))
                     .expected(MediaTypes.HTML.type())
                     .build());
             assertTrue(JrawUtils.typeComparison(response.getType(), MediaTypes.HTML.type()));
-        } catch (NetworkException e) {
+        } catch (NetworkException | MalformedURLException e) {
             handle(e);
         }
     }
