@@ -167,7 +167,7 @@ public class AccountManagerTest extends AuthenticatedRedditTest {
     @Test(dependsOnMethods = "testReplySubmission")
     public void testDeleteComment() {
         try {
-            account.delete(newCommentId);
+            moderation.delete(newCommentId);
 
             for (Comment c : reddit.getSubmission(SUBMISSION_ID).getComments()) {
                 if (c.getId().equals(newCommentId)) {
@@ -182,7 +182,7 @@ public class AccountManagerTest extends AuthenticatedRedditTest {
     @Test(dependsOnMethods = "testPostLink")
     public void testDeletePost() {
         try {
-            account.delete(newSubmssionId);
+            moderation.delete(newSubmssionId);
         } catch (NetworkException | ApiException e) {
             handle(e);
         }
@@ -371,7 +371,7 @@ public class AccountManagerTest extends AuthenticatedRedditTest {
             Submission s = (Submission) getPaginator("submitted").next().get(0);
             boolean newVal = !s.isNsfw();
 
-            account.setNsfw(s, newVal);
+            moderation.setNsfw(s, newVal);
 
             // Reload the submission's data
             s = reddit.getSubmission(s.getId());
@@ -427,7 +427,7 @@ public class AccountManagerTest extends AuthenticatedRedditTest {
 
         boolean expected = !(submission.isStickied());
         try {
-            account.setSticky(submission, expected);
+            moderation.setSticky(submission, expected);
         } catch (NetworkException | ApiException e) {
             handle(e);
         }
@@ -452,7 +452,7 @@ public class AccountManagerTest extends AuthenticatedRedditTest {
             String subreddit = "jraw_testing2";
             FlairTemplate template = account.getFlairChoices(subreddit).get(0);
 
-            account.setFlair(subreddit, template, null);
+            moderation.setFlair(subreddit, template, null);
         } catch (NetworkException | ApiException e) {
             handle(e);
         }

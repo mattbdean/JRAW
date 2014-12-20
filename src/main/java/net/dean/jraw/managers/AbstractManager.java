@@ -1,11 +1,8 @@
 package net.dean.jraw.managers;
 
+import net.dean.jraw.ApiException;
 import net.dean.jraw.RedditClient;
-import net.dean.jraw.http.HttpClient;
-import net.dean.jraw.http.NetworkAccessible;
-import net.dean.jraw.http.NetworkException;
-import net.dean.jraw.http.RedditResponse;
-import net.dean.jraw.http.RestRequest;
+import net.dean.jraw.http.*;
 
 /**
  * This class serves as the base class for all "manager" classes, which have control over a certain section of the API,
@@ -47,5 +44,28 @@ public abstract class AbstractManager implements HttpClient<RedditResponse>,
     @Override
     public final RedditClient getHttpClient() {
         return reddit;
+    }
+
+    /**
+     * Executes a generic POST request that returns a RedditResponse. Used primarily for convenience and standardization
+     * of the messages of RedditExceptions that are thrown.
+     *
+     * @param r The request to execute
+     * @return A representation of the response by the Reddit API
+     * @throws NetworkException If the request was not successful
+     *                          HTTP request.
+     */
+    protected RedditResponse genericPost(RestRequest r) throws NetworkException,
+            ApiException {
+        if (!r.getMethod().equals("POST")) {
+            throw new IllegalArgumentException("Request is not POST");
+        }
+
+        RedditResponse response = execute(r);
+        if (response.hasErrors()) {
+            throw response.getErrors()[0];
+        }
+
+        return response;
     }
 }
