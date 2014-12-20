@@ -298,8 +298,8 @@ public class Submission extends PublicContribution {
      * Gets a URL on the redd.it domain. For example, <a href="http://redd.it/92dd8">http://redd.it/92dd8</a>
      * @return The short URL to this post
      */
-    public URL getShortURL() {
-        return JrawUtils.newUrl("http://redd.it/" + getId());
+    public String getShortURL() {
+        return "http://redd.it/" + getId();
     }
 
     @Override
