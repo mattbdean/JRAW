@@ -24,10 +24,14 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * This class is responsible for parsing {@value EndpointAnalyzer#ALL_ENDPOINTS_FILE_NAME} into Endpoint objects
+ * This class is responsible for parsing {@value #ALL_ENDPOINTS_FILE_NAME} into Endpoint objects
  */
 public class EndpointAnalyzer {
-    private static final String ALL_ENDPOINTS_FILE_NAME = "endpoints.json";
+    /**
+     * The name of the file that contains a JSON mapping of all the endpoints and their
+     * respective categories.
+     */
+    protected static final String ALL_ENDPOINTS_FILE_NAME = "endpoints.json";
     private static final String KEY_GEN_MARKDOWN = "md";
     private static final String KEY_GEN_JAVA = "java";
     private static final String KEY_UPD_README = "readme";
