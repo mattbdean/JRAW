@@ -35,7 +35,7 @@ public class ModeratorPaginator extends GenericPaginator<PublicContribution> {
      * filtering.
      *
      * @return If this ModeratorPaginator is including submissions
-     * @see Where#supportsFilter()
+     * @see ModeratorPaginator.Where#supportsFilter()
      */
     public boolean isIncludingSubmissions() {
         return includeSubmissions;
@@ -46,7 +46,7 @@ public class ModeratorPaginator extends GenericPaginator<PublicContribution> {
      * Where given supports filtering.
      *
      * @param includeSubmissions If this ModeratorPaginator is including submissions
-     * @see Where#supportsFilter()
+     * @see ModeratorPaginator.Where#supportsFilter()
      */
     public void setIncludeSubmissions(boolean includeSubmissions) {
         this.includeSubmissions = includeSubmissions;
@@ -58,7 +58,7 @@ public class ModeratorPaginator extends GenericPaginator<PublicContribution> {
      * filtering.
      *
      * @return If this ModeratorPaginator is including comments
-     * @see Where#supportsFilter()
+     * @see ModeratorPaginator.Where#supportsFilter()
      */
     public boolean isIncludingComments() {
         return includeComments;
@@ -69,7 +69,7 @@ public class ModeratorPaginator extends GenericPaginator<PublicContribution> {
      * Where given supports filtering.
      *
      * @param includeComments If this ModeratorPaginator is including comments
-     * @see Where#supportsFilter()
+     * @see ModeratorPaginator.Where#supportsFilter()
      */
     public void setIncludeComments(boolean includeComments) {
         this.includeComments = includeComments;
@@ -113,7 +113,7 @@ public class ModeratorPaginator extends GenericPaginator<PublicContribution> {
         return args;
     }
 
-    private static enum Where {
+    protected static enum Where {
         /** Submissions that have been reported. Supports filtering. */
         REPORTS(true),
         /** Submissions that have been marked as spam. Supports filtering. */
