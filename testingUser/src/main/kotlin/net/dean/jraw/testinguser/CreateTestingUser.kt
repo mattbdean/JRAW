@@ -15,6 +15,7 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import net.dean.jraw.managers.MultiRedditManager
 import net.dean.jraw.models.Captcha
 import net.dean.jraw.ApiException
+import java.io.IOException
 
 /**
  * This class will create a Reddit user and set up everything you need to start testing with JRAW. See
@@ -31,7 +32,7 @@ public class CreateTestingUser {
 
     class object {
         public platformStatic fun main(args: Array<String>) {
-            if (args.size < 1)
+            if (args.size() < 1)
                 throw IllegalArgumentException("First argument should be the JSON configuration file")
 
             CreateTestingUser().`do`(File(args[0]))
@@ -81,7 +82,7 @@ public class CreateTestingUser {
             })
             password = getInput(s, "Enter a password", getSecureRandom(), filter = object : InputFilter {
                 override fun check(str: String): String {
-                    if (str.length == 0) return "Password cannot be empty"
+                    if (str.length() == 0) return "Password cannot be empty"
                     return ""
                 }
             })
@@ -129,6 +130,13 @@ public class CreateTestingUser {
                 "password" to creds.getPassword(),
                 "client_id" to creds.getClientId(),
                 "client_secret" to creds.getClientSecret())
+        val parentDir = jsonConfig.getParentFile()
+        if (parentDir.isFile()) {
+            throw IllegalArgumentException("Download directory already exists as a file: $parentDir")
+        }
+        if (!parentDir.isDirectory() && !parentDir.mkdirs()) {
+            throw IOException("Could not create directory $parentDir")
+        }
         jacksonObjectMapper().writerWithDefaultPrettyPrinter().writeValue(jsonConfig, data)
         println("Your testing user's credentials can be found at ${jsonConfig.getAbsolutePath()}")
     }
