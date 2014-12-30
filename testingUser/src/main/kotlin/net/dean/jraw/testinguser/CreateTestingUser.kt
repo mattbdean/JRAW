@@ -132,7 +132,7 @@ public class CreateTestingUser {
                 "client_secret" to creds.getClientSecret())
         val parentDir = jsonConfig.getParentFile()
         if (parentDir.isFile()) {
-            throw IllegalArgumentException("Download directory already exists as a file: $parentDir")
+            throw IllegalArgumentException("Parent directory already exists as a file: $parentDir")
         }
         if (!parentDir.isDirectory() && !parentDir.mkdirs()) {
             throw IOException("Could not create directory $parentDir")

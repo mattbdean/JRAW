@@ -13,7 +13,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -530,7 +529,8 @@ public final class RestRequest {
          * @return A URL-encoded string
          */
         private String urlEncode(String str) {
-            String charset = StandardCharsets.UTF_8.name();
+            //String charset = StandardCharsets.UTF_8.name();
+            String charset = "UTF-8";
             try {
                 return URLEncoder.encode(str, charset);
             } catch (UnsupportedEncodingException e) {

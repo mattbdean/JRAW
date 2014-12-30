@@ -1,8 +1,8 @@
 package net.dean.jraw.models;
 
-import org.codehaus.jackson.JsonNode;
+import net.dean.jraw.Dimension;
 
-import java.awt.*;
+import org.codehaus.jackson.JsonNode;
 
 /**
  * This class represents a Subreddit such as /r/pics.
