@@ -34,6 +34,9 @@ public final class RestRequest {
     private final Endpoints endpoint;
     private final boolean needsAuth;
     private final MediaType expected;
+    private final boolean https;
+    private final String host;
+    private final String path;
 
     /**
      * Creates a RestRequest from the given URL
@@ -55,6 +58,9 @@ public final class RestRequest {
         this.endpoint = b.endpoint;
         this.needsAuth = b.auth;
         this.expected = b.expected;
+        this.https = b.https;
+        this.host = b.host;
+        this.path = b.path;
         if (b.query != null) {
             this.query = b.query;
         } else {
@@ -149,6 +155,26 @@ public final class RestRequest {
         return false;
     }
 
+    public boolean isHttps() {
+        return https;
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public boolean isNeedsAuth() {
+        return needsAuth;
+    }
+
+    public MediaType getExpected() {
+        return expected;
+    }
+
     public Request getOkHttpRequest() {
         return request;
     }
@@ -206,7 +232,7 @@ public final class RestRequest {
             Builder b = new Builder()
                         .https(url.getProtocol().equals("https"))
                         .host(url.getHost())
-                        .path(url.getFile())
+                        .path(url.getPath())
                         .query(query);
             if (formArgs.length != 0) {
                 b.formMethod(method, JrawUtils.args(formArgs));

@@ -72,6 +72,11 @@ public class OAuthHelper implements NetworkAccessible<RedditResponse, RedditClie
         // http://stackoverflow.com/a/41156/1275092
         this.state = new BigInteger(130, secureRandom).toString(32);
 
+        String scopesList = scope;
+        if (otherScopes.length > 0) {
+            scopesList += ',' + Joiner.on(',').join(otherScopes);
+        }
+
         RestRequest r = new RestRequest.Builder()
                 .https(true)
                 .host(RedditClient.HOST_SPECIAL)
@@ -83,7 +88,7 @@ public class OAuthHelper implements NetworkAccessible<RedditResponse, RedditClie
                         "state", state,
                         "redirect_uri", redirectUri,
                         "duration", permanent ? "permanent" : "temporary",
-                        "scope", scope + ',' + Joiner.on(',').join(otherScopes)
+                        "scope", scopesList
                 )).build();
         this.started = true;
         return r.getUrl();

@@ -2,8 +2,10 @@ package net.dean.jraw.test;
 
 import net.dean.jraw.ApiException;
 import net.dean.jraw.Endpoint;
+import net.dean.jraw.RedditClient;
 import net.dean.jraw.Version;
 import net.dean.jraw.http.NetworkException;
+import net.dean.jraw.http.RestRequest;
 import net.dean.jraw.http.oauth.OAuthException;
 import net.dean.jraw.http.oauth.OAuthHelper;
 import net.dean.jraw.models.Captcha;
@@ -23,9 +25,11 @@ import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import static org.testng.Assert.*;
 
@@ -146,7 +150,32 @@ public class InternalsTest extends RedditTest {
     @Test
     public void testOAuthHelper() throws MalformedURLException {
         OAuthHelper helper = new OAuthHelper(reddit);
-        assertNotNull(helper.getAuthorizationUrl("client ID", "http://www.example.com", true, "test", "test2"));
+        RestRequest expected = new RestRequest.Builder()
+                .https(true)
+                .host(RedditClient.HOST_SPECIAL)
+                .path("/api/v1/authorize")
+                .query(
+                        "client_id", "myClientId",
+                        "response_type", "code",
+                        "state", "untestable",
+                        "redirect_uri", "http://www.example.com",
+                        "duration", "permanent",
+                        "scope", "scope1,scope2"
+                ).build();
+        RestRequest actual = RestRequest.from("GET", new URL(helper.getAuthorizationUrl(
+                "myClientId", "http://www.example.com", true, "scope1", "scope2"
+        )));
+
+        assertEquals(actual.isHttps(), expected.isHttps(), "Scheme was different");
+        assertEquals(actual.getHost(), expected.getHost(), "Host was different");
+        assertEquals(actual.getPath(), expected.getPath(), "Path was different");
+        for (Map.Entry<String, String> pair : expected.getQuery().entrySet()) {
+            if (pair.getKey().equals("state")) {
+                // State is random
+                continue;
+            }
+            assertEquals(pair.getValue(), actual.getQuery().get(pair.getKey()));
+        }
     }
 
     @Test
