@@ -1,6 +1,7 @@
 package net.dean.jraw.http;
 
 import com.google.common.collect.ImmutableMap;
+import com.squareup.okhttp.CacheControl;
 import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.Request;
@@ -405,6 +406,15 @@ public final class RestRequest {
          */
         public Builder customBody(String method, MediaType mediaType, String content) {
             builder.method(method, RequestBody.create(mediaType, content));
+            return this;
+        }
+
+        /**
+         * Sets how OkHttp will handle retrieving the request.
+         * @return This Builder
+         */
+        public Builder cacheControl(CacheControl cacheControl) {
+            builder.cacheControl(cacheControl);
             return this;
         }
 

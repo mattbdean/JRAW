@@ -1,5 +1,6 @@
 package net.dean.jraw.paginators;
 
+import com.squareup.okhttp.CacheControl;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.NetworkAccessible;
 import net.dean.jraw.http.NetworkException;
@@ -66,16 +67,23 @@ public abstract class Paginator<T extends Thing> implements Iterator<Listing<T>>
         this.includeLimit = false;
     }
 
+    protected Listing<T> getListing(boolean forwards) throws NetworkException {
+        return getListing(forwards, false);
+    }
+
     /**
      * Gets a listing of things
      *
      * @param forwards If true, this method will return the next listing. If false, it will return the first listing.
+     * @param forceNetwork If true, then the request will be sent through the network, regardless of it a cached version
+     *                     is already available. Useful for when you want to make sure you have the absolute latest
+     *                     version of the model.
      * @return A new listing
      * @throws NetworkException If the request was not successful
      * @throws IllegalStateException If a setter method (such as {@link #setLimit(int)} was called after the first
      *                               listing was requested and {@link #reset()} was not called.
      */
-    protected Listing<T> getListing(boolean forwards) throws NetworkException, IllegalStateException {
+    protected Listing<T> getListing(boolean forwards, boolean forceNetwork) throws NetworkException, IllegalStateException {
         if (started && changed) {
             throw new IllegalStateException("Cannot change parameters without calling reset()");
         }
@@ -89,7 +97,8 @@ public abstract class Paginator<T extends Thing> implements Iterator<Listing<T>>
             if (forwards && current.getAfter() != null)
                 args.put("after", current.getAfter());
 
-        if (timePeriod != null && (sorting == Sorting.CONTROVERSIAL || sorting == Sorting.TOP)) {
+        boolean sortingUsed = timePeriod != null;
+        if (sortingUsed && (sorting == Sorting.CONTROVERSIAL || sorting == Sorting.TOP)) {
             // Time period only applies to controversial and top listings
             args.put("t", timePeriod.name().toLowerCase());
         }
@@ -99,11 +108,14 @@ public abstract class Paginator<T extends Thing> implements Iterator<Listing<T>>
             args.putAll(extraArgs);
         }
 
-        RestRequest request = getHttpClient().request()
+        RestRequest.Builder request = getHttpClient().request()
                 .path(path)
-                .query(args)
-                .build();
-        Listing<T> listing = parseListing(getHttpClient().execute(request));
+                .query(args);
+        if (forceNetwork || (sortingUsed && sorting == Sorting.NEW)) {
+            request.cacheControl(CacheControl.FORCE_NETWORK);
+        }
+
+        Listing<T> listing = parseListing(getHttpClient().execute(request.build()));
         this.current = listing;
         pageNumber++;
 
