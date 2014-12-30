@@ -165,7 +165,8 @@ public class Endpoint implements Comparable<Endpoint> {
 
     @Override
     public int compareTo(Endpoint other) {
-        int implComp = Boolean.compare(implemented, other.implemented);
+        //int implComp = Boolean.compare(implemented, other.implemented);
+        int implComp = Boolean.valueOf(implemented).compareTo(Boolean.valueOf(other.implemented));
         if (implComp != 0) {
             return implComp;
         } else {
