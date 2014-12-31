@@ -22,7 +22,7 @@ public class SubredditSearchPaginator extends Paginator<Subreddit> {
      * @param creator The RedditClient that will be used to send HTTP requests
      * @param query   What to search for
      */
-    SubredditSearchPaginator(RedditClient creator, String query) {
+    public SubredditSearchPaginator(RedditClient creator, String query) {
         super(creator, Subreddit.class);
         this.query = query;
     }

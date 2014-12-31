@@ -17,7 +17,7 @@ public class InboxPaginator extends GenericPaginator<Message> {
      * @param reddit The client to send requests with
      * @param where  The "where" enum value to use
      */
-    InboxPaginator(RedditClient reddit, String where) {
+    public InboxPaginator(RedditClient reddit, String where) {
         super(reddit, Message.class, where);
     }
 

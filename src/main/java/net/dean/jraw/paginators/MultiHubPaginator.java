@@ -37,7 +37,7 @@ public class MultiHubPaginator extends Paginator<MultiHubPaginator.MultiRedditId
      * Instantiates a new MultiHubPaginator
      * @param client The RedditClient to use
      */
-    MultiHubPaginator(RedditClient client) {
+    public MultiHubPaginator(RedditClient client) {
         super(client, MultiRedditId.class);
         // Blank matcher for now, reset(String) will be called later
         this.matcher = Pattern.compile(MULTIREDDIT_URL_REGEX).matcher("");

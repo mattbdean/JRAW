@@ -21,7 +21,7 @@ public class LiveThreadPaginator extends Paginator<LiveUpdate> {
      * @param creator The RedditClient that will be used to send HTTP requests
      * @param threadId The live thread's ID
      */
-    LiveThreadPaginator(RedditClient creator, String threadId) {
+    public LiveThreadPaginator(RedditClient creator, String threadId) {
         super(creator, LiveUpdate.class);
         this.threadId = threadId;
     }

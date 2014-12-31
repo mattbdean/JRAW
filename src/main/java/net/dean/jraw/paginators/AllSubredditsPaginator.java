@@ -18,7 +18,7 @@ public class AllSubredditsPaginator extends GenericPaginator<Subreddit> {
      * @param creator The RedditClient that will be used to send HTTP requests
      * @param where The criteria in which to return Subreddits
      */
-    AllSubredditsPaginator(RedditClient creator, String where) {
+    public AllSubredditsPaginator(RedditClient creator, String where) {
         super(creator, Subreddit.class, where);
     }
 
