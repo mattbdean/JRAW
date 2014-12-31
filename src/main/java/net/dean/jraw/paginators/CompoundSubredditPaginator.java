@@ -17,7 +17,7 @@ public class CompoundSubredditPaginator extends SubredditPaginator {
      * @param creator The RedditClient that will be used to send HTTP requests
      * @param subreddits The subreddits to iterate over. Must contain at least on element.
      */
-    CompoundSubredditPaginator(RedditClient creator, List<String> subreddits) {
+    public CompoundSubredditPaginator(RedditClient creator, List<String> subreddits) {
         super(creator);
         setSubreddits(subreddits);
         this.subreddits = Collections.unmodifiableList(subreddits);

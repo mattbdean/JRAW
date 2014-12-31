@@ -17,7 +17,7 @@ public class ImportantUserPaginator extends GenericUserRecordPaginator {
      * @param creator The RedditClient that will be used to send requests
      * @param where   What to look up
      */
-    ImportantUserPaginator(RedditClient creator, String where) {
+    public ImportantUserPaginator(RedditClient creator, String where) {
         super(creator, where);
     }
 
