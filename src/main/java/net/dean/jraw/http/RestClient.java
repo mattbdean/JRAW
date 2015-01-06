@@ -265,6 +265,14 @@ public abstract class RestClient<T extends RestResponse> implements HttpClient<T
     }
 
     /**
+     * Gets the HttpLogger that will log the HTTP requests and responses that this class sends and receives.
+     * @return This RestClient's HttpLogger
+     */
+    public HttpLogger getHttpLogger() {
+        return logger;
+    }
+
+    /**
      * This method is responsible for instantiating a new RestResponse or one of its subclasses
      *
      * @param r The OkHttp response given
