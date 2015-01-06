@@ -25,7 +25,7 @@ public class ModeratorPaginator extends GenericPaginator<PublicContribution> {
      * @param subreddit The subreddit to view. Must be a moderator.
      * @param where What to paginate
      */
-    ModeratorPaginator(RedditClient creator, String subreddit, String where) {
+    public ModeratorPaginator(RedditClient creator, String subreddit, String where) {
         super(creator, PublicContribution.class, where);
         this.subreddit = subreddit;
     }

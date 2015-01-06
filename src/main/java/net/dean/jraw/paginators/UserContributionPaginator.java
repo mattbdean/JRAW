@@ -19,7 +19,7 @@ public class UserContributionPaginator extends GenericPaginator<Contribution> {
      * @param where The criteria in which to return Subreddits
      * @param username The user to view
      */
-    UserContributionPaginator(RedditClient creator, String where, String username) {
+    public UserContributionPaginator(RedditClient creator, String where, String username) {
         super(creator, Contribution.class, where);
         this.username = username;
     }

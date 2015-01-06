@@ -21,7 +21,7 @@ public class UserRecordPaginator extends GenericUserRecordPaginator {
      *                  subreddit.
      * @param where What to iterate
      */
-    UserRecordPaginator(RedditClient creator, String subreddit, String where) {
+    public UserRecordPaginator(RedditClient creator, String subreddit, String where) {
         super(creator, where);
         this.subreddit = subreddit;
     }
