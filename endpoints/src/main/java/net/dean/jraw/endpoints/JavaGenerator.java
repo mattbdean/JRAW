@@ -29,6 +29,7 @@ public class JavaGenerator extends AbstractEndpointGenerator {
     private static final String JAVADOC_GET_ENDPOINT_RETURN = "The Endpoint object";
     private static final Map<String, String> PREFIX_SUBSTITUTIONS;
     private static final Map<String, String> POSTFIX_SUBSTITUTIONS;
+    private static final String JAVADOC_GET_SCOPE = "Gets this Endpoint's OAuth scope";
 
     /**
      * Instantiates a new JavaGenerator
@@ -64,9 +65,27 @@ public class JavaGenerator extends AbstractEndpointGenerator {
 
             int endpointCounter = 0;
             for (Endpoint endpoint : entry.getValue()) {
+                // Write the Javadoc
                 writer.writeLine(String.format(JAVADOC_ENUM, getRedditDocUrl(endpoint), endpoint.getRequestDescriptor(), endpoint.getScope().replace("&", "&amp;")));
-                writer.writeLine(String.format("%s(\"%s\")%s", generateEnumName(endpoint, duplicateUris.contains(endpoint.getUri())), endpoint.getRequestDescriptor(),
-                        catCounter == sorted.size() - 1 && endpointCounter == entry.getValue().size() - 1 ? ";" : ","));
+                // Write the enum value
+                String enumName = generateEnumName(endpoint, duplicateUris.contains(endpoint.getUri()));
+
+                String requestDescriptor = endpoint.getRequestDescriptor();
+                String scope = endpoint.getScope();
+
+                char finishingPunctuation;
+                if (catCounter == sorted.size() - 1 && endpointCounter == entry.getValue().size() - 1) {
+                    finishingPunctuation = ';';
+                } else {
+                    finishingPunctuation = ',';
+                }
+
+                // MY_ENDPOINT("/my/endpoint", "my_scope"),
+                writer.writeLine(String.format("%s(\"%s\", \"%s\")%s",
+                        enumName,
+                        requestDescriptor,
+                        scope,
+                        finishingPunctuation));
                 endpointCounter++;
             }
 
@@ -75,10 +94,12 @@ public class JavaGenerator extends AbstractEndpointGenerator {
 
         writer.newline();
         writer.writeLine("private final net.dean.jraw.Endpoint endpoint;");
+        writer.writeLine("private final String scope;");
         writer.newline();
-        writer.writeLine("private Endpoints(java.lang.String requestDescriptor) {");
+        writer.writeLine("private Endpoints(String requestDescriptor, String scope) {");
         writer.incIndent();
         writer.writeLine("this.endpoint = new net.dean.jraw.Endpoint(requestDescriptor);");
+        writer.writeLine("this.scope = scope;");
         writer.decIndent();
         writer.writeLine("}");
         writer.newline();
@@ -94,8 +115,18 @@ public class JavaGenerator extends AbstractEndpointGenerator {
 
         writer.newline();
 
+        writer.writeLine("/**");
+        writer.writeLine("  * " + JAVADOC_GET_SCOPE);
+        writer.writeLine("  */");
+        writer.writeLine("public final String getScope() {");
+        writer.incIndent();
+        writer.writeLine("return scope;");
+        writer.decIndent();
+        writer.writeLine("}");
+        writer.newline();
+
         writer.writeLine("@Override");
-        writer.writeLine("public java.lang.String toString() {");
+        writer.writeLine("public String toString() {");
         writer.incIndent();
         writer.writeLine("return endpoint.toString();");
         writer.decIndent();

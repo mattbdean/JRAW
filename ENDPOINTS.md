@@ -1,4 +1,4 @@
-<!--- Generated 2014-11-16 at 10:29:08 EST. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
+<!--- Generated 2015-01-10 at 00:02:53 EST. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
 #Endpoints
 
 This file contains a list of all the endpoints (regardless of if they have been implemented) that can be found at the [official Reddit API docs](https://www.reddit.com/dev/api). To update this file, run `./gradlew endpoints:update`.
@@ -49,7 +49,7 @@ Method|Endpoint|Implemented?
 :----:|--------|------------
 `POST`|[`/api/live/{thread}/delete_update`](https://www.reddit.com/dev/api/oauth#POST_api_live_%7Bthread%7D_delete_update)|No
 `POST`|[`/api/live/{thread}/strike_update`](https://www.reddit.com/dev/api/oauth#POST_api_live_%7Bthread%7D_strike_update)|No
-`POST`|[`/api/del`](https://www.reddit.com/dev/api/oauth#POST_api_del)|[`AccountManager.delete(String)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/managers/AccountManager#delete(java.lang.String))
+`POST`|[`/api/del`](https://www.reddit.com/dev/api/oauth#POST_api_del)|[`ModerationManager.delete(String)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/managers/ModerationManager#delete(java.lang.String))
 `POST`|[`/api/editusertext`](https://www.reddit.com/dev/api/oauth#POST_api_editusertext)|[`AccountManager.updateSelfpost(Submission, String)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/managers/AccountManager#updateSelfpost(net.dean.jraw.models.Submission, java.lang.String))
 `POST`|[`/api/sendreplies`](https://www.reddit.com/dev/api/oauth#POST_api_sendreplies)|[`AccountManager.sendRepliesToInbox(Submission, boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/managers/AccountManager#sendRepliesToInbox(net.dean.jraw.models.Submission, boolean))
 
@@ -57,7 +57,7 @@ Method|Endpoint|Implemented?
 Method|Endpoint|Implemented?
 :----:|--------|------------
 `POST`|[`/api/flairselector`](https://www.reddit.com/dev/api/oauth#POST_api_flairselector)|[`AccountManager.getFlairChoices(String)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/managers/AccountManager#getFlairChoices(java.lang.String))
-`POST`|[`/api/selectflair`](https://www.reddit.com/dev/api/oauth#POST_api_selectflair)|[`AccountManager.setFlair(String, FlairTemplate, String, Submission, String)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/managers/AccountManager#setFlair(java.lang.String, net.dean.jraw.models.FlairTemplate, java.lang.String, net.dean.jraw.models.Submission, java.lang.String))
+`POST`|[`/api/selectflair`](https://www.reddit.com/dev/api/oauth#POST_api_selectflair)|[`ModerationManager.setFlair(String, FlairTemplate, String, Submission, String)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/managers/ModerationManager#setFlair(java.lang.String, net.dean.jraw.models.FlairTemplate, java.lang.String, net.dean.jraw.models.Submission, java.lang.String))
 `POST`|[`/api/setflairenabled`](https://www.reddit.com/dev/api/oauth#POST_api_setflairenabled)|[`AccountManager.setFlairEnabled(String, boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/managers/AccountManager#setFlairEnabled(java.lang.String, boolean))
 
 ##history
@@ -129,9 +129,9 @@ Method|Endpoint|Implemented?
 `POST`|[`/api/remove`](https://www.reddit.com/dev/api/oauth#POST_api_remove)|No
 `POST`|[`/api/set_contest_mode`](https://www.reddit.com/dev/api/oauth#POST_api_set_contest_mode)|No
 `POST`|[`/api/unignore_reports`](https://www.reddit.com/dev/api/oauth#POST_api_unignore_reports)|No
-`POST`|[`/api/marknsfw`](https://www.reddit.com/dev/api/oauth#POST_api_marknsfw)|[`AccountManager.setNsfw(Submission, boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/managers/AccountManager#setNsfw(net.dean.jraw.models.Submission, boolean))
-`POST`|[`/api/set_subreddit_sticky`](https://www.reddit.com/dev/api/oauth#POST_api_set_subreddit_sticky)|[`AccountManager.setSticky(Submission, boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/managers/AccountManager#setSticky(net.dean.jraw.models.Submission, boolean))
-`POST`|[`/api/unmarknsfw`](https://www.reddit.com/dev/api/oauth#POST_api_unmarknsfw)|[`AccountManager.setNsfw(Submission, boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/managers/AccountManager#setNsfw(net.dean.jraw.models.Submission, boolean))
+`POST`|[`/api/marknsfw`](https://www.reddit.com/dev/api/oauth#POST_api_marknsfw)|[`ModerationManager.setNsfw(Submission, boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/managers/ModerationManager#setNsfw(net.dean.jraw.models.Submission, boolean))
+`POST`|[`/api/set_subreddit_sticky`](https://www.reddit.com/dev/api/oauth#POST_api_set_subreddit_sticky)|[`ModerationManager.setSticky(Submission, boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/managers/ModerationManager#setSticky(net.dean.jraw.models.Submission, boolean))
+`POST`|[`/api/unmarknsfw`](https://www.reddit.com/dev/api/oauth#POST_api_unmarknsfw)|[`ModerationManager.setNsfw(Submission, boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/managers/ModerationManager#setNsfw(net.dean.jraw.models.Submission, boolean))
 
 ##modwiki
 Method|Endpoint|Implemented?
@@ -224,7 +224,7 @@ Method|Endpoint|Implemented?
 ##report
 Method|Endpoint|Implemented?
 :----:|--------|------------
-`POST`|[`/api/live/thread/report`](https://www.reddit.com/dev/api/oauth#POST_api_live_thread_report)|No
+`POST`|[`/api/live/{thread}/report`](https://www.reddit.com/dev/api/oauth#POST_api_live_%7Bthread%7D_report)|No
 `POST`|[`/api/report`](https://www.reddit.com/dev/api/oauth#POST_api_report)|No
 `POST`|[`/api/hide`](https://www.reddit.com/dev/api/oauth#POST_api_hide)|[`AccountManager.hide(Submission, boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/managers/AccountManager#hide(net.dean.jraw.models.Submission, boolean))
 `POST`|[`/api/unhide`](https://www.reddit.com/dev/api/oauth#POST_api_unhide)|[`AccountManager.hide(Submission, boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/managers/AccountManager#hide(net.dean.jraw.models.Submission, boolean))
@@ -241,7 +241,7 @@ Method|Endpoint|Implemented?
 Method|Endpoint|Implemented?
 :----:|--------|------------
 `POST`|[`/api/live/create`](https://www.reddit.com/dev/api/oauth#POST_api_live_create)|No
-`POST`|[`/api/live/thread/update`](https://www.reddit.com/dev/api/oauth#POST_api_live_thread_update)|No
+`POST`|[`/api/live/{thread}/update`](https://www.reddit.com/dev/api/oauth#POST_api_live_%7Bthread%7D_update)|No
 `POST`|[`/api/comment`](https://www.reddit.com/dev/api/oauth#POST_api_comment)|[`AccountManager.reply(Contribution, String)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/managers/AccountManager#reply(net.dean.jraw.models.Contribution, java.lang.String))
 `POST`|[`/api/submit`](https://www.reddit.com/dev/api/oauth#POST_api_submit)|[`AccountManager.submit(SubmissionBuilder, Captcha, String)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/managers/AccountManager#submit(net.dean.jraw.managers.AccountManager$SubmissionBuilder, net.dean.jraw.models.Captcha, java.lang.String))
 `GET`|[`/api/submit_text.json`](https://www.reddit.com/dev/api/oauth#GET_api_submit_text.json)|[`RedditClient.getSubmitText(String)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/RedditClient#getSubmitText(java.lang.String))

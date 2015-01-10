@@ -303,6 +303,21 @@ public class RedditOAuth2Client extends RedditClient {
         return authData;
     }
 
+    /**
+     * Checks if the given endpoint is applicable for the current OAuth scopes
+     */
+    public boolean isAuthorizedFor(Endpoints endpoint) {
+        if (authData == null) return false;
+
+        for (String scope : authData.getScopes()) {
+            if (scope.equalsIgnoreCase(endpoint.getScope())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     private static final class FriendModel {
         private final String name;
 
