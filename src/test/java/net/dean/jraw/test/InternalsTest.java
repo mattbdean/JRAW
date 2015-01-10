@@ -183,6 +183,15 @@ public class InternalsTest extends RedditTest {
         assertNull(ThingType.getByPrefix(null));
     }
 
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void testRequestWithBasicAuthNoHttps() throws NetworkException {
+        new RestRequest.Builder()
+                .host("example.com")
+                .basicAuth("foo", "bar")
+                .https(false)
+                .build();
+    }
+
     @Test
     public void testVersion() {
         MockVersion v = new MockVersion(1, 2, 3);

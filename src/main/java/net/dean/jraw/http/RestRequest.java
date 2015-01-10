@@ -37,6 +37,7 @@ public final class RestRequest {
     private final boolean https;
     private final String host;
     private final String path;
+    private final BasicAuthData authData;
 
     /**
      * Creates a RestRequest from the given URL
@@ -59,6 +60,7 @@ public final class RestRequest {
         this.needsAuth = b.auth;
         this.expected = b.expected;
         this.https = b.https;
+        this.authData = b.authData;
         this.host = b.host;
         this.path = b.path;
         if (b.query != null) {
@@ -186,6 +188,14 @@ public final class RestRequest {
         return expected;
     }
 
+    public BasicAuthData getBasicAuthData() {
+        return authData;
+    }
+
+    public boolean isUsingBasicAuth() {
+        return authData != null && authData.isValid();
+    }
+
     /**
      * This class is responsible for creating new RestRequests
      */
@@ -202,6 +212,7 @@ public final class RestRequest {
         private String[] sensitiveArgs;
         private boolean auth;
         private MediaType expected;
+        private BasicAuthData authData;
 
         /**
          * Creates a new Builder that will result in a RestRequest whose URL will match the one given
@@ -418,6 +429,29 @@ public final class RestRequest {
             return this;
         }
 
+        /**
+         * Sends this request with HTTP Basic Auth (see <a href="http://tools.ietf.org/html/rfc2617">RFC 2617</a>).
+         * HTTPS <b>MUST</b> be enabled, or else your passwords will be floating around the network in plain text. This
+         * method will automatically enable HTTPS.
+         * @return This Builder
+         */
+        public Builder basicAuth(String username, String password) {
+            if (username == null && password == null) {
+                // Disable it
+                authData = null;
+                return this;
+            }
+
+            BasicAuthData authData = new BasicAuthData(username, password);
+            if (!authData.isValid()) {
+                // One of the two were null, catch that now
+                throw new IllegalArgumentException("Username or password were null");
+            }
+
+            this.authData = authData;
+            return https(true);
+        }
+
         private Builder formMethod(String method, Map<String, String> formArgs) {
             RequestBody body = null;
             if (formArgs != null) {
@@ -529,6 +563,9 @@ public final class RestRequest {
             }
 
             builder.url(url.toString());
+
+            if ((authData != null) && !https)
+                throw new IllegalArgumentException("Refusing to build RestRequest using Basic Auth without HTTPS");
 
             return new RestRequest(this);
         }

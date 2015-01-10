@@ -21,11 +21,6 @@ public abstract class AbstractManager implements HttpClient<RedditResponse>,
     }
 
     @Override
-    public RedditResponse executeWithBasicAuth(RestRequest request, String username, String password) throws NetworkException {
-        return reddit.executeWithBasicAuth(request, username, password);
-    }
-
-    @Override
     public final RedditResponse execute(RestRequest r) throws NetworkException {
         if (r.needsAuth() && !reddit.isLoggedIn()) {
             throw new IllegalStateException("This request requires an authenticated user");

@@ -124,14 +124,14 @@ public class RedditOAuth2Client extends RedditClient {
      * @throws NetworkException If the request was not successful
      */
     public void revokeToken(Credentials creds) throws NetworkException {
-        executeWithBasicAuth(request()
+        execute(request()
                 .host(HOST_SPECIAL)
                 .path("/api/v1/revoke_token")
                 .post(JrawUtils.args(
                         "token", authData.getAccessToken(),
                         "token_type_hint", "access_token"
-                )).build(),
-                creds.getClientId(), creds.getClientSecret());
+                )).basicAuth(creds.getClientId(), creds.getClientSecret())
+                .build());
 
         authData = null;
         authMethod = AuthenticationMethod.NONE;
@@ -147,14 +147,15 @@ public class RedditOAuth2Client extends RedditClient {
         if (authData.getRefreshToken() == null) {
             throw new IllegalArgumentException("No refresh token was requested, therefore no refresh can be performed");
         }
-        RedditResponse response = executeWithBasicAuth(request()
+        RedditResponse response = execute(request()
                 .https(true)
                 .host(RedditClient.HOST_SPECIAL)
                 .path("/api/v1/access_token")
                 .post(JrawUtils.args(
                         "grant_type", "refresh_token",
                         "refresh_token", authData.getRefreshToken()
-                )).build(), creds.getClientId(), creds.getClientSecret());
+                )).basicAuth(creds.getClientId(), creds.getClientSecret())
+                .build());
         this.authData = new AuthData(response.getJson());
     }
 

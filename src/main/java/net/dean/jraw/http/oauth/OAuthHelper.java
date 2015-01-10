@@ -145,7 +145,7 @@ public class OAuthHelper implements NetworkAccessible<RedditResponse, RedditClie
         String code = query.get("code");
 
         try {
-            RedditResponse response = reddit.executeWithBasicAuth(reddit.request()
+            RedditResponse response = reddit.execute(reddit.request()
                     .https(true)
                     .host(RedditClient.HOST)
                     .path("/api/v1/access_token")
@@ -153,7 +153,9 @@ public class OAuthHelper implements NetworkAccessible<RedditResponse, RedditClie
                             "grant_type", "authorization_code",
                             "code", code,
                             "redirect_uri", redirectUri
-                    )).build(), creds.getClientId(), creds.getClientSecret());
+                    ))
+                    .basicAuth(creds.getClientId(), creds.getClientSecret())
+                    .build());
             return new AuthData(response.getJson());
         } catch (NetworkException e) {
             if (e.getCode() == 401) {
@@ -178,7 +180,7 @@ public class OAuthHelper implements NetworkAccessible<RedditResponse, RedditClie
             throw new IllegalArgumentException("This method only authenticates 'script' apps");
         }
 
-        RedditResponse response = reddit.executeWithBasicAuth(reddit.request()
+        RedditResponse response = reddit.execute(reddit.request()
                 .https(true)
                 .host(RedditClient.HOST_SPECIAL)
                 .path("/api/v1/access_token")
@@ -188,7 +190,8 @@ public class OAuthHelper implements NetworkAccessible<RedditResponse, RedditClie
                         "password", credentials.getPassword()
                 ))
                 .sensitiveArgs("password")
-                .build(), credentials.getClientId(), credentials.getClientSecret());
+                .basicAuth(credentials.getClientId(), credentials.getClientSecret())
+                .build());
 
         return new AuthData(response.getJson());
     }

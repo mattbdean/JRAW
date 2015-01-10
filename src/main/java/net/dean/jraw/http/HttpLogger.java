@@ -18,6 +18,7 @@ import static net.dean.jraw.http.HttpLogger.Component.*;
 public class HttpLogger {
     private static final String INDENT = "    ";
     private static final String ELLIPSIS = "...";
+    private static final String CENSOR = "<sensitive>";
     private static final int RESPONSE_BODY_CUTOFF = 100 - ELLIPSIS.length();
     private final Logger l;
     private Map<Component, Boolean> components;
@@ -95,7 +96,7 @@ public class HttpLogger {
         for (Map.Entry<String, String> entry : data.entrySet()) {
             l.info("{}{}={}{}", counter != 0 ? indent : header,
                     entry.getKey(),
-                    contains(entry.getKey(), sensitiveKeys) ? "<sensitive>" : entry.getValue(),
+                    contains(entry.getKey(), sensitiveKeys) ? CENSOR : entry.getValue(),
                     counter == data.size() - 1 ? '}' : ',');
             counter++;
         }
@@ -143,6 +144,12 @@ public class HttpLogger {
                 }
 
                 logMap("headers", map, null);
+            }
+            if (isEnabled(REQUEST_BASIC_AUTH) && r.isUsingBasicAuth()) {
+                Map<String, String> data = new HashMap<>();
+                data.put("username", r.getBasicAuthData().getUsername());
+                data.put("password", CENSOR); // Don't even make 'password' a sensitive arg, just go right for it
+                logMap("basic-auth", data, new String[0]);
             }
         }
     }
@@ -197,6 +204,8 @@ public class HttpLogger {
         REQUEST_FORM_DATA,
         /** Headers sent to the server */
         REQUEST_HEADERS,
+        /** Basic Auth data, if applicable. Password will be censored. */
+        REQUEST_BASIC_AUTH,
 
         /** The entire response */
         RESPONSE,

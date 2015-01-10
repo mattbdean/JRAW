@@ -142,21 +142,14 @@ public abstract class RestClient<T extends RestResponse> implements HttpClient<T
     }
 
     @Override
-    public T executeWithBasicAuth(RestRequest request, String username, String password) throws NetworkException {
-        if (!request.getUrl().startsWith("https://")) {
-            throw new IllegalArgumentException("Credentials sent over basic auth must use HTTPS");
-        }
-        Authenticator prevAuthenticator = http.getAuthenticator();
-        // Create a BasicAuthenticator for this request
-        http.setAuthenticator(new BasicAuthenticator(username, password));
-        T response = execute(request);
-        // Reset the Authenticator
-        http.setAuthenticator(prevAuthenticator);
-        return response;
-    }
-
-    @Override
     public T execute(RestRequest request) throws NetworkException {
+        Authenticator prevAuthenticator = http.getAuthenticator();
+
+        if (request.isUsingBasicAuth()) {
+            BasicAuthData auth = request.getBasicAuthData();
+            http.setAuthenticator(new BasicAuthenticator(auth.getUsername(), auth.getPassword()));
+        }
+
         if (enforceRatelimit) {
             if (!rateLimiter.tryAcquire()) {
                 double time = rateLimiter.acquire();
@@ -191,6 +184,9 @@ public abstract class RestClient<T extends RestResponse> implements HttpClient<T
             return genericResponse;
         } catch (IOException e) {
             throw new NetworkException("Could not execute the request: " + r, e);
+        } finally {
+            // Reset the Authenticator
+            http.setAuthenticator(prevAuthenticator);
         }
     }
 
