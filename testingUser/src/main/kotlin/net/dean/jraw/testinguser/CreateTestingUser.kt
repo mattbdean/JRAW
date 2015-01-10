@@ -9,7 +9,6 @@ import java.math.BigInteger
 import java.util.Random
 import net.dean.jraw.http.Credentials
 import net.dean.jraw.managers.AccountManager
-import net.dean.jraw.AppType
 import java.io.File
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import net.dean.jraw.managers.MultiRedditManager
@@ -110,7 +109,7 @@ public class CreateTestingUser {
         val mgr = AccountManager(reddit)
         val url = "https://github.com/thatJavaNerd/JRAW"
         val name = "JRAW-testing-app"
-        mgr.createOrUpdateApp(null, name, AppType.SCRIPT, "Created to test OAuth2 features in JRAW", url, url)
+        mgr.createOrUpdateApp(null, name, net.dean.jraw.http.oauth.AppType.SCRIPT, "Created to test OAuth2 features in JRAW", url, url)
         println("Login with your new account and navigate to \"https://www.reddit.com/prefs/apps\"")
         println("Then find the client ID and secret of the '$name' app")
         println("See https://github.com/reddit/reddit/wiki/OAuth2#getting-started for help.")

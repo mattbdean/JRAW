@@ -1,6 +1,6 @@
 package net.dean.jraw.http;
 
-import net.dean.jraw.AppType;
+import net.dean.jraw.http.oauth.AppType;
 import net.dean.jraw.RedditClient;
 
 /**

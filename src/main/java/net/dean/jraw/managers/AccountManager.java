@@ -2,15 +2,13 @@ package net.dean.jraw.managers;
 
 import com.google.common.collect.ImmutableList;
 import net.dean.jraw.ApiException;
-import net.dean.jraw.AppType;
+import net.dean.jraw.http.oauth.AppType;
 import net.dean.jraw.EndpointImplementation;
 import net.dean.jraw.Endpoints;
 import net.dean.jraw.JrawUtils;
 import net.dean.jraw.RedditClient;
-import net.dean.jraw.http.AuthenticationMethod;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.RedditResponse;
-import net.dean.jraw.http.RestRequest;
 import net.dean.jraw.models.Captcha;
 import net.dean.jraw.models.Contribution;
 import net.dean.jraw.models.FlairTemplate;

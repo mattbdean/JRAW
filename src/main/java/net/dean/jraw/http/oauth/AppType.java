@@ -1,4 +1,4 @@
-package net.dean.jraw;
+package net.dean.jraw.http.oauth;
 
 /**
  * Represents the list of available Reddit OAuth2 apps

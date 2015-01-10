@@ -1,7 +1,7 @@
 package net.dean.jraw.test.auth;
 
 import net.dean.jraw.ApiException;
-import net.dean.jraw.AppType;
+import net.dean.jraw.http.oauth.AppType;
 import net.dean.jraw.JrawUtils;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.managers.AccountManager;
