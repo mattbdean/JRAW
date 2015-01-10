@@ -61,6 +61,9 @@ public abstract class JsonModel {
      */
     @SuppressWarnings("unchecked")
     public <T> T data(String name, Class<T> type) {
+        if (data == null)
+            throw new NullPointerException("No JSON associated with this model");
+
         // Make sure the key is actually there
         if (!data.has(name)) {
             return null;

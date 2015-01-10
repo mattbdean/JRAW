@@ -79,7 +79,7 @@ public class OAuthHelper implements NetworkAccessible<RedditResponse, RedditClie
 
         RestRequest r = new RestRequest.Builder()
                 .https(true)
-                .host(RedditClient.HOST_SPECIAL)
+                .host(RedditClient.HOST)
                 .path("/api/v1/authorize")
                 .expected(MediaTypes.HTML.type())
                 .query(JrawUtils.args(
@@ -147,7 +147,7 @@ public class OAuthHelper implements NetworkAccessible<RedditResponse, RedditClie
         try {
             RedditResponse response = reddit.executeWithBasicAuth(reddit.request()
                     .https(true)
-                    .host(RedditClient.HOST_SPECIAL)
+                    .host(RedditClient.HOST)
                     .path("/api/v1/access_token")
                     .post(JrawUtils.args(
                             "grant_type", "authorization_code",

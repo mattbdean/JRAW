@@ -36,13 +36,10 @@ public class RedditClient extends RestClient<RedditResponse> {
     /** The host that will be used to execute most HTTP(S) requests */
     public static final String HOST = "www.reddit.com";
 
-    /**
-     * The host that will be used to execute OAuth requests, with the exception of authorization, in which case
-     * {@link #HOST_SPECIAL} will be used
-     */
+    /** The host that will be used to execute OAuth requests */
     public static final String HOST_OAUTH = "oauth.reddit.com";
 
-    /** The host that will be used for logging in, OAuth authorizations, and preferences */
+    /** The host that will be used for OAuth authorizations, and preferences */
     public static final String HOST_SPECIAL = "ssl.reddit.com";
 
     /** The name of the header that will be assigned upon a successful standard login */
@@ -134,7 +131,6 @@ public class RedditClient extends RestClient<RedditResponse> {
     public LoggedInAccount login(Credentials credentials) throws NetworkException, ApiException {
         RestRequest request = request()
                 .https(true) // Always HTTPS
-                .host(HOST_SPECIAL)
                 .endpoint(Endpoints.LOGIN)
                 .post(JrawUtils.args(
                         "user", credentials.getUsername(),
@@ -201,7 +197,7 @@ public class RedditClient extends RestClient<RedditResponse> {
         }
         RedditResponse response = execute(request()
                 .https(true)
-                .host(HOST_SPECIAL)
+                .host(HOST)
                 .endpoint(Endpoints.REGISTER)
                 .post(args)
                 .sensitiveArgs("passwd", "passwd2")

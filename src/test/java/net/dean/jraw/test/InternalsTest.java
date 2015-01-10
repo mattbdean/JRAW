@@ -152,7 +152,7 @@ public class InternalsTest extends RedditTest {
         OAuthHelper helper = new OAuthHelper(reddit);
         RestRequest expected = new RestRequest.Builder()
                 .https(true)
-                .host(RedditClient.HOST_SPECIAL)
+                .host(RedditClient.HOST)
                 .path("/api/v1/authorize")
                 .query(
                         "client_id", "myClientId",
