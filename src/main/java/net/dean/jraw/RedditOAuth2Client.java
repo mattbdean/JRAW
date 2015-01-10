@@ -7,7 +7,7 @@ import net.dean.jraw.http.MediaTypes;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.RedditResponse;
 import net.dean.jraw.http.RestRequest;
-import net.dean.jraw.http.oauth.AuthData;
+import net.dean.jraw.http.oauth.OAuthData;
 import net.dean.jraw.http.oauth.OAuthHelper;
 import net.dean.jraw.models.AccountPreferences;
 import net.dean.jraw.models.Award;
@@ -28,7 +28,7 @@ import java.util.Map;
  */
 public class RedditOAuth2Client extends RedditClient {
     private static final String HEADER_AUTHORIZATION = "Authorization";
-    private AuthData authData;
+    private OAuthData authData;
     private OAuthHelper authHelper;
 
     /**
@@ -80,7 +80,7 @@ public class RedditOAuth2Client extends RedditClient {
      * @return The currently authenticated user
      * @throws NetworkException If the request to retrieve the authenticated user's data was not successful
      */
-    public LoggedInAccount onAuthorized(AuthData data, Credentials credentials) throws NetworkException {
+    public LoggedInAccount onAuthorized(OAuthData data, Credentials credentials) throws NetworkException {
         this.authData = data;
         defaultHeaders.put(HEADER_AUTHORIZATION, "bearer " + authData.getAccessToken());
 
@@ -156,7 +156,7 @@ public class RedditOAuth2Client extends RedditClient {
                         "refresh_token", authData.getRefreshToken()
                 )).basicAuth(creds.getClientId(), creds.getClientSecret())
                 .build());
-        this.authData = new AuthData(response.getJson());
+        this.authData = new OAuthData(response.getJson());
     }
 
     /**
@@ -299,7 +299,7 @@ public class RedditOAuth2Client extends RedditClient {
     /**
      * Gets the data that shows that this client has been authenticated
      */
-    public AuthData getAuthData() {
+    public OAuthData getAuthData() {
         return authData;
     }
 

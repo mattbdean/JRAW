@@ -10,14 +10,14 @@ import java.util.Date;
  * This class represents the data provided from a successful request to {@code /api/v1/access_token}. See
  * <a href="https://github.com/reddit/reddit/wiki/OAuth2#token-retrieval">here</a> for an example.
  */
-public class AuthData extends JsonModel {
+public class OAuthData extends JsonModel {
 
     /**
      * Instantiates a new AuthData
      *
      * @param dataNode The node to parse data from
      */
-    public AuthData(JsonNode dataNode) {
+    public OAuthData(JsonNode dataNode) {
         super(dataNode);
     }
 

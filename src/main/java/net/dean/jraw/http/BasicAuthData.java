@@ -1,8 +1,10 @@
 package net.dean.jraw.http;
 
+import net.dean.jraw.http.oauth.OAuthData;
+
 /**
  * Represents a username and password to be used when executing a request using HTTP Basic Authentication. Not to be
- * confused with {@link net.dean.jraw.http.oauth.AuthData}
+ * confused with {@link OAuthData}
  */
 public class BasicAuthData {
     private final String username;

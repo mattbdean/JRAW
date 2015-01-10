@@ -30,7 +30,7 @@ import java.util.Map;
  *     <li>Give this data as well as an instance of {@link Credentials} to
  *         {@link #onUserChallenge(String, String, Credentials)}. This method will parse the query arguments and report
  *         any errors. Once the request's integrity has been verified, a request to obtain the OAuth access code will be
- *         made and an instance of {@link AuthData} retrieved.
+ *         made and an instance of {@link OAuthData} retrieved.
  * </ol>
  * <p>
  *     Authentication is simpler when the app type is 'script', as this enables the bypassing of showing the initial
@@ -113,7 +113,7 @@ public class OAuthHelper implements NetworkAccessible<RedditResponse, RedditClie
      *                               match the value of the 'state' query parameter.
      * @return An AuthData that holds the new access token among other things
      */
-    public AuthData onUserChallenge(String finalUrl, String redirectUri, Credentials creds) throws NetworkException,
+    public OAuthData onUserChallenge(String finalUrl, String redirectUri, Credentials creds) throws NetworkException,
             OAuthException, IllegalStateException, MalformedURLException {
         if (!creds.getAuthenticationMethod().isOAuth2()) {
             throw new IllegalArgumentException("Credentials provided are not for an OAuth2 login.");
@@ -156,7 +156,7 @@ public class OAuthHelper implements NetworkAccessible<RedditResponse, RedditClie
                     ))
                     .basicAuth(creds.getClientId(), creds.getClientSecret())
                     .build());
-            return new AuthData(response.getJson());
+            return new OAuthData(response.getJson());
         } catch (NetworkException e) {
             if (e.getCode() == 401) {
                 throw new OAuthException("Invalid client ID/secret", e);
@@ -175,7 +175,7 @@ public class OAuthHelper implements NetworkAccessible<RedditResponse, RedditClie
      * @return The data returned from the authorization request
      * @throws NetworkException If the request was not successful
      */
-    public AuthData doScriptApp(Credentials credentials) throws NetworkException {
+    public OAuthData doScriptApp(Credentials credentials) throws NetworkException {
         if (credentials.getAuthenticationMethod() != AuthenticationMethod.SCRIPT) {
             throw new IllegalArgumentException("This method only authenticates 'script' apps");
         }
@@ -193,7 +193,7 @@ public class OAuthHelper implements NetworkAccessible<RedditResponse, RedditClie
                 .basicAuth(credentials.getClientId(), credentials.getClientSecret())
                 .build());
 
-        return new AuthData(response.getJson());
+        return new OAuthData(response.getJson());
     }
 
     @Override
