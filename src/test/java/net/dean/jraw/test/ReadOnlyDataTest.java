@@ -8,7 +8,6 @@ import net.dean.jraw.http.RedditResponse;
 import net.dean.jraw.http.RestRequest;
 import net.dean.jraw.models.Comment;
 import net.dean.jraw.models.CommentSort;
-import net.dean.jraw.models.CompactComment;
 import net.dean.jraw.models.Listing;
 import net.dean.jraw.models.LiveThread;
 import net.dean.jraw.models.More;
@@ -110,11 +109,11 @@ public class ReadOnlyDataTest extends RedditTest {
             More more = submission.getComments().getMoreChildren();
 
             // Top-comments in the "more" node at the end of the thread "id" should be the fullname of the submission
-            List<CompactComment> comments = reddit.getMoreChildren(submission, CommentSort.TOP, more);
+            List<Comment> comments = reddit.getMoreComments(submission, CommentSort.TOP, more);
 
-            for (CompactComment com : comments) {
+            for (Comment com : comments) {
                 validateModel(com);
-                validateRenderString(com.getContent());
+                validateRenderString(com.getBody());
             }
         } catch (NetworkException | ApiException e) {
             handle(e);

@@ -10,8 +10,8 @@ import net.dean.jraw.http.RestClient;
 import net.dean.jraw.http.RestRequest;
 import net.dean.jraw.models.Account;
 import net.dean.jraw.models.Captcha;
+import net.dean.jraw.models.Comment;
 import net.dean.jraw.models.CommentSort;
-import net.dean.jraw.models.CompactComment;
 import net.dean.jraw.models.LiveThread;
 import net.dean.jraw.models.LoggedInAccount;
 import net.dean.jraw.models.More;
@@ -545,7 +545,7 @@ public class RedditClient extends RestClient<RedditResponse> {
     }
 
     /**
-     * Retrieves more comments from the comment tree
+     * Retrieves more comments from the comment tree.
      *
      * @param submission The submission where the desired 'more' object is found
      * @param sort How to sort the returned comments
@@ -555,9 +555,9 @@ public class RedditClient extends RestClient<RedditResponse> {
      * @throws ApiException
      */
     @EndpointImplementation(Endpoints.MORECHILDREN)
-    public List<CompactComment> getMoreChildren(Submission submission, CommentSort sort, More more)
+    public List<Comment> getMoreComments(Submission submission, CommentSort sort, More more)
             throws NetworkException, ApiException {
-
+        // TODO: Map the comments into a tree
         List<String> moreIds = more.getChildrenIds();
         StringBuilder ids = new StringBuilder(moreIds.get(0));
         for (int i = 1; i < moreIds.size(); i++) {
@@ -565,9 +565,11 @@ public class RedditClient extends RestClient<RedditResponse> {
             ids.append(',').append(other);
         }
 
+        // POST with a body could be used instead of GET with a query to avoid an unnecessarily long URL, but Reddit
+        // seems to handle it fine.
         RedditResponse response = execute(request()
-                .endpoint(Endpoints.MORECHILDREN)
-                .post(JrawUtils.args(
+                .path(Endpoints.MORECHILDREN.getEndpoint().getUri() + ".json")
+                .query(JrawUtils.args(
                         "children", ids.toString(),
                         "link_id", submission.getFullName(),
                         "sort", sort.name().toLowerCase(),
@@ -578,9 +580,9 @@ public class RedditClient extends RestClient<RedditResponse> {
         }
 
         JsonNode things = response.getJson().get("json").get("data").get("things");
-        List<CompactComment> commentList = new ArrayList<>(things.size());
+        List<Comment> commentList = new ArrayList<>(things.size());
         for (JsonNode node : things) {
-            commentList.add(new CompactComment(node.get("data")));
+            commentList.add(new Comment(node.get("data")));
         }
 
         return commentList;
