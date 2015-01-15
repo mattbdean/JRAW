@@ -18,6 +18,8 @@ import net.dean.jraw.models.More;
 import net.dean.jraw.models.RenderStringPair;
 import net.dean.jraw.models.Submission;
 import net.dean.jraw.models.Subreddit;
+import net.dean.jraw.models.Thing;
+import net.dean.jraw.models.ThingType;
 import net.dean.jraw.paginators.Paginators;
 import net.dean.jraw.paginators.Sorting;
 import net.dean.jraw.paginators.SubredditPaginator;
@@ -545,7 +547,8 @@ public class RedditClient extends RestClient<RedditResponse> {
     }
 
     /**
-     * Retrieves more comments from the comment tree.
+     * Retrieves more comments from the comment tree. Note that the replies are flat, as they do not have a 'replies'
+     * key. The resulting list will also include More objects.
      *
      * @param submission The submission where the desired 'more' object is found
      * @param sort How to sort the returned comments
@@ -555,7 +558,7 @@ public class RedditClient extends RestClient<RedditResponse> {
      * @throws ApiException
      */
     @EndpointImplementation(Endpoints.MORECHILDREN)
-    public List<Comment> getMoreComments(Submission submission, CommentSort sort, More more)
+    public List<Thing> getMoreComments(Submission submission, CommentSort sort, More more)
             throws NetworkException, ApiException {
         // TODO: Map the comments into a tree
         List<String> moreIds = more.getChildrenIds();
@@ -580,9 +583,18 @@ public class RedditClient extends RestClient<RedditResponse> {
         }
 
         JsonNode things = response.getJson().get("json").get("data").get("things");
-        List<Comment> commentList = new ArrayList<>(things.size());
+        List<Thing> commentList = new ArrayList<>(things.size());
         for (JsonNode node : things) {
-            commentList.add(new Comment(node.get("data")));
+            String kind = node.get("kind").asText();
+            JsonNode data = node.get("data");
+            if (node.get("kind").asText().equals(ThingType.COMMENT.getPrefix())) {
+                commentList.add(new Comment(data));
+            } else if (node.get("kind").asText().equals(ThingType.MORE.getPrefix())) {
+                commentList.add(new More(data));
+            } else {
+                throw new IllegalArgumentException(String.format("Illegal data type: %s. Expecting %s or %s",
+                        kind, ThingType.COMMENT.getPrefix(), ThingType.MORE.getPrefix()));
+            }
         }
 
         return commentList;

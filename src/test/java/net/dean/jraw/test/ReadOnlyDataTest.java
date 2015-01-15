@@ -13,6 +13,7 @@ import net.dean.jraw.models.LiveThread;
 import net.dean.jraw.models.More;
 import net.dean.jraw.models.Submission;
 import net.dean.jraw.models.Subreddit;
+import net.dean.jraw.models.Thing;
 import net.dean.jraw.paginators.Paginators;
 import net.dean.jraw.paginators.SubredditPaginator;
 import org.testng.Assert;
@@ -109,11 +110,10 @@ public class ReadOnlyDataTest extends RedditTest {
             More more = submission.getComments().getMoreChildren();
 
             // Top-comments in the "more" node at the end of the thread "id" should be the fullname of the submission
-            List<Comment> comments = reddit.getMoreComments(submission, CommentSort.TOP, more);
+            List<Thing> comments = reddit.getMoreComments(submission, CommentSort.TOP, more);
 
-            for (Comment com : comments) {
-                validateModel(com);
-                validateRenderString(com.getBody());
+            for (Thing t : comments) {
+                validateModel(t);
             }
         } catch (NetworkException | ApiException e) {
             handle(e);
