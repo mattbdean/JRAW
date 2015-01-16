@@ -14,8 +14,11 @@ public interface Votable extends JsonAttribute {
      * Gets the amount of upvotes the object has received
      *
      * @return The amount of upvotes the object has received
+     * @deprecated With recent changes in Reddit, this will always be equivalent to {@link #getScore()}. See
+     *             <a href="https://github.com/reddit/reddit/commit/8c9ad4e">this commit</a> for more information.
      */
     @JsonProperty
+    @Deprecated
     public Integer getUpvotes();
 
     /**
@@ -23,14 +26,14 @@ public interface Votable extends JsonAttribute {
      *
      * @return The amount of downvotes the post has received
      * @deprecated With recent changes in Reddit, this will always return 0. See
-     * <a href="https://github.com/reddit/reddit/commit/8c9ad4e">this commit</a> for more information.
+     *             <a href="https://github.com/reddit/reddit/commit/8c9ad4e">this commit</a> for more information.
      */
     @JsonProperty
     @Deprecated
     public Integer getDownvotes();
 
     /**
-     * The net score of the link (upvotes minus downvotes)
+     * The net score of this Votable model
      *
      * @return The link's net score
      */
@@ -39,8 +42,9 @@ public interface Votable extends JsonAttribute {
 
 
     /**
-     * Gets the way in which the logged in user voted. If there is none, this method will always return
-     * {@link net.dean.jraw.models.VoteDirection#NO_VOTE}.
+     * Gets the way in which the logged in user voted. If there is none,
+     * {@link net.dean.jraw.models.VoteDirection#NO_VOTE} will be returned.
+     *
      * @return The way in which the logged in user voted
      */
     @JsonProperty
