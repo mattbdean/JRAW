@@ -67,7 +67,7 @@ public class AccountManagerTest extends AuthenticatedRedditTest {
                     new AccountManager.SubmissionBuilder(content, "jraw_testing2", "Self post test (epoch=" + number + ")"));
 
             assertTrue(submission.isSelfPost());
-            assertTrue(submission.getSelftext().md().equals(content));
+            assertTrue(submission.getSelftext().equals(content));
             validateModel(submission);
         } catch (NetworkException e) {
             handle(e);

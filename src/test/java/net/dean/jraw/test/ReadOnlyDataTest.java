@@ -25,6 +25,7 @@ import java.net.URL;
 import java.util.List;
 
 import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
 /**
@@ -167,7 +168,7 @@ public class ReadOnlyDataTest extends RedditTest {
     @Test
     public void testSubmitText() {
         try {
-            validateRenderString(reddit.getSubmitText("videos"));
+            assertNotNull(reddit.getSubmitText("videos"));
         } catch (NetworkException e) {
             handle(e);
         }

@@ -176,8 +176,8 @@ public class Submission extends PublicContribution {
      * @return The raw text of the self post
      */
     @JsonProperty
-    public RenderStringPair getSelftext() {
-        return data("selftext", RenderStringPair.class);
+    public String getSelftext() {
+        return data("selftext");
     }
 
     /**

@@ -9,7 +9,6 @@ import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.RedditResponse;
 import net.dean.jraw.http.RestRequest;
 import net.dean.jraw.models.MultiReddit;
-import net.dean.jraw.models.RenderStringPair;
 import org.codehaus.jackson.JsonNode;
 
 import java.util.ArrayList;
@@ -211,7 +210,7 @@ public class MultiRedditManager extends AbstractManager {
      * @throws NetworkException If the request was not successful
      */
     @EndpointImplementation(Endpoints.MULTI_MULTIPATH_DESCRIPTION_PUT)
-    public RenderStringPair updateDescription(String multiName, String newDescription) throws NetworkException {
+    public String updateDescription(String multiName, String newDescription) throws NetworkException {
         RestRequest request = request()
                 .endpoint(Endpoints.MULTI_MULTIPATH_DESCRIPTION_PUT, getMultiPath(multiName).substring(1))
                 .put(JrawUtils.args(
@@ -221,7 +220,7 @@ public class MultiRedditManager extends AbstractManager {
         RedditResponse response = execute(request);
         JsonNode dataNode = response.getJson().get("data");
 
-        return new RenderStringPair(dataNode.get("body_md").asText(), dataNode.get("body_html").asText());
+        return dataNode.get("body_md").asText();
     }
 
     /**
@@ -285,7 +284,7 @@ public class MultiRedditManager extends AbstractManager {
      * @throws ApiException If the Reddit API returned an error
      */
     @EndpointImplementation(Endpoints.MULTI_MULTIPATH_DESCRIPTION_GET)
-    public RenderStringPair getDescription(String multiName) throws NetworkException, ApiException {
+    public String getDescription(String multiName) throws NetworkException, ApiException {
         return getDescription(reddit.getAuthenticatedUser(), multiName);
     }
 
@@ -299,7 +298,7 @@ public class MultiRedditManager extends AbstractManager {
      * @throws ApiException If the Reddit API returned an error
      */
     @EndpointImplementation(Endpoints.MULTI_MULTIPATH_DESCRIPTION_GET)
-    public RenderStringPair getDescription(String owner, String multiName) throws NetworkException, ApiException {
+    public String getDescription(String owner, String multiName) throws NetworkException, ApiException {
         JsonNode node = execute(request()
                 .endpoint(Endpoints.MULTI_MULTIPATH_DESCRIPTION_GET, getMultiPath(owner, multiName).substring(1))
                 .needsAuth(!owner.equals(reddit.getAuthenticatedUser()))
@@ -307,7 +306,7 @@ public class MultiRedditManager extends AbstractManager {
 
         checkForError(node);
         node = node.get("data");
-        return new RenderStringPair(node.get("body_md").asText(), node.get("body_html").asText());
+        return node.get("body_md").asText();
     }
 
     /**

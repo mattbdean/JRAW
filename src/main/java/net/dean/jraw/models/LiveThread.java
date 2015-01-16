@@ -26,8 +26,8 @@ public class LiveThread extends RedditObject implements Created {
      * @return The thread's description
      */
     @JsonProperty
-    public RenderStringPair getDescription() {
-        return data("description", RenderStringPair.class);
+    public String getDescription() {
+        return data("description");
     }
 
     /**

@@ -7,7 +7,6 @@ import net.dean.jraw.Version;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.models.JsonModel;
 import net.dean.jraw.models.meta.JsonProperty;
-import net.dean.jraw.models.RenderStringPair;
 import org.testng.Assert;
 import org.testng.SkipException;
 
@@ -73,12 +72,6 @@ public abstract class RedditTest {
         } else {
             Assert.fail(e.getMessage());
         }
-    }
-
-    protected final void validateRenderString(RenderStringPair strings) {
-        Assert.assertNotNull(strings);
-        Assert.assertNotNull(strings.md());
-        Assert.assertNotNull(strings.html());
     }
 
     protected String getCallingMethod() {

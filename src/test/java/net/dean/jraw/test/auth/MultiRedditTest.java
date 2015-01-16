@@ -5,7 +5,6 @@ import net.dean.jraw.JrawUtils;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.managers.MultiRedditManager;
 import net.dean.jraw.models.MultiReddit;
-import net.dean.jraw.models.RenderStringPair;
 import net.dean.jraw.test.SetupRequiredException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -59,7 +58,7 @@ public class MultiRedditTest extends AuthenticatedRedditTest {
     @Test
     public void testGetDescription() {
         try {
-            validateRenderString(manager.getDescription(manager.mine().get(0).getFullName()));
+            assertNotNull(manager.getDescription(manager.mine().get(0).getFullName()));
         } catch (NetworkException | ApiException e) {
             handle(e);
         }
@@ -71,12 +70,12 @@ public class MultiRedditTest extends AuthenticatedRedditTest {
         String desc2 = "desc2";
 
         try {
-            RenderStringPair before = manager.getDescription(MULTI_NAME);
-            String expected = before.md().equals(desc1) ? desc2 : desc1;
+            String before = manager.getDescription(MULTI_NAME);
+            String expected = before.equals(desc1) ? desc2 : desc1;
 
             manager.updateDescription(MULTI_NAME, expected);
 
-            assertEquals(manager.getDescription(MULTI_NAME).md(), expected);
+            assertEquals(manager.getDescription(MULTI_NAME), expected);
         } catch (NetworkException | ApiException e) {
             handle(e);
         }

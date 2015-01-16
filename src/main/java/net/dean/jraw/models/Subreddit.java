@@ -46,8 +46,8 @@ public class Subreddit extends Thing {
      * @return The subreddit's description
      */
     @JsonProperty
-    public RenderStringPair getSidebar() {
-        return data("description", RenderStringPair.class);
+    public String getSidebar() {
+        return data("description");
     }
 
     /**

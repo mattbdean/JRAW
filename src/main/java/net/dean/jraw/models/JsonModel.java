@@ -49,9 +49,8 @@ public abstract class JsonModel {
      * Integer, Long, Float, or String, then it returns one of those objects using {@code JsonNode.asX()}. If the class
      * is URI or URL, a new URL or URI (respectively) is returned. If class is {@link java.util.Date}, then the
      * JsonNode's value is assumed to be long representing unix epoch seconds. The value is multiplied by 1000 since the
-     * value is assumed to be in seconds) and then passed to {@link Date#Date(long)}. If the class is
-     * {@link net.dean.jraw.models.RenderStringPair}, then the JSON field for the HTML is assumed to be the name with
-     * "_html" appended to the given name. If any other class is passed, then String is assumed.
+     * value is assumed to be in seconds) and then passed to {@link Date#Date(long)}. If any other class is given, then
+     * java.lang.String is assumed.
      *
      * @param name The key to look up in the JSON node.
      * @param type The wanted return value. Supported values are any class representing a primitive data type, such as
@@ -103,8 +102,6 @@ public abstract class JsonModel {
         } else if (type.equals(Date.class)) {
             long seconds = node.asLong();
             returnVal = (T) new Date(seconds * 1000);
-        } else if (type.equals(RenderStringPair.class)) {
-            return (T) new RenderStringPair(data(name), data(name + "_html"));
         } else if (type.equals(String.class)) {
             returnVal = (T) String.valueOf(node.asText());
         } else {

@@ -15,7 +15,6 @@ import net.dean.jraw.models.CommentSort;
 import net.dean.jraw.models.LiveThread;
 import net.dean.jraw.models.LoggedInAccount;
 import net.dean.jraw.models.More;
-import net.dean.jraw.models.RenderStringPair;
 import net.dean.jraw.models.Submission;
 import net.dean.jraw.models.Subreddit;
 import net.dean.jraw.models.Thing;
@@ -428,13 +427,13 @@ public class RedditClient extends RestClient<RedditResponse> {
      * @throws NetworkException If the request was not successful
      */
     @EndpointImplementation(Endpoints.SUBMIT_TEXT)
-    public RenderStringPair getSubmitText(String subreddit) throws NetworkException {
+    public String getSubmitText(String subreddit) throws NetworkException {
         String path = JrawUtils.getSubredditPath(subreddit, "/api/submit_text.json");
 
         JsonNode node = execute(request()
                 .path(path)
                 .build()).getJson();
-        return new RenderStringPair(node.get("submit_text").asText(), node.get("submit_text_html").asText());
+        return node.get("submit_text").asText();
     }
 
     /**

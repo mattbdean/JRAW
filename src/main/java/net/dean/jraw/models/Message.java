@@ -23,8 +23,8 @@ public abstract class Message extends Contribution implements Distinguishable {
     }
 
     @JsonProperty
-    public RenderStringPair getBody() {
-        return data("body", RenderStringPair.class);
+    public String getBody() {
+        return data("body");
     }
 
     /**

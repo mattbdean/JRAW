@@ -80,8 +80,8 @@ public class Comment extends PublicContribution {
      * @return The body of the comment
      */
     @JsonProperty
-    public RenderStringPair getBody() {
-        return data("body", RenderStringPair.class);
+    public String getBody() {
+        return data("body");
     }
 
     /**

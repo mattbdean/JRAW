@@ -14,7 +14,6 @@ import net.dean.jraw.models.Flair;
 import net.dean.jraw.models.JsonModel;
 import net.dean.jraw.models.Listing;
 import net.dean.jraw.models.More;
-import net.dean.jraw.models.RenderStringPair;
 import net.dean.jraw.models.Submission;
 import net.dean.jraw.models.meta.JsonProperty;
 import net.dean.jraw.paginators.Paginators;
@@ -80,13 +79,6 @@ public class InternalsTest extends RedditTest {
         for (CodeBlock e : codeBlocks) {
             assertNotNull(getException(e));
         }
-    }
-
-    @Test
-    public void testRenderString() {
-        RenderStringPair string = new RenderStringPair("md", "html");
-        RenderStringPair string2 = new RenderStringPair("md", "html");
-        basicObjectTest(string, string2);
     }
 
     @Test

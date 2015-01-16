@@ -46,8 +46,8 @@ public class WikiPage extends RedditObject {
      * @return The content
      */
     @JsonProperty
-    public RenderStringPair getContent() {
-        return new RenderStringPair(data("content_md"), data("content_html"));
+    public String getContent() {
+        return data("content_md");
     }
 
     /**

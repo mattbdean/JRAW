@@ -27,8 +27,8 @@ public class LiveUpdate extends Thing implements Created {
      * @return The body
      */
     @JsonProperty
-    public RenderStringPair getBody() {
-        return data("body", RenderStringPair.class);
+    public String getBody() {
+        return data("body");
     }
 
     /**
