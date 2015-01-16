@@ -3,7 +3,8 @@ package net.dean.jraw.test.auth;
 import net.dean.jraw.ApiException;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.managers.InboxManager;
-import net.dean.jraw.models.Message;
+import net.dean.jraw.models.Contribution;
+import net.dean.jraw.models.PrivateMessage;
 import net.dean.jraw.paginators.InboxPaginator;
 import net.dean.jraw.paginators.Paginators;
 import org.testng.annotations.Test;
@@ -20,9 +21,12 @@ public class InboxManagerTest extends AuthenticatedRedditTest {
         try {
             InboxPaginator paginator = Paginators.inbox(reddit, "messages");
 
-            Message m1 = paginator.next().get(0);
-            boolean expected = !m1.isRead();
-            inbox.setRead(m1, expected);
+            Contribution m1 = paginator.next().get(0);
+            if (m1 instanceof PrivateMessage) {
+                PrivateMessage m = (PrivateMessage) m1;
+                boolean expected = !m.isRead();
+                inbox.setRead(m, expected);
+            }
         } catch (NetworkException e) {
             handle(e);
         } catch (IllegalStateException e) {

@@ -1,6 +1,8 @@
 package net.dean.jraw.models;
 
 import net.dean.jraw.models.attr.Created;
+import net.dean.jraw.models.meta.JsonProperty;
+import net.dean.jraw.models.meta.Model;
 import org.codehaus.jackson.JsonNode;
 
 import java.util.Date;
@@ -8,6 +10,7 @@ import java.util.Date;
 /**
  * Represents an administrative action from a moderator of a subreddit
  */
+@Model(kind = Model.Kind.MOD_ACTION)
 public class ModAction extends Thing implements Created {
     /**
      * Instantiates a new ModAction
@@ -98,11 +101,6 @@ public class ModAction extends Thing implements Created {
     @JsonProperty
     public String getSubredditId() {
         return data("sr_id36");
-    }
-
-    @Override
-    public ThingType getType() {
-        return ThingType.MODACTION;
     }
 
     @Override

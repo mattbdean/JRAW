@@ -1,5 +1,7 @@
 package net.dean.jraw.models;
 
+import net.dean.jraw.models.meta.JsonProperty;
+import net.dean.jraw.models.meta.Model;
 import org.codehaus.jackson.JsonNode;
 
 import java.util.ArrayList;
@@ -10,6 +12,7 @@ import java.util.List;
  * This class represents a small bit of data relevant to moderation logs such as banned users, accepted contributors,
  * and moderators. Also used when using friends and blocked users.
  */
+@Model(kind = Model.Kind.NONE)
 public class UserRecord extends Thing {
 
     /**
@@ -62,13 +65,6 @@ public class UserRecord extends Thing {
     @JsonProperty(nullable = true)
     public String getNote() {
         return data("note");
-    }
-
-    @Override
-    public ThingType getType() {
-        // This class has no explicit type (at least as specified by a JSON response), but it needs (at a minimum) to
-        // extend Thing so it can be a valid generic parameter in Paginator
-        return null;
     }
 
     /**

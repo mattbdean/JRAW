@@ -1,13 +1,13 @@
 package net.dean.jraw.models;
 
 import net.dean.jraw.models.attr.Distinguishable;
+import net.dean.jraw.models.meta.JsonProperty;
+import net.dean.jraw.models.meta.MessageSerializer;
+import net.dean.jraw.models.meta.Model;
 import org.codehaus.jackson.JsonNode;
 
-/**
- * This class represents a private message sent from one user to another
- */
-public class Message extends Contribution implements Distinguishable {
-
+@Model(kind = Model.Kind.ABSTRACT, serializer = MessageSerializer.class)
+public abstract class Message extends Contribution implements Distinguishable {
     /**
      * Instantiates a new Thing
      *
@@ -36,46 +36,13 @@ public class Message extends Contribution implements Distinguishable {
         return data("first_message_name");
     }
 
-     /**
-     * If this message represents a comment, then this method will return the way in which the logged in user voted.
-     * If this message represents a private message, then this method will always return null.
-     * @return The way in which the logged in user voted
-     */
-    @JsonProperty(nullable = true)
-    public VoteDirection getVote() {
-        // If "was_comment" == false then "likes" will not exist
-        if (!isComment()) {
-            return null;
-        }
-
-        JsonNode likes = getDataNode().get("likes");
-        if (likes.isNull()) {
-            return VoteDirection.NO_VOTE;
-        }
-
-        return likes.getBooleanValue() ? VoteDirection.UPVOTE : VoteDirection.DOWNVOTE;
-    }
-
-    /**
-     * Gets the title of the link this comment was posted in, or null if this message represents a private message
-     * @return The parent link's title
-     */
-    @JsonProperty
-    public String getLinkTitle() {
-        if (!isComment()) {
-            return null;
-        }
-
-        return data("link_title");
-    }
-
     /**
      * Checks if this message is unread
      * @return If this message is unread
      */
     @JsonProperty
     public Boolean isRead() {
-        return !data("new", Boolean.class);
+        return data.has("new") && !data("new", Boolean.class);
     }
 
     /**
@@ -107,17 +74,13 @@ public class Message extends Contribution implements Distinguishable {
     }
 
     /**
-     * Checks if this message is a comment
+     * Checks if this message is a comment. If true, then one may assume that this Message is an instance of
+     * {@link CommentMessage}.
      * @return True if this message is a comment, false if it is a private message
      */
     @JsonProperty
     public Boolean isComment() {
         return data("was_comment", Boolean.class);
-    }
-
-    @Override
-    public ThingType getType() {
-        return ThingType.MESSAGE;
     }
 
     @Override

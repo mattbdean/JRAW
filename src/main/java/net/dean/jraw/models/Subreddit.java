@@ -1,12 +1,14 @@
 package net.dean.jraw.models;
 
 import net.dean.jraw.Dimension;
-
+import net.dean.jraw.models.meta.JsonProperty;
+import net.dean.jraw.models.meta.Model;
 import org.codehaus.jackson.JsonNode;
 
 /**
  * This class represents a Subreddit such as /r/pics.
  */
+@Model(kind = Model.Kind.SUBREDDIT)
 public class Subreddit extends Thing {
 
     /**
@@ -20,6 +22,7 @@ public class Subreddit extends Thing {
 
     /**
      * Gets the amount of users active in the last 15 minutes
+     *
      * @return The number of active users
      */
     @JsonProperty
@@ -29,6 +32,7 @@ public class Subreddit extends Thing {
 
     /**
      * Gets the number of minutes the subreddit initially hides comment scores
+     *
      * @return The number of minutes the subreddit initially hides comment scores
      */
     @JsonProperty
@@ -38,6 +42,7 @@ public class Subreddit extends Thing {
 
     /**
      * Gets the subreddit's description
+     *
      * @return The subreddit's description
      */
     @JsonProperty
@@ -47,6 +52,7 @@ public class Subreddit extends Thing {
 
     /**
      * Gets the "human" name of the subreddit (ex: "pics")
+     *
      * @return The subreddit's name
      */
     @JsonProperty
@@ -56,6 +62,7 @@ public class Subreddit extends Thing {
 
     /**
      * Gets the full URL to the header image, or null if one is not present.
+     *
      * @return The full URL to the header image
      */
     @JsonProperty(nullable = true)
@@ -65,6 +72,7 @@ public class Subreddit extends Thing {
 
     /**
      * Gets the dimensions of the header image, or null if the header does not exist
+     *
      * @return The dimensions of the header image
      */
     @JsonProperty(nullable = true)
@@ -79,6 +87,7 @@ public class Subreddit extends Thing {
     /**
      * Gets the description of the header image shown when the cursor has hovered over it, or null if a header image is
      * not present
+     *
      * @return The header image's description
      */
     @JsonProperty(nullable = true)
@@ -88,6 +97,7 @@ public class Subreddit extends Thing {
 
     /**
      * Checks if this subreddit is not safe for work
+     *
      * @return If this subreddit is NSFW
      */
     @JsonProperty
@@ -97,6 +107,7 @@ public class Subreddit extends Thing {
 
     /**
      * Gets the public description show in the subreddit search results
+     *
      * @return The public description
      */
     @JsonProperty
@@ -106,6 +117,7 @@ public class Subreddit extends Thing {
 
     /**
      * Checks if the subreddit's traffic page is publicly accessible
+     *
      * @return If the subreddit's traffic page is publicly accessible
      */
     @JsonProperty
@@ -115,6 +127,7 @@ public class Subreddit extends Thing {
 
     /**
      * Gets the amount of users subscribed to this subreddit
+     *
      * @return The amount of users subscribed to this subreddit
      */
     @JsonProperty
@@ -124,6 +137,7 @@ public class Subreddit extends Thing {
 
     /**
      * Gets the types of submissions allowed to be posted on this subreddit
+     *
      * @return If this subreddit allows self posts
      */
     @JsonProperty
@@ -137,6 +151,7 @@ public class Subreddit extends Thing {
 
     /**
      * Gets the subreddit's custom label for the "submit link" button, if any
+     *
      * @return The subreddit's custom label for the "submit link" button
      */
     @JsonProperty
@@ -146,6 +161,7 @@ public class Subreddit extends Thing {
 
     /**
      * Gets the subreddit's custom label for the "submit text" button, if any
+     *
      * @return The subreddit's custom label for the "submit link" button
      */
     @JsonProperty
@@ -155,6 +171,7 @@ public class Subreddit extends Thing {
 
     /**
      * Gets this subreddit's type
+     *
      * @return This subreddit's type
      */
     @JsonProperty
@@ -164,6 +181,7 @@ public class Subreddit extends Thing {
 
     /**
      * Gets the title of the main page
+     *
      * @return The title of the main page
      */
     @JsonProperty
@@ -173,6 +191,7 @@ public class Subreddit extends Thing {
 
     /**
      * Gets the relative URL of the subreddit (ex: "/r/pics")
+     *
      * @return The relative URL of the subreddit
      */
     @JsonProperty
@@ -182,6 +201,7 @@ public class Subreddit extends Thing {
 
     /**
      * Checks if the logged-in-user is banned from this subreddit
+     *
      * @return If the logged-in-user is banned form this subreddit
      */
     @JsonProperty
@@ -191,6 +211,7 @@ public class Subreddit extends Thing {
 
     /**
      * Checks if the logged-in-user contributes to this subreddit
+     *
      * @return If the logged-in-user contributes to this subreddit
      */
     @JsonProperty
@@ -200,6 +221,7 @@ public class Subreddit extends Thing {
 
     /**
      * Checks if the logged-in-user is a moderator of this subreddit
+     *
      * @return If the logged-in-user is a moderator of this subreddit
      */
     @JsonProperty
@@ -209,6 +231,7 @@ public class Subreddit extends Thing {
 
     /**
      * Checks if the logged-in-user is subscribed to this subreddit
+     *
      * @return If the logged-in-user is subscribed to this subreddit
      */
     @JsonProperty
@@ -220,13 +243,21 @@ public class Subreddit extends Thing {
      * This class represents a list of all the available subreddit types
      */
     public static enum Type {
-        /** Open to all users */
+        /**
+         * Open to all users
+         */
         PUBLIC,
-        /** only approved members can view and submit */
+        /**
+         * only approved members can view and submit
+         */
         PRIVATE,
-        /** Anyone can view, but only some are approved to submit links */
+        /**
+         * Anyone can view, but only some are approved to submit links
+         */
         RESTRICTED,
-        /** Only users with Reddit gold can post */
+        /**
+         * Only users with Reddit gold can post
+         */
         GOLD_RESTRICTED,
         ARCHIVED
     }
@@ -235,18 +266,21 @@ public class Subreddit extends Thing {
      * A list of how a subreddit can restrict the type of submissions that can be posted
      */
     public static enum SubmissionType {
-        /** Links and self posts */
+        /**
+         * Links and self posts
+         */
         ANY,
-        /** Only links */
+        /**
+         * Only links
+         */
         LINK,
-        /** Only self posts */
+        /**
+         * Only self posts
+         */
         SELF,
-        /** Restricted subreddit */
+        /**
+         * Restricted subreddit
+         */
         NONE
-    }
-
-    @Override
-    public ThingType getType() {
-        return ThingType.SUBREDDIT;
     }
 }

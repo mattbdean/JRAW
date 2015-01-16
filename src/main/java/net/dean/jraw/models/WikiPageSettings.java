@@ -1,5 +1,7 @@
 package net.dean.jraw.models;
 
+import net.dean.jraw.models.meta.JsonProperty;
+import net.dean.jraw.models.meta.Model;
 import org.codehaus.jackson.JsonNode;
 
 import java.util.ArrayList;
@@ -8,6 +10,7 @@ import java.util.List;
 /**
  * Represents the settings of a wiki page
  */
+@Model(kind = Model.Kind.WIKI_PAGE_SETTINGS)
 public class WikiPageSettings extends RedditObject {
 
     /**
@@ -21,6 +24,7 @@ public class WikiPageSettings extends RedditObject {
 
     /**
      * Get the approved editors of this wiki page.
+     *
      * @return The approved editors
      */
     @JsonProperty
@@ -36,6 +40,7 @@ public class WikiPageSettings extends RedditObject {
 
     /**
      * Checks if this wiki page is shown in the index of pages
+     *
      * @return If this page is listed
      */
     @JsonProperty
@@ -53,10 +58,5 @@ public class WikiPageSettings extends RedditObject {
     @JsonProperty
     public Integer getPermLevel() {
         return data("permlevel", Integer.class);
-    }
-
-    @Override
-    public ThingType getType() {
-        return ThingType.WIKI_PAGE_SETTINGS;
     }
 }

@@ -19,7 +19,7 @@ import net.dean.jraw.models.RenderStringPair;
 import net.dean.jraw.models.Submission;
 import net.dean.jraw.models.Subreddit;
 import net.dean.jraw.models.Thing;
-import net.dean.jraw.models.ThingType;
+import net.dean.jraw.models.meta.Model;
 import net.dean.jraw.paginators.Paginators;
 import net.dean.jraw.paginators.Sorting;
 import net.dean.jraw.paginators.SubredditPaginator;
@@ -587,13 +587,13 @@ public class RedditClient extends RestClient<RedditResponse> {
         for (JsonNode node : things) {
             String kind = node.get("kind").asText();
             JsonNode data = node.get("data");
-            if (node.get("kind").asText().equals(ThingType.COMMENT.getPrefix())) {
+            if (node.get("kind").asText().equals(Model.Kind.COMMENT.getValue())) {
                 commentList.add(new Comment(data));
-            } else if (node.get("kind").asText().equals(ThingType.MORE.getPrefix())) {
+            } else if (node.get("kind").asText().equals(Model.Kind.MORE.getValue())) {
                 commentList.add(new More(data));
             } else {
                 throw new IllegalArgumentException(String.format("Illegal data type: %s. Expecting %s or %s",
-                        kind, ThingType.COMMENT.getPrefix(), ThingType.MORE.getPrefix()));
+                        kind, Model.Kind.COMMENT, Model.Kind.MORE));
             }
         }
 

@@ -1,7 +1,7 @@
 package net.dean.jraw.models.attr;
 
 import net.dean.jraw.models.DistinguishedStatus;
-import net.dean.jraw.models.JsonProperty;
+import net.dean.jraw.models.meta.JsonProperty;
 
 /**
  * Indicates this Thing was posted by a redditor of elevated role in the website, such as an administrator or moderator.

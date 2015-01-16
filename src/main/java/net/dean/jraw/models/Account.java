@@ -1,6 +1,8 @@
 package net.dean.jraw.models;
 
 import net.dean.jraw.models.attr.Created;
+import net.dean.jraw.models.meta.JsonProperty;
+import net.dean.jraw.models.meta.Model;
 import org.codehaus.jackson.JsonNode;
 
 import java.util.Date;
@@ -10,6 +12,7 @@ import java.util.Date;
  *
  * @author Matthew Dean
  */
+@Model(kind = Model.Kind.ACCOUNT)
 public class Account extends Thing implements Created {
     /**
      * Instantiates a new Account
@@ -73,12 +76,6 @@ public class Account extends Thing implements Created {
         return data("over_18", Boolean.class);
     }
 
-    @Override
-    public ThingType getType() {
-        return ThingType.ACCOUNT;
-    }
-
-    @Override
     public Date getCreated() {
         return _getCreated();
     }

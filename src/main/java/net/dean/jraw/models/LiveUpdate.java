@@ -2,6 +2,8 @@ package net.dean.jraw.models;
 
 import com.google.common.collect.ImmutableList;
 import net.dean.jraw.models.attr.Created;
+import net.dean.jraw.models.meta.JsonProperty;
+import net.dean.jraw.models.meta.Model;
 import org.codehaus.jackson.JsonNode;
 
 import java.util.Date;
@@ -9,6 +11,7 @@ import java.util.Date;
 /**
  * Represents an update in a live thread
  */
+@Model(kind = Model.Kind.LIVE_UPDATE)
 public class LiveUpdate extends Thing implements Created {
     /**
      * Instantiates a new LiveUpdate
@@ -50,11 +53,6 @@ public class LiveUpdate extends Thing implements Created {
             builder.add(new Embed(embedNode));
         }
         return builder.build();
-    }
-
-    @Override
-    public ThingType getType() {
-        return ThingType.LIVE_UPDATE;
     }
 
     @Override

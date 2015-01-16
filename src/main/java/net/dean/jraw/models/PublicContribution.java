@@ -3,6 +3,9 @@ package net.dean.jraw.models;
 import net.dean.jraw.models.attr.Distinguishable;
 import net.dean.jraw.models.attr.Gildable;
 import net.dean.jraw.models.attr.Votable;
+import net.dean.jraw.models.meta.ContributionSerializer;
+import net.dean.jraw.models.meta.JsonProperty;
+import net.dean.jraw.models.meta.Model;
 import org.codehaus.jackson.JsonNode;
 
 import java.util.HashMap;
@@ -11,6 +14,7 @@ import java.util.Map;
 /**
  * This class is used to separate public contributions (submissions and comments) from private contributions (messages)
  */
+@Model(kind = Model.Kind.ABSTRACT, serializer = ContributionSerializer.class)
 public abstract class PublicContribution extends Contribution implements Distinguishable, Gildable, Votable {
     /**
      * Instantiates a new PublicContribution

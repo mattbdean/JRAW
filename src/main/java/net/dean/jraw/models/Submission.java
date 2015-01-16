@@ -1,15 +1,17 @@
 package net.dean.jraw.models;
 
-import net.dean.jraw.JrawUtils;
+import net.dean.jraw.models.meta.JsonProperty;
+import net.dean.jraw.models.meta.Model;
+import net.dean.jraw.models.meta.SubmissionSerializer;
 import org.codehaus.jackson.JsonNode;
 
-import java.net.URL;
 import java.util.Date;
 
 /**
  * Represents content that the user has submitted, whether that be a self post or a link. More information can be found
  * <a href="https://github.com/reddit/reddit/wiki/JSON#link-implements-votable--created">here</a>.
  */
+@Model(kind = Model.Kind.LINK, serializer = SubmissionSerializer.class, validate = false)
 public class Submission extends PublicContribution {
     /**
      * The comments that belong to this link
@@ -34,11 +36,6 @@ public class Submission extends PublicContribution {
     public Submission(JsonNode dataNode, Listing<Comment> comments) {
         super(dataNode);
         this.comments = comments;
-    }
-
-    @Override
-    public ThingType getType() {
-        return ThingType.LINK;
     }
 
     /**

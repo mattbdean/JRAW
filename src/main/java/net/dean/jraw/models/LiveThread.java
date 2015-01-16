@@ -1,6 +1,8 @@
 package net.dean.jraw.models;
 
 import net.dean.jraw.models.attr.Created;
+import net.dean.jraw.models.meta.JsonProperty;
+import net.dean.jraw.models.meta.Model;
 import org.codehaus.jackson.JsonNode;
 
 import java.util.Date;
@@ -8,6 +10,7 @@ import java.util.Date;
 /**
  * Represents a live thread. See <a href="https://www.reddit.com/r/live/wiki/index">here</a> for more information.
  */
+@Model(kind = Model.Kind.LIVE_THREAD)
 public class LiveThread extends RedditObject implements Created {
     /**
      * Instantiates a new LiveEvent
@@ -88,11 +91,6 @@ public class LiveThread extends RedditObject implements Created {
     @JsonProperty
     public String getResources() {
         return data("resources");
-    }
-
-    @Override
-    public ThingType getType() {
-        return ThingType.LIVE_THREAD;
     }
 
     @Override

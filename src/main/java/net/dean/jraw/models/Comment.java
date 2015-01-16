@@ -1,5 +1,7 @@
 package net.dean.jraw.models;
 
+import net.dean.jraw.models.meta.JsonProperty;
+import net.dean.jraw.models.meta.Model;
 import org.codehaus.jackson.JsonNode;
 
 import java.util.Date;
@@ -9,6 +11,7 @@ import java.util.Date;
  *
  * @author Matthew Dean
  */
+@Model(kind = Model.Kind.COMMENT)
 public class Comment extends PublicContribution {
 
     /**
@@ -22,6 +25,7 @@ public class Comment extends PublicContribution {
 
     /**
      * Gets who approved this comment, nor null if the logged in user is not a moderator
+     *
      * @return Who approved this comment
      */
     @JsonProperty(nullable = true)
@@ -31,6 +35,7 @@ public class Comment extends PublicContribution {
 
     /**
      * Gets the name of the account that posted this comment
+     *
      * @return The name the account that posted this comment
      */
     @JsonProperty
@@ -40,6 +45,7 @@ public class Comment extends PublicContribution {
 
     /**
      * Gets the author's flair. Subreddit specific.
+     *
      * @return The subreddit-specific flair of the author
      */
     @JsonProperty
@@ -50,15 +56,17 @@ public class Comment extends PublicContribution {
 
     /**
      * If the comment is controversial (has a large number of both upvotes and downvotes)
+     *
      * @return If the comment is controversial
      */
     @JsonProperty
     public Boolean isControversial() {
-        return data("controversiality", Integer.class) == 1;
+        return data.has("controversiality") && data("controversiality", Integer.class) == 1;
     }
 
     /**
      * Who removed this comment, or null if you are not a mod
+     *
      * @return Who removed this comment
      */
     @JsonProperty(nullable = true)
@@ -68,6 +76,7 @@ public class Comment extends PublicContribution {
 
     /**
      * Gets the body of the comment
+     *
      * @return The body of the comment
      */
     @JsonProperty
@@ -77,12 +86,17 @@ public class Comment extends PublicContribution {
 
     /**
      * The edit date in UTC, or null if it has not been edited. Note that the Reddit API will return a boolean value
-     * for some old edited comments, in which this method will return null.
+     * for some old edited comments, in which this method will return null. If this comment was retrieved via the inbox,
+     * this will also return null.
      *
      * @return The edit date in UTC, or null if it has not been edited
      */
-    @JsonProperty
+    @JsonProperty(nullable = true)
     public Date getEditedDate() {
+        if (!data.has("edited")) {
+            return null;
+        }
+
         JsonNode edited = data.get("edited");
         if (edited.isBoolean()) {
             // API returns true for some old comments
@@ -119,6 +133,7 @@ public class Comment extends PublicContribution {
 
     /**
      * Gets the author of the parent link
+     *
      * @return The author of the parent link, or null if this comment is not being displayed outside of its own thread
      */
     @JsonProperty(nullable = true)
@@ -128,6 +143,7 @@ public class Comment extends PublicContribution {
 
     /**
      * Gets the comments made in reply to this one
+     *
      * @return The comments made in reply to this one
      */
     @JsonProperty(nullable = true)
@@ -142,6 +158,7 @@ public class Comment extends PublicContribution {
 
     /**
      * Gets the ID of the submission this comment is located in
+     *
      * @return The ID of the submission this comment is located in
      */
     @JsonProperty
@@ -151,6 +168,7 @@ public class Comment extends PublicContribution {
 
     /**
      * The title of the parent link, or null if this comment is not being displayed outside of its own thread
+     *
      * @return The title of the parent link
      */
     @JsonProperty(nullable = true)
@@ -160,6 +178,7 @@ public class Comment extends PublicContribution {
 
     /**
      * The author of the parent submission
+     *
      * @return The author of the parent submission, or null if this comment is not being displayed outside of its own
      * thread
      */
@@ -170,6 +189,7 @@ public class Comment extends PublicContribution {
 
     /**
      * The amount of times this comment has been reported
+     *
      * @return The amount of times this comment has been reported, or null if not a mod
      */
     @JsonProperty(nullable = true)
@@ -179,6 +199,7 @@ public class Comment extends PublicContribution {
 
     /**
      * The ID of the comment or submission this comment is replying to
+     *
      * @return The ID of the comment or submission this comment is replying to
      */
     @JsonProperty
@@ -188,6 +209,7 @@ public class Comment extends PublicContribution {
 
     /**
      * True if this post is saved by the logged in user, otherwise false
+     *
      * @return True if this post is saved by the logged in user, otherwise false
      */
     @JsonProperty
@@ -197,6 +219,7 @@ public class Comment extends PublicContribution {
 
     /**
      * Whether the comment's score is currently hidden
+     *
      * @return True if the comment's score is hidden, false if not
      */
     @JsonProperty
@@ -206,6 +229,7 @@ public class Comment extends PublicContribution {
 
     /**
      * The subreddit the comment was posted in, excluding the "/r/" prefix (ex: "pics")
+     *
      * @return The name of the subreddit the comment was posted in
      */
     @JsonProperty
@@ -215,15 +239,11 @@ public class Comment extends PublicContribution {
 
     /**
      * The ID of the subreddit in which this comment was posted in
+     *
      * @return The ID of the subreddit in which this comment was posted in
      */
     @JsonProperty
     public String getSubredditId() {
         return data("subreddit_id");
-    }
-
-    @Override
-    public ThingType getType() {
-        return ThingType.COMMENT;
     }
 }

@@ -1,7 +1,9 @@
 package net.dean.jraw.models;
 
 import com.google.common.collect.ImmutableList;
-import net.dean.jraw.JrawUtils;
+import net.dean.jraw.models.meta.JsonProperty;
+import net.dean.jraw.models.meta.Model;
+import net.dean.jraw.models.meta.ModelManager;
 import org.codehaus.jackson.JsonNode;
 
 import java.util.Collection;
@@ -18,6 +20,7 @@ import java.util.ListIterator;
  * @author Matthew Dean
  */
 @SuppressWarnings("deprecation")
+@Model(kind = Model.Kind.LISTING)
 public class Listing<T extends RedditObject> extends RedditObject implements List<T> {
 
     private final Class<T> thingClass;
@@ -44,7 +47,7 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
         // children is a JSON array
         for (JsonNode childNode : data.get("children")) {
             if (!childNode.get("kind").getTextValue().equalsIgnoreCase("more")) {
-                children.add(JrawUtils.parseJson(childNode, thingClass));
+                children.add(ModelManager.create(childNode, thingClass));
             }
         }
 
@@ -100,11 +103,6 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
     @JsonProperty
     public String getModhash() {
         return data("modhash");
-    }
-
-    @Override
-    public ThingType getType() {
-        return ThingType.LISTING;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package net.dean.jraw.models;
 
 import net.dean.jraw.JrawUtils;
+import net.dean.jraw.models.meta.JsonProperty;
 import org.codehaus.jackson.JsonNode;
 
 import java.lang.reflect.InvocationTargetException;

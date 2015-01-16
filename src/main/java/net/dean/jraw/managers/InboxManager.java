@@ -7,7 +7,7 @@ import net.dean.jraw.JrawUtils;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.RedditResponse;
-import net.dean.jraw.models.Message;
+import net.dean.jraw.models.PrivateMessage;
 
 /**
  * This class is responsible for managing a user's inbox
@@ -34,7 +34,7 @@ public class InboxManager extends AbstractManager {
             Endpoints.READ_MESSAGE,
             Endpoints.UNREAD_MESSAGE
     })
-    public void setRead(Message m, boolean read) throws NetworkException {
+    public void setRead(PrivateMessage m, boolean read) throws NetworkException {
         execute(request()
                 .endpoint(read ? Endpoints.READ_MESSAGE : Endpoints.UNREAD_MESSAGE)
                 .post(JrawUtils.args("id", m.getFullName()))

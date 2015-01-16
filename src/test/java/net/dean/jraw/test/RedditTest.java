@@ -6,7 +6,7 @@ import net.dean.jraw.RedditClient;
 import net.dean.jraw.Version;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.models.JsonModel;
-import net.dean.jraw.models.JsonProperty;
+import net.dean.jraw.models.meta.JsonProperty;
 import net.dean.jraw.models.RenderStringPair;
 import org.testng.Assert;
 import org.testng.SkipException;

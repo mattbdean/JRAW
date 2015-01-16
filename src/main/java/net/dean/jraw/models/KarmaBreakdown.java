@@ -1,6 +1,8 @@
 package net.dean.jraw.models;
 
 import com.google.common.collect.ImmutableList;
+import net.dean.jraw.models.meta.JsonProperty;
+import net.dean.jraw.models.meta.Model;
 import org.codehaus.jackson.JsonNode;
 
 import java.util.List;
@@ -8,6 +10,7 @@ import java.util.List;
 /**
  * Represents a breakdown of link and comment karma by subreddit. Only accessible with OAuth2
  */
+@Model(kind = Model.Kind.KARMA_BREAKDOWN)
 public class KarmaBreakdown extends RedditObject {
     /**
      * Instantiates a new KarmaBreakdown
@@ -29,11 +32,6 @@ public class KarmaBreakdown extends RedditObject {
         }
 
         return list.build();
-    }
-
-    @Override
-    public ThingType getType() {
-        return ThingType.KARMA_LIST;
     }
 
     /**

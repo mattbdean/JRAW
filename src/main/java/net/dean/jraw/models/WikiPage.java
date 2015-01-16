@@ -1,5 +1,7 @@
 package net.dean.jraw.models;
 
+import net.dean.jraw.models.meta.JsonProperty;
+import net.dean.jraw.models.meta.Model;
 import org.codehaus.jackson.JsonNode;
 
 import java.util.Date;
@@ -7,6 +9,7 @@ import java.util.Date;
 /**
  * Represents a wiki page. See <a href="http://www.reddit.com/wiki/wiki">here</a> for some basic information
  */
+@Model(kind = Model.Kind.WIKI_PAGE)
 public class WikiPage extends RedditObject {
     /**
      * Instantiates a new WikiPage
@@ -19,6 +22,7 @@ public class WikiPage extends RedditObject {
 
     /**
      * Checks if the current user can edit this page
+     *
      * @return If the current user can edit this page
      */
     @JsonProperty
@@ -28,6 +32,7 @@ public class WikiPage extends RedditObject {
 
     /**
      * Gets the date of last revision (or creation?)
+     *
      * @return The date of last revision
      */
     @JsonProperty
@@ -37,6 +42,7 @@ public class WikiPage extends RedditObject {
 
     /**
      * Gets the content of this page
+     *
      * @return The content
      */
     @JsonProperty
@@ -46,6 +52,7 @@ public class WikiPage extends RedditObject {
 
     /**
      * Gets the person who last revised this page
+     *
      * @return The person ({@link Account}) who last revised this page
      */
     @JsonProperty(nullable = true)
@@ -54,10 +61,5 @@ public class WikiPage extends RedditObject {
             return null;
         }
         return new Account(data.get("revision_by").get("data"));
-    }
-
-    @Override
-    public ThingType getType() {
-        return ThingType.WIKI_PAGE;
     }
 }

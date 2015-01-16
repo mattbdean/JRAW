@@ -1,10 +1,13 @@
 package net.dean.jraw.models;
 
+import net.dean.jraw.models.meta.JsonProperty;
+import net.dean.jraw.models.meta.Model;
 import org.codehaus.jackson.JsonNode;
 
 /**
  * Represents an award
  */
+@Model(kind = Model.Kind.AWARD)
 public class Award extends Thing {
     /**
      * Instantiates a new Trophy
@@ -53,10 +56,5 @@ public class Award extends Thing {
     @JsonProperty
     public String getAboutUrl() {
         return data("url");
-    }
-
-    @Override
-    public ThingType getType() {
-        return ThingType.AWARD;
     }
 }

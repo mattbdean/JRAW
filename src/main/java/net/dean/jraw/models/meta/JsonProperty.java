@@ -1,4 +1,4 @@
-package net.dean.jraw.models;
+package net.dean.jraw.models.meta;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

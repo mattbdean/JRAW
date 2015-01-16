@@ -12,12 +12,11 @@ import net.dean.jraw.models.Captcha;
 import net.dean.jraw.models.DistinguishedStatus;
 import net.dean.jraw.models.Flair;
 import net.dean.jraw.models.JsonModel;
-import net.dean.jraw.models.JsonProperty;
 import net.dean.jraw.models.Listing;
 import net.dean.jraw.models.More;
 import net.dean.jraw.models.RenderStringPair;
 import net.dean.jraw.models.Submission;
-import net.dean.jraw.models.ThingType;
+import net.dean.jraw.models.meta.JsonProperty;
 import net.dean.jraw.paginators.Paginators;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -176,11 +175,6 @@ public class InternalsTest extends RedditTest {
             }
             assertEquals(pair.getValue(), actual.getQuery().get(pair.getKey()));
         }
-    }
-
-    @Test
-    public void testThingTypeNull() {
-        assertNull(ThingType.getByPrefix(null));
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)

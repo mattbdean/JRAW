@@ -3,10 +3,10 @@ package net.dean.jraw.http;
 import com.squareup.okhttp.Response;
 import net.dean.jraw.ApiException;
 import net.dean.jraw.JrawUtils;
-import net.dean.jraw.models.RedditObject;
-import net.dean.jraw.models.Comment;
+import net.dean.jraw.models.JsonModel;
 import net.dean.jraw.models.Listing;
-import net.dean.jraw.models.Submission;
+import net.dean.jraw.models.RedditObject;
+import net.dean.jraw.models.meta.ModelManager;
 import org.codehaus.jackson.JsonNode;
 
 /**
@@ -48,32 +48,10 @@ public class RedditResponse extends RestResponse {
         this.apiExceptions = errors;
     }
 
-    /**
-     * This method is a convenience method for turning the JsonNode associated with this data into a RedditObject. Make
-     * sure that the appropriate class is used. No exception will be thrown if the "wrong" class is used, but you will
-     * receive many NullPointerExceptions down the road when trying to use getter methods that rely on the JSON data.
-     *
-     * @param thingClass The class that will be used to instantiate the RedditObject
-     * @param <T> The type of object to be created
-     * @return A new generic RedditObject
-     */
+    /** Convenience method to call {@link ModelManager#create(JsonNode, Class)} */
     @SuppressWarnings("unchecked")
-    public <T extends RedditObject> T as(Class<T> thingClass) {
-        if (thingClass.equals(Submission.class)) {
-            // Special handling for submissions, not just submission data being returned, also its comments.
-            // For example: http://www.reddit.com/92dd8.json
-
-            // rootNode is an array where the first is a listing which contains one element in its "children": the submission.
-            // The second element in the array is a listing of comments
-
-            // Get the list of comments first
-            JsonNode commentListingDataNode = rootNode.get(1).get("data");
-            Listing<Comment> comments = new Listing<>(commentListingDataNode, Comment.class);
-            return (T) new Submission(rootNode.get(0).get("data").get("children").get(0).get("data"), comments);
-        }
-
-        // Normal Thing
-        return JrawUtils.parseJson(rootNode, thingClass);
+    public <T extends JsonModel> T as(Class<T> thingClass) {
+        return ModelManager.create(rootNode, thingClass);
     }
 
     /**

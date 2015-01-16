@@ -20,15 +20,6 @@ public abstract class RedditObject extends JsonModel {
     }
 
     /**
-     * Gets the type of this RedditObject. Will always be constant for every class. For example, every
-     * {@link Account} class will always return {@link net.dean.jraw.models.ThingType#ACCOUNT}.
-     *
-     * @return The type of this Thing
-     */
-    @JsonProperty
-    public abstract ThingType getType();
-
-    /**
      * Gets the date this object was created in local time
      * @return Date created in local time
      */
@@ -57,6 +48,9 @@ public abstract class RedditObject extends JsonModel {
     }
 
     protected final Integer _getTimesGilded() {
+        if (!getDataNode().has("gilded")) {
+            return 0;
+        }
         return getDataNode().get("gilded").asInt();
     }
 

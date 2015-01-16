@@ -1,13 +1,16 @@
 package net.dean.jraw.models;
 
 import net.dean.jraw.models.attr.Created;
+import net.dean.jraw.models.meta.ContributionSerializer;
+import net.dean.jraw.models.meta.Model;
 import org.codehaus.jackson.JsonNode;
 
 import java.util.Date;
 
 /**
- * This class provides a way to wrap {@link Submission}, {@link Comment}, and {@link Message} together.
+ * This class provides a way to wrap {@link Submission}, {@link Comment}, and {@link PrivateMessage} together.
  */
+@Model(kind = Model.Kind.ABSTRACT, serializer = ContributionSerializer.class)
 public abstract class Contribution extends Thing implements Created {
 
     /**

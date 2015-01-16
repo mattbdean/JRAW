@@ -1,5 +1,7 @@
 package net.dean.jraw.models;
 
+import net.dean.jraw.models.meta.JsonProperty;
+import net.dean.jraw.models.meta.Model;
 import org.codehaus.jackson.JsonNode;
 
 import java.util.ArrayList;
@@ -10,6 +12,7 @@ import java.util.List;
  * is most commonly found as the last element of a Listing in the JSON response.
  * See <a href="https://github.com/reddit/reddit/wiki/JSON#more">here</a> for more information.
  */
+@Model(kind = Model.Kind.MORE)
 public class More extends Thing {
 
     /**
@@ -19,11 +22,6 @@ public class More extends Thing {
      */
     public More(JsonNode dataNode) {
         super(dataNode);
-    }
-
-    @Override
-    public ThingType getType() {
-        return ThingType.MORE;
     }
 
     /**

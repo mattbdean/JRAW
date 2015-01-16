@@ -1,7 +1,7 @@
 package net.dean.jraw.http.oauth;
 
 import net.dean.jraw.models.JsonModel;
-import net.dean.jraw.models.JsonProperty;
+import net.dean.jraw.models.meta.JsonProperty;
 import org.codehaus.jackson.JsonNode;
 
 import java.util.Date;

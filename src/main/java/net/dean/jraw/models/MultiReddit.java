@@ -1,6 +1,8 @@
 package net.dean.jraw.models;
 
 import net.dean.jraw.models.attr.Created;
+import net.dean.jraw.models.meta.JsonProperty;
+import net.dean.jraw.models.meta.Model;
 import org.codehaus.jackson.JsonNode;
 
 import java.util.ArrayList;
@@ -10,6 +12,7 @@ import java.util.List;
 /**
  * Represents a collection of subreddits. See <a href="http://www.reddit.com/r/multihub">here</a> for some examples.
  */
+@Model(kind = Model.Kind.MULTIREDDIT)
 public class MultiReddit extends Thing implements Created {
 
     /**
@@ -19,11 +22,6 @@ public class MultiReddit extends Thing implements Created {
      */
     public MultiReddit(JsonNode dataNode) {
         super(dataNode);
-    }
-
-    @Override
-    public ThingType getType() {
-        return ThingType.MULTI;
     }
 
     /**

@@ -1,23 +1,12 @@
 package net.dean.jraw;
 
 import com.squareup.okhttp.MediaType;
-import net.dean.jraw.models.Comment;
-import net.dean.jraw.models.Contribution;
-import net.dean.jraw.models.Message;
-import net.dean.jraw.models.PublicContribution;
-import net.dean.jraw.models.RedditObject;
-import net.dean.jraw.models.Submission;
-import net.dean.jraw.models.ThingType;
-import net.dean.jraw.paginators.MultiHubPaginator;
-import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -131,57 +120,6 @@ public final class JrawUtils {
             throw new IllegalArgumentException("Name must be at least three characters");
         }
         return name.matches("t[1-6|8]_[a-zA-Z].*");
-    }
-
-    /**
-     * Parses a JsonNode into a RedditObject
-     *
-     * @param rootNode   The root node of the Thing. Should only contain two elements: "kind", and "data".
-     * @param thingClass The type of Thing this JsonNode should be turned into
-     * @param <T>        The return type
-     * @return A new RedditObject
-     */
-    @SuppressWarnings("unchecked")
-    public static <T extends RedditObject> T parseJson(JsonNode rootNode, Class<T> thingClass) {
-        if (thingClass.equals(Contribution.class)) {
-            switch (ThingType.getByPrefix(rootNode.get("kind").asText())) {
-                case LINK:
-                    return (T) new Submission(rootNode.get("data"));
-                case COMMENT:
-                    return (T) new Comment(rootNode.get("data"));
-                case MESSAGE:
-                    return (T) new Message(rootNode.get("data"));
-                default:
-                    throw new IllegalArgumentException("Class " + thingClass.getName() +
-                            " is not applicable for Contribution");
-            }
-        } else if (thingClass.equals(MultiHubPaginator.MultiRedditId.class)) {
-            return (T) new MultiHubPaginator.MultiRedditId(rootNode.get("owner").asText(),
-                    rootNode.get("name").asText());
-        } else if (thingClass.equals(PublicContribution.class)) {
-            switch (ThingType.getByPrefix(rootNode.get("kind").asText())) {
-                case LINK:
-                    return (T) new Submission(rootNode.get("data"));
-                case COMMENT:
-                    return (T) new Comment(rootNode.get("data"));
-                default:
-                    throw new IllegalArgumentException("Class " + thingClass.getName() +
-                            " is not applicable for Contribution");
-            }
-        }
-        try {
-            // Instantiate a generic Thing
-            Constructor<T> constructor = thingClass.getConstructor(JsonNode.class);
-            return constructor.newInstance(rootNode.get("data"));
-        } catch (NoSuchMethodException |
-                InstantiationException |
-                IllegalAccessException |
-                InvocationTargetException e) {
-            // Holy exceptions Batman!
-            logger().error("Could not create the Thing ({})", thingClass.getName(), e);
-        }
-
-        return null;
     }
 
     /**

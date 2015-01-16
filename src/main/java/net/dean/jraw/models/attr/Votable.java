@@ -1,6 +1,6 @@
 package net.dean.jraw.models.attr;
 
-import net.dean.jraw.models.JsonProperty;
+import net.dean.jraw.models.meta.JsonProperty;
 import net.dean.jraw.models.VoteDirection;
 
 /**
