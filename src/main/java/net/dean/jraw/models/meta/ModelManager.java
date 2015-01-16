@@ -85,10 +85,12 @@ public class ModelManager {
 
     /**
      * Validates that the given JsonNode can be applied to the given class. If the value of {@link Model#kind()} does
-     * not match the value of
+     * not match the value of the "kind" node, then an IllegalArgumentException is thrown.
      *
      * @param rootNode The root node of the JSON model. Must contain two children: "kind" and "data".
      * @param expectedClass The class to use as validation.
+     * @throws IllegalArgumentException If the root node does not have a "kind" node or if the expected value for that
+     *                                  node was not found.
      */
     public void validate(JsonNode rootNode, Class<?> expectedClass) {
         Model type = getModel(expectedClass);
