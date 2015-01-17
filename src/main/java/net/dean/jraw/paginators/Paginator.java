@@ -148,10 +148,16 @@ public abstract class Paginator<T extends Thing> implements Iterator<Listing<T>>
         if (maxPages <= 0) {
             throw new IllegalArgumentException("maxPages must be greater than 0");
         }
+        int prevLimit = limit;
+        limit = RECOMMENDED_MAX_LIMIT;
 
         List<Listing<T>> listings = new ArrayList<>(maxPages);
-        while (hasNext() && getPageIndex() < maxPages) {
-            listings.add(getListing(true));
+        try {
+            while (hasNext() && getPageIndex() < maxPages) {
+                listings.add(getListing(true));
+            }
+        } finally {
+            limit = prevLimit;
         }
 
         return listings;
@@ -167,16 +173,14 @@ public abstract class Paginator<T extends Thing> implements Iterator<Listing<T>>
      * @throws NetworkException If any request was not successful
      */
     public final List<T> accumulateMerged(int maxPages) throws NetworkException {
-        if (maxPages <= 0) {
-            throw new IllegalArgumentException("maxPages must be greater than 0");
+        List<Listing<T>> listings = accumulate(maxPages);
+        List<T> flattened = new ArrayList<>();
+
+        for (Listing<T> listing : listings) {
+            flattened.addAll(listing);
         }
 
-        List<T> models = new ArrayList<>(maxPages * Math.min(limit, RECOMMENDED_MAX_LIMIT));
-        while (hasNext() && getPageIndex() < maxPages) {
-            models.addAll(next());
-        }
-
-        return models;
+        return flattened;
     }
 
     @Override
