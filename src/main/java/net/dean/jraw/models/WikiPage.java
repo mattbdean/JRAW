@@ -56,7 +56,7 @@ public class WikiPage extends RedditObject {
      * @return The person ({@link Account}) who last revised this page
      */
     @JsonProperty(nullable = true)
-    public Account getRevisionBy() {
+    public Account getCurrentRevisionAuthor() {
         if (data.get("revision_by").isNull()) {
             return null;
         }
