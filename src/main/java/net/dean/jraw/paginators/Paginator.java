@@ -142,29 +142,41 @@ public abstract class Paginator<T extends Thing> implements Iterator<Listing<T>>
      *
      * @param maxPages The maximum amount of pages to retrieve
      * @return A list of listings
-     * @throws NetworkException If the request was not successful
+     * @throws NetworkException If any request was not successful
      */
     public final List<Listing<T>> accumulate(int maxPages) throws NetworkException {
-        List<Listing<T>> listings = new ArrayList<>();
         if (maxPages <= 0) {
-            throw new IllegalArgumentException("Pages must be greater than 0");
+            throw new IllegalArgumentException("maxPages must be greater than 0");
         }
 
-        try {
-            while (hasNext() && getPageIndex() < maxPages) {
-                listings.add(next());
-            }
-        } catch (IllegalStateException e) {
-            // Most likely cause will be a NetworkException because next() throws a NetworkException as a cause of an
-            // IllegalStateException
-            if (e.getCause().getClass().equals(NetworkException.class)) {
-                throw (NetworkException) e.getCause();
-            } else {
-                throw e;
-            }
+        List<Listing<T>> listings = new ArrayList<>(maxPages);
+        while (hasNext() && getPageIndex() < maxPages) {
+            listings.add(getListing(true));
         }
 
         return listings;
+    }
+
+    /**
+     * Creates a list of Things whose size is less than or equal to
+     * {@code maxPages * Math.min(limit, RECOMMENDED_MAX_LIMIT)}. The amount of time this method takes to return will
+     * grow linearly based on the value of {@code maxPages}.
+     *
+     * @param maxPages The maximum amount of pages to retrive
+     * @return A list of Things
+     * @throws NetworkException If any request was not successful
+     */
+    public final List<T> accumulateMerged(int maxPages) throws NetworkException {
+        if (maxPages <= 0) {
+            throw new IllegalArgumentException("maxPages must be greater than 0");
+        }
+
+        List<T> models = new ArrayList<>(maxPages * Math.min(limit, RECOMMENDED_MAX_LIMIT));
+        while (hasNext() && getPageIndex() < maxPages) {
+            models.addAll(next());
+        }
+
+        return models;
     }
 
     @Override

@@ -271,6 +271,19 @@ public class PaginationTest extends AuthenticatedRedditTest {
     }
 
     @Test
+    public void testAcummulateMerged() {
+        Paginator<Submission> p = Paginators.frontPage(reddit);
+        try {
+            List<Submission> things = p.accumulateMerged(3);
+            for (Submission s : things) {
+                validateModel(s);
+            }
+        } catch (NetworkException e) {
+            handle(e);
+        }
+    }
+
+    @Test
     public void testModLog() {
         ModLogPaginator paginator = Paginators.modlog(reddit, getModeratedSubreddit().getDisplayName());
         commonTest(paginator);
