@@ -1,5 +1,6 @@
 package net.dean.jraw.models;
 
+import net.dean.jraw.managers.ThingManager;
 import net.dean.jraw.models.meta.JsonProperty;
 import org.codehaus.jackson.JsonNode;
 
@@ -12,12 +13,13 @@ import org.codehaus.jackson.JsonNode;
 public abstract class Thing extends RedditObject {
 
     /**
-     * Instantiates a new Thing
+     * Instantiates and registers a new Thing
      *
      * @param dataNode The node to parse data from
      */
     public Thing(JsonNode dataNode) {
         super(dataNode);
+        ThingManager.get().addThing(this);
     }
 
     /**
