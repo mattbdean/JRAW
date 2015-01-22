@@ -33,14 +33,21 @@ public class ThingManager {
     private HashMap<String, WeakReference<Thing>> thingMap = new HashMap<>();
 
     /**
-     * Add a Thing to the map if the map is enabled.
+     * Add a Thing to the map if the map is enabled,
+     * and the thing has a full name.
      *
      * @param thing The thing to add
+     * @return whether the Thing was added
      */
-    public void addThing(Thing thing) {
+    public boolean addThing(Thing thing) {
         if (this.isEnabled()) {
-            this.thingMap.put(thing.getFullName(), new WeakReference<>(thing));
+            if (thing.getDataNode() != null
+                    && thing.getDataNode().has("name")) {
+                this.thingMap.put(thing.getFullName(), new WeakReference<>(thing));
+                return true;
+            }
         }
+        return false;
     }
 
     /**
