@@ -87,7 +87,7 @@ public class ThingManager {
     /**
      * Check if ThingManager is updated.
      *
-     * @return
+     * @return Whether ThingManager is enabled
      */
     public boolean isEnabled() {
         return isEnabled;
@@ -96,7 +96,7 @@ public class ThingManager {
     /**
      * Enable or disable the updating of ThingMap.
      *
-     * @param isEnabled
+     * @param isEnabled Enable or disable ThingMap
      */
     public void setEnabled(boolean isEnabled) {
         this.isEnabled = isEnabled;
