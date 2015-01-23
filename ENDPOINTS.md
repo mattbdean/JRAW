@@ -1,4 +1,4 @@
-<!--- Generated 2015-01-10 at 00:02:53 EST. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
+<!--- Generated 2015-01-23 at 14:17:52 EST. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
 #Endpoints
 
 This file contains a list of all the endpoints (regardless of if they have been implemented) that can be found at the [official Reddit API docs](https://www.reddit.com/dev/api). To update this file, run `./gradlew endpoints:update`.
@@ -161,8 +161,8 @@ Method|Endpoint|Implemented?
 `POST`|[`/api/read_all_messages`](https://www.reddit.com/dev/api/oauth#POST_api_read_all_messages)|No
 `POST`|[`/api/unblock_subreddit`](https://www.reddit.com/dev/api/oauth#POST_api_unblock_subreddit)|No
 `POST`|[`/api/compose`](https://www.reddit.com/dev/api/oauth#POST_api_compose)|[`InboxManager.compose(String, String, String, String)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/managers/InboxManager#compose(java.lang.String, java.lang.String, java.lang.String, java.lang.String))
-`POST`|[`/api/read_message`](https://www.reddit.com/dev/api/oauth#POST_api_read_message)|[`InboxManager.setRead(Message, boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/managers/InboxManager#setRead(net.dean.jraw.models.Message, boolean))
-`POST`|[`/api/unread_message`](https://www.reddit.com/dev/api/oauth#POST_api_unread_message)|[`InboxManager.setRead(Message, boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/managers/InboxManager#setRead(net.dean.jraw.models.Message, boolean))
+`POST`|[`/api/read_message`](https://www.reddit.com/dev/api/oauth#POST_api_read_message)|[`InboxManager.setRead(PrivateMessage, boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/managers/InboxManager#setRead(net.dean.jraw.models.PrivateMessage, boolean))
+`POST`|[`/api/unread_message`](https://www.reddit.com/dev/api/oauth#POST_api_unread_message)|[`InboxManager.setRead(PrivateMessage, boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/managers/InboxManager#setRead(net.dean.jraw.models.PrivateMessage, boolean))
 `GET`|[`/message/inbox`](https://www.reddit.com/dev/api/oauth#GET_message_inbox)|[`InboxPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/paginators/InboxPaginator#getListing(boolean))
 `GET`|[`/message/sent`](https://www.reddit.com/dev/api/oauth#GET_message_sent)|[`InboxPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/paginators/InboxPaginator#getListing(boolean))
 `GET`|[`/message/unread`](https://www.reddit.com/dev/api/oauth#GET_message_unread)|[`InboxPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/paginators/InboxPaginator#getListing(boolean))
@@ -189,7 +189,7 @@ Method|Endpoint|Implemented?
 `GET`|[`/about/wikicontributors`](https://www.reddit.com/dev/api/oauth#GET_about_wikicontributors)|[`UserRecordPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/paginators/UserRecordPaginator#getListing(boolean))
 `GET`|[`/about/{location}`](https://www.reddit.com/dev/api/oauth#GET_about_%7Blocation%7D)|[`ModeratorPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/paginators/ModeratorPaginator#getListing(boolean))
 `GET`|[`/about/{where}`](https://www.reddit.com/dev/api/oauth#GET_about_%7Bwhere%7D)|[`UserRecordPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/paginators/UserRecordPaginator#getListing(boolean))
-`POST`|[`/api/morechildren`](https://www.reddit.com/dev/api/oauth#POST_api_morechildren)|[`RedditClient.getMoreChildren(Submission, CommentSort, More)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/RedditClient#getMoreChildren(net.dean.jraw.models.Submission, net.dean.jraw.models.CommentSort, net.dean.jraw.models.More))
+`POST`|[`/api/morechildren`](https://www.reddit.com/dev/api/oauth#POST_api_morechildren)|[`RedditClient.getMoreThings(Submission, CommentSort, More)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/RedditClient#getMoreThings(net.dean.jraw.models.Submission, net.dean.jraw.models.CommentSort, net.dean.jraw.models.More))
 `GET`|[`/api/multi/mine`](https://www.reddit.com/dev/api/oauth#GET_api_multi_mine)|[`MultiRedditManager.mine()`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/managers/MultiRedditManager#mine())
 `GET`|[`/api/multi/{multipath}`](https://www.reddit.com/dev/api/oauth#GET_api_multi_%7Bmultipath%7D)|[`MultiRedditManager.get(String, String)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/managers/MultiRedditManager#get(java.lang.String, java.lang.String))
 `GET`|[`/api/multi/{multipath}/description`](https://www.reddit.com/dev/api/oauth#GET_api_multi_%7Bmultipath%7D_description)|[`MultiRedditManager.getDescription(String, String)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/managers/MultiRedditManager#getDescription(java.lang.String, java.lang.String))
