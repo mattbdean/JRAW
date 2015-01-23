@@ -6,14 +6,8 @@ import net.dean.jraw.http.MediaTypes;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.RedditResponse;
 import net.dean.jraw.http.RestRequest;
-import net.dean.jraw.models.Comment;
-import net.dean.jraw.models.CommentSort;
-import net.dean.jraw.models.Listing;
-import net.dean.jraw.models.LiveThread;
-import net.dean.jraw.models.More;
-import net.dean.jraw.models.Submission;
-import net.dean.jraw.models.Subreddit;
-import net.dean.jraw.models.Thing;
+import net.dean.jraw.managers.ThingManager;
+import net.dean.jraw.models.*;
 import net.dean.jraw.paginators.Paginators;
 import net.dean.jraw.paginators.SubredditPaginator;
 import org.testng.Assert;
@@ -22,11 +16,10 @@ import org.testng.annotations.Test;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.rmi.UnexpectedException;
 import java.util.List;
 
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.*;
 
 /**
  * This class tests data that is accessible to everyone, such as submissions and basic user information.
@@ -107,16 +100,24 @@ public class ReadOnlyDataTest extends RedditTest {
     @Test
     public void testMoreChildren() {
         try {
+            ThingManager.get().setEnabled(true);
             Submission submission = reddit.getSubmission("92dd8");
             More more = submission.getComments().getMoreChildren();
 
             // Top-comments in the "more" node at the end of the thread "id" should be the fullname of the submission
-            List<Thing> comments = reddit.getMoreComments(submission, CommentSort.TOP, more);
+            List<Thing> comments = reddit.getMoreThings(submission, CommentSort.TOP, more);
 
             for (Thing t : comments) {
                 validateModel(t);
             }
-        } catch (NetworkException | ApiException e) {
+
+            submission.getComments().loadMoreChildren(reddit, submission, null, CommentSort.TOP);
+
+            Comment comment = (Comment) ThingManager.get().getThing("t1_c0b715s");
+            comment.getReplies().loadMoreChildren(reddit, submission, comment, CommentSort.TOP);
+
+            //TODO: Check if the tree is assembled correctly
+        } catch (NetworkException | ApiException | UnexpectedException e) {
             handle(e);
         }
     }
@@ -193,7 +194,7 @@ public class ReadOnlyDataTest extends RedditTest {
             assertTrue(subs.size() > 0);
             // Make sure the items aren't null
             for (String s : subs) {
-            	Assert.assertNotNull(s);
+                Assert.assertNotNull(s);
             }
         } catch (NetworkException e) {
             handle(e);

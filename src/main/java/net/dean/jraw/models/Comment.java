@@ -14,6 +14,8 @@ import java.util.Date;
 @Model(kind = Model.Kind.COMMENT)
 public class Comment extends PublicContribution {
 
+    private Listing<Comment> commentReplies;
+
     /**
      * Instantiates a new Comment
      *
@@ -21,6 +23,14 @@ public class Comment extends PublicContribution {
      */
     public Comment(JsonNode dataNode) {
         super(dataNode);
+
+        // If it has no replies, the value for the replies key will be an empty string or null
+        JsonNode replies = data.get("replies");
+        if (replies.isNull() || (replies.isTextual() && replies.asText().isEmpty())) {
+            commentReplies = new Listing<>(Comment.class);
+        } else {
+            commentReplies = new Listing<>(data.get("replies").get("data"), Comment.class);
+        }
     }
 
     /**
@@ -148,12 +158,7 @@ public class Comment extends PublicContribution {
      */
     @JsonProperty(nullable = true)
     public Listing<Comment> getReplies() {
-        // If it has no replies, the value for the replies key will be an empty string or null
-        JsonNode replies = data.get("replies");
-        if (replies.isNull() || (replies.isTextual() && replies.asText().isEmpty())) {
-            return null;
-        }
-        return new Listing<>(data.get("replies").get("data"), Comment.class);
+        return commentReplies;
     }
 
     /**
