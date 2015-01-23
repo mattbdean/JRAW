@@ -18,7 +18,7 @@ public class ThingManager {
     /**
      * Whether the manager should be storing references.
      */
-    private boolean isEnabled = true;
+    private boolean isEnabled = false;
 
     /**
      * ThingManager is a singleton.
