@@ -124,6 +124,9 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
             }
             if (loadedMores.size() > 0) {
                 parentSubmission.getComments().setMoreChildren(loadedMores.get(0));
+            } else {
+                //More was just loaded
+                parentSubmission.getComments().setMoreChildren(null);
             }
         } else {
             for (Comment c : loadedComments) {
@@ -131,6 +134,9 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
             }
             if (loadedMores.size() > 0) {
                 commentRoot.getReplies().setMoreChildren(loadedMores.get(0));
+            } else {
+                //More was just loaded
+                commentRoot.getReplies().setMoreChildren(null);
             }
         }
     }
