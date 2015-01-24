@@ -27,7 +27,7 @@ import java.util.*;
 public class Listing<T extends RedditObject> extends RedditObject implements List<T> {
 
     private static ObjectMapper mapper = new ObjectMapper();
-    
+
     private final Class<T> thingClass;
     private final List<T> children;
     private More more;
@@ -90,11 +90,16 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
      * Loads more children into the Listing. The highest level modified will be commentRoot, or
      * parentSubmission is commentRoot is null. All loaded children are inserted into the comment tree.
      *
+     * @param client
      * @param parentSubmission The submission all comments are under
-     * @param commentRoot      If loading more comments, the parent comment of this listing or null if the parent is the submission
-     * @param sort             How to sort the recieved comments
+     * @param commentRoot If loading more comments, the parent comment of this listing or null if the parent is the submission
+     * @param sort How to sort the recieved comments
+     * @return The array of comments loaded and inserted into the tree
+     * @throws NetworkException
+     * @throws ApiException
+     * @throws IllegalArgumentException
      */
-    public void loadMoreChildren(RedditClient client, Submission parentSubmission
+    public Comment[] loadMoreChildren(RedditClient client, Submission parentSubmission
             , Comment commentRoot, CommentSort sort)
             throws NetworkException, ApiException, IllegalArgumentException {
         if (commentRoot != null) {
@@ -141,6 +146,8 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
                 commentRoot.getReplies().setMoreChildren(null);
             }
         }
+
+        return loadedComments.toArray(new Comment[loadedComments.size()]);
     }
 
     /**
@@ -185,7 +192,7 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
             mores.remove(more);
         }
         if (mores.size() > 1) {
-            throw new IllegalArgumentException("Only 1 more object should be left");
+            throw new IllegalArgumentException("Only 1 more object should be left after inserting into the comment tree");
         }
     }
 
