@@ -94,7 +94,7 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
      */
     public void loadMoreChildren(RedditClient client, Submission parentSubmission
             , Comment commentRoot, CommentSort sort)
-            throws NetworkException, ApiException, UnexpectedException {
+            throws NetworkException, ApiException, IllegalArgumentException {
         if (commentRoot != null) {
             //We're loading more comments in a thread
             if (commentRoot.getReplies() != this) {
@@ -150,7 +150,7 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
      * @param mores    The mores to add into the comment tree
      * @throws UnexpectedException More than 1 more was left over, should only be one for the root
      */
-    public static void formCommentTree(List<Comment> comments, List<More> mores) throws UnexpectedException {
+    public static void formCommentTree(List<Comment> comments, List<More> mores) throws IllegalArgumentException {
         List<Comment> toAdd = new ArrayList<>(comments);
         comments.clear();
         HashMap<String, Comment> commentMap = new HashMap<>();
@@ -183,7 +183,7 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
             mores.remove(more);
         }
         if (mores.size() > 1) {
-            throw new UnexpectedException("Only 1 more object should be left");
+            throw new IllegalArgumentException("Only 1 more object should be left");
         }
     }
 

@@ -16,7 +16,6 @@ import org.testng.annotations.Test;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.rmi.UnexpectedException;
 import java.util.List;
 
 import static org.testng.Assert.*;
@@ -117,7 +116,7 @@ public class ReadOnlyDataTest extends RedditTest {
             comment.getReplies().loadMoreChildren(reddit, submission, comment, CommentSort.TOP);
 
             //TODO: Check if the tree is assembled correctly
-        } catch (NetworkException | ApiException | UnexpectedException e) {
+        } catch (NetworkException | ApiException | IllegalArgumentException e) {
             handle(e);
         }
     }
