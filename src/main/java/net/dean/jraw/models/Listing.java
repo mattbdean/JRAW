@@ -26,6 +26,8 @@ import java.util.*;
 @Model(kind = Model.Kind.LISTING)
 public class Listing<T extends RedditObject> extends RedditObject implements List<T> {
 
+    private static ObjectMapper mapper = new ObjectMapper();
+    
     private final Class<T> thingClass;
     private final List<T> children;
     private More more;
@@ -378,7 +380,6 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
     }
 
     private static JsonNode getEmptyListingJSON() {
-        ObjectMapper mapper = new ObjectMapper();
         ObjectNode dataTable = mapper.createObjectNode();
         dataTable.putArray("children");
         dataTable.put("after", "");
