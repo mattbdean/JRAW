@@ -11,9 +11,9 @@ import java.util.HashMap;
  *
  * @author Phani Gaddipati
  */
-public class ThingManager {
+public class ThingCache {
 
-    private static ThingManager instance = null;
+    private static ThingCache instance = null;
 
     /**
      * Whether the manager should be storing references.
@@ -23,7 +23,7 @@ public class ThingManager {
     /**
      * ThingManager is a singleton.
      */
-    private ThingManager() {
+    private ThingCache() {
     }
 
     /**
@@ -107,9 +107,9 @@ public class ThingManager {
      *
      * @return An instance of ThingManager
      */
-    public static ThingManager get() {
+    public static ThingCache get() {
         if (instance == null) {
-            instance = new ThingManager();
+            instance = new ThingCache();
         }
         return instance;
     }

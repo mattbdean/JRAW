@@ -1,6 +1,6 @@
 package net.dean.jraw.models;
 
-import net.dean.jraw.managers.ThingManager;
+import net.dean.jraw.managers.ThingCache;
 import net.dean.jraw.models.meta.JsonProperty;
 import org.codehaus.jackson.JsonNode;
 
@@ -19,7 +19,7 @@ public abstract class Thing extends RedditObject {
      */
     public Thing(JsonNode dataNode) {
         super(dataNode);
-        ThingManager.get().addThing(this);
+        ThingCache.get().addThing(this);
     }
 
     /**

@@ -6,7 +6,7 @@ import net.dean.jraw.http.MediaTypes;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.RedditResponse;
 import net.dean.jraw.http.RestRequest;
-import net.dean.jraw.managers.ThingManager;
+import net.dean.jraw.managers.ThingCache;
 import net.dean.jraw.models.*;
 import net.dean.jraw.paginators.Paginators;
 import net.dean.jraw.paginators.SubredditPaginator;
@@ -99,7 +99,7 @@ public class ReadOnlyDataTest extends RedditTest {
     @Test
     public void testMoreChildren() {
         try {
-            ThingManager.get().setEnabled(true);
+            ThingCache.get().setEnabled(true);
             Submission submission = reddit.getSubmission("92dd8");
             More more = submission.getComments().getMoreChildren();
 
@@ -112,7 +112,7 @@ public class ReadOnlyDataTest extends RedditTest {
 
             submission.getComments().loadMoreChildren(reddit, submission, null, CommentSort.TOP);
 
-            Comment comment = (Comment) ThingManager.get().getThing("t1_c0b715s");
+            Comment comment = (Comment) ThingCache.get().getThing("t1_c0b715s");
             comment.getReplies().loadMoreChildren(reddit, submission, comment, CommentSort.TOP);
 
             //TODO: Check if the tree is assembled correctly
