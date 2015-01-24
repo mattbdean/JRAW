@@ -1,6 +1,5 @@
 package net.dean.jraw.models;
 
-import com.google.common.collect.ImmutableList;
 import net.dean.jraw.ApiException;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.NetworkException;
@@ -16,8 +15,9 @@ import java.util.*;
 
 /**
  * Represents a listing of Things. A Listing has four main keys: before, after, modhash, and its children. Listing uses
- * an {@link ImmutableList} to implement the method inherited by {@link java.util.List}. Any method that attempts to
- * change the data (such as {@link List#remove(Object)}) will throw an UnsupportedOperationException.
+ * an {@link ArrayList} to implement the method inherited by {@link java.util.List}. Any method that attempts to
+ * change the data externally (such as {@link List#remove(Object)}) will throw an UnsupportedOperationException.
+ * List is only modifiable internally via loadMoreChildren.
  *
  * @param <T> The type of elements that will be in this listing
  * @author Matthew Dean
