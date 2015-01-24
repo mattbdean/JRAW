@@ -1,13 +1,13 @@
 {
     "(any scope)": [
+        "POST /api/friend",
+        "POST /api/unfriend",
         "GET /api/needs_captcha.json",
         "POST /api/new_captcha",
         "POST /captcha/{iden}"],
     "(not available through oauth)": [
         "POST /api/register",
         "POST /api/set_force_https",
-        "POST /api/setpermissions",
-        "POST /api/unfriend",
         "POST /api/update",
         "POST /api/update_email",
         "POST /api/update_password",
@@ -78,6 +78,8 @@
         "POST /api/flairtemplate"],
     "modlog": [
         "GET /about/log"],
+    "modothers": [
+        "POST /api/setpermissions"],
     "modposts": [
         "POST /api/approve",
         "POST /api/distinguish",
@@ -88,6 +90,10 @@
         "POST /api/set_subreddit_sticky",
         "POST /api/unignore_reports",
         "POST /api/unmarknsfw"],
+    "modself": [
+        "POST /api/accept_moderator_invite",
+        "POST /api/leavecontributor",
+        "POST /api/leavemoderator"],
     "modwiki": [
         "POST /api/wiki/alloweditor/add",
         "POST /api/wiki/alloweditor/del",

@@ -6,6 +6,10 @@ package net.dean.jraw;
 public enum Endpoints {
 
     ///////// (any scope) /////////
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#POST_api_friend">{@code POST /api/friend}</a>" included in the "(any scope)" scope */
+    FRIEND("POST /api/friend", "(any scope)"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#POST_api_unfriend">{@code POST /api/unfriend}</a>" included in the "(any scope)" scope */
+    UNFRIEND("POST /api/unfriend", "(any scope)"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_api_needs_captcha.json">{@code GET /api/needs_captcha.json}</a>" included in the "(any scope)" scope */
     NEEDS_CAPTCHA("GET /api/needs_captcha.json", "(any scope)"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#POST_api_new_captcha">{@code POST /api/new_captcha}</a>" included in the "(any scope)" scope */
@@ -22,10 +26,6 @@ public enum Endpoints {
     SET_FORCE_HTTPS("POST /api/set_force_https", "(not available through oauth)"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_setappicon">{@code POST /api/setappicon}</a>" included in the "(not available through oauth)" scope */
     SETAPPICON("POST /api/setappicon", "(not available through oauth)"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_setpermissions">{@code POST /api/setpermissions}</a>" included in the "(not available through oauth)" scope */
-    SETPERMISSIONS("POST /api/setpermissions", "(not available through oauth)"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_unfriend">{@code POST /api/unfriend}</a>" included in the "(not available through oauth)" scope */
-    UNFRIEND("POST /api/unfriend", "(not available through oauth)"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_update">{@code POST /api/update}</a>" included in the "(not available through oauth)" scope */
     UPDATE("POST /api/update", "(not available through oauth)"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_update_email">{@code POST /api/update_email}</a>" included in the "(not available through oauth)" scope */
@@ -163,6 +163,10 @@ public enum Endpoints {
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_about_log">{@code GET /about/log}</a>" included in the "modlog" scope */
     ABOUT_LOG("GET /about/log", "modlog"),
 
+    ///////// modothers /////////
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#POST_api_setpermissions">{@code POST /api/setpermissions}</a>" included in the "modothers" scope */
+    SETPERMISSIONS("POST /api/setpermissions", "modothers"),
+
     ///////// modposts /////////
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#POST_api_approve">{@code POST /api/approve}</a>" included in the "modposts" scope */
     APPROVE("POST /api/approve", "modposts"),
@@ -182,6 +186,14 @@ public enum Endpoints {
     SET_SUBREDDIT_STICKY("POST /api/set_subreddit_sticky", "modposts"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#POST_api_unmarknsfw">{@code POST /api/unmarknsfw}</a>" included in the "modposts" scope */
     UNMARKNSFW("POST /api/unmarknsfw", "modposts"),
+
+    ///////// modself /////////
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#POST_api_accept_moderator_invite">{@code POST /api/accept_moderator_invite}</a>" included in the "modself" scope */
+    ACCEPT_MODERATOR_INVITE("POST /api/accept_moderator_invite", "modself"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#POST_api_leavecontributor">{@code POST /api/leavecontributor}</a>" included in the "modself" scope */
+    LEAVECONTRIBUTOR("POST /api/leavecontributor", "modself"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#POST_api_leavemoderator">{@code POST /api/leavemoderator}</a>" included in the "modself" scope */
+    LEAVEMODERATOR("POST /api/leavemoderator", "modself"),
 
     ///////// modwiki /////////
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#POST_api_wiki_alloweditor_add">{@code POST /api/wiki/alloweditor/add}</a>" included in the "modwiki" scope */
