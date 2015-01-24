@@ -19,23 +19,23 @@ public class ThingCacheTest extends RedditTest {
     public void testThingMap() {
         Submission submission;
         try {
-            ThingCache.get().setEnabled(true);
+            ThingCache.instance().setEnabled(true);
             submission = reddit.getSubmission(SUBMISSION_ID);
             validateModel(submission);
             String submissionName = submission.getFullName();
             //Test that the found reference matches the expected reference
-            Assert.assertEquals(submission, ThingCache.get().getThing(submissionName));
+            Assert.assertEquals(submission, ThingCache.instance().getThing(submissionName));
 
             //Test that when disabled/cleared, getThing will return null
 
-            ThingCache.get().setEnabled(false);
-            ThingCache.get().clearMap();
+            ThingCache.instance().setEnabled(false);
+            ThingCache.instance().clearMap();
 
             submission = reddit.getSubmission(SUBMISSION_ID);
             validateModel(submission);
             submissionName = submission.getFullName();
             //Test that there is no reference
-            Assert.assertNull(ThingCache.get().getThing(submissionName));
+            Assert.assertNull(ThingCache.instance().getThing(submissionName));
         } catch (NetworkException e) {
             handle(e);
         }

@@ -107,7 +107,7 @@ public class ThingCache {
      *
      * @return An instance of ThingManager
      */
-    public static ThingCache get() {
+    public static ThingCache instance() {
         if (instance == null) {
             instance = new ThingCache();
         }

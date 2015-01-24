@@ -19,7 +19,7 @@ public abstract class Thing extends RedditObject {
      */
     public Thing(JsonNode dataNode) {
         super(dataNode);
-        ThingCache.get().addThing(this);
+        ThingCache.instance().addThing(this);
     }
 
     /**

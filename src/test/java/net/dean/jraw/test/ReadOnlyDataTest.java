@@ -99,7 +99,7 @@ public class ReadOnlyDataTest extends RedditTest {
     @Test
     public void testMoreChildren() {
         try {
-            ThingCache.get().setEnabled(true);
+            ThingCache.instance().setEnabled(true);
             Submission submission = reddit.getSubmission("92dd8");
             More more = submission.getComments().getMoreChildren();
 
@@ -112,7 +112,7 @@ public class ReadOnlyDataTest extends RedditTest {
 
             submission.getComments().loadMoreChildren(reddit, submission, null, CommentSort.TOP);
 
-            Comment comment = (Comment) ThingCache.get().getThing("t1_c0b715s");
+            Comment comment = (Comment) ThingCache.instance().getThing("t1_c0b715s");
             comment.getReplies().loadMoreChildren(reddit, submission, comment, CommentSort.TOP);
 
             //TODO: Check if the tree is assembled correctly
