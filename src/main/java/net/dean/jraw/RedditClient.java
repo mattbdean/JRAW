@@ -542,7 +542,7 @@ public class RedditClient extends RestClient<RedditResponse> {
      * @throws ApiException
      */
     @EndpointImplementation(Endpoints.MORECHILDREN)
-    public List<Thing> getMoreComments(Submission submission, CommentSort sort, More more)
+    public List<Thing> getMoreThings(Submission submission, CommentSort sort, More more)
             throws NetworkException, ApiException {
 
         List<String> moreIds = more.getChildrenIds();
