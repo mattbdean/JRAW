@@ -1,6 +1,5 @@
 package net.dean.jraw.http.oauth;
 
-import com.google.common.base.Joiner;
 import net.dean.jraw.JrawUtils;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.AuthenticationMethod;
@@ -19,14 +18,14 @@ import java.util.Map;
 
 /**
  * <p>
- *     This class assists users of this library in authenticating users via OAuth2. For the app types of 'installed' or
- *     'web', a typical use of this class is as follows:<br>
+ *     This class assists developers using this library in authenticating users via OAuth2. For the app types of
+ *     'installed' or 'web', a typical use of this class is as follows:<br>
  * </p>
  * <ol>
- *     <li>Obtain an authorization URL using {@link #getAuthorizationUrl(String, String, boolean, String, String...)}.
- *     <li>Point the user's browser to that URL and have the user enter press either 'yes' or 'no' on the authentication
- *         form. The URL that the browser redirects to will be your app's redirect URI with a few arguments in the
- *         query.
+ *     <li>Obtain an authorization URL using {@link #getAuthorizationUrl(String, String, boolean, String...)}.
+ *     <li>Point the user's browser to that URL and have the user login and then press either 'yes' or 'no' on the
+ *         authentication form. The URL that the browser redirects to will be your app's redirect URI with a few
+ *         arguments in the query.
  *     <li>Give this data as well as an instance of {@link Credentials} to
  *         {@link #onUserChallenge(String, String, Credentials)}. This method will parse the query arguments and report
  *         any errors. Once the request's integrity has been verified, a request to obtain the OAuth access code will be
@@ -59,23 +58,17 @@ public class OAuthHelper implements NetworkAccessible<RedditResponse, RedditClie
      * @param redirectUri The app's redirect URI. Must match exactly as in the app settings.
      * @param permanent Whether or not to request a 'refresh' token which can be exchanged for an additional
      *                  Authorization token in the future.
-     * @param scope The first scope. A full list of scopes can be found
+     * @param scopes OAuth scopes to be requested. A full list of scopes can be found
      *              <a href="https://www.reddit.com/dev/api/oauth>here</a>
-     * @param otherScopes Any other additional scopes
      * @return The URL clients are sent to in order to authorize themselves
      */
-    public String getAuthorizationUrl(String clientId, String redirectUri, boolean permanent, String scope, String... otherScopes) {
+    public String getAuthorizationUrl(String clientId, String redirectUri, boolean permanent, String... scopes) {
         if (started) started = false; // Restarting
 
         if (secureRandom == null)
             secureRandom = new SecureRandom();
         // http://stackoverflow.com/a/41156/1275092
         this.state = new BigInteger(130, secureRandom).toString(32);
-
-        String scopesList = scope;
-        if (otherScopes.length > 0) {
-            scopesList += ',' + Joiner.on(',').join(otherScopes);
-        }
 
         RestRequest r = new RestRequest.Builder()
                 .https(true)
@@ -88,7 +81,7 @@ public class OAuthHelper implements NetworkAccessible<RedditResponse, RedditClie
                         "state", state,
                         "redirect_uri", redirectUri,
                         "duration", permanent ? "permanent" : "temporary",
-                        "scope", scopesList
+                        "scope", JrawUtils.join(scopes)
                 )).build();
         this.started = true;
         return r.getUrl();
@@ -109,8 +102,8 @@ public class OAuthHelper implements NetworkAccessible<RedditResponse, RedditClie
      * @throws NetworkException If the request was not successful
      * @throws MalformedURLException If {@code finalUrl} is not a valid URL
      * @throws IllegalStateException If the state last generated with
-     *                               {@link #getAuthorizationUrl(String, String, boolean, String, String...)} did not
-     *                               match the value of the 'state' query parameter.
+     *                               {@link #getAuthorizationUrl(String, String, boolean, String...)} did not match the
+     *                               value of the 'state' query parameter.
      * @return An AuthData that holds the new access token among other things
      */
     public OAuthData onUserChallenge(String finalUrl, String redirectUri, Credentials creds) throws NetworkException,

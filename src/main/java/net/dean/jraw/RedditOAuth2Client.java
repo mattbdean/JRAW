@@ -1,6 +1,5 @@
 package net.dean.jraw;
 
-import com.google.common.base.Joiner;
 import net.dean.jraw.http.AuthenticationMethod;
 import net.dean.jraw.http.Credentials;
 import net.dean.jraw.http.MediaTypes;
@@ -170,7 +169,7 @@ public class RedditOAuth2Client extends RedditClient {
     public AccountPreferences getPreferences(String... names) throws NetworkException {
         Map<String, String> query = new HashMap<>();
         if (names.length > 0) {
-            query.put("fields", Joiner.on(',').join(names));
+            query.put("fields", JrawUtils.join(',', names));
         }
 
         RedditResponse response = execute(request()

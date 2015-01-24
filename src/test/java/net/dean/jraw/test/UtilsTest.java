@@ -7,6 +7,7 @@ import java.util.Map;
 
 import static net.dean.jraw.JrawUtils.args;
 import static net.dean.jraw.JrawUtils.isFullName;
+import static net.dean.jraw.JrawUtils.join;
 import static org.testng.Assert.*;
 
 /** Tests methods found in {@link net.dean.jraw.JrawUtils} */
@@ -47,5 +48,13 @@ public class UtilsTest extends RedditTest {
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void testOddArgLength() {
         args("only one element");
+    }
+
+    @Test
+    public void testJoin() {
+        char sep = ',';
+        assertEquals(join(), "");
+        assertEquals(join(sep, "one"), "one");
+        assertEquals(join(sep, "one", "two", "three"), "one,two,three");
     }
 }

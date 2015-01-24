@@ -1,5 +1,6 @@
 package net.dean.jraw;
 
+import com.google.common.base.Joiner;
 import com.squareup.okhttp.MediaType;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
@@ -163,4 +164,24 @@ public final class JrawUtils {
         return out.toString();
     }
 
+    /**
+     * Joins the given Strings together with a comma
+     */
+    public static String join(String... args) {
+        return join(',', args);
+    }
+
+    /**
+     * Joins the given Strings together with a given character
+     */
+    public static String join(char separator, String... args) {
+        switch (args.length) {
+            case 0:
+                return "";
+            case 1:
+                return args[0];
+            default:
+                return Joiner.on(separator).join(args);
+        }
+    }
 }
