@@ -110,12 +110,23 @@ public class ReadOnlyDataTest extends RedditTest {
                 validateModel(t);
             }
 
-            submission.getComments().loadMoreChildren(reddit, submission, null, CommentSort.TOP);
-
+            //Test loading more comment replies from comment:
+            //http://www.reddit.com/r/pics/comments/92dd8/test_post_please_ignore/c0b715s
             Comment comment = (Comment) ThingCache.instance().getThing("t1_c0b715s");
-            comment.getReplies().loadMoreChildren(reddit, submission, comment, CommentSort.TOP);
+            Comment[] loadedComments = comment.getReplies().loadMoreChildren(reddit, submission, comment, CommentSort.TOP);
 
-            //TODO: Check if the tree is assembled correctly
+            //Check if the expected parent is really the parent
+            for (Comment c : loadedComments) {
+                Comment parentComment = (Comment) ThingCache.instance().getThing(c.getParentId());
+                boolean isCChildOfParent = false;
+                for (Comment child : parentComment.getReplies()) {
+                    if (child == c) {
+                        isCChildOfParent = true;
+                        break;
+                    }
+                }
+                assertTrue(isCChildOfParent);
+            }
         } catch (NetworkException | ApiException | IllegalArgumentException e) {
             handle(e);
         }

@@ -111,22 +111,24 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
         }
 
         List<Thing> loadedThings = client.getMoreThings(parentSubmission, sort, getMoreChildren());
-        List<Comment> loadedComments = new ArrayList<>();
+        List<Comment> loadedCommentTree = new ArrayList<>();
+        List<Comment> allLoadedComments = new ArrayList<>();
         List<More> loadedMores = new ArrayList<>();
 
         for (Thing t : loadedThings) {
             if (t instanceof Comment) {
-                loadedComments.add((Comment) t);
+                loadedCommentTree.add((Comment) t);
+                allLoadedComments.add((Comment) t);
             } else {
                 loadedMores.add((More) t);
             }
         }
 
-        formCommentTree(loadedComments, loadedMores);
+        formCommentTree(loadedCommentTree, loadedMores);
 
         if (commentRoot == null) {
             //Add all of the comments to the submission
-            for (Comment c : loadedComments) {
+            for (Comment c : loadedCommentTree) {
                 parentSubmission.getComments().addLoaded(c);
             }
             if (loadedMores.size() > 0) {
@@ -136,7 +138,7 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
                 parentSubmission.getComments().setMoreChildren(null);
             }
         } else {
-            for (Comment c : loadedComments) {
+            for (Comment c : loadedCommentTree) {
                 commentRoot.getReplies().addLoaded(c);
             }
             if (loadedMores.size() > 0) {
@@ -147,7 +149,7 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
             }
         }
 
-        return loadedComments.toArray(new Comment[loadedComments.size()]);
+        return allLoadedComments.toArray(new Comment[allLoadedComments.size()]);
     }
 
     /**
