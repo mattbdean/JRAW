@@ -530,26 +530,6 @@ public class RedditClient extends RestClient<RedditResponse> {
         return subreddits;
     }
 
-
-    /**
-     * Retrieves more comments from the comment tree. Note that the replies are flat, as they do not have a 'replies'
-     * key. The resulting list will also include More objects.
-     *
-     * Deprecated, use @link(getMoreThings)
-     *
-     * @param submission The submission where the desired 'more' object is found
-     * @param sort How to sort the returned comments
-     * @param more The More object to retrieve the children of
-     * @return A list of CompactComments that the More object represents
-     * @throws NetworkException
-     * @throws ApiException
-     */
-    @Deprecated
-    public List<Thing> getMoreComments(Submission submission, CommentSort sort, More more)
-            throws NetworkException, ApiException {
-        return getMoreThings(submission, sort, more);
-    }
-
     /**
      * Retrieves more comments from the comment tree. Note that the replies are flat, as they do not have a 'replies'
      * key. The resulting list will also include More objects.
@@ -562,7 +542,7 @@ public class RedditClient extends RestClient<RedditResponse> {
      * @throws ApiException
      */
     @EndpointImplementation(Endpoints.MORECHILDREN)
-    public List<Thing> getMoreThings(Submission submission, CommentSort sort, More more)
+    public List<Thing> getMoreComments(Submission submission, CommentSort sort, More more)
             throws NetworkException, ApiException {
 
         List<String> moreIds = more.getChildrenIds();
