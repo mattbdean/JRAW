@@ -9,13 +9,14 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.List;
 
 public class ReadmeUpdater extends AbstractEndpointGenerator {
     private static final String SEARCH_REGEX =
-            "http[s]?://img\\.shields\\.io/badge/api--coverage-(\\d{1,2}\\.\\d{2})%-blue\\.svg";
+            "http[s]?://img\\.shields\\.io/badge/api--coverage-(\\d{1,2}\\.\\d{1,2})%-blue\\.svg";
 
-    private DecimalFormat format;
+    private NumberFormat format;
 
     /**
      * Instantiates a new AbstractEndpointGenerator
