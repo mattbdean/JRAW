@@ -18,7 +18,7 @@ public class ThingManager {
     /**
      * Whether the manager should be storing references.
      */
-    private boolean isEnabled = false;
+    private boolean enabled = false;
 
     /**
      * ThingManager is a singleton.
@@ -90,7 +90,7 @@ public class ThingManager {
      * @return Whether ThingManager is enabled
      */
     public boolean isEnabled() {
-        return isEnabled;
+        return enabled;
     }
 
     /**
@@ -99,7 +99,7 @@ public class ThingManager {
      * @param isEnabled Enable or disable ThingMap
      */
     public void setEnabled(boolean isEnabled) {
-        this.isEnabled = isEnabled;
+        this.enabled = isEnabled;
     }
 
     /**
