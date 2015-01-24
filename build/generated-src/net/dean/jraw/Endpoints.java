@@ -252,8 +252,6 @@ public enum Endpoints {
     FILTER_FILTERPATH_GET("GET /api/filter/{filterpath}", "read"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_api_filter_%7Bfilterpath%7D_r_%7Bsrname%7D">{@code GET /api/filter/{filterpath}/r/{srname}}</a>" included in the "read" scope */
     FILTER_FILTERPATH_R_SRNAME_GET("GET /api/filter/{filterpath}/r/{srname}", "read"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_api_info">{@code GET /api/info}</a>" included in the "read" scope */
-    INFO("GET /api/info", "read"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_api_recommend_sr_%7Bsrnames%7D">{@code GET /api/recommend/sr/{srnames}}</a>" included in the "read" scope */
     RECOMMEND_SR_SRNAMES("GET /api/recommend/sr/{srnames}", "read"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_live_%7Bthread%7D_contributors.json">{@code GET /live/{thread}/contributors.json}</a>" included in the "read" scope */
@@ -284,6 +282,8 @@ public enum Endpoints {
     ABOUT_LOCATION("GET /about/{location}", "read"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_about_%7Bwhere%7D">{@code GET /about/{where}}</a>" included in the "read" scope */
     ABOUT_WHERE("GET /about/{where}", "read"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_api_info">{@code GET /api/info}</a>" included in the "read" scope */
+    INFO("GET /api/info", "read"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#POST_api_morechildren">{@code POST /api/morechildren}</a>" included in the "read" scope */
     MORECHILDREN("POST /api/morechildren", "read"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_api_multi_mine">{@code GET /api/multi/mine}</a>" included in the "read" scope */
