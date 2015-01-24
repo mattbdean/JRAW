@@ -1,7 +1,22 @@
 package net.dean.jraw.models.meta;
 
 import net.dean.jraw.models.Account;
+import net.dean.jraw.models.Award;
+import net.dean.jraw.models.Comment;
+import net.dean.jraw.models.JsonModel;
+import net.dean.jraw.models.KarmaBreakdown;
+import net.dean.jraw.models.Listing;
+import net.dean.jraw.models.LiveThread;
+import net.dean.jraw.models.LiveUpdate;
+import net.dean.jraw.models.Message;
+import net.dean.jraw.models.ModAction;
 import net.dean.jraw.models.More;
+import net.dean.jraw.models.MultiReddit;
+import net.dean.jraw.models.Submission;
+import net.dean.jraw.models.Subreddit;
+import net.dean.jraw.models.WikiPage;
+import net.dean.jraw.models.WikiPageSettings;
+import org.codehaus.jackson.JsonNode;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -35,7 +50,10 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Documented
 public @interface Model {
-    /** The expected value of the "kind" JSON node */
+    /**
+     * The expected value of the "kind" JSON node. If the value is {@link Kind#ABSTRACT} or {@link Kind#NONE}, the
+     * class annotated with this model will not be validated using {@link ModelManager#validate(JsonNode, Class)}.
+     */
     public Kind kind();
 
     /** The class used to serialize instances of this model */
@@ -48,46 +66,52 @@ public @interface Model {
      * A list of possible values of "kind" nodes from the Reddit API
      */
     public static enum Kind {
-        ABSTRACT("__ABSTRACT__"),
-        NONE("__NONE__"),
+        /** Represents an abstract type */
+        ABSTRACT("__ABSTRACT__", null),
+        NONE("__NONE__", null),
 
         /** Represents a comment with the prefix "t1" */
-        COMMENT("t1"),
+        COMMENT("t1", Comment.class),
         /** Represents an account with the prefix "t2" */
-        ACCOUNT("t2"),
+        ACCOUNT("t2", Account.class),
         /** Represents a submission with the prefix "t3" */
-        LINK("t3"),
+        LINK("t3", Submission.class),
         /** Represents a message with the prefix "t4" */
-        MESSAGE("t4"),
+        MESSAGE("t4", Message.class),
         /** Represents a subreddit with the prefix "t5" */
-        SUBREDDIT("t5"),
+        SUBREDDIT("t5", Subreddit.class),
         /** Represents an award with the prefix "t6" */
-        AWARD("t6"),
+        AWARD("t6", Award.class),
         /** Represents a listing */
-        LISTING("Listing"),
+        LISTING("Listing", Listing.class),
         /** Represents a "more" object. See {@link More} */
-        MORE("more"),
+        MORE("more", More.class),
         /** Represents a MultiReddit */
-        MULTIREDDIT("LabeledMulti"),
+        MULTIREDDIT("LabeledMulti", MultiReddit.class),
         /** Represents a wiki page */
-        WIKI_PAGE("wikipage"),
+        WIKI_PAGE("wikipage", WikiPage.class),
         /** Represents a wiki page's settings */
-        WIKI_PAGE_SETTINGS("wikipagesettings"),
+        WIKI_PAGE_SETTINGS("wikipagesettings", WikiPageSettings.class),
         /** Represents a live thread */
-        LIVE_THREAD("LiveUpdateEvent"),
+        LIVE_THREAD("LiveUpdateEvent", LiveThread.class),
         /** Represents an update in a live thread */
-        LIVE_UPDATE("LiveUpdate"),
+        LIVE_UPDATE("LiveUpdate", LiveUpdate.class),
         /** Represents a breakdown of karma by subreddit */
-        KARMA_BREAKDOWN("KarmaList"),
+        KARMA_BREAKDOWN("KarmaList", KarmaBreakdown.class),
         /** Represents an administrative action on behalf of a moderator of a subreddit */
-        MOD_ACTION("modaction");
+        MOD_ACTION("modaction", ModAction.class);
 
         private final String value;
-        private Kind(String value) {
+        private final Class<? extends JsonModel> defaultClass;
+        private Kind(String value, Class<? extends JsonModel> defaultClass) {
             this.value = value;
+            this.defaultClass = defaultClass;
         }
 
         public String getValue() { return value; }
+
+        /** Gets the class most likely to use this Kind */
+        public Class<? extends JsonModel> getDefaultClass() { return defaultClass; }
 
         /**
          * Gets a Kind by its JSON value (t1, t2, etc.)

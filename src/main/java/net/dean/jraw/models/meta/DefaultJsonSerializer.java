@@ -14,7 +14,7 @@ import java.lang.reflect.InvocationTargetException;
 public class DefaultJsonSerializer implements JsonSerializer<JsonModel> {
 
     @Override
-    public <T extends JsonModel> T parse(JsonNode node, Class<T> clazz) {
+    public <T extends JsonModel> T parse(JsonNode node, Class<T> clazz, Model.Kind kind) {
         try {
             // Instantiate a generic Thing
             Constructor<T> constructor = clazz.getConstructor(JsonNode.class);

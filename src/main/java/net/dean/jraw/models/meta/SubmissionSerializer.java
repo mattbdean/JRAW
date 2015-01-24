@@ -15,7 +15,7 @@ import org.codehaus.jackson.JsonNode;
 public class SubmissionSerializer implements JsonSerializer<Submission> {
     @Override
     @SuppressWarnings("unchecked")
-    public <T extends Submission> T parse(JsonNode node, Class<T> clazz) {
+    public <T extends Submission> T parse(JsonNode node, Class<T> clazz, Model.Kind kind) {
         if (node.isArray()) {
             // Submission with comments requested
             JsonNode commentListingDataNode = node.get(1).get("data");

@@ -14,9 +14,8 @@ public class ContributionSerializer implements JsonSerializer<Contribution> {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T extends Contribution> T parse(JsonNode node, Class<T> clazz) {
-        String kind = node.get("kind").asText();
-        switch (Model.Kind.getByValue(kind)) {
+    public <T extends Contribution> T parse(JsonNode node, Class<T> clazz, Model.Kind kind) {
+        switch (kind) {
             case LINK:
                 return (T) new Submission(node.get("data"));
             case COMMENT:

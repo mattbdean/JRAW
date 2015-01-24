@@ -1,5 +1,6 @@
 package net.dean.jraw.models.meta;
 
+import net.dean.jraw.JrawUtils;
 import net.dean.jraw.models.JsonModel;
 import org.codehaus.jackson.JsonNode;
 
@@ -11,6 +12,7 @@ import java.util.Map;
  * and {@link Model} classes. This class is a singleton.
  */
 public class ModelManager {
+    public static final Class<? extends JsonSerializer> DEFAULT_SERIALIZER = DefaultJsonSerializer.class;
     private static ModelManager instance = new ModelManager();
     public static ModelManager getInstance() { return instance; }
 
@@ -59,7 +61,8 @@ public class ModelManager {
         try {
             serializer = serClass.newInstance();
         } catch (InstantiationException e) {
-            throw new IllegalArgumentException("JsonSerializer " + clazz.getName() + " has no default constructor or is abstract");
+            throw new IllegalArgumentException(
+                    "JsonSerializer " + clazz.getName() + " has no default constructor or is abstract", e);
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
@@ -129,9 +132,12 @@ public class ModelManager {
         }
 
         JsonSerializer serializer = getSerializer(expectedClass);
-        if (kind.equals(Model.Kind.ABSTRACT) && serializer instanceof DefaultJsonSerializer) {
-            throw new IllegalArgumentException("Models labeled ABSTRACT must not use the default JsonSerializer");
+        if (kind.equals(Model.Kind.ABSTRACT)) {
+            Model.Kind effectiveKind = Model.Kind.getByValue(rootNode.get("kind").asText());
+            JrawUtils.logger().debug("Mapping abstract @Model to {}", effectiveKind.getDefaultClass().getName());
+            // Try to serialize the abstract
+            return (T) serializer.parse(rootNode, effectiveKind.getDefaultClass(), effectiveKind);
         }
-        return (T) serializer.parse(rootNode, expectedClass);
+        return (T) serializer.parse(rootNode, expectedClass, kind);
     }
 }

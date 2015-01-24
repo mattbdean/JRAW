@@ -14,8 +14,9 @@ public interface JsonSerializer<B extends JsonModel> {
      * @param node The node to parse data from. This must be the root node of the object structure. In other words, it
      *             needs to have two children nodes: "kind" and "data".
      * @param clazz The class to make an instance of
+     * @param kind The value of the class's Model.kind()
      * @param <T> The type of object to return
      * @return A new JsonModel
      */
-    public <T extends B> T parse(JsonNode node, Class<T> clazz);
+    public <T extends B> T parse(JsonNode node, Class<T> clazz, Model.Kind kind);
 }

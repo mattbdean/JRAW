@@ -12,6 +12,7 @@ import net.dean.jraw.models.Account;
 import net.dean.jraw.models.Captcha;
 import net.dean.jraw.models.Comment;
 import net.dean.jraw.models.CommentSort;
+import net.dean.jraw.models.Listing;
 import net.dean.jraw.models.LiveThread;
 import net.dean.jraw.models.LoggedInAccount;
 import net.dean.jraw.models.More;
@@ -597,6 +598,28 @@ public class RedditClient extends RestClient<RedditResponse> {
         }
 
         return commentList;
+    }
+
+    /**
+     * Gets a Listing of the given full names. Only submissions, comments, and subreddits will be returned
+     * @param fullNames A list of full names
+     * @return A Listing of Things
+     * @throws NetworkException If the request was not successful
+     */
+    @EndpointImplementation(Endpoints.INFO)
+    public Listing<Thing> get(String... fullNames) throws NetworkException {
+        for (String name : fullNames) {
+            if (!(name.startsWith(Model.Kind.LINK.getValue()) ||
+                    name.startsWith(Model.Kind.COMMENT.getValue()) ||
+                    name.startsWith(Model.Kind.SUBREDDIT.getValue()))) {
+                // Send the data, but warn the developer
+                JrawUtils.logger().warn("Name '{}' is not a submission, comment, or subreddit", name);
+            }
+        }
+        return execute(request()
+                .path(Endpoints.INFO.getEndpoint().getUri() + ".json")
+                .query("id", JrawUtils.join(fullNames))
+                .build()).asListing(Thing.class);
     }
 
     /**

@@ -22,11 +22,10 @@ import org.testng.annotations.Test;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.List;
 
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.*;
 
 /**
  * This class tests data that is accessible to everyone, such as submissions and basic user information.
@@ -229,6 +228,22 @@ public class ReadOnlyDataTest extends RedditTest {
         try {
             LiveThread t = reddit.getLiveThread("ts4r8m1g99ys");
             validateModel(t);
+        } catch (NetworkException e) {
+            handle(e);
+        }
+    }
+
+    @Test
+    public void testGet() {
+        try {
+            String[] nameArray = {"t5_31qvo", "t3_92dd8", "t1_c0b6xx0"};
+            List<String> names = Arrays.asList(nameArray);
+            Listing<Thing> listing = reddit.get(nameArray);
+            assertEquals(listing.size(), names.size());
+
+            for (Thing t : listing) {
+                assertTrue(names.contains(t.getFullName()));
+            }
         } catch (NetworkException e) {
             handle(e);
         }
