@@ -50,7 +50,7 @@ public abstract class RestClient<T extends RestResponse> implements HttpClient<T
         this.http = new OkHttpClient();
         this.saveResponseHistory = false;
         this.logger = new HttpLogger(JrawUtils.logger());
-        this.requestLogging = true;
+        this.requestLogging = false;
         CookieManager manager = new CookieManager();
         manager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
         http.setCookieHandler(manager);
