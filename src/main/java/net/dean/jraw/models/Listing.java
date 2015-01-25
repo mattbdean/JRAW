@@ -1,20 +1,23 @@
 package net.dean.jraw.models;
 
-import com.google.common.collect.ImmutableList;
+import net.dean.jraw.ApiException;
+import net.dean.jraw.RedditClient;
+import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.models.meta.JsonProperty;
 import net.dean.jraw.models.meta.Model;
 import net.dean.jraw.models.meta.ModelManager;
 import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.node.ObjectNode;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
+import java.rmi.UnexpectedException;
+import java.util.*;
 
 /**
  * Represents a listing of Things. A Listing has four main keys: before, after, modhash, and its children. Listing uses
- * an {@link ImmutableList} to implement the method inherited by {@link java.util.List}. Any method that attempts to
- * change the data (such as {@link List#remove(Object)}) will throw an UnsupportedOperationException.
+ * an {@link ArrayList} to implement the method inherited by {@link java.util.List}. Any method that attempts to
+ * change the data externally (such as {@link List#remove(Object)}) will throw an UnsupportedOperationException.
+ * List is only modifiable internally via loadMoreChildren.
  *
  * @param <T> The type of elements that will be in this listing
  * @author Matthew Dean
@@ -23,9 +26,11 @@ import java.util.ListIterator;
 @Model(kind = Model.Kind.LISTING)
 public class Listing<T extends RedditObject> extends RedditObject implements List<T> {
 
+    private static ObjectMapper mapper = new ObjectMapper();
+
     private final Class<T> thingClass;
-    private final ImmutableList<T> children;
-    private final More more;
+    private final List<T> children;
+    private More more;
 
     /**
      * Instantiates a new Listing
@@ -41,8 +46,21 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
         this.more = initMore();
     }
 
-    protected ImmutableList<T> initChildren() {
-        ImmutableList.Builder<T> children = ImmutableList.builder();
+    /**
+     * Instantiates a new empty listing
+     *
+     * @param thingClass The class which will be the type of the children in this listing
+     */
+    public Listing(Class<T> thingClass) {
+        super(getEmptyListingJSON());
+
+        this.thingClass = thingClass;
+        this.children = new ArrayList<>();
+        this.more = null;
+    }
+
+    protected List<T> initChildren() {
+        List<T> children = new ArrayList<>();
 
         // children is a JSON array
         for (JsonNode childNode : data.get("children")) {
@@ -51,7 +69,7 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
             }
         }
 
-        return children.build();
+        return children;
     }
 
     protected More initMore() {
@@ -64,8 +82,120 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
         return null;
     }
 
-    public ImmutableList<T> getChildren() {
+    public List<T> getChildren() {
         return children;
+    }
+
+    /**
+     * Loads more children into the Listing. The highest level modified will be commentRoot, or
+     * parentSubmission is commentRoot is null. All loaded children are inserted into the comment tree.
+     *
+     * @param client
+     * @param parentSubmission The submission all comments are under
+     * @param commentRoot If loading more comments, the parent comment of this listing or null if the parent is the submission
+     * @param sort How to sort the recieved comments
+     * @return The array of comments loaded and inserted into the tree
+     * @throws NetworkException
+     * @throws ApiException
+     * @throws IllegalArgumentException
+     */
+    public Comment[] loadMoreChildren(RedditClient client, Submission parentSubmission
+            , Comment commentRoot, CommentSort sort)
+            throws NetworkException, ApiException, IllegalArgumentException {
+        if (commentRoot != null) {
+            //We're loading more comments in a thread
+            if (commentRoot.getReplies() != this) {
+                //The parent's replies should be this listing
+                throw new IllegalArgumentException("commentRoot should be the direct parent of this listing!");
+            }
+        }
+
+        List<Thing> loadedThings = client.getMoreComments(parentSubmission, sort, getMoreChildren());
+        List<Comment> loadedCommentTree = new ArrayList<>();
+        List<Comment> allLoadedComments = new ArrayList<>();
+        List<More> loadedMores = new ArrayList<>();
+
+        for (Thing t : loadedThings) {
+            if (t instanceof Comment) {
+                loadedCommentTree.add((Comment) t);
+                allLoadedComments.add((Comment) t);
+            } else {
+                loadedMores.add((More) t);
+            }
+        }
+
+        formCommentTree(loadedCommentTree, loadedMores);
+
+        if (commentRoot == null) {
+            //Add all of the comments to the submission
+            for (Comment c : loadedCommentTree) {
+                parentSubmission.getComments().addLoaded(c);
+            }
+            if (loadedMores.size() > 0) {
+                parentSubmission.getComments().setMoreChildren(loadedMores.get(0));
+            } else {
+                //More was just loaded
+                parentSubmission.getComments().setMoreChildren(null);
+            }
+        } else {
+            for (Comment c : loadedCommentTree) {
+                commentRoot.getReplies().addLoaded(c);
+            }
+            if (loadedMores.size() > 0) {
+                commentRoot.getReplies().setMoreChildren(loadedMores.get(0));
+            } else {
+                //More was just loaded
+                commentRoot.getReplies().setMoreChildren(null);
+            }
+        }
+
+        return allLoadedComments.toArray(new Comment[allLoadedComments.size()]);
+    }
+
+    /**
+     * Merge the Comments and Mores into a tree as far as possible.
+     * There should only be at most 1 more object left at completion,
+     * the more for the root of all the trees formed.
+     *
+     * @param comments The comments to organize into a tree
+     * @param mores    The mores to add into the comment tree
+     * @throws UnexpectedException More than 1 more was left over, should only be one for the root
+     */
+    public static void formCommentTree(List<Comment> comments, List<More> mores) throws IllegalArgumentException {
+        List<Comment> toAdd = new ArrayList<>(comments);
+        comments.clear();
+        HashMap<String, Comment> commentMap = new HashMap<>();
+
+        for (Comment c : toAdd) {
+            commentMap.put(c.getFullName(), c);
+        }
+
+        while (toAdd.size() > 0) {
+            Comment c = toAdd.get(0);
+            Comment parent = commentMap.get(c.getParentId());
+            if (parent == null) {
+                //It's a base comment
+                comments.add(c);
+            } else {
+                parent.getReplies().addLoaded(c);
+            }
+            toAdd.remove(c);
+        }
+
+        List<More> toRemove = new ArrayList<>();
+        for (More more : mores) {
+            Comment parent = commentMap.get(more.getParentId());
+            if (parent != null) {
+                parent.getReplies().setMoreChildren(more);
+                toRemove.add(more);
+            }
+        }
+        for (More more : toRemove) {
+            mores.remove(more);
+        }
+        if (mores.size() > 1) {
+            throw new IllegalArgumentException("Only 1 more object should be left after inserting into the comment tree");
+        }
     }
 
     /**
@@ -79,7 +209,17 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
     }
 
     /**
+     * Set the "more" element, for use when another loaded from the previous more
+     *
+     * @param more A more object
+     */
+    public void setMoreChildren(More more) {
+        this.more = more;
+    }
+
+    /**
      * The full name of the Thing that follows before this page, or null if there is no previous page
+     *
      * @return The full name of the Thing that comes before this one
      */
     @JsonProperty(nullable = true)
@@ -89,6 +229,7 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
 
     /**
      * The full name of the Thing that follows after this page, or null if there is no following page
+     *
      * @return The full name of the Thing that comes after this page
      */
     @JsonProperty(nullable = true)
@@ -98,6 +239,7 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
 
     /**
      * Not the same modhash provided upon login. You can reuse the modhash given upon login
+     *
      * @return A modhash
      */
     @JsonProperty
@@ -122,6 +264,10 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
         result = 31 * result + thingClass.hashCode();
         result = 31 * result + children.hashCode();
         return result;
+    }
+
+    private void addLoaded(T object) {
+        children.add(object);
     }
 
     // java.util.List methods below
@@ -159,12 +305,12 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
 
     @Override
     public boolean add(T object) {
-        return getChildren().add(object);
+        throw new UnsupportedOperationException("A listing cannot be modified!");
     }
 
     @Override
     public boolean remove(Object object) {
-        return getChildren().remove(object);
+        throw new UnsupportedOperationException("A listing cannot be modified!");
     }
 
     @Override
@@ -174,27 +320,27 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
 
     @Override
     public boolean addAll(Collection<? extends T> collection) {
-        return getChildren().addAll(collection);
+        throw new UnsupportedOperationException("A listing cannot be modified!");
     }
 
     @Override
     public boolean addAll(int i, Collection<? extends T> collection) {
-        return getChildren().addAll(i, collection);
+        throw new UnsupportedOperationException("A listing cannot be modified!");
     }
 
     @Override
     public boolean removeAll(Collection<?> objects) {
-        return getChildren().removeAll(objects);
+        throw new UnsupportedOperationException("A listing cannot be modified!");
     }
 
     @Override
     public boolean retainAll(Collection<?> objects) {
-        return getChildren().removeAll(objects);
+        throw new UnsupportedOperationException("A listing cannot be modified!");
     }
 
     @Override
     public void clear() {
-        getChildren().clear();
+        throw new UnsupportedOperationException("A listing cannot be modified!");
     }
 
     @Override
@@ -204,17 +350,17 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
 
     @Override
     public T set(int index, T object) {
-        return getChildren().set(index, object);
+        throw new UnsupportedOperationException("A listing cannot be modified!");
     }
 
     @Override
     public void add(int index, T object) {
-        getChildren().add(index, object);
+        throw new UnsupportedOperationException("A listing cannot be modified!");
     }
 
     @Override
     public T remove(int index) {
-        return getChildren().remove(index);
+        throw new UnsupportedOperationException("A listing cannot be modified!");
     }
 
     @Override
@@ -240,6 +386,15 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
     @Override
     public List<T> subList(int start, int end) {
         return getChildren().subList(start, end);
+    }
+
+    private static JsonNode getEmptyListingJSON() {
+        ObjectNode dataTable = mapper.createObjectNode();
+        dataTable.putArray("children");
+        dataTable.put("after", "");
+        dataTable.put("before", "");
+        dataTable.put("modhash", "");
+        return dataTable;
     }
 
 }

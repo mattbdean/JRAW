@@ -6,14 +6,8 @@ import net.dean.jraw.http.MediaTypes;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.RedditResponse;
 import net.dean.jraw.http.RestRequest;
-import net.dean.jraw.models.Comment;
-import net.dean.jraw.models.CommentSort;
-import net.dean.jraw.models.Listing;
-import net.dean.jraw.models.LiveThread;
-import net.dean.jraw.models.More;
-import net.dean.jraw.models.Submission;
-import net.dean.jraw.models.Subreddit;
-import net.dean.jraw.models.Thing;
+import net.dean.jraw.managers.ThingCache;
+import net.dean.jraw.models.*;
 import net.dean.jraw.paginators.Paginators;
 import net.dean.jraw.paginators.SubredditPaginator;
 import org.testng.Assert;
@@ -106,6 +100,7 @@ public class ReadOnlyDataTest extends RedditTest {
     @Test
     public void testMoreChildren() {
         try {
+            ThingCache.instance().setEnabled(true);
             Submission submission = reddit.getSubmission("92dd8");
             More more = submission.getComments().getMoreChildren();
 
@@ -115,7 +110,25 @@ public class ReadOnlyDataTest extends RedditTest {
             for (Thing t : comments) {
                 validateModel(t);
             }
-        } catch (NetworkException | ApiException e) {
+
+            //Test loading more comment replies from comment:
+            //http://www.reddit.com/r/pics/comments/92dd8/test_post_please_ignore/c0b715s
+            Comment comment = (Comment) ThingCache.instance().getThing("t1_c0b715s");
+            Comment[] loadedComments = comment.getReplies().loadMoreChildren(reddit, submission, comment, CommentSort.TOP);
+
+            //Check if the expected parent is really the parent
+            for (Comment c : loadedComments) {
+                Comment parentComment = (Comment) ThingCache.instance().getThing(c.getParentId());
+                boolean isCChildOfParent = false;
+                for (Comment child : parentComment.getReplies()) {
+                    if (child == c) {
+                        isCChildOfParent = true;
+                        break;
+                    }
+                }
+                assertTrue(isCChildOfParent);
+            }
+        } catch (NetworkException | ApiException | IllegalArgumentException e) {
             handle(e);
         }
     }
@@ -192,7 +205,7 @@ public class ReadOnlyDataTest extends RedditTest {
             assertTrue(subs.size() > 0);
             // Make sure the items aren't null
             for (String s : subs) {
-            	Assert.assertNotNull(s);
+                Assert.assertNotNull(s);
             }
         } catch (NetworkException e) {
             handle(e);

@@ -2,13 +2,7 @@ package net.dean.jraw.http.oauth;
 
 import net.dean.jraw.JrawUtils;
 import net.dean.jraw.RedditClient;
-import net.dean.jraw.http.AuthenticationMethod;
-import net.dean.jraw.http.Credentials;
-import net.dean.jraw.http.MediaTypes;
-import net.dean.jraw.http.NetworkAccessible;
-import net.dean.jraw.http.NetworkException;
-import net.dean.jraw.http.RedditResponse;
-import net.dean.jraw.http.RestRequest;
+import net.dean.jraw.http.*;
 
 import java.math.BigInteger;
 import java.net.MalformedURLException;
@@ -59,7 +53,7 @@ public class OAuthHelper implements NetworkAccessible<RedditResponse, RedditClie
      * @param permanent Whether or not to request a 'refresh' token which can be exchanged for an additional
      *                  Authorization token in the future.
      * @param scopes OAuth scopes to be requested. A full list of scopes can be found
-     *              <a href="https://www.reddit.com/dev/api/oauth>here</a>
+     *              <a href="https://www.reddit.com/dev/api/oauth">here</a>
      * @return The URL clients are sent to in order to authorize themselves
      */
     public String getAuthorizationUrl(String clientId, String redirectUri, boolean permanent, String... scopes) {

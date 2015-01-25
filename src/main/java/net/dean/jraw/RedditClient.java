@@ -1,24 +1,8 @@
 package net.dean.jraw;
 
 import com.squareup.okhttp.Response;
-import net.dean.jraw.http.AuthenticationMethod;
-import net.dean.jraw.http.Credentials;
-import net.dean.jraw.http.MediaTypes;
-import net.dean.jraw.http.NetworkException;
-import net.dean.jraw.http.RedditResponse;
-import net.dean.jraw.http.RestClient;
-import net.dean.jraw.http.RestRequest;
-import net.dean.jraw.models.Account;
-import net.dean.jraw.models.Captcha;
-import net.dean.jraw.models.Comment;
-import net.dean.jraw.models.CommentSort;
-import net.dean.jraw.models.Listing;
-import net.dean.jraw.models.LiveThread;
-import net.dean.jraw.models.LoggedInAccount;
-import net.dean.jraw.models.More;
-import net.dean.jraw.models.Submission;
-import net.dean.jraw.models.Subreddit;
-import net.dean.jraw.models.Thing;
+import net.dean.jraw.http.*;
+import net.dean.jraw.models.*;
 import net.dean.jraw.models.meta.Model;
 import net.dean.jraw.paginators.Paginators;
 import net.dean.jraw.paginators.Sorting;
@@ -560,7 +544,7 @@ public class RedditClient extends RestClient<RedditResponse> {
     @EndpointImplementation(Endpoints.MORECHILDREN)
     public List<Thing> getMoreComments(Submission submission, CommentSort sort, More more)
             throws NetworkException, ApiException {
-        // TODO: Map the comments into a tree
+
         List<String> moreIds = more.getChildrenIds();
         StringBuilder ids = new StringBuilder(moreIds.get(0));
         for (int i = 1; i < moreIds.size(); i++) {
