@@ -10,7 +10,6 @@ import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ObjectNode;
 
-import java.rmi.UnexpectedException;
 import java.util.*;
 
 /**
@@ -92,8 +91,8 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
      *
      * @param client
      * @param parentSubmission The submission all comments are under
-     * @param commentRoot If loading more comments, the parent comment of this listing or null if the parent is the submission
-     * @param sort How to sort the recieved comments
+     * @param commentRoot      If loading more comments, the parent comment of this listing or null if the parent is the submission
+     * @param sort             How to sort the recieved comments
      * @return The array of comments loaded and inserted into the tree
      * @throws NetworkException
      * @throws ApiException
@@ -159,7 +158,7 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
      *
      * @param comments The comments to organize into a tree
      * @param mores    The mores to add into the comment tree
-     * @throws UnexpectedException More than 1 more was left over, should only be one for the root
+     * @throws IllegalArgumentException More than 1 more was left over, should only be one for the root
      */
     public static void formCommentTree(List<Comment> comments, List<More> mores) throws IllegalArgumentException {
         List<Comment> toAdd = new ArrayList<>(comments);
