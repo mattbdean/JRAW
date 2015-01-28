@@ -1,43 +1,36 @@
 package net.dean.jraw.http;
 
-import com.google.common.collect.ImmutableMap;
 import com.squareup.okhttp.CacheControl;
 import com.squareup.okhttp.FormEncodingBuilder;
+import com.squareup.okhttp.Headers;
 import com.squareup.okhttp.MediaType;
-import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
-import net.dean.jraw.Endpoint;
+import com.squareup.okhttp.internal.Util;
+import com.squareup.okhttp.internal.http.HttpMethod;
 import net.dean.jraw.Endpoints;
 import net.dean.jraw.JrawUtils;
 
-import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * This class is responsible for representing a RESTful HTTP request
  */
 public final class RestRequest {
-    private final String url;
     private final String method;
-    private final Map<String, String> formArgs;
-    private final Map<String, String> query;
+    private final URL url;
+    private final RequestBody body;
+    private final Headers headers;
+    private final BasicAuthData basicAuthData;
+    private final MediaType expectedMediaType;
     private final String[] sensitiveArgs;
-    private final Request request;
-    private final Endpoints endpoint;
-    private final boolean needsAuth;
-    private final MediaType expected;
-    private final boolean https;
-    private final String host;
-    private final String path;
-    private final BasicAuthData authData;
 
     /**
      * Creates a RestRequest from the given URL
@@ -52,76 +45,48 @@ public final class RestRequest {
     }
 
     private RestRequest(Builder b) {
-        this.request = b.builder.build();
-        this.url = request.urlString();
-        this.method = request.method();
+        this.method = b.method;
+        this.url = b.url;
+        this.body = b.body;
+        this.headers = b.headers.build();
+        this.basicAuthData = b.basicAuthData;
+        this.expectedMediaType = b.expectedMediaType;
         this.sensitiveArgs = b.sensitiveArgs;
-        this.endpoint = b.endpoint;
-        this.needsAuth = b.auth;
-        this.expected = b.expected;
-        this.https = b.https;
-        this.authData = b.authData;
-        this.host = b.host;
-        this.path = b.path;
-        if (b.query != null) {
-            this.query = b.query;
-        } else {
-            query = null;
-        }
-        if (b.formArgs != null) {
-            this.formArgs = ImmutableMap.<String, String>builder().putAll(b.formArgs).build();
-        } else {
-            formArgs = null;
-        }
     }
 
-    /**
-     * Checks if this request needs some sort of authentication to be sent successfully.
-     * @return True if this request needs authentication, false if else.
-     */
-    public boolean needsAuth() {
-        return needsAuth;
-    }
-
-    /**
-     * Gets the OkHttp request being wrapped by this object.
-     * @return The OkHttp request
-     */
-    public Request getRequest() {
-        return request;
-    }
-
-    /**
-     * The fully-qualified URL that this request will be sent to
-     * @return The URL that this request will be sent to
-     */
-    public String getUrl() {
-        return url;
-    }
-
-    /**
-     * The HTTP method to use (GET, POST, PUT, DELETE, etc.)
-     * @return The HTTP method to use
-     */
     public String getMethod() {
         return method;
     }
 
-    /**
-     * The data to send as URL-encoded form data with a POST or similar request
-     * @return The data to send in the form body
-     */
-    public Map<String, String> getFormArgs() {
-        return formArgs;
+    public URL getUrl() {
+        return url;
     }
 
-    public Map<String, String> getQuery() {
-        return query;
+    public RequestBody getBody() {
+        return body;
+    }
+
+    public Headers getHeaders() {
+        return headers;
+    }
+
+    public BasicAuthData getBasicAuthData() {
+        return basicAuthData;
+    }
+
+    public MediaType getExpectedType() {
+        return expectedMediaType;
+    }
+
+    public boolean isUsingBasicAuth() {
+        return basicAuthData != null && basicAuthData.isValid();
     }
 
     /**
-     * An array of the names of sensitive form data arguments. These values of these arguments should be concealed.
-     * @return An array of keys whose values are sensitive
+     * Gets an array of the names of sensitive form data arguments. The values of these arguments should be concealed.
+     * Only applies to a {@code application/x-www-form-urlencoded} request body.
+     *
+     * @return A copy of array consisting of keys whose values are sensitive
      */
     public String[] getSensitiveArgs() {
         if (sensitiveArgs == null) {
@@ -133,86 +98,32 @@ public final class RestRequest {
     }
 
     /**
-     * The endpoint that this request is being sent to
+     * This class provides an interface to create objects that model HTTP requests. Borrowed heavily from OkHttp's
+     * Request.Builder class.
      */
-    public Endpoints getEndpoint() {
-        return endpoint;
-    }
+    public static final class Builder {
+        /** This Pattern will match a URI parameter. For example, /api/{param1}/{param2} */
+        private static final Pattern PATH_PARAM_PATTERN = Pattern.compile("\\{(.*?)\\}");
 
-    /**
-     * Checks if the given key in the form data is sensitive
-     * @param arg A key
-     * @return True, if the key's value has been marked as sensitive. False if else
-     */
-    public boolean isSensitive(String arg) {
-        if (sensitiveArgs == null || sensitiveArgs.length == 0) {
-            return false;
-        }
-        for (String sensitive : sensitiveArgs) {
-            if (sensitive.equals(arg)) {
-                return true;
-            }
-        }
+        private String method;
 
-        return false;
-    }
+        // Created when build() is called
+        private transient URL url;
 
-    public boolean isHttps() {
-        return https;
-    }
-
-    public String getHost() {
-        return host;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public boolean isNeedsAuth() {
-        return needsAuth;
-    }
-
-    public MediaType getExpected() {
-        return expected;
-    }
-
-    public Request getOkHttpRequest() {
-        return request;
-    }
-
-    /**
-     * The expected Content-Type
-     */
-    public MediaType getExpectedType() {
-        return expected;
-    }
-
-    public BasicAuthData getBasicAuthData() {
-        return authData;
-    }
-
-    public boolean isUsingBasicAuth() {
-        return authData != null && authData.isValid();
-    }
-
-    /**
-     * This class is responsible for creating new RestRequests
-     */
-    public static class Builder {
-        private Request.Builder builder;
-
+        // URL properties
+        private String protocol;
         private String host;
         private String path;
+        private String[] pathParams;
         private Map<String, String> query;
-        private List<String> urlParams;
-        private boolean https;
-        private Endpoints endpoint;
-        private Map<String, String> formArgs;
+
+        private RequestBody body;
+
+        // Extras
+        private Headers.Builder headers;
+        private BasicAuthData basicAuthData;
+        private MediaType expectedMediaType;
         private String[] sensitiveArgs;
-        private boolean auth;
-        private MediaType expected;
-        private BasicAuthData authData;
 
         /**
          * Creates a new Builder that will result in a RestRequest whose URL will match the one given
@@ -229,265 +140,192 @@ public final class RestRequest {
             Map<String, String> query = new HashMap<>();
 
             if (url.getQuery() != null) {
-                try {
-                    String[] queryKeysValues = URLDecoder.decode(url.getQuery(), "UTF-8").split("&");
-                    for (String keyValuePair : queryKeysValues) {
-                        String[] parts = keyValuePair.split("=");
-                        query.put(parts[0], parts[1]);
-                    }
-                } catch (UnsupportedEncodingException e) {
-                    throw new RuntimeException("UTF-8 not supported");
+                String[] queryKeysValues = JrawUtils.urlDecode(url.getQuery()).split("&");
+                for (String keyValuePair : queryKeysValues) {
+                    String[] parts = keyValuePair.split("=");
+                    query.put(parts[0], parts[1]);
                 }
             }
 
             Builder b = new Builder()
-                        .https(url.getProtocol().equals("https"))
-                        .host(url.getHost())
-                        .path(url.getPath())
-                        .query(query);
+                    .https(url.getProtocol().equals("https"))
+                    .host(url.getHost())
+                    .path(url.getPath())
+                    .query(query);
             if (formArgs.length != 0) {
-                b.formMethod(method, JrawUtils.args(formArgs));
+                b.method(method, JrawUtils.args(formArgs));
             }
             return b;
         }
 
-        /**
-         * Instantiates a new Builder
-         */
         public Builder() {
-            this.https = false;
-            this.auth = false;
-            this.expected = MediaTypes.JSON.type();
-            this.builder = new Request.Builder();
+            get();
+            https(false);
+            this.headers = new Headers.Builder();
+            this.expectedMediaType = MediaTypes.JSON.type();
         }
 
-        /**
-         * Enables or disables HTTP over SSL
-         * @param https Whether this request should be executed securely
-         * @return This Builder
-         */
-        public Builder https(boolean https) {
-            this.https = https;
-            return this;
-        }
+        public Builder get() { return method("GET", (RequestBody) null); }
 
-        /**
-         * Sets the query string arguments. The given parameters are passed into {@link JrawUtils#args(Object...)} and then
-         * given to {@link #query(java.util.Map)}.
-         * @param args The parameters that will be found in the query string
-         * @return This Builder
-         */
-        public Builder query(Object... args) {
-            return query(JrawUtils.args(args));
-        }
+        public Builder delete() { return method("DELETE", (RequestBody) null); }
 
-        /**
-         * Sets the query string arguments
-         * @param args The parameters that will be found in the query string
-         * @return This Builder
-         */
-        public Builder query(Map<String, String> args) {
-            this.query = args;
-            return this;
-        }
+        public Builder head() { return method("HEAD", (RequestBody) null); }
 
-        /**
-         * Sets the endpoint to use. If the given endpoint has arguments in the URI (such as {@code /user/{username}/about.json}),
-         * then the given strings will be substituted in the order given. For example, if the endpoint was
-         * {@code /api/multi/{multipath}/r/{srname}}, and the given strings were "myMulti" and "mySubreddit", then the
-         * result would be {@code /api/multipath/myMulti/mySubreddit}. If {@link #path(String)} is also called, this method
-         * will take priority, regardless of order.
-         *
-         * @param e The endpoint to use
-         * @param positionalUrlParams The parameters to use. Must be equal to the size of the corresponding Endpoint's
-         * {@link net.dean.jraw.Endpoint#getUrlParams()} list.
-         * @return This Builder
-         */
-        public Builder endpoint(Endpoints e, String... positionalUrlParams) {
-            this.endpoint = e;
-            this.urlParams = Arrays.asList(positionalUrlParams);
-            return this;
-        }
+        public Builder post() { return method("POST", (RequestBody) null); }
+        public Builder post(Map<String, String> urlEncodedForm) { return method("POST", urlEncodedForm); }
+        public Builder post(RequestBody body) { return method("POST", body); }
 
-        /**
-         * Sets the path of the request. For example, "/stylesheet". If {@link #endpoint(net.dean.jraw.Endpoints, String...)}
-         * is also called, that method will take priority, regardless of order.
-         *
-         * @param path The path to use
-         * @return This Builder
-         */
-        public Builder path(String path) {
-            this.path = path;
-            return this;
-        }
+        public Builder put() { return method("PUT", (RequestBody) null); }
+        public Builder put(Map<String, String> urlEncodedForm) { return method("PUT", urlEncodedForm); }
+        public Builder put(RequestBody body) { return method("PUT", body); }
 
-        /**
-         * Sets the request's host. For example, "www.reddit.com"
-         * @param host The new host
-         * @return This Builder
-         */
-        public Builder host(String host) {
-            this.host = host;
-            return this;
-        }
+        public Builder patch() { return method("PATCH", (RequestBody) null); }
+        public Builder patch(Map<String, String> urlEncodedForm) { return method("PATCH", urlEncodedForm); }
+        public Builder patch(RequestBody body) { return method("PATCH", body); }
 
-        /**
-         * Marks this Builder as being sent as a GET request
-         * @return This Builder
-         */
-        public Builder get() {
-            builder.get();
-            return this;
-        }
-
-        /**
-         * Marks this Builder as being sent as a DELETE request
-         * @return This Builder
-         */
-        public Builder delete() {
-            builder.delete();
-            return this;
-        }
-
-        /**
-         * Marks this Builder as being sent as a POST request
-         * @param formArgs The arguments to send in the body. Will be URL encoded.
-         * @return This Builder
-         */
-        public Builder post(Map<String, String> formArgs) {
-            return formMethod("POST", formArgs);
-        }
-
-        /**
-         * Marks this Builder as being sent as a PUT request
-         * @param formArgs The arguments to send in the body. Will be URL encoded.
-         * @return This Builder
-         */
-        public Builder put(Map<String, String> formArgs) {
-            return formMethod("PUT", formArgs);
-        }
-
-        /**
-         * Adds a header to the request
-         * @param key The name of the header
-         * @param value The header's value
-         * @return This Builder
-         */
-        public Builder header(String key, String value) {
-            builder.header(key, value);
-            return this;
-        }
-
-        /**
-         * Sets the keys of form data that have sensitive arguments
-         * @param args The keys
-         * @return This Builder
-         */
-        public Builder sensitiveArgs(String... args) {
-            this.sensitiveArgs = args;
-            return this;
-        }
-
-        /**
-         * Sets whether or not this request will required authentication in order to complete successfully.
-         * @param auth If this request needs authentication
-         * @return This Builder
-         */
-        public Builder needsAuth(boolean auth) {
-            this.auth = auth;
-            return this;
-        }
-
-        /**
-         * Sets the expected content type
-         * @param type The expected content type
-         * @return This Builder
-         */
-        public Builder expected(MediaType type) {
-            this.expected = type;
-            return this;
-        }
-
-        /**
-         * Sets a custom request body
-         * @param method The HTTP verb to execute this request with
-         * @param mediaType The Content-Type of the body
-         * @param content The content to send
-         * @return This Builder
-         */
-        public Builder customBody(String method, MediaType mediaType, String content) {
-            builder.method(method, RequestBody.create(mediaType, content));
-            return this;
-        }
-
-        /**
-         * Sets how OkHttp will handle retrieving the request.
-         * @return This Builder
-         */
-        public Builder cacheControl(CacheControl cacheControl) {
-            builder.cacheControl(cacheControl);
-            return this;
-        }
-
-        /**
-         * Sends this request with HTTP Basic Auth (see <a href="http://tools.ietf.org/html/rfc2617">RFC 2617</a>).
-         * HTTPS <b>MUST</b> be enabled, or else your passwords will be floating around the network in plain text. This
-         * method will automatically enable HTTPS.
-         * @return This Builder
-         */
-        public Builder basicAuth(String username, String password) {
-            if (username == null && password == null) {
-                // Disable it
-                authData = null;
-                return this;
-            }
-
-            BasicAuthData authData = new BasicAuthData(username, password);
-            if (!authData.isValid()) {
-                // One of the two were null, catch that now
-                throw new IllegalArgumentException("Username or password were null");
-            }
-
-            this.authData = authData;
-            return https(true);
-        }
-
-        private Builder formMethod(String method, Map<String, String> formArgs) {
+        public Builder method(String method, Map<String, String> urlEncodedForm) {
             RequestBody body = null;
-            if (formArgs != null) {
+            if (urlEncodedForm != null && HttpMethod.permitsRequestBody(method.toUpperCase())) {
                 FormEncodingBuilder formBuilder = new FormEncodingBuilder();
-                for (Map.Entry<String, String> entry : formArgs.entrySet()) {
+                for (Map.Entry<String, String> entry : urlEncodedForm.entrySet()) {
                     formBuilder.add(entry.getKey(), entry.getValue());
                 }
                 body = formBuilder.build();
             }
 
-            builder.method(method, body);
+            return method(method, body);
+        }
 
-            this.formArgs = formArgs;
+        public Builder method(String method, RequestBody body) {
+            // Adapted from com.squareup.okhttp.Request.Builder.method(String, RequestBody)
+            if (method == null || method.length() == 0) {
+                throw new IllegalArgumentException("Missing HTTP method");
+            }
+            if (body != null && !HttpMethod.permitsRequestBody(method)) {
+                throw new IllegalArgumentException("Request body not allowed for " + method);
+            }
+            if (body == null && HttpMethod.permitsRequestBody(method)) {
+                body = RequestBody.create(null, Util.EMPTY_BYTE_ARRAY);
+            }
+            this.method = method;
+            this.body = body;
             return this;
+        }
 
+        public Builder https(boolean https) {
+            this.protocol = https ? "https" : "http";
+            return this;
+        }
+
+        public Builder host(String host) {
+            this.host = host;
+            return this;
+        }
+
+        public Builder path(String path, String... params) {
+            this.path = path;
+            return pathParams(params);
+        }
+
+        public Builder pathParams(String... params) {
+            this.pathParams = params;
+            return this;
+        }
+
+        public Builder endpoint(Endpoints e, String... pathParams) {
+            if (e == null) {
+                throw new NullPointerException("Endpoint cannot be null");
+            }
+            this.path = e.getEndpoint().getUri();
+            pathParams(pathParams);
+            return this;
+        }
+
+        public Builder query(String... keysAndValues) {
+            return query(JrawUtils.args((String[]) keysAndValues));
+        }
+
+        public Builder query(Map<String, String> query) {
+            this.query = query;
+            return this;
+        }
+
+        /** Replaces all values of the given header with the given value */
+        public Builder header(String name, String value) {
+            this.headers.set(name, value);
+            return this;
+        }
+
+        /** Removes all values of a header */
+        public Builder removeHeader(String name) {
+            this.headers.removeAll(name);
+            return this;
         }
 
         /**
-         * Generates a valid query string based on the given arguments
-         * @param args The arguments for the query string
-         * @return A query string
+         * Sets how the server should go about finding a cached version of this request
+         * @param cacheControl The value of the Cache-Control header. If null or empty, the the header is removed.
          */
-        private String generateQueryString(Map<String, String> args) {
-            if (args.size() == 0) {
+        public Builder cacheControl(CacheControl cacheControl) {
+            String value;
+            if (cacheControl == null || (value = cacheControl.toString()).isEmpty()) {
+                return removeHeader("Cache-Control");
+            }
+
+            return header("Cache-Control", value);
+        }
+
+        public Builder basicAuth(BasicAuthData data) {
+            this.basicAuthData = data;
+            return this;
+        }
+
+        public Builder expected(MediaType type) {
+            this.expectedMediaType = type;
+            return this;
+        }
+
+        public Builder sensitiveArgs(String... args) {
+            this.sensitiveArgs = args == null ? new String[0] : args;
+            return this;
+        }
+
+        public RestRequest build() {
+            if (basicAuthData != null && !protocol.equals("https")) {
+                throw new IllegalArgumentException("Refusing to send credentials unencrypted");
+            }
+
+            String effectivePath = path;
+            if (pathParams != null && pathParams.length != 0) {
+                effectivePath = substitutePathParameters(path, pathParams);
+            }
+            if (query != null && query.size() != 0) {
+                effectivePath += buildQuery(query);
+            }
+            try {
+                this.url = new URL(protocol, host, effectivePath);
+            } catch (MalformedURLException e) {
+                throw new IllegalArgumentException(String.format("Malformed URL by new java.net.URL(protocol=%s, host=%s, file=%s)",
+                        protocol, host, effectivePath), e);
+            }
+
+            return new RestRequest(this);
+        }
+
+        private static String buildQuery(Map<String, String> query) {
+            if (query.size() == 0) {
                 return "";
             }
             StringBuilder url = new StringBuilder();
 
-            // Create the query string (?foo=bar&key1=val1
+            // Create a query string, such as "?foo=bar&key1=val1"
             url.append("?");
-            for (Iterator<Map.Entry<String, String>> it = args.entrySet().iterator(); it.hasNext(); ) {
+            for (Iterator<Map.Entry<String, String>> it = query.entrySet().iterator(); it.hasNext(); ) {
                 Map.Entry<String, String> entry = it.next();
 
-                url.append(urlEncode(entry.getKey()));
+                url.append(JrawUtils.urlEncode(entry.getKey()));
                 url.append("=");
-                url.append(urlEncode(entry.getValue()));
+                url.append(JrawUtils.urlEncode(entry.getValue()));
                 if (it.hasNext()) {
                     // More parameters are coming, add a separator
                     url.append("&");
@@ -497,27 +335,21 @@ public final class RestRequest {
             return url.toString();
         }
 
-        /**
-         * This method will substitute the URI parameters with the given arguments, like
-         * {@link #endpoint(net.dean.jraw.Endpoints, String...)} specifies.
-         * @param e The endpoint to use
-         * @param positionalArgs The arguments to use
-         * @return A URI based on the given endpoint's URI
-         */
-        private String replaceUriParameters(Endpoint e, List<String> positionalArgs) {
-            if (e.getUrlParams().size() != positionalArgs.size()) {
+
+        private static String substitutePathParameters(String path, String[] positionalArgs) {
+            List<String> pathParams = parsePathParams(path);
+            if (pathParams.size() != positionalArgs.length) {
                 // Different amount of parameters
                 throw new IllegalArgumentException(String.format("URL parameter size mismatch. Expecting %s, got %s",
-                        e.getUrlParams().size(), positionalArgs.size()));
+                        pathParams.size(), positionalArgs.length));
             }
 
-            // There are URL parameters, substitute them
-            String updatedUri = e.getUri();
+            String updatedUri = path;
             Matcher m = null;
             for (String arg : positionalArgs) {
                 if (m == null) {
                     // Create on first use
-                    m = Endpoint.URI_PARAM_PATTERN.matcher(updatedUri);
+                    m = PATH_PARAM_PATTERN.matcher(updatedUri);
                 } else {
                     // Reuse the Matcher
                     m.reset(updatedUri);
@@ -528,62 +360,14 @@ public final class RestRequest {
             return updatedUri;
         }
 
-        /**
-         * Builds this Builder into a fully-fledged RestRequest that mirrors the given parameters exactly
-         * @return A new RestRequest
-         */
-        public RestRequest build() {
-            if (host == null || host.isEmpty()) {
-                throw new IllegalStateException("No host given");
+        private static List<String> parsePathParams(String path) {
+            List<String> params = new ArrayList<>();
+            Matcher matcher = PATH_PARAM_PATTERN.matcher(path);
+            while (matcher.find()) {
+                params.add(matcher.group());
             }
 
-            // Update the url using url()
-            StringBuilder url = new StringBuilder(
-                    String.format("http%s://%s", https ? "s" : "", host));
-
-            // Add the endpoint URI
-            if (endpoint != null) {
-                Endpoint e = endpoint.getEndpoint();
-                if (e.getUrlParams().isEmpty()) {
-                    // There are no parameters for the endpoint or none have been given
-                    url.append(e.getUri());
-                } else {
-                    url.append(replaceUriParameters(e, urlParams));
-                }
-            } else if (path != null) {
-                // Endpoint takes priority over path
-                if (!path.startsWith("/")) {
-                    url.append("/");
-                }
-                url.append(path);
-            }
-
-            if (query != null) {
-                url.append(generateQueryString(query));
-            }
-
-            builder.url(url.toString());
-
-            if ((authData != null) && !https)
-                throw new IllegalArgumentException("Refusing to build RestRequest using Basic Auth without HTTPS");
-
-            return new RestRequest(this);
-        }
-
-        /**
-         * Utility method to URL-encode a given string in UTF-8.
-         * @param str The unencoded String
-         * @return A URL-encoded string
-         */
-        private String urlEncode(String str) {
-            //String charset = StandardCharsets.UTF_8.name();
-            String charset = "UTF-8";
-            try {
-                return URLEncoder.encode(str, charset);
-            } catch (UnsupportedEncodingException e) {
-                JrawUtils.logger().error("Unsupported charset: " + charset);
-                return null;
-            }
+            return params;
         }
     }
 }

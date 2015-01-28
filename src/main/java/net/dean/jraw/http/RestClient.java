@@ -1,36 +1,25 @@
 package net.dean.jraw.http;
 
 import com.google.common.util.concurrent.RateLimiter;
-import com.squareup.okhttp.Authenticator;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
+import com.squareup.okhttp.Headers;
 import net.dean.jraw.JrawUtils;
 
 import java.io.IOException;
-import java.net.CookieManager;
-import java.net.CookiePolicy;
-import java.net.CookieStore;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 /**
  * This class provides a high-level API to send REST-oriented HTTP requests with.
  */
-public abstract class RestClient<T extends RestResponse> implements HttpClient<T>, NetworkAccessible<T, RestClient<T>> {
+public abstract class RestClient implements NetworkAccessible {
+    /** The HttpAdapter used to send HTTP requests */
+    protected final HttpAdapter httpAdapter;
     private final String defaultHost;
-    /** The OkHttpClient used to execute HTTP requests */
-    protected final OkHttpClient http;
-    /** The CookieStore that will contain all the cookies saved by {@link #http} */
-    protected final CookieStore cookieJar;
+    /** The CookieStore that will contain all the cookies saved by {@link #httpAdapter} */
     protected final HttpLogger logger;
     /** A list of Requests sent in the past */
-    protected final LinkedHashMap<T, Date> history;
-    /** A list of headers to be sent for request */
-    protected final Map<String, String> defaultHeaders;
+    protected final LinkedHashMap<RestResponse, Date> history;
     private RateLimiter rateLimiter;
     private boolean useHttpsDefault;
     private boolean enforceRatelimit;
@@ -45,19 +34,14 @@ public abstract class RestClient<T extends RestResponse> implements HttpClient<T
      * @param requestsPerMinute The amount of HTTP requests that can be sent in one minute. A value greater than 0 will
      *                          enable rate limit enforcing, one less than or equal to 0 will disable it.
      */
-    public RestClient(String defaultHost, String userAgent, int requestsPerMinute) {
+    public RestClient(HttpAdapter httpAdapter, String defaultHost, String userAgent, int requestsPerMinute) {
+        this.httpAdapter = httpAdapter;
         this.defaultHost = defaultHost;
-        this.http = new OkHttpClient();
         this.saveResponseHistory = false;
         this.logger = new HttpLogger(JrawUtils.logger());
         this.requestLogging = false;
-        CookieManager manager = new CookieManager();
-        manager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
-        http.setCookieHandler(manager);
-        this.cookieJar = manager.getCookieStore();
         this.history = new LinkedHashMap<>();
         this.useHttpsDefault = false;
-        this.defaultHeaders = new HashMap<>();
         setUserAgent(userAgent);
         setEnforceRatelimit(requestsPerMinute);
     }
@@ -88,34 +72,22 @@ public abstract class RestClient<T extends RestResponse> implements HttpClient<T
         this.useHttpsDefault = useHttpsDefault;
     }
 
-    @Override
+    /**
+     * Creates a new {@link RestRequest.Builder} whose host is {@link #getDefaultHost()} and uses HTTPS if
+     * {@link #isHttpsDefault()} is true, and with {@link #getHttpAdapter()}'s
+     * {@link HttpAdapter#getDefaultHeaders() default headers} already applied.
+     *
+     * @return A new RestRequest Builder
+     */
     public RestRequest.Builder request() {
-        return addDefaultHeaders(new RestRequest.Builder()
+        RestRequest.Builder builder = new RestRequest.Builder()
                 .host(defaultHost)
-                .https(useHttpsDefault));
-    }
-
-    private RestRequest.Builder addDefaultHeaders(RestRequest.Builder builder) {
-        for (Map.Entry<String, String> entry : defaultHeaders.entrySet()) {
+                .https(useHttpsDefault);
+        for (Map.Entry<String, String> entry: httpAdapter.getDefaultHeaders().entrySet()) {
             builder.header(entry.getKey(), entry.getValue());
         }
+
         return builder;
-    }
-
-    /**
-     * Sets the time in milliseconds the HTTP client will wait before timing out
-     * @param milliseconds Timeout length in milliseconds
-     */
-    public void setTimeoutLength(long milliseconds) {
-        http.setConnectTimeout(milliseconds, TimeUnit.MILLISECONDS);
-    }
-
-    /**
-     * Gets the length in milliseconds the internal HTTP client will wait before timing out
-     * @return Timeout length in milliseconds
-     */
-    public long getTimeoutLength() {
-        return http.getConnectTimeout();
     }
 
     /**
@@ -141,58 +113,57 @@ public abstract class RestClient<T extends RestResponse> implements HttpClient<T
         return enforceRatelimit;
     }
 
-    @Override
-    public T execute(RestRequest request) throws NetworkException {
-        Authenticator prevAuthenticator = http.getAuthenticator();
-
+    /**
+     * Executes a HTTP request. HTTP Basic Authentication, rate limiting, request and response logging, and Content-Type
+     * checking will be used if applicable. If using a rate limit, this method will block until it can obtain a ticket.
+     *
+     * @param request The request to send
+     * @return A RestResponse modeling the response sent from the server
+     * @throws NetworkException
+     */
+    public RestResponse execute(RestRequest request) throws NetworkException {
         if (request.isUsingBasicAuth()) {
-            BasicAuthData auth = request.getBasicAuthData();
-            http.setAuthenticator(new BasicAuthenticator(auth.getUsername(), auth.getPassword()));
+            httpAdapter.authenticate(request.getBasicAuthData());
+        }
+
+        Headers.Builder builder = request.getHeaders().newBuilder();
+        for (Map.Entry<String, String> defaultHeader : httpAdapter.getDefaultHeaders().entrySet()) {
+            builder.add(defaultHeader.getKey(), defaultHeader.getValue());
         }
 
         if (enforceRatelimit) {
+            // Try to get a ticket without waiting
             if (!rateLimiter.tryAcquire()) {
+                // Could not get a ticket immediately, block until we can
                 double time = rateLimiter.acquire();
                 if (requestLogging) {
                     JrawUtils.logger().info("Slept for {} seconds", time);
-                    JrawUtils.logger().info("");
                 }
             }
         }
 
-        Request r = request.getRequest();
         try {
             if (requestLogging)
                 logger.log(request);
 
-            Response response = http.newCall(r).execute();
-            T genericResponse = initResponse(response);
+            RestResponse response = httpAdapter.execute(request);
             if (requestLogging)
-                logger.log(genericResponse);
+                logger.log(response);
 
-            if (!response.isSuccessful())
-                throw new NetworkException(response.code());
-
-            if (!JrawUtils.typeComparison(genericResponse.getType(), request.getExpectedType())) {
+            if (!JrawUtils.typeComparison(response.getType(), request.getExpectedType())) {
                 throw new NetworkException(String.format("Expected Content-Type ('%s/%s') did not match actual Content-Type ('%s/%s')",
                         request.getExpectedType().type(), request.getExpectedType().subtype(),
-                        genericResponse.getType().type(), genericResponse.getType().subtype()));
+                        response.getType().type(), response.getType().subtype()));
             }
 
             if (saveResponseHistory)
-                history.put(genericResponse, new Date());
-            return genericResponse;
+                history.put(response, new Date());
+            return response;
         } catch (IOException e) {
-            throw new NetworkException("Could not execute the request: " + r, e);
+            throw new NetworkException("Could not execute the request: " + request, e);
         } finally {
-            // Reset the Authenticator
-            http.setAuthenticator(prevAuthenticator);
+            httpAdapter.deauthenticate();
         }
-    }
-
-    @Override
-    public RestClient<T> getHttpClient() {
-        return this;
     }
 
     /**
@@ -200,7 +171,7 @@ public abstract class RestClient<T extends RestResponse> implements HttpClient<T
      * @return The value of the User-Agent header
      */
     public String getUserAgent() {
-        return defaultHeaders.get("User-Agent");
+        return httpAdapter.getDefaultHeader("User-Agent");
     }
 
     /**
@@ -208,7 +179,7 @@ public abstract class RestClient<T extends RestResponse> implements HttpClient<T
      * @param userAgent The new User-Agent header
      */
     public void setUserAgent(String userAgent) {
-        defaultHeaders.put("User-Agent", userAgent);
+        httpAdapter.setDefaultHeader("User-Agent", userAgent);
     }
 
     /**
@@ -256,7 +227,7 @@ public abstract class RestClient<T extends RestResponse> implements HttpClient<T
      * received. Will be empty unless changed using {@link #setSaveResponseHistory(boolean)}.
      * @return The response history
      */
-    public LinkedHashMap<T, Date> getHistory() {
+    public LinkedHashMap<RestResponse, Date> getHistory() {
         return history;
     }
 
@@ -268,11 +239,8 @@ public abstract class RestClient<T extends RestResponse> implements HttpClient<T
         return logger;
     }
 
-    /**
-     * This method is responsible for instantiating a new RestResponse or one of its subclasses
-     *
-     * @param r The OkHttp response given
-     * @return A new response
-     */
-    protected abstract T initResponse(Response r);
+    @Override
+    public HttpAdapter getHttpAdapter() {
+        return httpAdapter;
+    }
 }

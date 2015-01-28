@@ -1,17 +1,11 @@
 package net.dean.jraw;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * This class represents a Reddit API endpoint such as "{@code POST /api/login}"
  */
 public class Endpoint implements Comparable<Endpoint> {
-    /** This Pattern will match a URI parameter. For example, /api/{param1}/{param2} */
-    public static final Pattern URI_PARAM_PATTERN = Pattern.compile("\\{([^\\}]+)\\}");
 
     private final String scope;
     private boolean implemented;
@@ -20,7 +14,6 @@ public class Endpoint implements Comparable<Endpoint> {
     protected final String verb;
     protected final String uri;
     protected final String requestDescriptor;
-    protected final List<String> urlParams;
 
     /**
      * Instantiates a new Endpoint. Used mostly for meta-programming in the
@@ -49,28 +42,8 @@ public class Endpoint implements Comparable<Endpoint> {
 
         this.verb = parts[0].toUpperCase();
         this.uri = parts[1];
-        this.urlParams = parseUrlParams(uri);
         this.scope = scope;
         this.implemented = false;
-    }
-
-    private List<String> parseUrlParams(String uri) {
-        List<String> params = new ArrayList<>();
-        Matcher matcher = URI_PARAM_PATTERN.matcher(uri);
-        while (matcher.find()) {
-            params.add(matcher.group());
-        }
-
-        return params;
-    }
-
-    /**
-     * Gets a list of parameters in this endpoint's URI. For example, the endpoint {@code /user/{username}/about.json}
-     * would have one parameter: {@code {username}}.
-     * @return The URI parameters
-     */
-    public List<String> getUrlParams() {
-        return urlParams;
     }
 
     /**
@@ -159,14 +132,12 @@ public class Endpoint implements Comparable<Endpoint> {
                 ", verb='" + verb + '\'' +
                 ", uri='" + uri + '\'' +
                 ", requestDescriptor='" + requestDescriptor + '\'' +
-                ", urlParams=" + urlParams +
                 '}';
     }
 
     @Override
     public int compareTo(Endpoint other) {
-        // Android-compatible compare
-        int implComp = Boolean.valueOf(implemented).compareTo(Boolean.valueOf(other.implemented));
+        int implComp = Boolean.valueOf(implemented).compareTo(other.implemented);
         if (implComp != 0) {
             return implComp;
         } else {

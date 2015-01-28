@@ -3,7 +3,7 @@ package net.dean.jraw.managers;
 import net.dean.jraw.*;
 import net.dean.jraw.http.AuthenticationMethod;
 import net.dean.jraw.http.NetworkException;
-import net.dean.jraw.http.RedditResponse;
+import net.dean.jraw.http.RestResponse;
 import net.dean.jraw.models.FlairTemplate;
 import net.dean.jraw.models.Submission;
 import net.dean.jraw.models.Thing;
@@ -37,7 +37,7 @@ public class ModerationManager extends AbstractManager {
 	public void setNsfw(Submission s, boolean nsfw) throws NetworkException,
 			ApiException {
 		// "/api/marknsfw" if nsfw == true, "/api/unmarknsfw" if nsfw == false
-		genericPost(request()
+		genericPost(reddit.request()
 				.endpoint(nsfw ? Endpoints.MARKNSFW : Endpoints.UNMARKNSFW)
 				.post(JrawUtils.args(
 						"id", s.getFullName()
@@ -66,7 +66,7 @@ public class ModerationManager extends AbstractManager {
 	 */
 	@EndpointImplementation(Endpoints.DEL)
 	public void delete(String id) throws NetworkException, ApiException {
-		genericPost(request()
+		genericPost(reddit.request()
 				.endpoint(Endpoints.DEL)
 				.post(JrawUtils.args(
 						"id", id
@@ -84,7 +84,7 @@ public class ModerationManager extends AbstractManager {
 	 */
 	@EndpointImplementation(Endpoints.SET_SUBREDDIT_STICKY)
 	public void setSticky(Submission s, boolean sticky) throws NetworkException, ApiException {
-		genericPost(request()
+		genericPost(reddit.request()
 				.endpoint(Endpoints.SET_SUBREDDIT_STICKY)
 				.post(JrawUtils.args(
 						"api_type", "json",
@@ -185,7 +185,7 @@ public class ModerationManager extends AbstractManager {
 			args.put("text", text);
 		}
 
-		RedditResponse response = execute(request()
+		RestResponse response = reddit.execute(reddit.request()
 				.post(args)
 				.path("/r/" + subreddit + Endpoints.SELECTFLAIR.getEndpoint().getUri())
 				.build());

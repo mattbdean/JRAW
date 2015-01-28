@@ -29,7 +29,7 @@ public abstract class AuthenticatedRedditTest extends RedditTest {
     protected final ModerationManager moderation;
     protected static final RedditOAuth2Client redditOAuth2 = new RedditOAuth2Client("");
 
-    AuthenticatedRedditTest() {
+    protected AuthenticatedRedditTest() {
         super();
         redditOAuth2.setUserAgent(getUserAgent(getClass()));
         Credentials creds = getCredentials();

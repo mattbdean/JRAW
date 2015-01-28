@@ -8,7 +8,7 @@ import net.dean.jraw.Endpoints;
 import net.dean.jraw.JrawUtils;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.NetworkException;
-import net.dean.jraw.http.RedditResponse;
+import net.dean.jraw.http.RestResponse;
 import net.dean.jraw.models.Captcha;
 import net.dean.jraw.models.Contribution;
 import net.dean.jraw.models.FlairTemplate;
@@ -87,7 +87,7 @@ public class AccountManager extends AbstractManager {
             args.put("captcha", captchaAttempt);
         }
 
-        RedditResponse response = genericPost(request()
+        RestResponse response = genericPost(reddit.request()
                 .endpoint(Endpoints.SUBMIT)
                 .post(args)
                 .build());
@@ -106,7 +106,7 @@ public class AccountManager extends AbstractManager {
      */
     @EndpointImplementation(Endpoints.VOTE)
     public <T extends Thing & Votable> void vote(T s, VoteDirection voteDirection) throws NetworkException, ApiException {
-        genericPost(request()
+        genericPost(reddit.request()
                 .endpoint(Endpoints.VOTE)
                 .post(JrawUtils.args(
                                 "api_type", "json",
@@ -146,7 +146,7 @@ public class AccountManager extends AbstractManager {
     @EndpointImplementation({Endpoints.SAVE, Endpoints.UNSAVE})
     private void setSaved(Submission s, boolean save) throws NetworkException, ApiException {
         // Send it to "/api/save" if save == true, "/api/unsave" if save == false
-        genericPost(request()
+        genericPost(reddit.request()
                 .endpoint(save ? Endpoints.SAVE : Endpoints.UNSAVE)
                 .post(JrawUtils.args(
                         "id", s.getFullName()
@@ -163,7 +163,7 @@ public class AccountManager extends AbstractManager {
      */
     @EndpointImplementation(Endpoints.SENDREPLIES)
     public void sendRepliesToInbox(Submission s, boolean send) throws NetworkException, ApiException {
-        genericPost(request()
+        genericPost(reddit.request()
                 .endpoint(Endpoints.SENDREPLIES)
                 .post(JrawUtils.args(
                         "id", s.getFullName(),
@@ -205,7 +205,7 @@ public class AccountManager extends AbstractManager {
     }
 
     private void modifyDeveloperStatus(String clientId, String devName, boolean remove) throws NetworkException, ApiException {
-        genericPost(request()
+        genericPost(reddit.request()
                 .endpoint(remove ? Endpoints.REMOVEDEVELOPER : Endpoints.ADDDEVELOPER)
                 .post(JrawUtils.args(
                         "api_type", "json",
@@ -239,7 +239,7 @@ public class AccountManager extends AbstractManager {
         if (clientId != null) {
             args.put("client_id", clientId);
         }
-        RedditResponse response = execute(request()
+        RestResponse response = reddit.execute(reddit.request()
                 .endpoint(Endpoints.UPDATEAPP)
                 .post(args)
                 .build());
@@ -256,7 +256,7 @@ public class AccountManager extends AbstractManager {
      */
     @EndpointImplementation(Endpoints.DELETEAPP)
     public void deleteApp(String clientId) throws NetworkException, ApiException {
-        RedditResponse response = execute(request()
+        RestResponse response = reddit.execute(reddit.request()
                 .endpoint(Endpoints.DELETEAPP)
                 .post(JrawUtils.args(
                         "client_id", clientId
@@ -276,7 +276,7 @@ public class AccountManager extends AbstractManager {
      */
     @EndpointImplementation({Endpoints.HIDE, Endpoints.UNHIDE})
     public void hide(Submission s, boolean hide) throws NetworkException, ApiException {
-        genericPost(request()
+        genericPost(reddit.request()
                 .endpoint(hide ? Endpoints.HIDE : Endpoints.UNHIDE)
                 .post(JrawUtils.args(
                         "id", s.getFullName()
@@ -293,7 +293,7 @@ public class AccountManager extends AbstractManager {
      */
     @EndpointImplementation(Endpoints.EDITUSERTEXT)
     public void updateSelfpost(Submission submission, String text) throws NetworkException, ApiException {
-        genericPost(request().endpoint(Endpoints.EDITUSERTEXT)
+        genericPost(reddit.request().endpoint(Endpoints.EDITUSERTEXT)
                 .post(JrawUtils.args(
                         "api_type", "json",
                         "text", text,
@@ -312,7 +312,7 @@ public class AccountManager extends AbstractManager {
      */
     @EndpointImplementation(Endpoints.COMMENT)
     public <T extends Contribution> String reply(T contribution, String text) throws NetworkException, ApiException {
-        RedditResponse response = genericPost(request()
+        RestResponse response = genericPost(reddit.request()
                 .endpoint(Endpoints.COMMENT)
                 .post(JrawUtils.args(
                         "api_type", "json",
@@ -352,7 +352,7 @@ public class AccountManager extends AbstractManager {
      * @throws NetworkException If the request was not successful
      */
     private void setSubscribed(Subreddit subreddit, boolean sub) throws NetworkException {
-        execute(request()
+        reddit.execute(reddit.request()
                 .endpoint(Endpoints.SUBSCRIBE)
                 .post(JrawUtils.args(
                         "sr", subreddit.getFullName(),
@@ -427,7 +427,7 @@ public class AccountManager extends AbstractManager {
      */
     @EndpointImplementation(Endpoints.SETFLAIRENABLED)
     public void setFlairEnabled(String subreddit, boolean enabled) throws NetworkException, ApiException {
-        RedditResponse response = execute(request()
+        RestResponse response = reddit.execute(reddit.request()
                 .path("/r/" + subreddit + Endpoints.SETFLAIRENABLED.getEndpoint().getUri())
                 .post(JrawUtils.args(
                         "api_type", "json",
@@ -446,7 +446,7 @@ public class AccountManager extends AbstractManager {
             formArgs.put("link", linkFullname);
         }
 
-        RedditResponse response = genericPost(request()
+        RestResponse response = genericPost(reddit.request()
                 .path("/r/" + subreddit + Endpoints.FLAIRSELECTOR.getEndpoint().getUri() + ".json")
                 .post(formArgs.isEmpty() ? null : formArgs)
                 .build());

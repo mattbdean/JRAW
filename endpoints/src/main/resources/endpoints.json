@@ -160,7 +160,7 @@
         "GET /prefs/blocked",
         "GET /prefs/friends",
         "GET /prefs/where",
-        "GET /r/subreddit/about.json",
+        "GET /r/{subreddit}/about.json",
         "GET /random",
         "GET /search",
         "GET /subreddits/new",

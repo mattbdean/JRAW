@@ -4,10 +4,17 @@ import net.dean.jraw.ApiException;
 import net.dean.jraw.JrawUtils;
 import net.dean.jraw.http.MediaTypes;
 import net.dean.jraw.http.NetworkException;
-import net.dean.jraw.http.RedditResponse;
 import net.dean.jraw.http.RestRequest;
+import net.dean.jraw.http.RestResponse;
 import net.dean.jraw.managers.ThingCache;
-import net.dean.jraw.models.*;
+import net.dean.jraw.models.Comment;
+import net.dean.jraw.models.CommentSort;
+import net.dean.jraw.models.Listing;
+import net.dean.jraw.models.LiveThread;
+import net.dean.jraw.models.More;
+import net.dean.jraw.models.Submission;
+import net.dean.jraw.models.Subreddit;
+import net.dean.jraw.models.Thing;
 import net.dean.jraw.paginators.Paginators;
 import net.dean.jraw.paginators.SubredditPaginator;
 import org.testng.Assert;
@@ -88,7 +95,7 @@ public class ReadOnlyDataTest extends RedditTest {
 
             validateModels(comments);
 
-            RedditResponse response = reddit.execute(RestRequest.Builder.from("GET", new URL(submission.getShortURL()))
+            RestResponse response = reddit.execute(RestRequest.Builder.from("GET", new URL(submission.getShortURL()))
                     .expected(MediaTypes.HTML.type())
                     .build());
             assertTrue(JrawUtils.typeComparison(response.getType(), MediaTypes.HTML.type()));

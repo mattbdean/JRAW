@@ -16,6 +16,7 @@ public class WikiManagerTest extends AuthenticatedRedditTest {
     private WikiManager manager;
 
     public WikiManagerTest() {
+        super();
         this.manager = new WikiManager(reddit);
     }
 

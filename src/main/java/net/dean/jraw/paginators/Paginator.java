@@ -2,10 +2,11 @@ package net.dean.jraw.paginators;
 
 import com.squareup.okhttp.CacheControl;
 import net.dean.jraw.RedditClient;
+import net.dean.jraw.http.HttpAdapter;
 import net.dean.jraw.http.NetworkAccessible;
 import net.dean.jraw.http.NetworkException;
-import net.dean.jraw.http.RedditResponse;
 import net.dean.jraw.http.RestRequest;
+import net.dean.jraw.http.RestResponse;
 import net.dean.jraw.models.Listing;
 import net.dean.jraw.models.Thing;
 
@@ -20,8 +21,7 @@ import java.util.Map;
  *
  * @param <T> The type that the listings will contain
  */
-public abstract class Paginator<T extends Thing> implements Iterator<Listing<T>>,
-        NetworkAccessible<RedditResponse, RedditClient> {
+public abstract class Paginator<T extends Thing> implements Iterator<Listing<T>>, NetworkAccessible {
 
     /** The default limit of Things to return */
     public static final int DEFAULT_LIMIT = 25;
@@ -108,14 +108,14 @@ public abstract class Paginator<T extends Thing> implements Iterator<Listing<T>>
             args.putAll(extraArgs);
         }
 
-        RestRequest.Builder request = getHttpClient().request()
+        RestRequest.Builder request = reddit.request()
                 .path(path)
                 .query(args);
         if (forceNetwork || (sortingUsed && sorting == Sorting.NEW)) {
             request.cacheControl(CacheControl.FORCE_NETWORK);
         }
 
-        Listing<T> listing = parseListing(getHttpClient().execute(request.build()));
+        Listing<T> listing = parseListing(reddit.execute(request.build()));
         this.current = listing;
         pageNumber++;
 
@@ -131,7 +131,7 @@ public abstract class Paginator<T extends Thing> implements Iterator<Listing<T>>
      * @param response The response
      * @return A new Listing from the given response
      */
-    protected Listing<T> parseListing(RedditResponse response) {
+    protected Listing<T> parseListing(RestResponse response) {
         return response.asListing(thingType);
     }
 
@@ -312,8 +312,8 @@ public abstract class Paginator<T extends Thing> implements Iterator<Listing<T>>
     }
 
     @Override
-    public RedditClient getHttpClient() {
-        return reddit;
+    public HttpAdapter getHttpAdapter() {
+        return reddit.getHttpAdapter();
     }
 
     @Override

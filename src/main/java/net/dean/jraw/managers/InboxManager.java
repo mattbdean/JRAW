@@ -6,7 +6,7 @@ import net.dean.jraw.Endpoints;
 import net.dean.jraw.JrawUtils;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.NetworkException;
-import net.dean.jraw.http.RedditResponse;
+import net.dean.jraw.http.RestResponse;
 import net.dean.jraw.models.PrivateMessage;
 
 /**
@@ -35,7 +35,7 @@ public class InboxManager extends AbstractManager {
             Endpoints.UNREAD_MESSAGE
     })
     public void setRead(PrivateMessage m, boolean read) throws NetworkException {
-        execute(request()
+        reddit.execute(reddit.request()
                 .endpoint(read ? Endpoints.READ_MESSAGE : Endpoints.UNREAD_MESSAGE)
                 .post(JrawUtils.args("id", m.getFullName()))
                 .build());
@@ -67,7 +67,7 @@ public class InboxManager extends AbstractManager {
      */
     @EndpointImplementation(Endpoints.COMPOSE)
     public void compose(String from, String to, String subject, String body) throws NetworkException, ApiException {
-        RedditResponse response = execute(request()
+        RestResponse response = reddit.execute(reddit.request()
                 .endpoint(Endpoints.COMPOSE)
                 .post(JrawUtils.args(
                         "api_type", "json",

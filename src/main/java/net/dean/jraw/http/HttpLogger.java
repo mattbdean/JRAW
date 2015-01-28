@@ -1,11 +1,15 @@
 package net.dean.jraw.http;
 
-import com.squareup.okhttp.Response;
-import com.squareup.okhttp.internal.http.HttpMethod;
+import com.squareup.okhttp.Headers;
+import com.squareup.okhttp.RequestBody;
+import net.dean.jraw.JrawUtils;
+import okio.Buffer;
 import org.slf4j.Logger;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 import static net.dean.jraw.http.HttpLogger.Component.*;
 
@@ -83,8 +87,25 @@ public class HttpLogger {
         return false;
     }
 
+    private String formatHeader(String header) {
+        return INDENT + header + ": {";
+    }
+
+    private void logHeaders(Headers headers) {
+        Map<String, String> map = new HashMap<>();
+        for (String key : headers.names()) {
+            map.put(key, headers.get(key));
+        }
+        logMap("headers", map, null);
+    }
+
     private void logMap(String header, Map<String, String> data, String[] sensitiveKeys) {
-        header = INDENT + header + ": {";
+        if (isEnabled(ALPHABETIZE_MAPS)) {
+            Map<String, String> unsorted = data;
+            data = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+            data.putAll(unsorted);
+        }
+        header = formatHeader(header);
 
         if (data == null || data.size() == 0) {
             l.info("{}}", header); // my-data: {}
@@ -94,12 +115,19 @@ public class HttpLogger {
         String indent = getIndent(header);
         int counter = 0;
         for (Map.Entry<String, String> entry : data.entrySet()) {
-            l.info("{}{}={}{}", counter != 0 ? indent : header,
-                    entry.getKey(),
-                    contains(entry.getKey(), sensitiveKeys) ? CENSOR : entry.getValue(),
-                    counter == data.size() - 1 ? '}' : ',');
+            l.info("{}{}={}{}",
+                    counter != 0 ? indent : header, // If the first one, output the header, otherwise indent
+                    JrawUtils.urlDecode(entry.getKey()),
+                    // Censor the value if need be
+                    contains(entry.getKey(), sensitiveKeys) ? CENSOR : JrawUtils.urlDecode(entry.getValue()),
+                    counter == data.size() - 1 ? '}' : ','); // Use a comma if there are more, else a closing bracket
             counter++;
         }
+    }
+
+    private void logBody(String header, String data) {
+        header = formatHeader(header);
+        l.info("{} {}}", header, data);
     }
 
     /**
@@ -108,18 +136,33 @@ public class HttpLogger {
      * @param format Passed to {@link Logger#info(String, Object...)} or its {@code error()} sibling
      * @param params Passed to {@link Logger#info(String, Object...)} or its {@code error()} sibling
      */
-    private void logBySuccess(Response r, String format, Object... params) {
+    private void logBySuccess(RestResponse r, String format, Object... params) {
         if (r.isSuccessful())
             l.info(format, params);
         else
             l.error(format, params);
     }
 
+    private String getContent(RequestBody body) {
+        Buffer buff = new Buffer();
+        try {
+            body.writeTo(buff);
+        } catch (IOException e) {
+            throw new RuntimeException("Could not write the body", e);
+        }
+
+        return buff.readUtf8();
+    }
+
+    private Map<String, String> parseUrlEncoded(RequestBody requestBody) {
+        return JrawUtils.parseUrlEncoded(getContent(requestBody));
+    }
+
     /**
      * Logs an HTTP request in this format:
      *
      * <pre>{@code
-     * $requestDescriptor
+     * $method $url
      *     form-data: {$key1=$val2,
      *                 $key2=$val2}
      *     headers: {$key1=$val1}
@@ -133,17 +176,20 @@ public class HttpLogger {
             if (isEnabled(REQUEST_DESCRIPTOR)) {
                 l.info("{} {}", r.getMethod(), r.getUrl());
             }
-            if (isEnabled(REQUEST_FORM_DATA) && HttpMethod.permitsRequestBody(r.getMethod())) {
-                logMap("form-data", r.getFormArgs(), r.getSensitiveArgs());
+            if (isEnabled(REQUEST_BODY) && r.getBody() != null) {
+                if (isEnabled(REQUEST_FORMAT_FORM) &&
+                        r.getBody().contentType() != null && // Will be null if no body was sent
+                        JrawUtils.typeComparison(r.getBody().contentType(), MediaTypes.FORM_ENCODED.type())) {
+                    // Body Content-Type was x-www-form-urlencoded
+                    logMap("form-data", parseUrlEncoded(r.getBody()), r.getSensitiveArgs());
+                } else {
+                    // Other Content-Type
+                    logBody("body", getContent(r.getBody()));
+                }
             }
             if (isEnabled(REQUEST_HEADERS)) {
                 // Create a map out of the request's Headers
-                Map<String, String> map = new HashMap<>();
-                for (String key : r.getOkHttpRequest().headers().names()) {
-                    map.put(key, r.getOkHttpRequest().headers().get(key));
-                }
-
-                logMap("headers", map, null);
+                logHeaders(r.getHeaders());
             }
             if (isEnabled(REQUEST_BASIC_AUTH) && r.isUsingBasicAuth()) {
                 Map<String, String> data = new HashMap<>();
@@ -166,16 +212,15 @@ public class HttpLogger {
      * @param r The response to log
      */
     public void log(RestResponse r) {
-        Response okResponse = r.getOkHttpResponse();
         if (isEnabled(RESPONSE)) {
-            logBySuccess(okResponse, "{} {} {}", okResponse.protocol().toString().toUpperCase(), okResponse.code(), okResponse.message());
-            if (isEnabled(RESPONSE_CONTENT_TYPE)) {
-                logBySuccess(okResponse, "{}content-type: {}", INDENT, okResponse.header("Content-Type", "(unknown)"));
+            logBySuccess(r, "{} {} {}", r.getProtocol(), r.getStatusCode(), r.getMessage());
+            if (isEnabled(RESPONSE_HEADERS)) {
+                logHeaders(r.getHeaders());
             }
             if (isEnabled(RESPONSE_BODY)) {
                 String raw = r.getRaw();
 
-                if (!isEnabled(RESPONSE_BODY_ALWAYS_FULL) && okResponse.isSuccessful()) {
+                if (!isEnabled(RESPONSE_BODY_ALWAYS_FULL) && r.isSuccessful()) {
                     // If the request was successful the response isn't as important.
                     // Display the full response if the request was not successful
                     raw = raw.replace("\n", "").replace("\r", "").replace("\t", "");
@@ -187,7 +232,7 @@ public class HttpLogger {
                 if (raw.isEmpty()) {
                     raw = "<nothing>";
                 }
-                logBySuccess(okResponse, "{}response-body: {}", INDENT, raw);
+                logBySuccess(r, "{}response-body: {}", INDENT, raw);
             }
         }
     }
@@ -198,25 +243,40 @@ public class HttpLogger {
     public static enum Component {
         /** The entire request */
         REQUEST,
-        /** The request descriptor (ex: "POST https://www.example.com" */
+        /** The HTTP verb and URL. For example, "{@code POST https://www.example.com}". Depends on {@link #REQUEST} */
         REQUEST_DESCRIPTOR,
-        /** Form data (used in POST, PUT, etc.) */
-        REQUEST_FORM_DATA,
-        /** Headers sent to the server */
+        /** The entirety of the request body. Depends on {@link #REQUEST}*/
+        REQUEST_BODY,
+        /**
+         * Format and decode the response body to be more readable. Only applies if the request Content-Type was
+         * {@code application/x-www-form-urlencoded}. Depends on {@link #REQUEST_BODY}
+         */
+        REQUEST_FORMAT_FORM,
+        /** Headers sent to the server. Depends on {@link #REQUEST} */
         REQUEST_HEADERS,
-        /** Basic Auth data, if applicable. Password will be censored. */
+        /** Basic Auth data, if applicable. Password will be censored. Depends on {@link #REQUEST}. */
         REQUEST_BASIC_AUTH,
+
 
         /** The entire response */
         RESPONSE,
-        /** The 'Content-Type' header */
-        RESPONSE_CONTENT_TYPE,
+        /** Response's headers. Depends on {@link #RESPONSE}. */
+        RESPONSE_HEADERS,
         /**
          * The raw response data. Newlines will be removed unless either {@link #RESPONSE_BODY_ALWAYS_FULL} is enabled
-         * or the response was not successful.
+         * or the response was not successful. Depends on {@link #RESPONSE}.
          */
         RESPONSE_BODY,
-        /** Whether or not to always log the full response body, regardless of the request's success */
-        RESPONSE_BODY_ALWAYS_FULL
+        /**
+         * Whether or not to always log the full response body, regardless of the request's success. If this component
+         * is disabled, the body will be trimmed and an ellipsis ("{@value #ELLIPSIS}") will be appended.
+         */
+        RESPONSE_BODY_ALWAYS_FULL,
+
+        /**
+         * Will copy any data with keys and values (headers, form data, etc.) to a case-insensitive TreeMap before
+         * iterating and logging.
+         */
+        ALPHABETIZE_MAPS
     }
 }

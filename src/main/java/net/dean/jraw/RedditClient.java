@@ -1,8 +1,24 @@
 package net.dean.jraw;
 
-import com.squareup.okhttp.Response;
-import net.dean.jraw.http.*;
-import net.dean.jraw.models.*;
+import net.dean.jraw.http.AuthenticationMethod;
+import net.dean.jraw.http.Credentials;
+import net.dean.jraw.http.MediaTypes;
+import net.dean.jraw.http.NetworkException;
+import net.dean.jraw.http.OkHttpAdapter;
+import net.dean.jraw.http.RestClient;
+import net.dean.jraw.http.RestRequest;
+import net.dean.jraw.http.RestResponse;
+import net.dean.jraw.models.Account;
+import net.dean.jraw.models.Captcha;
+import net.dean.jraw.models.Comment;
+import net.dean.jraw.models.CommentSort;
+import net.dean.jraw.models.Listing;
+import net.dean.jraw.models.LiveThread;
+import net.dean.jraw.models.LoggedInAccount;
+import net.dean.jraw.models.More;
+import net.dean.jraw.models.Submission;
+import net.dean.jraw.models.Subreddit;
+import net.dean.jraw.models.Thing;
 import net.dean.jraw.models.meta.Model;
 import net.dean.jraw.paginators.Paginators;
 import net.dean.jraw.paginators.Sorting;
@@ -17,8 +33,7 @@ import java.util.Map;
 /**
  * This class provides a gateway to the services this library provides
  */
-public class RedditClient extends RestClient<RedditResponse> {
-
+public class RedditClient extends RestClient {
     /** The host that will be used to execute most HTTP(S) requests */
     public static final String HOST = "www.reddit.com";
 
@@ -37,7 +52,7 @@ public class RedditClient extends RestClient<RedditResponse> {
     /** The amount of requests allowed per minute when using OAuth2 */
     public static final int REQUESTS_PER_MINUTE_OAUTH2 = 60;
 
-    /** The amount of trending subreddits that will appear in each /r/trendingsubreddits post */
+    /** The amount of trending subreddits that appear in each /r/trendingsubreddits post */
     private static final int NUM_TRENDING_SUBREDDITS = 5;
 
     /** The username of the user who is currently authenticated */
@@ -66,7 +81,7 @@ public class RedditClient extends RestClient<RedditResponse> {
      * @param requestsPerMinute The amount of requests per minute to send
      */
     public RedditClient(String userAgent, int requestsPerMinute) {
-        super(HOST, userAgent, requestsPerMinute);
+        super(new OkHttpAdapter(), HOST, userAgent, requestsPerMinute);
         this.authMethod = AuthenticationMethod.NONE;
     }
 
@@ -90,11 +105,6 @@ public class RedditClient extends RestClient<RedditResponse> {
      */
     public RedditClient(String userAgent) {
         this(userAgent, REQUESTS_PER_MINUTE);
-    }
-
-    @Override
-    protected RedditResponse initResponse(Response response) {
-        return new RedditResponse(response);
     }
 
     /**
@@ -125,7 +135,7 @@ public class RedditClient extends RestClient<RedditResponse> {
                 )).sensitiveArgs("passwd")
                 .build();
 
-        RedditResponse loginResponse = execute(request);
+        RestResponse loginResponse = execute(request);
 
         if (loginResponse.hasErrors()) {
             throw loginResponse.getErrors()[0];
@@ -136,7 +146,7 @@ public class RedditClient extends RestClient<RedditResponse> {
         String modhash = loginResponse.getJson().get("json").get("data").get("modhash").getTextValue();
 
         // Add the X-Modhash header, or update it if it already exists
-        defaultHeaders.put(HEADER_MODHASH, modhash);
+        httpAdapter.setDefaultHeader(HEADER_MODHASH, modhash);
 
         LoggedInAccount me = me();
         this.authenticatedUser = me.getFullName();
@@ -152,8 +162,9 @@ public class RedditClient extends RestClient<RedditResponse> {
         execute(request()
                 .path("/logout")
                 .expected(MediaTypes.HTML.type())
-                .post(null).build());
-        defaultHeaders.remove(HEADER_MODHASH);
+                .post()
+                .build());
+        httpAdapter.removeDefaultHeader(HEADER_MODHASH);
         authMethod = AuthenticationMethod.NONE;
     }
 
@@ -181,7 +192,7 @@ public class RedditClient extends RestClient<RedditResponse> {
         if (email != null && !email.isEmpty()) {
             args.put("email", email);
         }
-        RedditResponse response = execute(request()
+        RestResponse response = execute(request()
                 .https(true)
                 .host(HOST)
                 .endpoint(Endpoints.REGISTER)
@@ -197,7 +208,7 @@ public class RedditClient extends RestClient<RedditResponse> {
         String modhash = response.getJson().get("json").get("data").get("modhash").getTextValue();
 
         // Add the X-Modhash header, or update it if it already exists
-        defaultHeaders.put(HEADER_MODHASH, modhash);
+        httpAdapter.setDefaultHeader(HEADER_MODHASH, modhash);
 
         LoggedInAccount me = me();
         this.authenticatedUser = me.getFullName();
@@ -221,7 +232,7 @@ public class RedditClient extends RestClient<RedditResponse> {
      */
     @EndpointImplementation(Endpoints.ME)
     public LoggedInAccount me() throws NetworkException {
-        RedditResponse response = execute(request()
+        RestResponse response = execute(request()
                 .endpoint(Endpoints.ME)
                 .build());
         return new LoggedInAccount(response.getJson().get("data"));
@@ -239,7 +250,7 @@ public class RedditClient extends RestClient<RedditResponse> {
     public boolean needsCaptcha() throws NetworkException {
         try {
             // This endpoint does not return JSON, but rather just "true" or "false"
-            RedditResponse response = execute(request()
+            RestResponse response = execute(request()
                     .endpoint(Endpoints.NEEDS_CAPTCHA)
                     .get()
                     .build());
@@ -259,7 +270,7 @@ public class RedditClient extends RestClient<RedditResponse> {
     @EndpointImplementation(Endpoints.NEW_CAPTCHA)
     public Captcha getNewCaptcha() throws NetworkException, ApiException {
         try {
-            RedditResponse response = execute(request()
+            RestResponse response = execute(request()
                     .endpoint(Endpoints.NEW_CAPTCHA)
                     .post(JrawUtils.args(
                             "api_type", "json"
@@ -363,7 +374,7 @@ public class RedditClient extends RestClient<RedditResponse> {
      */
     @EndpointImplementation(Endpoints.USERNAME_AVAILABLE)
     public boolean isUsernameAvailable(String name) throws NetworkException {
-        RedditResponse response = execute(request()
+        RestResponse response = execute(request()
                 .endpoint(Endpoints.USERNAME_AVAILABLE)
                 .query("user", name)
                 .build());
@@ -487,7 +498,7 @@ public class RedditClient extends RestClient<RedditResponse> {
                 .path(path)
                 .expected(MediaTypes.CSS.type())
                 .build();
-        RedditResponse response = execute(r);
+        RestResponse response = execute(r);
 
         return response.getRaw();
     }
@@ -554,7 +565,7 @@ public class RedditClient extends RestClient<RedditResponse> {
 
         // POST with a body could be used instead of GET with a query to avoid an unnecessarily long URL, but Reddit
         // seems to handle it fine.
-        RedditResponse response = execute(request()
+        RestResponse response = execute(request()
                 .path(Endpoints.MORECHILDREN.getEndpoint().getUri() + ".json")
                 .query(JrawUtils.args(
                         "children", ids.toString(),

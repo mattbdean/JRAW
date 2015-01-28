@@ -2,7 +2,7 @@ package net.dean.jraw.paginators;
 
 import com.google.common.collect.ImmutableList;
 import net.dean.jraw.RedditClient;
-import net.dean.jraw.http.RedditResponse;
+import net.dean.jraw.http.RestResponse;
 import net.dean.jraw.models.FauxListing;
 import net.dean.jraw.models.Listing;
 import net.dean.jraw.models.MultiReddit;
@@ -49,7 +49,7 @@ public class MultiHubPaginator extends Paginator<MultiHubPaginator.MultiRedditId
     }
 
     @Override
-    protected Listing<MultiRedditId> parseListing(RedditResponse response) {
+    protected Listing<MultiRedditId> parseListing(RestResponse response) {
         ImmutableList.Builder<MultiRedditId> multiReddits = ImmutableList.builder();
 
         Listing<Submission> submissions = response.asListing(Submission.class);

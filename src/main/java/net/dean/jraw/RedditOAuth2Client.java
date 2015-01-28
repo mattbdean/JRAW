@@ -1,11 +1,13 @@
 package net.dean.jraw;
 
+import com.squareup.okhttp.RequestBody;
 import net.dean.jraw.http.AuthenticationMethod;
+import net.dean.jraw.http.BasicAuthData;
 import net.dean.jraw.http.Credentials;
 import net.dean.jraw.http.MediaTypes;
 import net.dean.jraw.http.NetworkException;
-import net.dean.jraw.http.RedditResponse;
 import net.dean.jraw.http.RestRequest;
+import net.dean.jraw.http.RestResponse;
 import net.dean.jraw.http.oauth.OAuthData;
 import net.dean.jraw.http.oauth.OAuthHelper;
 import net.dean.jraw.models.AccountPreferences;
@@ -81,7 +83,7 @@ public class RedditOAuth2Client extends RedditClient {
      */
     public LoggedInAccount onAuthorized(OAuthData data, Credentials credentials) throws NetworkException {
         this.authData = data;
-        defaultHeaders.put(HEADER_AUTHORIZATION, "bearer " + authData.getAccessToken());
+        httpAdapter.setDefaultHeader(HEADER_AUTHORIZATION, "bearer " + authData.getAccessToken());
 
         LoggedInAccount me = me();
         this.authenticatedUser = me.getFullName();
@@ -92,7 +94,7 @@ public class RedditOAuth2Client extends RedditClient {
     @Override
     @EndpointImplementation(Endpoints.OAUTH_ME)
     public LoggedInAccount me() throws NetworkException {
-        RedditResponse response = execute(request()
+        RestResponse response = execute(request()
                 .endpoint(Endpoints.OAUTH_ME)
                 .build());
         // Usually we would use response.as(), but /api/v1/me does not return a "data" or "kind" node.
@@ -129,7 +131,7 @@ public class RedditOAuth2Client extends RedditClient {
                 .post(JrawUtils.args(
                         "token", authData.getAccessToken(),
                         "token_type_hint", "access_token"
-                )).basicAuth(creds.getClientId(), creds.getClientSecret())
+                )).basicAuth(new BasicAuthData(creds.getClientId(), creds.getClientSecret()))
                 .build());
 
         authData = null;
@@ -146,14 +148,14 @@ public class RedditOAuth2Client extends RedditClient {
         if (authData.getRefreshToken() == null) {
             throw new IllegalArgumentException("No refresh token was requested, therefore no refresh can be performed");
         }
-        RedditResponse response = execute(request()
+        RestResponse response = execute(request()
                 .https(true)
                 .host(RedditClient.HOST_SPECIAL)
                 .path("/api/v1/access_token")
                 .post(JrawUtils.args(
                         "grant_type", "refresh_token",
                         "refresh_token", authData.getRefreshToken()
-                )).basicAuth(creds.getClientId(), creds.getClientSecret())
+                )).basicAuth(new BasicAuthData(creds.getClientId(), creds.getClientSecret()))
                 .build());
         this.authData = new OAuthData(response.getJson());
     }
@@ -172,7 +174,7 @@ public class RedditOAuth2Client extends RedditClient {
             query.put("fields", JrawUtils.join(',', names));
         }
 
-        RedditResponse response = execute(request()
+        RestResponse response = execute(request()
                 .endpoint(Endpoints.OAUTH_ME_PREFS_GET)
                 .query(query)
                 .build());
@@ -187,9 +189,9 @@ public class RedditOAuth2Client extends RedditClient {
      */
     @EndpointImplementation(Endpoints.OAUTH_ME_PREFS_PATCH)
     public AccountPreferences updatePreferences(AccountPreferencesEditor prefs) throws NetworkException {
-        RedditResponse response = execute(request()
+        RestResponse response = execute(request()
                 .endpoint(Endpoints.OAUTH_ME_PREFS_PATCH)
-                .customBody("PATCH", MediaTypes.JSON.type(), JrawUtils.toJson(prefs.getArgs()))
+                .patch(RequestBody.create(MediaTypes.JSON.type(), JrawUtils.toJson(prefs.getArgs())))
                 .build());
         return new AccountPreferences(response.getJson());
     }
@@ -221,7 +223,7 @@ public class RedditOAuth2Client extends RedditClient {
             username = authenticatedUser;
         }
 
-        RedditResponse response = execute(request()
+        RestResponse response = execute(request()
                 .endpoint(Endpoints.OAUTH_USER_USERNAME_TROPHIES, username)
                 .build());
 
@@ -240,7 +242,7 @@ public class RedditOAuth2Client extends RedditClient {
      */
     @EndpointImplementation(Endpoints.OAUTH_ME_KARMA)
     public KarmaBreakdown getKarmaBreakdown() throws NetworkException {
-        RedditResponse response = execute(request()
+        RestResponse response = execute(request()
                 .endpoint(Endpoints.OAUTH_ME_KARMA)
                 .build());
         return new KarmaBreakdown(response.getJson().get("data"));
@@ -267,7 +269,7 @@ public class RedditOAuth2Client extends RedditClient {
      */
     @EndpointImplementation(Endpoints.OAUTH_ME_FRIENDS_USERNAME_GET)
     public UserRecord getFriend(String name) throws NetworkException {
-        RedditResponse response = execute(request()
+        RestResponse response = execute(request()
                 .endpoint(Endpoints.OAUTH_ME_FRIENDS_USERNAME_GET, name)
                 .build());
         return new UserRecord(response.getJson());
@@ -281,8 +283,8 @@ public class RedditOAuth2Client extends RedditClient {
      */
     @EndpointImplementation(Endpoints.OAUTH_ME_FRIENDS_USERNAME_PUT)
     public UserRecord updateFriend(String name) throws NetworkException {
-        RedditResponse response = execute(request()
-                .customBody("PUT", MediaTypes.JSON.type(), JrawUtils.toJson(new FriendModel(name)))
+        RestResponse response = execute(request()
+                .put(RequestBody.create(MediaTypes.JSON.type(), JrawUtils.toJson(new FriendModel(name))))
                 .endpoint(Endpoints.OAUTH_ME_FRIENDS_USERNAME_PUT, name)
                 .build());
         return new UserRecord(response.getJson());

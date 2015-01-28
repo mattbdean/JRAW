@@ -4,6 +4,7 @@ import net.dean.jraw.ApiException;
 import net.dean.jraw.Endpoint;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.Version;
+import net.dean.jraw.http.BasicAuthData;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.RestRequest;
 import net.dean.jraw.http.oauth.OAuthException;
@@ -26,6 +27,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -103,7 +105,7 @@ public class InternalsTest extends RedditTest {
     public void testCaptcha() {
         try {
             Captcha c = reddit.getNewCaptcha();
-            Captcha c2 = new Captcha(c.getId(), c.getImageUrl().toExternalForm());
+            Captcha c2 = new Captcha(c.getId(), c.getImageUrl());
             basicObjectTest(c, c2);
         } catch (NetworkException | ApiException e) {
             handle(e);
@@ -114,7 +116,7 @@ public class InternalsTest extends RedditTest {
     public void testNetworkException() {
         NetworkException ex = new NetworkException(404);
         assertEquals(ex.getCode(), 404);
-        assertEquals(ex.getMessage(), "Request returned bad code (404)");
+        assertEquals(ex.getMessage(), "Request returned non-successful status code (404)");
 
         ex = new NetworkException("message");
         assertTrue(ex.getCode() == -1);
@@ -153,27 +155,45 @@ public class InternalsTest extends RedditTest {
                         "duration", "permanent",
                         "scope", "scope1,scope2"
                 ).build();
-        RestRequest actual = RestRequest.from("GET", new URL(helper.getAuthorizationUrl(
+        RestRequest actual = RestRequest.from("GET", helper.getAuthorizationUrl(
                 "myClientId", "http://www.example.com", true, "scope1", "scope2"
-        )));
+        ));
 
-        assertEquals(actual.isHttps(), expected.isHttps(), "Scheme was different");
-        assertEquals(actual.getHost(), expected.getHost(), "Host was different");
-        assertEquals(actual.getPath(), expected.getPath(), "Path was different");
-        for (Map.Entry<String, String> pair : expected.getQuery().entrySet()) {
+        URL actualUrl = actual.getUrl();
+        URL expectedUrl = expected.getUrl();
+        assertEquals(actualUrl.getProtocol(), expectedUrl.getProtocol(), "Scheme was different");
+        assertEquals(actualUrl.getHost(), expectedUrl.getHost(), "Host was different");
+        assertEquals(actualUrl.getPath(), expectedUrl.getPath(), "Path was different");
+
+        Map<String, String> actualQuery = parseQuery(actual.getUrl().getQuery());
+        Map<String, String> expectedQuery = parseQuery(expected.getUrl().getQuery());
+
+        for (Map.Entry<String, String> pair : expectedQuery.entrySet()) {
             if (pair.getKey().equals("state")) {
                 // State is random
                 continue;
             }
-            assertEquals(pair.getValue(), actual.getQuery().get(pair.getKey()));
+            assertEquals(pair.getValue(), actualQuery.get(pair.getKey()));
         }
+    }
+
+    private Map<String, String> parseQuery(String queryString) {
+        Map<String, String> query = new HashMap<>();
+
+        String[] pairs = queryString.split("&");
+        for (String pair : pairs) {
+            String[] parts = pair.split("=");
+            query.put(parts[0], parts[1]);
+        }
+
+        return query;
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void testRequestWithBasicAuthNoHttps() throws NetworkException {
         new RestRequest.Builder()
                 .host("example.com")
-                .basicAuth("foo", "bar")
+                .basicAuth(new BasicAuthData("foo", "bar"))
                 .https(false)
                 .build();
     }
@@ -258,7 +278,6 @@ public class InternalsTest extends RedditTest {
         assertEquals(e.getScope(), "cat");
         assertEquals(e.getUri(), "/api/{foo}/{bar}/baz");
         assertEquals(e.getVerb(), "GET");
-        assertEquals(e.getUrlParams(), Arrays.asList("{foo}", "{bar}"));
         assertEquals(e.getRequestDescriptor(), requestDescriptor);
 
         Endpoint e2 = new Endpoint(requestDescriptor, category);

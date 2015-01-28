@@ -2,7 +2,7 @@ package net.dean.jraw.paginators;
 
 import com.google.common.collect.ImmutableList;
 import net.dean.jraw.RedditClient;
-import net.dean.jraw.http.RedditResponse;
+import net.dean.jraw.http.RestResponse;
 import net.dean.jraw.models.FauxListing;
 import net.dean.jraw.models.Listing;
 import net.dean.jraw.models.UserRecord;
@@ -23,7 +23,7 @@ public abstract class GenericUserRecordPaginator extends GenericPaginator<UserRe
     }
 
     @Override
-    protected Listing<UserRecord> parseListing(RedditResponse response) {
+    protected Listing<UserRecord> parseListing(RestResponse response) {
         ImmutableList.Builder<UserRecord> list = ImmutableList.builder();
 
         JsonNode data;

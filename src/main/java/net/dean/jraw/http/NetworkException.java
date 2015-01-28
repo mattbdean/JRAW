@@ -35,7 +35,7 @@ public class NetworkException extends Exception {
      * @param httpCode The code that was returned from the request
      */
     public NetworkException(int httpCode) {
-        super(String.format("Request returned bad code (%s)", httpCode));
+        super(String.format("Request returned non-successful status code (%s)", httpCode));
         this.code = httpCode;
     }
     /**

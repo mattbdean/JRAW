@@ -8,10 +8,13 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,6 +23,7 @@ import java.util.Map;
  */
 public final class JrawUtils {
     private static final ObjectMapper mapper = new ObjectMapper();
+    private static final String CHARSET = "UTF-8";
 
     private JrawUtils() {
         // no instances
@@ -182,6 +186,46 @@ public final class JrawUtils {
                 return args[0];
             default:
                 return Joiner.on(separator).join(args);
+        }
+    }
+
+    /**
+     * Parses a URL-encoded string with keys and values into a map. The key-value pair separator is assumed to be '&'
+     * and the key-value separator is assumed to be '='
+     */
+    public static Map<String, String> parseUrlEncoded(String data) {
+        Map<String, String> map = new HashMap<>();
+
+        String[] keysAndValues = data.split("&");
+        for (String pair : keysAndValues) {
+            String[] parts = pair.split("=");
+            // Avoid an ArrayIndexOutOfBoundsException if there was no value
+            String value = parts.length == 1 ? "" : parts[1];
+            map.put(parts[0], value);
+        }
+
+        return map;
+    }
+
+    /**
+     * Returns a URL-encoded version of the given String in UTF-8
+     */
+    public static String urlEncode(String data) {
+        try {
+            return URLEncoder.encode(data, CHARSET);
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException("Charset '" + CHARSET + "' not found", e);
+        }
+    }
+
+    /**
+     * Returns a decoded UTF-8 string
+     */
+    public static String urlDecode(String data) {
+        try {
+            return URLDecoder.decode(data, CHARSET);
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException("Charset '" + CHARSET + "' not found", e);
         }
     }
 }

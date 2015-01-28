@@ -1,7 +1,5 @@
 package net.dean.jraw.models;
 
-import net.dean.jraw.JrawUtils;
-
 import java.net.URL;
 
 /**
@@ -17,9 +15,9 @@ public class Captcha {
      * @param id The captcha's ID
      * @param url The URL to the captcha (as in the image)
      */
-    public Captcha(String id, String url) {
+    public Captcha(String id, URL url) {
         this.id = id;
-        this.imageUrl = JrawUtils.newUrl(url);
+        this.imageUrl = url;
     }
 
     /**

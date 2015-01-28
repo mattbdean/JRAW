@@ -8,9 +8,7 @@ import net.dean.jraw.JrawUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NavigableMap;
@@ -100,13 +98,7 @@ public abstract class AbstractEndpointGenerator {
      * @return A URL pointing to the given endpoint
      */
     protected String getRedditDocUrl(Endpoint endpoint) {
-        String ref = endpoint.getVerb() + endpoint.getUri().replace('/', '_');
-
-        try {
-            ref = URLEncoder.encode(ref, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            JrawUtils.logger().error("Could not URL-encode " + ref, e);
-        }
+        String ref = JrawUtils.urlEncode(endpoint.getVerb() + endpoint.getUri().replace('/', '_'));
 
         String base = "https://www.reddit.com/dev/api";
         if (!endpoint.getScope().equals("(not available through oauth)")) {

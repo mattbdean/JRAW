@@ -32,7 +32,7 @@ import java.util.Map;
  *     {@link #doScriptApp(Credentials)}.
  * </p>
  */
-public class OAuthHelper implements NetworkAccessible<RedditResponse, RedditClient> {
+public class OAuthHelper implements NetworkAccessible {
     private SecureRandom secureRandom;
     private String state;
     private boolean started;
@@ -56,7 +56,7 @@ public class OAuthHelper implements NetworkAccessible<RedditResponse, RedditClie
      *              <a href="https://www.reddit.com/dev/api/oauth">here</a>
      * @return The URL clients are sent to in order to authorize themselves
      */
-    public String getAuthorizationUrl(String clientId, String redirectUri, boolean permanent, String... scopes) {
+    public URL getAuthorizationUrl(String clientId, String redirectUri, boolean permanent, String... scopes) {
         if (started) started = false; // Restarting
 
         if (secureRandom == null)
@@ -85,6 +85,7 @@ public class OAuthHelper implements NetworkAccessible<RedditResponse, RedditClie
      * Used obtain an access token for 'web' or 'installed' app types. This method parses the query arguments passed to
      * this URI. If no error is present and the 'state' code matches the one <em>most recently</em> generated, then an
      * access token is requested.
+     *
      * @param redirectUri The app's redirect URI. Must match exactly as in the app settings.
      * @param finalUrl The URL that the HTTP client redirected to after the user chose either to authorize or not
      *                 authorize the application. This will be the app's redirect URI with the addition of a few query
@@ -115,7 +116,7 @@ public class OAuthHelper implements NetworkAccessible<RedditResponse, RedditClie
             throw new IllegalStateException("Auth flow not started yet. See getAuthorizationUrl()");
         }
         RestRequest request = RestRequest.from("invalid", new URL(finalUrl));
-        Map<String, String> query = request.getQuery();
+        Map<String, String> query = JrawUtils.parseUrlEncoded(request.getUrl().getQuery());
         if (!query.containsKey("state")) {
             throw new IllegalArgumentException("Final redirect URI did not contain the 'state' query parameter");
         }
@@ -132,7 +133,7 @@ public class OAuthHelper implements NetworkAccessible<RedditResponse, RedditClie
         String code = query.get("code");
 
         try {
-            RedditResponse response = reddit.execute(reddit.request()
+            RestResponse response = reddit.execute(reddit.request()
                     .https(true)
                     .host(RedditClient.HOST)
                     .path("/api/v1/access_token")
@@ -141,7 +142,7 @@ public class OAuthHelper implements NetworkAccessible<RedditResponse, RedditClie
                             "code", code,
                             "redirect_uri", redirectUri
                     ))
-                    .basicAuth(creds.getClientId(), creds.getClientSecret())
+                    .basicAuth(new BasicAuthData(creds.getClientId(), creds.getClientSecret()))
                     .build());
             return new OAuthData(response.getJson());
         } catch (NetworkException e) {
@@ -167,7 +168,7 @@ public class OAuthHelper implements NetworkAccessible<RedditResponse, RedditClie
             throw new IllegalArgumentException("This method only authenticates 'script' apps");
         }
 
-        RedditResponse response = reddit.execute(reddit.request()
+        RestResponse response = reddit.execute(reddit.request()
                 .https(true)
                 .host(RedditClient.HOST_SPECIAL)
                 .path("/api/v1/access_token")
@@ -177,14 +178,14 @@ public class OAuthHelper implements NetworkAccessible<RedditResponse, RedditClie
                         "password", credentials.getPassword()
                 ))
                 .sensitiveArgs("password")
-                .basicAuth(credentials.getClientId(), credentials.getClientSecret())
+                .basicAuth(new BasicAuthData(credentials.getClientId(), credentials.getClientSecret()))
                 .build());
 
         return new OAuthData(response.getJson());
     }
 
     @Override
-    public RedditClient getHttpClient() {
-        return reddit;
+    public HttpAdapter getHttpAdapter() {
+        return reddit.getHttpAdapter();
     }
 }
