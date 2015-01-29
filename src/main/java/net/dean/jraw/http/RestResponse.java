@@ -23,7 +23,7 @@ import java.util.Scanner;
  * implementer. To see if the response has any errors, use {@link #hasErrors()} and {@link #getErrors()}
  */
 public class RestResponse {
-    private final RestRequest origin;
+    private final HttpRequest origin;
     /** The ObjectMapper used to read a JSON tree into a JsonNode */
     private static final ObjectMapper objectMapper = new ObjectMapper();
     /** A list of all the headers received from the server */
@@ -43,7 +43,7 @@ public class RestResponse {
     /**
      * Instantiates a new RedditResponse
      */
-    RestResponse(RestRequest origin, InputStream body, Headers headers, int statusCode, String message, String protocol) {
+    RestResponse(HttpRequest origin, InputStream body, Headers headers, int statusCode, String message, String protocol) {
         this.origin = origin;
         this.headers = headers;
         this.raw = readContent(body);
@@ -52,31 +52,34 @@ public class RestResponse {
         this.message = message;
         this.protocol = protocol;
 
+        // Assume there aren't any exceptions
+        ApiException[] errors = new ApiException[0];
+
         if (JrawUtils.isEqual(type, MediaTypes.JSON.type()) && !raw.isEmpty()) {
+            // Body is JSON, parse it and try to find ApiExceptions
             this.rootNode = readTree(raw);
+            if (JrawUtils.isEqual(type, MediaTypes.JSON.type()) && !raw.isEmpty()) {
+                // Parse the errors into ApiExceptions
+                JsonNode errorsNode = rootNode.get("json");
+                if (errorsNode != null) {
+                    errorsNode = errorsNode.get("errors");
+                }
+
+                if (errorsNode != null) {
+                    errors = new ApiException[errorsNode.size()];
+                    if (errorsNode.size() > 0) {
+                        for (int i = 0; i < errorsNode.size(); i++) {
+                            JsonNode error = errorsNode.get(i);
+                            errors[i] = new ApiException(error.get(0).asText(), error.get(1).asText());
+                        }
+                    }
+                }
+            }
         } else {
             // Init JSON-related final variables
             this.rootNode = null;
         }
 
-        ApiException[] errors = new ApiException[0];
-        if (JrawUtils.isEqual(type, MediaTypes.JSON.type()) && !raw.isEmpty()) {
-            // Parse the errors into ApiExceptions
-            JsonNode errorsNode = rootNode.get("json");
-            if (errorsNode != null) {
-                errorsNode = errorsNode.get("errors");
-            }
-
-            if (errorsNode != null) {
-                errors = new ApiException[errorsNode.size()];
-                if (errorsNode.size() > 0) {
-                    for (int i = 0; i < errorsNode.size(); i++) {
-                        JsonNode error = errorsNode.get(i);
-                        errors[i] = new ApiException(error.get(0).asText(), error.get(1).asText());
-                    }
-                }
-            }
-        }
 
         this.apiExceptions = errors;
     }
@@ -163,7 +166,7 @@ public class RestResponse {
         return raw;
     }
 
-    public RestRequest getOrigin() {
+    public HttpRequest getOrigin() {
         return origin;
     }
 

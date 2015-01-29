@@ -5,7 +5,7 @@ import net.dean.jraw.Endpoints;
 import net.dean.jraw.JrawUtils;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.NetworkException;
-import net.dean.jraw.http.RestRequest;
+import net.dean.jraw.http.HttpRequest;
 import net.dean.jraw.models.WikiPage;
 import net.dean.jraw.models.WikiPageSettings;
 import org.codehaus.jackson.JsonNode;
@@ -84,7 +84,7 @@ public class WikiManager extends AbstractManager {
     public WikiPage get(String subreddit, String page) throws NetworkException {
         String path = JrawUtils.getSubredditPath(subreddit, "/wiki/" + page + ".json");
 
-        RestRequest r = reddit.request()
+        HttpRequest r = reddit.request()
                 .path(path)
                 .build();
         return reddit.execute(r).as(WikiPage.class);

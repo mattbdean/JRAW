@@ -14,10 +14,11 @@ import java.util.TreeMap;
 import static net.dean.jraw.http.HttpLogger.Component.*;
 
 /**
- * This class is responsible for logging HTTP requests and responses, particularly the {@link RestRequest} and
- * {@link RestResponse} classes. The parts of the request and response are broken into parts called {@link Component}s.
- * By default, all of these components are enabled (except for {@link Component#RESPONSE_BODY_ALWAYS_FULL}. To enable or
- * disable a Component, you can use {@link #enable(Component)} or {@link #disable(Component)} respectively.
+ * This class is responsible for logging objects relating to network activity, particularly the {@link HttpRequest}
+ * and {@link RestResponse} classes. The parts of the request and response are broken into parts called
+ * {@link Component}s. By default, all of these components are enabled(except for
+ * {@link Component#RESPONSE_BODY_ALWAYS_FULL}. To enable or disable a Component, you can use {@link #enable(Component)}
+ * or {@link #disable(Component)} respectively.
  */
 public class HttpLogger {
     /** What will replace the latter part of the response body if it needs to be trimmed. */
@@ -172,7 +173,7 @@ public class HttpLogger {
      * Where {@code $requestDescriptor} is the combination of the HTTP method and URL (ex: "POST http://www.example.com").
      * @param r The request to log
      */
-    public void log(RestRequest r) {
+    public void log(HttpRequest r) {
         if (isEnabled(REQUEST)) {
             if (isEnabled(REQUEST_DESCRIPTOR)) {
                 l.info("{} {}", r.getMethod(), r.getUrl());

@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * This class provides a high-level API to send REST-oriented HTTP requests with.
  */
-public abstract class RestClient implements NetworkAccessible {
+public abstract class RestClient implements HttpClient {
     /** The HttpAdapter used to send HTTP requests */
     protected final HttpAdapter httpAdapter;
     private final String defaultHost;
@@ -29,10 +29,11 @@ public abstract class RestClient implements NetworkAccessible {
     /**
      * Instantiates a new RestClient
      *
-     * @param defaultHost The host on which to operate
-     * @param userAgent The User-Agent header which will be sent with all requests
+     * @param defaultHost The host that will be applied to every {@link HttpRequest.Builder} returned by
+     *                    {@link #request()}
+     * @param userAgent The default value of the User-Agent header
      * @param requestsPerMinute The amount of HTTP requests that can be sent in one minute. A value greater than 0 will
-     *                          enable rate limit enforcing, one less than or equal to 0 will disable it.
+     *                          enable rate limiting, one less than or equal to 0 will disable it.
      */
     public RestClient(HttpAdapter httpAdapter, String defaultHost, String userAgent, int requestsPerMinute) {
         this.httpAdapter = httpAdapter;
@@ -55,42 +56,6 @@ public abstract class RestClient implements NetworkAccessible {
     }
 
     /**
-     * Checks to see if RequestBuilders returned from {@link #request()} will be executed with HTTPS. Note that this can
-     * be changed per request later.
-     * @return If HTTPS will be used by default
-     */
-    public boolean isHttpsDefault() {
-        return useHttpsDefault;
-    }
-
-    /**
-     * Sets whether or not RequestBuilders returned from {@link #request()} will be executed with HTTPS. Note that this
-     * can be changed per request later
-     * @param useHttpsDefault If HTTPS will be used by default
-     */
-    public void setHttpsDefault(boolean useHttpsDefault) {
-        this.useHttpsDefault = useHttpsDefault;
-    }
-
-    /**
-     * Creates a new {@link RestRequest.Builder} whose host is {@link #getDefaultHost()} and uses HTTPS if
-     * {@link #isHttpsDefault()} is true, and with {@link #getHttpAdapter()}'s
-     * {@link HttpAdapter#getDefaultHeaders() default headers} already applied.
-     *
-     * @return A new RestRequest Builder
-     */
-    public RestRequest.Builder request() {
-        RestRequest.Builder builder = new RestRequest.Builder()
-                .host(defaultHost)
-                .https(useHttpsDefault);
-        for (Map.Entry<String, String> entry: httpAdapter.getDefaultHeaders().entrySet()) {
-            builder.header(entry.getKey(), entry.getValue());
-        }
-
-        return builder;
-    }
-
-    /**
      * Whether to automatically manage the execution of HTTP requests based on time (enabled by default). If there has
      * been more than a certain amount of requests in the last minute (30 for normal API, 60 for OAuth), this class will
      * wait to execute the next request in order to minimize the chance of Reddit IP banning this client or simply
@@ -105,7 +70,7 @@ public abstract class RestClient implements NetworkAccessible {
     }
 
     /**
-     * Checks if the rate limit is being enforced. If true, then thread that {@link #execute(RestRequest)} is called on
+     * Checks if the rate limit is being enforced. If true, then thread that {@link #execute(HttpRequest)} is called on
      * will block until enough time has passed
      * @return If the rate limit is being enforced.
      */
@@ -113,15 +78,30 @@ public abstract class RestClient implements NetworkAccessible {
         return enforceRatelimit;
     }
 
-    /**
-     * Executes a HTTP request. HTTP Basic Authentication, rate limiting, request and response logging, and Content-Type
-     * checking will be used if applicable. If using a rate limit, this method will block until it can obtain a ticket.
-     *
-     * @param request The request to send
-     * @return A RestResponse modeling the response sent from the server
-     * @throws NetworkException
-     */
-    public RestResponse execute(RestRequest request) throws NetworkException {
+    @Override
+    public boolean isHttpsDefault() {
+        return useHttpsDefault;
+    }
+
+    @Override
+    public void setHttpsDefault(boolean useHttpsDefault) {
+        this.useHttpsDefault = useHttpsDefault;
+    }
+
+    @Override
+    public HttpRequest.Builder request() {
+        HttpRequest.Builder builder = new HttpRequest.Builder()
+                .host(defaultHost)
+                .https(useHttpsDefault);
+        for (Map.Entry<String, String> entry: httpAdapter.getDefaultHeaders().entrySet()) {
+            builder.header(entry.getKey(), entry.getValue());
+        }
+
+        return builder;
+    }
+
+    @Override
+    public RestResponse execute(HttpRequest request) throws NetworkException {
         if (request.isUsingBasicAuth()) {
             httpAdapter.authenticate(request.getBasicAuthData());
         }
@@ -166,75 +146,42 @@ public abstract class RestClient implements NetworkAccessible {
         }
     }
 
-    /**
-     * Gets the value of the User-Agent header for this RestClient
-     * @return The value of the User-Agent header
-     */
+    @Override
     public String getUserAgent() {
         return httpAdapter.getDefaultHeader("User-Agent");
     }
 
-    /**
-     * Sets the User-Agent header for this RestClient
-     * @param userAgent The new User-Agent header
-     */
+    @Override
     public void setUserAgent(String userAgent) {
         httpAdapter.setDefaultHeader("User-Agent", userAgent);
     }
 
-    /**
-     * Notifies the client to log every response received. You can access this data by using {@link #getHistory()}. This
-     * defaults to false.
-     * 
-     * @return Checks if this client is saving response history
-     */
+    @Override
     public boolean isSavingResponseHistory() {
         return saveResponseHistory;
     }
 
-    /**
-     * Notifies the client to log every response received. You can access this data by using {@link #getHistory()}.
-     * @param saveResponseHistory Whether or not to save the HTTP responses received
-     */
+    @Override
     public void setSaveResponseHistory(boolean saveResponseHistory) {
         this.saveResponseHistory = saveResponseHistory;
     }
 
-    /**
-     * Checks if this RestClient is logging HTTP requests using SLF4J. The full URL, form data, and time spent sleeping
-     * are displayed also (unless it has been marked as sensitive). Enabled by default.
-     *
-     * @return If requests are being logged
-     * @see RestRequest#getSensitiveArgs()
-     */
-    public boolean isLoggingRequests() {
+    @Override
+    public boolean isLoggingActivity() {
         return requestLogging;
     }
 
-    /**
-     * Sets whether or not to log HTTP requests. The full URL, form data, and time spent sleeping are displayed also.
-     * Enabled by default.
-     *
-     * @param requestLogging Whether or not to log requests
-     * @see RestRequest#getSensitiveArgs()
-     */
-    public void setRequestLoggingEnabled(boolean requestLogging) {
-        this.requestLogging = requestLogging;
+    @Override
+    public void enableLogging(boolean flag) {
+        this.requestLogging = flag;
     }
 
-    /**
-     * Gets a map of responses to LocalDateTimes, in which the LocalDateTime refers to the time that the response was
-     * received. Will be empty unless changed using {@link #setSaveResponseHistory(boolean)}.
-     * @return The response history
-     */
+    @Override
     public LinkedHashMap<RestResponse, Date> getHistory() {
         return history;
     }
 
-    /**
-     * Gets the HttpLogger that will log the HTTP requests and responses that this class sends and receives.
-     * @return This RestClient's HttpLogger
-     */
+    @Override
     public HttpLogger getHttpLogger() {
         return logger;
     }

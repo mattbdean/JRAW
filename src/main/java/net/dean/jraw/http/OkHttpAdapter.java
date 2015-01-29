@@ -25,7 +25,7 @@ public final class OkHttpAdapter implements HttpAdapter {
     }
 
     @Override
-    public RestResponse execute(RestRequest request) throws NetworkException, IOException {
+    public RestResponse execute(HttpRequest request) throws NetworkException, IOException {
         Request.Builder builder = new Request.Builder()
                 .method(request.getMethod(), request.getBody())
                 .url(request.getUrl())

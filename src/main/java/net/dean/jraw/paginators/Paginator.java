@@ -5,7 +5,7 @@ import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.HttpAdapter;
 import net.dean.jraw.http.NetworkAccessible;
 import net.dean.jraw.http.NetworkException;
-import net.dean.jraw.http.RestRequest;
+import net.dean.jraw.http.HttpRequest;
 import net.dean.jraw.http.RestResponse;
 import net.dean.jraw.models.Listing;
 import net.dean.jraw.models.Thing;
@@ -108,7 +108,7 @@ public abstract class Paginator<T extends Thing> implements Iterator<Listing<T>>
             args.putAll(extraArgs);
         }
 
-        RestRequest.Builder request = reddit.request()
+        HttpRequest.Builder request = reddit.request()
                 .path(path)
                 .query(args);
         if (forceNetwork || (sortingUsed && sorting == Sorting.NEW)) {

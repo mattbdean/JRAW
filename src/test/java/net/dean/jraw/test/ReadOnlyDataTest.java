@@ -4,7 +4,7 @@ import net.dean.jraw.ApiException;
 import net.dean.jraw.JrawUtils;
 import net.dean.jraw.http.MediaTypes;
 import net.dean.jraw.http.NetworkException;
-import net.dean.jraw.http.RestRequest;
+import net.dean.jraw.http.HttpRequest;
 import net.dean.jraw.http.RestResponse;
 import net.dean.jraw.managers.ThingCache;
 import net.dean.jraw.models.Comment;
@@ -95,7 +95,7 @@ public class ReadOnlyDataTest extends RedditTest {
 
             validateModels(comments);
 
-            RestResponse response = reddit.execute(RestRequest.Builder.from("GET", new URL(submission.getShortURL()))
+            RestResponse response = reddit.execute(HttpRequest.Builder.from("GET", new URL(submission.getShortURL()))
                     .expected(MediaTypes.HTML.type())
                     .build());
             assertTrue(JrawUtils.isEqual(response.getType(), MediaTypes.HTML.type()));

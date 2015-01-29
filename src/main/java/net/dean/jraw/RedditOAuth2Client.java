@@ -6,7 +6,7 @@ import net.dean.jraw.http.BasicAuthData;
 import net.dean.jraw.http.Credentials;
 import net.dean.jraw.http.MediaTypes;
 import net.dean.jraw.http.NetworkException;
-import net.dean.jraw.http.RestRequest;
+import net.dean.jraw.http.HttpRequest;
 import net.dean.jraw.http.RestResponse;
 import net.dean.jraw.http.oauth.OAuthData;
 import net.dean.jraw.http.oauth.OAuthHelper;
@@ -57,7 +57,7 @@ public class RedditOAuth2Client extends RedditClient {
     }
 
     @Override
-    public RestRequest.Builder request() {
+    public HttpRequest.Builder request() {
         return super.request().host(HOST_OAUTH);
     }
 

@@ -6,7 +6,7 @@ import net.dean.jraw.RedditClient;
 import net.dean.jraw.Version;
 import net.dean.jraw.http.BasicAuthData;
 import net.dean.jraw.http.NetworkException;
-import net.dean.jraw.http.RestRequest;
+import net.dean.jraw.http.HttpRequest;
 import net.dean.jraw.http.oauth.OAuthException;
 import net.dean.jraw.http.oauth.OAuthHelper;
 import net.dean.jraw.models.Captcha;
@@ -143,7 +143,7 @@ public class InternalsTest extends RedditTest {
     @Test
     public void testOAuthHelper() throws MalformedURLException {
         OAuthHelper helper = new OAuthHelper(reddit);
-        RestRequest expected = new RestRequest.Builder()
+        HttpRequest expected = new HttpRequest.Builder()
                 .https(true)
                 .host(RedditClient.HOST)
                 .path("/api/v1/authorize")
@@ -155,7 +155,7 @@ public class InternalsTest extends RedditTest {
                         "duration", "permanent",
                         "scope", "scope1,scope2"
                 ).build();
-        RestRequest actual = RestRequest.from("GET", helper.getAuthorizationUrl(
+        HttpRequest actual = HttpRequest.from("GET", helper.getAuthorizationUrl(
                 "myClientId", "http://www.example.com", true, "scope1", "scope2"
         ));
 
@@ -191,7 +191,7 @@ public class InternalsTest extends RedditTest {
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void testRequestWithBasicAuthNoHttps() throws NetworkException {
-        new RestRequest.Builder()
+        new HttpRequest.Builder()
                 .host("example.com")
                 .basicAuth(new BasicAuthData("foo", "bar"))
                 .https(false)

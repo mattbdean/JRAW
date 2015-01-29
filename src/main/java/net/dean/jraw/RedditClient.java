@@ -6,7 +6,7 @@ import net.dean.jraw.http.MediaTypes;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.OkHttpAdapter;
 import net.dean.jraw.http.RestClient;
-import net.dean.jraw.http.RestRequest;
+import net.dean.jraw.http.HttpRequest;
 import net.dean.jraw.http.RestResponse;
 import net.dean.jraw.models.Account;
 import net.dean.jraw.models.Captcha;
@@ -125,7 +125,7 @@ public class RedditClient extends RestClient {
      */
     @EndpointImplementation(Endpoints.LOGIN)
     public LoggedInAccount login(Credentials credentials) throws NetworkException, ApiException {
-        RestRequest request = request()
+        HttpRequest request = request()
                 .https(true) // Always HTTPS
                 .endpoint(Endpoints.LOGIN)
                 .post(JrawUtils.mapOf(
@@ -296,7 +296,7 @@ public class RedditClient extends RestClient {
     @EndpointImplementation(Endpoints.CAPTCHA_IDEN)
     public Captcha getCaptcha(String id) {
         // Use Request to format the URL
-        RestRequest request = request()
+        HttpRequest request = request()
                 .endpoint(Endpoints.CAPTCHA_IDEN, id)
                 .get()
                 .build();
@@ -348,7 +348,6 @@ public class RedditClient extends RestClient {
                 .path(String.format("/comments/%s.json", request.id))
                 .query(args)
                 .build()).as(Submission.class);
-
     }
 
     /**
@@ -444,7 +443,7 @@ public class RedditClient extends RestClient {
     public List<String> getSubredditsByTopic(String topic) throws NetworkException {
         List<String> subreddits = new ArrayList<>();
 
-        RestRequest request = request()
+        HttpRequest request = request()
                 .endpoint(Endpoints.SUBREDDITS_BY_TOPIC)
                 .query("query", topic)
                 .build();
@@ -469,7 +468,7 @@ public class RedditClient extends RestClient {
     public List<String> searchSubreddits(String start, boolean includeNsfw) throws NetworkException {
         List<String> subs = new ArrayList<>();
 
-        RestRequest request = request()
+        HttpRequest request = request()
                 .endpoint(Endpoints.SEARCH_REDDIT_NAMES)
                 .post(JrawUtils.mapOf(
                         "query", start,
@@ -494,7 +493,7 @@ public class RedditClient extends RestClient {
     public String getStylesheet(String subreddit) throws NetworkException {
         String path = JrawUtils.getSubredditPath(subreddit, "/stylesheet");
 
-        RestRequest r = request()
+        HttpRequest r = request()
                 .path(path)
                 .expected(MediaTypes.CSS.type())
                 .build();

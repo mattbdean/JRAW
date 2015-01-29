@@ -21,9 +21,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * This class is responsible for representing a RESTful HTTP request
+ * This class represents a HTTP request. Its API is designed to be as simple as possible, and is therefore based off of
+ * OkHttp's {@code Request} class.
  */
-public final class RestRequest {
+public final class HttpRequest {
     private final String method;
     private final URL url;
     private final RequestBody body;
@@ -40,11 +41,11 @@ public final class RestRequest {
      *                 info.
      * @return A RestRequest that represents the given URL
      */
-    public static RestRequest from(String method, URL url, Object... formArgs) {
+    public static HttpRequest from(String method, URL url, Object... formArgs) {
         return Builder.from(method, url, formArgs).build();
     }
 
-    private RestRequest(Builder b) {
+    private HttpRequest(Builder b) {
         this.method = b.method;
         this.url = b.url;
         this.body = b.body;
@@ -290,7 +291,7 @@ public final class RestRequest {
             return this;
         }
 
-        public RestRequest build() {
+        public HttpRequest build() {
             if (basicAuthData != null && !protocol.equals("https")) {
                 throw new IllegalArgumentException("Refusing to send credentials unencrypted");
             }
@@ -309,7 +310,7 @@ public final class RestRequest {
                         protocol, host, effectivePath), e);
             }
 
-            return new RestRequest(this);
+            return new HttpRequest(this);
         }
 
         private static String buildQuery(Map<String, String> query) {

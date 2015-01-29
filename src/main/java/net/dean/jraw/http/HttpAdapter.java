@@ -20,11 +20,11 @@ public interface HttpAdapter {
      * @throws NetworkException If the request was not successful. A request is considered unsuccessful if the HTTP
      *                          status code is less than 300 and greater than or equal to 200.
      */
-    public RestResponse execute(RestRequest request) throws NetworkException, IOException;
+    public RestResponse execute(HttpRequest request) throws NetworkException, IOException;
 
     /**
      * Gets the HTTP status code from the library-specific object
-     * @param response The object returned by {@link #execute(RestRequest)}
+     * @param response The object returned by {@link #execute(HttpRequest)}
      * @return An integer that represents the HTTP status code of the response
      */
     public int getCode(Object response);

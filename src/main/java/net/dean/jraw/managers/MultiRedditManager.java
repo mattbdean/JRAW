@@ -7,7 +7,7 @@ import net.dean.jraw.JrawUtils;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.RestResponse;
-import net.dean.jraw.http.RestRequest;
+import net.dean.jraw.http.HttpRequest;
 import net.dean.jraw.models.MultiReddit;
 import org.codehaus.jackson.JsonNode;
 
@@ -69,7 +69,7 @@ public class MultiRedditManager extends AbstractManager {
         Map<String, String> args = new HashMap<>();
         args.put("model", JrawUtils.toJson(creationData));
 
-        RestRequest.Builder request = reddit.request()
+        HttpRequest.Builder request = reddit.request()
                 .endpoint(Endpoints.MULTI_MULTIPATH_POST, getMultiPath(name).substring(1));
 
         request.put(args);
@@ -91,7 +91,7 @@ public class MultiRedditManager extends AbstractManager {
     public void addSubreddit(String multiName, String subreddit) throws NetworkException {
         MultiRedditSubredditModel data = new MultiRedditSubredditModel(subreddit);
 
-        RestRequest request = reddit.request()
+        HttpRequest request = reddit.request()
                 .endpoint(Endpoints.MULTI_MULTIPATH_R_SRNAME_PUT, multiName, subreddit)
                 .put(JrawUtils.mapOf(
                         "model", JrawUtils.toJson(data),
@@ -111,7 +111,7 @@ public class MultiRedditManager extends AbstractManager {
      */
     @EndpointImplementation(Endpoints.MULTI_MULTIPATH_R_SRNAME_DELETE)
     public void removeSubreddit(String multiName, String subreddit) throws NetworkException {
-        RestRequest request = reddit.request()
+        HttpRequest request = reddit.request()
                 .endpoint(Endpoints.MULTI_MULTIPATH_R_SRNAME_DELETE, getMultiPath(multiName).substring(1), subreddit)
                 .query(
                         "multipath", getMultiPath(multiName),
@@ -149,7 +149,7 @@ public class MultiRedditManager extends AbstractManager {
     public void copy(String sourceOwner, String sourceMulti, String destName) throws NetworkException, ApiException {
         String from = getMultiPath(sourceOwner, sourceMulti);
         String to = getMultiPath(destName);
-        RestRequest request = reddit.request()
+        HttpRequest request = reddit.request()
                 // Using .endpoint(Endpoints.MULTI_MULTIPATH_COPY) returns 400 Bad Request, use this path instead.
                 .path("/api/multi/copy")
                 .post(JrawUtils.mapOf(
@@ -182,7 +182,7 @@ public class MultiRedditManager extends AbstractManager {
     public void rename(String prevName, String newName) throws NetworkException, ApiException {
         String from = getMultiPath(prevName);
         String to = getMultiPath(newName);
-        RestRequest request = reddit.request()
+        HttpRequest request = reddit.request()
                 // Using .endpoint(Endpoints.MULTI_MULTIPATH_RENAME) returns 400 Bad Request, use this path instead.
                 .path("/api/multi/rename")
                 .post(JrawUtils.mapOf(
@@ -211,7 +211,7 @@ public class MultiRedditManager extends AbstractManager {
      */
     @EndpointImplementation(Endpoints.MULTI_MULTIPATH_DESCRIPTION_PUT)
     public String updateDescription(String multiName, String newDescription) throws NetworkException {
-        RestRequest request = reddit.request()
+        HttpRequest request = reddit.request()
                 .endpoint(Endpoints.MULTI_MULTIPATH_DESCRIPTION_PUT, getMultiPath(multiName).substring(1))
                 .put(JrawUtils.mapOf(
                         "model", String.format("{\"body_md\":\"%s\"}", newDescription),
@@ -232,7 +232,7 @@ public class MultiRedditManager extends AbstractManager {
      */
     @EndpointImplementation(Endpoints.MULTI_MULTIPATH_DELETE)
     public void delete(String name) throws NetworkException {
-        RestRequest request = reddit.request()
+        HttpRequest request = reddit.request()
                 .endpoint(Endpoints.MULTI_MULTIPATH_DELETE, getMultiPath(name).substring(1))
                 .delete()
                 .build();
@@ -310,7 +310,7 @@ public class MultiRedditManager extends AbstractManager {
     /**
      * Gets the path to a multi in this format: {@code /user/{username}/m/{multiname}} where {@code username} is the
      * currently logged in user. If this method is being used in conjunction with
-     * {@link net.dean.jraw.http.RestRequest.Builder#endpoint(Endpoints, String...)}, then it is recommended to call
+     * {@link HttpRequest.Builder#endpoint(Endpoints, String...)}, then it is recommended to call
      * {@code .substring(1)} on the return value because without it, the resulting URL would have double forward slashes.
      * For example: {@code http://www.reddit.com/api/multi//user/USERNAME/m/MULTI_NAME}
      *

@@ -64,7 +64,7 @@ public class OAuthHelper implements NetworkAccessible {
         // http://stackoverflow.com/a/41156/1275092
         this.state = new BigInteger(130, secureRandom).toString(32);
 
-        RestRequest r = new RestRequest.Builder()
+        HttpRequest r = new HttpRequest.Builder()
                 .https(true)
                 .host(RedditClient.HOST)
                 .path("/api/v1/authorize")
@@ -115,7 +115,7 @@ public class OAuthHelper implements NetworkAccessible {
         if (!started) {
             throw new IllegalStateException("Auth flow not started yet. See getAuthorizationUrl()");
         }
-        RestRequest request = RestRequest.from("invalid", new URL(finalUrl));
+        HttpRequest request = HttpRequest.from("invalid", new URL(finalUrl));
         Map<String, String> query = JrawUtils.parseUrlEncoded(request.getUrl().getQuery());
         if (!query.containsKey("state")) {
             throw new IllegalArgumentException("Final redirect URI did not contain the 'state' query parameter");

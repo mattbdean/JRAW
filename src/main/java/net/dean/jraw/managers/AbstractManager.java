@@ -33,7 +33,7 @@ public abstract class AbstractManager implements NetworkAccessible {
      * @throws NetworkException If the request was not successful
      *                          HTTP request.
      */
-    protected RestResponse genericPost(RestRequest r) throws NetworkException,
+    protected RestResponse genericPost(HttpRequest r) throws NetworkException,
             ApiException {
         if (!r.getMethod().equals("POST")) {
             throw new IllegalArgumentException("Request is not POST");
