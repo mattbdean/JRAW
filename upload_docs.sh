@@ -63,7 +63,7 @@ git config credential.helper "store --file=.git/credentials"
 
 echo "https://$GIT_USER:$GIT_PASS@github.com" > .git/credentials
 
-git add docs/
+git add --all docs/
 git commit -m "$COMMIT_MSG"
 git push --set-upstream origin gh-pages
 git checkout master
