@@ -36,7 +36,7 @@ fi
 # See http://stackoverflow.com/q/7548661/1275092
 git remote set-url origin https://github.com/thatJavaNerd/JRAW
 
-# Fetch the other branches since Travis only clones gh-pages
+# Fetch the other branches since Travis only clones master
 git fetch origin gh-pages:gh-pages
 
 rm -rf "$BUILD_DOC" # Remove all old javadoc
@@ -52,7 +52,8 @@ fi
 
 mkdir -p "$OUT_DIR"
 mv ../$DOC_FOLDER/* "$OUT_DIR" # Move the javadoc to its corresponding folder
-cp -r "$OUT_DIR" "$OUT_DIR_LATEST"
+rm -r "$OUT_DIR_LATEST"
+cp -r "$OUT_DIR/." "$OUT_DIR_LATEST"
 rm -r ../$DOC_FOLDER/
 
 # Configure git
@@ -66,4 +67,4 @@ git add docs/
 git commit -m "$COMMIT_MSG"
 git push --set-upstream origin gh-pages
 git checkout master
-
+   
