@@ -242,7 +242,7 @@ public final class RestRequest {
         }
 
         public Builder query(String... keysAndValues) {
-            return query(JrawUtils.args((String[]) keysAndValues));
+            return query(JrawUtils.args((Object[]) keysAndValues));
         }
 
         public Builder query(Map<String, String> query) {

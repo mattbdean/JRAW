@@ -20,8 +20,9 @@ import static net.dean.jraw.http.HttpLogger.Component.*;
  * disable a Component, you can use {@link #enable(Component)} or {@link #disable(Component)} respectively.
  */
 public class HttpLogger {
+    /** What will replace the latter part of the response body if it needs to be trimmed. */
+    public static final String ELLIPSIS = "...";
     private static final String INDENT = "    ";
-    private static final String ELLIPSIS = "...";
     private static final String CENSOR = "<sensitive>";
     private static final int RESPONSE_BODY_CUTOFF = 100 - ELLIPSIS.length();
     private final Logger l;
@@ -269,13 +270,15 @@ public class HttpLogger {
         RESPONSE_BODY,
         /**
          * Whether or not to always log the full response body, regardless of the request's success. If this component
-         * is disabled, the body will be trimmed and an ellipsis ("{@value #ELLIPSIS}") will be appended.
+         * is disabled, the body will be trimmed and an ellipsis will be appended.
+         *
+         * @see #ELLIPSIS
          */
         RESPONSE_BODY_ALWAYS_FULL,
 
         /**
          * Will copy any data with keys and values (headers, form data, etc.) to a case-insensitive TreeMap before
-         * iterating and logging.
+         * iterating and logging. Applies to any data, whether that be in the request or response.
          */
         ALPHABETIZE_MAPS
     }
