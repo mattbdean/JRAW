@@ -36,6 +36,16 @@ public class InboxManagerTest extends AuthenticatedRedditTest {
     }
 
     @Test
+    public void testReadAll() {
+        try {
+            // Will throw a NetworkException if not successful
+            inbox.setAllRead();
+        } catch (NetworkException e) {
+            handle(e);
+        }
+    }
+
+    @Test
     public void testCompose() {
         try {
             String subject = getUserAgent(InboxManagerTest.class);

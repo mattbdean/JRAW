@@ -5,6 +5,7 @@ import net.dean.jraw.EndpointImplementation;
 import net.dean.jraw.Endpoints;
 import net.dean.jraw.JrawUtils;
 import net.dean.jraw.RedditClient;
+import net.dean.jraw.http.MediaTypes;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.RestResponse;
 import net.dean.jraw.models.PrivateMessage;
@@ -39,6 +40,26 @@ public class InboxManager extends AbstractManager {
                 .endpoint(read ? Endpoints.READ_MESSAGE : Endpoints.UNREAD_MESSAGE)
                 .post(JrawUtils.mapOf("id", m.getFullName()))
                 .build());
+    }
+
+    /**
+     * Sets all unread messages as read.
+     * @throws NetworkException If the response code was not 202
+     */
+    @EndpointImplementation(Endpoints.READ_ALL_MESSAGES)
+    public void setAllRead() throws NetworkException {
+        RestResponse response = reddit.execute(reddit.request()
+                        .endpoint(Endpoints.READ_ALL_MESSAGES)
+                // Returns the string "202 Accepted\n\nThe request is accepted for processing.      "
+        .expected(MediaTypes.PLAIN.type())
+                .post()
+                .build());
+        if (response.getStatusCode() != 202) {
+            // Returns 202 if the request was acknowledged
+            // See https://www.reddit.com/dev/api/oauth#POST_api_read_all_messages
+            throw new NetworkException("Expected to return HTTP 202 Accepted, got HTTP "
+                    + response.getStatusCode() + " " + response.getMessage());
+        }
     }
 
     /**

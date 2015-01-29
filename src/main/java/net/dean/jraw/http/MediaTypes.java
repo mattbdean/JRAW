@@ -8,6 +8,8 @@ import com.squareup.okhttp.MediaType;
 public enum MediaTypes {
     /** Represents URL-encoded form data */
     FORM_ENCODED("application/x-www-form-urlencoded"),
+    /** Represents plain text with a MIME type of "text/plain" */
+    PLAIN("text/plain"),
     /** Represents a JavaScript Object Notation file with a MIME type of "application/json" */
     JSON("application/json"),
     /** Represents a HyperText Markup Language file with a MIME type of "text/html" */

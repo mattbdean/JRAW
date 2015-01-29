@@ -228,12 +228,12 @@ public enum Endpoints {
     ///////// privatemessages /////////
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#POST_api_block">{@code POST /api/block}</a>" included in the "privatemessages" scope */
     BLOCK("POST /api/block", "privatemessages"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#POST_api_read_all_messages">{@code POST /api/read_all_messages}</a>" included in the "privatemessages" scope */
-    READ_ALL_MESSAGES("POST /api/read_all_messages", "privatemessages"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#POST_api_unblock_subreddit">{@code POST /api/unblock_subreddit}</a>" included in the "privatemessages" scope */
     UNBLOCK_SUBREDDIT("POST /api/unblock_subreddit", "privatemessages"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#POST_api_compose">{@code POST /api/compose}</a>" included in the "privatemessages" scope */
     COMPOSE("POST /api/compose", "privatemessages"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#POST_api_read_all_messages">{@code POST /api/read_all_messages}</a>" included in the "privatemessages" scope */
+    READ_ALL_MESSAGES("POST /api/read_all_messages", "privatemessages"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#POST_api_read_message">{@code POST /api/read_message}</a>" included in the "privatemessages" scope */
     READ_MESSAGE("POST /api/read_message", "privatemessages"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#POST_api_unread_message">{@code POST /api/unread_message}</a>" included in the "privatemessages" scope */
@@ -258,8 +258,6 @@ public enum Endpoints {
     LIVE_THREAD_CONTRIBUTORS("GET /live/{thread}/contributors.json", "read"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_live_%7Bthread%7D_discussions">{@code GET /live/{thread}/discussions}</a>" included in the "read" scope */
     LIVE_THREAD_DISCUSSIONS("GET /live/{thread}/discussions", "read"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_r_%7Bsubreddit%7D_about.json">{@code GET /r/{subreddit}/about.json}</a>" included in the "read" scope */
-    SUBREDDIT_ABOUT("GET /r/{subreddit}/about.json", "read"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_about_banned">{@code GET /about/banned}</a>" included in the "read" scope */
     ABOUT_BANNED("GET /about/banned", "read"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_about_contributors">{@code GET /about/contributors}</a>" included in the "read" scope */
@@ -328,6 +326,8 @@ public enum Endpoints {
     PREFS_FRIENDS("GET /prefs/friends", "read"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_prefs_where">{@code GET /prefs/where}</a>" included in the "read" scope */
     PREFS_WHERE("GET /prefs/where", "read"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_r_%7Bsubreddit%7D_about.json">{@code GET /r/{subreddit}/about.json}</a>" included in the "read" scope */
+    SUBREDDIT_ABOUT("GET /r/{subreddit}/about.json", "read"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_random">{@code GET /random}</a>" included in the "read" scope */
     RANDOM("GET /random", "read"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_search">{@code GET /search}</a>" included in the "read" scope */
