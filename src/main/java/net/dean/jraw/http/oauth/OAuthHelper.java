@@ -69,7 +69,7 @@ public class OAuthHelper implements NetworkAccessible {
                 .host(RedditClient.HOST)
                 .path("/api/v1/authorize")
                 .expected(MediaTypes.HTML.type())
-                .query(JrawUtils.args(
+                .query(JrawUtils.mapOf(
                         "client_id", clientId,
                         "response_type", "code",
                         "state", state,
@@ -137,7 +137,7 @@ public class OAuthHelper implements NetworkAccessible {
                     .https(true)
                     .host(RedditClient.HOST)
                     .path("/api/v1/access_token")
-                    .post(JrawUtils.args(
+                    .post(JrawUtils.mapOf(
                             "grant_type", "authorization_code",
                             "code", code,
                             "redirect_uri", redirectUri
@@ -172,7 +172,7 @@ public class OAuthHelper implements NetworkAccessible {
                 .https(true)
                 .host(RedditClient.HOST_SPECIAL)
                 .path("/api/v1/access_token")
-                .post(JrawUtils.args(
+                .post(JrawUtils.mapOf(
                         "grant_type", "password",
                         "username", credentials.getUsername(),
                         "password", credentials.getPassword()

@@ -128,7 +128,7 @@ public class RedditClient extends RestClient {
         RestRequest request = request()
                 .https(true) // Always HTTPS
                 .endpoint(Endpoints.LOGIN)
-                .post(JrawUtils.args(
+                .post(JrawUtils.mapOf(
                         "user", credentials.getUsername(),
                         "passwd", credentials.getPassword(),
                         "api_type", "json"
@@ -181,7 +181,7 @@ public class RedditClient extends RestClient {
      */
     @EndpointImplementation(Endpoints.REGISTER)
     public LoggedInAccount register(String username, String password, String email, Captcha captcha, String captchaAttempt) throws NetworkException, ApiException {
-        Map<String, String> args = JrawUtils.args(
+        Map<String, String> args = JrawUtils.mapOf(
                 "api_type", "json",
                 "captcha", captchaAttempt,
                 "iden", captcha.getId(),
@@ -272,7 +272,7 @@ public class RedditClient extends RestClient {
         try {
             RestResponse response = execute(request()
                     .endpoint(Endpoints.NEW_CAPTCHA)
-                    .post(JrawUtils.args(
+                    .post(JrawUtils.mapOf(
                             "api_type", "json"
                     )).build());
 
@@ -471,7 +471,7 @@ public class RedditClient extends RestClient {
 
         RestRequest request = request()
                 .endpoint(Endpoints.SEARCH_REDDIT_NAMES)
-                .post(JrawUtils.args(
+                .post(JrawUtils.mapOf(
                         "query", start,
                         "include_over_18", includeNsfw
                 )).build();
@@ -567,7 +567,7 @@ public class RedditClient extends RestClient {
         // seems to handle it fine.
         RestResponse response = execute(request()
                 .path(Endpoints.MORECHILDREN.getEndpoint().getUri() + ".json")
-                .query(JrawUtils.args(
+                .query(JrawUtils.mapOf(
                         "children", ids.toString(),
                         "link_id", submission.getFullName(),
                         "sort", sort.name().toLowerCase(),

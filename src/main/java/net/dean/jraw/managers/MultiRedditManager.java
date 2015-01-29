@@ -93,7 +93,7 @@ public class MultiRedditManager extends AbstractManager {
 
         RestRequest request = reddit.request()
                 .endpoint(Endpoints.MULTI_MULTIPATH_R_SRNAME_PUT, multiName, subreddit)
-                .put(JrawUtils.args(
+                .put(JrawUtils.mapOf(
                         "model", JrawUtils.toJson(data),
                         "multipath", getMultiPath(multiName),
                         "srname", subreddit
@@ -152,7 +152,7 @@ public class MultiRedditManager extends AbstractManager {
         RestRequest request = reddit.request()
                 // Using .endpoint(Endpoints.MULTI_MULTIPATH_COPY) returns 400 Bad Request, use this path instead.
                 .path("/api/multi/copy")
-                .post(JrawUtils.args(
+                .post(JrawUtils.mapOf(
                         "from", from,
                         "to", to
                 )).build();
@@ -185,7 +185,7 @@ public class MultiRedditManager extends AbstractManager {
         RestRequest request = reddit.request()
                 // Using .endpoint(Endpoints.MULTI_MULTIPATH_RENAME) returns 400 Bad Request, use this path instead.
                 .path("/api/multi/rename")
-                .post(JrawUtils.args(
+                .post(JrawUtils.mapOf(
                         "from", from,
                         "to", to
                 )).build();
@@ -213,7 +213,7 @@ public class MultiRedditManager extends AbstractManager {
     public String updateDescription(String multiName, String newDescription) throws NetworkException {
         RestRequest request = reddit.request()
                 .endpoint(Endpoints.MULTI_MULTIPATH_DESCRIPTION_PUT, getMultiPath(multiName).substring(1))
-                .put(JrawUtils.args(
+                .put(JrawUtils.mapOf(
                         "model", String.format("{\"body_md\":\"%s\"}", newDescription),
                         "multipath", getMultiPath(multiName)
                 )).build();

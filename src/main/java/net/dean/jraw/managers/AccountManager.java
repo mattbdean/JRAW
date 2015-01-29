@@ -60,7 +60,7 @@ public class AccountManager extends AbstractManager {
      */
     @EndpointImplementation(Endpoints.SUBMIT)
     public Submission submit(SubmissionBuilder b, Captcha captcha, String captchaAttempt) throws NetworkException, ApiException {
-        Map<String, String> args = JrawUtils.args(
+        Map<String, String> args = JrawUtils.mapOf(
                 "api_type", "json",
                 "extension", "json",
                 "kind", b.selfPost ? "self" : "link",
@@ -108,7 +108,7 @@ public class AccountManager extends AbstractManager {
     public <T extends Thing & Votable> void vote(T s, VoteDirection voteDirection) throws NetworkException, ApiException {
         genericPost(reddit.request()
                 .endpoint(Endpoints.VOTE)
-                .post(JrawUtils.args(
+                .post(JrawUtils.mapOf(
                                 "api_type", "json",
                                 "dir", voteDirection.getValue(),
                                 "id", s.getFullName())
@@ -148,7 +148,7 @@ public class AccountManager extends AbstractManager {
         // Send it to "/api/save" if save == true, "/api/unsave" if save == false
         genericPost(reddit.request()
                 .endpoint(save ? Endpoints.SAVE : Endpoints.UNSAVE)
-                .post(JrawUtils.args(
+                .post(JrawUtils.mapOf(
                         "id", s.getFullName()
                 )).build());
     }
@@ -165,7 +165,7 @@ public class AccountManager extends AbstractManager {
     public void sendRepliesToInbox(Submission s, boolean send) throws NetworkException, ApiException {
         genericPost(reddit.request()
                 .endpoint(Endpoints.SENDREPLIES)
-                .post(JrawUtils.args(
+                .post(JrawUtils.mapOf(
                         "id", s.getFullName(),
                         "state", send
                 )).build());
@@ -207,7 +207,7 @@ public class AccountManager extends AbstractManager {
     private void modifyDeveloperStatus(String clientId, String devName, boolean remove) throws NetworkException, ApiException {
         genericPost(reddit.request()
                 .endpoint(remove ? Endpoints.REMOVEDEVELOPER : Endpoints.ADDDEVELOPER)
-                .post(JrawUtils.args(
+                .post(JrawUtils.mapOf(
                         "api_type", "json",
                         "client_id", clientId,
                         "name", devName
@@ -228,7 +228,7 @@ public class AccountManager extends AbstractManager {
      */
     @EndpointImplementation(Endpoints.UPDATEAPP)
     public void createOrUpdateApp(String clientId, String name, AppType appType, String description, String aboutUrl, String redirectUrl) throws NetworkException, ApiException {
-        Map<String, String> args = JrawUtils.args(
+        Map<String, String> args = JrawUtils.mapOf(
                 "api_type", "json",
                 "name", name,
                 "app_type", appType,
@@ -258,7 +258,7 @@ public class AccountManager extends AbstractManager {
     public void deleteApp(String clientId) throws NetworkException, ApiException {
         RestResponse response = reddit.execute(reddit.request()
                 .endpoint(Endpoints.DELETEAPP)
-                .post(JrawUtils.args(
+                .post(JrawUtils.mapOf(
                         "client_id", clientId
                 )).build());
         if (response.hasErrors()) {
@@ -278,7 +278,7 @@ public class AccountManager extends AbstractManager {
     public void hide(Submission s, boolean hide) throws NetworkException, ApiException {
         genericPost(reddit.request()
                 .endpoint(hide ? Endpoints.HIDE : Endpoints.UNHIDE)
-                .post(JrawUtils.args(
+                .post(JrawUtils.mapOf(
                         "id", s.getFullName()
                 )).build());
     }
@@ -294,7 +294,7 @@ public class AccountManager extends AbstractManager {
     @EndpointImplementation(Endpoints.EDITUSERTEXT)
     public void updateSelfpost(Submission submission, String text) throws NetworkException, ApiException {
         genericPost(reddit.request().endpoint(Endpoints.EDITUSERTEXT)
-                .post(JrawUtils.args(
+                .post(JrawUtils.mapOf(
                         "api_type", "json",
                         "text", text,
                         "thing_id", submission.getFullName()
@@ -314,7 +314,7 @@ public class AccountManager extends AbstractManager {
     public <T extends Contribution> String reply(T contribution, String text) throws NetworkException, ApiException {
         RestResponse response = genericPost(reddit.request()
                 .endpoint(Endpoints.COMMENT)
-                .post(JrawUtils.args(
+                .post(JrawUtils.mapOf(
                         "api_type", "json",
                         "text", text,
                         "thing_id", contribution.getFullName()
@@ -354,7 +354,7 @@ public class AccountManager extends AbstractManager {
     private void setSubscribed(Subreddit subreddit, boolean sub) throws NetworkException {
         reddit.execute(reddit.request()
                 .endpoint(Endpoints.SUBSCRIBE)
-                .post(JrawUtils.args(
+                .post(JrawUtils.mapOf(
                         "sr", subreddit.getFullName(),
                         "action", sub ? "sub" : "unsub"
                         // JSON is returned on subscribe, HTML is returned on unsubscribe
@@ -429,7 +429,7 @@ public class AccountManager extends AbstractManager {
     public void setFlairEnabled(String subreddit, boolean enabled) throws NetworkException, ApiException {
         RestResponse response = reddit.execute(reddit.request()
                 .path("/r/" + subreddit + Endpoints.SETFLAIRENABLED.getEndpoint().getUri())
-                .post(JrawUtils.args(
+                .post(JrawUtils.mapOf(
                         "api_type", "json",
                         "enabled", enabled
                 ))

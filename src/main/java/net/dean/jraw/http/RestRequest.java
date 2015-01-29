@@ -36,7 +36,7 @@ public final class RestRequest {
      * Creates a RestRequest from the given URL
      * @param method The HTTP verb to execute this RestRequest with
      * @param url A valid URL
-     * @param formArgs An optional array of Strings to send as form data. See {@link JrawUtils#args(Object...)} for more
+     * @param formArgs An optional array of Strings to send as form data. See {@link JrawUtils#mapOf(Object...)} for more
      *                 info.
      * @return A RestRequest that represents the given URL
      */
@@ -153,7 +153,7 @@ public final class RestRequest {
                     .path(url.getPath())
                     .query(query);
             if (formArgs.length != 0) {
-                b.method(method, JrawUtils.args(formArgs));
+                b.method(method, JrawUtils.mapOf(formArgs));
             }
             return b;
         }
@@ -242,7 +242,7 @@ public final class RestRequest {
         }
 
         public Builder query(String... keysAndValues) {
-            return query(JrawUtils.args((Object[]) keysAndValues));
+            return query(JrawUtils.mapOf((Object[]) keysAndValues));
         }
 
         public Builder query(Map<String, String> query) {

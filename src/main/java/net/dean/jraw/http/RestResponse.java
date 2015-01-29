@@ -52,7 +52,7 @@ public class RestResponse {
         this.message = message;
         this.protocol = protocol;
 
-        if (JrawUtils.typeComparison(type, MediaTypes.JSON.type()) && !raw.isEmpty()) {
+        if (JrawUtils.isEqual(type, MediaTypes.JSON.type()) && !raw.isEmpty()) {
             this.rootNode = readTree(raw);
         } else {
             // Init JSON-related final variables
@@ -60,7 +60,7 @@ public class RestResponse {
         }
 
         ApiException[] errors = new ApiException[0];
-        if (JrawUtils.typeComparison(type, MediaTypes.JSON.type()) && !raw.isEmpty()) {
+        if (JrawUtils.isEqual(type, MediaTypes.JSON.type()) && !raw.isEmpty()) {
             // Parse the errors into ApiExceptions
             JsonNode errorsNode = rootNode.get("json");
             if (errorsNode != null) {

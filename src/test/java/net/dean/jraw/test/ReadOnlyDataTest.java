@@ -98,7 +98,7 @@ public class ReadOnlyDataTest extends RedditTest {
             RestResponse response = reddit.execute(RestRequest.Builder.from("GET", new URL(submission.getShortURL()))
                     .expected(MediaTypes.HTML.type())
                     .build());
-            assertTrue(JrawUtils.typeComparison(response.getType(), MediaTypes.HTML.type()));
+            assertTrue(JrawUtils.isEqual(response.getType(), MediaTypes.HTML.type()));
         } catch (NetworkException | MalformedURLException e) {
             handle(e);
         }

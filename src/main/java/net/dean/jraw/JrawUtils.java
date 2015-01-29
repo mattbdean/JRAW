@@ -74,7 +74,7 @@ public final class JrawUtils {
     /**
      * Convenience method to combine a list of strings into a map. Sample usage:<br>
      * <pre>{@code
-     * Map<String, String> mapOfArguments = args("key1", "value1", "key2", "value2");
+     * Map<String, String> mapOfArguments = mapOf("key1", "value1", "key2", "value2");
      * }</pre>
      * would result in this:
      * <pre>
@@ -92,7 +92,7 @@ public final class JrawUtils {
      * @throws IllegalArgumentException If the amount of parameters is not even
      * @throws NullPointerException If an element in the array was null
      */
-    public static Map<String, String> args(Object... keysAndValues) {
+    public static Map<String, String> mapOf(Object... keysAndValues) {
         if (keysAndValues.length % 2 != 0) {
             throw new IllegalArgumentException("Keys and values length must be even");
         }
@@ -128,14 +128,14 @@ public final class JrawUtils {
     }
 
     /**
-     * Compares the type and subtype of two MediaTypes.
+     * Compares the type and subtype of two MediaTypes. Will recognize the asterisk ('*') as a wildcard.
      * @param t1 The first MediaType
      * @param t2 The second MediaType
-     * @return True, if {@code t1.type().equals(t2.type())} and {@code t1.subtype().equals(t2.subtype())}, false if
-     *         else.
      */
-    public static boolean typeComparison(MediaType t1, MediaType t2) {
-        return t1.type().equals(t2.type()) && t1.subtype().equals(t2.subtype());
+    public static boolean isEqual(MediaType t1, MediaType t2) {
+        boolean mainType = t1.type().equals(t2.type()) || (t1.type().equals("*") || t2.type().equals("*"));
+        boolean subType = t1.subtype().equals(t2.subtype()) || (t1.subtype().equals("*") || t2.subtype().equals("*"));
+        return mainType && subType;
     }
 
     /**

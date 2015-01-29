@@ -37,7 +37,7 @@ public class InboxManager extends AbstractManager {
     public void setRead(PrivateMessage m, boolean read) throws NetworkException {
         reddit.execute(reddit.request()
                 .endpoint(read ? Endpoints.READ_MESSAGE : Endpoints.UNREAD_MESSAGE)
-                .post(JrawUtils.args("id", m.getFullName()))
+                .post(JrawUtils.mapOf("id", m.getFullName()))
                 .build());
     }
 
@@ -69,7 +69,7 @@ public class InboxManager extends AbstractManager {
     public void compose(String from, String to, String subject, String body) throws NetworkException, ApiException {
         RestResponse response = reddit.execute(reddit.request()
                 .endpoint(Endpoints.COMPOSE)
-                .post(JrawUtils.args(
+                .post(JrawUtils.mapOf(
                         "api_type", "json",
                         "from_sr", from,
                         "subject", subject,

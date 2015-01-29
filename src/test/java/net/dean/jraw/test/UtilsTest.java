@@ -1,24 +1,23 @@
 package net.dean.jraw.test;
 
+import com.squareup.okhttp.MediaType;
 import org.testng.annotations.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static net.dean.jraw.JrawUtils.args;
-import static net.dean.jraw.JrawUtils.isFullName;
-import static net.dean.jraw.JrawUtils.join;
+import static net.dean.jraw.JrawUtils.*;
 import static org.testng.Assert.*;
 
 /** Tests methods found in {@link net.dean.jraw.JrawUtils} */
 public class UtilsTest extends RedditTest {
     @Test
-    public void testArgs() {
+    public void testMapOf() {
         Map<String, String> expected = new HashMap<>();
         expected.put("hello", "world");
         expected.put("key", "value");
 
-        Map<String, String> generated = args(
+        Map<String, String> generated = mapOf(
                 "hello", "world",
                 "key", "value"
         );
@@ -28,7 +27,7 @@ public class UtilsTest extends RedditTest {
 
     @Test(expectedExceptions = NullPointerException.class)
     public void testArgsWithNullObject() {
-        args("hello", null);
+        mapOf("hello", null);
     }
 
     @Test
@@ -47,7 +46,32 @@ public class UtilsTest extends RedditTest {
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void testOddArgLength() {
-        args("only one element");
+        mapOf("only one element");
+    }
+
+    @Test
+    public void testIsEqualBasic() {
+        String type = "application/json";
+        assertEqualMediaType(type, type);
+    }
+
+    @Test
+    public void testIsEqualAnyType() {
+        assertEqualMediaType("*/json", "application/json");
+    }
+
+    @Test
+    public void testIsEqualAnySubtype() {
+        assertEqualMediaType("application/*", "application/json");
+    }
+
+    @Test
+    public void testIsEqualAny() {
+        assertEqualMediaType("*/*", "application/json");
+    }
+
+    private void assertEqualMediaType(String t1, String t2) {
+        assertTrue(isEqual(MediaType.parse(t1), MediaType.parse(t2)), t1 + " was not equal to " + t2);
     }
 
     @Test

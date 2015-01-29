@@ -39,7 +39,7 @@ public class ModerationManager extends AbstractManager {
 		// "/api/marknsfw" if nsfw == true, "/api/unmarknsfw" if nsfw == false
 		genericPost(reddit.request()
 				.endpoint(nsfw ? Endpoints.MARKNSFW : Endpoints.UNMARKNSFW)
-				.post(JrawUtils.args(
+				.post(JrawUtils.mapOf(
 						"id", s.getFullName()
 				)).build());
 	}
@@ -68,7 +68,7 @@ public class ModerationManager extends AbstractManager {
 	public void delete(String id) throws NetworkException, ApiException {
 		genericPost(reddit.request()
 				.endpoint(Endpoints.DEL)
-				.post(JrawUtils.args(
+				.post(JrawUtils.mapOf(
 						"id", id
 				)).build());
 	}
@@ -86,7 +86,7 @@ public class ModerationManager extends AbstractManager {
 	public void setSticky(Submission s, boolean sticky) throws NetworkException, ApiException {
 		genericPost(reddit.request()
 				.endpoint(Endpoints.SET_SUBREDDIT_STICKY)
-				.post(JrawUtils.args(
+				.post(JrawUtils.mapOf(
 						"api_type", "json",
 						"id", s.getFullName(),
 						"state", sticky
@@ -160,7 +160,7 @@ public class ModerationManager extends AbstractManager {
 		if (subreddit == null) {
 			throw new IllegalArgumentException("subreddit cannot be null");
 		}
-		Map<String, String> args = JrawUtils.args(
+		Map<String, String> args = JrawUtils.mapOf(
 				"api_type", "json",
 				"flair_template_id", template.getId()
 		);

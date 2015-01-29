@@ -128,7 +128,7 @@ public class RedditOAuth2Client extends RedditClient {
         execute(request()
                 .host(HOST_SPECIAL)
                 .path("/api/v1/revoke_token")
-                .post(JrawUtils.args(
+                .post(JrawUtils.mapOf(
                         "token", authData.getAccessToken(),
                         "token_type_hint", "access_token"
                 )).basicAuth(new BasicAuthData(creds.getClientId(), creds.getClientSecret()))
@@ -152,7 +152,7 @@ public class RedditOAuth2Client extends RedditClient {
                 .https(true)
                 .host(RedditClient.HOST_SPECIAL)
                 .path("/api/v1/access_token")
-                .post(JrawUtils.args(
+                .post(JrawUtils.mapOf(
                         "grant_type", "refresh_token",
                         "refresh_token", authData.getRefreshToken()
                 )).basicAuth(new BasicAuthData(creds.getClientId(), creds.getClientSecret()))

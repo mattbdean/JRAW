@@ -150,7 +150,7 @@ public abstract class RestClient implements NetworkAccessible {
             if (requestLogging)
                 logger.log(response);
 
-            if (!JrawUtils.typeComparison(response.getType(), request.getExpectedType())) {
+            if (!JrawUtils.isEqual(response.getType(), request.getExpectedType())) {
                 throw new NetworkException(String.format("Expected Content-Type ('%s/%s') did not match actual Content-Type ('%s/%s')",
                         request.getExpectedType().type(), request.getExpectedType().subtype(),
                         response.getType().type(), response.getType().subtype()));
