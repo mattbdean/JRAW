@@ -73,7 +73,8 @@ public final class JrawUtils {
     }
 
     /**
-     * Convenience method to combine a list of strings into a map. Sample usage:<br>
+     * Convenience method to combine a list of objects into a map Objects will be turned into strings by calling their
+     * {@code toString()} method. Sample usage:<br>
      * <pre>{@code
      * Map<String, String> mapOfArguments = mapOf("key1", "value1", "key2", "value2");
      * }</pre>
@@ -88,9 +89,9 @@ public final class JrawUtils {
      * </pre>
      *
      * @param keysAndValues A list of objects to be turned into strings and condensed into a map. Must be of even length
-     *                      and all values must be non-null
+     *                      and all values must be non-null.
      * @return A map of the given keys and values array
-     * @throws IllegalArgumentException If the amount of parameters is not even
+     * @throws IllegalArgumentException If the amount of parameters is not even (there is not a value for every key)
      * @throws NullPointerException If an element in the array was null
      */
     public static Map<String, String> mapOf(Object... keysAndValues) {
@@ -114,9 +115,9 @@ public final class JrawUtils {
 
     /**
      * Tests if the given string could possibly be the full name of an Thing. In order to pass, the first character must
-     * be "t", the second character must be a digit in the range of 1-8, the third character must be an underscore, and
-     * the rest of the letters must be alphanumeric. See <a href="http://www.reddit.com/dev/api#fullnames">here</a> for
-     * more information.
+     * be "t", the second character must be a digit in the range of 1-6 or 8, the third character must be an underscore,
+     * and the rest of the letters must be alphanumeric. See <a href="http://www.reddit.com/dev/api#fullnames">here</a>
+     * for more information.
      *
      * @param name The String to test
      * @return If the name given could be a Thing's full name

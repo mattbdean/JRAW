@@ -21,8 +21,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * This class represents a HTTP request. Its API is designed to be as simple as possible, and is therefore based off of
- * OkHttp's {@code Request} class.
+ * This immutable class represents a HTTP request.
  */
 public final class HttpRequest {
     private final String method;
@@ -55,6 +54,7 @@ public final class HttpRequest {
         this.sensitiveArgs = b.sensitiveArgs;
     }
 
+    /** Get the HTTP verb (GET, POST, etc.) */
     public String getMethod() {
         return method;
     }
@@ -75,10 +75,17 @@ public final class HttpRequest {
         return basicAuthData;
     }
 
+    /**
+     * Gets the MediaType that the response is expected to have
+     */
     public MediaType getExpectedType() {
         return expectedMediaType;
     }
 
+    /**
+     * Returns true if the data is not null and it is valid
+     * @see BasicAuthData#isValid()
+     */
     public boolean isUsingBasicAuth() {
         return basicAuthData != null && basicAuthData.isValid();
     }
@@ -99,12 +106,16 @@ public final class HttpRequest {
     }
 
     /**
-     * This class provides an interface to create objects that model HTTP requests. Borrowed heavily from OkHttp's
-     * Request.Builder class.
+     * This class provides an interface to create objects that model HTTP requests. Each property method will return
+     * itself for method chaining. Borrowed heavily from OkHttp's Request.Builder class.
      */
     public static final class Builder {
         /** This Pattern will match a URI parameter. For example, /api/{param1}/{param2} */
         private static final Pattern PATH_PARAM_PATTERN = Pattern.compile("\\{(.*?)\\}");
+        private static final String DEFAULT_VERB = "GET";
+        private static final String DEFAULT_PROTOCOL = "http";
+        private static final String DEFAULT_PATH = "/";
+        private static final MediaType DEFAULT_EXPECTED_TYPE = MediaTypes.JSON.type();
 
         private String method;
 
@@ -118,6 +129,7 @@ public final class HttpRequest {
         private String[] pathParams;
         private Map<String, String> query;
 
+        // Body
         private RequestBody body;
 
         // Extras
@@ -160,30 +172,48 @@ public final class HttpRequest {
         }
 
         public Builder() {
-            get();
-            https(false);
             this.headers = new Headers.Builder();
-            this.expectedMediaType = MediaTypes.JSON.type();
         }
 
+        /** Makes this request a GET */
         public Builder get() { return method("GET", (RequestBody) null); }
 
+        /** Makes this request a DELETE */
         public Builder delete() { return method("DELETE", (RequestBody) null); }
 
+        /** Makes this request a HEAD */
         public Builder head() { return method("HEAD", (RequestBody) null); }
 
+        /** Makes this request a POST with no body */
         public Builder post() { return method("POST", (RequestBody) null); }
+        /** Makes this request a POST with a {@code x-www-form-urlencoded} body */
         public Builder post(Map<String, String> urlEncodedForm) { return method("POST", urlEncodedForm); }
+        /** Makes this request a POST with a given body. */
         public Builder post(RequestBody body) { return method("POST", body); }
 
+        /** Makes this request a PUT with no body */
         public Builder put() { return method("PUT", (RequestBody) null); }
+        /** Makes this request a PUT with a {@code x-www-form-urlencoded} body */
         public Builder put(Map<String, String> urlEncodedForm) { return method("PUT", urlEncodedForm); }
+        /** Makes this request a PUT with a given body. */
         public Builder put(RequestBody body) { return method("PUT", body); }
 
+        /** Makes this request a PATCH with no body */
         public Builder patch() { return method("PATCH", (RequestBody) null); }
+        /** Makes this request a PATCH with a {@code x-www-form-urlencoded} body */
         public Builder patch(Map<String, String> urlEncodedForm) { return method("PATCH", urlEncodedForm); }
+        /** Makes this request a PATCH with a given body. */
         public Builder patch(RequestBody body) { return method("PATCH", body); }
 
+        /**
+         * Sets the HTTP verb to use for this request. A full list can be found in
+         * <a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html">RFC 2616</a>. The Content-Type for this
+         * request will be {@code application/x-www-form-urlencoded}.
+         *
+         * @param method The name of the method (GET, POST, etc.)
+         * @param urlEncodedForm A map that will be encoded using UTF-8. Can be null.
+         * @return This Builder
+         */
         public Builder method(String method, Map<String, String> urlEncodedForm) {
             RequestBody body = null;
             if (urlEncodedForm != null && HttpMethod.permitsRequestBody(method.toUpperCase())) {
@@ -197,6 +227,14 @@ public final class HttpRequest {
             return method(method, body);
         }
 
+        /**
+         * Sets the HTTP verb to use for this request. A full list can be found in
+         * <a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html">RFC 2616</a>.
+         *
+         * @param method The name of the method (GET, POST, etc.)
+         * @param body The request body. Can be null.
+         * @return This Bulider
+         */
         public Builder method(String method, RequestBody body) {
             // Adapted from com.squareup.okhttp.Request.Builder.method(String, RequestBody)
             if (method == null || method.length() == 0) {
@@ -213,51 +251,68 @@ public final class HttpRequest {
             return this;
         }
 
+        /** Enables or disables HTTPS */
         public Builder https(boolean https) {
             this.protocol = https ? "https" : "http";
             return this;
         }
 
+        /** Sets the target URL's host. For example, "github.com." */
         public Builder host(String host) {
             this.host = host;
             return this;
         }
 
+        /**
+         * Sets the URL's path. For example, "/thatJavaNerd/JRAW." Positional path parameters are supported, so if
+         * {@code path} was "/api/{resource}" and {@code params} was a one-element array consisting of "foo", then the
+         * resulting path would be "/api/foo."
+         *
+         * @param path The path. If null, "/" will be used.
+         * @param params Optional positional path parameters
+         * @return This Builder
+         */
         public Builder path(String path, String... params) {
+            if (path == null)
+                path = DEFAULT_PATH;
             this.path = path;
-            return pathParams(params);
-        }
-
-        public Builder pathParams(String... params) {
             this.pathParams = params;
             return this;
         }
 
+        /** Calls {@link #path(String, String...)} with {@code e.getEndpoint().getUri()} */
         public Builder endpoint(Endpoints e, String... pathParams) {
-            if (e == null) {
-                throw new NullPointerException("Endpoint cannot be null");
-            }
-            this.path = e.getEndpoint().getUri();
-            pathParams(pathParams);
-            return this;
+            return path(e.getEndpoint().getUri(), pathParams);
         }
 
+        /**
+         * Sets the arguments to be used in the query string. This will be appended after the path in the format
+         * {@code ?key=value&foo=bar}.
+         *
+         * @param keysAndValues Passed to {@link JrawUtils#mapOf(Object...)}
+         * @return This Builder
+         */
         public Builder query(String... keysAndValues) {
             return query(JrawUtils.mapOf((Object[]) keysAndValues));
         }
 
+        /**
+         * Sets the arguments to be used in the query string. This will be appended after the path in the format
+         * {@code ?key=value&foo=bar}.
+         * @return This Builder
+         */
         public Builder query(Map<String, String> query) {
             this.query = query;
             return this;
         }
 
-        /** Replaces all values of the given header with the given value */
+        /** Sets a header */
         public Builder header(String name, String value) {
             this.headers.set(name, value);
             return this;
         }
 
-        /** Removes all values of a header */
+        /** Removes a header */
         public Builder removeHeader(String name) {
             this.headers.removeAll(name);
             return this;
@@ -276,33 +331,71 @@ public final class HttpRequest {
             return header("Cache-Control", value);
         }
 
+        /**
+         * Sets the username and password to be used with HTTP Basic Authentication. HTTPS must be enabled before
+         * {@link #build()} is called in order for to avoid an exception.
+         *
+         * @see #https(boolean)
+         */
         public Builder basicAuth(BasicAuthData data) {
             this.basicAuthData = data;
             return this;
         }
 
+        /** Sets the expected value of the response's Content-Type header */
         public Builder expected(MediaType type) {
             this.expectedMediaType = type;
             return this;
         }
 
+        /**
+         * Notes that the the values of the given keys should be kept secret. Only applies if the body is
+         * {@code x-www-form-urlencoded}. Note that this is honored by {@link HttpLogger}, third party classes might
+         * not. If you are unsure about security, it is best to disable logging HTTP requests and enable HTTPS by
+         * default.
+         *
+         * @see HttpLogger#log(HttpRequest)
+         * @see HttpClient#setHttpsDefault(boolean)
+         */
         public Builder sensitiveArgs(String... args) {
             this.sensitiveArgs = args == null ? new String[0] : args;
             return this;
         }
 
+        /**
+         * Compiles all the data given from other property methods into a {@link HttpRequest}
+         *
+         * @throws IllegalArgumentException If a malformed URL is created, HTTP Basic Authentication is enabled but
+         *                                  HTTPS is not, or an essential piece of information is missing, like the
+         *                                  host.
+         */
         public HttpRequest build() {
-            if (basicAuthData != null && !protocol.equals("https")) {
+            // Check for errors
+            if (basicAuthData != null && !protocol.equals("https"))
                 throw new IllegalArgumentException("Refusing to send credentials unencrypted");
-            }
+            if (host == null || host.isEmpty())
+                throw new IllegalArgumentException("Missing host");
 
+            // Set defaults
+            if (method == null)
+                method = DEFAULT_VERB;
+            if (protocol == null || protocol.isEmpty())
+                protocol = DEFAULT_PROTOCOL;
+            if (expectedMediaType == null)
+                expectedMediaType = DEFAULT_EXPECTED_TYPE;
+            if (path == null)
+                path = DEFAULT_PATH;
+
+            // Substitute path parameters
             String effectivePath = path;
             if (pathParams != null && pathParams.length != 0) {
                 effectivePath = substitutePathParameters(path, pathParams);
             }
+            // Append query string
             if (query != null && query.size() != 0) {
-                effectivePath += buildQuery(query);
+                effectivePath += buildQueryString(query);
             }
+
             try {
                 this.url = new URL(protocol, host, effectivePath);
             } catch (MalformedURLException e) {
@@ -313,7 +406,7 @@ public final class HttpRequest {
             return new HttpRequest(this);
         }
 
-        private static String buildQuery(Map<String, String> query) {
+        private static String buildQueryString(Map<String, String> query) {
             if (query.size() == 0) {
                 return "";
             }
@@ -336,7 +429,7 @@ public final class HttpRequest {
             return url.toString();
         }
 
-
+        /** Implements the functionality described in {@link #path(String, String...)}. */
         private static String substitutePathParameters(String path, String[] positionalArgs) {
             List<String> pathParams = parsePathParams(path);
             if (pathParams.size() != positionalArgs.length) {
@@ -361,6 +454,7 @@ public final class HttpRequest {
             return updatedUri;
         }
 
+        /** Finds all parameters in the given path */
         private static List<String> parsePathParams(String path) {
             List<String> params = new ArrayList<>();
             Matcher matcher = PATH_PARAM_PATTERN.matcher(path);

@@ -4,9 +4,8 @@ import net.dean.jraw.ApiException;
 import net.dean.jraw.Endpoint;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.Version;
-import net.dean.jraw.http.BasicAuthData;
-import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.HttpRequest;
+import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.oauth.OAuthException;
 import net.dean.jraw.http.oauth.OAuthHelper;
 import net.dean.jraw.models.Captcha;
@@ -187,15 +186,6 @@ public class InternalsTest extends RedditTest {
         }
 
         return query;
-    }
-
-    @Test(expectedExceptions = IllegalArgumentException.class)
-    public void testRequestWithBasicAuthNoHttps() throws NetworkException {
-        new HttpRequest.Builder()
-                .host("example.com")
-                .basicAuth(new BasicAuthData("foo", "bar"))
-                .https(false)
-                .build();
     }
 
     @Test
