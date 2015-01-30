@@ -1,7 +1,7 @@
 package net.dean.jraw.http;
 
+import com.google.common.net.MediaType;
 import com.squareup.okhttp.Headers;
-import com.squareup.okhttp.MediaType;
 import net.dean.jraw.ApiException;
 import net.dean.jraw.JrawUtils;
 import net.dean.jraw.models.JsonModel;
@@ -43,7 +43,11 @@ public class RestResponse {
         this.origin = origin;
         this.headers = headers;
         this.raw = readContent(body);
-        this.type = MediaType.parse(headers.get("Content-Type"));
+        String contentType = headers.get("Content-Type");
+        if (contentType.endsWith(";")) {
+            contentType = contentType.substring(0, contentType.length() - 1);
+        }
+        this.type = MediaType.parse(contentType);
         this.statusCode = statusCode;
         this.message = message;
         this.protocol = protocol;

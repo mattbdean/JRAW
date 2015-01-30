@@ -1,7 +1,8 @@
 package net.dean.jraw;
 
 import com.google.common.base.Joiner;
-import com.squareup.okhttp.MediaType;
+import com.squareup.okhttp.RequestBody;
+import net.dean.jraw.http.MediaTypes;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
@@ -134,10 +135,28 @@ public final class JrawUtils {
      * @param t1 The first MediaType
      * @param t2 The second MediaType
      */
-    public static boolean isEqual(MediaType t1, MediaType t2) {
-        boolean mainType = t1.type().equals(t2.type()) || (t1.type().equals("*") || t2.type().equals("*"));
-        boolean subType = t1.subtype().equals(t2.subtype()) || (t1.subtype().equals("*") || t2.subtype().equals("*"));
+    public static boolean isEqual(com.squareup.okhttp.MediaType t1, com.google.common.net.MediaType t2) {
+        return isEqual(t1.type(), t1.subtype(), t2.type(), t2.subtype());
+    }
+
+    public static boolean isEqual(com.google.common.net.MediaType t1, com.google.common.net.MediaType t2) {
+        return isEqual(t1.type(), t1.subtype(), t2.type(), t2.subtype());
+    }
+
+    private static boolean isEqual(String t1Main, String t1Sub, String t2Main, String t2Sub) {
+        boolean mainType = t1Main.equals(t2Main) || (t1Main.equals("*") || t2Main.equals("*"));
+        boolean subType = t1Sub.equals(t2Sub) || (t1Sub.equals("*") || t2Sub.equals("*"));
         return mainType && subType;
+    }
+
+    /**
+     * Creates a new OkHttp RequestBody
+     * @param type
+     * @param content
+     * @return
+     */
+    public static RequestBody newRequestBody(MediaTypes type, String content) {
+        return RequestBody.create(com.squareup.okhttp.MediaType.parse(type.string()), content);
     }
 
     /**

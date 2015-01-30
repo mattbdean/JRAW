@@ -1,7 +1,6 @@
 package net.dean.jraw.http;
 
 import com.squareup.okhttp.Headers;
-import com.squareup.okhttp.RequestBody;
 import net.dean.jraw.JrawUtils;
 import okio.Buffer;
 import org.slf4j.Logger;
@@ -14,11 +13,10 @@ import java.util.TreeMap;
 import static net.dean.jraw.http.HttpLogger.Component.*;
 
 /**
- * This class is responsible for logging objects relating to network activity, particularly the {@link HttpRequest}
+ * This class is responsible for logging objects relating to HTTP network activity, particularly the {@link HttpRequest}
  * and {@link RestResponse} classes. The parts of the request and response are broken into parts called
  * {@link Component}s. By default, all of these components are enabled(except for
- * {@link Component#RESPONSE_BODY_ALWAYS_FULL}. To enable or disable a Component, you can use {@link #enable(Component)}
- * or {@link #disable(Component)} respectively.
+ * {@link Component#RESPONSE_BODY_ALWAYS_FULL}. To enable or * disable a Component, you can use {@link #enable(Component)} or {@link #disable(Component)} respectively.
  */
 public class HttpLogger {
     /** What will replace the latter part of the response body if it needs to be trimmed. */

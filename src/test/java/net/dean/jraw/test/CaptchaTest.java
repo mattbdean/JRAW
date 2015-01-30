@@ -1,9 +1,9 @@
 package net.dean.jraw.test;
 
-import com.squareup.okhttp.MediaType;
+import com.google.common.net.MediaType;
 import net.dean.jraw.ApiException;
-import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.HttpRequest;
+import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.models.Captcha;
 import org.testng.Assert;
 import org.testng.annotations.Test;

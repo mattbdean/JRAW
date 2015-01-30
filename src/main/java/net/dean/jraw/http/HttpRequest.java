@@ -1,10 +1,8 @@
 package net.dean.jraw.http;
 
+import com.google.common.net.MediaType;
 import com.squareup.okhttp.CacheControl;
-import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.Headers;
-import com.squareup.okhttp.MediaType;
-import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.internal.Util;
 import com.squareup.okhttp.internal.http.HttpMethod;
 import net.dean.jraw.Endpoints;
@@ -217,11 +215,7 @@ public final class HttpRequest {
         public Builder method(String method, Map<String, String> urlEncodedForm) {
             RequestBody body = null;
             if (urlEncodedForm != null && HttpMethod.permitsRequestBody(method.toUpperCase())) {
-                FormEncodingBuilder formBuilder = new FormEncodingBuilder();
-                for (Map.Entry<String, String> entry : urlEncodedForm.entrySet()) {
-                    formBuilder.add(entry.getKey(), entry.getValue());
-                }
-                body = formBuilder.build();
+                body = FormEncodedBodyBuilder.with(urlEncodedForm);
             }
 
             return method(method, body);

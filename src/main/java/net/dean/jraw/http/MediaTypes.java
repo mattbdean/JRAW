@@ -1,6 +1,7 @@
 package net.dean.jraw.http;
 
-import com.squareup.okhttp.MediaType;
+
+import com.google.common.net.MediaType;
 
 /**
  * A list of common MediaType objects used throughout the project
@@ -17,9 +18,11 @@ public enum MediaTypes {
     /** Represents a Cascading Style Sheet file with a MIME type of "text/css" */
     CSS("text/css");
 
-    private MediaType type;
-    private MediaTypes(String types) {
-        this.type = MediaType.parse(types);
+    private final MediaType type;
+    private final String typeString;
+    private MediaTypes(String typeString) {
+        this.typeString = typeString;
+        this.type = MediaType.parse(typeString);
     }
 
     /**
@@ -28,5 +31,17 @@ public enum MediaTypes {
      */
     public MediaType type() {
         return type;
+    }
+
+    /**
+     * Returns the string representation of this MediaType
+     */
+    public String string() {
+        return typeString;
+    }
+
+    @Override
+    public String toString() {
+        return string();
     }
 }

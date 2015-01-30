@@ -1,6 +1,6 @@
 package net.dean.jraw.test;
 
-import com.squareup.okhttp.MediaType;
+import com.google.common.net.MediaType;
 import org.testng.annotations.Test;
 
 import java.util.HashMap;
@@ -55,7 +55,7 @@ public class UtilsTest extends RedditTest {
         assertEqualMediaType(type, type);
     }
 
-    @Test
+    @Test(expectedExceptions = IllegalArgumentException.class)
     public void testIsEqualAnyType() {
         assertEqualMediaType("*/json", "application/json");
     }

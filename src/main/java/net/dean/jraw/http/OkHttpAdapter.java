@@ -3,6 +3,7 @@ package net.dean.jraw.http;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
+import okio.BufferedSink;
 
 import java.io.IOException;
 import java.net.CookieManager;
@@ -27,7 +28,7 @@ public final class OkHttpAdapter implements HttpAdapter {
     @Override
     public RestResponse execute(HttpRequest request) throws NetworkException, IOException {
         Request.Builder builder = new Request.Builder()
-                .method(request.getMethod(), request.getBody())
+                .method(request.getMethod(), request.getBody() == null ? null : new OkHttpRequestBody(request.getBody()))
                 .url(request.getUrl())
                 .headers(request.getHeaders());
 
@@ -133,5 +134,35 @@ public final class OkHttpAdapter implements HttpAdapter {
     @Override
     public Map<String, String> getDefaultHeaders() {
         return new HashMap<>(defaultHeaders);
+    }
+
+    /** Mirrors a JRAW RequestBody to an OkHttp RequestBody */
+    private class OkHttpRequestBody extends com.squareup.okhttp.RequestBody {
+        private RequestBody mirror;
+        private com.squareup.okhttp.MediaType contentType = null; // Lazily initialized
+
+        public OkHttpRequestBody(RequestBody mirror) {
+            this.mirror = mirror;
+        }
+
+        @Override
+        public com.squareup.okhttp.MediaType contentType() {
+            if (mirror.contentType() == null)
+                return null;
+            if (contentType != null)
+                return contentType;
+            contentType = com.squareup.okhttp.MediaType.parse(mirror.contentType().toString());
+            return contentType;
+        }
+
+        @Override
+        public long contentLength() {
+            return mirror.contentLength();
+        }
+
+        @Override
+        public void writeTo(BufferedSink sink) throws IOException {
+            mirror.writeTo(sink);
+        }
     }
 }
