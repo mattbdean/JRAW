@@ -252,8 +252,6 @@ public enum Endpoints {
     FILTER_FILTERPATH_GET("GET /api/filter/{filterpath}", "read"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_api_filter_%7Bfilterpath%7D_r_%7Bsrname%7D">{@code GET /api/filter/{filterpath}/r/{srname}}</a>" included in the "read" scope */
     FILTER_FILTERPATH_R_SRNAME_GET("GET /api/filter/{filterpath}/r/{srname}", "read"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_api_recommend_sr_%7Bsrnames%7D">{@code GET /api/recommend/sr/{srnames}}</a>" included in the "read" scope */
-    RECOMMEND_SR_SRNAMES("GET /api/recommend/sr/{srnames}", "read"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_live_%7Bthread%7D_contributors.json">{@code GET /live/{thread}/contributors.json}</a>" included in the "read" scope */
     LIVE_THREAD_CONTRIBUTORS("GET /live/{thread}/contributors.json", "read"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_live_%7Bthread%7D_discussions">{@code GET /live/{thread}/discussions}</a>" included in the "read" scope */
@@ -296,6 +294,8 @@ public enum Endpoints {
     MULTI_MULTIPATH_DESCRIPTION_PUT("PUT /api/multi/{multipath}/description", "read"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_api_multi_%7Bmultipath%7D_r_%7Bsrname%7D">{@code GET /api/multi/{multipath}/r/{srname}}</a>" included in the "read" scope */
     MULTI_MULTIPATH_R_SRNAME_GET("GET /api/multi/{multipath}/r/{srname}", "read"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_api_recommend_sr_%7Bsrnames%7D">{@code GET /api/recommend/sr/{srnames}}</a>" included in the "read" scope */
+    RECOMMEND_SR_SRNAMES("GET /api/recommend/sr/{srnames}", "read"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#POST_api_search_reddit_names.json">{@code POST /api/search_reddit_names.json}</a>" included in the "read" scope */
     SEARCH_REDDIT_NAMES("POST /api/search_reddit_names.json", "read"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_api_subreddits_by_topic.json">{@code GET /api/subreddits_by_topic.json}</a>" included in the "read" scope */

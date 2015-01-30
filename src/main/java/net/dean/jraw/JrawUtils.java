@@ -2,6 +2,7 @@ package net.dean.jraw;
 
 import com.google.common.base.Joiner;
 import com.squareup.okhttp.MediaType;
+import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -153,7 +154,7 @@ public final class JrawUtils {
     }
 
     /**
-     * Serializes an object to a JSON string
+     * Serializes an object into a JSON string
      * @return The JSON interpretation of the object
      */
     public static String toJson(Object o) {
@@ -166,6 +167,24 @@ public final class JrawUtils {
         }
 
         return out.toString();
+    }
+
+    /**
+     * Deserializes a JSON string into a Jackson JsonNode.
+     */
+    public static JsonNode fromString(String json) {
+        try {
+            return mapper.readTree(json);
+        } catch (IOException e) {
+            throw new RuntimeException("Unable to parse JSON: " + json.replace("\r", " ").replace("\n", " "), e);
+        }
+    }
+
+    /**
+     * Joins the given strings together with a comma
+     */
+    public static String join(Iterable<String> args) {
+        return Joiner.on(',').join(args);
     }
 
     /**

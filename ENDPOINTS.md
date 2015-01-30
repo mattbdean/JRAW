@@ -1,9 +1,9 @@
-<!--- Generated 2015-01-29 at 00:05:44 EST. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
+<!--- Generated 2015-01-29 at 19:19:01 EST. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
 #Endpoints
 
 This file contains a list of all the endpoints (regardless of if they have been implemented) that can be found at the [official Reddit API docs](https://www.reddit.com/dev/api). To update this file, run `./gradlew endpoints:update`.
 
-So far **114** endpoints (out of 187 total) have been implemented.
+So far **115** endpoints (out of 187 total) have been implemented.
 
 ##(any scope)
 Method|Endpoint|Implemented?
@@ -185,7 +185,6 @@ Method|Endpoint|Implemented?
 :----:|--------|------------
 `GET`|[`/api/filter/{filterpath}`](https://www.reddit.com/dev/api/oauth#GET_api_filter_%7Bfilterpath%7D)|No
 `GET`|[`/api/filter/{filterpath}/r/{srname}`](https://www.reddit.com/dev/api/oauth#GET_api_filter_%7Bfilterpath%7D_r_%7Bsrname%7D)|No
-`GET`|[`/api/recommend/sr/{srnames}`](https://www.reddit.com/dev/api/oauth#GET_api_recommend_sr_%7Bsrnames%7D)|No
 `GET`|[`/live/{thread}/contributors.json`](https://www.reddit.com/dev/api/oauth#GET_live_%7Bthread%7D_contributors.json)|No
 `GET`|[`/live/{thread}/discussions`](https://www.reddit.com/dev/api/oauth#GET_live_%7Bthread%7D_discussions)|No
 `GET`|[`/about/banned`](https://www.reddit.com/dev/api/oauth#GET_about_banned)|[`UserRecordPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/paginators/UserRecordPaginator#getListing(boolean))
@@ -207,6 +206,7 @@ Method|Endpoint|Implemented?
 `GET`|[`/api/multi/{multipath}/description`](https://www.reddit.com/dev/api/oauth#GET_api_multi_%7Bmultipath%7D_description)|[`MultiRedditManager.getDescription(String, String)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/managers/MultiRedditManager#getDescription(java.lang.String, java.lang.String))
 `PUT`|[`/api/multi/{multipath}/description`](https://www.reddit.com/dev/api/oauth#PUT_api_multi_%7Bmultipath%7D_description)|[`MultiRedditManager.updateDescription(String, String)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/managers/MultiRedditManager#updateDescription(java.lang.String, java.lang.String))
 `GET`|[`/api/multi/{multipath}/r/{srname}`](https://www.reddit.com/dev/api/oauth#GET_api_multi_%7Bmultipath%7D_r_%7Bsrname%7D)|[`MultiRedditManager.get(String, String)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/managers/MultiRedditManager#get(java.lang.String, java.lang.String))
+`GET`|[`/api/recommend/sr/{srnames}`](https://www.reddit.com/dev/api/oauth#GET_api_recommend_sr_%7Bsrnames%7D)|[`RedditClient.getRecommendations(List, String[])`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/RedditClient#getRecommendations(java.util.List, [Ljava.lang.String;))
 `POST`|[`/api/search_reddit_names.json`](https://www.reddit.com/dev/api/oauth#POST_api_search_reddit_names.json)|[`RedditClient.searchSubreddits(String, boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/RedditClient#searchSubreddits(java.lang.String, boolean))
 `GET`|[`/api/subreddits_by_topic.json`](https://www.reddit.com/dev/api/oauth#GET_api_subreddits_by_topic.json)|[`RedditClient.getSubredditsByTopic(String)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/RedditClient#getSubredditsByTopic(java.lang.String))
 `GET`|[`/api/v1/me/blocked`](https://www.reddit.com/dev/api/oauth#GET_api_v1_me_blocked)|[`ImportantUserPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/paginators/ImportantUserPaginator#getListing(boolean))

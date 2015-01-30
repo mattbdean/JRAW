@@ -595,6 +595,36 @@ public class RedditClient extends RestClient {
     }
 
     /**
+     * Gets a list of similar subreddits based on the given ones.
+     *
+     * @param subreddits A list of subreddit names to act as the seed
+     * @param omit An array of subreddits to explicitly avoid. These will not appear in the result.
+     * @return A list of similar subreddit names
+     * @throws NetworkException If the request was not successful.
+     */
+    @EndpointImplementation(Endpoints.RECOMMEND_SR_SRNAMES)
+    public List<String> getRecommendations(List<String> subreddits, String... omit) throws NetworkException {
+        if (subreddits.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        RestResponse response = execute(request()
+                .get()
+                .endpoint(Endpoints.RECOMMEND_SR_SRNAMES, JrawUtils.join(subreddits))
+                .query("omit", omit != null ? JrawUtils.join(omit) : "")
+                // Returns JSON data with a Content-Type of text/html
+                .expected(MediaTypes.HTML.type())
+                .build());
+        JsonNode json = JrawUtils.fromString(response.getRaw());
+        List<String> recommendations = new ArrayList<>();
+        for (JsonNode node : json) {
+            recommendations.add(node.get("sr_name").asText());
+        }
+
+        return recommendations;
+    }
+
+    /**
      * Gets a Listing of the given full names. Only submissions, comments, and subreddits will be returned
      * @param fullNames A list of full names
      * @return A Listing of Things

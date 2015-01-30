@@ -9,9 +9,7 @@ import net.dean.jraw.models.Listing;
 import net.dean.jraw.models.RedditObject;
 import net.dean.jraw.models.meta.ModelManager;
 import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.map.ObjectMapper;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Scanner;
 
@@ -24,8 +22,6 @@ import java.util.Scanner;
  */
 public class RestResponse {
     private final HttpRequest origin;
-    /** The ObjectMapper used to read a JSON tree into a JsonNode */
-    private static final ObjectMapper objectMapper = new ObjectMapper();
     /** A list of all the headers received from the server */
     protected final Headers headers;
     /** The root node of the JSON */
@@ -57,7 +53,7 @@ public class RestResponse {
 
         if (JrawUtils.isEqual(type, MediaTypes.JSON.type()) && !raw.isEmpty()) {
             // Body is JSON, parse it and try to find ApiExceptions
-            this.rootNode = readTree(raw);
+            this.rootNode = JrawUtils.fromString(raw);
             if (JrawUtils.isEqual(type, MediaTypes.JSON.type()) && !raw.isEmpty()) {
                 // Parse the errors into ApiExceptions
                 JsonNode errorsNode = rootNode.get("json");
@@ -91,15 +87,6 @@ public class RestResponse {
         } catch (Exception e) {
             JrawUtils.logger().error("Could not read the body of the given response");
             throw e;
-        }
-    }
-
-    private JsonNode readTree(String raw) {
-        try {
-            return objectMapper.readTree(raw);
-        } catch (IOException e) {
-            JrawUtils.logger().error("Unable to parse JSON: \"{}\"", raw.replace("\n", "").replace("\r", ""));
-            throw new RuntimeException("Unable to parse JSON");
         }
     }
 

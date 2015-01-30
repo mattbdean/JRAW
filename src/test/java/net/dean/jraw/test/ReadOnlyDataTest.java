@@ -268,4 +268,15 @@ public class ReadOnlyDataTest extends RedditTest {
             handle(e);
         }
     }
+
+    @Test
+    public void testGetRecommendations() {
+        try {
+            List<String> subs = Arrays.asList("programming", "java", "git");
+            List<String> recommendations = reddit.getRecommendations(subs, "php");
+            assertFalse(recommendations.isEmpty());
+        } catch (NetworkException e) {
+            handle(e);
+        }
+    }
 }
