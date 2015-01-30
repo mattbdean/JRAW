@@ -136,6 +136,7 @@ public abstract class AbstractEndpointGenerator {
         // "/net/dean/jraw/ClassName.html#"
         base.append("/")
                 .append(m.getDeclaringClass().getName().replace('.', '/'))
+                .append(".html")
                 .append('#');
         StringBuilder ref = new StringBuilder();
         // "myMethod"
