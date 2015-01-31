@@ -49,9 +49,9 @@ public class InboxManager extends AbstractManager {
     @EndpointImplementation(Endpoints.READ_ALL_MESSAGES)
     public void setAllRead() throws NetworkException {
         RestResponse response = reddit.execute(reddit.request()
-                        .endpoint(Endpoints.READ_ALL_MESSAGES)
+                .endpoint(Endpoints.READ_ALL_MESSAGES)
                 // Returns the string "202 Accepted\n\nThe request is accepted for processing.      "
-        .expected(MediaTypes.PLAIN.type())
+                .expected(MediaTypes.PLAIN.type())
                 .post()
                 .build());
         if (response.getStatusCode() != 202) {

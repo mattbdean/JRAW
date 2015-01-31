@@ -3,9 +3,11 @@ package net.dean.jraw;
 import net.dean.jraw.http.AuthenticationMethod;
 import net.dean.jraw.http.BasicAuthData;
 import net.dean.jraw.http.Credentials;
+import net.dean.jraw.http.HttpAdapter;
 import net.dean.jraw.http.HttpRequest;
 import net.dean.jraw.http.MediaTypes;
 import net.dean.jraw.http.NetworkException;
+import net.dean.jraw.http.OkHttpAdapter;
 import net.dean.jraw.http.RequestBody;
 import net.dean.jraw.http.RestResponse;
 import net.dean.jraw.http.oauth.OAuthData;
@@ -33,20 +35,22 @@ public class RedditOAuth2Client extends RedditClient {
     private OAuthHelper authHelper;
 
     /**
-     * Instantiates a new OAuth2RedditClient
+     * Instantiates a new OAuth2RedditClient with the default HttpAdapter ({@link OkHttpAdapter})
      *
      * @param userAgent The User-Agent header that will be sent with all the HTTP requests.
-     *                  <blockquote>Change your client's
-     *                  User-Agent string to something unique and descriptive, preferably referencing your reddit
-     *                  username. From the <a href="https://github.com/reddit/reddit/wiki/API">Reddit Wiki on Github</a>:
+     *                  <blockquote>
+     *                  Change your client's User-Agent string to something unique and descriptive, preferably
+     *                  referencing your reddit username. From the
+     *                  <a href="https://github.com/reddit/reddit/wiki/API">Reddit Wiki on GitHub</a>:
+     *
      *                  <ul>
-     *                  <li>Many default User-Agents (like "Python/urllib" or "Java") are drastically limited to
-     *                  encourage unique and descriptive user-agent strings.</li>
-     *                  <li>If you're making an application for others to use, please include a version number in
-     *                  the user agent. This allows us to block buggy versions without blocking all versions of
-     *                  your app.</li>
-     *                  <li>NEVER lie about your user-agent. This includes spoofing popular browsers and spoofing
-     *                  other bots. We will ban liars with extreme prejudice.</li>
+     *                    <li>Many default User-Agents (like "Python/urllib" or "Java") are drastically limited to
+     *                        encourage unique and descriptive user-agent strings.
+     *                    <li>If you're making an application for others to use, please include a version number in
+     *                        the user agent. This allows us to block buggy versions without blocking all versions of
+     *                        your app.
+     *                    <li>NEVER lie about your user-agent. This includes spoofing popular browsers and spoofing
+     *                        other bots. We will ban liars with extreme prejudice.</li>
      *                  </ul>
      *                  </blockquote>
      */
@@ -54,6 +58,30 @@ public class RedditOAuth2Client extends RedditClient {
         super(userAgent, REQUESTS_PER_MINUTE_OAUTH2);
         this.authHelper = new OAuthHelper(this);
         setHttpsDefault(true);
+    }
+
+    /**
+     * Instantiates a new OAuth2RedditClient with a custom HttpAdapter
+     * @param userAgent The User-Agent header that will be sent with all the HTTP requests.
+     *                  <blockquote>
+     *                  Change your client's User-Agent string to something unique and descriptive, preferably
+     *                  referencing your reddit username. From the
+     *                  <a href="https://github.com/reddit/reddit/wiki/API">Reddit Wiki on GitHub</a>:
+     *
+     *                  <ul>
+     *                    <li>Many default User-Agents (like "Python/urllib" or "Java") are drastically limited to
+     *                        encourage unique and descriptive user-agent strings.
+     *                    <li>If you're making an application for others to use, please include a version number in
+     *                        the user agent. This allows us to block buggy versions without blocking all versions of
+     *                        your app.
+     *                    <li>NEVER lie about your user-agent. This includes spoofing popular browsers and spoofing
+     *                        other bots. We will ban liars with extreme prejudice.</li>
+     *                  </ul>
+     *                  </blockquote>
+     * @param adapter How the client will send HTTP requests
+     */
+    public RedditOAuth2Client(String userAgent, HttpAdapter adapter) {
+        super(userAgent, adapter);
     }
 
     @Override
