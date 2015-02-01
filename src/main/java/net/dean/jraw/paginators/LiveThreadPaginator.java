@@ -28,7 +28,7 @@ public class LiveThreadPaginator extends Paginator<LiveUpdate> {
 
     @Override
     @EndpointImplementation(Endpoints.LIVE_THREAD)
-    protected Listing<LiveUpdate> getListing(boolean forwards) throws NetworkException {
+    public Listing<LiveUpdate> getListing(boolean forwards) throws NetworkException {
         // Just call super so that we can add the @EndpointImplementation annotation
         return super.getListing(forwards);
     }

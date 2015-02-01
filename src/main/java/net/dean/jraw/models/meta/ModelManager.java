@@ -114,7 +114,8 @@ public class ModelManager {
      * is {@link Model.Kind#ABSTRACT} or {@link Model.Kind#NONE}, then the JsonNode will not be validated via
      * {@link #validate(JsonNode, Class)}.
      *
-     * @param rootNode The root JSON node. Must contain two children: "data" and "kind"
+     * @param rootNode The root JSON node. Must contain two children: "data" and "kind", unless the {@link Model}'s
+     *                 {@link Model#kind() kind} is {@link Model.Kind#NONE}
      * @param expectedClass The class to map this data to
      * @param <T> What type of JsonModel to return
      * @return A new JsonModel
@@ -125,10 +126,8 @@ public class ModelManager {
         Model.Kind kind = model.kind();
         // Validate only if requested or the kind is ABSTRACT or NONE, since NONE types do not have a "kind" node and
         // will fail validation
-        if (model.validate()) {
-            if (!(kind.equals(Model.Kind.ABSTRACT) || kind.equals(Model.Kind.NONE))) {
-                validate(rootNode, expectedClass);
-            }
+        if (model.validate() && !(kind.equals(Model.Kind.ABSTRACT) || kind.equals(Model.Kind.NONE))) {
+            validate(rootNode, expectedClass);
         }
 
         JsonSerializer serializer = getSerializer(expectedClass);

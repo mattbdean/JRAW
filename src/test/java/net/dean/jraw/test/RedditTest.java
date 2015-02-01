@@ -24,7 +24,7 @@ public abstract class RedditTest {
 
     protected RedditTest() {
         reddit.setUserAgent(getUserAgent(getClass()));
-        reddit.enableLogging(true);
+        reddit.setLoggingEnabled(true);
     }
 
     protected String getUserAgent(Class<?> clazz) {

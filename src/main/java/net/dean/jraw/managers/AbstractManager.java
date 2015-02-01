@@ -6,7 +6,7 @@ import net.dean.jraw.http.*;
 
 /**
  * This class serves as the base class for all "manager" classes, which have control over a certain section of the API,
- * such as multireddits, wikis, and messages
+ * such as {@link MultiRedditManager multireddits}, {@link WikiManager wikis}, or {@link InboxManager the inbox}.
  */
 public abstract class AbstractManager implements NetworkAccessible {
     protected final RedditClient reddit;
@@ -25,8 +25,8 @@ public abstract class AbstractManager implements NetworkAccessible {
     }
 
     /**
-     * Executes a generic POST request that returns a RestResponse. Used primarily for convenience and standardization
-     * of the messages of RedditExceptions that are thrown.
+     * Executes a generic POST request that returns a {@link RestResponse}. Used primarily for convenience since most
+     * endpoints that modify something are POST requests, and also for automatic error handling.
      *
      * @param r The request to execute
      * @return A representation of the response by the Reddit API
@@ -41,7 +41,7 @@ public abstract class AbstractManager implements NetworkAccessible {
 
         RestResponse response = reddit.execute(r);
         if (response.hasErrors()) {
-            throw response.getErrors()[0];
+            throw response.getError();
         }
 
         return response;

@@ -23,13 +23,6 @@ public interface HttpAdapter {
     public RestResponse execute(HttpRequest request) throws NetworkException, IOException;
 
     /**
-     * Gets the HTTP status code from the library-specific object
-     * @param response The object returned by {@link #execute(HttpRequest)}
-     * @return An integer that represents the HTTP status code of the response
-     */
-    public int getCode(Object response);
-
-    /**
      * Gets the time in milliseconds the HTTP client will wait while trying to connect before timing out
      * @return Connection timeout in milliseconds
      */
@@ -107,32 +100,6 @@ public interface HttpAdapter {
      */
     public void deauthenticate();
 
-    /**
-     * Sets a default header. This will be sent with all future requests.
-     * @param key Header name
-     * @param value Header value
-     * @see #removeDefaultHeader(String)
-     * @see #getDefaultHeader(String)
-     */
-    public void setDefaultHeader(String key, String value);
-
-    /**
-     * Removes a default header
-     * @param key The header's name
-     * @see #setDefaultHeader(String, String)
-     * @see #getDefaultHeader(String)
-     */
-    public void removeDefaultHeader(String key);
-
-    /**
-     * Gets the value of a default header
-     * @param key The name of the header
-     * @return The value of the header, or null if it does not exist
-     * @see #removeDefaultHeader(String)
-     * @see #setDefaultHeader(String, String)
-     */
-    public String getDefaultHeader(String key);
-
-    /** Creates a copy of the default headers and returns it. */
+    /** Gets a not-null, mutable Map of the headers that will be sent with every new HTTP request. */
     public Map<String, String> getDefaultHeaders();
 }

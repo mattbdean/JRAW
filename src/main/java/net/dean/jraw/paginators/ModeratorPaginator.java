@@ -95,7 +95,7 @@ public class ModeratorPaginator extends GenericPaginator<PublicContribution> {
             Endpoints.ABOUT_UNMODERATED,
             Endpoints.ABOUT_EDITED
     })
-    protected Listing<PublicContribution> getListing(boolean forwards) throws NetworkException {
+    public Listing<PublicContribution> getListing(boolean forwards) throws NetworkException {
         // Just call super so that we can add the @EndpointImplementation annotation
         return super.getListing(forwards);
     }

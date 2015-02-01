@@ -103,6 +103,17 @@ public final class HttpRequest {
         return localCopy;
     }
 
+    @Override
+    public String toString() {
+        return "HttpRequest {" +
+                "method='" + method + '\'' +
+                ", url=" + url +
+                ", expectedMediaType=" + expectedMediaType +
+                ", headers=" + headers +
+                ", body=" + body +
+                '}';
+    }
+
     /**
      * This class provides an interface to create objects that model HTTP requests. Each property method will return
      * itself for method chaining. Borrowed heavily from OkHttp's Request.Builder class.

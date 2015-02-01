@@ -63,7 +63,7 @@ public class SpecificPaginator extends Paginator<Submission> {
 
     @Override
     @EndpointImplementation(Endpoints.BY_ID_NAMES)
-    protected Listing<Submission> getListing(boolean forwards) throws NetworkException {
+    public Listing<Submission> getListing(boolean forwards) throws NetworkException {
         // Just call super so we can add the @EndpointImplementation annotation
         return super.getListing(forwards);
     }

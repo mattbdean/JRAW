@@ -35,7 +35,7 @@ public class UserRecordPaginator extends GenericUserRecordPaginator {
             Endpoints.ABOUT_MODERATORS,
             Endpoints.ABOUT_WHERE
     })
-    protected Listing<UserRecord> getListing(boolean forwards) throws NetworkException {
+    public Listing<UserRecord> getListing(boolean forwards) throws NetworkException {
         // Just call super so that we can add the @EndpointImplementation annotation
         return super.getListing(forwards);
     }

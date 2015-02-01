@@ -244,7 +244,7 @@ public class AccountManager extends AbstractManager {
                 .post(args)
                 .build());
         if (response.hasErrors()) {
-            throw response.getErrors()[0];
+            throw response.getError();
         }
     }
 
@@ -262,7 +262,7 @@ public class AccountManager extends AbstractManager {
                         "client_id", clientId
                 )).build());
         if (response.hasErrors()) {
-            throw response.getErrors()[0];
+            throw response.getError();
         }
     }
 
@@ -435,7 +435,7 @@ public class AccountManager extends AbstractManager {
                 ))
                 .build());
         if (response.hasErrors()) {
-            throw response.getErrors()[0];
+            throw response.getError();
         }
     }
 

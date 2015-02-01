@@ -67,23 +67,40 @@ public abstract class Paginator<T extends Thing> implements Iterator<Listing<T>>
         this.includeLimit = false;
     }
 
-    protected Listing<T> getListing(boolean forwards) throws NetworkException {
+    /**
+     * Synonymous to {@link #next()}, but preferred since a NetworkException must be explicitly handled if one is,
+     * instead of trying to handle an IllegalStateException whose cause is a NetworkException.
+     *
+     * @return The next page
+     * @throws NetworkException If the request was not successful
+     */
+    public Listing<T> getNext() throws NetworkException {
+        return getListing(true);
+    }
+
+    /**
+     * Gets the next page
+     * @param forwards If true, this method will return the next listing. If false, it will return the page.
+     * @return The next page
+     * @throws NetworkException If the request was not successful
+     */
+    public Listing<T> getListing(boolean forwards) throws NetworkException {
         return getListing(forwards, false);
     }
 
     /**
-     * Gets a listing of things
+     * Gets the next page
      *
-     * @param forwards If true, this method will return the next listing. If false, it will return the first listing.
+     * @param forwards If true, this method will return the next listing. If false, it will return the page.
      * @param forceNetwork If true, then the request will be sent through the network, regardless of it a cached version
      *                     is already available. Useful for when you want to make sure you have the absolute latest
      *                     version of the model.
-     * @return A new listing
+     * @return The next page
      * @throws NetworkException If the request was not successful
      * @throws IllegalStateException If a setter method (such as {@link #setLimit(int)} was called after the first
      *                               listing was requested and {@link #reset()} was not called.
      */
-    protected Listing<T> getListing(boolean forwards, boolean forceNetwork) throws NetworkException, IllegalStateException {
+    public Listing<T> getListing(boolean forwards, boolean forceNetwork) throws NetworkException, IllegalStateException {
         if (started && changed) {
             throw new IllegalStateException("Cannot change parameters without calling reset()");
         }
@@ -108,14 +125,15 @@ public abstract class Paginator<T extends Thing> implements Iterator<Listing<T>>
             args.putAll(extraArgs);
         }
 
-        HttpRequest.Builder request = reddit.request()
+        HttpRequest request = reddit.request()
                 .path(path)
-                .query(args);
-        if (forceNetwork || (sortingUsed && sorting == Sorting.NEW)) {
-            request.cacheControl(CacheControl.FORCE_NETWORK);
-        }
+                .query(args)
+                // Force a network response if sorting by new or explicitly declared
+                .cacheControl(forceNetwork || (sortingUsed && sorting == Sorting.NEW) ? CacheControl.FORCE_NETWORK : null)
+                .build();
 
-        Listing<T> listing = parseListing(reddit.execute(request.build()));
+
+        Listing<T> listing = parseListing(reddit.execute(request));
         this.current = listing;
         pageNumber++;
 
@@ -188,16 +206,10 @@ public abstract class Paginator<T extends Thing> implements Iterator<Listing<T>>
         return (current != null && current.getAfter() != null) || !started;
     }
 
-    /**
-     * Gets the next listing.
-     *
-     * @return The next listing of submissions
-     * @throws IllegalStateException If there was a problem getting the next listing
-     */
     @Override
     public Listing<T> next() {
         try {
-            return getListing(true);
+            return getNext();
         } catch (NetworkException e) {
             throw new IllegalStateException("Could not get the next listing", e);
         }
@@ -268,14 +280,15 @@ public abstract class Paginator<T extends Thing> implements Iterator<Listing<T>>
 
     /**
      * Generates extra arguments to be included in the query string.
-     * @return A map of paginator-implementation-specific arguments
+     * @return A non-null map of paginator-implementation-specific arguments
      */
     protected Map<String, String> getExtraQueryArgs() {
         return new HashMap<>();
     }
 
     /**
-     * Resets the listing. Call this method after you call a setter method such as {@link #setTimePeriod(TimePeriod)}
+     * Resets the Paginator; it will begin at page one. Call this method after you call a setter method such as
+     * {@link #setTimePeriod(TimePeriod)} to avoid an IllegalStateException from {@link #getListing(boolean, boolean)}
      */
     public void reset() {
         current = null;
@@ -294,7 +307,7 @@ public abstract class Paginator<T extends Thing> implements Iterator<Listing<T>>
     }
 
     /**
-     * Gets the last listing that was retrieved
+     * Gets the last page that was retrieved
      * @return The last listing retrieved, or null if this is a new Paginator or {@link #reset()} was just called
      */
     public Listing<T> getCurrentListing() {

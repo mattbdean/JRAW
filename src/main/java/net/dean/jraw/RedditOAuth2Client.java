@@ -111,7 +111,7 @@ public class RedditOAuth2Client extends RedditClient {
      */
     public LoggedInAccount onAuthorized(OAuthData data, Credentials credentials) throws NetworkException {
         this.authData = data;
-        httpAdapter.setDefaultHeader(HEADER_AUTHORIZATION, "bearer " + authData.getAccessToken());
+        httpAdapter.getDefaultHeaders().put(HEADER_AUTHORIZATION, "bearer " + authData.getAccessToken());
 
         LoggedInAccount me = me();
         this.authenticatedUser = me.getFullName();

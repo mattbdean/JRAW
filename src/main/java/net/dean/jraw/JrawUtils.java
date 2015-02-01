@@ -1,8 +1,6 @@
 package net.dean.jraw;
 
 import com.google.common.base.Joiner;
-import com.squareup.okhttp.RequestBody;
-import net.dean.jraw.http.MediaTypes;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
@@ -100,15 +98,15 @@ public final class JrawUtils {
             throw new IllegalArgumentException("Keys and values length must be even");
         }
 
-        for (int i = 0; i < keysAndValues.length; i++) {
-            Object o = keysAndValues[i];
-            if (o == null)
-                throw new NullPointerException("Object at index " + i + " was null");
-        }
-
         Map<String, String> args = new HashMap<>();
         for (int i = 0; i < keysAndValues.length; ) {
-            args.put(String.valueOf(keysAndValues[i++]), String.valueOf(keysAndValues[i++]));
+            Object key = keysAndValues[i++];
+            if (key == null)
+                throw new NullPointerException("Object at index " + i + " was null");
+            Object val = keysAndValues[i++];
+            if (val == null)
+                throw new NullPointerException("Object at index " + i + " was null");
+            args.put(String.valueOf(key), String.valueOf(val));
         }
 
         return args;
@@ -130,15 +128,12 @@ public final class JrawUtils {
         return name.matches("t[1-6|8]_[a-zA-Z].*");
     }
 
-    /**
-     * Compares the type and subtype of two MediaTypes. Will recognize the asterisk ('*') as a wildcard.
-     * @param t1 The first MediaType
-     * @param t2 The second MediaType
-     */
+    /** Compares the type and subtype of two MediaTypes. Will recognize the asterisk ('*') as a wildcard. */
     public static boolean isEqual(com.squareup.okhttp.MediaType t1, com.google.common.net.MediaType t2) {
         return isEqual(t1.type(), t1.subtype(), t2.type(), t2.subtype());
     }
 
+    /** Compares the type and subtype of two MediaTypes. Will recognize the asterisk ('*') as a wildcard. */
     public static boolean isEqual(com.google.common.net.MediaType t1, com.google.common.net.MediaType t2) {
         return isEqual(t1.type(), t1.subtype(), t2.type(), t2.subtype());
     }
@@ -147,16 +142,6 @@ public final class JrawUtils {
         boolean mainType = t1Main.equals(t2Main) || (t1Main.equals("*") || t2Main.equals("*"));
         boolean subType = t1Sub.equals(t2Sub) || (t1Sub.equals("*") || t2Sub.equals("*"));
         return mainType && subType;
-    }
-
-    /**
-     * Creates a new OkHttp RequestBody
-     * @param type
-     * @param content
-     * @return
-     */
-    public static RequestBody newRequestBody(MediaTypes type, String content) {
-        return RequestBody.create(com.squareup.okhttp.MediaType.parse(type.string()), content);
     }
 
     /**

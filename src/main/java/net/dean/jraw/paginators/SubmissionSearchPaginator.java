@@ -35,7 +35,7 @@ public class SubmissionSearchPaginator extends Paginator<Submission> {
 
     @Override
     @EndpointImplementation(Endpoints.SEARCH)
-    protected Listing<Submission> getListing(boolean forwards) throws NetworkException {
+    public Listing<Submission> getListing(boolean forwards) throws NetworkException {
         // Just call super so that we can add the @EndpointImplementation annotation
         return super.getListing(forwards);
     }

@@ -38,7 +38,7 @@ public class InboxPaginator extends GenericPaginator<Message> {
             Endpoints.MESSAGE_UNREAD,
             Endpoints.MESSAGE_WHERE
     })
-    protected Listing<Message> getListing(boolean forwards) throws NetworkException {
+    public Listing<Message> getListing(boolean forwards) throws NetworkException {
         // Just call super so that we can add the @EndpointImplementation annotation
         return super.getListing(forwards);
     }

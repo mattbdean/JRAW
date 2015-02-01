@@ -23,8 +23,7 @@ public class AccountPreferencesEditor {
     }
 
     /**
-     * Instantiates a new AccountPreferencesEditor
-     * @param original Uses the data found in this object to define default values for the preferences
+     * Instantiates a new AccountPreferencesEditor, whose initial values are set to the original's values
      */
     public AccountPreferencesEditor(AccountPreferences original) {
         this.args = new HashMap<>();

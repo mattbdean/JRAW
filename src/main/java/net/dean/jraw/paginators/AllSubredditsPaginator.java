@@ -28,7 +28,7 @@ public class AllSubredditsPaginator extends GenericPaginator<Subreddit> {
             Endpoints.SUBREDDITS_NEW,
             Endpoints.SUBREDDITS_WHERE
     })
-    protected Listing<Subreddit> getListing(boolean forwards) throws NetworkException {
+    public Listing<Subreddit> getListing(boolean forwards) throws NetworkException {
         // Just call super so that we can add the @EndpointImplementation annotation
         return super.getListing(forwards, where.equals("new"));
     }

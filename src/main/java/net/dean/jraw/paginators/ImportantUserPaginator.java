@@ -29,7 +29,7 @@ public class ImportantUserPaginator extends GenericUserRecordPaginator {
             Endpoints.OAUTH_ME_BLOCKED,
             Endpoints.OAUTH_ME_FRIENDS
     })
-    protected Listing<UserRecord> getListing(boolean forwards) throws NetworkException, IllegalStateException {
+    public Listing<UserRecord> getListing(boolean forwards) throws NetworkException, IllegalStateException {
         return super.getListing(forwards);
     }
 

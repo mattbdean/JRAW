@@ -34,7 +34,7 @@ public class SubredditSearchPaginator extends Paginator<Subreddit> {
 
     @Override
     @EndpointImplementation(Endpoints.SUBREDDITS_SEARCH)
-    protected Listing<Subreddit> getListing(boolean forwards) throws NetworkException, IllegalStateException {
+    public Listing<Subreddit> getListing(boolean forwards) throws NetworkException, IllegalStateException {
         return super.getListing(forwards);
     }
 

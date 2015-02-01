@@ -15,8 +15,9 @@ import static net.dean.jraw.http.HttpLogger.Component.*;
 /**
  * This class is responsible for logging objects relating to HTTP network activity, particularly the {@link HttpRequest}
  * and {@link RestResponse} classes. The parts of the request and response are broken into parts called
- * {@link Component}s. By default, all of these components are enabled(except for
- * {@link Component#RESPONSE_BODY_ALWAYS_FULL}. To enable or * disable a Component, you can use {@link #enable(Component)} or {@link #disable(Component)} respectively.
+ * {@link Component components}. By default, all of these components are enabled (except for
+ * {@link Component#RESPONSE_BODY_ALWAYS_FULL}. To enable or disable a Component, you can use
+ * {@link #enable(Component)} or {@link #disable(Component)} respectively.
  */
 public class HttpLogger {
     /** What will replace the latter part of the response body if it needs to be trimmed. */
@@ -213,7 +214,7 @@ public class HttpLogger {
      */
     public void log(RestResponse r) {
         if (isEnabled(RESPONSE)) {
-            logBySuccess(r, "{} {} {}", r.getProtocol(), r.getStatusCode(), r.getMessage());
+            logBySuccess(r, "{} {} {}", r.getProtocol(), r.getStatusCode(), r.getStatusMessage());
             if (isEnabled(RESPONSE_HEADERS)) {
                 logHeaders(r.getHeaders());
             }

@@ -4,7 +4,7 @@ import net.dean.jraw.models.meta.JsonProperty;
 import net.dean.jraw.models.VoteDirection;
 
 /**
- * Provides a way to show that this Thing is able to be voted on
+ * Provides a way to show that this Thing is able to be voted on.
  *
  * @see net.dean.jraw.models.VoteDirection
  */

@@ -194,7 +194,7 @@ public class RedditClient extends RestClient {
         RestResponse loginResponse = execute(request);
 
         if (loginResponse.hasErrors()) {
-            throw loginResponse.getErrors()[0];
+            throw loginResponse.getError();
         }
 
         setHttpsDefault(loginResponse.getJson().get("json").get("data").get("need_https").asBoolean());
@@ -202,7 +202,7 @@ public class RedditClient extends RestClient {
         String modhash = loginResponse.getJson().get("json").get("data").get("modhash").getTextValue();
 
         // Add the X-Modhash header, or update it if it already exists
-        httpAdapter.setDefaultHeader(HEADER_MODHASH, modhash);
+        httpAdapter.getDefaultHeaders().put(HEADER_MODHASH, modhash);
 
         LoggedInAccount me = me();
         this.authenticatedUser = me.getFullName();
@@ -220,7 +220,7 @@ public class RedditClient extends RestClient {
                 .expected(MediaTypes.HTML.type())
                 .post()
                 .build());
-        httpAdapter.removeDefaultHeader(HEADER_MODHASH);
+        httpAdapter.getDefaultHeaders().remove(HEADER_MODHASH);
         authMethod = AuthenticationMethod.NONE;
     }
 
@@ -256,7 +256,7 @@ public class RedditClient extends RestClient {
                 .sensitiveArgs("passwd", "passwd2")
                 .build());
         if (response.hasErrors()) {
-            throw response.getErrors()[0];
+            throw response.getError();
         }
 
         setHttpsDefault(response.getJson().get("json").get("data").get("need_https").asBoolean());
@@ -264,7 +264,7 @@ public class RedditClient extends RestClient {
         String modhash = response.getJson().get("json").get("data").get("modhash").getTextValue();
 
         // Add the X-Modhash header, or update it if it already exists
-        httpAdapter.setDefaultHeader(HEADER_MODHASH, modhash);
+        httpAdapter.getDefaultHeaders().put(HEADER_MODHASH, modhash);
 
         LoggedInAccount me = me();
         this.authenticatedUser = me.getFullName();
@@ -333,7 +333,7 @@ public class RedditClient extends RestClient {
                     )).build());
 
             if (response.hasErrors()) {
-                throw response.getErrors()[0];
+                throw response.getError();
             }
             String id = response.getJson().get("json").get("data").get("iden").asText();
 
@@ -629,7 +629,7 @@ public class RedditClient extends RestClient {
                         "api_type", "json"
                 )).build());
         if (response.hasErrors()) {
-            throw response.getErrors()[0];
+            throw response.getError();
         }
 
         JsonNode things = response.getJson().get("json").get("data").get("things");

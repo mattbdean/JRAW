@@ -39,7 +39,7 @@ public interface HttpClient extends NetworkAccessible {
      * @return If requests are being logged
      * @see HttpLogger
      */
-    public boolean isLoggingActivity();
+    public boolean isLoggingEnabled();
 
     /**
      * Sets whether or not to log HTTP requests and responses. The amount of time spent waiting is also displayed.
@@ -48,7 +48,7 @@ public interface HttpClient extends NetworkAccessible {
      * @param flag Whether or not to log requests
      * @see #getHttpLogger()
      */
-    public void enableLogging(boolean flag);
+    public void setLoggingEnabled(boolean flag);
 
     /**
      * Sets whether or not {@link HttpRequest.Builder}s returned from {@link #request()} will be executed with HTTPS by

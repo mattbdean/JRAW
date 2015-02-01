@@ -190,7 +190,7 @@ public class ModerationManager extends AbstractManager {
 				.path("/r/" + subreddit + Endpoints.SELECTFLAIR.getEndpoint().getUri())
 				.build());
 		if (response.hasErrors()) {
-			throw response.getErrors()[0];
+			throw response.getError();
 		}
 	}
 }

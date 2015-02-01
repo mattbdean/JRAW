@@ -18,7 +18,7 @@ import java.util.Scanner;
  *
  * This class provides automatic parsing of ApiExceptions, as well as quick RedditObject and Listing
  * creation. Note that constructing a RedditResponse will <em>not</em> throw an ApiException. This must be done by the
- * implementer. To see if the response has any errors, use {@link #hasErrors()} and {@link #getErrors()}
+ * implementer. To see if the response has any errors, use {@link #hasErrors()} and {@link #getError()}
  */
 public class RestResponse {
     private final HttpRequest origin;
@@ -31,15 +31,16 @@ public class RestResponse {
     /** The Content-Type returned from the response */
     protected final MediaType type;
     protected final int statusCode;
-    protected final String message;
+    protected final String statusMessage;
     protected final String protocol;
 
-    private final ApiException[] apiExceptions;
+    private final ApiException apiException;
 
     /**
      * Instantiates a new RedditResponse
      */
-    RestResponse(HttpRequest origin, InputStream body, Headers headers, int statusCode, String message, String protocol) {
+    @SuppressWarnings("ThrowableInstanceNeverThrown")
+    RestResponse(HttpRequest origin, InputStream body, Headers headers, int statusCode, String statusMessage, String protocol) {
         this.origin = origin;
         this.headers = headers;
         this.raw = readContent(body);
@@ -49,11 +50,11 @@ public class RestResponse {
         }
         this.type = MediaType.parse(contentType);
         this.statusCode = statusCode;
-        this.message = message;
+        this.statusMessage = statusMessage;
         this.protocol = protocol;
 
         // Assume there aren't any exceptions
-        ApiException[] errors = new ApiException[0];
+        ApiException error = null;
 
         if (JrawUtils.isEqual(type, MediaTypes.JSON.type()) && !raw.isEmpty()) {
             // Body is JSON, parse it and try to find ApiExceptions
@@ -65,14 +66,9 @@ public class RestResponse {
                     errorsNode = errorsNode.get("errors");
                 }
 
-                if (errorsNode != null) {
-                    errors = new ApiException[errorsNode.size()];
-                    if (errorsNode.size() > 0) {
-                        for (int i = 0; i < errorsNode.size(); i++) {
-                            JsonNode error = errorsNode.get(i);
-                            errors[i] = new ApiException(error.get(0).asText(), error.get(1).asText());
-                        }
-                    }
+                if (errorsNode != null && errorsNode.size() > 0) {
+                    JsonNode errorNode = errorsNode.get(0);
+                    error = new ApiException(errorNode.get(0).asText(), errorNode.get(1).asText());
                 }
             }
         } else {
@@ -80,8 +76,7 @@ public class RestResponse {
             this.rootNode = null;
         }
 
-
-        this.apiExceptions = errors;
+        this.apiException = error;
     }
 
     private String readContent(InputStream entity) {
@@ -114,49 +109,36 @@ public class RestResponse {
     /**
      * Checks if there were errors returned by the Reddit API
      * @return True if there were errors, false if else
-     * @see #getErrors()
+     * @see #getError()
      */
     public boolean hasErrors() {
-        return apiExceptions.length != 0;
+        return apiException != null;
     }
 
     /**
      * Gets the ApiExceptions returned from the Reddit API
      * @return An array of ApiExceptions
      */
-    public ApiException[] getErrors() {
-        ApiException[] localCopy = new ApiException[apiExceptions.length];
-        for (int i = 0; i < apiExceptions.length; i++) {
-            localCopy[i] = new ApiException(apiExceptions[i].getReason(), apiExceptions[i].getExplanation());
-        }
-        return localCopy;
+    public ApiException getError() {
+        return apiException;
     }
 
-
-    /**
-     * Gets the Content-Type of the response
-     * @return The Content-Type of the response
-     */
+    /** Gets the value of the Content-Type header */
     public MediaType getType() {
         return type;
     }
 
-    /**
-     * Gets the root JsonNode
-     * @return The root JsonNode
-     */
+    /** Gets the root JsonNode, or null if the content type was not {@code application/json}. */
     public JsonNode getJson() {
         return rootNode;
     }
 
-    /**
-     * Gets the raw response data returned from the request
-     * @return The raw data of the request
-     */
+    /** Gets the raw response body */
     public String getRaw() {
         return raw;
     }
 
+    /** Gets the request that initiated this response */
     public HttpRequest getOrigin() {
         return origin;
     }
@@ -165,18 +147,25 @@ public class RestResponse {
         return headers;
     }
 
+    /** Gets the HTTP status code, such as 200 or 404. */
     public int getStatusCode() {
         return statusCode;
     }
 
+    /**
+     * Checks if this response returned a successful status code, which is greater than or equal to 200, but less than
+     * 300.
+     */
     public boolean isSuccessful() {
         return statusCode >= 200 && statusCode < 300;
     }
 
-    public String getMessage() {
-        return message;
+    /** Gets the HTTP status message, such as "Not Found" or "OK" */
+    public String getStatusMessage() {
+        return statusMessage;
     }
 
+    /** Gets the protocol that was used to execute this HTTP request, such as "HTTP/1.1" or "SPDY/3.1" */
     public String getProtocol() {
         return protocol;
     }

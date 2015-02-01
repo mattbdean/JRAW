@@ -1,7 +1,7 @@
 package net.dean.jraw.http;
 
 /**
- * This interface shows that the implementing class has access to a class that can send HTTP requests
+ * Denotes that this class has the ability to send HTTP requests
  */
 public interface NetworkAccessible {
     /**

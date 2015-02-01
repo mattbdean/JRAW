@@ -26,7 +26,7 @@ public class ModLogPaginator extends Paginator<ModAction> {
 
     @Override
     @EndpointImplementation(Endpoints.ABOUT_LOG)
-    protected Listing<ModAction> getListing(boolean forwards) throws NetworkException, IllegalStateException {
+    public Listing<ModAction> getListing(boolean forwards) throws NetworkException, IllegalStateException {
         return super.getListing(forwards);
     }
 

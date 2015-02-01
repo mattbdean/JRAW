@@ -148,12 +148,12 @@ public abstract class RestClient implements HttpClient {
 
     @Override
     public String getUserAgent() {
-        return httpAdapter.getDefaultHeader("User-Agent");
+        return httpAdapter.getDefaultHeaders().get("User-Agent");
     }
 
     @Override
     public void setUserAgent(String userAgent) {
-        httpAdapter.setDefaultHeader("User-Agent", userAgent);
+        httpAdapter.getDefaultHeaders().put("User-Agent", userAgent);
     }
 
     @Override
@@ -167,12 +167,12 @@ public abstract class RestClient implements HttpClient {
     }
 
     @Override
-    public boolean isLoggingActivity() {
+    public boolean isLoggingEnabled() {
         return requestLogging;
     }
 
     @Override
-    public void enableLogging(boolean flag) {
+    public void setLoggingEnabled(boolean flag) {
         this.requestLogging = flag;
     }
 

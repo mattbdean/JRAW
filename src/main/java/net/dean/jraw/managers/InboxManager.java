@@ -58,7 +58,7 @@ public class InboxManager extends AbstractManager {
             // Returns 202 if the request was acknowledged
             // See https://www.reddit.com/dev/api/oauth#POST_api_read_all_messages
             throw new NetworkException("Expected to return HTTP 202 Accepted, got HTTP "
-                    + response.getStatusCode() + " " + response.getMessage());
+                    + response.getStatusCode() + " " + response.getStatusMessage());
         }
     }
 
@@ -98,7 +98,7 @@ public class InboxManager extends AbstractManager {
                         "to", to
                 )).build());
         if (response.hasErrors()) {
-            throw response.getErrors()[0];
+            throw response.getError();
         }
     }
 }

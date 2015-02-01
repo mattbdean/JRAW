@@ -36,7 +36,7 @@ public class UserContributionPaginator extends GenericPaginator<Contribution> {
             Endpoints.USER_USERNAME_SAVED,
             Endpoints.USER_USERNAME_GILDED
     })
-    protected Listing<Contribution> getListing(boolean forwards) throws NetworkException {
+    public Listing<Contribution> getListing(boolean forwards) throws NetworkException {
         // Just call super so that we can add the @EndpointImplementation annotation
         return super.getListing(forwards);
     }

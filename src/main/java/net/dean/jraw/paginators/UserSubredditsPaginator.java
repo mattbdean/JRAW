@@ -40,7 +40,7 @@ public class UserSubredditsPaginator extends GenericPaginator<Subreddit> {
             Endpoints.SUBREDDITS_MINE_SUBSCRIBER,
             Endpoints.SUBREDDITS_MINE_WHERE
     })
-    protected Listing<Subreddit> getListing(boolean forwards) throws NetworkException {
+    public Listing<Subreddit> getListing(boolean forwards) throws NetworkException {
         // Just call super so that we can add the @EndpointImplementation annotation
         return super.getListing(forwards);
     }
