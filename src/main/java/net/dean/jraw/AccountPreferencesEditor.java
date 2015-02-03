@@ -2,7 +2,7 @@ package net.dean.jraw;
 
 import net.dean.jraw.models.AccountPreferences;
 import net.dean.jraw.models.ThumbnailDisplayPreference;
-import org.codehaus.jackson.JsonNode;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -29,7 +29,7 @@ public class AccountPreferencesEditor {
         this.args = new HashMap<>();
 
         if (original != null) {
-            for (Iterator<Map.Entry<String, JsonNode>> it = original.getDataNode().getFields(); it.hasNext(); ) {
+            for (Iterator<Map.Entry<String, JsonNode>> it = original.getDataNode().fields(); it.hasNext(); ) {
                 Map.Entry<String, JsonNode> entry = it.next();
                 args.put(entry.getKey(), val(entry.getValue()));
             }

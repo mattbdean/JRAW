@@ -1,7 +1,7 @@
 package net.dean.jraw.models.attr;
 
 import net.dean.jraw.models.meta.JsonProperty;
-import org.codehaus.jackson.JsonNode;
+import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * This interface is the base class for all model interfaces

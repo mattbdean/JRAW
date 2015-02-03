@@ -4,7 +4,7 @@ import net.dean.jraw.RedditClient;
 import net.dean.jraw.models.Comment;
 import net.dean.jraw.models.Listing;
 import net.dean.jraw.models.Submission;
-import org.codehaus.jackson.JsonNode;
+import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * This class is responsible for serializing Submissions, since they are presented differently than other models. When a

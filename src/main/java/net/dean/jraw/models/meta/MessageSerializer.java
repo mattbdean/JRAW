@@ -3,7 +3,7 @@ package net.dean.jraw.models.meta;
 import net.dean.jraw.models.CommentMessage;
 import net.dean.jraw.models.Message;
 import net.dean.jraw.models.PrivateMessage;
-import org.codehaus.jackson.JsonNode;
+import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * This class is responsible for serializing Message subclasses. It accepts JsonNodes whose "kind" node are equal

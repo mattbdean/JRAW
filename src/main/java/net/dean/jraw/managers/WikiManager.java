@@ -8,7 +8,7 @@ import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.HttpRequest;
 import net.dean.jraw.models.WikiPage;
 import net.dean.jraw.models.WikiPageSettings;
-import org.codehaus.jackson.JsonNode;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import java.util.ArrayList;
 import java.util.List;

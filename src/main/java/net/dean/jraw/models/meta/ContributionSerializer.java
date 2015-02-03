@@ -4,7 +4,7 @@ import net.dean.jraw.models.Comment;
 import net.dean.jraw.models.Contribution;
 import net.dean.jraw.models.PrivateMessage;
 import net.dean.jraw.models.Submission;
-import org.codehaus.jackson.JsonNode;
+import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * This class is responsible for serializing Contribution subclasses. It accepts JsonNodes whose "kind" node are equal

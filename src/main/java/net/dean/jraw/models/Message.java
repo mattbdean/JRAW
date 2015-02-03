@@ -4,7 +4,7 @@ import net.dean.jraw.models.attr.Distinguishable;
 import net.dean.jraw.models.meta.JsonProperty;
 import net.dean.jraw.models.meta.MessageSerializer;
 import net.dean.jraw.models.meta.Model;
-import org.codehaus.jackson.JsonNode;
+import com.fasterxml.jackson.databind.JsonNode;
 
 @Model(kind = Model.Kind.ABSTRACT, serializer = MessageSerializer.class)
 public abstract class Message extends Contribution implements Distinguishable {

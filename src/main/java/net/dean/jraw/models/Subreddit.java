@@ -3,7 +3,7 @@ package net.dean.jraw.models;
 import net.dean.jraw.Dimension;
 import net.dean.jraw.models.meta.JsonProperty;
 import net.dean.jraw.models.meta.Model;
-import org.codehaus.jackson.JsonNode;
+import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * This class represents a Subreddit such as /r/pics.

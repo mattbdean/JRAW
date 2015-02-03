@@ -1,8 +1,8 @@
 package net.dean.jraw.models;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import net.dean.jraw.JrawUtils;
 import net.dean.jraw.models.meta.JsonProperty;
-import org.codehaus.jackson.JsonNode;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

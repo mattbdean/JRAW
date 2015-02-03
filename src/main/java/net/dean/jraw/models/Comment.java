@@ -2,7 +2,7 @@ package net.dean.jraw.models;
 
 import net.dean.jraw.models.meta.JsonProperty;
 import net.dean.jraw.models.meta.Model;
-import org.codehaus.jackson.JsonNode;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import java.util.Date;
 
@@ -113,7 +113,7 @@ public class Comment extends PublicContribution {
             return null;
         }
 
-        return new Date(edited.getLongValue() * 1000);
+        return new Date(edited.longValue() * 1000);
     }
 
     /**
@@ -131,7 +131,7 @@ public class Comment extends PublicContribution {
         if (edited.isBoolean()) {
             // If false, then the comment hasn't been edited.
             // On very old comments, the API will return true if it has been edited
-            return edited.getBooleanValue();
+            return edited.booleanValue();
         } else if (edited.isLong()) {
             // The comment has been edited, value is the time (in seconds) from the UTC epoch
             return true;

@@ -25,12 +25,12 @@ allprojects {
 }
 
 dependencies {
-    compile     group: 'com.squareup.okhttp',  name: 'okhttp',             version: '2.2.0'
-    compile     group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.13'
-    compile     group: 'com.google.guava',     name: 'guava',              version: '18.0'
-    compile     group: 'org.slf4j',            name: 'slf4j-api',          version: '1.7.10'
-    testCompile group: 'org.slf4j',            name: 'slf4j-simple',       version: '1.7.10'
-    testCompile group: 'org.testng',           name: 'testng',             version: '6.1.1'
+    compile     'com.squareup.okhttp:okhttp:2.2.0'
+    compile     'com.fasterxml.jackson.core:jackson-databind:2.5.0'
+    compile     'com.google.guava:guava:18.0'
+    compile     'org.slf4j:slf4j-api:1.7.10'
+    testCompile 'org.slf4j:slf4j-simple:1.7.10'
+    testCompile 'org.testng:testng:6.1.1'
 }
 
 // Add the generated source to the main Java source directories

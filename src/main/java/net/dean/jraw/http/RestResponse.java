@@ -1,5 +1,6 @@
 package net.dean.jraw.http;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.net.MediaType;
 import com.squareup.okhttp.Headers;
 import net.dean.jraw.ApiException;
@@ -8,7 +9,6 @@ import net.dean.jraw.models.JsonModel;
 import net.dean.jraw.models.Listing;
 import net.dean.jraw.models.RedditObject;
 import net.dean.jraw.models.meta.ModelManager;
-import org.codehaus.jackson.JsonNode;
 
 import java.io.InputStream;
 import java.util.Scanner;

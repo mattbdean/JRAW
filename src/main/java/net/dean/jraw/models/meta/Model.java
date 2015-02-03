@@ -16,7 +16,7 @@ import net.dean.jraw.models.Submission;
 import net.dean.jraw.models.Subreddit;
 import net.dean.jraw.models.WikiPage;
 import net.dean.jraw.models.WikiPageSettings;
-import org.codehaus.jackson.JsonNode;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

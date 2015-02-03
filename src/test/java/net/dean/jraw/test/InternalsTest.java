@@ -1,5 +1,6 @@
 package net.dean.jraw.test;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import net.dean.jraw.ApiException;
 import net.dean.jraw.Endpoint;
 import net.dean.jraw.RedditClient;
@@ -17,8 +18,7 @@ import net.dean.jraw.models.More;
 import net.dean.jraw.models.Submission;
 import net.dean.jraw.models.meta.JsonProperty;
 import net.dean.jraw.paginators.Paginators;
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.map.ObjectMapper;
+import com.fasterxml.jackson.databind.JsonNode;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
@@ -35,7 +35,7 @@ import static org.testng.Assert.*;
 public class InternalsTest extends RedditTest {
 	
     private static final ObjectMapper objectMapper = new ObjectMapper();
-    
+
     @Test(expectedExceptions = UnsupportedOperationException.class)
     public void testModifyListing() {
         Listing<Submission> submissions = Paginators.frontPage(reddit).next();

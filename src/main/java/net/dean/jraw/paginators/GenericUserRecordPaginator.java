@@ -6,7 +6,7 @@ import net.dean.jraw.http.RestResponse;
 import net.dean.jraw.models.FauxListing;
 import net.dean.jraw.models.Listing;
 import net.dean.jraw.models.UserRecord;
-import org.codehaus.jackson.JsonNode;
+import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * This class provides the basic framework required to create a Paginator that returns listings of UserRecords

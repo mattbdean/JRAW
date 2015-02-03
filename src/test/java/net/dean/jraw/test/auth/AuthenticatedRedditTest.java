@@ -1,5 +1,6 @@
 package net.dean.jraw.test.auth;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import net.dean.jraw.ApiException;
 import net.dean.jraw.RedditOAuth2Client;
 import net.dean.jraw.http.AuthenticationMethod;
@@ -13,8 +14,7 @@ import net.dean.jraw.models.Subreddit;
 import net.dean.jraw.paginators.Paginators;
 import net.dean.jraw.test.RedditTest;
 import net.dean.jraw.test.SetupRequiredException;
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.map.ObjectMapper;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import java.io.InputStream;
 

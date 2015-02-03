@@ -1,7 +1,7 @@
 package net.dean.jraw.models;
 
 import net.dean.jraw.models.meta.Model;
-import org.codehaus.jackson.JsonNode;
+import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * This class represents a private message sent from one user to another

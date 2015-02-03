@@ -1,14 +1,14 @@
 package net.dean.jraw.models;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import net.dean.jraw.ApiException;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.models.meta.JsonProperty;
 import net.dean.jraw.models.meta.Model;
 import net.dean.jraw.models.meta.ModelManager;
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.node.ObjectNode;
 
 import java.util.*;
 
@@ -63,7 +63,7 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
 
         // children is a JSON array
         for (JsonNode childNode : data.get("children")) {
-            if (!childNode.get("kind").getTextValue().equalsIgnoreCase("more")) {
+            if (!childNode.get("kind").asText().equalsIgnoreCase("more")) {
                 children.add(ModelManager.create(childNode, thingClass));
             }
         }
@@ -73,7 +73,7 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
 
     protected More initMore() {
         for (JsonNode childNode : data.get("children")) {
-            if (childNode.get("kind").getTextValue().equalsIgnoreCase("more")) {
+            if (childNode.get("kind").textValue().equalsIgnoreCase("more")) {
                 return new More(childNode.get("data"));
             }
         }

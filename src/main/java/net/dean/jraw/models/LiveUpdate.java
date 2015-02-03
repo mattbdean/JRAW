@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableList;
 import net.dean.jraw.models.attr.Created;
 import net.dean.jraw.models.meta.JsonProperty;
 import net.dean.jraw.models.meta.Model;
-import org.codehaus.jackson.JsonNode;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import java.util.Date;
 

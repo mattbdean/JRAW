@@ -3,7 +3,7 @@ package net.dean.jraw.models;
 import net.dean.jraw.managers.ThingCache;
 import net.dean.jraw.models.meta.JsonProperty;
 import net.dean.jraw.models.meta.Model;
-import org.codehaus.jackson.JsonNode;
+import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * Represents the base class of all objects defined in the Reddit API, except for "Listing" and "more". More information

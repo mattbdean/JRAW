@@ -1,16 +1,13 @@
 package net.dean.jraw.test;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import net.dean.jraw.models.Account;
 import net.dean.jraw.models.meta.ModelManager;
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.map.ObjectMapper;
+import com.fasterxml.jackson.databind.JsonNode;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
 
-/**
- * Created by matthew on 1/14/15.
- */
 public class ModelManagerTest {
 
     @Test(expectedExceptions = IllegalArgumentException.class)

@@ -2,7 +2,7 @@ package net.dean.jraw.models;
 
 import net.dean.jraw.models.meta.JsonProperty;
 import net.dean.jraw.models.meta.Model;
-import org.codehaus.jackson.JsonNode;
+import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * This class adds extra properties to {@link Message} that is only available in some inbox entries. This class is
@@ -45,6 +45,6 @@ public class CommentMessage extends Message {
             return VoteDirection.NO_VOTE;
         }
 
-        return likes.getBooleanValue() ? VoteDirection.UPVOTE : VoteDirection.DOWNVOTE;
+        return likes.booleanValue() ? VoteDirection.UPVOTE : VoteDirection.DOWNVOTE;
     }
 }

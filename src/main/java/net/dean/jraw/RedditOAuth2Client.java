@@ -18,7 +18,7 @@ import net.dean.jraw.models.Captcha;
 import net.dean.jraw.models.KarmaBreakdown;
 import net.dean.jraw.models.LoggedInAccount;
 import net.dean.jraw.models.UserRecord;
-import org.codehaus.jackson.JsonNode;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import java.util.ArrayList;
 import java.util.HashMap;

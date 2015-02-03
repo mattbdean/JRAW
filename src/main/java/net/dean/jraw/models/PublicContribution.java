@@ -6,7 +6,7 @@ import net.dean.jraw.models.attr.Votable;
 import net.dean.jraw.models.meta.ContributionSerializer;
 import net.dean.jraw.models.meta.JsonProperty;
 import net.dean.jraw.models.meta.Model;
-import org.codehaus.jackson.JsonNode;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import java.util.HashMap;
 import java.util.Map;

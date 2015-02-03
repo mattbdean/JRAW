@@ -24,7 +24,7 @@ import net.dean.jraw.models.meta.Model;
 import net.dean.jraw.paginators.Paginators;
 import net.dean.jraw.paginators.Sorting;
 import net.dean.jraw.paginators.SubredditPaginator;
-import org.codehaus.jackson.JsonNode;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -199,7 +199,7 @@ public class RedditClient extends RestClient {
 
         setHttpsDefault(loginResponse.getJson().get("json").get("data").get("need_https").asBoolean());
 
-        String modhash = loginResponse.getJson().get("json").get("data").get("modhash").getTextValue();
+        String modhash = loginResponse.getJson().get("json").get("data").get("modhash").textValue();
 
         // Add the X-Modhash header, or update it if it already exists
         httpAdapter.getDefaultHeaders().put(HEADER_MODHASH, modhash);
@@ -261,7 +261,7 @@ public class RedditClient extends RestClient {
 
         setHttpsDefault(response.getJson().get("json").get("data").get("need_https").asBoolean());
 
-        String modhash = response.getJson().get("json").get("data").get("modhash").getTextValue();
+        String modhash = response.getJson().get("json").get("data").get("modhash").textValue();
 
         // Add the X-Modhash header, or update it if it already exists
         httpAdapter.getDefaultHeaders().put(HEADER_MODHASH, modhash);

@@ -2,7 +2,7 @@ package net.dean.jraw.models.meta;
 
 import net.dean.jraw.JrawUtils;
 import net.dean.jraw.models.JsonModel;
-import org.codehaus.jackson.JsonNode;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -3,7 +3,7 @@ package net.dean.jraw.models;
 import net.dean.jraw.models.meta.JsonProperty;
 import net.dean.jraw.models.meta.Model;
 import net.dean.jraw.models.meta.SubmissionSerializer;
-import org.codehaus.jackson.JsonNode;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import java.util.Date;
 
@@ -81,7 +81,7 @@ public class Submission extends PublicContribution {
      */
     @JsonProperty
     public Boolean isSelfPost() {
-        return data.get("is_self").getBooleanValue();
+        return data.get("is_self").booleanValue();
     }
 
     /**
@@ -204,7 +204,7 @@ public class Submission extends PublicContribution {
      */
     @JsonProperty(nullable = true)
     public String getThumbnail() {
-        String thumb = data.get("thumbnail").getTextValue();
+        String thumb = data.get("thumbnail").textValue();
         if (getThumbnailType() != ThumbnailType.URL) {
             return null;
         }
@@ -220,7 +220,7 @@ public class Submission extends PublicContribution {
      */
     @JsonProperty
     public ThumbnailType getThumbnailType() {
-        String thumb = data.get("thumbnail").getTextValue();
+        String thumb = data.get("thumbnail").textValue();
 
         // Try to find the type
         ThumbnailType type;
@@ -266,11 +266,11 @@ public class Submission extends PublicContribution {
         JsonNode node = data.get("edited");
 
         // "edited" is false if it hasn't been edited, so return null instead
-        if (node.isBoolean() && !node.getBooleanValue()) {
+        if (node.isBoolean() && !node.booleanValue()) {
             return null;
         }
 
-        return new Date(node.getLongValue() * 1000);
+        return new Date(node.longValue() * 1000);
     }
 
     /**

@@ -1,7 +1,7 @@
 package net.dean.jraw.models;
 
 import net.dean.jraw.models.meta.JsonProperty;
-import org.codehaus.jackson.JsonNode;
+import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * This class represents a simplified version of oEmbed data that includes embedded HTML

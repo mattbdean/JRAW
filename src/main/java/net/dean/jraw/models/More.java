@@ -2,7 +2,7 @@ package net.dean.jraw.models;
 
 import net.dean.jraw.models.meta.JsonProperty;
 import net.dean.jraw.models.meta.Model;
-import org.codehaus.jackson.JsonNode;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +46,7 @@ public class More extends Thing {
     public List<String> getChildrenIds() {
         List<String> ids = new ArrayList<>();
         for (JsonNode child : data.get("children")) {
-            ids.add(child.getTextValue());
+            ids.add(child.textValue());
         }
 
         return ids;

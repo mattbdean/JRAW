@@ -1,6 +1,6 @@
 package net.dean.jraw.models;
 
-import org.codehaus.jackson.JsonNode;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import java.util.Date;
 
@@ -25,7 +25,7 @@ public abstract class RedditObject extends JsonModel {
      */
     protected final Date _getCreated() {
         // created in seconds, Date constructor wants milliseconds
-        return new Date(getDataNode().get("created").getLongValue() * 1000);
+        return new Date(getDataNode().get("created").longValue() * 1000);
     }
 
     /**
@@ -34,11 +34,11 @@ public abstract class RedditObject extends JsonModel {
      */
     protected final Date _getCreatedUtc() {
         // created in seconds, Date constructor wants milliseconds
-        return new Date(getDataNode().get("created_utc").getLongValue() * 1000);
+        return new Date(getDataNode().get("created_utc").longValue() * 1000);
     }
 
     protected final DistinguishedStatus _getDistinguishedStatus() {
-        String distinguished = getDataNode().get("distinguished").getTextValue();
+        String distinguished = getDataNode().get("distinguished").textValue();
 
         if (distinguished == null) {
             return DistinguishedStatus.NORMAL;
@@ -55,15 +55,15 @@ public abstract class RedditObject extends JsonModel {
     }
 
     protected final Integer _getUpvotes() {
-        return getDataNode().get("ups").getIntValue();
+        return getDataNode().get("ups").intValue();
     }
 
     protected final Integer _getDownvotes() {
-        return getDataNode().get("downs").getIntValue();
+        return getDataNode().get("downs").intValue();
     }
 
     protected final Integer _getScore() {
-        return getDataNode().get("score").getIntValue();
+        return getDataNode().get("score").intValue();
     }
 
     protected final VoteDirection _getVote() {
@@ -72,6 +72,6 @@ public abstract class RedditObject extends JsonModel {
             return VoteDirection.NO_VOTE;
         }
 
-        return likes.getBooleanValue() ? VoteDirection.UPVOTE : VoteDirection.DOWNVOTE;
+        return likes.booleanValue() ? VoteDirection.UPVOTE : VoteDirection.DOWNVOTE;
     }
 }
