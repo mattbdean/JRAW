@@ -1,9 +1,9 @@
 package net.dean.jraw.models;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import net.dean.jraw.models.meta.JsonProperty;
 import net.dean.jraw.models.meta.Model;
 import net.dean.jraw.models.meta.SubmissionSerializer;
-import com.fasterxml.jackson.databind.JsonNode;
 
 import java.util.Date;
 
@@ -317,16 +317,6 @@ public class Submission extends PublicContribution {
     @Override
     public Integer getTimesGilded() {
         return _getTimesGilded();
-    }
-
-    @Override
-    public Integer getUpvotes() {
-        return _getUpvotes();
-    }
-
-    @Override
-    public Integer getDownvotes() {
-        return _getDownvotes();
     }
 
     @Override

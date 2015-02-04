@@ -1,12 +1,12 @@
 package net.dean.jraw.models;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import net.dean.jraw.models.attr.Distinguishable;
 import net.dean.jraw.models.attr.Gildable;
 import net.dean.jraw.models.attr.Votable;
 import net.dean.jraw.models.meta.ContributionSerializer;
 import net.dean.jraw.models.meta.JsonProperty;
 import net.dean.jraw.models.meta.Model;
-import com.fasterxml.jackson.databind.JsonNode;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -68,16 +68,6 @@ public abstract class PublicContribution extends Contribution implements Disting
     @Override
     public Integer getTimesGilded() {
         return _getTimesGilded();
-    }
-
-    @Override
-    public Integer getUpvotes() {
-        return _getUpvotes();
-    }
-
-    @Override
-    public Integer getDownvotes() {
-        return _getDownvotes();
     }
 
     @Override

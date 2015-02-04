@@ -29,6 +29,8 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
 
     private final Class<T> thingClass;
     private final List<T> children;
+    private final String before;
+    private final String after;
     private More more;
 
     /**
@@ -38,11 +40,11 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
      * @param thingClass The class which will be the type of the children in this listing
      */
     public Listing(JsonNode dataNode, Class<T> thingClass) {
-        super(dataNode);
-
-        this.thingClass = thingClass;
-        this.children = initChildren();
-        this.more = initMore();
+        this(thingClass,
+                initChildren(dataNode, thingClass),
+                getProp(dataNode, "before"),
+                getProp(dataNode, "after"),
+                initMore(dataNode));
     }
 
     /**
@@ -51,14 +53,32 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
      * @param thingClass The class which will be the type of the children in this listing
      */
     public Listing(Class<T> thingClass) {
-        super(getEmptyListingJSON());
-
-        this.thingClass = thingClass;
-        this.children = new ArrayList<>();
-        this.more = null;
+        this(thingClass, new ArrayList<T>(), null, null, null);
     }
 
-    private List<T> initChildren() {
+    protected Listing(Class<T> thingClass, List<T> children, String before, String after, More more) {
+        super(null);
+        this.thingClass = thingClass;
+        this.children = children;
+        this.before = before;
+        this.after = after;
+        this.more = more;
+    }
+
+    protected static String getProp(JsonNode data, String key) {
+        if (!data.has(key)) {
+            return null;
+        }
+
+        JsonNode val = data.get(key);
+        if (val.isNull()) {
+            return null;
+        }
+
+        return val.asText();
+    }
+
+    protected static <T extends JsonModel> List<T> initChildren(JsonNode data, Class<T> thingClass) {
         List<T> children = new ArrayList<>();
 
         // children is a JSON array
@@ -71,7 +91,7 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
         return children;
     }
 
-    private More initMore() {
+    protected static More initMore(JsonNode data) {
         for (JsonNode childNode : data.get("children")) {
             if (childNode.get("kind").textValue().equalsIgnoreCase("more")) {
                 return new More(childNode.get("data"));
@@ -81,30 +101,25 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
         return null;
     }
 
-    public List<T> getChildren() {
-        return children;
-    }
-
     /**
      * Loads more children into the Listing. The highest level modified will be commentRoot, or
      * parentSubmission is commentRoot is null. All loaded children are inserted into the comment tree.
      *
-     * @param client
      * @param parentSubmission The submission all comments are under
      * @param commentRoot      If loading more comments, the parent comment of this listing or null if the parent is the submission
      * @param sort             How to sort the recieved comments
      * @return The array of comments loaded and inserted into the tree
      * @throws NetworkException
      * @throws ApiException
-     * @throws IllegalArgumentException
+     * @throws IllegalArgumentException If commentRoot
      */
-    public Comment[] loadMoreChildren(RedditClient client, Submission parentSubmission
-            , Comment commentRoot, CommentSort sort)
+    public List<Comment> loadMoreChildren(RedditClient client, Submission parentSubmission, Comment commentRoot,
+                                          CommentSort sort)
             throws NetworkException, ApiException, IllegalArgumentException {
         if (commentRoot != null) {
-            //We're loading more comments in a thread
+            // We're loading more comments in a thread
             if (commentRoot.getReplies() != this) {
-                //The parent's replies should be this listing
+                // The parent's replies should be this listing
                 throw new IllegalArgumentException("commentRoot should be the direct parent of this listing!");
             }
         }
@@ -126,14 +141,14 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
         formCommentTree(loadedCommentTree, loadedMores);
 
         if (commentRoot == null) {
-            //Add all of the comments to the submission
+            // Add all of the comments to the submission
             for (Comment c : loadedCommentTree) {
                 parentSubmission.getComments().addLoaded(c);
             }
             if (loadedMores.size() > 0) {
                 parentSubmission.getComments().setMoreChildren(loadedMores.get(0));
             } else {
-                //More was just loaded
+                // More was just loaded
                 parentSubmission.getComments().setMoreChildren(null);
             }
         } else {
@@ -143,22 +158,21 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
             if (loadedMores.size() > 0) {
                 commentRoot.getReplies().setMoreChildren(loadedMores.get(0));
             } else {
-                //More was just loaded
+                // More was just loaded
                 commentRoot.getReplies().setMoreChildren(null);
             }
         }
 
-        return allLoadedComments.toArray(new Comment[allLoadedComments.size()]);
+        return allLoadedComments;
     }
 
     /**
-     * Merge the Comments and Mores into a tree as far as possible.
-     * There should only be at most 1 more object left at completion,
-     * the more for the root of all the trees formed.
+     * Merge the {@link Comment}s and {@link More}s into a tree as far as possible. There should only be at most one
+     * more object left at completion; the More for the root of all the trees formed.
      *
      * @param comments The comments to organize into a tree
      * @param mores    The mores to add into the comment tree
-     * @throws IllegalArgumentException More than 1 more was left over, should only be one for the root
+     * @throws IllegalArgumentException If more than one More was left over, should only be one for the root
      */
     public static void formCommentTree(List<Comment> comments, List<More> mores) throws IllegalArgumentException {
         List<Comment> toAdd = new ArrayList<>(comments);
@@ -173,7 +187,7 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
             Comment c = toAdd.get(0);
             Comment parent = commentMap.get(c.getParentId());
             if (parent == null) {
-                //It's a base comment
+                // It's a base comment
                 comments.add(c);
             } else {
                 parent.getReplies().addLoaded(c);
@@ -193,25 +207,21 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
             mores.remove(more);
         }
         if (mores.size() > 1) {
-            throw new IllegalArgumentException("Only 1 more object should be left after inserting into the comment tree");
+            throw new IllegalArgumentException("Only one more object should be left after inserting into the comment tree");
         }
     }
 
-    /**
-     * Gets the "more" element (the last element in the children)
-     *
-     * @return A More object
-     */
+    public List<T> getChildren() {
+        return children;
+    }
+
+    /** Gets the "more" element (the last element in the children) */
     @JsonProperty(nullable = true)
     public More getMoreChildren() {
         return more;
     }
 
-    /**
-     * Set the "more" element, for use when another loaded from the previous more
-     *
-     * @param more A more object
-     */
+    /** Set the "more" element, for use when another loaded from the previous more */
     public void setMoreChildren(More more) {
         this.more = more;
     }
@@ -223,7 +233,7 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
      */
     @JsonProperty(nullable = true)
     public String getBefore() {
-        return data("before");
+        return before;
     }
 
     /**
@@ -233,17 +243,7 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
      */
     @JsonProperty(nullable = true)
     public String getAfter() {
-        return data("after");
-    }
-
-    /**
-     * Not the same modhash provided upon login. You can reuse the modhash given upon login
-     *
-     * @return A modhash
-     */
-    @JsonProperty
-    public String getModhash() {
-        return data("modhash");
+        return after;
     }
 
     @Override
@@ -387,7 +387,7 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
         return getChildren().subList(start, end);
     }
 
-    private static JsonNode getEmptyListingJSON() {
+    protected static JsonNode getEmptyListingJSON() {
         ObjectNode dataTable = mapper.createObjectNode();
         dataTable.putArray("children");
         dataTable.put("after", "");

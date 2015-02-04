@@ -2,19 +2,12 @@ package net.dean.jraw.test;
 
 import net.dean.jraw.ApiException;
 import net.dean.jraw.JrawUtils;
+import net.dean.jraw.http.HttpRequest;
 import net.dean.jraw.http.MediaTypes;
 import net.dean.jraw.http.NetworkException;
-import net.dean.jraw.http.HttpRequest;
 import net.dean.jraw.http.RestResponse;
 import net.dean.jraw.managers.ThingCache;
-import net.dean.jraw.models.Comment;
-import net.dean.jraw.models.CommentSort;
-import net.dean.jraw.models.Listing;
-import net.dean.jraw.models.LiveThread;
-import net.dean.jraw.models.More;
-import net.dean.jraw.models.Submission;
-import net.dean.jraw.models.Subreddit;
-import net.dean.jraw.models.Thing;
+import net.dean.jraw.models.*;
 import net.dean.jraw.paginators.Paginators;
 import net.dean.jraw.paginators.SubredditPaginator;
 import org.testng.Assert;
@@ -121,7 +114,7 @@ public class ReadOnlyDataTest extends RedditTest {
             //Test loading more comment replies from comment:
             //http://www.reddit.com/r/pics/comments/92dd8/test_post_please_ignore/c0b715s
             Comment comment = (Comment) ThingCache.instance().getThing("t1_c0b715s");
-            Comment[] loadedComments = comment.getReplies().loadMoreChildren(reddit, submission, comment, CommentSort.TOP);
+            List<Comment> loadedComments = comment.getReplies().loadMoreChildren(reddit, submission, comment, CommentSort.TOP);
 
             //Check if the expected parent is really the parent
             for (Comment c : loadedComments) {

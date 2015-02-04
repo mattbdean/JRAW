@@ -3,18 +3,14 @@ package net.dean.jraw;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Joiner;
+import com.google.common.net.MediaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
+import java.net.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -211,6 +207,19 @@ public final class JrawUtils {
             default:
                 return Joiner.on(separator).join(args);
         }
+    }
+
+    /**
+     * Creates a new MediaType, removing any trailing semicolons if necessary.
+     * @param header The value of the Content-Type header
+     * @return A new MediaType
+     */
+    public static MediaType parseMediaType(String header) {
+        if ((header = header.trim()).endsWith(";")) {
+            // MediaType.parse() doesn't like a trailing semicolon, remove it
+            header = header.substring(0, header.length() - 1);
+        }
+        return MediaType.parse(header);
     }
 
     /**

@@ -54,14 +54,6 @@ public abstract class RedditObject extends JsonModel {
         return getDataNode().get("gilded").asInt();
     }
 
-    protected final Integer _getUpvotes() {
-        return getDataNode().get("ups").intValue();
-    }
-
-    protected final Integer _getDownvotes() {
-        return getDataNode().get("downs").intValue();
-    }
-
     protected final Integer _getScore() {
         return getDataNode().get("score").intValue();
     }

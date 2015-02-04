@@ -60,11 +60,11 @@ public class SubmissionRequestTest extends RedditTest {
     public void testSort() {
         request.sort(CommentSort.TOP);
         s = get();
-        int prevScore = s.getComments().get(0).getUpvotes();
+        int prevScore = s.getComments().get(0).getScore();
         for (int i = 1; i < 5; i++) {
             Comment c = s.getComments().get(i);
-            assertTrue(prevScore >= c.getUpvotes());
-            prevScore = c.getUpvotes();
+            assertTrue(prevScore >= c.getScore());
+            prevScore = c.getScore();
         }
     }
 

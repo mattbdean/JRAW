@@ -8,12 +8,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * This class provides an abstract model for retrieving data from a JSON node, although not necessarily relating to the
@@ -62,7 +57,7 @@ public abstract class JsonModel {
     @SuppressWarnings("unchecked")
     public <T> T data(String name, Class<T> type) {
         if (data == null)
-            throw new NullPointerException("No JSON associated with this model");
+            throw new NullPointerException("Trying to retrieve data from a null JsonNode");
 
         // Make sure the key is actually there
         if (!data.has(name)) {

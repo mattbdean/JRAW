@@ -67,8 +67,10 @@ public class MultiHubPaginator extends Paginator<MultiHubPaginator.MultiRedditId
             }
         }
 
-        return new FauxListing<>(multiReddits.build(), submissions.getBefore(), submissions.getAfter(),
-                submissions.getModhash(), submissions.getMoreChildren());
+        return new FauxListing<>(multiReddits.build(),
+                submissions.getBefore(),
+                submissions.getAfter(),
+                submissions.getMoreChildren());
     }
 
     /**

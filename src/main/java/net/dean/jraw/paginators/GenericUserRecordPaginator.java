@@ -1,12 +1,12 @@
 package net.dean.jraw.paginators;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.ImmutableList;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.RestResponse;
 import net.dean.jraw.models.FauxListing;
 import net.dean.jraw.models.Listing;
 import net.dean.jraw.models.UserRecord;
-import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * This class provides the basic framework required to create a Paginator that returns listings of UserRecords
@@ -39,8 +39,9 @@ public abstract class GenericUserRecordPaginator extends GenericPaginator<UserRe
             list.add(new UserRecord(child));
         }
 
-        return new FauxListing<>(list.build(), getJsonValue(data, "before"),
-                getJsonValue(data, "after"), getJsonValue(data, "after"));
+        return new FauxListing<>(list.build(),
+                getJsonValue(data, "before"),
+                getJsonValue(data, "after"));
     }
 
     private String getJsonValue(JsonNode data, String key) {
@@ -54,5 +55,4 @@ public abstract class GenericUserRecordPaginator extends GenericPaginator<UserRe
         }
         return node.asText();
     }
-
 }
