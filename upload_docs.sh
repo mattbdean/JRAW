@@ -12,7 +12,7 @@ BUILD_DOC="build/docs/javadoc/"
 DOC_FOLDER=$(basename $BUILD_DOC)
 ## First seven characters of the latest commit SHA
 COMMIT_SHA=$(git rev-parse --short HEAD --verify)
-## Last release (v0.6.1, etc.)
+## Last release (vX.X.X)
 LATEST_TAG=$(git describe --abbrev=0 --tags)
 ## Generic commit message
 COMMIT_MSG="Update Javadoc to commit $COMMIT_SHA"

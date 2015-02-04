@@ -4,7 +4,7 @@ package net.dean.jraw;
  * This class provides a standard way to version the library
  */
 public class Version {
-    private static final Version v = new Version(0, 6, 1);
+    private static final Version v = new Version(0, 7, 0);
 
     /**
      * Returns the current version of the library

@@ -223,7 +223,7 @@ public final class JrawUtils {
     }
 
     /**
-     * Parses a URL-encoded string with keys and values into a map. The key-value pair separator is assumed to be '&'
+     * Parses a URL-encoded string with keys and values into a map. The key-value pair separator is assumed to be '&amp;'
      * and the key-value separator is assumed to be '='
      */
     public static Map<String, String> parseUrlEncoded(String data) {
