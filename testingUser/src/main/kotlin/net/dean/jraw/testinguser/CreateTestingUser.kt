@@ -15,6 +15,8 @@ import net.dean.jraw.managers.MultiRedditManager
 import net.dean.jraw.models.Captcha
 import net.dean.jraw.ApiException
 import java.io.IOException
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.ObjectWriter
 
 /**
  * This class will create a Reddit user and set up everything you need to start testing with JRAW. See
@@ -136,7 +138,8 @@ public class CreateTestingUser {
         if (!parentDir.isDirectory() && !parentDir.mkdirs()) {
             throw IOException("Could not create directory $parentDir")
         }
-        jacksonObjectMapper().writerWithDefaultPrettyPrinter().writeValue(jsonConfig, data)
+        val writer: ObjectWriter = jacksonObjectMapper().writerWithDefaultPrettyPrinter()
+        writer.writeValue(jsonConfig, data)
         println("Your testing user's credentials can be found at ${jsonConfig.getAbsolutePath()}")
     }
 
