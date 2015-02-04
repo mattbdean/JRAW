@@ -17,7 +17,9 @@
 ##Getting Started
 ####Adding the Dependency
 
-JRAW is hosted on Bintray's [jCenter](https://bintray.com/thatjavanerd/maven/JRAW/view).
+JRAW is hosted on Bintray's [jCenter](http://jcenter.bintray.com/net/dean/jraw/JRAW/).
+
+ [ ![Download](https://api.bintray.com/packages/thatjavanerd/maven/JRAW/images/download.svg) ](https://bintray.com/thatjavanerd/maven/JRAW/_latestVersion)
 
 **Gradle**:
 ```groovy
@@ -26,7 +28,7 @@ repositories {
 }
 
 dependencies {
-    compile 'net.dean.jraw:JRAW:0.6.1'
+    compile "net.dean.jraw:JRAW:$jrawVersion"
 }
 ```
 
@@ -38,7 +40,7 @@ Add jCenter to your repositories (see [here](https://bintray.com/bintray/jcenter
 <dependency>
     <groupId>net.dean.jraw</groupId>
     <artifactId>JRAW</artifactId>
-    <version>0.6.1</version>
+    <version>${jraw.version}</version>
 </dependency>
 ```
 
