@@ -2,19 +2,11 @@ package net.dean.jraw.paginators;
 
 import com.squareup.okhttp.CacheControl;
 import net.dean.jraw.RedditClient;
-import net.dean.jraw.http.HttpAdapter;
-import net.dean.jraw.http.NetworkAccessible;
-import net.dean.jraw.http.NetworkException;
-import net.dean.jraw.http.HttpRequest;
-import net.dean.jraw.http.RestResponse;
+import net.dean.jraw.http.*;
 import net.dean.jraw.models.Listing;
 import net.dean.jraw.models.Thing;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Represents the basic concept of a paginator
@@ -166,16 +158,10 @@ public abstract class Paginator<T extends Thing> implements Iterator<Listing<T>>
         if (maxPages <= 0) {
             throw new IllegalArgumentException("maxPages must be greater than 0");
         }
-        int prevLimit = limit;
-        limit = RECOMMENDED_MAX_LIMIT;
 
         List<Listing<T>> listings = new ArrayList<>(maxPages);
-        try {
-            while (hasNext() && getPageIndex() < maxPages) {
-                listings.add(getListing(true));
-            }
-        } finally {
-            limit = prevLimit;
+        while (hasNext() && getPageIndex() < maxPages) {
+            listings.add(getListing(true));
         }
 
         return listings;
