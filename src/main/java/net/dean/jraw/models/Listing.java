@@ -58,7 +58,7 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
         this.more = null;
     }
 
-    protected List<T> initChildren() {
+    private List<T> initChildren() {
         List<T> children = new ArrayList<>();
 
         // children is a JSON array
@@ -71,7 +71,7 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
         return children;
     }
 
-    protected More initMore() {
+    private More initMore() {
         for (JsonNode childNode : data.get("children")) {
             if (childNode.get("kind").textValue().equalsIgnoreCase("more")) {
                 return new More(childNode.get("data"));

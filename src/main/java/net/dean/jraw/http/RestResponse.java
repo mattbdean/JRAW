@@ -11,6 +11,7 @@ import net.dean.jraw.models.RedditObject;
 import net.dean.jraw.models.meta.ModelManager;
 
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
 /**
@@ -43,12 +44,9 @@ public class RestResponse {
     RestResponse(HttpRequest origin, InputStream body, Headers headers, int statusCode, String statusMessage, String protocol) {
         this.origin = origin;
         this.headers = headers;
-        this.raw = readContent(body);
-        String contentType = headers.get("Content-Type");
-        if (contentType.endsWith(";")) {
-            contentType = contentType.substring(0, contentType.length() - 1);
-        }
-        this.type = MediaType.parse(contentType);
+        this.type = MediaType.parse(headers.get("Content-Type"));
+        String charset = type.charset().or(StandardCharsets.UTF_8).name();
+        this.raw = readContent(body, charset);
         this.statusCode = statusCode;
         this.statusMessage = statusMessage;
         this.protocol = protocol;
@@ -79,9 +77,9 @@ public class RestResponse {
         this.apiException = error;
     }
 
-    private String readContent(InputStream entity) {
+    private String readContent(InputStream entity, String charset) {
         try {
-            Scanner s = new Scanner(entity).useDelimiter("\\A");
+            Scanner s = new Scanner(entity, charset).useDelimiter("\\A");
             return s.hasNext() ? s.next() : "";
         } catch (Exception e) {
             JrawUtils.logger().error("Could not read the body of the given response");

@@ -44,16 +44,6 @@ public final class FauxListing<T extends RedditObject> extends Listing<T> {
     }
 
     @Override
-    protected ImmutableList<T> initChildren() {
-        return children;
-    }
-
-    @Override
-    protected More initMore() {
-        return more;
-    }
-
-    @Override
     public ImmutableList<T> getChildren() {
         return children;
     }
@@ -76,5 +66,33 @@ public final class FauxListing<T extends RedditObject> extends Listing<T> {
     @Override
     public String getModhash() {
         return modhash;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+
+        FauxListing that = (FauxListing) o;
+
+        if (after != null ? !after.equals(that.after) : that.after != null) return false;
+        if (before != null ? !before.equals(that.before) : that.before != null) return false;
+        if (children != null ? !children.equals(that.children) : that.children != null) return false;
+        if (modhash != null ? !modhash.equals(that.modhash) : that.modhash != null) return false;
+        if (more != null ? !more.equals(that.more) : that.more != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (children != null ? children.hashCode() : 0);
+        result = 31 * result + (before != null ? before.hashCode() : 0);
+        result = 31 * result + (after != null ? after.hashCode() : 0);
+        result = 31 * result + (modhash != null ? modhash.hashCode() : 0);
+        result = 31 * result + (more != null ? more.hashCode() : 0);
+        return result;
     }
 }

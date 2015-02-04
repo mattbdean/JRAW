@@ -136,7 +136,7 @@ public final class OkHttpAdapter implements HttpAdapter {
     }
 
     /** Mirrors a JRAW RequestBody to an OkHttp RequestBody */
-    private class OkHttpRequestBody extends com.squareup.okhttp.RequestBody {
+    private static class OkHttpRequestBody extends com.squareup.okhttp.RequestBody {
         private RequestBody mirror;
         private com.squareup.okhttp.MediaType contentType = null; // Lazily initialized
 

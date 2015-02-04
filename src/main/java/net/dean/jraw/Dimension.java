@@ -25,11 +25,31 @@ public final class Dimension {
         return height;
     }
 
-    public boolean equals(int w, int h) {
-        return this.width == w && this.height == h;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Dimension dimension = (Dimension) o;
+
+        if (height != dimension.height) return false;
+        if (width != dimension.width) return false;
+
+        return true;
     }
 
-    public boolean equals(Object o) {
-        return o instanceof Dimension && (o == this || equals(((Dimension) o).width, ((Dimension) o).height));
+    @Override
+    public int hashCode() {
+        int result = width;
+        result = 31 * result + height;
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Dimension {" +
+                "width=" + width +
+                ", height=" + height +
+                '}';
     }
 }
