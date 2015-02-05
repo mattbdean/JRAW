@@ -79,4 +79,12 @@ public abstract class PublicContribution extends Contribution implements Disting
     public VoteDirection getVote() {
         return _getVote();
     }
+
+    /**
+     * Checks if this contribution has been archived. If so, then it is no longer open for voting.
+     */
+    @JsonProperty
+    public boolean isArchived() {
+        return data("archived", Boolean.class);
+    }
 }
