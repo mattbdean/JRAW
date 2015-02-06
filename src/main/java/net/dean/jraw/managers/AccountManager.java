@@ -1,8 +1,8 @@
 package net.dean.jraw.managers;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.ImmutableList;
 import net.dean.jraw.ApiException;
-import net.dean.jraw.http.oauth.AppType;
 import net.dean.jraw.EndpointImplementation;
 import net.dean.jraw.Endpoints;
 import net.dean.jraw.JrawUtils;
@@ -17,7 +17,6 @@ import net.dean.jraw.models.Subreddit;
 import net.dean.jraw.models.Thing;
 import net.dean.jraw.models.VoteDirection;
 import net.dean.jraw.models.attr.Votable;
-import com.fasterxml.jackson.databind.JsonNode;
 
 import java.net.URL;
 import java.util.HashMap;
@@ -169,101 +168,6 @@ public class AccountManager extends AbstractManager {
                         "id", s.getFullName(),
                         "state", send
                 )).build());
-    }
-
-    /**
-     * Adds a user as a developer of an application. See <a href="https://ssl.reddit.com/prefs/apps/">here</a> for more.
-     *
-     * @param clientId Your application's client ID. You must be a developer of the app.
-     * @param newDev The username of the new developer
-     * @throws NetworkException If the request was not successful
-     * @throws ApiException If the API returned an error
-     */
-    @EndpointImplementation(Endpoints.ADDDEVELOPER)
-    public void addDeveloper(String clientId, String newDev) throws NetworkException, ApiException {
-        try {
-            modifyDeveloperStatus(clientId, newDev, false);
-        } catch (ApiException e) {
-            if (!e.getReason().equals("DEVELOPER_ALREADY_ADDED")) {
-                // This seems to be the response for /api/adddeveloper no matter what user is given
-                throw e;
-            }
-        }
-    }
-
-    /**
-     * Removes a user as a developer of an application. See <a href="https://ssl.reddit.com/prefs/apps/">here</a> for more.
-     *
-     * @param clientId Your application's client ID. You must be a developer of the app.
-     * @param oldDev The username of the (soon-to-be) former developer
-     * @throws NetworkException If the request was not successful
-     * @throws ApiException If the API returned an error
-     */
-    @EndpointImplementation(Endpoints.REMOVEDEVELOPER)
-    public void removeDeveloper(String clientId, String oldDev) throws NetworkException, ApiException {
-        modifyDeveloperStatus(clientId, oldDev, true);
-    }
-
-    private void modifyDeveloperStatus(String clientId, String devName, boolean remove) throws NetworkException, ApiException {
-        genericPost(reddit.request()
-                .endpoint(remove ? Endpoints.REMOVEDEVELOPER : Endpoints.ADDDEVELOPER)
-                .post(JrawUtils.mapOf(
-                        "api_type", "json",
-                        "client_id", clientId,
-                        "name", devName
-                )).build());
-    }
-
-    /**
-     * Updates an app if clientId is non-null, creates one if else.
-     * @param clientId The application's client ID
-     * @param name The name of the app
-     * @param appType The application's type. See {@link AppType} for more information.
-     * @param description The application's description, formatted in Markdown
-     * @param aboutUrl The URL which users will be sent to about your application
-     * @param redirectUrl Used in OAuth2 authorization. Parameters to obtain an OAuth2 Authorization token will be sent
-     *                    to this URI as part of the query.
-     * @throws NetworkException If the request was not successful
-     * @throws ApiException If the API returned an error
-     */
-    @EndpointImplementation(Endpoints.UPDATEAPP)
-    public void createOrUpdateApp(String clientId, String name, AppType appType, String description, String aboutUrl, String redirectUrl) throws NetworkException, ApiException {
-        Map<String, String> args = JrawUtils.mapOf(
-                "api_type", "json",
-                "name", name,
-                "app_type", appType,
-                "description", description,
-                "about_url", aboutUrl,
-                "redirect_uri", redirectUrl
-        );
-        if (clientId != null) {
-            args.put("client_id", clientId);
-        }
-        RestResponse response = reddit.execute(reddit.request()
-                .endpoint(Endpoints.UPDATEAPP)
-                .post(args)
-                .build());
-        if (response.hasErrors()) {
-            throw response.getError();
-        }
-    }
-
-    /**
-     * Deletes a Reddit OAuth2 application
-     * @param clientId The application's client ID
-     * @throws NetworkException If the request was not successful
-     * @throws ApiException If the API returned an error
-     */
-    @EndpointImplementation(Endpoints.DELETEAPP)
-    public void deleteApp(String clientId) throws NetworkException, ApiException {
-        RestResponse response = reddit.execute(reddit.request()
-                .endpoint(Endpoints.DELETEAPP)
-                .post(JrawUtils.mapOf(
-                        "client_id", clientId
-                )).build());
-        if (response.hasErrors()) {
-            throw response.getError();
-        }
     }
 
     /**

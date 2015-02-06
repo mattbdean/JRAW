@@ -1,7 +1,6 @@
 package net.dean.jraw.test.auth;
 
 import net.dean.jraw.ApiException;
-import net.dean.jraw.http.oauth.AppType;
 import net.dean.jraw.JrawUtils;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.managers.AccountManager;
@@ -309,61 +308,6 @@ public class AccountManagerTest extends AuthenticatedRedditTest {
             handle(e);
         }
     }
-
-    @Test
-    public void testAddDeveloper() {
-        try {
-            // Remove the developer to prevent /api/adddeveloper from returning a DEVELOPER_ALREADY_ADDED error.
-            // /api/removedeveloper doesn't seem to return an error if the given name isn't in the list of current devs,
-            // so this call will (probably) never fail.
-            account.removeDeveloper(CLIENT_ID, DEV_NAME);
-            // Actually test the method
-            account.addDeveloper(CLIENT_ID, DEV_NAME);
-        } catch (ApiException | NetworkException e) {
-            handle(e);
-        }
-    }
-
-    @Test
-    public void testRemoveDeveloper() {
-        // Add the developer if they're not already one
-        try {
-            account.addDeveloper(CLIENT_ID, DEV_NAME);
-        } catch (ApiException e) {
-            if (!e.getReason().equals("DEVELOPER_ALREADY_ADDED")) {
-                // Not ok
-                handle(e);
-            }
-        } catch (NetworkException e) {
-            handle(e);
-        }
-
-        try {
-            account.removeDeveloper(CLIENT_ID, DEV_NAME);
-        } catch (NetworkException | ApiException e) {
-            handle(e);
-        }
-    }
-
-    @Test
-    public void testCreateOrUpdateApp() {
-        try {
-            account.createOrUpdateApp(null,
-                    "Test app for " + getClass().getSimpleName(),
-                    AppType.SCRIPT,
-                    "description goes here",
-                    "https://github.com/thatJavaNerd/JRAW",
-                    "https://github.com/thatJavaNerd/JRAW");
-        } catch (NetworkException | ApiException e) {
-            handle(e);
-        }
-    }
-
-    /*
-    Note: It is impossible to test account.deleteApp(String) because there is no way (to my knowledge) to get the ID of
-          any of your own apps, including the one created using account.createOrUpdateApp(null, <...>) because the
-          response does not contain any of that data
-     */
 
     @Test
     public void testSetNsfw() {

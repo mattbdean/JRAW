@@ -1,9 +1,9 @@
-<!--- Generated 2015-01-29 at 19:23:49 EST. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
+<!--- Generated 2015-02-06 at 01:11:57 EST. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
 #Endpoints
 
 This file contains a list of all the endpoints (regardless of if they have been implemented) that can be found at the [official Reddit API docs](https://www.reddit.com/dev/api). To update this file, run `./gradlew endpoints:update`.
 
-So far **115** endpoints (out of 187 total) have been implemented.
+So far **110** endpoints (out of 180 total) have been implemented.
 
 ##(any scope)
 Method|Endpoint|Implemented?
@@ -12,25 +12,14 @@ Method|Endpoint|Implemented?
 `POST`|[`/api/unfriend`](https://www.reddit.com/dev/api/oauth#POST_api_unfriend)|No
 `GET`|[`/api/needs_captcha.json`](https://www.reddit.com/dev/api/oauth#GET_api_needs_captcha.json)|[`RedditClient.needsCaptcha()`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/RedditClient.html#needsCaptcha())
 `POST`|[`/api/new_captcha`](https://www.reddit.com/dev/api/oauth#POST_api_new_captcha)|[`RedditClient.getNewCaptcha()`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/RedditClient.html#getNewCaptcha())
-`POST`|[`/captcha/{iden}`](https://www.reddit.com/dev/api/oauth#POST_captcha_%7Biden%7D)|[`RedditClient.getCaptcha(String)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/RedditClient.html#getCaptcha(java.lang.String))
+`GET`|[`/captcha/{iden}`](https://www.reddit.com/dev/api/oauth#GET_captcha_%7Biden%7D)|[`RedditClient.getCaptcha(String)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/RedditClient.html#getCaptcha(java.lang.String))
 
 ##(not available through oauth)
 Method|Endpoint|Implemented?
 :----:|--------|------------
-`POST`|[`/api/clear_sessions`](https://www.reddit.com/dev/api#POST_api_clear_sessions)|No
-`POST`|[`/api/revokeapp`](https://www.reddit.com/dev/api#POST_api_revokeapp)|No
-`POST`|[`/api/set_force_https`](https://www.reddit.com/dev/api#POST_api_set_force_https)|No
-`POST`|[`/api/setappicon`](https://www.reddit.com/dev/api#POST_api_setappicon)|No
-`POST`|[`/api/update`](https://www.reddit.com/dev/api#POST_api_update)|No
-`POST`|[`/api/update_email`](https://www.reddit.com/dev/api#POST_api_update_email)|No
-`POST`|[`/api/update_password`](https://www.reddit.com/dev/api#POST_api_update_password)|No
-`POST`|[`/api/adddeveloper`](https://www.reddit.com/dev/api#POST_api_adddeveloper)|[`AccountManager.addDeveloper(String, String)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/managers/AccountManager.html#addDeveloper(java.lang.String, java.lang.String))
-`POST`|[`/api/deleteapp`](https://www.reddit.com/dev/api#POST_api_deleteapp)|[`AccountManager.deleteApp(String)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/managers/AccountManager.html#deleteApp(java.lang.String))
 `POST`|[`/api/login`](https://www.reddit.com/dev/api#POST_api_login)|[`RedditClient.login(Credentials)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/RedditClient.html#login(net.dean.jraw.http.Credentials))
 `GET`|[`/api/me.json`](https://www.reddit.com/dev/api#GET_api_me.json)|[`RedditClient.me()`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/RedditClient.html#me())
 `POST`|[`/api/register`](https://www.reddit.com/dev/api#POST_api_register)|[`RedditClient.register(String, String, String, Captcha, String)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/RedditClient.html#register(java.lang.String, java.lang.String, java.lang.String, net.dean.jraw.models.Captcha, java.lang.String))
-`POST`|[`/api/removedeveloper`](https://www.reddit.com/dev/api#POST_api_removedeveloper)|[`AccountManager.removeDeveloper(String, String)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/managers/AccountManager.html#removeDeveloper(java.lang.String, java.lang.String))
-`POST`|[`/api/updateapp`](https://www.reddit.com/dev/api#POST_api_updateapp)|[`AccountManager.createOrUpdateApp(String, String, AppType, String, String, String)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/managers/AccountManager.html#createOrUpdateApp(java.lang.String, java.lang.String, net.dean.jraw.http.oauth.AppType, java.lang.String, java.lang.String, java.lang.String))
 `GET`|[`/api/username_available.json`](https://www.reddit.com/dev/api#GET_api_username_available.json)|[`RedditClient.isUsernameAvailable(String)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/RedditClient.html#isUsernameAvailable(java.lang.String))
 
 ##account
@@ -71,7 +60,7 @@ Method|Endpoint|Implemented?
 `GET`|[`/user/{username}/overview`](https://www.reddit.com/dev/api/oauth#GET_user_%7Busername%7D_overview)|[`UserContributionPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/paginators/UserContributionPaginator.html#getListing(boolean))
 `GET`|[`/user/{username}/saved`](https://www.reddit.com/dev/api/oauth#GET_user_%7Busername%7D_saved)|[`UserContributionPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/paginators/UserContributionPaginator.html#getListing(boolean))
 `GET`|[`/user/{username}/submitted`](https://www.reddit.com/dev/api/oauth#GET_user_%7Busername%7D_submitted)|[`UserContributionPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/paginators/UserContributionPaginator.html#getListing(boolean))
-`GET`|[`/user/{username}/where`](https://www.reddit.com/dev/api/oauth#GET_user_%7Busername%7D_where)|[`UserContributionPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/paginators/UserContributionPaginator.html#getListing(boolean))
+`GET`|[`/user/{username}/{where}`](https://www.reddit.com/dev/api/oauth#GET_user_%7Busername%7D_%7Bwhere%7D)|[`UserContributionPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/paginators/UserContributionPaginator.html#getListing(boolean))
 
 ##identity
 Method|Endpoint|Implemented?
@@ -100,7 +89,7 @@ Method|Endpoint|Implemented?
 `POST`|[`/api/site_admin`](https://www.reddit.com/dev/api/oauth#POST_api_site_admin)|No
 `POST`|[`/api/subreddit_stylesheet`](https://www.reddit.com/dev/api/oauth#POST_api_subreddit_stylesheet)|No
 `POST`|[`/api/upload_sr_img`](https://www.reddit.com/dev/api/oauth#POST_api_upload_sr_img)|No
-`GET`|[`/r/{subreddit}/about/edit.json`](https://www.reddit.com/dev/api/oauth#GET_r_%7Bsubreddit%7D_about_edit.json)|No
+`GET`|[`/r/subreddit/about/edit.json`](https://www.reddit.com/dev/api/oauth#GET_r_subreddit_about_edit.json)|No
 `GET`|[`/stylesheet`](https://www.reddit.com/dev/api/oauth#GET_stylesheet)|[`RedditClient.getStylesheet(String)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/RedditClient.html#getStylesheet(java.lang.String))
 
 ##modflair
@@ -185,11 +174,17 @@ Method|Endpoint|Implemented?
 :----:|--------|------------
 `GET`|[`/api/filter/{filterpath}`](https://www.reddit.com/dev/api/oauth#GET_api_filter_%7Bfilterpath%7D)|No
 `GET`|[`/api/filter/{filterpath}/r/{srname}`](https://www.reddit.com/dev/api/oauth#GET_api_filter_%7Bfilterpath%7D_r_%7Bsrname%7D)|No
+`GET`|[`/article/duplicates`](https://www.reddit.com/dev/api/oauth#GET_article_duplicates)|No
+`GET`|[`/article/related`](https://www.reddit.com/dev/api/oauth#GET_article_related)|No
 `GET`|[`/live/{thread}/contributors.json`](https://www.reddit.com/dev/api/oauth#GET_live_%7Bthread%7D_contributors.json)|No
 `GET`|[`/live/{thread}/discussions`](https://www.reddit.com/dev/api/oauth#GET_live_%7Bthread%7D_discussions)|No
+`GET`|[`/sidebar`](https://www.reddit.com/dev/api/oauth#GET_sidebar)|No
+`GET`|[`/sticky`](https://www.reddit.com/dev/api/oauth#GET_sticky)|No
+`GET`|[`/user/{username}/about.json`](https://www.reddit.com/dev/api/oauth#GET_user_%7Busername%7D_about.json)|No
 `GET`|[`/about/banned`](https://www.reddit.com/dev/api/oauth#GET_about_banned)|[`UserRecordPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/paginators/UserRecordPaginator.html#getListing(boolean))
 `GET`|[`/about/contributors`](https://www.reddit.com/dev/api/oauth#GET_about_contributors)|[`UserRecordPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/paginators/UserRecordPaginator.html#getListing(boolean))
 `GET`|[`/about/edited`](https://www.reddit.com/dev/api/oauth#GET_about_edited)|[`ModeratorPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/paginators/ModeratorPaginator.html#getListing(boolean))
+`GET`|[`/about/location`](https://www.reddit.com/dev/api/oauth#GET_about_location)|[`ModeratorPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/paginators/ModeratorPaginator.html#getListing(boolean))
 `GET`|[`/about/moderators`](https://www.reddit.com/dev/api/oauth#GET_about_moderators)|[`UserRecordPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/paginators/UserRecordPaginator.html#getListing(boolean))
 `GET`|[`/about/modqueue`](https://www.reddit.com/dev/api/oauth#GET_about_modqueue)|[`ModeratorPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/paginators/ModeratorPaginator.html#getListing(boolean))
 `GET`|[`/about/reports`](https://www.reddit.com/dev/api/oauth#GET_about_reports)|[`ModeratorPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/paginators/ModeratorPaginator.html#getListing(boolean))
@@ -197,10 +192,9 @@ Method|Endpoint|Implemented?
 `GET`|[`/about/unmoderated`](https://www.reddit.com/dev/api/oauth#GET_about_unmoderated)|[`ModeratorPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/paginators/ModeratorPaginator.html#getListing(boolean))
 `GET`|[`/about/wikibanned`](https://www.reddit.com/dev/api/oauth#GET_about_wikibanned)|[`UserRecordPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/paginators/UserRecordPaginator.html#getListing(boolean))
 `GET`|[`/about/wikicontributors`](https://www.reddit.com/dev/api/oauth#GET_about_wikicontributors)|[`UserRecordPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/paginators/UserRecordPaginator.html#getListing(boolean))
-`GET`|[`/about/{location}`](https://www.reddit.com/dev/api/oauth#GET_about_%7Blocation%7D)|[`ModeratorPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/paginators/ModeratorPaginator.html#getListing(boolean))
 `GET`|[`/about/{where}`](https://www.reddit.com/dev/api/oauth#GET_about_%7Bwhere%7D)|[`UserRecordPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/paginators/UserRecordPaginator.html#getListing(boolean))
 `GET`|[`/api/info`](https://www.reddit.com/dev/api/oauth#GET_api_info)|[`RedditClient.get(String[])`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/RedditClient.html#get([Ljava.lang.String;))
-`POST`|[`/api/morechildren`](https://www.reddit.com/dev/api/oauth#POST_api_morechildren)|[`RedditClient.getMoreComments(Submission, CommentSort, More)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/RedditClient.html#getMoreComments(net.dean.jraw.models.Submission, net.dean.jraw.models.CommentSort, net.dean.jraw.models.More))
+`GET`|[`/api/morechildren`](https://www.reddit.com/dev/api/oauth#GET_api_morechildren)|[`RedditClient.getMoreComments(Submission, CommentSort, More)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/RedditClient.html#getMoreComments(net.dean.jraw.models.Submission, net.dean.jraw.models.CommentSort, net.dean.jraw.models.More))
 `GET`|[`/api/multi/mine`](https://www.reddit.com/dev/api/oauth#GET_api_multi_mine)|[`MultiRedditManager.mine()`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/managers/MultiRedditManager.html#mine())
 `GET`|[`/api/multi/{multipath}`](https://www.reddit.com/dev/api/oauth#GET_api_multi_%7Bmultipath%7D)|[`MultiRedditManager.get(String, String)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/managers/MultiRedditManager.html#get(java.lang.String, java.lang.String))
 `GET`|[`/api/multi/{multipath}/description`](https://www.reddit.com/dev/api/oauth#GET_api_multi_%7Bmultipath%7D_description)|[`MultiRedditManager.getDescription(String, String)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/managers/MultiRedditManager.html#getDescription(java.lang.String, java.lang.String))
@@ -212,8 +206,8 @@ Method|Endpoint|Implemented?
 `GET`|[`/api/v1/me/blocked`](https://www.reddit.com/dev/api/oauth#GET_api_v1_me_blocked)|[`ImportantUserPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/paginators/ImportantUserPaginator.html#getListing(boolean))
 `GET`|[`/api/v1/me/friends`](https://www.reddit.com/dev/api/oauth#GET_api_v1_me_friends)|[`ImportantUserPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/paginators/ImportantUserPaginator.html#getListing(boolean))
 `GET`|[`/api/v1/user/{username}/trophies`](https://www.reddit.com/dev/api/oauth#GET_api_v1_user_%7Busername%7D_trophies)|[`RedditOAuth2Client.getTrophies(String)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/RedditOAuth2Client.html#getTrophies(java.lang.String))
-`GET`|[`/by_id/names`](https://www.reddit.com/dev/api/oauth#GET_by_id_names)|[`SpecificPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/paginators/SpecificPaginator.html#getListing(boolean))
-`GET`|[`/comments/article`](https://www.reddit.com/dev/api/oauth#GET_comments_article)|[`RedditClient.getSubmission(SubmissionRequest)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/RedditClient.html#getSubmission(net.dean.jraw.RedditClient$SubmissionRequest))
+`GET`|[`/by_id/{names}`](https://www.reddit.com/dev/api/oauth#GET_by_id_%7Bnames%7D)|[`SpecificPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/paginators/SpecificPaginator.html#getListing(boolean))
+`GET`|[`/comments/{article}`](https://www.reddit.com/dev/api/oauth#GET_comments_%7Barticle%7D)|[`RedditClient.getSubmission(SubmissionRequest)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/RedditClient.html#getSubmission(net.dean.jraw.RedditClient$SubmissionRequest))
 `GET`|[`/controversial`](https://www.reddit.com/dev/api/oauth#GET_controversial)|[`SubredditPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/paginators/SubredditPaginator.html#getListing(boolean))
 `GET`|[`/hot`](https://www.reddit.com/dev/api/oauth#GET_hot)|[`SubredditPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/paginators/SubredditPaginator.html#getListing(boolean))
 `GET`|[`/live/{thread}`](https://www.reddit.com/dev/api/oauth#GET_live_%7Bthread%7D)|[`LiveThreadPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/paginators/LiveThreadPaginator.html#getListing(boolean))
@@ -221,7 +215,7 @@ Method|Endpoint|Implemented?
 `GET`|[`/new`](https://www.reddit.com/dev/api/oauth#GET_new)|[`SubredditPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/paginators/SubredditPaginator.html#getListing(boolean))
 `GET`|[`/prefs/blocked`](https://www.reddit.com/dev/api/oauth#GET_prefs_blocked)|[`ImportantUserPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/paginators/ImportantUserPaginator.html#getListing(boolean))
 `GET`|[`/prefs/friends`](https://www.reddit.com/dev/api/oauth#GET_prefs_friends)|[`ImportantUserPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/paginators/ImportantUserPaginator.html#getListing(boolean))
-`GET`|[`/prefs/where`](https://www.reddit.com/dev/api/oauth#GET_prefs_where)|[`ImportantUserPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/paginators/ImportantUserPaginator.html#getListing(boolean))
+`GET`|[`/prefs/{where}`](https://www.reddit.com/dev/api/oauth#GET_prefs_%7Bwhere%7D)|[`ImportantUserPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/paginators/ImportantUserPaginator.html#getListing(boolean))
 `GET`|[`/r/{subreddit}/about.json`](https://www.reddit.com/dev/api/oauth#GET_r_%7Bsubreddit%7D_about.json)|[`RedditClient.getSubreddit(String)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/RedditClient.html#getSubreddit(java.lang.String))
 `GET`|[`/random`](https://www.reddit.com/dev/api/oauth#GET_random)|[`RedditClient.getRandomSubmission(String)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/RedditClient.html#getRandomSubmission(java.lang.String))
 `GET`|[`/search`](https://www.reddit.com/dev/api/oauth#GET_search)|[`SubmissionSearchPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/paginators/SubmissionSearchPaginator.html#getListing(boolean))
@@ -231,7 +225,6 @@ Method|Endpoint|Implemented?
 `GET`|[`/subreddits/search`](https://www.reddit.com/dev/api/oauth#GET_subreddits_search)|[`SubredditSearchPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/paginators/SubredditSearchPaginator.html#getListing(boolean))
 `GET`|[`/subreddits/where`](https://www.reddit.com/dev/api/oauth#GET_subreddits_where)|[`AllSubredditsPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/paginators/AllSubredditsPaginator.html#getListing(boolean))
 `GET`|[`/top`](https://www.reddit.com/dev/api/oauth#GET_top)|[`SubredditPaginator.getListing(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/paginators/SubredditPaginator.html#getListing(boolean))
-`GET`|[`/user/{username}/about.json`](https://www.reddit.com/dev/api/oauth#GET_user_%7Busername%7D_about.json)|[`RedditClient.getUser(String)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/RedditClient.html#getUser(java.lang.String))
 
 ##report
 Method|Endpoint|Implemented?
@@ -244,7 +237,7 @@ Method|Endpoint|Implemented?
 ##save
 Method|Endpoint|Implemented?
 :----:|--------|------------
-`GET`|[`/api/saved_categories.json`](https://www.reddit.com/dev/api/oauth#GET_api_saved_categories.json)|No
+`POST`|[`/api/saved_categories.json`](https://www.reddit.com/dev/api/oauth#POST_api_saved_categories.json)|No
 `POST`|[`/api/store_visits`](https://www.reddit.com/dev/api/oauth#POST_api_store_visits)|No
 `POST`|[`/api/save`](https://www.reddit.com/dev/api/oauth#POST_api_save)|[`AccountManager.setSaved(Submission, boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/managers/AccountManager.html#setSaved(net.dean.jraw.models.Submission, boolean))
 `POST`|[`/api/unsave`](https://www.reddit.com/dev/api/oauth#POST_api_unsave)|[`AccountManager.setSaved(Submission, boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/managers/AccountManager.html#setSaved(net.dean.jraw.models.Submission, boolean))
@@ -262,10 +255,10 @@ Method|Endpoint|Implemented?
 Method|Endpoint|Implemented?
 :----:|--------|------------
 `DELETE`|[`/api/filter/{filterpath}`](https://www.reddit.com/dev/api/oauth#DELETE_api_filter_%7Bfilterpath%7D)|No
+`POST`|[`/api/filter/{filterpath}`](https://www.reddit.com/dev/api/oauth#POST_api_filter_%7Bfilterpath%7D)|No
 `PUT`|[`/api/filter/{filterpath}`](https://www.reddit.com/dev/api/oauth#PUT_api_filter_%7Bfilterpath%7D)|No
 `DELETE`|[`/api/filter/{filterpath}/r/{srname}`](https://www.reddit.com/dev/api/oauth#DELETE_api_filter_%7Bfilterpath%7D_r_%7Bsrname%7D)|No
 `PUT`|[`/api/filter/{filterpath}/r/{srname}`](https://www.reddit.com/dev/api/oauth#PUT_api_filter_%7Bfilterpath%7D_r_%7Bsrname%7D)|No
-`POST`|[`/api/multi/{filterpath}`](https://www.reddit.com/dev/api/oauth#POST_api_multi_%7Bfilterpath%7D)|No
 `DELETE`|[`/api/multi/{multipath}`](https://www.reddit.com/dev/api/oauth#DELETE_api_multi_%7Bmultipath%7D)|[`MultiRedditManager.delete(String)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/managers/MultiRedditManager.html#delete(java.lang.String))
 `POST`|[`/api/multi/{multipath}`](https://www.reddit.com/dev/api/oauth#POST_api_multi_%7Bmultipath%7D)|[`MultiRedditManager.createOrUpdate(String, List, boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/managers/MultiRedditManager.html#createOrUpdate(java.lang.String, java.util.List, boolean))
 `PUT`|[`/api/multi/{multipath}`](https://www.reddit.com/dev/api/oauth#PUT_api_multi_%7Bmultipath%7D)|[`MultiRedditManager.createOrUpdate(String, List, boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/managers/MultiRedditManager.html#createOrUpdate(java.lang.String, java.util.List, boolean))
@@ -290,8 +283,8 @@ Method|Endpoint|Implemented?
 ##wikiread
 Method|Endpoint|Implemented?
 :----:|--------|------------
-`GET`|[`/wiki/discussions/page`](https://www.reddit.com/dev/api/oauth#GET_wiki_discussions_page)|No
+`GET`|[`/wiki/discussions/{page}`](https://www.reddit.com/dev/api/oauth#GET_wiki_discussions_%7Bpage%7D)|No
 `GET`|[`/wiki/revisions`](https://www.reddit.com/dev/api/oauth#GET_wiki_revisions)|No
-`GET`|[`/wiki/revisions/page`](https://www.reddit.com/dev/api/oauth#GET_wiki_revisions_page)|No
-`GET`|[`/wiki/page`](https://www.reddit.com/dev/api/oauth#GET_wiki_page)|[`WikiManager.get(String, String)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/managers/WikiManager.html#get(java.lang.String, java.lang.String))
+`GET`|[`/wiki/revisions/{page}`](https://www.reddit.com/dev/api/oauth#GET_wiki_revisions_%7Bpage%7D)|No
 `GET`|[`/wiki/pages`](https://www.reddit.com/dev/api/oauth#GET_wiki_pages)|[`WikiManager.getPages(String)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/managers/WikiManager.html#getPages(java.lang.String))
+`GET`|[`/wiki/{page}`](https://www.reddit.com/dev/api/oauth#GET_wiki_%7Bpage%7D)|[`WikiManager.get(String, String)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/managers/WikiManager.html#get(java.lang.String, java.lang.String))

@@ -15,8 +15,8 @@ import net.dean.jraw.managers.MultiRedditManager
 import net.dean.jraw.models.Captcha
 import net.dean.jraw.ApiException
 import java.io.IOException
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.ObjectWriter
+import net.dean.jraw.http.oauth.AppType
 
 /**
  * This class will create a Reddit user and set up everything you need to start testing with JRAW. See
@@ -107,13 +107,10 @@ public class CreateTestingUser {
      */
     fun createOAuth2App(): Pair<String, String> {
         ////// STEP 2
-        // "Create a OAuth2 app with type 'script' (AccountManager.createOrUpdateApp())"
-        val mgr = AccountManager(reddit)
-        val url = "https://github.com/thatJavaNerd/JRAW"
+        // "Create a OAuth2 app with type 'script'
         val name = "JRAW-testing-app"
-        mgr.createOrUpdateApp(null, name, net.dean.jraw.http.oauth.AppType.SCRIPT, "Created to test OAuth2 features in JRAW", url, url)
         println("Login with your new account and navigate to \"https://www.reddit.com/prefs/apps\"")
-        println("Then find the client ID and secret of the '$name' app")
+        println("Then create an OAuth2 app with the type 'script' and find its client ID and secret")
         println("See https://github.com/reddit/reddit/wiki/OAuth2#getting-started for help.")
 
         val id = getInput(s, "Enter $name's client ID")
