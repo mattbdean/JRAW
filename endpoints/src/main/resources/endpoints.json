@@ -178,8 +178,8 @@
     "GET /subreddits/where",
     "GET /top",
     "GET /user/{username}/about.json",
-    "GET /article/duplicates",
-    "GET /article/related",
+    "GET /{article}/duplicates",
+    "GET /{article}/related",
     "GET /sort"
   ],
   "report": [
