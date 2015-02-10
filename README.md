@@ -29,7 +29,7 @@ dependencies {
 
 **Maven**:
 
-Add jCenter to your repositories (see [here](https://bintray.com/bintray/jcenter) and press "Set me up!" on the right hand side) and then add the repository:
+Add jCenter (`https://jcenter.bintray.com`) to your repositories and then add the repository:
 
 ```xml
 <dependency>
