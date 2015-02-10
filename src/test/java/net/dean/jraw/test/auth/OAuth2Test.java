@@ -26,7 +26,7 @@ public class OAuth2Test extends AuthenticatedRedditTest {
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
-    public void testRefreshToken() {
+    public void testRefreshTokenScript() {
         try {
             // We're using script auth, which uses no refresh token
             redditOAuth2.refreshToken(getCredentials());
@@ -141,7 +141,7 @@ public class OAuth2Test extends AuthenticatedRedditTest {
     @Test
     public void testAddFriend() {
         try {
-            validateModel(redditOAuth2.updateFriend("thatJavaNerd"));
+            validateModel(redditOAuth2.updateFriend("spladug"));
         } catch (NetworkException e) {
             handle(e);
         }

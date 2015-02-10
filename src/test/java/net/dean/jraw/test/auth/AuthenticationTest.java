@@ -61,5 +61,4 @@ public class AuthenticationTest extends AuthenticatedRedditTest {
             handle(e);
         }
     }
-
 }

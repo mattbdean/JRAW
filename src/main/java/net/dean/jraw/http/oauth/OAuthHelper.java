@@ -1,13 +1,23 @@
 package net.dean.jraw.http.oauth;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import net.dean.jraw.JrawUtils;
 import net.dean.jraw.RedditClient;
-import net.dean.jraw.http.*;
+import net.dean.jraw.http.AuthenticationMethod;
+import net.dean.jraw.http.BasicAuthData;
+import net.dean.jraw.http.Credentials;
+import net.dean.jraw.http.HttpAdapter;
+import net.dean.jraw.http.HttpRequest;
+import net.dean.jraw.http.MediaTypes;
+import net.dean.jraw.http.NetworkAccessible;
+import net.dean.jraw.http.NetworkException;
+import net.dean.jraw.http.RestResponse;
 
 import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.SecureRandom;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -18,21 +28,22 @@ import java.util.Map;
  * <ol>
  *     <li>Obtain an authorization URL using {@link #getAuthorizationUrl(String, String, boolean, String...)}.
  *     <li>Point the user's browser to that URL and have the user login and then press either 'yes' or 'no' on the
- *         authentication form. The URL that the browser redirects to will be your app's redirect URI with a few
+ *         authentication form. The URL that the browser redirects to will be your app's redirect URI with some
  *         arguments in the query.
- *     <li>Give this data as well as an instance of {@link Credentials} to
+ *     <li>Provide this data as well as an instance of {@link Credentials} to
  *         {@link #onUserChallenge(String, String, Credentials)}. This method will parse the query arguments and report
- *         any errors. Once the request's integrity has been verified, a request to obtain the OAuth access code will be
- *         made and an instance of {@link OAuthData} retrieved.
+ *         any errors. Once the response's integrity has been verified, a request to obtain the OAuth access code will
+ *         be made and an instance of {@link OAuthData} retrieved.
  * </ol>
  * <p>
  *     Authentication is simpler when the app type is 'script', as this enables the bypassing of showing the initial
  *     authorization URL to the user. However, it comes at the cost of only being able to log into the accounts of users
- *     registered as "developers". To authenticate with a 'script' app, one may simply use
+ *     registered as "developers." To authenticate with a 'script' app, one may simply use
  *     {@link #doScriptApp(Credentials)}.
  * </p>
  */
 public class OAuthHelper implements NetworkAccessible {
+    private static final String GRANT_TYPE = "https://oauth.reddit.com/grants/installed_client";
     private SecureRandom secureRandom;
     private String state;
     private boolean started;
@@ -53,7 +64,7 @@ public class OAuthHelper implements NetworkAccessible {
      * @param permanent Whether or not to request a 'refresh' token which can be exchanged for an additional
      *                  Authorization token in the future.
      * @param scopes OAuth scopes to be requested. A full list of scopes can be found
-     *              <a href="https://www.reddit.com/dev/api/oauth">here</a>
+     *               <a href="https://www.reddit.com/dev/api/oauth">here</a>.
      * @return The URL clients are sent to in order to authorize themselves
      */
     public URL getAuthorizationUrl(String clientId, String redirectUri, boolean permanent, String... scopes) {
@@ -168,20 +179,60 @@ public class OAuthHelper implements NetworkAccessible {
             throw new IllegalArgumentException("This method only authenticates 'script' apps");
         }
 
-        RestResponse response = reddit.execute(reddit.request()
-                .https(true)
-                .host(RedditClient.HOST_SPECIAL)
-                .path("/api/v1/access_token")
+        RestResponse response = reddit.execute(accessTokenRequest(
+                new BasicAuthData(credentials.getClientId(), credentials.getClientSecret()))
                 .post(JrawUtils.mapOf(
                         "grant_type", "password",
                         "username", credentials.getUsername(),
                         "password", credentials.getPassword()
                 ))
                 .sensitiveArgs("password")
-                .basicAuth(new BasicAuthData(credentials.getClientId(), credentials.getClientSecret()))
                 .build());
 
         return new OAuthData(response.getJson());
+    }
+
+    /**
+     * Authenticates using application-only OAuth2 (in a user-less context).
+     * @param credentials The app's credentials. The authentication method must be
+     *                    {@link AuthenticationMethod#isUserless() userless}.
+     * @return The data returned from the authorization request
+     * @throws NetworkException If the request was not successful
+     */
+    public OAuthData doApplicationOnly(Credentials credentials) throws NetworkException, OAuthException {
+        if (credentials.getAuthenticationMethod() != AuthenticationMethod.USERLESS &&
+                credentials.getAuthenticationMethod() != AuthenticationMethod.USERLESS_APP) {
+            throw new IllegalArgumentException("This method is for user-less authorizations only");
+        }
+
+        Map<String, String> args = new HashMap<>();
+        args.put("grant_type", GRANT_TYPE);
+        if (credentials.getAuthenticationMethod().isUserless()) {
+            if (credentials.getDeviceId() == null)
+                throw new NullPointerException("Authentication method was userless but no device ID was present");
+            args.put("device_id", credentials.getDeviceId().toString());
+        }
+
+        RestResponse response = reddit.execute(accessTokenRequest(
+                        new BasicAuthData(credentials.getClientId(), credentials.getClientSecret()))
+                .post(args)
+                .build());
+        checkError(response.getJson());
+        return new OAuthData(response.getJson());
+    }
+
+    private void checkError(JsonNode json) throws OAuthException {
+        if (json.has("error")) {
+            throw new OAuthException(String.format("%s (%s)", json.get("error").asText(), json.get("error_description").asText()));
+        }
+    }
+
+    private HttpRequest.Builder accessTokenRequest(BasicAuthData authData) {
+        return reddit.request()
+                .https(true)
+                .host(RedditClient.HOST)
+                .path("/api/v1/access_token")
+                .basicAuth(authData);
     }
 
     @Override

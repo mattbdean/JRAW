@@ -1,5 +1,7 @@
 package net.dean.jraw.http;
 
+import java.util.UUID;
+
 /**
  * This class is responsible for handling any kind of Reddit user and OAuth2 credentials
  */
@@ -9,14 +11,21 @@ public final class Credentials {
     private final String password;
     private final String clientId;
     private final String clientSecret;
+    private final UUID deviceId;
 
     private Credentials(AuthenticationMethod authenticationMethod, String username, String password, String clientId,
                        String clientSecret) {
+        this(authenticationMethod, username, password, clientId, clientSecret, null);
+    }
+
+    public Credentials(AuthenticationMethod authenticationMethod, String username, String password, String clientId,
+                       String clientSecret, UUID deviceId) {
         this.authenticationMethod = authenticationMethod;
         this.username = username;
         this.password = password;
         this.clientId = clientId;
         this.clientSecret = clientSecret;
+        this.deviceId = deviceId;
     }
 
     /**
@@ -54,6 +63,14 @@ public final class Credentials {
     }
 
     /**
+     * Gets a UUID that is unique for every device. Only non-null when instantiated using
+     * {@link #userlessApp(String, UUID)}.
+     */
+    public UUID getDeviceId() {
+        return deviceId;
+    }
+
+    /**
      * Creates new new Credentials object for "normal" (non-OAuth2) authentication
      * @param username The username
      * @param password The password
@@ -77,7 +94,7 @@ public final class Credentials {
     }
 
     /**
-     * Creates a new Credentails object for a Reddit app whose type is 'web app'
+     * Creates a new Credentials object for a Reddit app whose type is 'web app'
      * @param username The username
      * @param password The password
      * @param clientId The publicly-available app ID
@@ -89,7 +106,7 @@ public final class Credentials {
     }
 
     /**
-     * Creates a new Credentails object for a Reddit app whose type is 'web app'
+     * Creates a new Credentials object for a Reddit app whose type is 'web app'
      * @param username The username
      * @param password The password
      * @param clientId The publicly-available app ID
@@ -98,5 +115,24 @@ public final class Credentials {
      */
     public static Credentials webapp(String username, String password, String clientId, String clientSecret) {
         return new Credentials(AuthenticationMethod.WEBAPP, username, password, clientId, clientSecret);
+    }
+
+    /**
+     * Creates a new Credentials object for using the API in a user-less context.
+     * @see AuthenticationMethod#USERLESS
+     */
+    public static Credentials userless(String clientId, String clientSecret, UUID deviceId) {
+        return new Credentials(AuthenticationMethod.USERLESS, null, null, clientId, clientSecret, deviceId);
+    }
+
+    /**
+     * Creates a new Credentials object for using the API in a user-less context on an installed application.
+     * @param deviceId The UUID unique to this device
+     * @see AuthenticationMethod#USERLESS_APP
+     */
+    public static Credentials userlessApp(String clientId, UUID deviceId) {
+        // Use an empty string as the client secret because "The 'password' for non-confidential clients
+        // (installed apps) is an empty string". See https://github.com/reddit/reddit/wiki/OAuth2#token-retrieval
+        return new Credentials(AuthenticationMethod.USERLESS_APP, null, null, clientId, "", deviceId);
     }
 }

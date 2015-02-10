@@ -91,32 +91,36 @@ public class RedditOAuth2Client extends RedditClient {
 
     @Override
     public LoggedInAccount login(Credentials credentials) throws NetworkException, ApiException {
-        if (!credentials.getAuthenticationMethod().isOAuth2()) {
-            throw new IllegalArgumentException("Credentials are not for OAuth2");
+        switch (credentials.getAuthenticationMethod()) {
+            case SCRIPT:
+                return onAuthorized(authHelper.doScriptApp(credentials), credentials);
+            case USERLESS:
+            case USERLESS_APP:
+                return onAuthorized(authHelper.doApplicationOnly(credentials), credentials);
+            default:
+                throw new IllegalArgumentException("Only 'script' app types and userless authentication is supported by " +
+                        "this method. Please use getOAuthHelper() instead to log in.");
         }
-        if (credentials.getAuthenticationMethod() != AuthenticationMethod.SCRIPT) {
-            throw new IllegalArgumentException("Only 'script' app types supported on this method. Please use " +
-                    "getOAuthHelper() instead to log in.");
-        }
-
-        return onAuthorized(authHelper.doScriptApp(credentials), credentials);
     }
 
     /**
      * Signifies that a successful authorization has been made
      * @param data The AuthData retrieved after requesting the access token
      * @param credentials The credentials used to retrieve this access token
-     * @return The currently authenticated user
      * @throws NetworkException If the request to retrieve the authenticated user's data was not successful
      */
     public LoggedInAccount onAuthorized(OAuthData data, Credentials credentials) throws NetworkException {
         this.authData = data;
         httpAdapter.getDefaultHeaders().put(HEADER_AUTHORIZATION, "bearer " + authData.getAccessToken());
 
-        LoggedInAccount me = me();
-        this.authenticatedUser = me.getFullName();
         this.authMethod = credentials.getAuthenticationMethod();
-        return me;
+        if (!authMethod.isUserless()) {
+            // Userless authentication 401's at /api/v1/me
+            LoggedInAccount me = me();
+            this.authenticatedUser = me.getFullName();
+            return me;
+        }
+        return null;
     }
 
     @Override
@@ -142,6 +146,11 @@ public class RedditOAuth2Client extends RedditClient {
     }
 
     @Override
+    public boolean isLoggedIn() {
+        return super.isLoggedIn() && authData != null;
+    }
+
+    @Override
     public LoggedInAccount register(String username, String password, String email, Captcha captcha, String captchaAttempt) throws NetworkException, ApiException {
         throw new UnsupportedOperationException("Not available through OAuth2");
     }
@@ -153,12 +162,13 @@ public class RedditOAuth2Client extends RedditClient {
      * @throws NetworkException If the request was not successful
      */
     public void revokeToken(Credentials creds) throws NetworkException {
+        if (!isLoggedIn())
+            return;
         execute(request()
-                .host(HOST_SPECIAL)
+                .host(HOST)
                 .path("/api/v1/revoke_token")
                 .post(JrawUtils.mapOf(
-                        "token", authData.getAccessToken(),
-                        "token_type_hint", "access_token"
+                        "token", authData.getAccessToken()
                 )).basicAuth(new BasicAuthData(creds.getClientId(), creds.getClientSecret()))
                 .build());
 
@@ -178,7 +188,7 @@ public class RedditOAuth2Client extends RedditClient {
         }
         RestResponse response = execute(request()
                 .https(true)
-                .host(RedditClient.HOST_SPECIAL)
+                .host(RedditClient.HOST)
                 .path("/api/v1/access_token")
                 .post(JrawUtils.mapOf(
                         "grant_type", "refresh_token",

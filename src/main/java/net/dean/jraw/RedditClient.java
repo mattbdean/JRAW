@@ -41,9 +41,6 @@ public class RedditClient extends RestClient {
     /** The host that will be used to execute OAuth requests */
     public static final String HOST_OAUTH = "oauth.reddit.com";
 
-    /** The host that will be used for OAuth authorizations, and preferences */
-    public static final String HOST_SPECIAL = "ssl.reddit.com";
-
     /** The name of the header that will be assigned upon a successful standard login */
     private static final String HEADER_MODHASH = "X-Modhash";
 

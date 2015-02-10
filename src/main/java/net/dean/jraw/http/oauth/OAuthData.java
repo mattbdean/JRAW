@@ -58,7 +58,7 @@ public class OAuthData extends JsonModel {
      * Gets the token which may be exchanged for another access token, granted one was requested during the time of
      * authorization
      */
-    @JsonProperty
+    @JsonProperty(nullable = true)
     public String getRefreshToken() {
         return data("refresh_token");
     }
