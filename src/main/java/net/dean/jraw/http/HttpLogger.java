@@ -97,10 +97,14 @@ public class HttpLogger {
         for (String key : headers.names()) {
             map.put(key, headers.get(key));
         }
-        logMap("headers", map, null);
+        logMap("headers", map, null, ": ");
     }
 
     private void logMap(String header, Map<String, String> data, String[] sensitiveKeys) {
+        logMap(header, data, sensitiveKeys, "=");
+    }
+
+    private void logMap(String header, Map<String, String> data, String[] sensitiveKeys, String separator) {
         if (isEnabled(ALPHABETIZE_MAPS)) {
             Map<String, String> unsorted = data;
             data = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
@@ -116,9 +120,10 @@ public class HttpLogger {
         String indent = getIndent(header);
         int counter = 0;
         for (Map.Entry<String, String> entry : data.entrySet()) {
-            l.info("{}{}={}{}",
+            l.info("{}{}{}{}{}",
                     counter != 0 ? indent : header, // If the first one, output the header, otherwise indent
                     JrawUtils.urlDecode(entry.getKey()),
+                    separator,
                     // Censor the value if need be
                     contains(entry.getKey(), sensitiveKeys) ? CENSOR : JrawUtils.urlDecode(entry.getValue()),
                     counter == data.size() - 1 ? '}' : ','); // Use a comma if there are more, else a closing bracket
@@ -166,7 +171,7 @@ public class HttpLogger {
      * $method $url
      *     form-data: {$key1=$val2,
      *                 $key2=$val2}
-     *     headers: {$key1=$val1}
+     *     headers: {$key1: $val1}
      * }</pre>
      *
      * Where {@code $requestDescriptor} is the combination of the HTTP method and URL (ex: "POST http://www.example.com").
@@ -206,8 +211,8 @@ public class HttpLogger {
      *
      * <pre>{@code
      * $protocol $code $message
-     *     headers: {$key1=$val1,
-     *               $key2=$val2}
+     *     headers: {$key1: $val1,
+     *               $key2: $val2}
      * }</pre>
      *
      * @param r The response to log
