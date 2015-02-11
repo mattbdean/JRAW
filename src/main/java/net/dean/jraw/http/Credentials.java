@@ -71,16 +71,6 @@ public final class Credentials {
     }
 
     /**
-     * Creates new new Credentials object for "normal" (non-OAuth2) authentication
-     * @param username The username
-     * @param password The password
-     * @return A new Credentials
-     */
-    public static Credentials standard(String username, String password) {
-        return new Credentials(AuthenticationMethod.STANDARD, username, password, null, null);
-    }
-
-    /**
      * Creates a new Credentials object for a Reddit app whose type is 'installed app'
      * @param username The username
      * @param password The password

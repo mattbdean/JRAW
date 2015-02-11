@@ -69,35 +69,7 @@ javadoc {
 }
 
 test {
-    useTestNG {
-        def travisPR = true
-        try {
-            // "$TRAVIS_PULL_REQUEST" will be an integer representing the pull request number
-            Integer.parseInt("$System.env.TRAVIS_PULL_REQUEST")
-        } catch (ignored) {
-            travisPR = false
-        }
-
-        def testPackage = "net.dean.jraw.test" // Defaults to just non-auth tests
-
-        if (travisPR) {
-            println "Build detected as a Travis-CI pull request build."
-            println "Only tests that do not require authentication will run."
-            println "Expect a major decrease in code coverage."
-        } else {
-            // Include all tests
-            testPackage += ".*"
-        }
-
-        // Generate a test suite based on the if this is a Travis-CI pull request
-        suiteXmlBuilder().suite(name: 'JRAW-suite') {
-            test(name: 'JRAW-test') {
-                packages() {
-                    'package'(name: testPackage)
-                }
-            }
-        }
-    }
+    useTestNG()
 
     testLogging {
         // Show stderr and stdout (useful for exceptions)

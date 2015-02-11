@@ -1,5 +1,6 @@
 package net.dean.jraw.http.oauth;
 
+import net.dean.jraw.http.AuthenticationMethod;
 import net.dean.jraw.models.JsonModel;
 import net.dean.jraw.models.meta.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -11,14 +12,16 @@ import java.util.Date;
  * <a href="https://github.com/reddit/reddit/wiki/OAuth2#token-retrieval">here</a> for an example.
  */
 public class OAuthData extends JsonModel {
+    private final AuthenticationMethod method;
 
     /**
      * Instantiates a new AuthData
      *
      * @param dataNode The node to parse data from
      */
-    public OAuthData(JsonNode dataNode) {
+    public OAuthData(AuthenticationMethod method, JsonNode dataNode) {
         super(dataNode);
+        this.method = method;
     }
 
     @JsonProperty
@@ -61,5 +64,9 @@ public class OAuthData extends JsonModel {
     @JsonProperty(nullable = true)
     public String getRefreshToken() {
         return data("refresh_token");
+    }
+
+    public AuthenticationMethod getAuthenticationMethod() {
+        return method;
     }
 }

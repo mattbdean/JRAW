@@ -1,4 +1,4 @@
-package net.dean.jraw.test.auth;
+package net.dean.jraw.test;
 
 import net.dean.jraw.ApiException;
 import net.dean.jraw.JrawUtils;
@@ -23,7 +23,7 @@ import static org.testng.Assert.fail;
 /**
  * This class tests all concrete subclasses of {@link net.dean.jraw.paginators.Paginator}
  */
-public class PaginationTest extends AuthenticatedRedditTest {
+public class PaginationTest extends RedditTest {
     private MultiRedditManager manager = new MultiRedditManager(reddit);
 
     @Test
@@ -186,7 +186,7 @@ public class PaginationTest extends AuthenticatedRedditTest {
 
     @Test
     public void testImportantUserPaginator() {
-        RedditClient[] clientsToTest = {reddit, redditOAuth2};
+        RedditClient[] clientsToTest = {reddit, reddit};
         for (RedditClient client : clientsToTest) {
             for (String where : new String[] {"friends", "blocked"}) {
                 ImportantUserPaginator paginator = Paginators.importantUsers(client, where);

@@ -1,4 +1,4 @@
-package net.dean.jraw.test.auth;
+package net.dean.jraw.test;
 
 import net.dean.jraw.ApiException;
 import net.dean.jraw.JrawUtils;
@@ -27,7 +27,7 @@ import static org.testng.Assert.*;
 /**
  * This class tests methods that require authentication, such as voting, saving, hiding, and posting.
  */
-public class AccountManagerTest extends AuthenticatedRedditTest {
+public class AccountManagerTest extends RedditTest {
     private static final String SUBMISSION_ID = "2kx1ly";
     private static final String COMMENT_ID = "clpgpjk";
     private static String CLIENT_ID = "0fehncPayYTIIg";
@@ -134,7 +134,8 @@ public class AccountManagerTest extends AuthenticatedRedditTest {
 
             // Reply to a submission
             this.newCommentId = account.reply(submission, replyText);
-            assertTrue(JrawUtils.isFullName(newCommentId));
+            // Since only the ID is returned, test the fullname
+            assertTrue(JrawUtils.isFullName("t1_" + newCommentId));
         } catch (ApiException e) {
             handlePostingQuota(e);
         } catch (NetworkException e) {

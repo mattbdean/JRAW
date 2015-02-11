@@ -169,9 +169,11 @@ public class ModerationManager extends AbstractManager {
 			args.put("link", submission.getFullName());
 		} else {
 			if (username == null) {
-				if (reddit.getAuthenticationMethod() == AuthenticationMethod.NONE) {
+				if (reddit.getAuthenticationMethod() == AuthenticationMethod.NOT_YET) {
 					throw new IllegalArgumentException("Not logged in and both submission and username were null");
 				}
+                if (!reddit.hasActiveUserContext())
+                    throw new IllegalStateException("Cannot set the flair for self because there is no active user context");
 				username = reddit.getAuthenticatedUser();
 			}
 			args.put("name", username);

@@ -7,14 +7,14 @@ import net.dean.jraw.JrawUtils;
 import java.util.Map;
 
 /**
- * Thrown when an error relating to authenticing with OAuth2 presents itself
+ * Thrown when an error relating to authenticating with OAuth2 presents itself
  */
 public final class OAuthException extends ApiException {
     public static final Map<String, String> REASONS = ImmutableMap.copyOf(JrawUtils.mapOf(
             "access_denied", "User chose not to grant permission",
             "unsupported_response_type", "Invalid 'response_type' parameter in initial authorization",
             "invalid_scope", "Invalid scope",
-            "invalid_request", "Invalid request. Please use the URL provided by OAuthorizationFlow.getAuthorizationUrl()"
+            "invalid_request", "Invalid request. Please use the URL provided by OAuthHelper.getAuthorizationUrl()"
     ));
 
     /**

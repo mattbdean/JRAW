@@ -1,4 +1,4 @@
-package net.dean.jraw.test.auth;
+package net.dean.jraw.test;
 
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.managers.WikiManager;
@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Tests anything and everything related to wikis.
  */
-public class WikiManagerTest extends AuthenticatedRedditTest {
+public class WikiManagerTest extends RedditTest {
     private WikiManager manager;
 
     public WikiManagerTest() {

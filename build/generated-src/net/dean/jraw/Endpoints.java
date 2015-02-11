@@ -17,16 +17,6 @@ public enum Endpoints {
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_captcha_%7Biden%7D">{@code GET /captcha/{iden}}</a>" included in the "(any scope)" scope */
     CAPTCHA_IDEN("GET /captcha/{iden}", "(any scope)"),
 
-    ///////// (not available through oauth) /////////
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_login">{@code POST /api/login}</a>" included in the "(not available through oauth)" scope */
-    LOGIN("POST /api/login", "(not available through oauth)"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_api_me.json">{@code GET /api/me.json}</a>" included in the "(not available through oauth)" scope */
-    ME("GET /api/me.json", "(not available through oauth)"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#POST_api_register">{@code POST /api/register}</a>" included in the "(not available through oauth)" scope */
-    REGISTER("POST /api/register", "(not available through oauth)"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api#GET_api_username_available.json">{@code GET /api/username_available.json}</a>" included in the "(not available through oauth)" scope */
-    USERNAME_AVAILABLE("GET /api/username_available.json", "(not available through oauth)"),
-
     ///////// account /////////
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#PATCH_api_v1_me_prefs">{@code PATCH /api/v1/me/prefs}</a>" included in the "account" scope */
     OAUTH_ME_PREFS_PATCH("PATCH /api/v1/me/prefs", "account"),

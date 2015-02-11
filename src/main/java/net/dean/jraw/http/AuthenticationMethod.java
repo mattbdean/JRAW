@@ -6,12 +6,8 @@ import net.dean.jraw.http.oauth.AppType;
  * A list of ways a client can authenticate themselves using Reddit's API
  */
 public enum AuthenticationMethod {
-    /** No authentication. */
-    NONE,
-    /**
-     * Non-OAuth2 authentication.
-     */
-    STANDARD,
+    /** Not yet authenticated. */
+    NOT_YET,
     /** OAuth2 authentication on a website. See {@link AppType#WEB} for more. */
     WEBAPP(AppType.WEB),
     /** OAuth2 authentication on an installed app. See {@link AppType#INSTALLED} for more. */

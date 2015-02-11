@@ -155,12 +155,32 @@ public class OAuthHelper implements NetworkAccessible {
                     ))
                     .basicAuth(new BasicAuthData(creds.getClientId(), creds.getClientSecret()))
                     .build());
-            return new OAuthData(response.getJson());
+            return new OAuthData(creds.getAuthenticationMethod(), response.getJson());
         } catch (NetworkException e) {
             if (e.getCode() == 401) {
                 throw new OAuthException("Invalid client ID/secret", e);
             }
             throw e;
+        }
+    }
+
+    /**
+     * Authorizes a 'script' app or any other in application-only (user-less) mode.
+     * @return A new OAuthData representing the access token response
+     * @throws NetworkException If the request was not successful. If the HTTP status code is 403, then it is likely
+     *                          that the Credentials object provided had incorrect data.
+     * @throws OAuthException If the API returned a JSON error. Only thrown when using application-only authentication.
+     */
+    public OAuthData easyAuth(Credentials creds) throws NetworkException, OAuthException {
+        switch (creds.getAuthenticationMethod()) {
+            case SCRIPT:
+                return doScriptApp(creds);
+            case USERLESS:
+            case USERLESS_APP:
+                return doApplicationOnly(creds);
+            default:
+                throw new IllegalArgumentException("Only 'script' app types and userless authentication is supported by " +
+                        "this method. Please use getOAuthHelper() instead to log in.");
         }
     }
 
@@ -174,7 +194,7 @@ public class OAuthHelper implements NetworkAccessible {
      * @return The data returned from the authorization request
      * @throws NetworkException If the request was not successful
      */
-    public OAuthData doScriptApp(Credentials credentials) throws NetworkException {
+    private OAuthData doScriptApp(Credentials credentials) throws NetworkException {
         if (credentials.getAuthenticationMethod() != AuthenticationMethod.SCRIPT) {
             throw new IllegalArgumentException("This method only authenticates 'script' apps");
         }
@@ -188,8 +208,7 @@ public class OAuthHelper implements NetworkAccessible {
                 ))
                 .sensitiveArgs("password")
                 .build());
-
-        return new OAuthData(response.getJson());
+        return new OAuthData(credentials.getAuthenticationMethod(), response.getJson());
     }
 
     /**
@@ -199,7 +218,7 @@ public class OAuthHelper implements NetworkAccessible {
      * @return The data returned from the authorization request
      * @throws NetworkException If the request was not successful
      */
-    public OAuthData doApplicationOnly(Credentials credentials) throws NetworkException, OAuthException {
+    private OAuthData doApplicationOnly(Credentials credentials) throws NetworkException, OAuthException {
         if (credentials.getAuthenticationMethod() != AuthenticationMethod.USERLESS &&
                 credentials.getAuthenticationMethod() != AuthenticationMethod.USERLESS_APP) {
             throw new IllegalArgumentException("This method is for user-less authorizations only");
@@ -218,7 +237,7 @@ public class OAuthHelper implements NetworkAccessible {
                 .post(args)
                 .build());
         checkError(response.getJson());
-        return new OAuthData(response.getJson());
+        return new OAuthData(credentials.getAuthenticationMethod(), response.getJson());
     }
 
     private void checkError(JsonNode json) throws OAuthException {
@@ -230,7 +249,7 @@ public class OAuthHelper implements NetworkAccessible {
     private HttpRequest.Builder accessTokenRequest(BasicAuthData authData) {
         return reddit.request()
                 .https(true)
-                .host(RedditClient.HOST)
+                .host(RedditClient.HOST_SPECIAL)
                 .path("/api/v1/access_token")
                 .basicAuth(authData);
     }

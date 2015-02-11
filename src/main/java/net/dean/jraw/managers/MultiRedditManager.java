@@ -132,6 +132,8 @@ public class MultiRedditManager extends AbstractManager {
      * @throws ApiException If the Reddit API returned an error
      */
     public void copy(String sourceName, String destName) throws NetworkException, ApiException {
+        if (!reddit.hasActiveUserContext())
+            throw new IllegalStateException("Cannot set the flair for self because there is no active user context");
         copy(reddit.getAuthenticatedUser(), sourceName, destName);
     }
 
@@ -250,6 +252,8 @@ public class MultiRedditManager extends AbstractManager {
      * @throws ApiException If the multi does not exist
      */
     public MultiReddit get(String name) throws NetworkException, ApiException {
+        if (!reddit.hasActiveUserContext())
+            throw new IllegalStateException("Cannot set the flair for self because there is no active user context");
         return get(reddit.getAuthenticatedUser(), name);
     }
 
@@ -284,6 +288,8 @@ public class MultiRedditManager extends AbstractManager {
      */
     @EndpointImplementation(Endpoints.MULTI_MULTIPATH_DESCRIPTION_GET)
     public String getDescription(String multiName) throws NetworkException, ApiException {
+        if (!reddit.hasActiveUserContext())
+            throw new IllegalStateException("Cannot set the flair for self because there is no active user context");
         return getDescription(reddit.getAuthenticatedUser(), multiName);
     }
 
@@ -318,6 +324,8 @@ public class MultiRedditManager extends AbstractManager {
      * @return The multireddit's path
      */
     private String getMultiPath(String multiName) {
+        if (!reddit.hasActiveUserContext())
+            throw new IllegalStateException("Cannot set the flair for self because there is no active user context");
         return getMultiPath(reddit.getAuthenticatedUser(), multiName);
     }
 

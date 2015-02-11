@@ -1,4 +1,4 @@
-package net.dean.jraw.test.auth;
+package net.dean.jraw.test;
 
 import net.dean.jraw.ApiException;
 import net.dean.jraw.http.NetworkException;
@@ -9,7 +9,7 @@ import net.dean.jraw.paginators.InboxPaginator;
 import net.dean.jraw.paginators.Paginators;
 import org.testng.annotations.Test;
 
-public class InboxManagerTest extends AuthenticatedRedditTest {
+public class InboxManagerTest extends RedditTest {
     private InboxManager inbox;
 
     public InboxManagerTest() {

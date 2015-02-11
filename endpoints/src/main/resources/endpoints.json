@@ -1,10 +1,4 @@
 {
-  "(not available through oauth)": [
-    "POST /api/login",
-    "POST /api/register",
-    "GET /api/me.json",
-    "GET /api/username_available.json"
-  ],
   "(any scope)": [
     "POST /api/friend",
     "GET /api/needs_captcha.json",

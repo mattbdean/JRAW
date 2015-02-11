@@ -1,11 +1,10 @@
-package net.dean.jraw.test.auth;
+package net.dean.jraw.test;
 
 import net.dean.jraw.ApiException;
 import net.dean.jraw.JrawUtils;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.managers.MultiRedditManager;
 import net.dean.jraw.models.MultiReddit;
-import net.dean.jraw.test.SetupRequiredException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -17,7 +16,7 @@ import static org.testng.Assert.*;
 /**
  * This class tests the {@link MultiRedditManager} class.
  */
-public class MultiRedditTest extends AuthenticatedRedditTest {
+public class MultiRedditTest extends RedditTest {
     private static final String MULTI_NAME = "jraw_testing";
     private static final List<String> INITIAL_MULTIS = Arrays.asList("programming", "java", "git");
 
