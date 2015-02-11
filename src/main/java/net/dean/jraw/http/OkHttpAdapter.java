@@ -1,5 +1,6 @@
 package net.dean.jraw.http;
 
+import com.squareup.okhttp.Authenticator;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Protocol;
 import com.squareup.okhttp.Request;
@@ -46,17 +47,26 @@ public final class OkHttpAdapter implements HttpAdapter {
 
     @Override
     public RestResponse execute(HttpRequest request) throws NetworkException, IOException {
-        Request.Builder builder = new Request.Builder()
-                .method(request.getMethod(), request.getBody() == null ? null : new OkHttpRequestBody(request.getBody()))
-                .url(request.getUrl())
-                .headers(request.getHeaders());
+        if (request.isUsingBasicAuth()) {
+            http.setAuthenticator(new BasicAuthenticator(request.getBasicAuthData()));
+        }
 
-        Response response = http.newCall(builder.build()).execute();
-        if (!response.isSuccessful())
-            throw new NetworkException(response.code());
+        try {
+            Request.Builder builder = new Request.Builder()
+                    .method(request.getMethod(), request.getBody() == null ? null : new OkHttpRequestBody(request.getBody()))
+                    .url(request.getUrl())
+                    .headers(request.getHeaders());
 
-        return new RestResponse(request, response.body().source().inputStream(), response.headers(), response.code(),
-                response.message(), response.protocol().toString().toUpperCase());
+            Response response = http.newCall(builder.build()).execute();
+            if (!response.isSuccessful())
+                throw new NetworkException(response.code());
+
+            return new RestResponse(request, response.body().source().inputStream(), response.headers(), response.code(),
+                    response.message(), response.protocol().toString().toUpperCase());
+        } finally {
+            // Recover by removing the BasicAuthenticator
+            http.setAuthenticator(null);
+        }
     }
 
     @Override
@@ -121,16 +131,6 @@ public final class OkHttpAdapter implements HttpAdapter {
     }
 
     @Override
-    public void authenticate(BasicAuthData authData) {
-        http.setAuthenticator(new BasicAuthenticator(authData.getUsername(), authData.getPassword()));
-    }
-
-    @Override
-    public void deauthenticate() {
-        http.setAuthenticator(null);
-    }
-
-    @Override
     public Map<String, String> getDefaultHeaders() {
         return defaultHeaders;
     }
@@ -162,6 +162,30 @@ public final class OkHttpAdapter implements HttpAdapter {
         @Override
         public void writeTo(BufferedSink sink) throws IOException {
             mirror.writeTo(sink);
+        }
+    }
+
+    /**
+     * This class is responsible for doing basic HTTP authentication. See
+     * <a href="http://tools.ietf.org/html/rfc2617">RFC 2617</a> for more details.
+     */
+    private static class BasicAuthenticator implements Authenticator {
+        private final BasicAuthData data;
+
+        public BasicAuthenticator(BasicAuthData data) {
+            this.data = data;
+        }
+
+        @Override
+        public Request authenticate(Proxy proxy, Response response) throws IOException {
+            String credential = com.squareup.okhttp.Credentials.basic(data.getUsername(), data.getPassword());
+            return response.request().newBuilder().header("Authorization", credential).build();
+        }
+
+        @Override
+        public Request authenticateProxy(Proxy proxy, Response response) throws IOException {
+            String credential = com.squareup.okhttp.Credentials.basic(data.getUsername(), data.getPassword());
+            return response.request().newBuilder().header("Proxy-Authorization", credential).build();
         }
     }
 }

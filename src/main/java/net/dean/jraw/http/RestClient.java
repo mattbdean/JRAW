@@ -102,10 +102,6 @@ public abstract class RestClient implements HttpClient {
 
     @Override
     public RestResponse execute(HttpRequest request) throws NetworkException {
-        if (request.isUsingBasicAuth()) {
-            httpAdapter.authenticate(request.getBasicAuthData());
-        }
-
         Headers.Builder builder = request.getHeaders().newBuilder();
         for (Map.Entry<String, String> defaultHeader : httpAdapter.getDefaultHeaders().entrySet()) {
             builder.add(defaultHeader.getKey(), defaultHeader.getValue());
@@ -141,8 +137,6 @@ public abstract class RestClient implements HttpClient {
             return response;
         } catch (IOException e) {
             throw new NetworkException("Could not execute the request: " + request, e);
-        } finally {
-            httpAdapter.deauthenticate();
         }
     }
 

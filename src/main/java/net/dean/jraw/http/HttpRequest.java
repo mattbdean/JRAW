@@ -375,12 +375,6 @@ public final class HttpRequest {
          *                                  host.
          */
         public HttpRequest build() {
-            // Check for errors
-            if (basicAuthData != null && !protocol.equals("https"))
-                throw new IllegalArgumentException("Refusing to send credentials unencrypted");
-            if (host == null || host.isEmpty())
-                throw new IllegalArgumentException("Missing host");
-
             // Set defaults
             if (method == null)
                 method = DEFAULT_VERB;
@@ -390,6 +384,12 @@ public final class HttpRequest {
                 expectedMediaType = DEFAULT_EXPECTED_TYPE;
             if (path == null)
                 path = DEFAULT_PATH;
+
+            // Check for errors
+            if (basicAuthData != null && !protocol.equals("https"))
+                throw new IllegalArgumentException("Refusing to use HTTP Basic Auth without HTTPS");
+            if (host == null || host.isEmpty())
+                throw new IllegalArgumentException("Missing host");
 
             // Substitute path parameters
             String effectivePath = path;

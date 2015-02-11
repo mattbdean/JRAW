@@ -12,12 +12,13 @@ import java.util.concurrent.TimeUnit;
  */
 public interface HttpAdapter {
     /**
-     * Executes an HTTP request.
+     * Executes an HTTP request. A fully functional HttpAdapter should support all features described by
+     * {@link HttpRequest}. GET, POST, PATCH, PUT, and DELETE should all be supported, as well as HTTP Basic
+     * Authentication and sending headers.
      *
-     * @param request A model containing all necessary data
      * @return A RestResponse from the resulting request
      * @throws IOException If an implementation-specific error occurred.
-     * @throws NetworkException If the request was not successful. A request is considered unsuccessful if the HTTP
+     * @throws NetworkException If the request was not successful. A request is considered successful if the HTTP
      *                          status code is less than 300 and greater than or equal to 200.
      */
     public RestResponse execute(HttpRequest request) throws NetworkException, IOException;
@@ -87,18 +88,6 @@ public interface HttpAdapter {
      * {@link CookieHandler#setDefault(CookieHandler)} in addition.
      */
     public void setCookieManager(CookieManager manager);
-
-    /**
-     * Sets the username and password to use when a RestRequest is using HTTP Basic Authentication. These credentials
-     * should not be revoked until {@link #deauthenticate()} is called.
-     */
-    public void authenticate(BasicAuthData authData);
-
-    /**
-     * Revokes the current HTTP Basic Authentication credentials. HTTP Basic Authentication should not be used until
-     * {@link #authenticate(BasicAuthData)} is called.
-     */
-    public void deauthenticate();
 
     /** Gets a not-null, mutable Map of the headers that will be sent with every new HTTP request. */
     public Map<String, String> getDefaultHeaders();
