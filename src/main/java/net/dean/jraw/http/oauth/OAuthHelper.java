@@ -86,7 +86,7 @@ public class OAuthHelper implements NetworkAccessible {
                         "state", state,
                         "redirect_uri", redirectUri,
                         "duration", permanent ? "permanent" : "temporary",
-                        "scope", JrawUtils.join(scopes)
+                        "scope", JrawUtils.join(' ', scopes)
                 )).build();
         this.started = true;
         return r.getUrl();
