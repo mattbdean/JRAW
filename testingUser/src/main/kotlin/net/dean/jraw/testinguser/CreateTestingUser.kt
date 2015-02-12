@@ -13,10 +13,9 @@ import java.io.File
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import net.dean.jraw.managers.MultiRedditManager
 import net.dean.jraw.models.Captcha
-import net.dean.jraw.ApiException
 import java.io.IOException
 import com.fasterxml.jackson.databind.ObjectWriter
-import net.dean.jraw.http.oauth.AppType
+import net.dean.jraw.http.NetworkException
 
 /**
  * This class will create a Reddit user and set up everything you need to start testing with JRAW. See
@@ -44,9 +43,9 @@ public class CreateTestingUser {
      * Main logic of the script. Provides a high-level overview of the script's processes
      */
     fun `do`(jsonConfig: File) {
-        val (username, password) = registerUser()
+        val username = registerUser()
         val (id, secret) = createOAuth2App()
-        val creds = Credentials.script(username, password, id, secret)
+        val creds = Credentials.script(username, "", id, secret)
         storeData(creds, jsonConfig)
         createSubreddit()
         createMutlireddit()
@@ -68,38 +67,18 @@ public class CreateTestingUser {
      *
      * Returns a Pair of username to password
      */
-    fun registerUser(): Pair<String, String> {
-        ////// STEP 1
-        // "Take a username, password, password verification, optional email, and a captcha attempt and register a new user."
-
-        val username: String
-        val password: String
-
-        println("Registering a new user")
-        while (true) {
-            // Keep looping until the user enters valid information
-            username = getInput(s, "Enter a username", getUniqueUsername(reddit), filter = object : InputFilter {
-                override fun check(str: String): String = if (reddit.isUsernameAvailable(str)) "" else "Username already taken"
-            })
-            password = getInput(s, "Enter a password", getSecureRandom(), filter = object : InputFilter {
-                override fun check(str: String): String {
-                    if (str.length() == 0) return "Password cannot be empty"
+    fun registerUser(): String {
+        // Keep looping until the user enters valid information
+        return getInput(s, "Create a new user at https://www.reddit.com/register", filter = object: InputFilter {
+            override fun check(str: String): String {
+                try {
+                    reddit.getUser(str)
                     return ""
+                } catch (e: NetworkException) {
+                    return "User not found"
                 }
-            })
-            val email = getInput(s, "Enter an email (leave blank for none)")
-            val (captcha, captchaAttempt) = promptForCaptcha()
-
-            try {
-                reddit.register(username, password, email, captcha, captchaAttempt)
-            } catch (e: ApiException) {
-                System.err.println("Failed to ceate a new user: ${e.getMessage()}")
-                continue
             }
-            // Bad practice to echo the password back in plain text?
-            println("Successfully registered user '$username' with password '$password'")
-            return username to password
-        }
+        })
     }
 
     /**
@@ -182,20 +161,6 @@ public class CreateTestingUser {
                                                                      subreddit,
                                                                      "New testing user"), captcha, attempt)
         println("Submitted your first post to /r/jraw_testing2: ${submission.getShortURL()}")
-    }
-
-    /**
-     * Tries to retrieve a unique username. The output will be a random number between 0 and 999,999 appended to the end
-     * of the string "jrawTestUser". For example, "jrawTestUser625741".
-     */
-    fun getUniqueUsername(reddit: RedditClient): String {
-        var username: String
-
-        do {
-            username = "jrawTestUser" + weakRandom.nextInt(1000000)
-        } while (!reddit.isUsernameAvailable(username))
-
-        return username
     }
 
     /**
