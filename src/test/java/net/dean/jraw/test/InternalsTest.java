@@ -152,7 +152,7 @@ public class InternalsTest extends RedditTest {
                         "state", "untestable",
                         "redirect_uri", "http://www.example.com",
                         "duration", "permanent",
-                        "scope", "scope1,scope2"
+                        "scope", "scope1 scope2"
                 ).build();
         HttpRequest actual = HttpRequest.from("GET", helper.getAuthorizationUrl(
                 "myClientId", "http://www.example.com", true, "scope1", "scope2"
