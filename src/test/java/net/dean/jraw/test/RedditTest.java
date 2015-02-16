@@ -115,8 +115,13 @@ public abstract class RedditTest {
     	}
     }
 
-    protected final void validateModel(CommentNode node) {
-        validateModel(node.getComment());
+    /**
+     * Validates all of the CommentNode's children's Comments
+     */
+    protected final void validateModel(CommentNode root) {
+        for (CommentNode node : root.walkTree()) {
+            validateModel(node.getComment());
+        }
     }
 
     protected final <T extends JsonModel> void validateModel(T model) {
