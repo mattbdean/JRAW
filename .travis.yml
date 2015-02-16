@@ -3,13 +3,14 @@ jdk:
 - oraclejdk7
 env:
   global:
+  # Use 'dumb' gradle output, since Gradle uses formatting that Travis can't handle by default
+  - TERM=dumb
+  - USERNAME=jraw_test
   # PASS
   - secure: u0Gmfx91ndH4u32msTaMtMcKSluz6VzQE1mxpwjFha2+mRw7bGmLlkEh6CNfbv9lio2cHP1RN+zmAXq28iQQ4qiOSW5HdfC2M2RzzD9IxQ8rrg4rnHjl3QagfWBltm7QhmgSwVA3gyK1EHNnhUehYhwbSZLD1velBt6je6vQp78=
+  - CLIENT_ID=SoUQNT49ZfuK3w
   # CLIENT_SECRET
   - secure: "DNG7LjzY8Ve4ztiD2WywVNQr9d6+d5sefG8JDQkYqM8vNCXQgNcewhH9tZzVyT+GXQ0gBeOHy6yBopwKPk9JHjBZLp6AdCOVuj/UxDGHSFGxMpDPC8e0v6hTHOJi+pswCKadPnHrt5dpr+G3dzyytqdtHcY2ofAO8GJ/yC3IQHw="
-  - USERNAME=jraw_test
-  - CLIENT_ID=SoUQNT49ZfuK3w
-  - TERM=dumb
   # GIT_NAME and GIT_EMAIL
   - secure: Jn+ssE7+DEnpqxH3BiY5u6b37Uf6op7nrhS30bZ4FsxGSeh4yNBCd4oj8vQn4eG/GDHSL5HmDCpeHMw0Wo6cDYAv/n1ft9IcghO5WGTSYoa2LBrtF4t0468RR447adBOT367PPBD8H/kOFZyyiRaYniA3Bax9K69uVe4B/aUyKI=
   # GIT_USER and GIT_PASS
