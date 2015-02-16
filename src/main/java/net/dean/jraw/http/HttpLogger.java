@@ -6,6 +6,7 @@ import okio.Buffer;
 import org.slf4j.Logger;
 
 import java.io.IOException;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -34,7 +35,7 @@ public class HttpLogger {
      */
     public HttpLogger(Logger logger) {
         this.l = logger;
-        this.components = new HashMap<>();
+        this.components = new EnumMap<>(Component.class);
         for (Component c : Component.values()) {
             components.put(c, true);
         }

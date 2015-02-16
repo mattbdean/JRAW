@@ -215,6 +215,9 @@ public final class JrawUtils {
      * @return A new MediaType
      */
     public static MediaType parseMediaType(String header) {
+        if (header == null || header.trim().length() == 0) {
+            throw new IllegalArgumentException("header cannot be null");
+        }
         if ((header = header.trim()).endsWith(";")) {
             // MediaType.parse() doesn't like a trailing semicolon, remove it
             header = header.substring(0, header.length() - 1);

@@ -18,10 +18,8 @@ public interface HttpAdapter {
      *
      * @return A RestResponse from the resulting request
      * @throws IOException If an implementation-specific error occurred.
-     * @throws NetworkException If the request was not successful. A request is considered successful if the HTTP
-     *                          status code is less than 300 and greater than or equal to 200.
      */
-    public RestResponse execute(HttpRequest request) throws NetworkException, IOException;
+    public RestResponse execute(HttpRequest request) throws IOException;
 
     /**
      * Gets the time in milliseconds the HTTP client will wait while trying to connect before timing out

@@ -24,7 +24,7 @@ public abstract class RestClient implements HttpClient {
     private boolean useHttpsDefault;
     private boolean enforceRatelimit;
     private boolean saveResponseHistory;
-    private boolean requestLogging;
+    private LoggingMode loggingMode;
 
     /**
      * Instantiates a new RestClient
@@ -40,9 +40,10 @@ public abstract class RestClient implements HttpClient {
         this.defaultHost = defaultHost;
         this.saveResponseHistory = false;
         this.logger = new HttpLogger(JrawUtils.logger());
-        this.requestLogging = false;
         this.history = new LinkedHashMap<>();
         this.useHttpsDefault = false;
+        // Never log by default
+        this.loggingMode = LoggingMode.NEVER;
         setUserAgent(userAgent);
         setEnforceRatelimit(requestsPerMinute);
     }
@@ -112,22 +113,31 @@ public abstract class RestClient implements HttpClient {
             if (!rateLimiter.tryAcquire()) {
                 // Could not get a ticket immediately, block until we can
                 double time = rateLimiter.acquire();
-                if (requestLogging) {
+                // We're not sure about whether this will fail, so be on the safe side
+                if (loggingMode == LoggingMode.ALWAYS) {
                     JrawUtils.logger().info("Slept for {} seconds", time);
                 }
             }
         }
 
         try {
-            if (requestLogging)
+            // We're always logging, so we can be proactive and log the request before it's executed
+            if (loggingMode == LoggingMode.ALWAYS)
                 logger.log(request);
 
             RestResponse response = httpAdapter.execute(request);
-            if (requestLogging)
+            // Log the response as well
+            if (loggingMode == LoggingMode.ALWAYS)
                 logger.log(response);
 
+            // Log the request and response if it was not successful
+            if (loggingMode == LoggingMode.ON_FAIL && !response.isSuccessful()) {
+                logger.log(request);
+                logger.log(response);
+            }
+
             if (!JrawUtils.isEqual(response.getType(), request.getExpectedType())) {
-                throw new NetworkException(String.format("Expected Content-Type ('%s/%s') did not match actual Content-Type ('%s/%s')",
+                throw new IllegalStateException(String.format("Expected Content-Type ('%s/%s') did not match actual Content-Type ('%s/%s')",
                         request.getExpectedType().type(), request.getExpectedType().subtype(),
                         response.getType().type(), response.getType().subtype()));
             }
@@ -136,7 +146,7 @@ public abstract class RestClient implements HttpClient {
                 history.put(response, new Date());
             return response;
         } catch (IOException e) {
-            throw new NetworkException("Could not execute the request: " + request, e);
+            throw new RuntimeException("Could not execute the request: " + request, e);
         }
     }
 
@@ -161,13 +171,13 @@ public abstract class RestClient implements HttpClient {
     }
 
     @Override
-    public boolean isLoggingEnabled() {
-        return requestLogging;
+    public LoggingMode getLoggingMode() {
+        return loggingMode;
     }
 
     @Override
-    public void setLoggingEnabled(boolean flag) {
-        this.requestLogging = flag;
+    public void setLoggingMode(LoggingMode mode) {
+        this.loggingMode = mode;
     }
 
     @Override

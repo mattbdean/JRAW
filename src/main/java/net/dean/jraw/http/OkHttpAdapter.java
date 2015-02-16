@@ -46,7 +46,7 @@ public final class OkHttpAdapter implements HttpAdapter {
     }
 
     @Override
-    public RestResponse execute(HttpRequest request) throws NetworkException, IOException {
+    public RestResponse execute(HttpRequest request) throws IOException {
         if (request.isUsingBasicAuth()) {
             http.setAuthenticator(new BasicAuthenticator(request.getBasicAuthData()));
         }
@@ -58,11 +58,13 @@ public final class OkHttpAdapter implements HttpAdapter {
                     .headers(request.getHeaders());
 
             Response response = http.newCall(builder.build()).execute();
-            if (!response.isSuccessful())
-                throw new NetworkException(response.code());
 
-            return new RestResponse(request, response.body().source().inputStream(), response.headers(), response.code(),
-                    response.message(), response.protocol().toString().toUpperCase());
+            return new RestResponse(request,
+                    response.body().source().inputStream(),
+                    response.headers(),
+                    response.code(),
+                    response.message(),
+                    response.protocol().toString().toUpperCase());
         } finally {
             // Recover by removing the BasicAuthenticator
             http.setAuthenticator(null);

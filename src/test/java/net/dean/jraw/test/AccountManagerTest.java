@@ -31,8 +31,6 @@ import static org.testng.Assert.*;
 public class AccountManagerTest extends RedditTest {
     private static final String SUBMISSION_ID = "2kx1ly";
     private static final String COMMENT_ID = "clpgpjk";
-    private static String CLIENT_ID = "0fehncPayYTIIg";
-    private static String DEV_NAME = "jraw_test2";
     private String newSubmssionId;
     private String newCommentId;
 
@@ -49,7 +47,7 @@ public class AccountManagerTest extends RedditTest {
             assertTrue(!submission.isSelfPost());
             assertTrue(submission.getUrl().equals(url.toExternalForm()));
             validateModel(submission);
-            this.newSubmssionId = submission.getFullName();
+            this.newSubmssionId = submission.getId();
         } catch (NetworkException e) {
             handle(e);
         } catch (ApiException e) {
@@ -191,12 +189,11 @@ public class AccountManagerTest extends RedditTest {
         try {
             reddit.getSubmission(newSubmssionId);
         } catch (NetworkException e) {
-            if (e.getCode() != 404) {
+            if (e.getResponse().getStatusCode() != 404) {
                 fail("Did not get a 404 when querying the deleted submission", e);
             }
         }
     }
-
 
     @Test
     public void testSendRepliesToInbox() throws ApiException {

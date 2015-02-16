@@ -8,6 +8,7 @@ import net.dean.jraw.RedditClient;
 import net.dean.jraw.Version;
 import net.dean.jraw.http.AuthenticationMethod;
 import net.dean.jraw.http.Credentials;
+import net.dean.jraw.http.LoggingMode;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.managers.AccountManager;
 import net.dean.jraw.managers.ModerationManager;
@@ -39,7 +40,7 @@ public abstract class RedditTest {
     protected final ModerationManager moderation;
 
     protected RedditTest() {
-        reddit.setLoggingEnabled(true);
+        reddit.setLoggingMode(LoggingMode.ON_FAIL);
         Credentials creds = getCredentials();
         if (!reddit.isLoggedIn()) {
             try {
@@ -63,9 +64,9 @@ public abstract class RedditTest {
     protected void handle(Throwable t) {
         if (t instanceof NetworkException) {
             NetworkException e = (NetworkException) t;
-            if (e.getCode() >= 500 && e.getCode() < 600) {
-                throw new SkipException("Received " + e.getCode() + ", skipping");
-            }
+            int code = e.getResponse().getStatusCode();
+            if (code >= 500 && code < 600)
+                throw new SkipException("Received " + code + ", skipping");
         }
         t.printStackTrace();
         Assert.fail(t.getMessage() == null ? t.getClass().getName() : t.getMessage(), t);

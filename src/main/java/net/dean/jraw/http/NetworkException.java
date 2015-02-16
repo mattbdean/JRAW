@@ -6,44 +6,23 @@ package net.dean.jraw.http;
  * @see com.squareup.okhttp.Response#isSuccessful()
  */
 public class NetworkException extends Exception {
-    private final int code;
-
-    /**
-     * Instantiates a new NetworkException
-     *
-     * @param message The detail message of this Exception
-     */
-    public NetworkException(String message) {
-        super(message);
-        this.code = -1;
-    }
-
-    /**
-     * Instantiates a new NetworkException
-     *
-     * @param message The detail message of this Exception
-     * @param cause   The cause of this Exception
-     */
-    public NetworkException(String message, Throwable cause) {
-        super(message, cause);
-        this.code = -1;
-    }
+    private final RestResponse response;
 
     /**
      * Instantiates a NetworkException
      *
-     * @param httpCode The code that was returned from the request
+     * @param response The cause of this exception
      */
-    public NetworkException(int httpCode) {
-        super(String.format("Request returned non-successful status code (%s)", httpCode));
-        this.code = httpCode;
+    public NetworkException(RestResponse response) {
+        super(String.format("Request returned non-successful status code: %s %s",
+                response.getStatusCode(),
+                response.getStatusMessage()));
+        if (response == null)
+            throw new NullPointerException("response cannot be null");
+        this.response = response;
     }
-    /**
-     * Gets the status code returned by the HTTP request. Will be -1 if a constructor other than
-     * {@link #NetworkException(int)} was used.
-     * @return The status code
-     */
-    public int getCode() {
-        return code;
+
+    public RestResponse getResponse() {
+        return response;
     }
 }

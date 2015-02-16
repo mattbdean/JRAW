@@ -47,15 +47,6 @@ public class HttpAdapterTest {
         assertEquals(response.getStatusCode(), 200);
     }
 
-    @Test(expectedExceptions = NetworkException.class)
-    public void testHandleErrorCode() throws IOException, NetworkException {
-        adapter.execute(new HttpRequest.Builder()
-                .get()
-                .host(HOST)
-                .path("/status/418") // 418 I'm a Teapot
-                .build());
-    }
-
     @Test
     public void testBasicAuth() throws IOException, NetworkException {
         String username = "user123", password = "hunter2";

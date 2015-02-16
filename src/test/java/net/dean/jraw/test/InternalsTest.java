@@ -112,20 +112,6 @@ public class InternalsTest extends RedditTest {
     }
 
     @Test
-    public void testNetworkException() {
-        NetworkException ex = new NetworkException(404);
-        assertEquals(ex.getCode(), 404);
-        assertEquals(ex.getMessage(), "Request returned non-successful status code (404)");
-
-        ex = new NetworkException("message");
-        assertTrue(ex.getCode() == -1);
-
-        NullPointerException cause = new NullPointerException();
-        ex = new NetworkException("message", cause);
-        assertEquals(ex.getCause(), cause);
-    }
-
-    @Test
     public void testOAuthException() {
         OAuthException e = new OAuthException("invalid_scope");
         assertEquals(e.getExplanation(), OAuthException.REASONS.get("invalid_scope"));

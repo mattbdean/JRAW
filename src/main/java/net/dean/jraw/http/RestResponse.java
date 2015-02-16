@@ -44,7 +44,10 @@ public class RestResponse {
     RestResponse(HttpRequest origin, InputStream body, Headers headers, int statusCode, String statusMessage, String protocol) {
         this.origin = origin;
         this.headers = headers;
-        this.type = JrawUtils.parseMediaType(headers.get("Content-Type"));
+        String contentType = headers.get("Content-Type");
+        if (contentType == null)
+            throw new IllegalStateException("No Content-Type header was found");
+        this.type = JrawUtils.parseMediaType(contentType);
         String charset = type.charset().or(StandardCharsets.UTF_8).name();
         this.raw = readContent(body, charset);
         this.statusCode = statusCode;

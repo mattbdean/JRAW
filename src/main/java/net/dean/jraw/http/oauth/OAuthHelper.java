@@ -157,7 +157,7 @@ public class OAuthHelper implements NetworkAccessible {
                     .build());
             return new OAuthData(creds.getAuthenticationMethod(), response.getJson());
         } catch (NetworkException e) {
-            if (e.getCode() == 401) {
+            if (e.getResponse().getStatusCode() == 401) {
                 throw new OAuthException("Invalid client ID/secret", e);
             }
             throw e;

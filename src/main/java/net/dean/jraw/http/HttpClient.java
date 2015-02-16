@@ -33,22 +33,19 @@ public interface HttpClient extends NetworkAccessible {
     public HttpLogger getHttpLogger();
 
     /**
-     * Checks if this RestClient is logging HTTP requests using SLF4J. The full URL, form data, and time spent sleeping
-     * are displayed also (unless it has been marked as sensitive). Enabled by default.
+     * Gets when this HttpClient is logging HTTP requests.
      *
      * @return If requests are being logged
-     * @see HttpLogger
-     */
-    public boolean isLoggingEnabled();
-
-    /**
-     * Sets whether or not to log HTTP requests and responses. The amount of time spent waiting is also displayed.
-     * Enabled by default.
-     *
-     * @param flag Whether or not to log requests
      * @see #getHttpLogger()
      */
-    public void setLoggingEnabled(boolean flag);
+    public LoggingMode getLoggingMode();
+
+    /**
+     * Sets when to log HTTP requests and responses.
+     *
+     * @see #getHttpLogger()
+     */
+    public void setLoggingMode(LoggingMode mode);
 
     /**
      * Sets whether or not {@link HttpRequest.Builder}s returned from {@link #request()} will be executed with HTTPS by
