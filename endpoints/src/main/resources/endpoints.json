@@ -172,7 +172,7 @@
     "GET /subreddits/where",
     "GET /top",
     "GET /user/{username}/about.json",
-    "GET /{article}/duplicates",
+    "GET /duplicates/{article}",
     "GET /{article}/related",
     "GET /sort"
   ],
