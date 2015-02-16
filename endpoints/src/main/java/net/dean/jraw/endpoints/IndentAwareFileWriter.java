@@ -2,8 +2,10 @@ package net.dean.jraw.endpoints;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,7 +20,7 @@ public class IndentAwareFileWriter {
     private Map<Integer, String> cachedIndentation;
 
     public IndentAwareFileWriter(File f, int spacesPerIndent) throws IOException {
-        this.bw = new BufferedWriter(new FileWriter(f));
+        this.bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f), StandardCharsets.UTF_8));
         this.cachedIndentation = new HashMap<>();
 
         StringBuilder sb = new StringBuilder();

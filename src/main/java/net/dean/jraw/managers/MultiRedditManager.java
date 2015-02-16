@@ -238,7 +238,7 @@ public class MultiRedditManager extends AbstractManager {
                 .endpoint(Endpoints.MULTI_MULTIPATH_DELETE, getMultiPath(name).substring(1))
                 .delete()
                 .build();
-        reddit.execute(request).getJson();
+        reddit.execute(request);
 
         // This endpoint does not return any JSON data, so we only have the HTTP code to go off of.
     }
