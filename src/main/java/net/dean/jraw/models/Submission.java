@@ -13,10 +13,7 @@ import java.util.Date;
  */
 @Model(kind = Model.Kind.LINK, serializer = SubmissionSerializer.class, validate = false)
 public class Submission extends PublicContribution {
-    /**
-     * The comments that belong to this link
-     */
-    private Listing<Comment> comments;
+    private CommentNode rootNode;
 
     /**
      * Instantiates a new Submission with no comments
@@ -33,9 +30,9 @@ public class Submission extends PublicContribution {
      * @param dataNode The JsonNode that is used to look up JSON values
      * @param comments The comments that belong to this link
      */
-    public Submission(JsonNode dataNode, Listing<Comment> comments) {
+    public Submission(JsonNode dataNode, CommentNode comments) {
         super(dataNode);
-        this.comments = comments;
+        this.rootNode = comments;
     }
 
     /**
@@ -278,8 +275,8 @@ public class Submission extends PublicContribution {
      * @return This Submission's comments
      */
     @JsonProperty(nullable = true)
-    public Listing<Comment> getComments() {
-        return comments;
+    public CommentNode getComments() {
+        return rootNode;
     }
 
     /**

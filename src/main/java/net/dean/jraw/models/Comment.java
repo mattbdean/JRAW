@@ -34,7 +34,7 @@ public class Comment extends PublicContribution {
     }
 
     /**
-     * Gets who approved this comment, nor null if the logged in user is not a moderator
+     * Gets who approved this comment, or null if the logged in user is not a moderator
      *
      * @return Who approved this comment
      */

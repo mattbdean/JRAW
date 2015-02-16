@@ -11,6 +11,7 @@ import net.dean.jraw.http.Credentials;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.managers.AccountManager;
 import net.dean.jraw.managers.ModerationManager;
+import net.dean.jraw.models.CommentNode;
 import net.dean.jraw.models.JsonModel;
 import net.dean.jraw.models.Listing;
 import net.dean.jraw.models.Subreddit;
@@ -31,7 +32,7 @@ import java.util.List;
  */
 public abstract class RedditTest {
     protected static final RedditClient reddit = new RedditClient(
-            "JRAW v" + Version.get().formatted() + " suite runner by /u/thatJavaNerd");
+            "JRAW v" + Version.get().formatted() + " test suite runner by /u/thatJavaNerd");
     private static Credentials credentials;
     private static ObjectMapper objectMapper = new ObjectMapper();
     protected final AccountManager account;
@@ -112,6 +113,10 @@ public abstract class RedditTest {
     	for (T model : iterable) {
     		validateModel(model);
     	}
+    }
+
+    protected final void validateModel(CommentNode node) {
+        validateModel(node.getComment());
     }
 
     protected final <T extends JsonModel> void validateModel(T model) {

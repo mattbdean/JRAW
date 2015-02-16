@@ -3,14 +3,15 @@ package net.dean.jraw.models;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import net.dean.jraw.ApiException;
-import net.dean.jraw.RedditClient;
-import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.models.meta.JsonProperty;
 import net.dean.jraw.models.meta.Model;
 import net.dean.jraw.models.meta.ModelManager;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 
 /**
  * Represents a listing of Things. A Listing has four main keys: before, after, modhash, and its children. Listing uses
@@ -99,116 +100,6 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
         }
 
         return null;
-    }
-
-    /**
-     * Loads more children into the Listing. The highest level modified will be commentRoot, or
-     * parentSubmission is commentRoot is null. All loaded children are inserted into the comment tree.
-     *
-     * @param parentSubmission The submission all comments are under
-     * @param commentRoot      If loading more comments, the parent comment of this listing or null if the parent is the submission
-     * @param sort             How to sort the recieved comments
-     * @return The array of comments loaded and inserted into the tree
-     * @throws NetworkException
-     * @throws ApiException
-     * @throws IllegalArgumentException If commentRoot
-     */
-    public List<Comment> loadMoreChildren(RedditClient client, Submission parentSubmission, Comment commentRoot,
-                                          CommentSort sort)
-            throws NetworkException, ApiException, IllegalArgumentException {
-        if (commentRoot != null) {
-            // We're loading more comments in a thread
-            if (commentRoot.getReplies() != this) {
-                // The parent's replies should be this listing
-                throw new IllegalArgumentException("commentRoot should be the direct parent of this listing!");
-            }
-        }
-
-        List<Thing> loadedThings = client.getMoreComments(parentSubmission, sort, getMoreChildren());
-        List<Comment> loadedCommentTree = new ArrayList<>();
-        List<Comment> allLoadedComments = new ArrayList<>();
-        List<More> loadedMores = new ArrayList<>();
-
-        for (Thing t : loadedThings) {
-            if (t instanceof Comment) {
-                loadedCommentTree.add((Comment) t);
-                allLoadedComments.add((Comment) t);
-            } else {
-                loadedMores.add((More) t);
-            }
-        }
-
-        formCommentTree(loadedCommentTree, loadedMores);
-
-        if (commentRoot == null) {
-            // Add all of the comments to the submission
-            for (Comment c : loadedCommentTree) {
-                parentSubmission.getComments().addLoaded(c);
-            }
-            if (loadedMores.size() > 0) {
-                parentSubmission.getComments().setMoreChildren(loadedMores.get(0));
-            } else {
-                // More was just loaded
-                parentSubmission.getComments().setMoreChildren(null);
-            }
-        } else {
-            for (Comment c : loadedCommentTree) {
-                commentRoot.getReplies().addLoaded(c);
-            }
-            if (loadedMores.size() > 0) {
-                commentRoot.getReplies().setMoreChildren(loadedMores.get(0));
-            } else {
-                // More was just loaded
-                commentRoot.getReplies().setMoreChildren(null);
-            }
-        }
-
-        return allLoadedComments;
-    }
-
-    /**
-     * Merge the {@link Comment}s and {@link More}s into a tree as far as possible. There should only be at most one
-     * more object left at completion; the More for the root of all the trees formed.
-     *
-     * @param comments The comments to organize into a tree
-     * @param mores    The mores to add into the comment tree
-     * @throws IllegalArgumentException If more than one More was left over, should only be one for the root
-     */
-    public static void formCommentTree(List<Comment> comments, List<More> mores) throws IllegalArgumentException {
-        List<Comment> toAdd = new ArrayList<>(comments);
-        comments.clear();
-        HashMap<String, Comment> commentMap = new HashMap<>();
-
-        for (Comment c : toAdd) {
-            commentMap.put(c.getFullName(), c);
-        }
-
-        while (toAdd.size() > 0) {
-            Comment c = toAdd.get(0);
-            Comment parent = commentMap.get(c.getParentId());
-            if (parent == null) {
-                // It's a base comment
-                comments.add(c);
-            } else {
-                parent.getReplies().addLoaded(c);
-            }
-            toAdd.remove(c);
-        }
-
-        List<More> toRemove = new ArrayList<>();
-        for (More more : mores) {
-            Comment parent = commentMap.get(more.getParentId());
-            if (parent != null) {
-                parent.getReplies().setMoreChildren(more);
-                toRemove.add(more);
-            }
-        }
-        for (More more : toRemove) {
-            mores.remove(more);
-        }
-        if (mores.size() > 1) {
-            throw new IllegalArgumentException("Only one more object should be left after inserting into the comment tree");
-        }
     }
 
     public List<T> getChildren() {

@@ -18,18 +18,17 @@ import net.dean.jraw.models.Account;
 import net.dean.jraw.models.AccountPreferences;
 import net.dean.jraw.models.Award;
 import net.dean.jraw.models.Captcha;
-import net.dean.jraw.models.Comment;
 import net.dean.jraw.models.CommentSort;
 import net.dean.jraw.models.KarmaBreakdown;
 import net.dean.jraw.models.Listing;
 import net.dean.jraw.models.LiveThread;
 import net.dean.jraw.models.LoggedInAccount;
-import net.dean.jraw.models.More;
 import net.dean.jraw.models.Submission;
 import net.dean.jraw.models.Subreddit;
 import net.dean.jraw.models.Thing;
 import net.dean.jraw.models.UserRecord;
 import net.dean.jraw.models.meta.Model;
+import net.dean.jraw.models.meta.SubmissionSerializer;
 import net.dean.jraw.paginators.Paginators;
 import net.dean.jraw.paginators.Sorting;
 import net.dean.jraw.paginators.SubredditPaginator;
@@ -334,13 +333,19 @@ public class RedditClient extends RestClient {
             args.put("limit", Integer.toString(request.limit));
         if (request.focus != null && !JrawUtils.isFullName(request.focus))
             args.put("comment", request.focus);
-        if (request.sort != null)
-            args.put("sort", request.sort.name().toLowerCase());
 
-        return execute(request()
+        CommentSort sort = request.sort;
+        if (sort == null)
+            // Reddit sorts by confidence by default
+            sort = CommentSort.CONFIDENCE;
+        args.put("sort", sort.name().toLowerCase());
+
+
+        RestResponse response = execute(request()
                 .path(String.format("/comments/%s.json", request.id))
                 .query(args)
-                .build()).as(Submission.class);
+                .build());
+        return SubmissionSerializer.withComments(response.getJson(), sort);
     }
 
     /**
@@ -377,9 +382,12 @@ public class RedditClient extends RestClient {
         String path = JrawUtils.getSubredditPath(subreddit, "/random.json");
 
         // Favor path() instead of endpoint() because we have already decided the path above
-        return execute(request()
+        RestResponse response = execute(request()
                 .path(path)
-                .build()).as(Submission.class);
+                .build());
+
+        // We don't really know which sort will be used so just guess Reddit's default
+        return SubmissionSerializer.withComments(response.getJson(), CommentSort.CONFIDENCE);
     }
 
     /**
@@ -516,59 +524,6 @@ public class RedditClient extends RestClient {
         return subreddits;
     }
 
-    /**
-     * Retrieves more comments from the comment tree. Note that the replies are flat, as they do not have a 'replies'
-     * key. The resulting list will also include More objects.
-     *
-     * @param submission The submission where the desired 'more' object is found
-     * @param sort How to sort the returned comments
-     * @param more The More object to retrieve the children of
-     * @return A list of CompactComments that the More object represents
-     * @throws NetworkException
-     * @throws ApiException
-     */
-    @EndpointImplementation(Endpoints.MORECHILDREN)
-    public List<Thing> getMoreComments(Submission submission, CommentSort sort, More more)
-            throws NetworkException, ApiException {
-
-        List<String> moreIds = more.getChildrenIds();
-        StringBuilder ids = new StringBuilder(moreIds.get(0));
-        for (int i = 1; i < moreIds.size(); i++) {
-            String other = moreIds.get(i);
-            ids.append(',').append(other);
-        }
-
-        // POST with a body could be used instead of GET with a query to avoid an unnecessarily long URL, but Reddit
-        // seems to handle it fine.
-        RestResponse response = execute(request()
-                .path(Endpoints.MORECHILDREN.getEndpoint().getUri() + ".json")
-                .query(JrawUtils.mapOf(
-                        "children", ids.toString(),
-                        "link_id", submission.getFullName(),
-                        "sort", sort.name().toLowerCase(),
-                        "api_type", "json"
-                )).build());
-        if (response.hasErrors()) {
-            throw response.getError();
-        }
-
-        JsonNode things = response.getJson().get("json").get("data").get("things");
-        List<Thing> commentList = new ArrayList<>(things.size());
-        for (JsonNode node : things) {
-            String kind = node.get("kind").asText();
-            JsonNode data = node.get("data");
-            if (node.get("kind").asText().equals(Model.Kind.COMMENT.getValue())) {
-                commentList.add(new Comment(data));
-            } else if (node.get("kind").asText().equals(Model.Kind.MORE.getValue())) {
-                commentList.add(new More(data));
-            } else {
-                throw new IllegalArgumentException(String.format("Illegal data type: %s. Expecting %s or %s",
-                        kind, Model.Kind.COMMENT, Model.Kind.MORE));
-            }
-        }
-
-        return commentList;
-    }
 
     /**
      * Gets a list of similar subreddits based on the given ones.
@@ -880,11 +835,11 @@ public class RedditClient extends RestClient {
          * Sets the ID of the comment to focus on. If this comment does not exist, then this parameter is ignored.
          * Otherwise, only one comment tree is returned: the one in which the given comment resides.
          *
-         * @param focus The ID of the comment to focus on. For example: "c0b6xx0".
+         * @param commentId The ID of the comment to focus on. For example: "c0b6xx0".
          * @return This SubmissionRequest
          */
-        public SubmissionRequest focus(String focus) {
-            this.focus = focus;
+        public SubmissionRequest focus(String commentId) {
+            this.focus = commentId;
             return this;
         }
     }

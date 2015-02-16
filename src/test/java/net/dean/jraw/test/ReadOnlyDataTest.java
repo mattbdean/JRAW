@@ -1,13 +1,16 @@
 package net.dean.jraw.test;
 
-import net.dean.jraw.ApiException;
 import net.dean.jraw.JrawUtils;
 import net.dean.jraw.http.HttpRequest;
 import net.dean.jraw.http.MediaTypes;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.RestResponse;
-import net.dean.jraw.managers.ThingCache;
-import net.dean.jraw.models.*;
+import net.dean.jraw.models.CommentNode;
+import net.dean.jraw.models.Listing;
+import net.dean.jraw.models.LiveThread;
+import net.dean.jraw.models.Submission;
+import net.dean.jraw.models.Subreddit;
+import net.dean.jraw.models.Thing;
 import net.dean.jraw.paginators.Paginators;
 import net.dean.jraw.paginators.SubredditPaginator;
 import org.testng.Assert;
@@ -82,53 +85,17 @@ public class ReadOnlyDataTest extends RedditTest {
             Submission submission = reddit.getSubmission(SUBMISSION_ID);
             validateModel(submission);
 
-            Listing<Comment> comments = submission.getComments();
+            CommentNode comments = submission.getComments();
             // This is one of the most upvoted links in reddit history, there's bound to be more than one comment
             assertFalse(comments.isEmpty());
 
-            validateModels(comments);
+            validateModel(comments);
 
             RestResponse response = reddit.execute(HttpRequest.Builder.from("GET", new URL(submission.getShortURL()))
                     .expected(MediaTypes.HTML.type())
                     .build());
             assertTrue(JrawUtils.isEqual(response.getType(), MediaTypes.HTML.type()));
         } catch (NetworkException | MalformedURLException e) {
-            handle(e);
-        }
-    }
-
-    @Test
-    public void testMoreChildren() {
-        try {
-            ThingCache.instance().setEnabled(true);
-            Submission submission = reddit.getSubmission("92dd8");
-            More more = submission.getComments().getMoreChildren();
-
-            // Top-comments in the "more" node at the end of the thread "id" should be the fullname of the submission
-            List<Thing> comments = reddit.getMoreComments(submission, CommentSort.TOP, more);
-
-            for (Thing t : comments) {
-                validateModel(t);
-            }
-
-            //Test loading more comment replies from comment:
-            //http://www.reddit.com/r/pics/comments/92dd8/test_post_please_ignore/c0b715s
-            Comment comment = (Comment) ThingCache.instance().getThing("t1_c0b715s");
-            List<Comment> loadedComments = comment.getReplies().loadMoreChildren(reddit, submission, comment, CommentSort.TOP);
-
-            //Check if the expected parent is really the parent
-            for (Comment c : loadedComments) {
-                Comment parentComment = (Comment) ThingCache.instance().getThing(c.getParentId());
-                boolean isCChildOfParent = false;
-                for (Comment child : parentComment.getReplies()) {
-                    if (child == c) {
-                        isCChildOfParent = true;
-                        break;
-                    }
-                }
-                assertTrue(isCChildOfParent);
-            }
-        } catch (NetworkException | ApiException | IllegalArgumentException e) {
             handle(e);
         }
     }
@@ -267,7 +234,8 @@ public class ReadOnlyDataTest extends RedditTest {
         try {
             List<String> subs = Arrays.asList("programming", "java", "git");
             List<String> recommendations = reddit.getRecommendations(subs, "php");
-            assertFalse(recommendations.isEmpty());
+            // TODO: As of Feb 16 2015, this seems to always return an empty array. See http://redd.it/2w1fpu
+//            assertFalse(recommendations.isEmpty());
         } catch (NetworkException e) {
             handle(e);
         }

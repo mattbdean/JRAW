@@ -5,6 +5,7 @@ import net.dean.jraw.JrawUtils;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.managers.AccountManager;
 import net.dean.jraw.models.Comment;
+import net.dean.jraw.models.CommentNode;
 import net.dean.jraw.models.Contribution;
 import net.dean.jraw.models.FlairTemplate;
 import net.dean.jraw.models.Listing;
@@ -146,11 +147,11 @@ public class AccountManagerTest extends RedditTest {
     @Test
     public void testReplyComment() {
         try {
-            Listing<Comment> comments = reddit.getSubmission(SUBMISSION_ID).getComments();
+            CommentNode comments = reddit.getSubmission(SUBMISSION_ID).getComments();
             Comment replyTo = null;
-            for (Comment c : comments) {
-                if (c.getId().equals(COMMENT_ID)) {
-                    replyTo = c;
+            for (CommentNode c : comments.walkTree()) {
+                if (c.getComment().getId().equals(COMMENT_ID)) {
+                    replyTo = c.getComment();
                     break;
                 }
             }
@@ -169,8 +170,8 @@ public class AccountManagerTest extends RedditTest {
         try {
             moderation.delete(newCommentId);
 
-            for (Comment c : reddit.getSubmission(SUBMISSION_ID).getComments()) {
-                if (c.getId().equals(newCommentId)) {
+            for (CommentNode c : reddit.getSubmission(SUBMISSION_ID).getComments().walkTree()) {
+                if (c.getComment().getId().equals(newCommentId)) {
                     fail("Found the (supposedly) deleted comment");
                 }
             }
