@@ -8,10 +8,8 @@ plugins {
 }
 
 ext {
-    releaseDest = new File((File) project.buildDir, "releases")
-
-    generatedJavaSrcName = "generated-src"
-    generatedJavaSrc = file("$buildDir/$generatedJavaSrcName")
+    releaseDest = new File(project.buildDir, "releases")
+    generatedJavaSrc = file("src/gen/java/")
 }
 
 allprojects {
@@ -78,19 +76,6 @@ test {
 
     beforeTest { descriptor ->
         logger.lifecycle("Running test: ${descriptor.className}.${descriptor.name}")
-    }
-}
-
-idea {
-    module {
-        // Exclude everything in the build dir except for the generated source folder
-        excludeDirs = buildDir.listFiles(new FilenameFilter() {
-            @Override
-            boolean accept(File file, String s) {
-                return !s.equals(generatedJavaSrcName)
-            }
-        })
-        sourceDirs += file(generatedJavaSrc)
     }
 }
 

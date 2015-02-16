@@ -2,12 +2,10 @@
 .idea/
 *.iml
 *.ipr
-*.iml
 *.iws
 
 # Gradle
 .gradle/
-!build/generated-src/
 build/
 out/
 
@@ -17,4 +15,4 @@ src/test/resources/credentials.json
 # Local todo list
 todo.txt
 
-/bin/
+bin/

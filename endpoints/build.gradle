@@ -15,7 +15,7 @@ task update(type: JavaExec, dependsOn: compileJava) {
     File parent = file(genJavaClass).parentFile
 
     parent.exists() || parent.mkdirs()
-    def java = file("$generatedJavaSrc/net/dean/jraw/Endpoints.java").absolutePath
+    def java = genJavaClass.absolutePath
     args = [
             "java=$java",
             "md=${file('../ENDPOINTS.md')}",
