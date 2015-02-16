@@ -239,16 +239,12 @@ public class RedditClient extends RestClient {
      */
     @EndpointImplementation(Endpoints.NEEDS_CAPTCHA)
     public boolean needsCaptcha() throws NetworkException {
-        try {
-            // This endpoint does not return JSON, but rather just "true" or "false"
-            RestResponse response = execute(request()
-                    .endpoint(Endpoints.NEEDS_CAPTCHA)
-                    .get()
-                    .build());
-            return Boolean.parseBoolean(response.getRaw());
-        } catch (NetworkException e) {
-            throw new NetworkException("Unable to make the request to /api/needs_captcha.json", e);
-        }
+        // This endpoint does not return JSON, but rather just "true" or "false"
+        RestResponse response = execute(request()
+                .endpoint(Endpoints.NEEDS_CAPTCHA)
+                .get()
+                .build());
+        return Boolean.parseBoolean(response.getRaw());
     }
 
     /**
@@ -260,22 +256,18 @@ public class RedditClient extends RestClient {
      */
     @EndpointImplementation(Endpoints.NEW_CAPTCHA)
     public Captcha getNewCaptcha() throws NetworkException, ApiException {
-        try {
-            RestResponse response = execute(request()
-                    .endpoint(Endpoints.NEW_CAPTCHA)
-                    .post(JrawUtils.mapOf(
-                            "api_type", "json"
-                    )).build());
+        RestResponse response = execute(request()
+                .endpoint(Endpoints.NEW_CAPTCHA)
+                .post(JrawUtils.mapOf(
+                        "api_type", "json"
+                )).build());
 
-            if (response.hasErrors()) {
-                throw response.getError();
-            }
-            String id = response.getJson().get("json").get("data").get("iden").asText();
-
-            return getCaptcha(id);
-        } catch (NetworkException e) {
-            throw new NetworkException("Unable to make the request to /api/new_captcha", e);
+        if (response.hasErrors()) {
+            throw response.getError();
         }
+        String id = response.getJson().get("json").get("data").get("iden").asText();
+
+        return getCaptcha(id);
     }
 
     /**
@@ -342,7 +334,7 @@ public class RedditClient extends RestClient {
 
 
         RestResponse response = execute(request()
-                .path(String.format("/comments/%s.json", request.id))
+                .path(String.format("/comments/%s", request.id))
                 .query(args)
                 .build());
         return SubmissionSerializer.withComments(response.getJson(), sort);
@@ -379,7 +371,7 @@ public class RedditClient extends RestClient {
      */
     @EndpointImplementation(Endpoints.RANDOM)
     public Submission getRandomSubmission(String subreddit) throws NetworkException  {
-        String path = JrawUtils.getSubredditPath(subreddit, "/random.json");
+        String path = JrawUtils.getSubredditPath(subreddit, "/random");
 
         // Favor path() instead of endpoint() because we have already decided the path above
         RestResponse response = execute(request()
@@ -407,7 +399,7 @@ public class RedditClient extends RestClient {
      */
     @EndpointImplementation(Endpoints.SUBMIT_TEXT)
     public String getSubmitText(String subreddit) throws NetworkException {
-        String path = JrawUtils.getSubredditPath(subreddit, "/api/submit_text.json");
+        String path = JrawUtils.getSubredditPath(subreddit, "/api/submit_text");
 
         JsonNode node = execute(request()
                 .path(path)
@@ -570,7 +562,7 @@ public class RedditClient extends RestClient {
             }
         }
         return execute(request()
-                .path(Endpoints.INFO.getEndpoint().getUri() + ".json")
+                .endpoint(Endpoints.INFO)
                 .query("id", JrawUtils.join(fullNames))
                 .build()).asListing(Thing.class);
     }

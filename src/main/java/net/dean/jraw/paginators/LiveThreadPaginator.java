@@ -35,6 +35,6 @@ public class LiveThreadPaginator extends Paginator<LiveUpdate> {
 
     @Override
     protected String getBaseUri() {
-        return String.format("/live/%s.json", threadId);
+        return String.format("/live/" + threadId);
     }
 }

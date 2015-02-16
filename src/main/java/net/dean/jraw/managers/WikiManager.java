@@ -44,7 +44,7 @@ public class WikiManager extends AbstractManager {
      */
     @EndpointImplementation(Endpoints.WIKI_PAGES)
     public List<String> getPages(String subreddit) throws NetworkException {
-        String path = JrawUtils.getSubredditPath(subreddit, "/wiki/pages.json");
+        String path = JrawUtils.getSubredditPath(subreddit, "/wiki/pages");
 
         List<String> pages = new ArrayList<>();
         JsonNode pagesNode = reddit.execute(reddit.request()
@@ -82,7 +82,7 @@ public class WikiManager extends AbstractManager {
      */
     @EndpointImplementation(Endpoints.WIKI_PAGE)
     public WikiPage get(String subreddit, String page) throws NetworkException {
-        String path = JrawUtils.getSubredditPath(subreddit, "/wiki/" + page + ".json");
+        String path = JrawUtils.getSubredditPath(subreddit, "/wiki/" + page);
 
         HttpRequest r = reddit.request()
                 .path(path)
@@ -111,7 +111,7 @@ public class WikiManager extends AbstractManager {
      */
     @EndpointImplementation(Endpoints.WIKI_SETTINGS_PAGE_GET)
     public WikiPageSettings getSettings(String subreddit, String page) throws NetworkException {
-        String path = JrawUtils.getSubredditPath(subreddit, "/wiki/settings/" + page + ".json");
+        String path = JrawUtils.getSubredditPath(subreddit, "/wiki/settings/" + page);
 
         return reddit.execute(reddit.request()
                 .path(path)

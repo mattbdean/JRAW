@@ -8,9 +8,9 @@ import java.util.Arrays;
 /**
  * This class provides a template for Paginators that use only a "where" attribute, such as {@code /user/username/{where}}.
  * The way this class assembles the base URI ({@link #getBaseUri()}) works somewhat differently than other paginators.
- * The formula for creating this URI is as follows: {@code {prefix}{where.name().toLowerCase()}{postfix}}. So if {@link #getUriPrefix()}
- * resulted in "/user/username/", the enum value's name was "SUBMITTED", and {@link #getUriPostfix()} resulted in ".json",
- * then the base URI would be "/user/username/submitted.json".
+ * The formula for creating this URI is as follows: {@code {prefix}{where.name().toLowerCase()}{postfix}}. So if
+ * {@link #getUriPrefix()} resulted in "/user/username/", the enum value's name was "SUBMITTED", and
+ * {@link #getUriPostfix()} resulted in ".json", then the base URI would be "/user/username/submitted.json".
  *
  * @param <T> The type of Thing that
  */
@@ -48,10 +48,10 @@ public abstract class GenericPaginator<T extends Thing> extends Paginator<T> {
     protected abstract String getUriPrefix();
 
     /**
-     * Gets the String that will come after all paths for this paginator. The default value is ".json".
+     * Gets the String that will come after all paths for this paginator. The default value is an empty string.
      * @return The String that will come after all paths for this paginator
      */
-    protected String getUriPostfix() { return ".json"; }
+    protected String getUriPostfix() { return ""; }
 
     /**
      * Gets the enum value that will be appended to the base URI

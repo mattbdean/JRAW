@@ -42,7 +42,7 @@ public class SubmissionSearchPaginator extends Paginator<Submission> {
 
     @Override
     protected String getBaseUri() {
-        String base = "/search.json";
+        String base = "/search";
         if (subreddit != null) {
             base = "/r/" + subreddit + base;
         }

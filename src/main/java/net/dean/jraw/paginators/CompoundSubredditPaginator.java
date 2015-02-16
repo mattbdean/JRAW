@@ -38,8 +38,7 @@ public class CompoundSubredditPaginator extends SubredditPaginator {
 
         // /top.json
         path.append("/")
-            .append(sorting.name().toLowerCase())
-            .append(".json");
+            .append(sorting.name().toLowerCase());
 
         return path.toString();
     }

@@ -45,7 +45,7 @@ public class MultiHubPaginator extends Paginator<MultiHubPaginator.MultiRedditId
 
     @Override
     protected String getBaseUri() {
-        return String.format("/r/multihub/%s.json", sorting.name().toLowerCase());
+        return String.format("/r/multihub/%s", sorting.name().toLowerCase());
     }
 
     @Override

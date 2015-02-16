@@ -29,7 +29,7 @@ public class SubredditSearchPaginator extends Paginator<Subreddit> {
 
     @Override
     protected String getBaseUri() {
-        return "/subreddits/search.json";
+        return "/subreddits/search";
     }
 
     @Override

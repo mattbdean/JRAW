@@ -351,7 +351,7 @@ public class AccountManager extends AbstractManager {
         }
 
         RestResponse response = genericPost(reddit.request()
-                .path("/r/" + subreddit + Endpoints.FLAIRSELECTOR.getEndpoint().getUri() + ".json")
+                .path("/r/" + subreddit + Endpoints.FLAIRSELECTOR.getEndpoint().getUri())
                 .post(formArgs.isEmpty() ? null : formArgs)
                 .build());
         return response.getJson();

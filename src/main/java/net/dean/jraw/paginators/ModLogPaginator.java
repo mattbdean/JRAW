@@ -32,6 +32,6 @@ public class ModLogPaginator extends Paginator<ModAction> {
 
     @Override
     protected String getBaseUri() {
-        return "/r/" + subreddit + "/about/log.json";
+        return "/r/" + subreddit + "/about/log";
     }
 }
