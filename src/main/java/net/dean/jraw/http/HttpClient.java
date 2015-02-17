@@ -91,5 +91,5 @@ public interface HttpClient extends NetworkAccessible {
     public String getUserAgent();
 
     /** Sets the default value of the User-Agent header */
-    public void setUserAgent(String userAgent);
+    public void setUserAgent(UserAgent userAgent);
 }

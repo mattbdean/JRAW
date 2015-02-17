@@ -12,6 +12,7 @@ import net.dean.jraw.http.OkHttpAdapter;
 import net.dean.jraw.http.RequestBody;
 import net.dean.jraw.http.RestClient;
 import net.dean.jraw.http.RestResponse;
+import net.dean.jraw.http.UserAgent;
 import net.dean.jraw.http.oauth.OAuthData;
 import net.dean.jraw.http.oauth.OAuthHelper;
 import net.dean.jraw.models.Account;
@@ -67,23 +68,8 @@ public class RedditClient extends RestClient {
      * Instantiates a new RedditClient and adds the given user agent to the default headers
      *
      * @param userAgent The User-Agent header that will be sent with all the HTTP requests.
-     *                  <blockquote>
-     *                  Change your client's User-Agent string to something unique and descriptive, preferably
-     *                  referencing your reddit username. From the
-     *                  <a href="https://github.com/reddit/reddit/wiki/API">Reddit Wiki on GitHub</a>:
-     *
-     *                  <ul>
-     *                    <li>Many default User-Agents (like "Python/urllib" or "Java") are drastically limited to
-     *                        encourage unique and descriptive user-agent strings.
-     *                    <li>If you're making an application for others to use, please include a version number in
-     *                        the user agent. This allows us to block buggy versions without blocking all versions of
-     *                        your app.
-     *                    <li>NEVER lie about your user-agent. This includes spoofing popular browsers and spoofing
-     *                        other bots. We will ban liars with extreme prejudice.</li>
-     *                  </ul>
-     *                  </blockquote>
      */
-    public RedditClient(String userAgent) {
+    public RedditClient(UserAgent userAgent) {
         this(userAgent, REQUESTS_PER_MINUTE);
     }
 
@@ -91,24 +77,9 @@ public class RedditClient extends RestClient {
      * Instantiates a new RedditClient and adds the given user agent to the default headers
      *
      * @param userAgent The User-Agent header that will be sent with all the HTTP requests.
-     *                  <blockquote>
-     *                  Change your client's User-Agent string to something unique and descriptive, preferably
-     *                  referencing your reddit username. From the
-     *                  <a href="https://github.com/reddit/reddit/wiki/API">Reddit Wiki on GitHub</a>:
-     *
-     *                  <ul>
-     *                    <li>Many default User-Agents (like "Python/urllib" or "Java") are drastically limited to
-     *                        encourage unique and descriptive user-agent strings.
-     *                    <li>If you're making an application for others to use, please include a version number in
-     *                        the user agent. This allows us to block buggy versions without blocking all versions of
-     *                        your app.
-     *                    <li>NEVER lie about your user-agent. This includes spoofing popular browsers and spoofing
-     *                        other bots. We will ban liars with extreme prejudice.</li>
-     *                  </ul>
-     *                  </blockquote>
      * @param requestsPerMinute The upper bound on the amount of requests allowed in one minute
      */
-    public RedditClient(String userAgent, int requestsPerMinute) {
+    public RedditClient(UserAgent userAgent, int requestsPerMinute) {
         this(userAgent, requestsPerMinute, new OkHttpAdapter());
     }
 
@@ -116,24 +87,9 @@ public class RedditClient extends RestClient {
      * Instantiates a new RedditClient and adds the given user agent to the default headers
      *
      * @param userAgent The User-Agent header that will be sent with all the HTTP requests.
-     *                  <blockquote>
-     *                  Change your client's User-Agent string to something unique and descriptive, preferably
-     *                  referencing your reddit username. From the
-     *                  <a href="https://github.com/reddit/reddit/wiki/API">Reddit Wiki on GitHub</a>:
-     *
-     *                  <ul>
-     *                    <li>Many default User-Agents (like "Python/urllib" or "Java") are drastically limited to
-     *                        encourage unique and descriptive user-agent strings.
-     *                    <li>If you're making an application for others to use, please include a version number in
-     *                        the user agent. This allows us to block buggy versions without blocking all versions of
-     *                        your app.
-     *                    <li>NEVER lie about your user-agent. This includes spoofing popular browsers and spoofing
-     *                        other bots. We will ban liars with extreme prejudice.</li>
-     *                  </ul>
-     *                  </blockquote>
      * @param adapter How the client will send HTTP requests
      */
-    public RedditClient(String userAgent, HttpAdapter adapter) {
+    public RedditClient(UserAgent userAgent, HttpAdapter adapter) {
         this(userAgent, REQUESTS_PER_MINUTE, adapter);
     }
 
@@ -141,25 +97,10 @@ public class RedditClient extends RestClient {
      * Instantiates a new RedditClient and adds the given user agent to the default headers
      *
      * @param userAgent The User-Agent header that will be sent with all the HTTP requests.
-     *                  <blockquote>
-     *                  Change your client's User-Agent string to something unique and descriptive, preferably
-     *                  referencing your reddit username. From the
-     *                  <a href="https://github.com/reddit/reddit/wiki/API">Reddit Wiki on GitHub</a>:
-     *
-     *                  <ul>
-     *                    <li>Many default User-Agents (like "Python/urllib" or "Java") are drastically limited to
-     *                        encourage unique and descriptive user-agent strings.
-     *                    <li>If you're making an application for others to use, please include a version number in
-     *                        the user agent. This allows us to block buggy versions without blocking all versions of
-     *                        your app.
-     *                    <li>NEVER lie about your user-agent. This includes spoofing popular browsers and spoofing
-     *                        other bots. We will ban liars with extreme prejudice.</li>
-     *                  </ul>
-     *                  </blockquote>
      * @param requestsPerMinute The upper bound on the amount of requests allowed in one minute
      * @param adapter How the client will send HTTP requests
      */
-    public RedditClient(String userAgent, int requestsPerMinute, HttpAdapter adapter) {
+    public RedditClient(UserAgent userAgent, int requestsPerMinute, HttpAdapter adapter) {
         super(adapter, HOST, userAgent, requestsPerMinute);
         this.authMethod = AuthenticationMethod.NOT_YET;
         this.authHelper = new OAuthHelper(this);

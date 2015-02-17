@@ -10,6 +10,7 @@ import net.dean.jraw.http.AuthenticationMethod;
 import net.dean.jraw.http.Credentials;
 import net.dean.jraw.http.LoggingMode;
 import net.dean.jraw.http.NetworkException;
+import net.dean.jraw.http.UserAgent;
 import net.dean.jraw.managers.AccountManager;
 import net.dean.jraw.managers.ModerationManager;
 import net.dean.jraw.models.CommentNode;
@@ -32,8 +33,10 @@ import java.util.List;
  * and several utility methods.
  */
 public abstract class RedditTest {
-    protected static final RedditClient reddit = new RedditClient(
-            "JRAW v" + Version.get().formatted() + " test suite runner by /u/thatJavaNerd");
+    protected static final RedditClient reddit = new RedditClient(UserAgent.of("desktop",
+            "net.dean.jraw.test",
+            "v" + Version.get().formatted(),
+            "thatJavaNerd"));
     private static Credentials credentials;
     private static ObjectMapper objectMapper = new ObjectMapper();
     protected final AccountManager account;

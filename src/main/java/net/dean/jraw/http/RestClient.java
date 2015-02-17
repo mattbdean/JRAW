@@ -27,14 +27,12 @@ public abstract class RestClient implements HttpClient {
 
     /**
      * Instantiates a new RestClient
-     *
-     * @param defaultHost The host that will be applied to every {@link HttpRequest.Builder} returned by
+     *  @param defaultHost The host that will be applied to every {@link HttpRequest.Builder} returned by
      *                    {@link #request()}
      * @param userAgent The default value of the User-Agent header
      * @param requestsPerMinute The amount of HTTP requests that can be sent in one minute. A value greater than 0 will
-     *                          enable rate limiting, one less than or equal to 0 will disable it.
      */
-    public RestClient(HttpAdapter httpAdapter, String defaultHost, String userAgent, int requestsPerMinute) {
+    public RestClient(HttpAdapter httpAdapter, String defaultHost, UserAgent userAgent, int requestsPerMinute) {
         this.httpAdapter = httpAdapter;
         this.defaultHost = defaultHost;
         this.saveResponseHistory = false;
@@ -152,8 +150,8 @@ public abstract class RestClient implements HttpClient {
     }
 
     @Override
-    public void setUserAgent(String userAgent) {
-        httpAdapter.getDefaultHeaders().put("User-Agent", userAgent);
+    public void setUserAgent(UserAgent userAgent) {
+        httpAdapter.getDefaultHeaders().put("User-Agent", userAgent.toString());
     }
 
     @Override

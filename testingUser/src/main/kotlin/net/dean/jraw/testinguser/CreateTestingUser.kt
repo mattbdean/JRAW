@@ -2,7 +2,6 @@ package net.dean.jraw.testinguser
 
 import kotlin.platform.platformStatic
 import net.dean.jraw.RedditClient
-import net.dean.jraw.Version
 import java.util.Scanner
 import java.security.SecureRandom
 import java.math.BigInteger
@@ -16,6 +15,8 @@ import net.dean.jraw.models.Captcha
 import java.io.IOException
 import com.fasterxml.jackson.databind.ObjectWriter
 import net.dean.jraw.http.NetworkException
+import net.dean.jraw.http.UserAgent
+import net.dean.jraw.Version
 
 /**
  * This class will create a Reddit user and set up everything you need to start testing with JRAW. See
@@ -28,7 +29,10 @@ public class CreateTestingUser {
     private val secureRandom = SecureRandom()
     private val weakRandom = Random()
     private val s = Scanner(System.`in`)
-    private val reddit = RedditClient("Testing-User-Creator for JRAW v" + Version.get().formatted())
+    private val reddit = RedditClient(UserAgent.of("desktop",
+            "net.dean.jraw.testinguser",
+            Version.get().formatted(),
+            "thatJavaNerd"))
 
     class object {
         public platformStatic fun main(args: Array<String>) {
