@@ -72,8 +72,8 @@ public final class Credentials {
 
     /**
      * Creates a new Credentials object for a Reddit app whose type is 'installed app'
-     * @param username The username
-     * @param password The password
+     * @param username The app owner's username
+     * @param password The app owner's password
      * @param clientId The publicly-available app ID
      * @return A new Credentials
      */
@@ -85,8 +85,8 @@ public final class Credentials {
 
     /**
      * Creates a new Credentials object for a Reddit app whose type is 'web app'
-     * @param username The username
-     * @param password The password
+     * @param username The app owner's username
+     * @param password The app owner's password
      * @param clientId The publicly-available app ID
      * @param clientSecret The secret value for the application
      * @return A new Credentials
@@ -97,8 +97,8 @@ public final class Credentials {
 
     /**
      * Creates a new Credentials object for a Reddit app whose type is 'web app'
-     * @param username The username
-     * @param password The password
+     * @param username The app owner's username
+     * @param password The app owner's password
      * @param clientId The publicly-available app ID
      * @param clientSecret The secret value for the application
      * @return A new Credentials

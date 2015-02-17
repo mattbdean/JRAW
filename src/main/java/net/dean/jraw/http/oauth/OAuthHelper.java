@@ -1,6 +1,7 @@
 package net.dean.jraw.http.oauth;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.common.net.MediaType;
 import net.dean.jraw.JrawUtils;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.AuthenticationMethod;
@@ -14,7 +15,6 @@ import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.RestResponse;
 
 import java.math.BigInteger;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.SecureRandom;
 import java.util.HashMap;
@@ -77,7 +77,7 @@ public class OAuthHelper implements NetworkAccessible {
 
         HttpRequest r = new HttpRequest.Builder()
                 .https(true)
-                .host(RedditClient.HOST)
+                .host(RedditClient.HOST_SPECIAL)
                 .path("/api/v1/authorize")
                 .expected(MediaTypes.HTML.type())
                 .query(JrawUtils.mapOf(
@@ -106,33 +106,22 @@ public class OAuthHelper implements NetworkAccessible {
      *              {@link #doScriptApp(Credentials)} instead.
      * @throws OAuthException If there was a problem with any of the parameters given
      * @throws NetworkException If the request was not successful
-     * @throws MalformedURLException If {@code finalUrl} is not a valid URL
-     * @throws IllegalStateException If the state last generated with
-     *                               {@link #getAuthorizationUrl(String, String, boolean, String...)} did not match the
+     * @throws IllegalStateException If the state last generated with {@link #getAuthorizationUrl} did not match the
      *                               value of the 'state' query parameter.
      * @return An OAuthData that holds the new access token among other things
      */
     public OAuthData onUserChallenge(String finalUrl, String redirectUri, Credentials creds) throws NetworkException,
-            OAuthException, IllegalStateException, MalformedURLException {
-        if (!creds.getAuthenticationMethod().isOAuth2()) {
-            throw new IllegalArgumentException("Credentials provided are not for an OAuth2 login.");
-        }
-
-        if (creds.getAuthenticationMethod() == AuthenticationMethod.SCRIPT) {
-            JrawUtils.logger().warn("Unnecessarily complicated auth process. Use doScriptApp() instead.");
-            return doScriptApp(creds);
-        }
-
+            OAuthException, IllegalStateException {
         if (!started) {
             throw new IllegalStateException("Auth flow not started yet. See getAuthorizationUrl()");
         }
-        HttpRequest request = HttpRequest.from("invalid", new URL(finalUrl));
+        HttpRequest request = HttpRequest.from("invalid", JrawUtils.newUrl(finalUrl));
         Map<String, String> query = JrawUtils.parseUrlEncoded(request.getUrl().getQuery());
         if (!query.containsKey("state")) {
             throw new IllegalArgumentException("Final redirect URI did not contain the 'state' query parameter");
         }
         if (!query.get("state").equals(state)) {
-            throw new IllegalArgumentException("State did not match");
+            throw new IllegalStateException("State did not match");
         }
         if (query.containsKey("error")) {
             throw new OAuthException(query.get("error"));
@@ -146,8 +135,9 @@ public class OAuthHelper implements NetworkAccessible {
         try {
             RestResponse response = reddit.execute(reddit.request()
                     .https(true)
-                    .host(RedditClient.HOST)
+                    .host(RedditClient.HOST_SPECIAL)
                     .path("/api/v1/access_token")
+                    .expected(MediaType.ANY_TYPE)
                     .post(JrawUtils.mapOf(
                             "grant_type", "authorization_code",
                             "code", code,
