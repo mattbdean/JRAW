@@ -213,6 +213,37 @@ public class RedditClient extends RestClient {
         authMethod = AuthenticationMethod.NOT_YET;
     }
 
+    @Override
+    public RestResponse execute(HttpRequest request) throws NetworkException {
+        RestResponse response = super.execute(request);
+        adjustRatelimit(response);
+        return response;
+    }
+
+    /** Adjust rate limit dynamically based off of X-Ratelimit-{Remaining,Reset} headers. */
+    private void adjustRatelimit(RestResponse response) {
+        if (response.getHeaders().get("X-Ratelimit-Reset") == null ||
+                response.getHeaders().get("X-Ratelimit-Remaining") == null) {
+            // Could not find the necessary headers
+            return;
+        }
+        int reset; // Time in seconds when the ratelimit will reset. Has an integer value
+        double remaining; // How many requests are left. Has decimal value
+        try {
+            reset = Integer.parseInt(response.getHeaders().get("X-Ratelimit-Reset"));
+            remaining = Double.parseDouble(response.getHeaders().get("X-Ratelimit-Remaining"));
+        } catch (NumberFormatException e) {
+            JrawUtils.logger().warn("Unable to parse ratelimit headers, using default", e);
+            // One request per minute for OAuth2, as specified by the docs
+            reset = 600;
+            remaining = 600.0;
+        }
+
+        double resetMinutes = reset / 60.0;
+        int requestsPerMinute = (int) Math.floor(remaining / resetMinutes);
+        setRatelimit(requestsPerMinute);
+    }
+
     /**
      * Checks if the user is logged in
      * @return True if the user is logged in

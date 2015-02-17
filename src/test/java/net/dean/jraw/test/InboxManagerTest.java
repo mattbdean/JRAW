@@ -1,6 +1,7 @@
 package net.dean.jraw.test;
 
 import net.dean.jraw.ApiException;
+import net.dean.jraw.Version;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.managers.InboxManager;
 import net.dean.jraw.models.Contribution;
@@ -48,7 +49,7 @@ public class InboxManagerTest extends RedditTest {
     @Test
     public void testCompose() {
         try {
-            String subject = getUserAgent(InboxManagerTest.class);
+            String subject = "InboxManagerTest for JRAW v" + Version.get().formatted();
             String body = "epoch=" + epochMillis();
             inbox.compose("/r/jraw_testing2", subject, body);
         } catch (NetworkException | ApiException e) {

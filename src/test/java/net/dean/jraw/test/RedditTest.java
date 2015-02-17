@@ -53,10 +53,6 @@ public abstract class RedditTest {
         this.moderation = new ModerationManager(reddit);
     }
 
-    protected String getUserAgent(Class<?> clazz) {
-        return clazz.getSimpleName() + " for JRAW v" + Version.get().formatted();
-    }
-
     public long epochMillis() {
         return new Date().getTime();
     }

@@ -22,7 +22,6 @@ public abstract class RestClient implements HttpClient {
     protected final LinkedHashMap<RestResponse, Date> history;
     private RateLimiter rateLimiter;
     private boolean useHttpsDefault;
-    private boolean enforceRatelimit;
     private boolean saveResponseHistory;
     private LoggingMode loggingMode;
 
@@ -45,7 +44,7 @@ public abstract class RestClient implements HttpClient {
         // Never log by default
         this.loggingMode = LoggingMode.NEVER;
         setUserAgent(userAgent);
-        setEnforceRatelimit(requestsPerMinute);
+        setRatelimit(requestsPerMinute);
     }
 
     /**
@@ -56,27 +55,26 @@ public abstract class RestClient implements HttpClient {
         return defaultHost;
     }
 
-    /**
-     * Whether to automatically manage the execution of HTTP requests based on time (enabled by default). If there has
-     * been more than a certain amount of requests in the last minute (30 for normal API, 60 for OAuth), this class will
-     * wait to execute the next request in order to minimize the chance of Reddit IP banning this client or simply
-     * returning a 403 Forbidden.
-     *
-     * @param requestsPerMinute The amount of HTTP requests that can be sent in one minute. A value greater than 0 will
-     *                          enable rate limit enforcing, one less than or equal to 0 will disable it.
-     */
-    public void setEnforceRatelimit(int requestsPerMinute) {
-        this.enforceRatelimit = requestsPerMinute > 0;
-        this.rateLimiter = enforceRatelimit ? RateLimiter.create((double) requestsPerMinute / 60) : null;
+    /** Gets the current amount of times a request can be executed in one minute. */
+    public double getCurrentRatelimit() {
+        return rateLimiter.getRate() * 60;
     }
 
     /**
-     * Checks if the rate limit is being enforced. If true, then thread that {@link #execute(HttpRequest)} is called on
-     * will block until enough time has passed
-     * @return If the rate limit is being enforced.
+     * Sets the amount of requests per minute this RestClient will allow to be executed. If there has been more than a
+     * certain amount of requests in the last minute, this class will wait to execute the next request in order to
+     * minimize the chance of Reddit IP banning this client or simply returning a 403 Forbidden.
+     *
+     * @param requestsPerMinute The amount of HTTP requests that can be sent in one minute. Must not be less than 1
      */
-    public boolean isEnforcingRatelimit() {
-        return enforceRatelimit;
+    protected void setRatelimit(int requestsPerMinute) {
+        if (requestsPerMinute < 1)
+            throw new IllegalArgumentException("requestsPerMinute cannot be less than 1");
+        double perSecond = requestsPerMinute / 60.0;
+        if (rateLimiter == null)
+            rateLimiter = RateLimiter.create(perSecond);
+        else
+            rateLimiter.setRate(perSecond);
     }
 
     @Override
@@ -108,15 +106,13 @@ public abstract class RestClient implements HttpClient {
             builder.add(defaultHeader.getKey(), defaultHeader.getValue());
         }
 
-        if (enforceRatelimit) {
-            // Try to get a ticket without waiting
-            if (!rateLimiter.tryAcquire()) {
-                // Could not get a ticket immediately, block until we can
-                double time = rateLimiter.acquire();
-                // We're not sure about whether this will fail, so be on the safe side
-                if (loggingMode == LoggingMode.ALWAYS) {
-                    JrawUtils.logger().info("Slept for {} seconds", time);
-                }
+        // Try to get a ticket without waiting
+        if (!rateLimiter.tryAcquire()) {
+            // Could not get a ticket immediately, block until we can
+            double time = rateLimiter.acquire();
+            // We're not sure about whether this will fail, so be on the safe side
+            if (loggingMode == LoggingMode.ALWAYS) {
+                JrawUtils.logger().info("Slept for {} seconds", time);
             }
         }
 
