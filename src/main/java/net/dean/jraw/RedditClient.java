@@ -52,9 +52,11 @@ public class RedditClient extends RestClient {
     private static final int NUM_TRENDING_SUBREDDITS = 5;
     /** Name of the 'Authorization' header */
     private static final String HEADER_AUTHORIZATION = "Authorization";
-
+    private static final String HEADER_RATELIMIT_RESET = "X-Ratelimit-Reset";
+    private static final String HEADER_RATELIMIT_REMAINING = "X-Ratelimit-Remaining";
     /** The username of the user who is currently authenticated */
-    protected String authenticatedUser;
+    private String authenticatedUser;
+    private boolean adjustRatelimit;
 
     /** The method of authentication currently being used */
     private AuthenticationMethod authMethod;
@@ -161,6 +163,7 @@ public class RedditClient extends RestClient {
         super(adapter, HOST, userAgent, requestsPerMinute);
         this.authMethod = AuthenticationMethod.NOT_YET;
         this.authHelper = new OAuthHelper(this);
+        this.adjustRatelimit = true;
         setHttpsDefault(true);
     }
 
@@ -216,22 +219,23 @@ public class RedditClient extends RestClient {
     @Override
     public RestResponse execute(HttpRequest request) throws NetworkException {
         RestResponse response = super.execute(request);
-        adjustRatelimit(response);
+        if (adjustRatelimit)
+            adjustRatelimit(response);
         return response;
     }
 
     /** Adjust rate limit dynamically based off of X-Ratelimit-{Remaining,Reset} headers. */
     private void adjustRatelimit(RestResponse response) {
-        if (response.getHeaders().get("X-Ratelimit-Reset") == null ||
-                response.getHeaders().get("X-Ratelimit-Remaining") == null) {
+        if (response.getHeaders().get(HEADER_RATELIMIT_RESET) == null ||
+                response.getHeaders().get(HEADER_RATELIMIT_REMAINING) == null) {
             // Could not find the necessary headers
             return;
         }
         int reset; // Time in seconds when the ratelimit will reset. Has an integer value
         double remaining; // How many requests are left. Has decimal value
         try {
-            reset = Integer.parseInt(response.getHeaders().get("X-Ratelimit-Reset"));
-            remaining = Double.parseDouble(response.getHeaders().get("X-Ratelimit-Remaining"));
+            reset = Integer.parseInt(response.getHeaders().get(HEADER_RATELIMIT_RESET));
+            remaining = Double.parseDouble(response.getHeaders().get(HEADER_RATELIMIT_REMAINING));
         } catch (NumberFormatException e) {
             JrawUtils.logger().warn("Unable to parse ratelimit headers, using default", e);
             // One request per minute for OAuth2, as specified by the docs
@@ -241,7 +245,24 @@ public class RedditClient extends RestClient {
 
         double resetMinutes = reset / 60.0;
         int requestsPerMinute = (int) Math.floor(remaining / resetMinutes);
+        // Prevent an IllegalArgumentException
+        if (requestsPerMinute < 1) {
+            requestsPerMinute = 1;
+        }
         setRatelimit(requestsPerMinute);
+    }
+
+    /** Checks whether the ratelimit will be changed based on specific headers returned from Reddit API responses. */
+    public boolean isAdjustingRatelimit() {
+        return adjustRatelimit;
+    }
+
+    /**
+     * Sets if the ratelimit should be adjusted based off values provided by Reddit in the form of headers from API
+     * responses.
+     */
+    public void setAdjustRatelimit(boolean flag) {
+        this.adjustRatelimit = flag;
     }
 
     /**
