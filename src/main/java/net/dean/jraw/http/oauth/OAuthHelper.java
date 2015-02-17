@@ -110,7 +110,7 @@ public class OAuthHelper implements NetworkAccessible {
      * @throws IllegalStateException If the state last generated with
      *                               {@link #getAuthorizationUrl(String, String, boolean, String...)} did not match the
      *                               value of the 'state' query parameter.
-     * @return An AuthData that holds the new access token among other things
+     * @return An OAuthData that holds the new access token among other things
      */
     public OAuthData onUserChallenge(String finalUrl, String redirectUri, Credentials creds) throws NetworkException,
             OAuthException, IllegalStateException, MalformedURLException {
