@@ -10,7 +10,7 @@ import net.dean.jraw.models.LiveThread;
 import net.dean.jraw.models.LiveUpdate;
 import net.dean.jraw.models.Message;
 import net.dean.jraw.models.ModAction;
-import net.dean.jraw.models.More;
+import net.dean.jraw.models.MoreChildren;
 import net.dean.jraw.models.MultiReddit;
 import net.dean.jraw.models.Submission;
 import net.dean.jraw.models.Subreddit;
@@ -84,8 +84,8 @@ public @interface Model {
         AWARD("t6", Award.class),
         /** Represents a listing */
         LISTING("Listing", Listing.class),
-        /** Represents a "more" object. See {@link More} */
-        MORE("more", More.class),
+        /** Represents a "more" object. See {@link MoreChildren} */
+        MORE("more", MoreChildren.class),
         /** Represents a MultiReddit */
         MULTIREDDIT("LabeledMulti", MultiReddit.class),
         /** Represents a wiki page */

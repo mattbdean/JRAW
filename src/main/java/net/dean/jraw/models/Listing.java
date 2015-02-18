@@ -32,7 +32,7 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
     private final List<T> children;
     private final String before;
     private final String after;
-    private More more;
+    private MoreChildren moreChildren;
 
     /**
      * Instantiates a new Listing
@@ -57,13 +57,13 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
         this(thingClass, new ArrayList<T>(), null, null, null);
     }
 
-    protected Listing(Class<T> thingClass, List<T> children, String before, String after, More more) {
+    protected Listing(Class<T> thingClass, List<T> children, String before, String after, MoreChildren more) {
         super(null);
         this.thingClass = thingClass;
         this.children = children;
         this.before = before;
         this.after = after;
-        this.more = more;
+        this.moreChildren = more;
     }
 
     protected static String getProp(JsonNode data, String key) {
@@ -92,10 +92,10 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
         return children;
     }
 
-    protected static More initMore(JsonNode data) {
+    protected static MoreChildren initMore(JsonNode data) {
         for (JsonNode childNode : data.get("children")) {
             if (childNode.get("kind").textValue().equalsIgnoreCase("more")) {
-                return new More(childNode.get("data"));
+                return new MoreChildren(childNode.get("data"));
             }
         }
 
@@ -108,13 +108,13 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
 
     /** Gets the "more" element (the last element in the children) */
     @JsonProperty(nullable = true)
-    public More getMoreChildren() {
-        return more;
+    public MoreChildren getMoreChildren() {
+        return moreChildren;
     }
 
     /** Set the "more" element, for use when another loaded from the previous more */
-    public void setMoreChildren(More more) {
-        this.more = more;
+    public void setMoreChildren(MoreChildren more) {
+        this.moreChildren = more;
     }
 
     /**

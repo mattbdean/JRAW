@@ -57,7 +57,7 @@ public class CommentNode {
     private static final Lock morechildrenLock = new ReentrantLock();
 
     private final String ownerId;
-    private More more;
+    private MoreChildren moreChildren;
     private final Comment comment;
     private final CommentNode parent;
     private final List<CommentNode> children;
@@ -72,23 +72,23 @@ public class CommentNode {
      * @param topLevelReplies A list of top level replies to this submission
      * @param more A More object which can be used to retrieve more comments later
      */
-    public CommentNode(String ownerId, List<Comment> topLevelReplies, More more, CommentSort commentSort) {
+    public CommentNode(String ownerId, List<Comment> topLevelReplies, MoreChildren more, CommentSort commentSort) {
         this.ownerId = ownerId;
         // This CommentNode is actually representing the Submission, whose depth is 0
         this.depth = 0;
         this.parent = null;
         this.comment = new RootComment(ownerId);
-        this.more = more;
+        this.moreChildren = more;
         this.commentSort = commentSort;
         this.children = createChildNodes(topLevelReplies);
     }
 
-    private CommentNode(String ownerId, CommentNode parent, Comment data, More more, CommentSort commentSort, int depth) {
+    private CommentNode(String ownerId, CommentNode parent, Comment data, MoreChildren more, CommentSort commentSort, int depth) {
         this.ownerId = ownerId;
         this.depth = depth;
         this.parent = parent;
         this.comment = data;
-        this.more = more;
+        this.moreChildren = more;
         this.commentSort = commentSort;
         this.children = createChildNodes(data.getReplies());
     }
@@ -114,11 +114,11 @@ public class CommentNode {
 
     /** Checks if there exists a More object for this CommentNode. */
     public boolean hasMoreChildren() {
-        return more != null;
+        return moreChildren != null;
     }
 
-    public More getMore() {
-        return more;
+    public MoreChildren getMoreChildren() {
+        return moreChildren;
     }
 
     /**
@@ -191,16 +191,17 @@ public class CommentNode {
         List<Thing> thingsToAdd = getMoreComments(reddit);
 
         List<Comment> newComments = new ArrayList<>();
-        List<More> newMores = new ArrayList<>();
+        List<MoreChildren> newMores = new ArrayList<>();
 
         // Assert every Thing is either a Comment or a More
         for (Thing t : thingsToAdd) {
             if (t instanceof Comment) {
                 newComments.add((Comment) t);
-            } else if (t instanceof More) {
-                newMores.add((More) t);
+            } else if (t instanceof MoreChildren) {
+                newMores.add((MoreChildren) t);
             } else {
-                throw new IllegalStateException("Received a Thing that was not a Comment or More, was " + t.getClass().getName());
+                throw new IllegalStateException("Received a Thing that was not a Comment or MoreChildren, was "
+                        + t.getClass().getName());
             }
         }
 
@@ -228,28 +229,28 @@ public class CommentNode {
         }
 
         // Map of the More's parent_id (which is a full name) to the More itself
-        Map<String, More> mores = new HashMap<>();
-        for (More m : newMores) {
+        Map<String, MoreChildren> mores = new HashMap<>();
+        for (MoreChildren m : newMores) {
             mores.put(m.getParentId(), m);
         }
 
         // Iterate the tree and insert Mores
         for (CommentNode node : walkTree()) {
             if (mores.containsKey(node.getComment().getFullName())) {
-                More m = mores.get(node.getComment().getFullName());
-                node.more = m;
+                MoreChildren m = mores.get(node.getComment().getFullName());
+                node.moreChildren = m;
                 newMores.remove(m);
             }
         }
 
         // Special handling for the More of the root node
         if (mores.containsKey(ownerId)) {
-            More m = mores.get(ownerId);
-            this.more = m;
+            MoreChildren m = mores.get(ownerId);
+            this.moreChildren = m;
             newMores.remove(m);
         }
 
-        for (More m : newMores) {
+        for (MoreChildren m : newMores) {
             JrawUtils.logger().warn("Unable to find parent for " + m);
         }
 
@@ -257,7 +258,7 @@ public class CommentNode {
     }
 
     /**
-     * Gets a list of {@link Comment} and {@link More} objects from this node's More object. The resulting Things will
+     * Gets a list of {@link Comment} and {@link MoreChildren} objects from this node's More object. The resulting Things will
      * be listed as if they were iterated in pre-order traversal. To add these new comments to the tree, use
      * {@link #loadMoreComments(RedditClient)}.
      *
@@ -271,7 +272,7 @@ public class CommentNode {
         if (!hasMoreChildren())
             return new ArrayList<>();
 
-        List<String> moreIds = more.getChildrenIds();
+        List<String> moreIds = moreChildren.getChildrenIds();
         StringBuilder ids = new StringBuilder(moreIds.get(0));
         for (int i = 1; i < moreIds.size(); i++) {
             String other = moreIds.get(i);
@@ -307,7 +308,7 @@ public class CommentNode {
             if (node.get("kind").asText().equals(Model.Kind.COMMENT.getValue())) {
                 commentList.add(new Comment(data));
             } else if (node.get("kind").asText().equals(Model.Kind.MORE.getValue())) {
-                commentList.add(new More(data));
+                commentList.add(new MoreChildren(data));
             } else {
                 throw new IllegalArgumentException(String.format("Unexpected data type: %s. Expecting %s or %s",
                         kind, Model.Kind.COMMENT, Model.Kind.MORE));
@@ -376,7 +377,7 @@ public class CommentNode {
                 "ownerId='" + ownerId + '\'' +
                 ", parent=" + parent +
                 ", depth=" + depth +
-                ", more=" + more +
+                ", more=" + moreChildren +
                 ", comment=" + comment +
                 ", totalSize=" + getTotalSize() +
                 '}';
@@ -392,7 +393,7 @@ public class CommentNode {
         if (depth != that.depth) return false;
         if (children != null ? !children.equals(that.children) : that.children != null) return false;
         if (comment != null ? !comment.equals(that.comment) : that.comment != null) return false;
-        if (more != null ? !more.equals(that.more) : that.more != null) return false;
+        if (moreChildren != null ? !moreChildren.equals(that.moreChildren) : that.moreChildren != null) return false;
         if (ownerId != null ? !ownerId.equals(that.ownerId) : that.ownerId != null) return false;
         if (parent != null ? !parent.equals(that.parent) : that.parent != null) return false;
 
@@ -402,7 +403,7 @@ public class CommentNode {
     @Override
     public int hashCode() {
         int result = ownerId != null ? ownerId.hashCode() : 0;
-        result = 31 * result + (more != null ? more.hashCode() : 0);
+        result = 31 * result + (moreChildren != null ? moreChildren.hashCode() : 0);
         result = 31 * result + (comment != null ? comment.hashCode() : 0);
         result = 31 * result + (parent != null ? parent.hashCode() : 0);
         result = 31 * result + (children != null ? children.hashCode() : 0);

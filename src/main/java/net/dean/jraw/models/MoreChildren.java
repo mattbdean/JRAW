@@ -13,14 +13,14 @@ import java.util.List;
  * See <a href="https://github.com/reddit/reddit/wiki/JSON#more">here</a> for more information.
  */
 @Model(kind = Model.Kind.MORE)
-public class More extends Thing {
+public class MoreChildren extends Thing {
 
     /**
      * Instantiates a new More
      *
      * @param dataNode The JsonNode to gather data from
      */
-    public More(JsonNode dataNode) {
+    public MoreChildren(JsonNode dataNode) {
         super(dataNode);
     }
 

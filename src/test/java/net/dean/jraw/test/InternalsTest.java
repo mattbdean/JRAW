@@ -14,7 +14,7 @@ import net.dean.jraw.models.DistinguishedStatus;
 import net.dean.jraw.models.Flair;
 import net.dean.jraw.models.JsonModel;
 import net.dean.jraw.models.Listing;
-import net.dean.jraw.models.More;
+import net.dean.jraw.models.MoreChildren;
 import net.dean.jraw.models.Submission;
 import net.dean.jraw.models.meta.JsonProperty;
 import net.dean.jraw.paginators.Paginators;
@@ -225,7 +225,7 @@ public class InternalsTest extends RedditTest {
                     "}";
             JsonNode dataNode = objectMapper.readTree(json);
 
-            More more = new More(dataNode);
+            MoreChildren more = new MoreChildren(dataNode);
 
             assertTrue(more.getCount() == 20);
 
