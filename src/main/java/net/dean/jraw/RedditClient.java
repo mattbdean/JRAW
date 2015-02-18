@@ -3,7 +3,7 @@ package net.dean.jraw;
 import com.fasterxml.jackson.databind.JsonNode;
 import net.dean.jraw.http.AuthenticationMethod;
 import net.dean.jraw.http.BasicAuthData;
-import net.dean.jraw.http.Credentials;
+import net.dean.jraw.http.oauth.Credentials;
 import net.dean.jraw.http.HttpAdapter;
 import net.dean.jraw.http.HttpRequest;
 import net.dean.jraw.http.MediaTypes;

@@ -6,7 +6,6 @@ import java.util.Scanner
 import java.security.SecureRandom
 import java.math.BigInteger
 import java.util.Random
-import net.dean.jraw.http.Credentials
 import net.dean.jraw.managers.AccountManager
 import java.io.File
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
@@ -17,6 +16,7 @@ import com.fasterxml.jackson.databind.ObjectWriter
 import net.dean.jraw.http.NetworkException
 import net.dean.jraw.http.UserAgent
 import net.dean.jraw.Version
+import net.dean.jraw.http.oauth.Credentials
 
 /**
  * This class will create a Reddit user and set up everything you need to start testing with JRAW. See

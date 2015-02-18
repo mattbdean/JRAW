@@ -1,4 +1,6 @@
-package net.dean.jraw.http;
+package net.dean.jraw.http.oauth;
+
+import net.dean.jraw.http.AuthenticationMethod;
 
 import java.util.UUID;
 
