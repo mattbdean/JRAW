@@ -13,7 +13,7 @@ import java.util.*;
  *
  * @param <T> The type that the listings will contain
  */
-public abstract class Paginator<T extends Thing> implements Iterator<Listing<T>>, NetworkAccessible {
+public abstract class Paginator<T extends Thing> implements Iterator<Listing<T>> {
 
     /** The default limit of Things to return */
     public static final int DEFAULT_LIMIT = 25;
@@ -308,11 +308,6 @@ public abstract class Paginator<T extends Thing> implements Iterator<Listing<T>>
      */
     public int getPageIndex() {
         return pageNumber;
-    }
-
-    @Override
-    public HttpAdapter getHttpAdapter() {
-        return reddit.getHttpAdapter();
     }
 
     @Override

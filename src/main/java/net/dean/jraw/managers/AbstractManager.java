@@ -8,7 +8,7 @@ import net.dean.jraw.http.*;
  * This class serves as the base class for all "manager" classes, which have control over a certain section of the API,
  * such as {@link MultiRedditManager multireddits}, {@link WikiManager wikis}, or {@link InboxManager the inbox}.
  */
-public abstract class AbstractManager implements NetworkAccessible {
+public abstract class AbstractManager {
     protected final RedditClient reddit;
 
     /**
@@ -17,11 +17,6 @@ public abstract class AbstractManager implements NetworkAccessible {
      */
     protected AbstractManager(RedditClient reddit) {
         this.reddit = reddit;
-    }
-
-    @Override
-    public final HttpAdapter getHttpAdapter() {
-        return reddit.getHttpAdapter();
     }
 
     /**
