@@ -6,10 +6,8 @@ import net.dean.jraw.JrawUtils;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.AuthenticationMethod;
 import net.dean.jraw.http.BasicAuthData;
-import net.dean.jraw.http.HttpAdapter;
 import net.dean.jraw.http.HttpRequest;
 import net.dean.jraw.http.MediaTypes;
-import net.dean.jraw.http.NetworkAccessible;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.RestResponse;
 
@@ -41,7 +39,7 @@ import java.util.Map;
  *     {@link #doScriptApp(Credentials)}.
  * </p>
  */
-public class OAuthHelper implements NetworkAccessible {
+public class OAuthHelper {
     private static final String GRANT_TYPE = "https://oauth.reddit.com/grants/installed_client";
     private SecureRandom secureRandom;
     private String state;
@@ -241,10 +239,5 @@ public class OAuthHelper implements NetworkAccessible {
                 .host(RedditClient.HOST_SPECIAL)
                 .path("/api/v1/access_token")
                 .basicAuth(authData);
-    }
-
-    @Override
-    public HttpAdapter getHttpAdapter() {
-        return reddit.getHttpAdapter();
     }
 }

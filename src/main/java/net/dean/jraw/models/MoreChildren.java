@@ -16,7 +16,7 @@ import java.util.List;
 public class MoreChildren extends Thing {
 
     /**
-     * Instantiates a new More
+     * Instantiates a new MoreChildren
      *
      * @param dataNode The JsonNode to gather data from
      */
