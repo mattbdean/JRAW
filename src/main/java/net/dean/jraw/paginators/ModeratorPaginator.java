@@ -3,7 +3,6 @@ package net.dean.jraw.paginators;
 import net.dean.jraw.EndpointImplementation;
 import net.dean.jraw.Endpoints;
 import net.dean.jraw.RedditClient;
-import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.models.Listing;
 import net.dean.jraw.models.PublicContribution;
 
@@ -95,9 +94,9 @@ public class ModeratorPaginator extends GenericPaginator<PublicContribution> {
             Endpoints.ABOUT_UNMODERATED,
             Endpoints.ABOUT_EDITED
     })
-    public Listing<PublicContribution> getListing(boolean forwards) throws NetworkException {
+    public Listing<PublicContribution> next(boolean forwards) {
         // Just call super so that we can add the @EndpointImplementation annotation
-        return super.getListing(forwards);
+        return super.next(forwards);
     }
 
     @Override

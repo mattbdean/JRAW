@@ -835,5 +835,4 @@ public class RedditClient extends RestClient {
             return this;
         }
     }
-
 }

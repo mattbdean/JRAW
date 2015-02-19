@@ -3,7 +3,6 @@ package net.dean.jraw.paginators;
 import net.dean.jraw.EndpointImplementation;
 import net.dean.jraw.Endpoints;
 import net.dean.jraw.RedditClient;
-import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.models.Listing;
 import net.dean.jraw.models.Message;
 
@@ -38,8 +37,8 @@ public class InboxPaginator extends GenericPaginator<Message> {
             Endpoints.MESSAGE_UNREAD,
             Endpoints.MESSAGE_WHERE
     })
-    public Listing<Message> getListing(boolean forwards) throws NetworkException {
+    public Listing<Message> next(boolean forwards) {
         // Just call super so that we can add the @EndpointImplementation annotation
-        return super.getListing(forwards);
+        return super.next(forwards);
     }
 }

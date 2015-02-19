@@ -3,7 +3,6 @@ package net.dean.jraw.paginators;
 import net.dean.jraw.EndpointImplementation;
 import net.dean.jraw.Endpoints;
 import net.dean.jraw.RedditClient;
-import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.models.Contribution;
 import net.dean.jraw.models.Listing;
 
@@ -36,9 +35,9 @@ public class UserContributionPaginator extends GenericPaginator<Contribution> {
             Endpoints.USER_USERNAME_SAVED,
             Endpoints.USER_USERNAME_GILDED
     })
-    public Listing<Contribution> getListing(boolean forwards) throws NetworkException {
+    public Listing<Contribution> next(boolean forwards) {
         // Just call super so that we can add the @EndpointImplementation annotation
-        return super.getListing(forwards);
+        return super.next(forwards);
     }
 
     @Override

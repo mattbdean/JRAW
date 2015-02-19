@@ -3,7 +3,6 @@ package net.dean.jraw.paginators;
 import net.dean.jraw.EndpointImplementation;
 import net.dean.jraw.Endpoints;
 import net.dean.jraw.RedditClient;
-import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.models.Listing;
 import net.dean.jraw.models.ModAction;
 
@@ -26,8 +25,8 @@ public class ModLogPaginator extends Paginator<ModAction> {
 
     @Override
     @EndpointImplementation(Endpoints.ABOUT_LOG)
-    public Listing<ModAction> getListing(boolean forwards) throws NetworkException, IllegalStateException {
-        return super.getListing(forwards);
+    public Listing<ModAction> next(boolean forwards) throws IllegalStateException {
+        return super.next(forwards);
     }
 
     @Override

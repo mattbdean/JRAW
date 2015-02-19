@@ -4,7 +4,6 @@ import net.dean.jraw.EndpointImplementation;
 import net.dean.jraw.Endpoints;
 import net.dean.jraw.JrawUtils;
 import net.dean.jraw.RedditClient;
-import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.models.Listing;
 import net.dean.jraw.models.Submission;
 
@@ -35,9 +34,9 @@ public class SubmissionSearchPaginator extends Paginator<Submission> {
 
     @Override
     @EndpointImplementation(Endpoints.SEARCH)
-    public Listing<Submission> getListing(boolean forwards) throws NetworkException {
+    public Listing<Submission> next(boolean forwards) {
         // Just call super so that we can add the @EndpointImplementation annotation
-        return super.getListing(forwards);
+        return super.next(forwards);
     }
 
     @Override

@@ -4,6 +4,7 @@ import net.dean.jraw.ApiException;
 import net.dean.jraw.JrawUtils;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.NetworkException;
+import net.dean.jraw.http.UncheckedNetworkException;
 import net.dean.jraw.managers.MultiRedditManager;
 import net.dean.jraw.models.Listing;
 import net.dean.jraw.models.MultiReddit;
@@ -40,19 +41,23 @@ public class PaginationTest extends RedditTest {
 
     @Test
     public void testPaginatorTimePeriod() {
-        final long millisecondsInAnHour = 60 * 60 * 1000;
+        try {
+            final long millisecondsInAnHour = 60 * 60 * 1000;
 
-        SubredditPaginator frontPage = Paginators.frontPage(reddit);
-        frontPage.setSorting(Sorting.TOP);
-        frontPage.setTimePeriod(TimePeriod.HOUR);
-        Listing<Submission> submissions = frontPage.next();
+            SubredditPaginator frontPage = Paginators.frontPage(reddit);
+            frontPage.setSorting(Sorting.TOP);
+            frontPage.setTimePeriod(TimePeriod.HOUR);
+            Listing<Submission> submissions = frontPage.next();
 
-        for (Submission post : submissions) {
-            long epochPosted = post.getCreatedUtc().getTime();
-            long epochNow = new Date().getTime();
+            for (Submission post : submissions) {
+                long epochPosted = post.getCreatedUtc().getTime();
+                long epochNow = new Date().getTime();
 
-            // Make sure the submissions have been posted in the past hour
-            assertTrue(epochPosted > epochNow - millisecondsInAnHour);
+                // Make sure the submissions have been posted in the past hour
+                assertTrue(epochPosted > epochNow - millisecondsInAnHour);
+            }
+        } catch (UncheckedNetworkException e) {
+            handle(e);
         }
     }
 
@@ -131,31 +136,35 @@ public class PaginationTest extends RedditTest {
 
     @Test
     public void testMultiHubPaginator() {
-        MultiHubPaginator paginator = Paginators.multihub(reddit);
+        try {
+            MultiHubPaginator paginator = Paginators.multihub(reddit);
 
-        final int threshold = 3;
-        int valid = 0;
-        int invalid = 0;
+            final int threshold = 3;
+            int valid = 0;
+            int invalid = 0;
 
-        Listing<MultiHubPaginator.MultiRedditId> ids = paginator.next();
+            Listing<MultiHubPaginator.MultiRedditId> ids = paginator.next();
 
-        for (MultiHubPaginator.MultiRedditId id : ids) {
-            try {
-                MultiReddit multi = manager.get(id.getOwner(), id.getName());
-                validateModel(multi);
-                valid++;
-            } catch (NetworkException | ApiException e) {
-                invalid++;
+            for (MultiHubPaginator.MultiRedditId id : ids) {
+                try {
+                    MultiReddit multi = manager.get(id.getOwner(), id.getName());
+                    validateModel(multi);
+                    valid++;
+                } catch (NetworkException | ApiException e) {
+                    invalid++;
+                }
+
+                if (valid >= threshold) {
+                    // Test passed
+                    break;
+                }
+                if (invalid >= threshold) {
+                    // More than the acceptable amount failed, something is probably broken
+                    fail("Failed to get " + threshold + " separate multireddits");
+                }
             }
-
-            if (valid >= threshold) {
-                // Test passed
-                break;
-            }
-            if (invalid >= threshold) {
-                // More than the acceptable amount failed, something is probably broken
-                fail("Failed to get " + threshold + " separate multireddits");
-            }
+        } catch (UncheckedNetworkException e) {
+            handle(e);
         }
     }
 
@@ -229,7 +238,7 @@ public class PaginationTest extends RedditTest {
     }
 
     @Test(expectedExceptions = IllegalStateException.class)
-    public void testChangeRequestParamters() {
+    public void testChangeRequestParameters() {
         AllSubredditsPaginator paginator = Paginators.allSubreddits(reddit, "new");
         paginator.next();
         // Modifying the request parameters after the initial request, without calling reset
@@ -272,24 +281,20 @@ public class PaginationTest extends RedditTest {
     }
 
     protected <T extends Thing> void commonTest(Paginator<T> p) {
-        try {
-            int numPages = 2;
-            // Test that the paginator can retrieve the data
-            List<Listing<T>> pages = p.accumulate(numPages);
+        int numPages = 2;
+        // Test that the paginator can retrieve the data
+        List<Listing<T>> pages = p.accumulate(numPages);
 
-            for (Listing<T> listing : pages) {
-                // Validate the Listing (not its children)
-                validateModel(listing);
+        for (Listing<T> listing : pages) {
+            // Validate the Listing (not its children)
+            validateModel(listing);
 
-                if (listing.size() > 0) {
-                    // Validate Listing children
-                    validateModels(listing);
-                } else {
-                    JrawUtils.logger().warn("Listing was empty");
-                }
+            if (listing.size() > 0) {
+                // Validate Listing children
+                validateModels(listing);
+            } else {
+                JrawUtils.logger().warn("Listing was empty");
             }
-        } catch (NetworkException e) {
-            handle(e);
         }
     }
 }

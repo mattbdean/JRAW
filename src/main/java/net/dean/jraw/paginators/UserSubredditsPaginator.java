@@ -3,7 +3,6 @@ package net.dean.jraw.paginators;
 import net.dean.jraw.EndpointImplementation;
 import net.dean.jraw.Endpoints;
 import net.dean.jraw.RedditClient;
-import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.models.Listing;
 import net.dean.jraw.models.Subreddit;
 
@@ -40,8 +39,8 @@ public class UserSubredditsPaginator extends GenericPaginator<Subreddit> {
             Endpoints.SUBREDDITS_MINE_SUBSCRIBER,
             Endpoints.SUBREDDITS_MINE_WHERE
     })
-    public Listing<Subreddit> getListing(boolean forwards) throws NetworkException {
+    public Listing<Subreddit> next(boolean forwards) {
         // Just call super so that we can add the @EndpointImplementation annotation
-        return super.getListing(forwards);
+        return super.next(forwards);
     }
 }

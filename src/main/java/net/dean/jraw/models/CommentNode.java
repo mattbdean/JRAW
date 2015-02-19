@@ -50,6 +50,8 @@ import java.util.concurrent.locks.ReentrantLock;
  * that submission with a depth of 1. Nodes {@code f}, {@code g} and {@code h}, and {@code i} have a depth of 3. This
  * tree can be traversed using several different methods: Pre-order ({@code abcfghdi}), post-order ({@code bfghcida}),
  * and breadth-first ({@code abcdfghi}).
+ *
+ * @author Matthew Dean
  */
 public class CommentNode {
     private static final SimpleTreeTraverser traverser = new SimpleTreeTraverser();

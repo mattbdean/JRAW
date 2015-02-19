@@ -3,7 +3,6 @@ package net.dean.jraw.paginators;
 import net.dean.jraw.EndpointImplementation;
 import net.dean.jraw.Endpoints;
 import net.dean.jraw.RedditClient;
-import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.models.Listing;
 import net.dean.jraw.models.UserRecord;
 
@@ -29,8 +28,8 @@ public class ImportantUserPaginator extends GenericUserRecordPaginator {
             Endpoints.OAUTH_ME_BLOCKED,
             Endpoints.OAUTH_ME_FRIENDS
     })
-    public Listing<UserRecord> getListing(boolean forwards) throws NetworkException, IllegalStateException {
-        return super.getListing(forwards);
+    public Listing<UserRecord> next(boolean forwards) throws IllegalStateException {
+        return super.next(forwards);
     }
 
     @Override

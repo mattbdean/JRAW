@@ -3,7 +3,6 @@ package net.dean.jraw.paginators;
 import net.dean.jraw.EndpointImplementation;
 import net.dean.jraw.Endpoints;
 import net.dean.jraw.RedditClient;
-import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.models.Listing;
 import net.dean.jraw.models.Subreddit;
 
@@ -34,8 +33,8 @@ public class SubredditSearchPaginator extends Paginator<Subreddit> {
 
     @Override
     @EndpointImplementation(Endpoints.SUBREDDITS_SEARCH)
-    public Listing<Subreddit> getListing(boolean forwards) throws NetworkException, IllegalStateException {
-        return super.getListing(forwards);
+    public Listing<Subreddit> next(boolean forwards) throws IllegalStateException {
+        return super.next(forwards);
     }
 
     @Override
