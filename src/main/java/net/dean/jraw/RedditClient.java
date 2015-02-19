@@ -516,7 +516,6 @@ public class RedditClient extends RestClient {
         return subreddits;
     }
 
-
     /**
      * Gets a list of similar subreddits based on the given ones.
      *
@@ -526,7 +525,7 @@ public class RedditClient extends RestClient {
      * @throws NetworkException If the request was not successful.
      */
     @EndpointImplementation(Endpoints.RECOMMEND_SR_SRNAMES)
-    public List<String> getRecommendations(List<String> subreddits, String... omit) throws NetworkException {
+    public List<String> getRecommendations(List<String> subreddits, List<String> omit) throws NetworkException {
         if (subreddits.isEmpty()) {
             return new ArrayList<>();
         }
