@@ -1,12 +1,16 @@
 package net.dean.jraw.http;
 
 /**
- * The same as {@link NetworkException}, except extending RuntimeException instead of Exception.
+ * A checked version of NetworkException
  */
-public class UncheckedNetworkException extends RuntimeException {
+public class CheckedNetworkException extends Exception {
     private final RestResponse response;
 
-    public UncheckedNetworkException(RestResponse response) {
+    public CheckedNetworkException(NetworkException ex) {
+        this(ex.getResponse());
+    }
+
+    public CheckedNetworkException(RestResponse response) {
         super(String.format("Request returned non-successful status code: %s %s",
                 response.getStatusCode(),
                 response.getStatusMessage()));

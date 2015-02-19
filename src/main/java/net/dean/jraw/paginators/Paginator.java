@@ -66,12 +66,12 @@ public abstract class Paginator<T extends Thing> implements RedditIterable<T> {
     }
 
     @Override
-    public Listing<T> next() throws UncheckedNetworkException {
+    public Listing<T> next() throws NetworkException {
         return next(true);
     }
 
     @Override
-    public Listing<T> next(boolean forceNetwork) throws UncheckedNetworkException, IllegalStateException {
+    public Listing<T> next(boolean forceNetwork) throws NetworkException, IllegalStateException {
         if (started && changed) {
             throw new IllegalStateException("Cannot change parameters without calling reset()");
         }
@@ -104,11 +104,7 @@ public abstract class Paginator<T extends Thing> implements RedditIterable<T> {
 
 
         RestResponse response;
-        try {
-            response = reddit.execute(request);
-        } catch (NetworkException e) {
-            throw new UncheckedNetworkException(e.getResponse());
-        }
+        response = reddit.execute(request);
         Listing<T> listing = parseListing(response);
         this.current = listing;
         pageNumber++;
@@ -121,7 +117,7 @@ public abstract class Paginator<T extends Thing> implements RedditIterable<T> {
     }
 
     @Override
-    public final List<Listing<T>> accumulate(int maxPages) throws UncheckedNetworkException {
+    public final List<Listing<T>> accumulate(int maxPages) throws NetworkException {
         if (maxPages <= 0) {
             throw new IllegalArgumentException("maxPages must be greater than 0");
         }

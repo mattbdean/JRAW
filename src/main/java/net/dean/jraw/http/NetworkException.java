@@ -1,11 +1,11 @@
 package net.dean.jraw.http;
 
 /**
- * This Exception is thrown when an HTTP response is not successful
+ * Thrown when an HTTP response is not successful
  *
- * @see com.squareup.okhttp.Response#isSuccessful()
+ * @see RestResponse#isSuccessful()
  */
-public class NetworkException extends Exception {
+public class NetworkException extends RuntimeException {
     private final RestResponse response;
 
     /**

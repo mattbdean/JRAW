@@ -4,7 +4,6 @@ import net.dean.jraw.ApiException;
 import net.dean.jraw.JrawUtils;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.NetworkException;
-import net.dean.jraw.http.UncheckedNetworkException;
 import net.dean.jraw.managers.MultiRedditManager;
 import net.dean.jraw.models.Listing;
 import net.dean.jraw.models.MultiReddit;
@@ -56,7 +55,7 @@ public class PaginationTest extends RedditTest {
                 // Make sure the submissions have been posted in the past hour
                 assertTrue(epochPosted > epochNow - millisecondsInAnHour);
             }
-        } catch (UncheckedNetworkException e) {
+        } catch (NetworkException e) {
             handle(e);
         }
     }
@@ -118,7 +117,7 @@ public class PaginationTest extends RedditTest {
     }
 
     @Test
-    public void testMultiRedditPaginator() throws NetworkException, ApiException {
+    public void testMultiRedditPaginator() throws ApiException {
         MultiReddit multi = manager.mine().get(0);
 
         MultiRedditPaginator paginator = Paginators.multireddit(reddit, multi);
@@ -126,7 +125,7 @@ public class PaginationTest extends RedditTest {
     }
 
     @Test
-    public void testCompoundSubredditPaginator() throws NetworkException {
+    public void testCompoundSubredditPaginator() {
         SubredditPaginator paginator = Paginators.subreddit(reddit, "programming", "java");
         // Paginators.subreddit() should have detected the additional subreddit and returned a CompoundSubreddit instead
         // of a normal SubredditPaginator
@@ -163,7 +162,7 @@ public class PaginationTest extends RedditTest {
                     fail("Failed to get " + threshold + " separate multireddits");
                 }
             }
-        } catch (UncheckedNetworkException e) {
+        } catch (NetworkException e) {
             handle(e);
         }
     }
@@ -262,7 +261,7 @@ public class PaginationTest extends RedditTest {
     }
 
     @Test
-    public void testAcummulateMerged() {
+    public void testAccumulateMerged() {
         Paginator<Submission> p = Paginators.frontPage(reddit);
         try {
             List<Submission> things = p.accumulateMerged(3);

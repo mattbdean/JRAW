@@ -1,7 +1,6 @@
 package net.dean.jraw.paginators;
 
 import net.dean.jraw.http.NetworkException;
-import net.dean.jraw.http.UncheckedNetworkException;
 import net.dean.jraw.models.Listing;
 import net.dean.jraw.models.Thing;
 
@@ -9,7 +8,7 @@ import java.util.List;
 
 public interface RedditIterable<T extends Thing> extends Iterable<Listing<T>> {
     /** Gets the next page */
-    public Listing<T> next() throws UncheckedNetworkException;
+    public Listing<T> next() throws NetworkException;
 
     /**
      * Gets the next page
@@ -21,7 +20,7 @@ public interface RedditIterable<T extends Thing> extends Iterable<Listing<T>> {
      * @throws IllegalStateException If any property was changed after the first listing was requested and
      *                               {@link #reset()} was not called.
      */
-    public Listing<T> next(boolean forceNetwork) throws UncheckedNetworkException;
+    public Listing<T> next(boolean forceNetwork) throws NetworkException;
 
     /** Checks if Reddit can provide a next page. */
     public boolean hasNext();
@@ -34,7 +33,7 @@ public interface RedditIterable<T extends Thing> extends Iterable<Listing<T>> {
      * @param maxPages The maximum amount of pages to retrieve
      * @return A list of listings
      */
-    public List<Listing<T>> accumulate(int maxPages) throws UncheckedNetworkException;
+    public List<Listing<T>> accumulate(int maxPages) throws NetworkException;
 
     /**
      * Creates a list of Things whose size is less than or equal to
