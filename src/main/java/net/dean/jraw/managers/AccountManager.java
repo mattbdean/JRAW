@@ -12,6 +12,7 @@ import net.dean.jraw.http.RestResponse;
 import net.dean.jraw.models.Captcha;
 import net.dean.jraw.models.Contribution;
 import net.dean.jraw.models.FlairTemplate;
+import net.dean.jraw.models.PublicContribution;
 import net.dean.jraw.models.Submission;
 import net.dean.jraw.models.Subreddit;
 import net.dean.jraw.models.Thing;
@@ -341,6 +342,24 @@ public class AccountManager extends AbstractManager {
         if (response.hasErrors()) {
             throw response.getError();
         }
+    }
+
+    /** Gives gold to a comment or submission */
+    @EndpointImplementation(Endpoints.OAUTH_GOLD_GILD_FULLNAME)
+    public void giveGold(PublicContribution target) throws NetworkException, ApiException {
+        genericPost(reddit.request()
+                .endpoint(Endpoints.OAUTH_GOLD_GILD_FULLNAME, target.getFullName())
+                .post()
+                .build());
+    }
+
+    /** Gives creddits to a user */
+    @EndpointImplementation(Endpoints.OAUTH_GOLD_GIVE_USERNAME)
+    public void giveGold(String username, int months) throws NetworkException, ApiException {
+        genericPost(reddit.request()
+                .endpoint(Endpoints.OAUTH_GOLD_GIVE_USERNAME, username)
+                .post(JrawUtils.mapOf("months", months))
+                .build());
     }
 
     private JsonNode getFlairChoicesRootNode(String subreddit, Submission link) throws NetworkException, ApiException {

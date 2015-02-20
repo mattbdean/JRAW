@@ -12,8 +12,8 @@ import net.dean.jraw.models.attr.Votable;
 import java.util.Map;
 
 /**
- * This class manages actions most commonly reserved for
- * moderators (although some of them can be used on yourself without moderator powers).
+ * This class manages actions most commonly reserved for moderators (although some of them can be used on yourself
+ * without moderator permissions).
  */
 public class ModerationManager extends AbstractManager {
 	/**
