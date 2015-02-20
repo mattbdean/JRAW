@@ -177,13 +177,16 @@ public class InternalsTest extends RedditTest {
     @Test
     public void testVersion() {
         MockVersion v = new MockVersion(1, 2, 3);
-        assertTrue(v.getMajor() == 1);
-        assertTrue(v.getMinor() == 2);
-        assertTrue(v.getPatch() == 3);
-        assertFalse(v.isSnapshot());
+        assertEquals(v.getMajor(), 1);
+        assertEquals(v.getMinor(), 2);
+        assertEquals(v.getPatch(), 3);
+        assertEquals(v.formatted(), "1.2.3");
+        assertEquals(v.formatted(), v.toString());
 
-        MockVersion v2 = new MockVersion(1, 2, 3);
-        basicObjectTest(v, v2);
+        MockVersion v2 = new MockVersion(1, 2, 3, 4);
+        assertEquals(v2.getBuild(), 4);
+        assertEquals(v2.formatted(), "1.2.3.4");
+        basicObjectTest(v2, v2);
     }
 
     /**
@@ -202,8 +205,12 @@ public class InternalsTest extends RedditTest {
     }
 
     private class MockVersion extends Version {
-        protected MockVersion(int major, int minor, int patch) {
+        public MockVersion(int major, int minor, int patch) {
             super(major, minor, patch);
+        }
+
+        public MockVersion(int major, int minor, int patch, int build) {
+            super(major, minor, patch, build);
         }
     }
 

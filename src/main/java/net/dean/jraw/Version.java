@@ -4,80 +4,67 @@ package net.dean.jraw;
  * This class provides a standard way to version the library
  */
 public class Version {
-    private static final Version v = new Version(0, 7, 0);
+    /** If a field is equal to this constant, then it will be excluded in {@link #formatted()}. */
+    public static final int EXCLUDE = -1;
+    private static final Version INSTANCE = new Version(0, 7, 0);
 
-    /**
-     * Returns the current version of the library
-     * @return The current version of the library
-     */
+    /** Gets the current version of the library */
     public static Version get() {
-        return v;
+        return INSTANCE;
     }
 
     private final int major;
     private final int minor;
     private final int patch;
-    private final boolean snapshot;
+    private final int build;
+    private final String formatted;
 
     protected Version(int major, int minor, int patch) {
-        this(major, minor, patch, false);
+        this(major, minor, patch, EXCLUDE);
     }
 
-    protected Version(int major, int minor, int patch, boolean snapshot) {
+    protected Version(int major, int minor, int patch, int build) {
         this.major = major;
         this.minor = minor;
         this.patch = patch;
-        this.snapshot = snapshot;
-    }
-
-    @Override
-    public String toString() {
-        return "Version {" +
-                "major=" + major +
-                ", minor=" + minor +
-                ", patch=" + patch +
-                ", snapshot=" + snapshot +
-                '}';
+        this.build = build;
+        this.formatted = String.format("%s.%s.%s%s", major, minor, patch, build != EXCLUDE ? "." + build : "");
     }
 
     /**
-     * Generates a formatted string representing this Version in the format of {@code <major>.<minor>.<patch>}
+     * Gets a string representing this Version. If this is a stable release, then the return value of this method will
+     * be equal to {@code <major>.<minor>.<patch>}, otherwise it will be equal to
+     * {@code <major>.<minor>.<patch>.<build>}.
+     *
      * @return A formatted string representing this Version
      */
     public String formatted() {
-        return String.format("%s.%s.%s%s", major, minor, patch, snapshot ? "-SNAPSHOT" : "");
+        return formatted;
     }
 
-    /**
-     * Gets the major version (first number)
-     * @return The major version
-     */
+    /** Gets the major version (first number) */
     public int getMajor() {
         return major;
     }
 
-    /**
-     * Gets the minor version (second number)
-     * @return The minor version
-     */
+    /** Gets the minor version (second number) */
     public int getMinor() {
         return minor;
     }
 
-    /**
-     * Gets the patch version (third number)
-     * @return The patch version
-     */
+    /** Gets the patch version (third number) */
     public int getPatch() {
         return patch;
     }
 
-    /**
-     * Checks if this build is a snapshot build
-     * @return If this version is a snapshot
-     */
-    public boolean isSnapshot() {
-        return snapshot;
+    /** Gets the build number (fourth number). Will be equal to {@link #EXCLUDE} if this is a stable release. */
+    public int getBuild() {
+        return build;
+    }
+
+    @Override
+    public String toString() {
+        return formatted();
     }
 
     @Override
@@ -90,7 +77,7 @@ public class Version {
         return major == version.major &&
                 minor == version.minor &&
                 patch == version.patch &&
-                snapshot == version.snapshot;
+                build == version.build;
 
     }
 
@@ -99,7 +86,7 @@ public class Version {
         int result = major;
         result = 31 * result + minor;
         result = 31 * result + patch;
-        result = 31 * result + (snapshot ? 1 : 0);
+        result = 31 * result + build;
         return result;
     }
 }
