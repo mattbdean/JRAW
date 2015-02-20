@@ -1,7 +1,7 @@
 package net.dean.jraw.test;
 
-import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.NetworkException;
+import net.dean.jraw.http.SubmissionRequest;
 import net.dean.jraw.models.Comment;
 import net.dean.jraw.models.CommentNode;
 import net.dean.jraw.models.CommentSort;
@@ -9,9 +9,7 @@ import net.dean.jraw.models.Submission;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotEquals;
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.*;
 
 /**
  * Tests for SubmissionRequest and the responses it produces
@@ -19,12 +17,12 @@ import static org.testng.Assert.assertTrue;
 public class SubmissionRequestTest extends RedditTest {
     private static final String SUBMISSION_ID = "92dd8";
     private static final String FOCUS_COMMENT_ID = "c0b73aj";
-    private RedditClient.SubmissionRequest request;
+    private SubmissionRequest.Builder request;
     private Submission s;
 
     @BeforeMethod
     public void setUp() {
-        this.request = new RedditClient.SubmissionRequest(SUBMISSION_ID);
+        this.request = new SubmissionRequest.Builder(SUBMISSION_ID);
     }
 
     @Test
@@ -80,7 +78,7 @@ public class SubmissionRequestTest extends RedditTest {
 
     private Submission get() {
         try {
-            return reddit.getSubmission(request);
+            return reddit.getSubmission(request.build());
         } catch (NetworkException e) {
             handle(e);
             return null;

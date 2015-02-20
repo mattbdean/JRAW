@@ -3,6 +3,7 @@ package net.dean.jraw;
 import com.fasterxml.jackson.databind.JsonNode;
 import net.dean.jraw.http.AuthenticationMethod;
 import net.dean.jraw.http.BasicAuthData;
+import net.dean.jraw.http.SubmissionRequest;
 import net.dean.jraw.http.oauth.Credentials;
 import net.dean.jraw.http.HttpAdapter;
 import net.dean.jraw.http.HttpRequest;
@@ -317,16 +318,16 @@ public class RedditClient extends RestClient {
     @EndpointImplementation(Endpoints.COMMENTS_ARTICLE)
     public Submission getSubmission(SubmissionRequest request) throws NetworkException {
         Map<String, String> args = new HashMap<>();
-        if (request.depth != null)
-            args.put("depth", Integer.toString(request.depth));
-        if (request.context != null)
-            args.put("context", Integer.toString(request.context));
-        if (request.limit != null)
-            args.put("limit", Integer.toString(request.limit));
-        if (request.focus != null && !JrawUtils.isFullName(request.focus))
-            args.put("comment", request.focus);
+        if (request.getDepth() != null)
+            args.put("depth", Integer.toString(request.getDepth()));
+        if (request.getContext() != null)
+            args.put("context", Integer.toString(request.getContext()));
+        if (request.getLimit() != null)
+            args.put("limit", Integer.toString(request.getLimit()));
+        if (request.getFocus() != null && !JrawUtils.isFullName(request.getFocus()))
+            args.put("comment", request.getFocus());
 
-        CommentSort sort = request.sort;
+        CommentSort sort = request.getSort();
         if (sort == null)
             // Reddit sorts by confidence by default
             sort = CommentSort.CONFIDENCE;
@@ -334,7 +335,7 @@ public class RedditClient extends RestClient {
 
 
         RestResponse response = execute(request()
-                .path(String.format("/comments/%s", request.id))
+                .path(String.format("/comments/%s", request.getId()))
                 .query(args)
                 .build());
         return SubmissionSerializer.withComments(response.getJson(), sort);
@@ -748,90 +749,8 @@ public class RedditClient extends RestClient {
         }
     }
 
-    /**
-     * Returns how the user was authenticated
-     * @return How the user was authenticated
-     */
+    /** Returns how the user was authenticated */
     public AuthenticationMethod getAuthenticationMethod() {
         return authMethod;
-    }
-
-    /**
-     * This class is used by {@link #getSubmission(net.dean.jraw.RedditClient.SubmissionRequest)} to specify the
-     * parameters of the request.
-     */
-    public static class SubmissionRequest {
-        private final String id;
-        private Integer depth;
-        private Integer limit;
-        private Integer context;
-        private CommentSort sort;
-        private String focus;
-
-        /**
-         * Instantiates a new SubmissionRequeslt
-         * @param id The link's ID, ex: "92dd8"
-         */
-        public SubmissionRequest(String id) {
-            this.id = id;
-        }
-
-        /**
-         * Sets the maximum amount of subtrees returned by this request. If the number is less than 1, it is ignored by
-         * the Reddit API and no depth restriction is enacted.
-         * @param depth The depth
-         * @return This SubmissionRequest
-         */
-        public SubmissionRequest depth(Integer depth) {
-            this.depth = depth;
-            return this;
-        }
-
-        /**
-         * Sets the maximum amount of comments to return
-         * @param limit The limit
-         * @return This SubmissionRequest
-         */
-        public SubmissionRequest limit(Integer limit) {
-            this.limit = limit;
-            return this;
-        }
-
-        /**
-         * Sets the number of parents shown in relation to the focused comment. For example, if the focused comment is
-         * in the eighth level of the comment tree (meaning there are seven replies above it), and the context is set to
-         * six, then the response will also contain the six direct parents of the given comment. For a better
-         * understanding, play with
-         * <a href="https://www.reddit.com/comments/92dd8?comment=c0b73aj&context=8">this link</a>.
-         *
-         * @param context The number of parent comments to return in relation to the focused comment.
-         * @return This SubmissionRequest
-         */
-        public SubmissionRequest context(Integer context) {
-            this.context = context;
-            return this;
-        }
-
-        /**
-         * Sets the sorting for the comments in the response
-         * @param sort The sorting
-         * @return This SubmissionRequest
-         */
-        public SubmissionRequest sort(CommentSort sort) {
-            this.sort = sort;
-            return this;
-        }
-
-        /**
-         * Sets the ID of the comment to focus on. If this comment does not exist, then this parameter is ignored.
-         * Otherwise, only one comment tree is returned: the one in which the given comment resides.
-         *
-         * @param commentId The ID of the comment to focus on. For example: "c0b6xx0".
-         * @return This SubmissionRequest
-         */
-        public SubmissionRequest focus(String commentId) {
-            this.focus = commentId;
-            return this;
-        }
     }
 }
