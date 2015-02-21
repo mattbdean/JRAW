@@ -130,6 +130,9 @@ public abstract class RestClient implements HttpClient {
                 logger.log(response);
             }
 
+            if (!response.isSuccessful())
+                throw new NetworkException(response);
+
             if (!JrawUtils.isEqual(response.getType(), request.getExpectedType())) {
                 throw new IllegalStateException(String.format("Expected Content-Type ('%s/%s') did not match actual Content-Type ('%s/%s')",
                         request.getExpectedType().type(), request.getExpectedType().subtype(),

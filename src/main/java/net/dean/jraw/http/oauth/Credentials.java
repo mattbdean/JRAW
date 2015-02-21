@@ -1,7 +1,9 @@
 package net.dean.jraw.http.oauth;
 
+import net.dean.jraw.JrawUtils;
 import net.dean.jraw.http.AuthenticationMethod;
 
+import java.net.URL;
 import java.util.UUID;
 
 /**
@@ -14,20 +16,22 @@ public final class Credentials {
     private final String clientId;
     private final String clientSecret;
     private final UUID deviceId;
+    private final URL redirectUrl;
 
     private Credentials(AuthenticationMethod authenticationMethod, String username, String password, String clientId,
-                       String clientSecret) {
-        this(authenticationMethod, username, password, clientId, clientSecret, null);
+                        String clientSecret, String redirectUrl) {
+        this(authenticationMethod, username, password, clientId, clientSecret, null, redirectUrl);
     }
 
     public Credentials(AuthenticationMethod authenticationMethod, String username, String password, String clientId,
-                       String clientSecret, UUID deviceId) {
+                       String clientSecret, UUID deviceId, String redirectUrl) {
         this.authenticationMethod = authenticationMethod;
         this.username = username;
         this.password = password;
         this.clientId = clientId;
         this.clientSecret = clientSecret;
         this.deviceId = deviceId;
+        this.redirectUrl = redirectUrl != null ? JrawUtils.newUrl(redirectUrl) : null;
     }
 
     /**
@@ -79,10 +83,10 @@ public final class Credentials {
      * @param clientId The publicly-available app ID
      * @return A new Credentials
      */
-    public static Credentials installedApp(String username, String password, String clientId) {
+    public static Credentials installedApp(String username, String password, String clientId, String redirectUrl) {
         // Use an empty string as the client secret because "The 'password' for non-confidential clients
         // (installed apps) is an empty string". See https://github.com/reddit/reddit/wiki/OAuth2#token-retrieval
-        return new Credentials(AuthenticationMethod.APP, username, password, clientId, "");
+        return new Credentials(AuthenticationMethod.APP, username, password, clientId, "", redirectUrl);
     }
 
     /**
@@ -94,7 +98,7 @@ public final class Credentials {
      * @return A new Credentials
      */
     public static Credentials script(String username, String password, String clientId, String clientSecret) {
-        return new Credentials(AuthenticationMethod.SCRIPT, username, password, clientId, clientSecret);
+        return new Credentials(AuthenticationMethod.SCRIPT, username, password, clientId, clientSecret, null);
     }
 
     /**
@@ -105,8 +109,8 @@ public final class Credentials {
      * @param clientSecret The secret value for the application
      * @return A new Credentials
      */
-    public static Credentials webapp(String username, String password, String clientId, String clientSecret) {
-        return new Credentials(AuthenticationMethod.WEBAPP, username, password, clientId, clientSecret);
+    public static Credentials webapp(String username, String password, String clientId, String clientSecret, String redirectUrl) {
+        return new Credentials(AuthenticationMethod.WEBAPP, username, password, clientId, clientSecret, redirectUrl);
     }
 
     /**
@@ -114,7 +118,7 @@ public final class Credentials {
      * @see AuthenticationMethod#USERLESS
      */
     public static Credentials userless(String clientId, String clientSecret, UUID deviceId) {
-        return new Credentials(AuthenticationMethod.USERLESS, null, null, clientId, clientSecret, deviceId);
+        return new Credentials(AuthenticationMethod.USERLESS, null, null, clientId, clientSecret, deviceId, null);
     }
 
     /**
@@ -125,6 +129,10 @@ public final class Credentials {
     public static Credentials userlessApp(String clientId, UUID deviceId) {
         // Use an empty string as the client secret because "The 'password' for non-confidential clients
         // (installed apps) is an empty string". See https://github.com/reddit/reddit/wiki/OAuth2#token-retrieval
-        return new Credentials(AuthenticationMethod.USERLESS_APP, null, null, clientId, "", deviceId);
+        return new Credentials(AuthenticationMethod.USERLESS_APP, null, null, clientId, "", deviceId, null);
+    }
+
+    public URL getRedirectUrl() {
+        return redirectUrl;
     }
 }

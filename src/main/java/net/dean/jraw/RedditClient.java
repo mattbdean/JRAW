@@ -103,8 +103,8 @@ public class RedditClient extends RestClient {
     }
 
     /**
-     * Gets the name of the currently logged in user
-     * @return The name of the currently logged in user
+     * Gets the name of the currently logged in user. Will be null if the "identity" scope was not included or when
+     * using application-only authentication.
      */
     public String getAuthenticatedUser() {
         return authenticatedUser;
@@ -127,7 +127,7 @@ public class RedditClient extends RestClient {
         this.authData = authData;
         httpAdapter.getDefaultHeaders().put(HEADER_AUTHORIZATION, "bearer " + authData.getAccessToken());
 
-        if (!authMethod.isUserless()) {
+        if (!authMethod.isUserless() && isAuthorizedFor(Endpoints.OAUTH_ME)) {
             this.authenticatedUser = me().getFullName();
         }
     }
@@ -596,7 +596,7 @@ public class RedditClient extends RestClient {
     /**
      * Gets the data that shows that this client has been authenticated
      */
-    public OAuthData getAuthData() {
+    public OAuthData getOAuthData() {
         return authData;
     }
 
@@ -605,6 +605,10 @@ public class RedditClient extends RestClient {
      */
     public boolean isAuthorizedFor(Endpoints endpoint) {
         if (authData == null) return false;
+        if (authData.getScopes().length > 0 && authData.getScopes()[0].equals("*")) {
+            // All scopes
+            return true;
+        }
 
         for (String scope : authData.getScopes()) {
             if (scope.equalsIgnoreCase(endpoint.getScope())) {

@@ -1,14 +1,12 @@
 package net.dean.jraw.test;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.dean.jraw.ApiException;
 import net.dean.jraw.Endpoint;
-import net.dean.jraw.RedditClient;
 import net.dean.jraw.Version;
-import net.dean.jraw.http.HttpRequest;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.oauth.OAuthException;
-import net.dean.jraw.http.oauth.OAuthHelper;
 import net.dean.jraw.models.Captcha;
 import net.dean.jraw.models.DistinguishedStatus;
 import net.dean.jraw.models.Flair;
@@ -17,18 +15,13 @@ import net.dean.jraw.models.Listing;
 import net.dean.jraw.models.MoreChildren;
 import net.dean.jraw.models.Submission;
 import net.dean.jraw.models.meta.JsonProperty;
-import com.fasterxml.jackson.databind.JsonNode;
 import net.dean.jraw.paginators.SubredditPaginator;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.testng.Assert.*;
 
@@ -123,55 +116,6 @@ public class InternalsTest extends RedditTest {
         NullPointerException cause = new NullPointerException();
         e = new OAuthException("test", cause);
         assertEquals(e.getCause(), cause);
-    }
-
-    @Test
-    public void testOAuthHelper() throws MalformedURLException {
-        OAuthHelper helper = new OAuthHelper(reddit);
-        HttpRequest expected = new HttpRequest.Builder()
-                .https(true)
-                .host(RedditClient.HOST_SPECIAL)
-                .path("/api/v1/authorize")
-                .query(
-                        "client_id", "myClientId",
-                        "response_type", "code",
-                        "state", "untestable",
-                        "redirect_uri", "http://www.example.com",
-                        "duration", "permanent",
-                        "scope", "scope1 scope2"
-                ).build();
-        HttpRequest actual = HttpRequest.from("GET", helper.getAuthorizationUrl(
-                "myClientId", "http://www.example.com", true, "scope1", "scope2"
-        ));
-
-        URL actualUrl = actual.getUrl();
-        URL expectedUrl = expected.getUrl();
-        assertEquals(actualUrl.getProtocol(), expectedUrl.getProtocol(), "Scheme was different");
-        assertEquals(actualUrl.getHost(), expectedUrl.getHost(), "Host was different");
-        assertEquals(actualUrl.getPath(), expectedUrl.getPath(), "Path was different");
-
-        Map<String, String> actualQuery = parseQuery(actual.getUrl().getQuery());
-        Map<String, String> expectedQuery = parseQuery(expected.getUrl().getQuery());
-
-        for (Map.Entry<String, String> pair : expectedQuery.entrySet()) {
-            if (pair.getKey().equals("state")) {
-                // State is random
-                continue;
-            }
-            assertEquals(pair.getValue(), actualQuery.get(pair.getKey()));
-        }
-    }
-
-    private Map<String, String> parseQuery(String queryString) {
-        Map<String, String> query = new HashMap<>();
-
-        String[] pairs = queryString.split("&");
-        for (String pair : pairs) {
-            String[] parts = pair.split("=");
-            query.put(parts[0], parts[1]);
-        }
-
-        return query;
     }
 
     @Test

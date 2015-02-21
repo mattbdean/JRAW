@@ -22,14 +22,14 @@ import java.util.Map;
  *    'installed' or 'web', a typical use of this class is as follows:
  *
  * <ol>
- *     <li>Obtain an authorization URL using {@link #getAuthorizationUrl(String, String, boolean, String...)}.
+ *     <li>Obtain an authorization URL using {@link #getAuthorizationUrl(Credentials, boolean, String...)}.
  *     <li>Point the user's browser to that URL and have the user login and then press either 'yes' or 'no' on the
  *         authentication form. The URL that the browser redirects to will be your app's redirect URI with some
  *         arguments in the query.
  *     <li>Provide this data as well as an instance of {@link Credentials} to
- *         {@link #onUserChallenge(String, String, Credentials)}. This method will parse the query arguments and report
- *         any errors. Once the response's integrity has been verified, a request to obtain the OAuth access code will
- *         be made and an instance of {@link OAuthData} retrieved.
+ *         {@link #onUserChallenge(String, Credentials)}. This method will parse the query arguments and report any
+ *         errors. Once the response's integrity has been verified, a request to obtain the OAuth access code will be
+ *         made and an instance of {@link OAuthData} retrieved.
  * </ol>
  *
  * <p>Authentication is simpler when the app type is 'script', as this enables the bypassing of showing the initial
@@ -40,6 +40,7 @@ import java.util.Map;
 public class OAuthHelper {
     private static final String GRANT_TYPE = "https://oauth.reddit.com/grants/installed_client";
     private AuthStatus authStatus;
+    private String refreshToken;
     private SecureRandom secureRandom;
     private String state;
     private RedditClient reddit;
@@ -55,15 +56,15 @@ public class OAuthHelper {
 
     /**
      * Generates a URL used to authorize a user using OAuth2 'installed' or 'web' type app.
-     * @param clientId The app's client ID
-     * @param redirectUri The app's redirect URI. Must match exactly as in the app settings.
+     *
+     * @param creds The app's credentials
      * @param permanent Whether or not to request a refresh token which can be exchanged for an additional authorization
      *                  token in the future.
      * @param scopes OAuth scopes to be requested. A full list of scopes can be found
      *               <a href="https://www.reddit.com/dev/api/oauth">here</a>.
      * @return The URL clients are sent to in order to authorize themselves
      */
-    public URL getAuthorizationUrl(String clientId, String redirectUri, boolean permanent, String... scopes) {
+    public URL getAuthorizationUrl(Credentials creds, boolean permanent, String... scopes) {
         if (secureRandom == null)
             secureRandom = new SecureRandom();
         // http://stackoverflow.com/a/41156/1275092
@@ -75,10 +76,10 @@ public class OAuthHelper {
                 .path("/api/v1/authorize")
                 .expected(MediaTypes.HTML.type())
                 .query(JrawUtils.mapOf(
-                        "client_id", clientId,
+                        "client_id", creds.getClientId(),
                         "response_type", "code",
                         "state", state,
-                        "redirect_uri", redirectUri,
+                        "redirect_uri", creds.getRedirectUrl().toExternalForm(),
                         "duration", permanent ? "permanent" : "temporary",
                         "scope", JrawUtils.join(' ', scopes)
                 )).build();
@@ -92,20 +93,19 @@ public class OAuthHelper {
      * this URI. If no error is present and the 'state' code matches the one <em>most recently</em> generated, then an
      * access token is requested.
      *
-     * @param redirectUri The app's redirect URI. Must match exactly as in the app settings.
      * @param finalUrl The URL that the HTTP client redirected to after the user chose either to authorize or not
      *                 authorize the application. This will be the app's redirect URI with the addition of a few query
      *                 parameters.
      * @param creds The credentials to retrieve the access token with. If the authorization method is
-     *              {@link AuthenticationMethod#SCRIPT}, stop what you're doing and use
-     *              {@link #doScriptApp(Credentials)} instead.
+     *              {@link AuthenticationMethod#SCRIPT} or application-only, stop what you're doing and use
+     *              {@link #easyAuth(Credentials)} instead.
      * @throws OAuthException If there was a problem with any of the parameters given
      * @throws NetworkException If the request was not successful
      * @throws IllegalStateException If the state last generated with {@link #getAuthorizationUrl} did not match the
      *                               value of the 'state' query parameter.
      * @return An OAuthData that holds the new access token among other things
      */
-    public OAuthData onUserChallenge(String finalUrl, String redirectUri, Credentials creds) throws NetworkException,
+    public OAuthData onUserChallenge(String finalUrl, Credentials creds) throws NetworkException,
             OAuthException, IllegalStateException {
         if (authStatus != AuthStatus.WAITING_FOR_CHALLENGE) {
             throw new IllegalStateException("Auth flow not started yet. See getAuthorizationUrl()");
@@ -137,12 +137,14 @@ public class OAuthHelper {
                     .post(JrawUtils.mapOf(
                             "grant_type", "authorization_code",
                             "code", code,
-                            "redirect_uri", redirectUri
+                            "redirect_uri", creds.getRedirectUrl()
                     ))
                     .basicAuth(new BasicAuthData(creds.getClientId(), creds.getClientSecret()))
                     .build());
             this.authStatus = AuthStatus.AUTHORIZED;
-            return new OAuthData(creds.getAuthenticationMethod(), response.getJson());
+            OAuthData data = new OAuthData(creds.getAuthenticationMethod(), response.getJson());
+            this.refreshToken = data.getRefreshToken();
+            return data;
         } catch (NetworkException e) {
             if (e.getResponse().getStatusCode() == 401) {
                 throw new OAuthException("Invalid client ID/secret", e);
@@ -202,7 +204,7 @@ public class OAuthHelper {
     /**
      * Authenticates using application-only OAuth2 (in a user-less context).
      * @param credentials The app's credentials. The authentication method must be
-     *                    {@link AuthenticationMethod#isUserless() userless}.
+     *                    {@link AuthenticationMethod#isUserless() user-less}.
      * @return The data returned from the authorization request
      * @throws NetworkException If the request was not successful
      */
@@ -239,10 +241,10 @@ public class OAuthHelper {
         if (!reddit.isLoggedIn())
             return;
         reddit.execute(reddit.request()
-                .host(RedditClient.HOST)
+                .host(RedditClient.HOST_SPECIAL)
                 .path("/api/v1/revoke_token")
                 .post(JrawUtils.mapOf(
-                        "token", reddit.getAuthData().getAccessToken()
+                        "token", reddit.getOAuthData().getAccessToken()
                 )).basicAuth(new BasicAuthData(creds.getClientId(), creds.getClientSecret()))
                 .build());
         authStatus = AuthStatus.REVOKED;
@@ -258,7 +260,7 @@ public class OAuthHelper {
      * @throws OAuthException If the client ID or secret was incorrect
      */
     public OAuthData refreshToken(Credentials creds) throws NetworkException, OAuthException {
-        if (reddit.getAuthData().getRefreshToken() == null) {
+        if (refreshToken == null) {
             throw new IllegalStateException("No refresh token");
         }
 
@@ -270,7 +272,7 @@ public class OAuthHelper {
                     .expected(MediaType.ANY_TYPE)
                     .post(JrawUtils.mapOf(
                             "grant_type", "refresh_token",
-                            "refresh_token", reddit.getAuthData().getRefreshToken()
+                            "refresh_token", refreshToken
                     ))
                     .basicAuth(new BasicAuthData(creds.getClientId(), creds.getClientSecret()))
                     .build());

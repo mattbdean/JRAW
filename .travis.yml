@@ -3,14 +3,20 @@ jdk:
 - oraclejdk7
 env:
   global:
-  # Use 'dumb' gradle output, since Gradle uses formatting that Travis can't handle by default
+  # Use 'dumb' gradle output, since Gradle by default uses formatting that Travis can't handle
   - TERM=dumb
-  - USERNAME=jraw_test
-  # PASS
-  - secure: u0Gmfx91ndH4u32msTaMtMcKSluz6VzQE1mxpwjFha2+mRw7bGmLlkEh6CNfbv9lio2cHP1RN+zmAXq28iQQ4qiOSW5HdfC2M2RzzD9IxQ8rrg4rnHjl3QagfWBltm7QhmgSwVA3gyK1EHNnhUehYhwbSZLD1velBt6je6vQp78=
-  - CLIENT_ID=SoUQNT49ZfuK3w
-  # CLIENT_SECRET
-  - secure: "DNG7LjzY8Ve4ztiD2WywVNQr9d6+d5sefG8JDQkYqM8vNCXQgNcewhH9tZzVyT+GXQ0gBeOHy6yBopwKPk9JHjBZLp6AdCOVuj/UxDGHSFGxMpDPC8e0v6hTHOJi+pswCKadPnHrt5dpr+G3dzyytqdtHcY2ofAO8GJ/yC3IQHw="
+  # USERNAME
+  - secure: "Lyr51sid6i2IR22Jwkvs0itzd/E7B9K++G/zOB7fnWjEaCrc/8lT+OVoZGqzShtthWPUzPWvF0LC5OmhniUpjDerdgTcV+loCd56o+53sba0Ca9DzowTOoVKp0+rQIjLFoUwEKC4KxGsPwzcF3Plhts7gdze+fq5D2K+jUgeJAo="
+  # PASSWORD
+  - secure: "qdaN//0RVPeU9dwf+VWg8k25ybRuO9xMWA+yZklzinL8nNV8xKO8k/+cjtG9SclvCc2IiwF7309V5TfQi7K86Vnm8gumizL6IDspxSXossOXeWHHjtWxdm7FbJq84h5hHKmHRC+Es7eaoX7f5WROJ8xHVsVLVsCNkeKQFt8Py0w="
+  # SCRIPT_CLIENT_ID
+  - secure: "MKBahXhYvidCGfi2eu97Pxdr+uJQmwavmUO8s1/59y4Y/FSoQUTwvnFIsN8jcHKJALqls6XNZOUlJDgIAcHoeHqrPzytnpmLDb1cO3WXRaQRFAy2OjGnGyb+6LxE3SVgqJh58e2ATbYj/2gqWtnNfyEgM2phCm+G0Un0bIMUEMI="
+  # SCRIPT_CLIENT_SECRET
+  - secure: "Tn6YKr1QfblLefowge0BSR8iwtyuW2d2WH5KoHzI+4qgqBbtUkyL0IpXAeGouVdd05pqUvM9K6BThYmeHWXHLgidoFF+vpP1Gb+MkCaEyYBsvdWms0x7N2+c0yeoWLWCBG3lcWp1o2/o7KCTElvwFEb2QQiLloefsgyF70u7C6c="
+  # INSTALLED_CLIENT_ID
+  - secure: "n8sxNsPzp+5BA3qcBvX8r0b8NNUQxF+lVrUVjPNOUXgtFz6eClslh+Bx7xhyl6Mt5Z+Wlmk/FO8QVXzqbgeqK/brHGS7AeWvgB8+S7UG3tx7BqyRXuBSoHtGXNMwzSl+ULHLJfNQv35KoimHkmWTMYxBz/K6z3KnW69Y9PA2yHI="
+  # INSTALLED_REDIRECT_URI
+  - secure: "DU1yOURjDTkXgxtt/DG/Uym1CYryqt20fsLGGwcU1O544/WlWHJz0Y/ZvfeyChLtrsvJNyhjI/46xRbr/yeHJTI6OHnlTxTcAtT/DqUd0D7R+U3CN+/ju/qAmwyTR0i5f9PUFu4Gdv6CBhr/4hZjRHMnXAPS7ns7h73UBvUJ8ts="
   # GIT_NAME and GIT_EMAIL
   - secure: Jn+ssE7+DEnpqxH3BiY5u6b37Uf6op7nrhS30bZ4FsxGSeh4yNBCd4oj8vQn4eG/GDHSL5HmDCpeHMw0Wo6cDYAv/n1ft9IcghO5WGTSYoa2LBrtF4t0468RR447adBOT367PPBD8H/kOFZyyiRaYniA3Bax9K69uVe4B/aUyKI=
   # GIT_USER and GIT_PASS

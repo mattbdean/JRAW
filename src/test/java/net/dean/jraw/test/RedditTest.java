@@ -1,16 +1,13 @@
 package net.dean.jraw.test;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import net.dean.jraw.ApiException;
 import net.dean.jraw.JrawUtils;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.Version;
-import net.dean.jraw.http.AuthenticationMethod;
-import net.dean.jraw.http.oauth.Credentials;
 import net.dean.jraw.http.LoggingMode;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.UserAgent;
+import net.dean.jraw.http.oauth.Credentials;
 import net.dean.jraw.managers.AccountManager;
 import net.dean.jraw.managers.ModerationManager;
 import net.dean.jraw.models.CommentNode;
@@ -22,7 +19,6 @@ import net.dean.jraw.paginators.UserSubredditsPaginator;
 import org.testng.Assert;
 import org.testng.SkipException;
 
-import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Date;
@@ -37,8 +33,6 @@ public abstract class RedditTest {
             "net.dean.jraw.test",
             "v" + Version.get().formatted(),
             "thatJavaNerd"));
-    private static Credentials credentials;
-    private static ObjectMapper objectMapper = new ObjectMapper();
     protected final AccountManager account;
     protected final ModerationManager moderation;
 
@@ -156,44 +150,10 @@ public abstract class RedditTest {
     }
 
     /**
-     * Gets a Credentials object that represents the properties found in credentials.json
-     * (located at /src/test/resources). The Credential's AuthenticationMethod will always be
-     * {@link AuthenticationMethod#SCRIPT}
-     *
-     * @return A Credentials object parsed form credentials.json
+     * Short for CredentialsUtils.instance().script()
      */
     protected final Credentials getCredentials() {
-        if (credentials != null) {
-            return credentials;
-        }
-
-        try {
-            // If running locally, use credentials file
-            // If running with Travis-CI, use env variables
-            if (System.getenv("TRAVIS") != null && Boolean.parseBoolean(System.getenv("TRAVIS"))) {
-                credentials = Credentials.script(System.getenv("USERNAME"),
-                        System.getenv("PASS"),
-                        System.getenv("CLIENT_ID"),
-                        System.getenv("CLIENT_SECRET"));
-                return credentials;
-            } else {
-                InputStream in = RedditTest.class.getResourceAsStream("/credentials.json");
-                if (in == null) {
-                    throw new SetupRequiredException("credentials.json could not be found. See " +
-                            "https://github.com/thatJavaNerd/JRAW#contributing for more information.");
-                }
-
-                JsonNode data = objectMapper.readTree(in);
-                credentials = Credentials.script(data.get("username").asText(),
-                        data.get("password").asText(),
-                        data.get("client_id").asText(),
-                        data.get("client_secret").asText());
-                return credentials;
-            }
-        } catch (Exception e) {
-            handle(e);
-            return null;
-        }
+        return CredentialsUtils.instance().script();
     }
 
     /**
