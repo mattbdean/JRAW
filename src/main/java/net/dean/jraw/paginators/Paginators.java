@@ -2,6 +2,7 @@ package net.dean.jraw.paginators;
 
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.models.MultiReddit;
+import net.dean.jraw.models.Submission;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,6 +21,16 @@ public final class Paginators {
      */
     public static AllSubredditsPaginator allSubreddits(RedditClient reddit, String where) {
         return new AllSubredditsPaginator(reddit, where);
+    }
+
+    /**
+     * Creates a new DuplicatesPaginator
+     * @param reddit The RedditClient to send requests with
+     * @param submission The Submission to find duplicates of
+     * @return A new DuplicatesPaginator
+     */
+    public static DuplicatesPaginator duplicates(RedditClient reddit, Submission submission) {
+        return new DuplicatesPaginator(reddit, submission);
     }
 
     /**
@@ -181,5 +192,12 @@ public final class Paginators {
      */
     public static UserSubredditsPaginator mySubreddits(RedditClient reddit, String where) {
         return new UserSubredditsPaginator(reddit, where);
+    }
+
+    /**
+     * Creates a new RelatedPaginator
+     */
+    public static RelatedPaginator related(RedditClient reddit, Submission submission) {
+        return new RelatedPaginator(reddit, submission);
     }
 }

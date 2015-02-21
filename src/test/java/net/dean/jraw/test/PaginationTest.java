@@ -236,6 +236,16 @@ public class PaginationTest extends RedditTest {
         commonTest(paginator);
     }
 
+    @Test
+    public void testDuplicatesPaginator() {
+        commonTest(Paginators.duplicates(reddit, reddit.getSubmission("92dd8")));
+    }
+
+    @Test
+    public void testRelatedPaginator() {
+        commonTest(Paginators.related(reddit, reddit.getSubmission("92dd8")));
+    }
+
     @Test(expectedExceptions = IllegalStateException.class)
     public void testChangeRequestParameters() {
         AllSubredditsPaginator paginator = Paginators.allSubreddits(reddit, "new");

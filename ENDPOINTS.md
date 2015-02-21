@@ -1,9 +1,9 @@
-<!--- Generated 2015-02-20 at 20:01:53 EST. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
+<!--- Generated 2015-02-21 at 09:04:13 EST. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
 #Endpoints
 
 This file contains a list of all the endpoints (regardless of if they have been implemented) that can be found at the [official Reddit API docs](https://www.reddit.com/dev/api). To update this file, run `./gradlew endpoints:update`.
 
-So far **109** endpoints (out of 176 total) have been implemented.
+So far **111** endpoints (out of 176 total) have been implemented.
 
 ##(any scope)
 Method|Endpoint|Implemented?
@@ -166,10 +166,8 @@ Method|Endpoint|Implemented?
 :----:|--------|------------
 `GET`|[`/api/filter/{filterpath}`](https://www.reddit.com/dev/api/oauth#GET_api_filter_%7Bfilterpath%7D)|No
 `GET`|[`/api/filter/{filterpath}/r/{srname}`](https://www.reddit.com/dev/api/oauth#GET_api_filter_%7Bfilterpath%7D_r_%7Bsrname%7D)|No
-`GET`|[`/duplicates/{article}`](https://www.reddit.com/dev/api/oauth#GET_duplicates_%7Barticle%7D)|No
 `GET`|[`/live/{thread}/contributors.json`](https://www.reddit.com/dev/api/oauth#GET_live_%7Bthread%7D_contributors.json)|No
 `GET`|[`/live/{thread}/discussions`](https://www.reddit.com/dev/api/oauth#GET_live_%7Bthread%7D_discussions)|No
-`GET`|[`/related/{article}`](https://www.reddit.com/dev/api/oauth#GET_related_%7Barticle%7D)|No
 `GET`|[`/sidebar`](https://www.reddit.com/dev/api/oauth#GET_sidebar)|No
 `GET`|[`/sticky`](https://www.reddit.com/dev/api/oauth#GET_sticky)|No
 `GET`|[`/about/banned`](https://www.reddit.com/dev/api/oauth#GET_about_banned)|[`UserRecordPaginator.next(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/paginators/UserRecordPaginator.html#next(boolean))
@@ -200,6 +198,7 @@ Method|Endpoint|Implemented?
 `GET`|[`/by_id/{names}`](https://www.reddit.com/dev/api/oauth#GET_by_id_%7Bnames%7D)|[`SpecificPaginator.next(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/paginators/SpecificPaginator.html#next(boolean))
 `GET`|[`/comments/{article}`](https://www.reddit.com/dev/api/oauth#GET_comments_%7Barticle%7D)|[`RedditClient.getSubmission(SubmissionRequest)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/RedditClient.html#getSubmission(net.dean.jraw.http.SubmissionRequest))
 `GET`|[`/controversial`](https://www.reddit.com/dev/api/oauth#GET_controversial)|[`SubredditPaginator.next(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/paginators/SubredditPaginator.html#next(boolean))
+`GET`|[`/duplicates/{article}`](https://www.reddit.com/dev/api/oauth#GET_duplicates_%7Barticle%7D)|[`DuplicatesPaginator.next(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/paginators/DuplicatesPaginator.html#next(boolean))
 `GET`|[`/hot`](https://www.reddit.com/dev/api/oauth#GET_hot)|[`SubredditPaginator.next(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/paginators/SubredditPaginator.html#next(boolean))
 `GET`|[`/live/{thread}`](https://www.reddit.com/dev/api/oauth#GET_live_%7Bthread%7D)|[`LiveThreadPaginator.next(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/paginators/LiveThreadPaginator.html#next(boolean))
 `GET`|[`/live/{thread}/about.json`](https://www.reddit.com/dev/api/oauth#GET_live_%7Bthread%7D_about.json)|[`RedditClient.getLiveThread(String)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/RedditClient.html#getLiveThread(java.lang.String))
@@ -209,6 +208,7 @@ Method|Endpoint|Implemented?
 `GET`|[`/prefs/{where}`](https://www.reddit.com/dev/api/oauth#GET_prefs_%7Bwhere%7D)|[`ImportantUserPaginator.next(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/paginators/ImportantUserPaginator.html#next(boolean))
 `GET`|[`/r/{subreddit}/about.json`](https://www.reddit.com/dev/api/oauth#GET_r_%7Bsubreddit%7D_about.json)|[`RedditClient.getSubreddit(String)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/RedditClient.html#getSubreddit(java.lang.String))
 `GET`|[`/random`](https://www.reddit.com/dev/api/oauth#GET_random)|[`RedditClient.getRandomSubmission(String)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/RedditClient.html#getRandomSubmission(java.lang.String))
+`GET`|[`/related/{article}`](https://www.reddit.com/dev/api/oauth#GET_related_%7Barticle%7D)|[`RelatedPaginator.next(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/paginators/RelatedPaginator.html#next(boolean))
 `GET`|[`/search`](https://www.reddit.com/dev/api/oauth#GET_search)|[`SubmissionSearchPaginator.next(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/paginators/SubmissionSearchPaginator.html#next(boolean))
 `GET`|[`/sort`](https://www.reddit.com/dev/api/oauth#GET_sort)|[`SubredditPaginator.next(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/paginators/SubredditPaginator.html#next(boolean))
 `GET`|[`/subreddits/new`](https://www.reddit.com/dev/api/oauth#GET_subreddits_new)|[`AllSubredditsPaginator.next()`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/paginators/AllSubredditsPaginator.html#next())

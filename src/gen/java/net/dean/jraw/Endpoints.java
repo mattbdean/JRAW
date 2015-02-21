@@ -220,14 +220,10 @@ public enum Endpoints {
     FILTER_FILTERPATH_GET("GET /api/filter/{filterpath}", "read"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_api_filter_%7Bfilterpath%7D_r_%7Bsrname%7D">{@code GET /api/filter/{filterpath}/r/{srname}}</a>" included in the "read" scope */
     FILTER_FILTERPATH_R_SRNAME_GET("GET /api/filter/{filterpath}/r/{srname}", "read"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_duplicates_%7Barticle%7D">{@code GET /duplicates/{article}}</a>" included in the "read" scope */
-    DUPLICATES_ARTICLE("GET /duplicates/{article}", "read"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_live_%7Bthread%7D_contributors.json">{@code GET /live/{thread}/contributors.json}</a>" included in the "read" scope */
     LIVE_THREAD_CONTRIBUTORS("GET /live/{thread}/contributors.json", "read"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_live_%7Bthread%7D_discussions">{@code GET /live/{thread}/discussions}</a>" included in the "read" scope */
     LIVE_THREAD_DISCUSSIONS("GET /live/{thread}/discussions", "read"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_related_%7Barticle%7D">{@code GET /related/{article}}</a>" included in the "read" scope */
-    RELATED_ARTICLE("GET /related/{article}", "read"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_sidebar">{@code GET /sidebar}</a>" included in the "read" scope */
     SIDEBAR("GET /sidebar", "read"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_sticky">{@code GET /sticky}</a>" included in the "read" scope */
@@ -288,6 +284,8 @@ public enum Endpoints {
     COMMENTS_ARTICLE("GET /comments/{article}", "read"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_controversial">{@code GET /controversial}</a>" included in the "read" scope */
     CONTROVERSIAL("GET /controversial", "read"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_duplicates_%7Barticle%7D">{@code GET /duplicates/{article}}</a>" included in the "read" scope */
+    DUPLICATES_ARTICLE("GET /duplicates/{article}", "read"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_hot">{@code GET /hot}</a>" included in the "read" scope */
     HOT("GET /hot", "read"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_live_%7Bthread%7D">{@code GET /live/{thread}}</a>" included in the "read" scope */
@@ -306,6 +304,8 @@ public enum Endpoints {
     SUBREDDIT_ABOUT("GET /r/{subreddit}/about.json", "read"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_random">{@code GET /random}</a>" included in the "read" scope */
     RANDOM("GET /random", "read"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_related_%7Barticle%7D">{@code GET /related/{article}}</a>" included in the "read" scope */
+    RELATED_ARTICLE("GET /related/{article}", "read"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_search">{@code GET /search}</a>" included in the "read" scope */
     SEARCH("GET /search", "read"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_sort">{@code GET /sort}</a>" included in the "read" scope */
