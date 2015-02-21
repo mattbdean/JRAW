@@ -44,12 +44,9 @@ public class LoggedInAccount extends Account {
         return data("has_verified_email", Boolean.class);
     }
 
-    /**
-     * Gets the current modhash
-     * @return Current modhash, or null if not your account or using OAuth2
-     */
-    @JsonProperty(nullable = true)
-    public String getModHash() {
-        return data("modhash");
+    /** Gets the amount of non-moderator mail the user has. */
+    @JsonProperty
+    public Integer getInboxCount() {
+        return data("inbox_count", Integer.class);
     }
 }

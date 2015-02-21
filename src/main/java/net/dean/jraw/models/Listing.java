@@ -14,10 +14,9 @@ import java.util.List;
 import java.util.ListIterator;
 
 /**
- * Represents a listing of Things. A Listing has four main keys: before, after, modhash, and its children. Listing uses
- * an {@link ArrayList} to implement the method inherited by {@link java.util.List}. Any method that attempts to
- * change the data externally (such as {@link List#remove(Object)}) will throw an UnsupportedOperationException.
- * List is only modifiable internally via loadMoreChildren.
+ * Represents a listing of Things. A Listing has three main keys: before, after, and its children. Listing uses an
+ * {@link ArrayList} to implement the method inherited by {@link java.util.List}. Any method that attempts to change the
+ * data externally (such as {@link List#remove(Object)}) will throw an UnsupportedOperationException.
  *
  * @param <T> The type of elements that will be in this listing
  * @author Matthew Dean
