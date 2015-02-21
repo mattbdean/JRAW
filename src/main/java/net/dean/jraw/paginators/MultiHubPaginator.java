@@ -5,15 +5,16 @@ import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.RestResponse;
 import net.dean.jraw.models.FauxListing;
 import net.dean.jraw.models.Listing;
-import net.dean.jraw.models.MultiReddit;
 import net.dean.jraw.models.Submission;
+import net.dean.jraw.models.Thing;
+import net.dean.jraw.models.meta.JsonProperty;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * This is specially designed to iterate <a href="https://www.reddit.com/r/multihub">/r/multihub</a> and pick out information
- * about multireddits submitted there.
+ * This is specially designed to iterate <a href="https://www.reddit.com/r/multihub">/r/multihub</a> and pick out
+ * information about multireddits submitted there.
  */
 public class MultiHubPaginator extends Paginator<MultiHubPaginator.MultiRedditId> {
 
@@ -74,12 +75,10 @@ public class MultiHubPaginator extends Paginator<MultiHubPaginator.MultiRedditId
     }
 
     /**
-     * This class is a "hacky" way to return a MultiReddit's name and owner without actually having to send an HTTP
-     * requests. This class extends MultiReddit, but the JsonNode will always be null. The only two methods that don't
-     * return null are {@link #getOwner()} and {@link #getName()}. To get a MultiReddit that represents this class, you
-     * can use {@code multiRedditManager.get(id.getOwner(), id.getName())}.
+     * This class is a "hacky" way to return a MultiReddit's name and owner without actually having to send any HTTP
+     * requests. Any inherited methods annotated with {@link JsonProperty} will throw a NullPointerException.
      */
-    public static final class MultiRedditId extends MultiReddit {
+    public static final class MultiRedditId extends Thing {
         private final String owner;
         private final String name;
 
