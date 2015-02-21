@@ -2,33 +2,28 @@ package net.dean.jraw;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import net.dean.jraw.http.AuthenticationMethod;
-import net.dean.jraw.http.BasicAuthData;
-import net.dean.jraw.http.SubmissionRequest;
-import net.dean.jraw.http.oauth.Credentials;
 import net.dean.jraw.http.HttpAdapter;
 import net.dean.jraw.http.HttpRequest;
 import net.dean.jraw.http.MediaTypes;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.OkHttpAdapter;
-import net.dean.jraw.http.RequestBody;
 import net.dean.jraw.http.RestClient;
 import net.dean.jraw.http.RestResponse;
+import net.dean.jraw.http.SubmissionRequest;
 import net.dean.jraw.http.UserAgent;
+import net.dean.jraw.http.oauth.Credentials;
 import net.dean.jraw.http.oauth.OAuthData;
 import net.dean.jraw.http.oauth.OAuthHelper;
 import net.dean.jraw.models.Account;
-import net.dean.jraw.models.AccountPreferences;
 import net.dean.jraw.models.Award;
 import net.dean.jraw.models.Captcha;
 import net.dean.jraw.models.CommentSort;
-import net.dean.jraw.models.KarmaBreakdown;
 import net.dean.jraw.models.Listing;
 import net.dean.jraw.models.LiveThread;
 import net.dean.jraw.models.LoggedInAccount;
 import net.dean.jraw.models.Submission;
 import net.dean.jraw.models.Subreddit;
 import net.dean.jraw.models.Thing;
-import net.dean.jraw.models.UserRecord;
 import net.dean.jraw.models.meta.Model;
 import net.dean.jraw.models.meta.SubmissionSerializer;
 import net.dean.jraw.paginators.Sorting;
@@ -51,7 +46,6 @@ public class RedditClient extends RestClient {
     public static final int REQUESTS_PER_MINUTE = 60;
     /** The amount of trending subreddits that appear in each /r/trendingsubreddits post */
     private static final int NUM_TRENDING_SUBREDDITS = 5;
-    /** Name of the 'Authorization' header */
     private static final String HEADER_AUTHORIZATION = "Authorization";
     private static final String HEADER_RATELIMIT_RESET = "X-Ratelimit-Reset";
     private static final String HEADER_RATELIMIT_REMAINING = "X-Ratelimit-Remaining";
@@ -124,8 +118,11 @@ public class RedditClient extends RestClient {
      *                          the authentication method is not userless.
      */
     public void authenticate(OAuthData authData) throws NetworkException {
+        if (authHelper.getAuthStatus() != OAuthHelper.AuthStatus.AUTHORIZED)
+            throw new IllegalStateException("OAuthHelper says it is not authorized");
         if (authData.getAuthenticationMethod() == null)
-            throw new NullPointerException("OAuthData.getAuthenticationMethod() cannot be null");
+            throw new NullPointerException("Authentication method cannot be null");
+
         this.authMethod = authData.getAuthenticationMethod();
         this.authData = authData;
         httpAdapter.getDefaultHeaders().put(HEADER_AUTHORIZATION, "bearer " + authData.getAccessToken());
@@ -136,22 +133,12 @@ public class RedditClient extends RestClient {
     }
 
     /**
-     * Revokes the OAuth2 access token. You will need to login again to continue using this client without error.
-     * @param creds The credentials to use. The username and password are irrelevant; only the client ID and secret will
-     *              be used.
-     * @throws NetworkException If the request was not successful
+     * Removes any authentication data. The access token needs to be revoked first using
+     * {@link OAuthHelper#revokeToken(Credentials)}.
      */
-    public void revokeToken(Credentials creds) throws NetworkException {
-        if (!isLoggedIn())
-            return;
-        execute(request()
-                .host(HOST)
-                .path("/api/v1/revoke_token")
-                .post(JrawUtils.mapOf(
-                        "token", authData.getAccessToken()
-                )).basicAuth(new BasicAuthData(creds.getClientId(), creds.getClientSecret()))
-                .build());
-
+    public void deauthenticate() {
+        if (authHelper.getAuthStatus() != OAuthHelper.AuthStatus.REVOKED)
+            throw new IllegalArgumentException("Revoke the access token first");
         authData = null;
         httpAdapter.getDefaultHeaders().remove(HEADER_AUTHORIZATION);
         authMethod = AuthenticationMethod.NOT_YET;
@@ -565,43 +552,6 @@ public class RedditClient extends RestClient {
                 .query("id", JrawUtils.join(fullNames))
                 .build()).asListing(Thing.class);
     }
-
-    /**
-     * Gets the preferences for this account
-     * @param names The specific names of the desired preferences. These can be found
-     *              <a href="https://www.reddit.com/dev/api#GET_api_v1_me_prefs">here</a>.
-     * @return An AccountPreferences that represent this account's preferences
-     * @throws NetworkException If the request was not successful
-     */
-    @EndpointImplementation(Endpoints.OAUTH_ME_PREFS_GET)
-    public AccountPreferences getPreferences(String... names) throws NetworkException {
-        Map<String, String> query = new HashMap<>();
-        if (names.length > 0) {
-            query.put("fields", JrawUtils.join(',', names));
-        }
-
-        RestResponse response = execute(request()
-                .endpoint(Endpoints.OAUTH_ME_PREFS_GET)
-                .query(query)
-                .build());
-        return new AccountPreferences(response.getJson());
-    }
-
-    /**
-     * Updates the preferences for this account
-     * @param prefs The preferences
-     * @return The preferences after they were updated
-     * @throws NetworkException If the request was not successful
-     */
-    @EndpointImplementation(Endpoints.OAUTH_ME_PREFS_PATCH)
-    public AccountPreferences updatePreferences(AccountPreferencesEditor prefs) throws NetworkException {
-        RestResponse response = execute(request()
-                .endpoint(Endpoints.OAUTH_ME_PREFS_PATCH)
-                .patch(RequestBody.create(MediaTypes.JSON.type(), JrawUtils.toJson(prefs.getArgs())))
-                .build());
-        return new AccountPreferences(response.getJson());
-    }
-
     /**
      * Gets the trophies for the currently authenticated user
      * @throws NetworkException If the request was not successful
@@ -621,13 +571,9 @@ public class RedditClient extends RestClient {
             Endpoints.OAUTH_USER_USERNAME_TROPHIES
     })
     public List<Award> getTrophies(String username) throws NetworkException {
-        if (username == null || username.isEmpty()) {
-            if (authMethod == AuthenticationMethod.NOT_YET) {
-                throw new IllegalArgumentException("No username given and not logged in");
-            }
-
-            username = authenticatedUser;
-        }
+        if (username == null)
+            assertNotUserless();
+        username = authenticatedUser;
 
         RestResponse response = execute(request()
                 .endpoint(Endpoints.OAUTH_USER_USERNAME_TROPHIES, username)
@@ -640,62 +586,6 @@ public class RedditClient extends RestClient {
 
         return awards;
     }
-
-    /**
-     * Gets a breakdown of link and comment karma by subreddit
-     * @return A KarmaBreakdown for this account
-     * @throws NetworkException If the request was not successful
-     */
-    @EndpointImplementation(Endpoints.OAUTH_ME_KARMA)
-    public KarmaBreakdown getKarmaBreakdown() throws NetworkException {
-        RestResponse response = execute(request()
-                .endpoint(Endpoints.OAUTH_ME_KARMA)
-                .build());
-        return new KarmaBreakdown(response.getJson().get("data"));
-    }
-
-    /**
-     * Removes a friend
-     * @param friend The username of the friend
-     * @throws NetworkException If the request was not successful
-     */
-    @EndpointImplementation(Endpoints.OAUTH_ME_FRIENDS_USERNAME_DELETE)
-    public void deleteFriend(String friend) throws NetworkException {
-        execute(request()
-                .delete()
-                .endpoint(Endpoints.OAUTH_ME_FRIENDS_USERNAME_DELETE, friend)
-                .build());
-    }
-
-    /**
-     * Gets a user record pertaining to a particular relationship
-     * @param name The name of the user
-     * @return A UserRecord representing the relationship
-     * @throws NetworkException If the request was not successful
-     */
-    @EndpointImplementation(Endpoints.OAUTH_ME_FRIENDS_USERNAME_GET)
-    public UserRecord getFriend(String name) throws NetworkException {
-        RestResponse response = execute(request()
-                .endpoint(Endpoints.OAUTH_ME_FRIENDS_USERNAME_GET, name)
-                .build());
-        return new UserRecord(response.getJson());
-    }
-
-    /**
-     * Adds of updates a friend
-     * @param name The name of the user
-     * @throws NetworkException If the request was not successful
-     * @return A UserRecord representing the new or updated relationship
-     */
-    @EndpointImplementation(Endpoints.OAUTH_ME_FRIENDS_USERNAME_PUT)
-    public UserRecord updateFriend(String name) throws NetworkException {
-        RestResponse response = execute(request()
-                .put(RequestBody.create(MediaTypes.JSON.type(), JrawUtils.toJson(new FriendModel(name))))
-                .endpoint(Endpoints.OAUTH_ME_FRIENDS_USERNAME_PUT, name)
-                .build());
-        return new UserRecord(response.getJson());
-    }
-
     /**
      * Gets the object that will help clients authenticate users with their Reddit app
      */
@@ -736,15 +626,9 @@ public class RedditClient extends RestClient {
         return authMethod != null && !authMethod.isUserless();
     }
 
-    private static final class FriendModel {
-        private final String name;
-
-        private FriendModel(String name) {
-            this.name = name == null ? "" : name;
-        }
-
-        public String getName() {
-            return name;
+    private void assertNotUserless() {
+        if (!hasActiveUserContext()) {
+            throw new IllegalArgumentException("Not applicable for application-only authentication");
         }
     }
 

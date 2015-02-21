@@ -18,10 +18,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * <p>
- *     This class assists developers using this library in authenticating users via OAuth2. For the app types of
- *     'installed' or 'web', a typical use of this class is as follows:<br>
- * </p>
+ * <p>This class assists developers using this library in authenticating users via OAuth2. For the app types of
+ *    'installed' or 'web', a typical use of this class is as follows:
+ *
  * <ol>
  *     <li>Obtain an authorization URL using {@link #getAuthorizationUrl(String, String, boolean, String...)}.
  *     <li>Point the user's browser to that URL and have the user login and then press either 'yes' or 'no' on the
@@ -32,18 +31,17 @@ import java.util.Map;
  *         any errors. Once the response's integrity has been verified, a request to obtain the OAuth access code will
  *         be made and an instance of {@link OAuthData} retrieved.
  * </ol>
- * <p>
- *     Authentication is simpler when the app type is 'script', as this enables the bypassing of showing the initial
- *     authorization URL to the user. However, it comes at the cost of only being able to log into the accounts of users
- *     registered as "developers." To authenticate with a 'script' app, one may simply use
- *     {@link #doScriptApp(Credentials)}.
- * </p>
+ *
+ * <p>Authentication is simpler when the app type is 'script', as this enables the bypassing of showing the initial
+ *    authorization URL to the user. However, it comes at the cost of only being able to log into the accounts of users
+ *    registered as "developers." To authenticate with a 'script' app or in a userless context, one may simply use
+ *    {@link #easyAuth(Credentials)}.
  */
 public class OAuthHelper {
     private static final String GRANT_TYPE = "https://oauth.reddit.com/grants/installed_client";
+    private AuthStatus authStatus;
     private SecureRandom secureRandom;
     private String state;
-    private boolean started;
     private RedditClient reddit;
 
     /**
@@ -52,21 +50,20 @@ public class OAuthHelper {
      */
     public OAuthHelper(RedditClient reddit) {
         this.reddit = reddit;
+        this.authStatus = AuthStatus.NOT_YET;
     }
 
     /**
      * Generates a URL used to authorize a user using OAuth2 'installed' or 'web' type app.
      * @param clientId The app's client ID
      * @param redirectUri The app's redirect URI. Must match exactly as in the app settings.
-     * @param permanent Whether or not to request a 'refresh' token which can be exchanged for an additional
-     *                  Authorization token in the future.
+     * @param permanent Whether or not to request a refresh token which can be exchanged for an additional authorization
+     *                  token in the future.
      * @param scopes OAuth scopes to be requested. A full list of scopes can be found
      *               <a href="https://www.reddit.com/dev/api/oauth">here</a>.
      * @return The URL clients are sent to in order to authorize themselves
      */
     public URL getAuthorizationUrl(String clientId, String redirectUri, boolean permanent, String... scopes) {
-        if (started) started = false; // Restarting
-
         if (secureRandom == null)
             secureRandom = new SecureRandom();
         // http://stackoverflow.com/a/41156/1275092
@@ -85,7 +82,8 @@ public class OAuthHelper {
                         "duration", permanent ? "permanent" : "temporary",
                         "scope", JrawUtils.join(' ', scopes)
                 )).build();
-        this.started = true;
+
+        this.authStatus = AuthStatus.WAITING_FOR_CHALLENGE;
         return r.getUrl();
     }
 
@@ -109,10 +107,11 @@ public class OAuthHelper {
      */
     public OAuthData onUserChallenge(String finalUrl, String redirectUri, Credentials creds) throws NetworkException,
             OAuthException, IllegalStateException {
-        if (!started) {
+        if (authStatus != AuthStatus.WAITING_FOR_CHALLENGE) {
             throw new IllegalStateException("Auth flow not started yet. See getAuthorizationUrl()");
         }
-        HttpRequest request = HttpRequest.from("invalid", JrawUtils.newUrl(finalUrl));
+
+        HttpRequest request = HttpRequest.from("irrelevant", JrawUtils.newUrl(finalUrl));
         Map<String, String> query = JrawUtils.parseUrlEncoded(request.getUrl().getQuery());
         if (!query.containsKey("state")) {
             throw new IllegalArgumentException("Final redirect URI did not contain the 'state' query parameter");
@@ -142,6 +141,7 @@ public class OAuthHelper {
                     ))
                     .basicAuth(new BasicAuthData(creds.getClientId(), creds.getClientSecret()))
                     .build());
+            this.authStatus = AuthStatus.AUTHORIZED;
             return new OAuthData(creds.getAuthenticationMethod(), response.getJson());
         } catch (NetworkException e) {
             if (e.getResponse().getStatusCode() == 401) {
@@ -195,6 +195,7 @@ public class OAuthHelper {
                 ))
                 .sensitiveArgs("password")
                 .build());
+        authStatus = AuthStatus.AUTHORIZED;
         return new OAuthData(credentials.getAuthenticationMethod(), response.getJson());
     }
 
@@ -224,7 +225,63 @@ public class OAuthHelper {
                 .post(args)
                 .build());
         checkError(response.getJson());
+        authStatus = AuthStatus.AUTHORIZED;
         return new OAuthData(credentials.getAuthenticationMethod(), response.getJson());
+    }
+
+    /**
+     * Revokes the OAuth2 access token. You will need to login again to continue using this client without error.
+     * @param creds The credentials to use. The username and password are irrelevant; only the client ID and secret will
+     *              be used.
+     * @throws NetworkException If the request was not successful
+     */
+    public void revokeToken(Credentials creds) throws NetworkException {
+        if (!reddit.isLoggedIn())
+            return;
+        reddit.execute(reddit.request()
+                .host(RedditClient.HOST)
+                .path("/api/v1/revoke_token")
+                .post(JrawUtils.mapOf(
+                        "token", reddit.getAuthData().getAccessToken()
+                )).basicAuth(new BasicAuthData(creds.getClientId(), creds.getClientSecret()))
+                .build());
+        authStatus = AuthStatus.REVOKED;
+        reddit.deauthenticate();
+    }
+
+    /**
+     * Refreshes the access token. Must have requested an access token when calling {@link #getAuthorizationUrl}.
+     *
+     * @param creds The credentials used to request the original access token. Only the client ID and client secret will
+     *              be used.
+     * @return A new OAuthData
+     * @throws OAuthException If the client ID or secret was incorrect
+     */
+    public OAuthData refreshToken(Credentials creds) throws NetworkException, OAuthException {
+        if (reddit.getAuthData().getRefreshToken() == null) {
+            throw new IllegalStateException("No refresh token");
+        }
+
+        try {
+            RestResponse response = reddit.execute(reddit.request()
+                    .https(true)
+                    .host(RedditClient.HOST_SPECIAL)
+                    .path("/api/v1/access_token")
+                    .expected(MediaType.ANY_TYPE)
+                    .post(JrawUtils.mapOf(
+                            "grant_type", "refresh_token",
+                            "refresh_token", reddit.getAuthData().getRefreshToken()
+                    ))
+                    .basicAuth(new BasicAuthData(creds.getClientId(), creds.getClientSecret()))
+                    .build());
+            this.authStatus = AuthStatus.AUTHORIZED;
+            return new OAuthData(creds.getAuthenticationMethod(), response.getJson());
+        } catch (NetworkException e) {
+            if (e.getResponse().getStatusCode() == 401) {
+                throw new OAuthException("Invalid client ID/secret", e);
+            }
+            throw e;
+        }
     }
 
     private void checkError(JsonNode json) throws OAuthException {
@@ -239,5 +296,25 @@ public class OAuthHelper {
                 .host(RedditClient.HOST_SPECIAL)
                 .path("/api/v1/access_token")
                 .basicAuth(authData);
+    }
+
+
+    /** Gets the current state of authorization */
+    public AuthStatus getAuthStatus() {
+        return authStatus;
+    }
+
+    /**
+     * Represents the different states of authorization this class can be in
+     */
+    public static enum AuthStatus {
+        /** No action has been performed */
+        NOT_YET,
+        /** An authorization URL has been created, but the user has not accepted/declined yet */
+        WAITING_FOR_CHALLENGE,
+        /** Authorized and ready to send requests */
+        AUTHORIZED,
+        /** The access token has been revoked and is no longer usable. */
+        REVOKED
     }
 }

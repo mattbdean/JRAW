@@ -2,20 +2,26 @@ package net.dean.jraw.managers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.ImmutableList;
+import net.dean.jraw.AccountPreferencesEditor;
 import net.dean.jraw.ApiException;
 import net.dean.jraw.EndpointImplementation;
 import net.dean.jraw.Endpoints;
 import net.dean.jraw.JrawUtils;
 import net.dean.jraw.RedditClient;
+import net.dean.jraw.http.MediaTypes;
 import net.dean.jraw.http.NetworkException;
+import net.dean.jraw.http.RequestBody;
 import net.dean.jraw.http.RestResponse;
+import net.dean.jraw.models.AccountPreferences;
 import net.dean.jraw.models.Captcha;
 import net.dean.jraw.models.Contribution;
 import net.dean.jraw.models.FlairTemplate;
+import net.dean.jraw.models.KarmaBreakdown;
 import net.dean.jraw.models.PublicContribution;
 import net.dean.jraw.models.Submission;
 import net.dean.jraw.models.Subreddit;
 import net.dean.jraw.models.Thing;
+import net.dean.jraw.models.UserRecord;
 import net.dean.jraw.models.VoteDirection;
 import net.dean.jraw.models.attr.Votable;
 
@@ -360,6 +366,109 @@ public class AccountManager extends AbstractManager {
                 .endpoint(Endpoints.OAUTH_GOLD_GIVE_USERNAME, username)
                 .post(JrawUtils.mapOf("months", months))
                 .build());
+    }
+
+    /**
+     * Gets the preferences for this account
+     * @param names The specific names of the desired preferences. These can be found
+     *              <a href="https://www.reddit.com/dev/api#GET_api_v1_me_prefs">here</a>.
+     * @return An AccountPreferences that represent this account's preferences
+     * @throws NetworkException If the request was not successful
+     */
+    @EndpointImplementation(Endpoints.OAUTH_ME_PREFS_GET)
+    public AccountPreferences getPreferences(String... names) throws NetworkException {
+        Map<String, String> query = new HashMap<>();
+        if (names.length > 0) {
+            query.put("fields", JrawUtils.join(',', names));
+        }
+
+        RestResponse response = reddit.execute(reddit.request()
+                .endpoint(Endpoints.OAUTH_ME_PREFS_GET)
+                .query(query)
+                .build());
+        return new AccountPreferences(response.getJson());
+    }
+
+    /**
+     * Updates the preferences for this account
+     * @param prefs The preferences
+     * @return The preferences after they were updated
+     * @throws NetworkException If the request was not successful
+     */
+    @EndpointImplementation(Endpoints.OAUTH_ME_PREFS_PATCH)
+    public AccountPreferences updatePreferences(AccountPreferencesEditor prefs) throws NetworkException {
+        RestResponse response = reddit.execute(reddit.request()
+                .endpoint(Endpoints.OAUTH_ME_PREFS_PATCH)
+                .patch(RequestBody.create(MediaTypes.JSON.type(), JrawUtils.toJson(prefs.getArgs())))
+                .build());
+        return new AccountPreferences(response.getJson());
+    }
+
+    /**
+     * Gets a breakdown of link and comment karma by subreddit
+     * @return A KarmaBreakdown for this account
+     * @throws NetworkException If the request was not successful
+     */
+    @EndpointImplementation(Endpoints.OAUTH_ME_KARMA)
+    public KarmaBreakdown getKarmaBreakdown() throws NetworkException {
+        RestResponse response = reddit.execute(reddit.request()
+                .endpoint(Endpoints.OAUTH_ME_KARMA)
+                .build());
+        return new KarmaBreakdown(response.getJson().get("data"));
+    }
+
+    /**
+     * Removes a friend
+     * @param friend The username of the friend
+     * @throws NetworkException If the request was not successful
+     */
+    @EndpointImplementation(Endpoints.OAUTH_ME_FRIENDS_USERNAME_DELETE)
+    public void deleteFriend(String friend) throws NetworkException {
+        reddit.execute(reddit.request()
+                .delete()
+                .endpoint(Endpoints.OAUTH_ME_FRIENDS_USERNAME_DELETE, friend)
+                .build());
+    }
+
+    /**
+     * Gets a user record pertaining to a particular relationship
+     * @param name The name of the user
+     * @return A UserRecord representing the relationship
+     * @throws NetworkException If the request was not successful
+     */
+    @EndpointImplementation(Endpoints.OAUTH_ME_FRIENDS_USERNAME_GET)
+    public UserRecord getFriend(String name) throws NetworkException {
+        RestResponse response = reddit.execute(reddit.request()
+                .endpoint(Endpoints.OAUTH_ME_FRIENDS_USERNAME_GET, name)
+                .build());
+        return new UserRecord(response.getJson());
+    }
+
+    /**
+     * Adds of updates a friend
+     * @param name The name of the user
+     * @throws NetworkException If the request was not successful
+     * @return A UserRecord representing the new or updated relationship
+     */
+    @EndpointImplementation(Endpoints.OAUTH_ME_FRIENDS_USERNAME_PUT)
+    public UserRecord updateFriend(String name) throws NetworkException {
+        RestResponse response = reddit.execute(reddit.request()
+                .put(RequestBody.create(MediaTypes.JSON.type(), JrawUtils.toJson(new FriendModel(name))))
+                .endpoint(Endpoints.OAUTH_ME_FRIENDS_USERNAME_PUT, name)
+                .build());
+        return new UserRecord(response.getJson());
+    }
+
+    private static final class FriendModel {
+        private final String name;
+
+        private FriendModel(String name) {
+            this.name = name == null ? "" : name;
+        }
+
+        public String getName() {
+            return name;
+        }
     }
 
     private JsonNode getFlairChoicesRootNode(String subreddit, Submission link) throws NetworkException, ApiException {
