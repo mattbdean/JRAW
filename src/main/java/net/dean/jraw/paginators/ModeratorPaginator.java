@@ -94,9 +94,9 @@ public class ModeratorPaginator extends GenericPaginator<PublicContribution> {
             Endpoints.ABOUT_UNMODERATED,
             Endpoints.ABOUT_EDITED
     })
-    public Listing<PublicContribution> next(boolean forwards) {
+    public Listing<PublicContribution> next(boolean forceNetwork) {
         // Just call super so that we can add the @EndpointImplementation annotation
-        return super.next(forwards);
+        return super.next(forceNetwork);
     }
 
     @Override

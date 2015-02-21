@@ -25,8 +25,8 @@ public class ModLogPaginator extends Paginator<ModAction> {
 
     @Override
     @EndpointImplementation(Endpoints.ABOUT_LOG)
-    public Listing<ModAction> next(boolean forwards) throws IllegalStateException {
-        return super.next(forwards);
+    public Listing<ModAction> next(boolean forceNetwork) throws IllegalStateException {
+        return super.next(forceNetwork);
     }
 
     @Override

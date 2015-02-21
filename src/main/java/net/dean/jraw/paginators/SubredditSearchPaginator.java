@@ -33,8 +33,8 @@ public class SubredditSearchPaginator extends Paginator<Subreddit> {
 
     @Override
     @EndpointImplementation(Endpoints.SUBREDDITS_SEARCH)
-    public Listing<Subreddit> next(boolean forwards) throws IllegalStateException {
-        return super.next(forwards);
+    public Listing<Subreddit> next(boolean forceNetwork) throws IllegalStateException {
+        return super.next(forceNetwork);
     }
 
     @Override

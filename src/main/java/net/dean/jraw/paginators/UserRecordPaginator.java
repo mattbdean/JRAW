@@ -13,7 +13,7 @@ public class UserRecordPaginator extends GenericUserRecordPaginator {
     private String subreddit;
 
     /**
-     * Instantiates a new GenericPaginator
+     * Instantiates a new UserRecordPaginator
      *
      * @param creator The RedditClient that will be used to send requests
      * @param subreddit The subreddit to view the user records from. The logged in user must be a moderator of this
@@ -34,9 +34,9 @@ public class UserRecordPaginator extends GenericUserRecordPaginator {
             Endpoints.ABOUT_MODERATORS,
             Endpoints.ABOUT_WHERE
     })
-    public Listing<UserRecord> next(boolean forwards) {
+    public Listing<UserRecord> next(boolean forceNetwork) {
         // Just call super so that we can add the @EndpointImplementation annotation
-        return super.next(forwards);
+        return super.next(forceNetwork);
     }
 
     @Override

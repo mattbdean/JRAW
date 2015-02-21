@@ -14,7 +14,7 @@ public class SubredditPaginator extends Paginator<Submission> {
     private String subreddit;
 
     /**
-     * Instantiates a new SubredditPaginator
+     * Instantiates a new SubredditPaginator that will iterate through submissions on the front page.
      * @param creator The RedditClient that will be used to send HTTP requests
      */
     public SubredditPaginator(RedditClient creator) {
@@ -22,7 +22,7 @@ public class SubredditPaginator extends Paginator<Submission> {
     }
     
     /**
-     * Instantiates a new SubredditPaginator for a subreddit
+     * Instantiates a new SubredditPaginator that will iterate through submissions in a subreddit.
      * @param creator The RedditClient that will be used to send HTTP requests
      * @param subreddit The subreddit to paginate through
      */
@@ -39,9 +39,9 @@ public class SubredditPaginator extends Paginator<Submission> {
             Endpoints.TOP,
             Endpoints.SORT
     })
-    public Listing<Submission> next(boolean forwards) {
+    public Listing<Submission> next(boolean forceNetwork) {
         // Just call super so that we can add the @EndpointImplementation annotation
-        return super.next(forwards);
+        return super.next(forceNetwork);
     }
 
     @Override

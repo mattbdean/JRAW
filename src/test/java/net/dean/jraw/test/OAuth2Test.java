@@ -6,7 +6,7 @@ import net.dean.jraw.models.AccountPreferences;
 import net.dean.jraw.models.KarmaBreakdown;
 import net.dean.jraw.models.Listing;
 import net.dean.jraw.models.UserRecord;
-import net.dean.jraw.paginators.Paginators;
+import net.dean.jraw.paginators.ImportantUserPaginator;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertNotNull;
@@ -136,9 +136,9 @@ public class OAuth2Test extends RedditTest {
     }
 
     private UserRecord getFriend() throws NetworkException {
-        Listing<UserRecord> friends = Paginators.importantUsers(reddit, "friends").next();
+        Listing<UserRecord> friends = new ImportantUserPaginator(reddit, "friends").next();
         if (friends.size() == 0) {
-            reddit.updateFriend("thatJavaNerd");
+            reddit.updateFriend("jraw_test3");
             return getFriend();
         }
 

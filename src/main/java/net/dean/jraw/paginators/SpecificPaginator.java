@@ -62,8 +62,8 @@ public class SpecificPaginator extends Paginator<Submission> {
 
     @Override
     @EndpointImplementation(Endpoints.BY_ID_NAMES)
-    public Listing<Submission> next(boolean forwards) {
+    public Listing<Submission> next(boolean forceNetwork) {
         // Just call super so we can add the @EndpointImplementation annotation
-        return super.next(forwards);
+        return super.next(forceNetwork);
     }
 }

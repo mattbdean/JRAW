@@ -27,9 +27,9 @@ public class LiveThreadPaginator extends Paginator<LiveUpdate> {
 
     @Override
     @EndpointImplementation(Endpoints.LIVE_THREAD)
-    public Listing<LiveUpdate> next(boolean forwards) {
+    public Listing<LiveUpdate> next(boolean forceNetwork) {
         // Just call super so that we can add the @EndpointImplementation annotation
-        return super.next(forwards);
+        return super.next(forceNetwork);
     }
 
     @Override

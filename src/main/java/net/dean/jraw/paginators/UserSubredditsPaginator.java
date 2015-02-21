@@ -39,8 +39,8 @@ public class UserSubredditsPaginator extends GenericPaginator<Subreddit> {
             Endpoints.SUBREDDITS_MINE_SUBSCRIBER,
             Endpoints.SUBREDDITS_MINE_WHERE
     })
-    public Listing<Subreddit> next(boolean forwards) {
+    public Listing<Subreddit> next(boolean forceNetwork) {
         // Just call super so that we can add the @EndpointImplementation annotation
-        return super.next(forwards);
+        return super.next(forceNetwork);
     }
 }

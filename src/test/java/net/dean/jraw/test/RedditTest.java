@@ -18,7 +18,7 @@ import net.dean.jraw.models.JsonModel;
 import net.dean.jraw.models.Listing;
 import net.dean.jraw.models.Subreddit;
 import net.dean.jraw.models.meta.JsonProperty;
-import net.dean.jraw.paginators.Paginators;
+import net.dean.jraw.paginators.UserSubredditsPaginator;
 import org.testng.Assert;
 import org.testng.SkipException;
 
@@ -201,7 +201,7 @@ public abstract class RedditTest {
      * @return A subreddit
      */
     protected final Subreddit getModeratedSubreddit() {
-        Listing<Subreddit> moderatorOf = Paginators.mySubreddits(reddit, "moderator").next();
+        Listing<Subreddit> moderatorOf = new UserSubredditsPaginator(reddit, "moderator").next();
         if (moderatorOf.size() == 0) {
             throw new IllegalStateException("Must be a moderator of at least one subreddit");
         }

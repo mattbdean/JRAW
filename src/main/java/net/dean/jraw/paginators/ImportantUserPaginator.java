@@ -28,8 +28,8 @@ public class ImportantUserPaginator extends GenericUserRecordPaginator {
             Endpoints.OAUTH_ME_BLOCKED,
             Endpoints.OAUTH_ME_FRIENDS
     })
-    public Listing<UserRecord> next(boolean forwards) throws IllegalStateException {
-        return super.next(forwards);
+    public Listing<UserRecord> next(boolean forceNetwork) throws IllegalStateException {
+        return super.next(forceNetwork);
     }
 
     @Override

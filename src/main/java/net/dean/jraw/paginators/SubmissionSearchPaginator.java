@@ -34,9 +34,9 @@ public class SubmissionSearchPaginator extends Paginator<Submission> {
 
     @Override
     @EndpointImplementation(Endpoints.SEARCH)
-    public Listing<Submission> next(boolean forwards) {
+    public Listing<Submission> next(boolean forceNetwork) {
         // Just call super so that we can add the @EndpointImplementation annotation
-        return super.next(forwards);
+        return super.next(forceNetwork);
     }
 
     @Override

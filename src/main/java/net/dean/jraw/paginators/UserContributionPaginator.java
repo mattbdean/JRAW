@@ -35,9 +35,9 @@ public class UserContributionPaginator extends GenericPaginator<Contribution> {
             Endpoints.USER_USERNAME_SAVED,
             Endpoints.USER_USERNAME_GILDED
     })
-    public Listing<Contribution> next(boolean forwards) {
+    public Listing<Contribution> next(boolean forceNetwork) {
         // Just call super so that we can add the @EndpointImplementation annotation
-        return super.next(forwards);
+        return super.next(forceNetwork);
     }
 
     @Override

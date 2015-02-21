@@ -7,7 +7,6 @@ import net.dean.jraw.managers.InboxManager;
 import net.dean.jraw.models.Contribution;
 import net.dean.jraw.models.PrivateMessage;
 import net.dean.jraw.paginators.InboxPaginator;
-import net.dean.jraw.paginators.Paginators;
 import org.testng.annotations.Test;
 
 public class InboxManagerTest extends RedditTest {
@@ -20,7 +19,7 @@ public class InboxManagerTest extends RedditTest {
     @Test
     public void testRead() {
         try {
-            InboxPaginator paginator = Paginators.inbox(reddit, "messages");
+            InboxPaginator paginator = new InboxPaginator(reddit, "messages");
 
             Contribution m1 = paginator.next().get(0);
             if (m1 instanceof PrivateMessage) {

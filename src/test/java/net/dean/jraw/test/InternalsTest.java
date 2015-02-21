@@ -17,8 +17,8 @@ import net.dean.jraw.models.Listing;
 import net.dean.jraw.models.MoreChildren;
 import net.dean.jraw.models.Submission;
 import net.dean.jraw.models.meta.JsonProperty;
-import net.dean.jraw.paginators.Paginators;
 import com.fasterxml.jackson.databind.JsonNode;
+import net.dean.jraw.paginators.SubredditPaginator;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
@@ -38,7 +38,7 @@ public class InternalsTest extends RedditTest {
 
     @Test(expectedExceptions = UnsupportedOperationException.class)
     public void testModifyListing() {
-        Listing<Submission> submissions = Paginators.frontPage(reddit).next();
+        Listing<Submission> submissions = new SubredditPaginator(reddit).next();
         submissions.remove(0);
     }
 
@@ -60,7 +60,7 @@ public class InternalsTest extends RedditTest {
 
     @Test
     public void testModifyListingData() {
-        final Listing<Submission> listing = Paginators.frontPage(reddit).next();
+        final Listing<Submission> listing = new SubredditPaginator(reddit).next();
         List<CodeBlock> codeBlocks = new ArrayList<>();
         
         // List of CodeBlocks that will modify the listing

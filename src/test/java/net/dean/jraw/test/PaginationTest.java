@@ -28,7 +28,7 @@ public class PaginationTest extends RedditTest {
 
     @Test
     public void testSubredditPaginatorFrontPage() throws NetworkException {
-        SubredditPaginator frontPage = Paginators.frontPage(reddit);
+        SubredditPaginator frontPage = new SubredditPaginator(reddit);
         commonTest(frontPage);
     }
 
@@ -43,7 +43,7 @@ public class PaginationTest extends RedditTest {
         try {
             final long millisecondsInAnHour = 60 * 60 * 1000;
 
-            SubredditPaginator frontPage = Paginators.frontPage(reddit);
+            SubredditPaginator frontPage = new SubredditPaginator(reddit);
             frontPage.setSorting(Sorting.TOP);
             frontPage.setTimePeriod(TimePeriod.HOUR);
             Listing<Submission> submissions = frontPage.next();
@@ -62,7 +62,7 @@ public class PaginationTest extends RedditTest {
 
     @Test
     public void testSearchPaginator() throws NetworkException {
-        SubmissionSearchPaginator paginator = Paginators.searchPosts(reddit, "test");
+        SubmissionSearchPaginator paginator = new SubmissionSearchPaginator(reddit, "test");
         String subreddit = "AskReddit";
         paginator.setSubreddit(subreddit);
         commonTest(paginator);
@@ -77,7 +77,7 @@ public class PaginationTest extends RedditTest {
     public void testSpecificPaginator() throws NetworkException {
         // It would be easier to declare fullNames as an array, but we want to use List.contains()
         List<String> fullNames = Arrays.asList("t3_92dd8", "t3_290287", "t3_28zy98", "t3_28zh9i");
-        SpecificPaginator paginator = Paginators.byId(reddit, fullNames.toArray(new String[fullNames.size()]));
+        SpecificPaginator paginator = new SpecificPaginator(reddit, fullNames.toArray(new String[fullNames.size()]));
 
         Listing<Submission> submissions = paginator.next();
         for (Submission s : submissions) {
@@ -88,21 +88,21 @@ public class PaginationTest extends RedditTest {
     @Test
     public void testUserContributionPaginator() throws NetworkException {
         // Test all Where values
-        String[] wheres = Paginators.contributions(reddit, "", "overview").getWhereValues();
+        String[] wheres = new UserContributionPaginator(reddit, "overview", "").getWhereValues();
 
         for (String where : wheres) {
-            UserContributionPaginator paginator = Paginators.contributions(reddit, reddit.getAuthenticatedUser(), where);
+            UserContributionPaginator paginator = new UserContributionPaginator(reddit, where, reddit.getAuthenticatedUser());
             commonTest(paginator);
         }
     }
 
     @Test
     public void testUserSubredditsPaginator() throws NetworkException {
-        String[] wheres = Paginators.mySubreddits(reddit, "subscriber").getWhereValues();
+        String[] wheres = new UserSubredditsPaginator(reddit, "subscriber").getWhereValues();
         // Test all Where values
 
         for (String where : wheres) {
-            UserSubredditsPaginator paginator = Paginators.mySubreddits(reddit, where);
+            UserSubredditsPaginator paginator = new UserSubredditsPaginator(reddit, where);
             commonTest(paginator);
         }
     }
@@ -111,7 +111,7 @@ public class PaginationTest extends RedditTest {
     public void testAllSubredditsPaginator() throws NetworkException {
         // Test all Where values
         for (String where : new String[] {"popular", "new"}) {
-            AllSubredditsPaginator paginator = Paginators.allSubreddits(reddit, where);
+            AllSubredditsPaginator paginator = new AllSubredditsPaginator(reddit, where);
             commonTest(paginator);
         }
     }
@@ -120,15 +120,13 @@ public class PaginationTest extends RedditTest {
     public void testMultiRedditPaginator() throws ApiException {
         MultiReddit multi = manager.mine().get(0);
 
-        MultiRedditPaginator paginator = Paginators.multireddit(reddit, multi);
+        MultiRedditPaginator paginator = new MultiRedditPaginator(reddit, multi);
         commonTest(paginator);
     }
 
     @Test
     public void testCompoundSubredditPaginator() {
-        SubredditPaginator paginator = Paginators.subreddit(reddit, "programming", "java");
-        // Paginators.subreddit() should have detected the additional subreddit and returned a CompoundSubreddit instead
-        // of a normal SubredditPaginator
+        SubredditPaginator paginator = new CompoundSubredditPaginator(reddit, Arrays.asList("programming", "java"));
         assertTrue(paginator.getClass().equals(CompoundSubredditPaginator.class));
         commonTest(paginator);
     }
@@ -136,7 +134,7 @@ public class PaginationTest extends RedditTest {
     @Test
     public void testMultiHubPaginator() {
         try {
-            MultiHubPaginator paginator = Paginators.multihub(reddit);
+            MultiHubPaginator paginator = new MultiHubPaginator(reddit);
 
             final int threshold = 3;
             int valid = 0;
@@ -169,25 +167,25 @@ public class PaginationTest extends RedditTest {
 
     @Test
     public void testLiveThreadPaginator() {
-        commonTest(Paginators.liveThread(reddit, "ts4r8m1g99ys"));
+        commonTest(new LiveThreadPaginator(reddit, "ts4r8m1g99ys"));
     }
 
     @Test
     public void testInboxPaginator() {
-        String[] wheres = Paginators.inbox(reddit, "inbox").getWhereValues();
+        String[] wheres = new InboxPaginator(reddit, "inbox").getWhereValues();
         for (String where : wheres) {
-            InboxPaginator paginator = Paginators.inbox(reddit, where);
+            InboxPaginator paginator = new InboxPaginator(reddit, where);
             commonTest(paginator);
         }
     }
 
     @Test
     public void testUserRecordPaginator() {
-        String[] wheres = Paginators.modRecords(reddit, "", "banned").getWhereValues();
+        String[] wheres = new UserRecordPaginator(reddit, "", "banned").getWhereValues();
         String modOf = getModeratedSubreddit().getDisplayName();
 
         for (String where : wheres) {
-            UserRecordPaginator paginator = Paginators.modRecords(reddit, modOf, where);
+            UserRecordPaginator paginator = new UserRecordPaginator(reddit, modOf, where);
             commonTest(paginator);
         }
     }
@@ -197,7 +195,7 @@ public class PaginationTest extends RedditTest {
         RedditClient[] clientsToTest = {reddit, reddit};
         for (RedditClient client : clientsToTest) {
             for (String where : new String[] {"friends", "blocked"}) {
-                ImportantUserPaginator paginator = Paginators.importantUsers(client, where);
+                ImportantUserPaginator paginator = new ImportantUserPaginator(client, where);
                 commonTest(paginator);
             }
         }
@@ -206,10 +204,10 @@ public class PaginationTest extends RedditTest {
     @Test
     public void testModeratorPaginator() {
         String modOf = getModeratedSubreddit().getDisplayName();
-        String[] wheres = Paginators.moderator(reddit, "", "reports").getWhereValues();
+        String[] wheres = new ModeratorPaginator(reddit, "", "reports").getWhereValues();
 
         for (String where : wheres) {
-            ModeratorPaginator paginator = Paginators.moderator(reddit, modOf, where);
+            ModeratorPaginator paginator = new ModeratorPaginator(reddit, modOf, where);
             // Test no filters
             commonTest(paginator);
 
@@ -232,23 +230,23 @@ public class PaginationTest extends RedditTest {
 
     @Test
     public void testSubredditSearchPaginator() {
-        SubredditSearchPaginator paginator = Paginators.searchSubreddits(reddit, "programming");
+        SubredditSearchPaginator paginator = new SubredditSearchPaginator(reddit, "programming");
         commonTest(paginator);
     }
 
     @Test
     public void testDuplicatesPaginator() {
-        commonTest(Paginators.duplicates(reddit, reddit.getSubmission("92dd8")));
+        commonTest(new DuplicatesPaginator(reddit, reddit.getSubmission("92dd8")));
     }
 
     @Test
     public void testRelatedPaginator() {
-        commonTest(Paginators.related(reddit, reddit.getSubmission("92dd8")));
+        commonTest(new RelatedPaginator(reddit, reddit.getSubmission("92dd8")));
     }
 
     @Test(expectedExceptions = IllegalStateException.class)
     public void testChangeRequestParameters() {
-        AllSubredditsPaginator paginator = Paginators.allSubreddits(reddit, "new");
+        AllSubredditsPaginator paginator = new AllSubredditsPaginator(reddit, "new");
         paginator.next();
         // Modifying the request parameters after the initial request, without calling reset
         paginator.setLimit(Paginator.DEFAULT_LIMIT);
@@ -258,7 +256,7 @@ public class PaginationTest extends RedditTest {
 
     @Test
     public void testResetRequestParameters() {
-        AllSubredditsPaginator paginator = Paginators.allSubreddits(reddit, "new");
+        AllSubredditsPaginator paginator = new AllSubredditsPaginator(reddit, "new");
         paginator.next();
         paginator.setLimit(Paginator.DEFAULT_LIMIT);
         // We know it has already started, but just making sure this method works as expected
@@ -272,7 +270,7 @@ public class PaginationTest extends RedditTest {
 
     @Test
     public void testAccumulateMerged() {
-        Paginator<Submission> p = Paginators.frontPage(reddit);
+        Paginator<Submission> p = new SubredditPaginator(reddit);
         try {
             List<Submission> things = p.accumulateMerged(3);
             for (Submission s : things) {
@@ -285,7 +283,7 @@ public class PaginationTest extends RedditTest {
 
     @Test
     public void testModLog() {
-        ModLogPaginator paginator = Paginators.modlog(reddit, getModeratedSubreddit().getDisplayName());
+        ModLogPaginator paginator = new ModLogPaginator(reddit, getModeratedSubreddit().getDisplayName());
         commonTest(paginator);
     }
 

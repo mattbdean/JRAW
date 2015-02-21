@@ -14,7 +14,8 @@ public class InboxPaginator extends GenericPaginator<Message> {
      * Instantiates a new InboxPaginator
      *
      * @param reddit The client to send requests with
-     * @param where  The "where" enum value to use
+     * @param where  The "where" enum value to use. One of "inbox", "unread", "messages", "sent", "moderator", or
+     *               "moderator/unread"
      */
     public InboxPaginator(RedditClient reddit, String where) {
         super(reddit, Message.class, where);
@@ -37,8 +38,8 @@ public class InboxPaginator extends GenericPaginator<Message> {
             Endpoints.MESSAGE_UNREAD,
             Endpoints.MESSAGE_WHERE
     })
-    public Listing<Message> next(boolean forwards) {
+    public Listing<Message> next(boolean forceNetwork) {
         // Just call super so that we can add the @EndpointImplementation annotation
-        return super.next(forwards);
+        return super.next(forceNetwork);
     }
 }

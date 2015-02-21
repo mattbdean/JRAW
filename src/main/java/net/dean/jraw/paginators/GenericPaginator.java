@@ -25,7 +25,7 @@ public abstract class GenericPaginator<T extends Thing> extends Paginator<T> {
      */
     protected GenericPaginator(RedditClient creator, Class<T> thingClass, String where) {
         super(creator, thingClass);
-        if (!isValidWhereVal(where))
+        if (!isValidWhereValue(where))
             throw new IllegalArgumentException(String.format("Invalid 'where' value: \"%s\". Expecting one of %s",
                     where, Arrays.toString(getWhereValues())));
         this.where = where;
@@ -78,7 +78,7 @@ public abstract class GenericPaginator<T extends Thing> extends Paginator<T> {
      * @return True if the given String is found in the array returned by {@link #getWhereValues()} (ignoring case),
      *         false if else
      */
-    public final boolean isValidWhereVal(String where) {
+    public final boolean isValidWhereValue(String where) {
         if (where == null) {
             return false;
         }

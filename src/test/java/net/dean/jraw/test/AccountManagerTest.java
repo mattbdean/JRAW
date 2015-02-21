@@ -13,7 +13,6 @@ import net.dean.jraw.models.Submission;
 import net.dean.jraw.models.Subreddit;
 import net.dean.jraw.models.VoteDirection;
 import net.dean.jraw.paginators.Paginator;
-import net.dean.jraw.paginators.Paginators;
 import net.dean.jraw.paginators.SubredditPaginator;
 import net.dean.jraw.paginators.UserContributionPaginator;
 import net.dean.jraw.paginators.UserSubredditsPaginator;
@@ -346,7 +345,7 @@ public class AccountManagerTest extends RedditTest {
     @Test
     public void testSticky() throws NetworkException {
         String modOf = getModeratedSubreddit().getDisplayName();
-        SubredditPaginator paginator = Paginators.subreddit(reddit, modOf);
+        SubredditPaginator paginator = new SubredditPaginator(reddit, modOf);
 
         Submission submission = null;
         List<Listing<Submission>> listingList = paginator.accumulate(3);
@@ -411,7 +410,7 @@ public class AccountManagerTest extends RedditTest {
     }
 
     private boolean isSubscribed(String subreddit) {
-        UserSubredditsPaginator paginator = Paginators.mySubreddits(reddit, "subscriber");
+        UserSubredditsPaginator paginator = new UserSubredditsPaginator(reddit, "subscriber");
         paginator.setLimit(Paginator.RECOMMENDED_MAX_LIMIT);
 
         // Try to find the subreddit in the list of subscribed subs
@@ -428,6 +427,6 @@ public class AccountManagerTest extends RedditTest {
     }
 
     private UserContributionPaginator getPaginator(String where) {
-        return Paginators.contributions(reddit, reddit.getAuthenticatedUser(), where);
+        return new UserContributionPaginator(reddit, where, reddit.getAuthenticatedUser());
     }
 }
