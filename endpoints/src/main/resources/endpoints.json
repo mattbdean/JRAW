@@ -173,7 +173,7 @@
     "GET /top",
     "GET /user/{username}/about.json",
     "GET /duplicates/{article}",
-    "GET /{article}/related",
+    "GET /related/{article}",
     "GET /sort"
   ],
   "report": [
