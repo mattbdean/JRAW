@@ -15,7 +15,7 @@ ext {
 allprojects {
     sourceCompatibility = 1.7
     group = 'net.dean.jraw'
-    version = '0.7.0'
+    version = '0.7.0.1'
 
     repositories {
         mavenCentral()
