@@ -25,8 +25,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * This class is the base class of all JRAW test classes. It provides dynamic User-Agents based on the name of the class
- * and several utility methods.
+ * This class is the base class of all JRAW test classes. It provides several utility methods.
  */
 public abstract class RedditTest {
     protected static final RedditClient reddit = new RedditClient(UserAgent.of("desktop",

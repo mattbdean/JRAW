@@ -113,18 +113,14 @@ public class OAuthHelper {
 
         HttpRequest request = HttpRequest.from("irrelevant", JrawUtils.newUrl(finalUrl));
         Map<String, String> query = JrawUtils.parseUrlEncoded(request.getUrl().getQuery());
-        if (!query.containsKey("state")) {
+        if (!query.containsKey("state"))
             throw new IllegalArgumentException("Final redirect URI did not contain the 'state' query parameter");
-        }
-        if (!query.get("state").equals(state)) {
+        if (!query.get("state").equals(state))
             throw new IllegalStateException("State did not match");
-        }
-        if (query.containsKey("error")) {
+        if (query.containsKey("error"))
             throw new OAuthException(query.get("error"));
-        }
-        if (!query.containsKey("code")) {
+        if (!query.containsKey("code"))
             throw new IllegalArgumentException("Final redirect URI did not contain the 'code' parameter");
-        }
 
         String code = query.get("code");
 
