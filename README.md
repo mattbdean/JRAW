@@ -40,7 +40,7 @@ Add jCenter (`https://jcenter.bintray.com`) to your repositories and then add th
 ```
 
 ####Using the Library
-See [the wiki](https://github.com/thatJavaNerd/JRAW/wiki/Home) to get you up and running
+See [Quickstart](https://github.com/thatJavaNerd/JRAW/wiki/Quickstart) to get you up and running
 
 Javadoc can be found [here](https://thatjavanerd.github.io/JRAW/)
 
