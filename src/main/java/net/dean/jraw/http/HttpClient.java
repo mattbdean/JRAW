@@ -1,5 +1,7 @@
 package net.dean.jraw.http;
 
+import net.dean.jraw.http.oauth.InvalidScopeException;
+
 import java.util.Date;
 import java.util.LinkedHashMap;
 
@@ -22,9 +24,11 @@ public interface HttpClient extends NetworkAccessible {
      *
      * @param request The request to send
      * @return A RestResponse modeling the response sent from the server
-     * @throws NetworkException
+     * @throws InvalidScopeException If the client does not have the required OAuth scope for an endpoint. Takes
+     *                               priority over NetworkException.
+     * @throws NetworkException If the request returned had a failing status code (not 2XX).
      */
-    public RestResponse execute(HttpRequest request) throws NetworkException;
+    public RestResponse execute(HttpRequest request) throws NetworkException, InvalidScopeException;
 
     /**
      * Gets the HttpLogger that will log the HTTP requests and responses that this class sends and receives.

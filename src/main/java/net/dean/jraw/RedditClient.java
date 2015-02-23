@@ -12,6 +12,7 @@ import net.dean.jraw.http.RestResponse;
 import net.dean.jraw.http.SubmissionRequest;
 import net.dean.jraw.http.UserAgent;
 import net.dean.jraw.http.oauth.Credentials;
+import net.dean.jraw.http.oauth.InvalidScopeException;
 import net.dean.jraw.http.oauth.OAuthData;
 import net.dean.jraw.http.oauth.OAuthHelper;
 import net.dean.jraw.models.Account;
@@ -145,8 +146,19 @@ public class RedditClient extends RestClient {
     }
 
     @Override
-    public RestResponse execute(HttpRequest request) throws NetworkException {
-        RestResponse response = super.execute(request);
+    public RestResponse execute(HttpRequest request) throws NetworkException, InvalidScopeException {
+        RestResponse response;
+        try {
+            response = super.execute(request);
+        } catch (NetworkException e) {
+            RestResponse errorResponse = e.getResponse();
+            if (errorResponse.getStatusCode() == 403 && errorResponse.getHeaders().get("WWW-Authenticate") != null) {
+                // Invalid scope
+                throw new InvalidScopeException(errorResponse.getOrigin().getUrl());
+            }
+            throw e;
+        }
+
         if (adjustRatelimit)
             adjustRatelimit(response);
         return response;

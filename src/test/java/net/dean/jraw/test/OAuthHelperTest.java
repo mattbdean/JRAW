@@ -10,6 +10,7 @@ import net.dean.jraw.Version;
 import net.dean.jraw.http.HttpRequest;
 import net.dean.jraw.http.UserAgent;
 import net.dean.jraw.http.oauth.Credentials;
+import net.dean.jraw.http.oauth.InvalidScopeException;
 import net.dean.jraw.http.oauth.OAuthData;
 import net.dean.jraw.http.oauth.OAuthException;
 import net.dean.jraw.http.oauth.OAuthHelper;
@@ -43,7 +44,7 @@ public class OAuthHelperTest {
     }
 
     @Test
-    public void testOAuthHelper() throws MalformedURLException {
+    public void testAuthUrl() throws MalformedURLException {
         OAuthHelper helper = reddit.getOAuthHelper();
         HttpRequest expected = new HttpRequest.Builder()
                 .https(true)
@@ -77,6 +78,13 @@ public class OAuthHelperTest {
             }
             assertEquals(pair.getValue(), actualQuery.get(pair.getKey()));
         }
+    }
+
+    @Test(expectedExceptions = InvalidScopeException.class)
+    public void testInvalidScope() throws OAuthException {
+        // This class really belongs in a different class but remains here because emulateBrowserAuth is also here
+        emulateBrowserAuth(new String[] {"read"});
+        reddit.me();
     }
 
     private Map<String, String> parseQuery(String queryString) {
@@ -135,6 +143,10 @@ public class OAuthHelperTest {
     }
 
     private void emulateBrowserAuth() throws OAuthException {
+        emulateBrowserAuth(new String[]{"identity"});
+    }
+
+    private void emulateBrowserAuth(String[] scopes) throws OAuthException {
         // Emulate a user authenticating this app. If they are not already logged in, they will be prompted to before
         // they're redirected to the page where you can click "allow."
         // Note that this is for testing purposes only and should absolutely not be done in a production app.
@@ -145,7 +157,7 @@ public class OAuthHelperTest {
             client.getOptions().setJavaScriptEnabled(false);
 
             assertEquals(reddit.getOAuthHelper().getAuthStatus(), OAuthHelper.AuthStatus.NOT_YET);
-            URL url = reddit.getOAuthHelper().getAuthorizationUrl(creds, true, "identity");
+            URL url = reddit.getOAuthHelper().getAuthorizationUrl(creds, true, scopes);
             assertEquals(reddit.getOAuthHelper().getAuthStatus(), OAuthHelper.AuthStatus.WAITING_FOR_CHALLENGE);
 
             // Reddit prompts us to log in before we authorize the app
