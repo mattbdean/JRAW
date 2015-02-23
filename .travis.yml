@@ -3,8 +3,6 @@ jdk:
 - oraclejdk7
 env:
   global:
-  # Use 'dumb' gradle output, since Gradle by default uses formatting that Travis can't handle
-  - TERM=dumb
   # USERNAME
   - secure: "Lyr51sid6i2IR22Jwkvs0itzd/E7B9K++G/zOB7fnWjEaCrc/8lT+OVoZGqzShtthWPUzPWvF0LC5OmhniUpjDerdgTcV+loCd56o+53sba0Ca9DzowTOoVKp0+rQIjLFoUwEKC4KxGsPwzcF3Plhts7gdze+fq5D2K+jUgeJAo="
   # PASSWORD
@@ -21,5 +19,5 @@ env:
   - secure: Jn+ssE7+DEnpqxH3BiY5u6b37Uf6op7nrhS30bZ4FsxGSeh4yNBCd4oj8vQn4eG/GDHSL5HmDCpeHMw0Wo6cDYAv/n1ft9IcghO5WGTSYoa2LBrtF4t0468RR447adBOT367PPBD8H/kOFZyyiRaYniA3Bax9K69uVe4B/aUyKI=
   # GIT_USER and GIT_PASS
   - secure: KtdoQLj2zDTkysWyXVj+H5xY65dDo58+070SQM68Tg6EYiB2tx9EV1IOJ1UallaDWGCyPfZvM2eTXs0selM5+S9GzskWePsY1uhFv+tnbGMUMcwiioq+yIxpK3zq8LLodIuiI5wv/4QigC/hsXSlUzV7hDUXWkdHieYig44p2Vs=
-script: "./gradlew test"
+script: "./gradlew --console plain test"
 after_success: "./gradlew jacocoTestReport coveralls; ./upload_docs.sh"
