@@ -3,7 +3,7 @@ plugins {
     id 'idea'
     id 'maven-publish'
     id 'findbugs'
-    id 'net.saliman.cobertura' version '2.2.5'
+    id 'jacoco'
     id 'com.github.kt3k.coveralls' version '2.0.1'
 }
 
@@ -87,8 +87,11 @@ findbugsMain {
     }
 }
 
-cobertura {
-    coverageFormats = ['html', 'xml']
+jacocoTestReport {
+    reports {
+        xml.enabled = true // coveralls depends on XML reports
+        html.enabled = true
+    }
 }
 
 publishing {
