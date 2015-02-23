@@ -27,7 +27,7 @@ public class AuthenticationTest extends RedditTest {
             // /api/me.json returns '{}' when there is no logged in user
             boolean expected = acc.getDataNode() != null;
 
-            assertEquals(reddit.isLoggedIn(), expected);
+            assertEquals(reddit.isAuthenticated(), expected);
         } catch (NetworkException e) {
             handle(e);
         }

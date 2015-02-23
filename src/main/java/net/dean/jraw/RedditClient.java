@@ -205,11 +205,8 @@ public class RedditClient extends RestClient {
         this.adjustRatelimit = flag;
     }
 
-    /**
-     * Checks if the user is logged in
-     * @return True if the user is logged in
-     */
-    public boolean isLoggedIn() {
+    /** Checks if this RedditClient is current authenticated. */
+    public boolean isAuthenticated() {
         return authMethod != AuthenticationMethod.NOT_YET && authData != null;
     }
 

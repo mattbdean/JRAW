@@ -126,18 +126,18 @@ public class OAuthHelperTest {
     @Test
     public void testRevokeAccessToken() throws OAuthException {
         emulateBrowserAuth();
-        assertTrue(reddit.isLoggedIn());
+        assertTrue(reddit.isAuthenticated());
         reddit.getOAuthHelper().revokeAccessToken(creds);
-        assertFalse(reddit.isLoggedIn());
+        assertFalse(reddit.isAuthenticated());
     }
 
     @Test
     public void testRevokeRefreshToken() throws OAuthException {
         emulateBrowserAuth();
-        assertTrue(reddit.isLoggedIn());
+        assertTrue(reddit.isAuthenticated());
         reddit.getOAuthHelper().revokeRefreshToken(creds);
         // Only the refresh token should be revoked, the access token should be fine.
-        assertTrue(reddit.isLoggedIn());
+        assertTrue(reddit.isAuthenticated());
         assertFalse(reddit.getOAuthHelper().canRefresh());
     }
 

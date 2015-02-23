@@ -235,7 +235,7 @@ public class OAuthHelper {
      * @throws NetworkException If the request was not successful
      */
     public void revokeAccessToken(Credentials creds) throws NetworkException {
-        if (!reddit.isLoggedIn())
+        if (!reddit.isAuthenticated())
             return;
         revokeToken(creds, reddit.getOAuthData().getAccessToken(), "access_token");
         authStatus = AuthStatus.REVOKED;

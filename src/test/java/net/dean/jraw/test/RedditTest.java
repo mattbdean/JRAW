@@ -38,7 +38,7 @@ public abstract class RedditTest {
     protected RedditTest() {
         reddit.setLoggingMode(LoggingMode.ON_FAIL);
         Credentials creds = getCredentials();
-        if (!reddit.isLoggedIn()) {
+        if (!reddit.isAuthenticated()) {
             try {
                 reddit.authenticate(reddit.getOAuthHelper().easyAuth(creds));
             } catch (NetworkException | ApiException e) {
