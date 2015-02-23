@@ -27,8 +27,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotEquals;
+import static org.testng.Assert.*;
 
 public class OAuthHelperTest {
     private RedditClient reddit;
@@ -125,9 +124,21 @@ public class OAuthHelperTest {
     }
 
     @Test
-    public void testRevoke() throws OAuthException {
+    public void testRevokeAccessToken() throws OAuthException {
         emulateBrowserAuth();
-        reddit.getOAuthHelper().revokeToken(creds);
+        assertTrue(reddit.isLoggedIn());
+        reddit.getOAuthHelper().revokeAccessToken(creds);
+        assertFalse(reddit.isLoggedIn());
+    }
+
+    @Test
+    public void testRevokeRefreshToken() throws OAuthException {
+        emulateBrowserAuth();
+        assertTrue(reddit.isLoggedIn());
+        reddit.getOAuthHelper().revokeRefreshToken(creds);
+        // Only the refresh token should be revoked, the access token should be fine.
+        assertTrue(reddit.isLoggedIn());
+        assertFalse(reddit.getOAuthHelper().canRefresh());
     }
 
     @Test

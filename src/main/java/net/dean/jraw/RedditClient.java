@@ -135,7 +135,7 @@ public class RedditClient extends RestClient {
 
     /**
      * Removes any authentication data. The access token needs to be revoked first using
-     * {@link OAuthHelper#revokeToken(Credentials)}.
+     * {@link OAuthHelper#revokeAccessToken(Credentials)}.
      */
     public void deauthenticate() {
         if (authHelper.getAuthStatus() != OAuthHelper.AuthStatus.REVOKED)

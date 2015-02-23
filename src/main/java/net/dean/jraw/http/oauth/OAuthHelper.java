@@ -194,6 +194,7 @@ public class OAuthHelper {
                 .sensitiveArgs("password")
                 .build());
         authStatus = AuthStatus.AUTHORIZED;
+        state = null;
         return new OAuthData(credentials.getAuthenticationMethod(), response.getJson());
     }
 
@@ -219,7 +220,7 @@ public class OAuthHelper {
         }
 
         RestResponse response = reddit.execute(accessTokenRequest(
-                        new BasicAuthData(credentials.getClientId(), credentials.getClientSecret()))
+                new BasicAuthData(credentials.getClientId(), credentials.getClientSecret()))
                 .post(args)
                 .build());
         checkError(response.getJson());
@@ -233,18 +234,41 @@ public class OAuthHelper {
      *              be used.
      * @throws NetworkException If the request was not successful
      */
-    public void revokeToken(Credentials creds) throws NetworkException {
+    public void revokeAccessToken(Credentials creds) throws NetworkException {
         if (!reddit.isLoggedIn())
             return;
+        revokeToken(creds, reddit.getOAuthData().getAccessToken(), "access_token");
+        authStatus = AuthStatus.REVOKED;
+        reddit.deauthenticate();
+    }
+
+    /**
+     * Revokes the OAuth2 refresh token. You will need to have the user reauthenticate using
+     * {@link #getAuthorizationUrl}.
+     *
+     * @param creds The credentials used to request the original token
+     */
+    public void revokeRefreshToken(Credentials creds) throws NetworkException {
+        if (!canRefresh()) return;
+        revokeToken(creds, refreshToken, "refresh_token");
+        refreshToken = null;
+    }
+
+    /**
+     * Revokes an OAuth2 token
+     * @param creds The credentials used to request the original token
+     * @param token Token value
+     * @param tokenType One of "access_token" or "refresh_token"
+     */
+    private void revokeToken(Credentials creds, String token, String tokenType) throws NetworkException {
         reddit.execute(reddit.request()
                 .host(RedditClient.HOST_SPECIAL)
                 .path("/api/v1/revoke_token")
                 .post(JrawUtils.mapOf(
-                        "token", reddit.getOAuthData().getAccessToken()
+                        "token", token,
+                        "token_type_hint", tokenType
                 )).basicAuth(new BasicAuthData(creds.getClientId(), creds.getClientSecret()))
                 .build());
-        authStatus = AuthStatus.REVOKED;
-        reddit.deauthenticate();
     }
 
     /**
@@ -256,7 +280,7 @@ public class OAuthHelper {
      * @throws OAuthException If the client ID or secret was incorrect
      */
     public OAuthData refreshToken(Credentials creds) throws NetworkException, OAuthException {
-        if (refreshToken == null) {
+        if (canRefresh()) {
             throw new IllegalStateException("No refresh token");
         }
 
@@ -289,7 +313,14 @@ public class OAuthHelper {
 
     /** Assigns the refresh token. */
     public void setRefreshToken(String refreshToken) {
+        if (refreshToken == null)
+            throw new NullPointerException("refreshToken cannot be null");
         this.refreshToken = refreshToken;
+    }
+
+    /** Checks if there is a refresh token available. */
+    public boolean canRefresh() {
+        return refreshToken != null;
     }
 
     private void checkError(JsonNode json) throws OAuthException {
