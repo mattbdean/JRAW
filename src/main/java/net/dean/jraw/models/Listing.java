@@ -111,11 +111,6 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
         return moreChildren;
     }
 
-    /** Set the "more" element, for use when another loaded from the previous more */
-    public void setMoreChildren(MoreChildren more) {
-        this.moreChildren = more;
-    }
-
     /**
      * The full name of the Thing that follows before this page, or null if there is no previous page
      *
