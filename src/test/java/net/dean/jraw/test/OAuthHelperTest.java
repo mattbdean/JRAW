@@ -44,7 +44,7 @@ public class OAuthHelperTest {
 
     @Test
     public void testOAuthHelper() throws MalformedURLException {
-        OAuthHelper helper = new OAuthHelper(reddit);
+        OAuthHelper helper = reddit.getOAuthHelper();
         HttpRequest expected = new HttpRequest.Builder()
                 .https(true)
                 .host(RedditClient.HOST_SPECIAL)

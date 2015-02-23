@@ -282,6 +282,16 @@ public class OAuthHelper {
         }
     }
 
+    /** Gets the token that will allow the client to get more access tokens */
+    public String getRefreshToken() {
+        return refreshToken;
+    }
+
+    /** Assigns the refresh token. */
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
+
     private void checkError(JsonNode json) throws OAuthException {
         if (json.has("error")) {
             throw new OAuthException(String.format("%s (%s)", json.get("error").asText(), json.get("error_description").asText()));
