@@ -280,7 +280,7 @@ public class OAuthHelper {
      * @throws OAuthException If the client ID or secret was incorrect
      */
     public OAuthData refreshToken(Credentials creds) throws NetworkException, OAuthException {
-        if (canRefresh()) {
+        if (!canRefresh()) {
             throw new IllegalStateException("No refresh token");
         }
 
