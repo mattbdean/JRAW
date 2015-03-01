@@ -17,6 +17,8 @@ import net.dean.jraw.http.NetworkException
 import net.dean.jraw.http.UserAgent
 import net.dean.jraw.Version
 import net.dean.jraw.http.oauth.Credentials
+import net.dean.jraw.http.MultiRedditUpdateRequest
+import net.dean.jraw.models.MultiReddit
 
 /**
  * This class will create a Reddit user and set up everything you need to start testing with JRAW. See
@@ -142,7 +144,10 @@ public class CreateTestingUser {
         val mgr = MultiRedditManager(reddit)
         val name = "jraw"
         println("Creating multireddit '$name'")
-        val multi = mgr.createOrUpdate(name, listOf("programming", "java", "git", "lolphp"), true)
+        val multi = mgr.createOrUpdate(MultiRedditUpdateRequest.Builder(reddit.getAuthenticatedUser(), name)
+                .subreddits("programming", "java", "git", "lolphp")
+                .visibility(MultiReddit.Visibility.PRIVATE)
+                .build());
         mgr.updateDescription(name, "This mutlireddit was created using JRAW because you had no other multireddits. " +
                                     "Feel free to delete this multireddit, but tests will fail if you don't have at " +
                                     "least one multireddit with at least one subreddit in it")
