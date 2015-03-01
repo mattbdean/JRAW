@@ -2,6 +2,7 @@ package net.dean.jraw.test;
 
 import net.dean.jraw.ApiException;
 import net.dean.jraw.JrawUtils;
+import net.dean.jraw.http.MultiRedditUpdateRequest;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.managers.MultiRedditManager;
 import net.dean.jraw.models.MultiReddit;
@@ -18,7 +19,7 @@ import static org.testng.Assert.*;
  */
 public class MultiRedditTest extends RedditTest {
     private static final String MULTI_NAME = "jraw_testing";
-    private static final List<String> INITIAL_MULTIS = Arrays.asList("programming", "java", "git");
+    private static final List<String> INITIAL_SUBS = Arrays.asList("programming", "java", "git");
 
     private MultiRedditManager manager;
     private String testingMulti;
@@ -30,7 +31,10 @@ public class MultiRedditTest extends RedditTest {
     @BeforeMethod
     public void setUp() {
         try {
-            manager.createOrUpdate(MULTI_NAME, INITIAL_MULTIS, false);
+            manager.createOrUpdate(new MultiRedditUpdateRequest.Builder(reddit.getAuthenticatedUser(), MULTI_NAME)
+                    .subreddits(INITIAL_SUBS)
+                    .visibility(MultiReddit.Visibility.PRIVATE)
+                    .build());
         } catch (NetworkException | ApiException e) {
             JrawUtils.logger().warn("Could not set up the test", e);
         }
@@ -55,26 +59,17 @@ public class MultiRedditTest extends RedditTest {
     }
 
     @Test
-    public void testGetDescription() {
-        try {
-            assertNotNull(manager.getDescription(manager.mine().get(0).getFullName()));
-        } catch (NetworkException | ApiException e) {
-            handle(e);
-        }
-    }
-
-    @Test
     public void testUpdateDescription() {
         String desc1 = "desc1";
         String desc2 = "desc2";
 
         try {
-            String before = manager.getDescription(MULTI_NAME);
+            String before = manager.get(MULTI_NAME).getDescription();
             String expected = before.equals(desc1) ? desc2 : desc1;
 
             manager.updateDescription(MULTI_NAME, expected);
 
-            assertEquals(manager.getDescription(MULTI_NAME), expected);
+            assertEquals(manager.get(MULTI_NAME).getDescription(), expected);
         } catch (NetworkException | ApiException e) {
             handle(e);
         }
@@ -93,8 +88,25 @@ public class MultiRedditTest extends RedditTest {
     public void testCreateOrUpdate() {
         try {
             manager.delete(MULTI_NAME);
+        } catch (NetworkException e) {
+            // We don't care if it 404's
+            if (e.getResponse().getStatusCode() != 404) {
+                handle(e);
+            }
+        }
+        try {
             assertFalse(multiExists(MULTI_NAME));
-            validateModel(manager.createOrUpdate(MULTI_NAME, INITIAL_MULTIS, true));
+            MultiReddit mr = manager.createOrUpdate(new MultiRedditUpdateRequest.Builder(reddit.getAuthenticatedUser(), MULTI_NAME)
+                    .visibility(MultiReddit.Visibility.PRIVATE)
+                    .description("test description")
+                    .subreddits(INITIAL_SUBS)
+                    .displayName("test-display-name")
+                    .icon(MultiReddit.Icon.ART_AND_DESIGN)
+                    .keyColor("#FFFFFF")
+                    .weightingScheme(MultiReddit.WeightingScheme.CLASSIC)
+                    .build());
+            validateModels(mr.getSubreddits());
+
             assertTrue(multiExists(MULTI_NAME));
         } catch (NetworkException | ApiException e) {
             handle(e);
@@ -120,7 +132,16 @@ public class MultiRedditTest extends RedditTest {
 
     @Test
     public void testCopy() {
-        String newName = MULTI_NAME + "_new";
+        String newName = MULTI_NAME + "_copy";
+        try {
+            manager.delete(newName);
+        } catch (NetworkException e) {
+            // We don't care if it 404's
+            if (e.getResponse().getStatusCode() != 404) {
+                handle(e);
+            }
+        }
+
         try {
             manager.copy(MULTI_NAME, newName);
             assertTrue(multiExists(newName));
@@ -147,7 +168,7 @@ public class MultiRedditTest extends RedditTest {
     @Test
     public void testRemoveSubreddit() {
         try {
-            manager.removeSubreddit(MULTI_NAME, INITIAL_MULTIS.get(0));
+            manager.removeSubreddit(MULTI_NAME, INITIAL_SUBS.get(0));
         } catch (NetworkException e) {
             handle(e);
         }

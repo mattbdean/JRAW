@@ -1,15 +1,16 @@
 package net.dean.jraw.managers;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import net.dean.jraw.ApiException;
 import net.dean.jraw.EndpointImplementation;
 import net.dean.jraw.Endpoints;
 import net.dean.jraw.JrawUtils;
 import net.dean.jraw.RedditClient;
+import net.dean.jraw.http.HttpRequest;
+import net.dean.jraw.http.MultiRedditUpdateRequest;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.RestResponse;
-import net.dean.jraw.http.HttpRequest;
 import net.dean.jraw.models.MultiReddit;
-import com.fasterxml.jackson.databind.JsonNode;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,6 +41,7 @@ public class MultiRedditManager extends AbstractManager {
     public List<MultiReddit> mine() throws NetworkException, ApiException {
         List<MultiReddit> multis = new ArrayList<>();
         JsonNode multiArray = reddit.execute(reddit.request()
+                .query("expand_srs", "true")
                 .endpoint(Endpoints.MULTI_MINE)
                 .build()).getJson();
         checkForError(multiArray);
@@ -54,23 +56,19 @@ public class MultiRedditManager extends AbstractManager {
     /**
      * Updates a multireddit or creates one if it does not exist
      *
-     * @param name The name of the multireddit
-     * @param subreddits The subreddits that make up this multireddit
-     * @param priv If this multireddit is private
+     * @param updateData The request to be sent
      * @throws NetworkException If the request was not successful
      * @throws ApiException If the Reddit API returned an error
      * @return The updated MultiReddit
      */
     @EndpointImplementation({Endpoints.MULTI_MULTIPATH_PUT, Endpoints.MULTI_MULTIPATH_POST})
-    public MultiReddit createOrUpdate(String name, List<String> subreddits, boolean priv) throws NetworkException, ApiException {
-
-        MultiRedditJsonModel creationData = new MultiRedditJsonModel(subreddits, priv);
-
+    public MultiReddit createOrUpdate(MultiRedditUpdateRequest updateData) throws NetworkException, ApiException {
         Map<String, String> args = new HashMap<>();
-        args.put("model", JrawUtils.toJson(creationData));
+        args.put("model", JrawUtils.toJson(updateData));
 
         HttpRequest.Builder request = reddit.request()
-                .endpoint(Endpoints.MULTI_MULTIPATH_POST, getMultiPath(name).substring(1));
+                .query("expand_srs", "true")
+                .endpoint(Endpoints.MULTI_MULTIPATH_POST, getMultiPath(updateData.getName()).substring(1));
 
         request.put(args);
 
@@ -89,7 +87,7 @@ public class MultiRedditManager extends AbstractManager {
      */
     @EndpointImplementation(Endpoints.MULTI_MULTIPATH_R_SRNAME_PUT)
     public void addSubreddit(String multiName, String subreddit) throws NetworkException {
-        MultiRedditSubredditModel data = new MultiRedditSubredditModel(subreddit);
+        MultiRedditUpdateRequest.SubredditModel data = new MultiRedditUpdateRequest.SubredditModel(subreddit);
 
         HttpRequest request = reddit.request()
                 .endpoint(Endpoints.MULTI_MULTIPATH_R_SRNAME_PUT, multiName, subreddit)
@@ -259,6 +257,7 @@ public class MultiRedditManager extends AbstractManager {
 
     /**
      * Gets a publicly available MultiReddit
+     *
      * @param owner The owner of the multireddit
      * @param multiName The name of the multireddit
      * @return A MultiReddit
@@ -267,50 +266,17 @@ public class MultiRedditManager extends AbstractManager {
      */
     @EndpointImplementation({
             Endpoints.MULTI_MULTIPATH_GET,
-            Endpoints.MULTI_MULTIPATH_R_SRNAME_GET
+            Endpoints.MULTI_MULTIPATH_R_SRNAME_GET,
+            Endpoints.MULTI_MULTIPATH_DESCRIPTION_GET
     })
     public MultiReddit get(String owner, String multiName) throws NetworkException, ApiException {
         JsonNode node = reddit.execute(reddit.request()
                 .endpoint(Endpoints.MULTI_MULTIPATH_GET, getMultiPath(owner, multiName).substring(1))
+                .query("expand_srs", "true")
                 .build()).getJson();
 
         checkForError(node);
         return new MultiReddit(node.get("data"));
-    }
-
-    /**
-     * Fetches the description of a self-owned multireddit.
-     *
-     * @param multiName The name of the multireddit
-     * @return A String array in which the first index is Markdown and the second is HTML
-     * @throws NetworkException If the request was not successful
-     * @throws ApiException If the Reddit API returned an error
-     */
-    @EndpointImplementation(Endpoints.MULTI_MULTIPATH_DESCRIPTION_GET)
-    public String getDescription(String multiName) throws NetworkException, ApiException {
-        if (!reddit.hasActiveUserContext())
-            throw new IllegalStateException("Cannot set the flair for self because there is no active user context");
-        return getDescription(reddit.getAuthenticatedUser(), multiName);
-    }
-
-    /**
-     * Fetches the description of a public or self-owned multireddit.
-     *
-     * @param owner The owner of the multireddit
-     * @param multiName The name of the multireddit
-     * @return A String array in which the first index is Markdown and the second is HTML
-     * @throws NetworkException If the request was not successful
-     * @throws ApiException If the Reddit API returned an error
-     */
-    @EndpointImplementation(Endpoints.MULTI_MULTIPATH_DESCRIPTION_GET)
-    public String getDescription(String owner, String multiName) throws NetworkException, ApiException {
-        JsonNode node = reddit.execute(reddit.request()
-                .endpoint(Endpoints.MULTI_MULTIPATH_DESCRIPTION_GET, getMultiPath(owner, multiName).substring(1))
-                .build()).getJson();
-
-        checkForError(node);
-        node = node.get("data");
-        return node.get("body_md").asText();
     }
 
     /**
@@ -325,7 +291,7 @@ public class MultiRedditManager extends AbstractManager {
      */
     private String getMultiPath(String multiName) {
         if (!reddit.hasActiveUserContext())
-            throw new IllegalStateException("Cannot set the flair for self because there is no active user context");
+            throw new IllegalStateException("Cannot get a self-owned multireddit's path because there is no active user context");
         return getMultiPath(reddit.getAuthenticatedUser(), multiName);
     }
 
@@ -349,58 +315,6 @@ public class MultiRedditManager extends AbstractManager {
     private void checkForError(JsonNode root) throws ApiException {
         if (root.has("explanation") && root.has("reason")) {
             throw new ApiException(root.get("reason").asText(), root.get("explanation").asText());
-        }
-    }
-
-    /**
-     * This class represents a Java object of the data sent to create a multireddit. When an instance of this class is
-     * turned into a JSON string, the output will look like this:
-     *
-     * <pre>
-     * {@code
-     * {
-     *     "subreddits": [
-     *         {"name": <sub>},
-     *         ...
-     *     ],
-     *     "visibility": ["public" | "private"]
-     * }
-     * }
-     * </pre>
-     */
-    private static final class MultiRedditJsonModel {
-        private final List<Map<String, String>> subreddits;
-        private final String visibility;
-
-        public MultiRedditJsonModel(List<String> subs, boolean priv) {
-            this.visibility = priv ? "private" : "public";
-
-            this.subreddits = new ArrayList<>(subs.size());
-            for (String sub : subs) {
-                HashMap<String, String> subredditMap = new HashMap<>();
-                subredditMap.put("name", sub);
-                subreddits.add(subredditMap);
-            }
-        }
-
-        public List<Map<String, String>> getSubreddits() {
-            return subreddits;
-        }
-
-        public String getVisibility() {
-            return visibility;
-        }
-    }
-
-    private static final class MultiRedditSubredditModel {
-        private String name;
-
-        private MultiRedditSubredditModel(String name) {
-            this.name = name;
-        }
-
-        public String getName() {
-            return name;
         }
     }
 }

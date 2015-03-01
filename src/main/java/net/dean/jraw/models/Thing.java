@@ -14,7 +14,7 @@ import net.dean.jraw.models.meta.Model;
 public abstract class Thing extends RedditObject {
 
     /**
-     * Instantiates and registers a new Thing
+     * Instantiates a new Thing
      *
      * @param dataNode The node to parse data from
      */

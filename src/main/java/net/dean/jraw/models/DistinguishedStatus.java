@@ -1,5 +1,7 @@
 package net.dean.jraw.models;
 
+import net.dean.jraw.NoSuchEnumConstantException;
+
 /**
  * Represents the status of a link or comment poster
  */
@@ -44,7 +46,7 @@ public enum DistinguishedStatus {
             }
         }
 
-        return null;
+        throw new NoSuchEnumConstantException(DistinguishedStatus.class, jsonValue);
     }
 
     /**

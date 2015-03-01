@@ -1,6 +1,7 @@
 package net.dean.jraw.models;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import net.dean.jraw.Dimension;
 
 import java.util.Date;
 
@@ -65,5 +66,16 @@ public abstract class RedditObject extends JsonModel {
         }
 
         return likes.booleanValue() ? VoteDirection.UPVOTE : VoteDirection.DOWNVOTE;
+    }
+
+    protected final Dimension _getDimension(String jsonKey) {
+        JsonNode node = data.get(jsonKey);
+        if (node.isNull())
+            return null;
+        return new Dimension(node.get(0).asInt(-1), node.get(1).asInt(-1));
+    }
+
+    protected final Dimension _getHeaderSize() {
+        return _getDimension("header_size");
     }
 }

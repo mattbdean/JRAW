@@ -1,5 +1,6 @@
 package net.dean.jraw.models.meta;
 
+import net.dean.jraw.NoSuchEnumConstantException;
 import net.dean.jraw.models.Account;
 import net.dean.jraw.models.Award;
 import net.dean.jraw.models.Comment;
@@ -123,7 +124,7 @@ public @interface Model {
                 }
             }
 
-            return null;
+            throw new NoSuchEnumConstantException(Kind.class, value);
         }
     }
 }
