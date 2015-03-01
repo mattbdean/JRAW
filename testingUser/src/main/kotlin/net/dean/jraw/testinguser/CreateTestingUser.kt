@@ -146,11 +146,11 @@ public class CreateTestingUser {
         println("Creating multireddit '$name'")
         val multi = mgr.createOrUpdate(MultiRedditUpdateRequest.Builder(reddit.getAuthenticatedUser(), name)
                 .subreddits("programming", "java", "git", "lolphp")
+                .description("This mutlireddit was created using JRAW because you had no other multireddits. " +
+                             "Feel free to delete this multireddit, but tests will fail if you don't have at " +
+                             "least one multireddit with at least one subreddit in it")
                 .visibility(MultiReddit.Visibility.PRIVATE)
                 .build());
-        mgr.updateDescription(name, "This mutlireddit was created using JRAW because you had no other multireddits. " +
-                                    "Feel free to delete this multireddit, but tests will fail if you don't have at " +
-                                    "least one multireddit with at least one subreddit in it")
         println("Your new multireddit can be accessed at")
         println("https://reddit.com${multi.getPath()}")
     }
