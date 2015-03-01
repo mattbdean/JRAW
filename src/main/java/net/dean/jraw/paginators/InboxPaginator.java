@@ -14,7 +14,7 @@ public class InboxPaginator extends GenericPaginator<Message> {
      * Instantiates a new InboxPaginator
      *
      * @param reddit The client to send requests with
-     * @param where  One of "inbox", "unread", "messages", "sent", "moderator", or "moderator/unread"
+     * @param where  One of "inbox", "unread", "messages", "sent", "moderator", or "moderator/unread", or "mentions"
      */
     public InboxPaginator(RedditClient reddit, String where) {
         super(reddit, Message.class, where);
@@ -27,7 +27,7 @@ public class InboxPaginator extends GenericPaginator<Message> {
 
     @Override
     public String[] getWhereValues() {
-        return new String[] {"inbox", "unread", "messages", "sent", "moderator", "moderator/unread"};
+        return new String[] {"inbox", "unread", "messages", "sent", "moderator", "moderator/unread", "mentions"};
     }
 
     @Override

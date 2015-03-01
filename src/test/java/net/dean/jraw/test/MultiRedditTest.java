@@ -178,7 +178,7 @@ public class MultiRedditTest extends RedditTest {
     public void testGetPublicMultis() {
         try {
             validateModels(manager.getPublicMultis(reddit.getAuthenticatedUser()));
-        } catch (ApiException e) {
+        } catch (NetworkException e) {
             handle(e);
         }
     }
