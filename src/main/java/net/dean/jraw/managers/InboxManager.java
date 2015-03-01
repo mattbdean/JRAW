@@ -8,7 +8,10 @@ import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.MediaTypes;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.RestResponse;
+import net.dean.jraw.models.Message;
 import net.dean.jraw.models.PrivateMessage;
+import net.dean.jraw.paginators.InboxPaginator;
+import net.dean.jraw.paginators.Paginator;
 
 /**
  * This class is responsible for managing a user's inbox
@@ -100,5 +103,20 @@ public class InboxManager extends AbstractManager {
         if (response.hasErrors()) {
             throw response.getError();
         }
+    }
+
+    /**
+     * Creates a new Paginator that will iterate through unread messages.
+     */
+    public Paginator<Message> read() {
+        return read("unread");
+    }
+
+    /**
+     * Creates a new Paginator that will iterate through the inbox.
+     * @param what One of "inbox", "unread", "messages", "sent", "moderator", or "moderator/unread"
+     */
+    public Paginator<Message> read(String what) {
+        return new InboxPaginator(reddit, what);
     }
 }
