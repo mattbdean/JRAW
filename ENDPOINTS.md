@@ -1,9 +1,9 @@
-<!--- Generated 2015-03-01 at 16:39:15 EST. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
+<!--- Generated 2015-03-01 at 18:43:16 EST. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
 #Endpoints
 
 This file contains a list of all the endpoints (regardless of if they have been implemented) that can be found at the [official Reddit API docs](https://www.reddit.com/dev/api). To update this file, run `./gradlew endpoints:update`.
 
-So far **111** endpoints (out of 177 total) have been implemented.
+So far **112** endpoints (out of 177 total) have been implemented.
 
 ##(any scope)
 Method|Endpoint|Implemented?
@@ -166,7 +166,6 @@ Method|Endpoint|Implemented?
 :----:|--------|------------
 `GET`|[`/api/filter/{filterpath}`](https://www.reddit.com/dev/api/oauth#GET_api_filter_%7Bfilterpath%7D)|No
 `GET`|[`/api/filter/{filterpath}/r/{srname}`](https://www.reddit.com/dev/api/oauth#GET_api_filter_%7Bfilterpath%7D_r_%7Bsrname%7D)|No
-`GET`|[`/api/multi/user/{username}`](https://www.reddit.com/dev/api/oauth#GET_api_multi_user_%7Busername%7D)|No
 `GET`|[`/live/{thread}/contributors.json`](https://www.reddit.com/dev/api/oauth#GET_live_%7Bthread%7D_contributors.json)|No
 `GET`|[`/live/{thread}/discussions`](https://www.reddit.com/dev/api/oauth#GET_live_%7Bthread%7D_discussions)|No
 `GET`|[`/sidebar`](https://www.reddit.com/dev/api/oauth#GET_sidebar)|No
@@ -186,6 +185,7 @@ Method|Endpoint|Implemented?
 `GET`|[`/api/info`](https://www.reddit.com/dev/api/oauth#GET_api_info)|[`RedditClient.get(String[])`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/RedditClient.html#get([Ljava.lang.String;))
 `GET`|[`/api/morechildren`](https://www.reddit.com/dev/api/oauth#GET_api_morechildren)|[`CommentNode.getMoreComments(RedditClient)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/models/CommentNode.html#getMoreComments(net.dean.jraw.RedditClient))
 `GET`|[`/api/multi/mine`](https://www.reddit.com/dev/api/oauth#GET_api_multi_mine)|[`MultiRedditManager.mine()`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/managers/MultiRedditManager.html#mine())
+`GET`|[`/api/multi/user/{username}`](https://www.reddit.com/dev/api/oauth#GET_api_multi_user_%7Busername%7D)|[`MultiRedditManager.getPublicMultis(String)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/managers/MultiRedditManager.html#getPublicMultis(java.lang.String))
 `GET`|[`/api/multi/{multipath}`](https://www.reddit.com/dev/api/oauth#GET_api_multi_%7Bmultipath%7D)|[`MultiRedditManager.get(String, String)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/managers/MultiRedditManager.html#get(java.lang.String, java.lang.String))
 `GET`|[`/api/multi/{multipath}/description`](https://www.reddit.com/dev/api/oauth#GET_api_multi_%7Bmultipath%7D_description)|[`MultiRedditManager.get(String, String)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/managers/MultiRedditManager.html#get(java.lang.String, java.lang.String))
 `PUT`|[`/api/multi/{multipath}/description`](https://www.reddit.com/dev/api/oauth#PUT_api_multi_%7Bmultipath%7D_description)|[`MultiRedditManager.updateDescription(String, String)`](https://thatjavanerd.github.io/JRAW/docs/git/latest/net/dean/jraw/managers/MultiRedditManager.html#updateDescription(java.lang.String, java.lang.String))

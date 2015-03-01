@@ -220,8 +220,6 @@ public enum Endpoints {
     FILTER_FILTERPATH_GET("GET /api/filter/{filterpath}", "read"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_api_filter_%7Bfilterpath%7D_r_%7Bsrname%7D">{@code GET /api/filter/{filterpath}/r/{srname}}</a>" included in the "read" scope */
     FILTER_FILTERPATH_R_SRNAME_GET("GET /api/filter/{filterpath}/r/{srname}", "read"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_api_multi_user_%7Busername%7D">{@code GET /api/multi/user/{username}}</a>" included in the "read" scope */
-    MULTI_USER_USERNAME("GET /api/multi/user/{username}", "read"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_live_%7Bthread%7D_contributors.json">{@code GET /live/{thread}/contributors.json}</a>" included in the "read" scope */
     LIVE_THREAD_CONTRIBUTORS("GET /live/{thread}/contributors.json", "read"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_live_%7Bthread%7D_discussions">{@code GET /live/{thread}/discussions}</a>" included in the "read" scope */
@@ -260,6 +258,8 @@ public enum Endpoints {
     MORECHILDREN("GET /api/morechildren", "read"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_api_multi_mine">{@code GET /api/multi/mine}</a>" included in the "read" scope */
     MULTI_MINE("GET /api/multi/mine", "read"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_api_multi_user_%7Busername%7D">{@code GET /api/multi/user/{username}}</a>" included in the "read" scope */
+    MULTI_USER_USERNAME("GET /api/multi/user/{username}", "read"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_api_multi_%7Bmultipath%7D">{@code GET /api/multi/{multipath}}</a>" included in the "read" scope */
     MULTI_MULTIPATH_GET("GET /api/multi/{multipath}", "read"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_api_multi_%7Bmultipath%7D_description">{@code GET /api/multi/{multipath}/description}</a>" included in the "read" scope */

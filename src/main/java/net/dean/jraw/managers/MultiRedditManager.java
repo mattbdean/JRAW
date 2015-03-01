@@ -279,6 +279,22 @@ public class MultiRedditManager extends AbstractManager {
         return new MultiReddit(node.get("data"));
     }
 
+    /** Gets a user's public multireddits. */
+    @EndpointImplementation(Endpoints.MULTI_USER_USERNAME)
+    public List<MultiReddit> getPublicMultis(String username) throws NetworkException {
+        RestResponse response = reddit.execute(reddit.request()
+                .endpoint(Endpoints.MULTI_USER_USERNAME, username)
+                .query("expand_srs", "true")
+                .build());
+        JsonNode root = response.getJson();
+        List<MultiReddit> multiReddits = new ArrayList<>(root.size());
+        for (JsonNode node : root) {
+            multiReddits.add(new MultiReddit(node.get("data")));
+        }
+
+        return multiReddits;
+    }
+
     /**
      * Gets the path to a multi in this format: {@code /user/{username}/m/{multiname}} where {@code username} is the
      * currently logged in user. If this method is being used in conjunction with

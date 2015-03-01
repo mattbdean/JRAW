@@ -9,7 +9,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 @Model(kind = Model.Kind.ABSTRACT, serializer = MessageSerializer.class)
 public abstract class Message extends Contribution implements Distinguishable {
     /**
-     * Instantiates a new Thing
+     * Instantiates a new Message
      *
      * @param dataNode The node to parse data from
      */

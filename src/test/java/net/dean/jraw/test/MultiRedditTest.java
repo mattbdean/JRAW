@@ -174,6 +174,15 @@ public class MultiRedditTest extends RedditTest {
         }
     }
 
+    @Test
+    public void testGetPublicMultis() {
+        try {
+            validateModels(manager.getPublicMultis(reddit.getAuthenticatedUser()));
+        } catch (ApiException e) {
+            handle(e);
+        }
+    }
+
     private boolean multiExists(String name) {
         try {
             manager.get(name);
