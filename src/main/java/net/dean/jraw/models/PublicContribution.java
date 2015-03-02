@@ -16,19 +16,12 @@ import java.util.Map;
  */
 @Model(kind = Model.Kind.ABSTRACT, serializer = ContributionSerializer.class)
 public abstract class PublicContribution extends Contribution implements Distinguishable, Gildable, Votable {
-    /**
-     * Instantiates a new PublicContribution
-     *
-     * @param dataNode The node to parse data from
-     */
+    /** Instantiates a new PublicContribution */
     public PublicContribution(JsonNode dataNode) {
         super(dataNode);
     }
 
-    /**
-     * Gets a map of reasons to the amount of times reported for that reason by normal users (not moderators)
-     * @return A map of reports of this submission by users
-     */
+    /** Gets a map of reasons to the amount of times reported for that reason by normal users (non-moderators) */
     @JsonProperty(nullable = true)
     public Map<String, Integer> getUserReports() {
         if (!data.has("user_reports")) {
@@ -42,10 +35,7 @@ public abstract class PublicContribution extends Contribution implements Disting
         return userReports;
     }
 
-    /**
-     * Gets a map of reasons to the moderator that used that reason to report this submission
-     * @return A map of reports of this submission by users
-     */
+    /** Gets a map of reasons to the moderator that used that reason to report this submission */
     @JsonProperty(nullable = true)
     public Map<String, String> getModeratorReports() {
         if (!data.has("mod_reports")) {

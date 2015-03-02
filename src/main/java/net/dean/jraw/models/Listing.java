@@ -1,8 +1,8 @@
 package net.dean.jraw.models;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import net.dean.jraw.JrawUtils;
 import net.dean.jraw.models.meta.JsonProperty;
 import net.dean.jraw.models.meta.Model;
 import net.dean.jraw.models.meta.ModelManager;
@@ -14,19 +14,15 @@ import java.util.List;
 import java.util.ListIterator;
 
 /**
- * Represents a listing of Things. A Listing has three main keys: before, after, and its children. Listing uses an
- * {@link ArrayList} to implement the method inherited by {@link java.util.List}. Any method that attempts to change the
- * data externally (such as {@link List#remove(Object)}) will throw an UnsupportedOperationException.
+ * Represents a Listing: How Reddit returns paginated data. A Listing has three main keys: the fullanme of the item
+ * before and after, and its children. Listing uses an {@link ArrayList} to implement the method inherited by
+ * {@link java.util.List}. For all intents and purposes, Listing children are unmodifiable.
  *
  * @param <T> The type of elements that will be in this listing
  * @author Matthew Dean
  */
-@SuppressWarnings("deprecation")
 @Model(kind = Model.Kind.LISTING)
 public class Listing<T extends RedditObject> extends RedditObject implements List<T> {
-
-    private static ObjectMapper mapper = new ObjectMapper();
-
     private final Class<T> thingClass;
     private final List<T> children;
     private final String before;
@@ -36,19 +32,18 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
     /**
      * Instantiates a new Listing
      *
-     * @param dataNode   The node to get data from
      * @param thingClass The class which will be the type of the children in this listing
      */
     public Listing(JsonNode dataNode, Class<T> thingClass) {
         this(thingClass,
                 initChildren(dataNode, thingClass),
-                getProp(dataNode, "before"),
-                getProp(dataNode, "after"),
+                property(dataNode, "before"),
+                property(dataNode, "after"),
                 initMore(dataNode));
     }
 
     /**
-     * Instantiates a new empty listing
+     * Instantiates a new empty Listing
      *
      * @param thingClass The class which will be the type of the children in this listing
      */
@@ -65,7 +60,7 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
         this.moreChildren = more;
     }
 
-    protected static String getProp(JsonNode data, String key) {
+    protected static String property(JsonNode data, String key) {
         if (!data.has(key)) {
             return null;
         }
@@ -111,21 +106,13 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
         return moreChildren;
     }
 
-    /**
-     * The full name of the Thing that follows before this page, or null if there is no previous page
-     *
-     * @return The full name of the Thing that comes before this one
-     */
+    /** Gets the fullname of the Thing that comes before this page, or null if there is no previous page */
     @JsonProperty(nullable = true)
     public String getBefore() {
         return before;
     }
 
-    /**
-     * The full name of the Thing that follows after this page, or null if there is no following page
-     *
-     * @return The full name of the Thing that comes after this page
-     */
+    /** Gets the fullname of the Thing that follows after this page, or null if there is no following page */
     @JsonProperty(nullable = true)
     public String getAfter() {
         return after;
@@ -148,10 +135,6 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
         result = 31 * result + thingClass.hashCode();
         result = 31 * result + children.hashCode();
         return result;
-    }
-
-    private void addLoaded(T object) {
-        children.add(object);
     }
 
     // java.util.List methods below
@@ -273,7 +256,7 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
     }
 
     protected static JsonNode getEmptyListingJSON() {
-        ObjectNode dataTable = mapper.createObjectNode();
+        ObjectNode dataTable = JrawUtils.objectMapper().createObjectNode();
         dataTable.putArray("children");
         dataTable.put("after", "");
         dataTable.put("before", "");

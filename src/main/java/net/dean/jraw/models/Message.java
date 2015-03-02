@@ -1,11 +1,17 @@
 package net.dean.jraw.models;
 
+import net.dean.jraw.managers.InboxManager;
 import net.dean.jraw.models.attr.Distinguishable;
 import net.dean.jraw.models.meta.JsonProperty;
 import net.dean.jraw.models.meta.MessageSerializer;
 import net.dean.jraw.models.meta.Model;
 import com.fasterxml.jackson.databind.JsonNode;
 
+/**
+ * This class represents any data that can appear in a user's inbox. The two main subclasses of this class are
+ * {@link PrivateMessage} (for when a user contacts another user directly) and {@link CommentMessage} (for when a user
+ * replies to another user's comment).
+ */
 @Model(kind = Model.Kind.ABSTRACT, serializer = MessageSerializer.class)
 public abstract class Message extends Contribution implements Distinguishable {
     /**
@@ -27,18 +33,16 @@ public abstract class Message extends Contribution implements Distinguishable {
         return data("body");
     }
 
-    /**
-     * Gets the full name of the first message's ID
-     * @return The first message
-     */
+    /** Gets the full name of the first message's ID */
     @JsonProperty
     public String getFirstMessage() {
         return data("first_message_name");
     }
 
     /**
-     * Checks if this message is unread
-     * @return If this message is unread
+     * Checks if this message has been read
+     *
+     * @see InboxManager#setRead(Message, boolean)
      */
     @JsonProperty
     public Boolean isRead() {
@@ -46,27 +50,23 @@ public abstract class Message extends Contribution implements Distinguishable {
     }
 
     /**
-     * Gets the fullname of the submission/comment/message that this is a reply to, or null if this is a top-level comment
-     * or private message.
-     * @return The ID of the message's parent
+     * Gets the fullname of the submission/comment/message that this is a reply to
+     * @return The fullname of the host, or null if this is a top-level comment or private message.
      */
     @JsonProperty(nullable = true)
     public String getParentId() {
         return data("parent_id");
     }
 
-    /**
-     * Gets the subject of the message
-     * @return The subject
-     */
+    /** Gets the subject of the message */
     @JsonProperty
     public String getSubject() {
         return data("subject");
     }
 
     /**
-     * Gets the subreddit this was posted in, or null if this message is not a comment
-     * @return The subreddit this was posted in
+     * Gets the subreddit this was posted in
+     * @return The subreddit this was posted in, or null if this message is not a comment
      */
     @JsonProperty(nullable = true)
     public String getSubreddit() {
@@ -75,8 +75,7 @@ public abstract class Message extends Contribution implements Distinguishable {
 
     /**
      * Checks if this message is a comment. If true, then one may assume that this Message is an instance of
-     * {@link CommentMessage}.
-     * @return True if this message is a comment, false if it is a private message
+     * {@link CommentMessage}, else {@link PrivateMessage}.
      */
     @JsonProperty
     public Boolean isComment() {

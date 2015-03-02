@@ -5,6 +5,6 @@ package net.dean.jraw;
  */
 public class NoSuchEnumConstantException extends RuntimeException {
     public NoSuchEnumConstantException(Class<? extends Enum> enumClass, String val) {
-        super("Could not find enum constant in " + enumClass.getName() + " via input '" + val + "'.");
+        super("Could not find enum constant in " + enumClass.getName() + " for JSON value '" + val + "'.");
     }
 }

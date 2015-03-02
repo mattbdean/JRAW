@@ -8,7 +8,12 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
 
 /**
  * This class provides an abstract model for retrieving data from a JSON node, although not necessarily relating to the
@@ -30,24 +35,27 @@ public abstract class JsonModel {
     }
 
     /**
-     * Retrieves a String value from the JSON node.
+     * Retrieves a textual value from the JSON node.
      *
-     * @param name The key to look up in the JSON node.
-     * @return An String in the JSON node
+     * @param key The key to look up in the JSON node.
+     * @return The textual value of the value of the Object returned by looking up the given key.
      */
-    public String data(String name) {
-        return data(name, String.class);
+    public String data(String key) {
+        return data(key, String.class);
     }
 
     /**
-     * Retrieves a value from the JSON node (provided in the constructor) of type T. When the class is Boolean, Double,
-     * Integer, Long, Float, or String, then it returns one of those objects using {@code JsonNode.asX()}. If the class
-     * is URI or URL, a new URL or URI (respectively) is returned. If class is {@link java.util.Date}, then the
-     * JsonNode's value is assumed to be long representing unix epoch seconds. The value is multiplied by 1000 since the
-     * value is assumed to be in seconds) and then passed to {@link Date#Date(long)}. If any other class is given, then
-     * java.lang.String is assumed.
+     * <p>Retrieves a value from the JSON node (provided in the constructor) of type T. Supported types:
      *
-     * @param name The key to look up in the JSON node.
+     * <ul>
+     *     <li>Classes that autobox/unbox to primitive types (Boolean, Double, Integer, Float, Long)
+     *     <li>{@code java.lang.String}
+     *     <li>{@code java.net.URI}
+     *     <li>{@code java.net.URL}
+     *     <li>{@code java.util.Date}
+     * </ul>
+     *
+     * @param key The key to look up in the JSON node.
      * @param type The wanted return value. Supported values are any class representing a primitive data type, such as
      *             {@link Integer} or {@link Boolean}.
      * @param <T> The desired return data type
@@ -55,16 +63,16 @@ public abstract class JsonModel {
      * @throws IllegalArgumentException If the class given was not one mentioned above
      */
     @SuppressWarnings("unchecked")
-    public <T> T data(String name, Class<T> type) {
+    public <T> T data(String key, Class<T> type) {
         if (data == null)
             throw new NullPointerException("Trying to retrieve data from a null JsonNode");
 
         // Make sure the key is actually there
-        if (!data.has(name)) {
+        if (!data.has(key)) {
             return null;
         }
 
-        JsonNode node = data.get(name);
+        JsonNode node = data.get(key);
 
         if (node.isNull()) {
             return null;
@@ -107,10 +115,11 @@ public abstract class JsonModel {
     }
 
     /**
-     * This method gets the "data" JsonNode. In a normal request (let's say to <a href="http://www.reddit.com/r/pics/about.json">/r/pics' "about" API link</a>),
-     * the Reddit API returns some JSON data. An example would look like this:
-     * <pre>
-     * {@code
+     * <p>This method gets the "data" JsonNode. In a traditional API request (let's say to
+     * <a href="http://www.reddit.com/r/pics/about.json">/r/pics/about.json</a>), the Reddit API returns some
+     * JSON data. An example would look like this:
+     *
+     * <pre>{@code
      * {
      *     "kind": "t5",
      *     "data": {
@@ -120,10 +129,9 @@ public abstract class JsonModel {
      *         ...
      *     }
      * }
-     * }
-     * </pre>
+     * }</pre>
      *
-     * The "data" node contains all the properties essential to this model.
+     * <p>The "data" node contains all the properties essential to this model.
      *
      * @return The JsonNode to get data from
      */
@@ -132,9 +140,10 @@ public abstract class JsonModel {
     }
 
     /**
-     * Convenience method to be used in toString() methods that returns the String literal "null" if the value is null.
-     * If the object's toString() method throws a NullPointerException, then the String literal "(NullPointerException)
-     * is returned. If no exceptions were thrown, then this method returns {@code val.toString()}.
+     * Convenience method to be used in toString() methods that returns the String literal "null" if the given value is
+     * null. If the object's toString() method throws a NullPointerException, then the String literal
+     * "(NullPointerException) is returned. If no exceptions were thrown, then this method returns
+     * {@code val.toString()}.
      *
      * @param val The object to evaluate
      * @return A string representation of the object
@@ -240,7 +249,7 @@ public abstract class JsonModel {
 
     /**
      * Gets a list of fields that have the JsonInteraction annotation attached to them. This method also returns
-     * JsonInteraction-annotated methods in this class' superclasses, up until JsonModel. Mainly used for testing.
+     * JsonInteraction-annotated methods in this class' superclasses, up until JsonModel. Used for testing.
      *
      * @param thingClass The class to search in
      * @return A list of fields that have the JsonInteraction annotation

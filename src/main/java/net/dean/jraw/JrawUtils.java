@@ -264,4 +264,8 @@ public final class JrawUtils {
             throw new RuntimeException("Charset '" + CHARSET + "' not found", e);
         }
     }
+
+    public static ObjectMapper objectMapper() {
+        return mapper;
+    }
 }

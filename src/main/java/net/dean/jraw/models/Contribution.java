@@ -8,16 +8,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import java.util.Date;
 
 /**
- * This class provides a way to wrap {@link Submission}, {@link Comment}, and {@link PrivateMessage} together.
+ * This class represents a contribution to the Reddit community (submissions, comments, messages, etc.).
  */
 @Model(kind = Model.Kind.ABSTRACT, serializer = ContributionSerializer.class)
 public abstract class Contribution extends Thing implements Created {
 
-    /**
-     * Instantiates a new Contribution
-     *
-     * @param dataNode The node to parse data from
-     */
+    /** Instantiates a new Contribution */
     public Contribution(JsonNode dataNode) {
         super(dataNode);
     }

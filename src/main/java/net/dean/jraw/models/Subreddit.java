@@ -5,76 +5,48 @@ import net.dean.jraw.models.meta.JsonProperty;
 import net.dean.jraw.models.meta.Model;
 import com.fasterxml.jackson.databind.JsonNode;
 
-/**
- * This class represents a Subreddit such as /r/pics.
- */
+/** This class represents a subreddit, such as /r/pics. */
 @Model(kind = Model.Kind.SUBREDDIT)
 public class Subreddit extends Thing {
 
-    /**
-     * Instantiates a new Subreddit
-     *
-     * @param dataNode The node to parse data from
-     */
+    /** Instantiates a new Subreddit */
     public Subreddit(JsonNode dataNode) {
         super(dataNode);
     }
 
-    /**
-     * Gets the amount of users active in the last 15 minutes
-     *
-     * @return The number of active users
-     */
+    /** Gets the amount of active users this subreddit has seen in the last 15 minutes */
     @JsonProperty
     public Integer getAccountsActive() {
         return data("accounts_active", Integer.class);
     }
 
-    /**
-     * Gets the number of minutes the subreddit initially hides comment scores
-     *
-     * @return The number of minutes the subreddit initially hides comment scores
-     */
+    /** Gets the number of minutes the subreddit will initially hide comment scores for */
     @JsonProperty
     public Integer getCommentScoreHideDuration() {
         return data("comment_score_hide_mins", Integer.class);
     }
 
     /**
-     * Gets the subreddit's description
-     *
-     * @return The subreddit's description
+     * Gets the subreddit's description. This appears on the sidebar on the website.
      */
     @JsonProperty
     public String getSidebar() {
         return data("description");
     }
 
-    /**
-     * Gets the "human" name of the subreddit (ex: "pics")
-     *
-     * @return The subreddit's name
-     */
+    /** Gets the "human readable" name of the subreddit (ex: "pics") */
     @JsonProperty
     public String getDisplayName() {
         return data("display_name");
     }
 
-    /**
-     * Gets the full URL to the header image, or null if one is not present.
-     *
-     * @return The full URL to the header image
-     */
+    /** Gets the full URL to the header image, or null if one is not present. */
     @JsonProperty(nullable = true)
     public String getHeaderImage() {
         return data("header_img");
     }
 
-    /**
-     * Gets the dimensions of the header image, or null if the header does not exist
-     *
-     * @return The dimensions of the header image
-     */
+    /** Gets the dimensions of the header image, or null if the header does not exist */
     @JsonProperty(nullable = true)
     public Dimension getHeaderSize() {
         return _getHeaderSize();
@@ -83,59 +55,37 @@ public class Subreddit extends Thing {
     /**
      * Gets the description of the header image shown when the cursor has hovered over it, or null if a header image is
      * not present
-     *
-     * @return The header image's description
      */
     @JsonProperty(nullable = true)
     public String getHeaderTitle() {
         return data("header_title");
     }
 
-    /**
-     * Checks if this subreddit is not safe for work
-     *
-     * @return If this subreddit is NSFW
-     */
+    /** Checks if this subreddit is not safe for work */
     @JsonProperty
     public Boolean isNsfw() {
         return data("over18", Boolean.class);
     }
 
-    /**
-     * Gets the public description show in the subreddit search results
-     *
-     * @return The public description
-     */
+    /** Gets the information that will show when this subreddit appears in a search */
     @JsonProperty
     public String getPublicDescription() {
         return data("public_description");
     }
 
-    /**
-     * Checks if the subreddit's traffic page is publicly accessible
-     *
-     * @return If the subreddit's traffic page is publicly accessible
-     */
+    /** Checks if the subreddit's traffic page is publicly accessible */
     @JsonProperty
     public Boolean isTrafficPublic() {
         return data("public_traffic", Boolean.class);
     }
 
-    /**
-     * Gets the amount of users subscribed to this subreddit
-     *
-     * @return The amount of users subscribed to this subreddit
-     */
+    /** Gets the amount of users subscribed to this subreddit */
     @JsonProperty
     public Long getSubscriberCount() {
         return data("subscribers", Long.class);
     }
 
-    /**
-     * Gets the types of submissions allowed to be posted on this subreddit
-     *
-     * @return If this subreddit allows self posts
-     */
+    /** Gets the types of submissions allowed to be posted on this subreddit */
     @JsonProperty
     public SubmissionType getAllowedSubmissionType() {
         JsonNode submissionType = data.get("submission_type");
@@ -145,99 +95,60 @@ public class Subreddit extends Thing {
         return SubmissionType.valueOf(submissionType.asText().toUpperCase());
     }
 
-    /**
-     * Gets the subreddit's custom label for the "submit link" button, if any
-     *
-     * @return The subreddit's custom label for the "submit link" button
-     */
+    /** Gets the subreddit's custom label for the "submit link" button, if any. */
     @JsonProperty
     public String getSubmitLinkLabel() {
         return data("submit_link_label");
     }
 
-    /**
-     * Gets the subreddit's custom label for the "submit text" button, if any
-     *
-     * @return The subreddit's custom label for the "submit link" button
-     */
+    /** Gets the subreddit's custom label for the "submit text" button, if any */
     @JsonProperty
     public String getSubmitTextLabel() {
         return data("submit_text_label");
     }
 
-    /**
-     * Gets this subreddit's type
-     *
-     * @return This subreddit's type
-     */
+    /** Gets this subreddit's traffic restriction type */
     @JsonProperty
     public Type getSubredditType() {
         return Type.valueOf(data("subreddit_type").toUpperCase());
     }
 
-    /**
-     * Gets the title of the main page
-     *
-     * @return The title of the main page
-     */
     @JsonProperty
     public String getTitle() {
         return data("title");
     }
 
-    /**
-     * Gets the relative URL of the subreddit (ex: "/r/pics")
-     *
-     * @return The relative URL of the subreddit
-     */
+    /** Gets the relative URL of the subreddit (ex: "/r/pics") */
     @JsonProperty
     public String getRelativeLocation() {
         return data("url");
     }
 
-    /**
-     * Checks if the logged-in-user is banned from this subreddit
-     *
-     * @return If the logged-in-user is banned form this subreddit
-     */
+    /** Checks if the logged-in user is banned from this subreddit */
     @JsonProperty
     public Boolean isUserBanned() {
         return data("user_is_banned", Boolean.class);
     }
 
-    /**
-     * Checks if the logged-in-user contributes to this subreddit
-     *
-     * @return If the logged-in-user contributes to this subreddit
-     */
+    /** Checks if the logged-in user is an approved contributor for this subreddit */
     @JsonProperty
     public Boolean isUserContributor() {
         return data("user_is_contributor", Boolean.class);
     }
 
-    /**
-     * Checks if the logged-in-user is a moderator of this subreddit
-     *
-     * @return If the logged-in-user is a moderator of this subreddit
-     */
+    /** Checks if the logged-in user is a moderator of this subreddit */
     @JsonProperty
     public Boolean isUserModerator() {
         return data("user_is_moderator", Boolean.class);
     }
 
-    /**
-     * Checks if the logged-in-user is subscribed to this subreddit
-     *
-     * @return If the logged-in-user is subscribed to this subreddit
-     */
+    /** Checks if the logged-in user is subscribed to this subreddit */
     @JsonProperty
     public Boolean isUserSubscriber() {
         return data("user_is_subscriber", Boolean.class);
     }
 
-    /**
-     * This class represents a list of all the available subreddit types
-     */
+    /** This class represents a list of all the available subreddit types */
     public static enum Type {
         /**
          * Open to all users
@@ -258,9 +169,7 @@ public class Subreddit extends Thing {
         ARCHIVED
     }
 
-    /**
-     * A list of how a subreddit can restrict the type of submissions that can be posted
-     */
+    /** A list of how a subreddit can restrict the type of submissions that can be posted */
     public static enum SubmissionType {
         /**
          * Links and self posts

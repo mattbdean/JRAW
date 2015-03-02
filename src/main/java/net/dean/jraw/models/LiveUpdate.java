@@ -13,34 +13,28 @@ import java.util.Date;
  */
 @Model(kind = Model.Kind.LIVE_UPDATE)
 public class LiveUpdate extends Thing implements Created {
-    /**
-     * Instantiates a new LiveUpdate
-     *
-     * @param dataNode The node to parse data from
-     */
+    /** Instantiates a new LiveUpdate */
     public LiveUpdate(JsonNode dataNode) {
         super(dataNode);
     }
 
-    /**
-     * The body text of this update
-     * @return The body
-     */
+    /** The value of the update */
     @JsonProperty
     public String getBody() {
         return data("body");
     }
 
-    /**
-     * Gets the name of the user who created this update
-     * @return The author
-     */
+    /** Gets the name of the user who created this update */
     @JsonProperty
     public String getAuthor() {
         return data("author");
     }
 
-//    @JsonInteraction public Boolean isStricken() // I have no idea what the 'stricken' key means
+    /** Checks if this update has been marked incorrect or crossed out. */
+    @JsonProperty
+    public Boolean isStricken() {
+        return data("stricken", Boolean.class);
+    }
 
     /**
      * Gets the Embeds found in this LiveUpdate. Will most likely only have zero or one element in the list.
@@ -65,16 +59,8 @@ public class LiveUpdate extends Thing implements Created {
         return _getCreatedUtc();
     }
 
-    /**
-     * Represents embedded data in a LiveUpdate
-     */
+    /** Represents embedded data in a LiveUpdate */
     public static class Embed extends JsonModel {
-
-        /**
-         * Instantiates a new JsonModel
-         *
-         * @param dataNode The node to parse data from
-         */
         public Embed(JsonNode dataNode) {
             super(dataNode);
         }

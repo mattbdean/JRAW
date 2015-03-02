@@ -11,11 +11,10 @@ import net.dean.jraw.http.MultiRedditUpdateRequest;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.RestResponse;
 import net.dean.jraw.models.MultiReddit;
+import net.dean.jraw.models.MultiSubreddit;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * This class provides the ability to create, read, update, and delete multireddits.
@@ -59,18 +58,17 @@ public class MultiRedditManager extends AbstractManager {
      * @param updateData The request to be sent
      * @throws NetworkException If the request was not successful
      * @throws ApiException If the Reddit API returned an error
-     * @return The updated MultiReddit
+     * @return The updated MultiReddit. Note that the only non-null property in its list of {@link MultiSubreddit}s will
+     *         be their names.
      */
     @EndpointImplementation({Endpoints.MULTI_MULTIPATH_PUT, Endpoints.MULTI_MULTIPATH_POST})
     public MultiReddit createOrUpdate(MultiRedditUpdateRequest updateData) throws NetworkException, ApiException {
-        Map<String, String> args = new HashMap<>();
-        args.put("model", JrawUtils.toJson(updateData));
-
         HttpRequest.Builder request = reddit.request()
-                .query("expand_srs", "true")
-                .endpoint(Endpoints.MULTI_MULTIPATH_POST, getMultiPath(updateData.getName()).substring(1));
-
-        request.put(args);
+                .endpoint(Endpoints.MULTI_MULTIPATH_POST, getMultiPath(updateData.getName()).substring(1))
+                .put(JrawUtils.mapOf(
+                        "model", JrawUtils.toJson(updateData),
+                        "expand_srs", "true"
+                ));
 
         RestResponse response = reddit.execute(request.build());
         JsonNode result = response.getJson();

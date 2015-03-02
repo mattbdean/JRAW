@@ -502,7 +502,12 @@ public class AccountManagerTest extends RedditTest {
         try {
             KarmaBreakdown breakdown = account.getKarmaBreakdown();
             validateModel(breakdown);
-            validateModels(breakdown.getSummaries());
+
+            for (String subreddit : breakdown.getSummaries().keySet()) {
+                // Make sure the link and comment karma properties are not null
+                breakdown.getCommentKarma(subreddit);
+                breakdown.getLinkKarma(subreddit);
+            }
         } catch (NetworkException e) {
             handle(e);
         }

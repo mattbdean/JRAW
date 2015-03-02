@@ -21,73 +21,52 @@ public class LiveThread extends RedditObject implements Created {
         super(dataNode);
     }
 
-    /**
-     * Gets the thread's description
-     * @return The thread's description
-     */
+    /** Gets the thread's description */
     @JsonProperty
     public String getDescription() {
         return data("description");
     }
 
-    /**
-     * Gets the title of the thread
-     * @return The title of the thread
-     */
+    /** Gets the thread's title */
     @JsonProperty
     public String getTitle() {
         return data("title");
     }
 
     /**
-     * Returns the WebSocket URL (wss://) to the thread
-     * @return The WebSocket URL
+     * Gets the WebSocket URL (wss://) to the thread. WebSocket clients can use this URL to be notified of new
+     * updates.
      */
     @JsonProperty(nullable = true)
     public String getWebsocketUrl() {
         return data("websocket_url");
     }
 
-    /**
-     * Checks if this live event is still active
-     * @return If this event is still active
-     */
+    /** Gets this thread's state. Either "live" or "complete." */
     @JsonProperty
-    public Boolean isActive() {
-        return data("state").equals("live"); // 'complete' if not active
+    public Boolean getState() {
+        return data("state").equals("live");
     }
 
-    /**
-     * Gets the amount of people watching this thread
-     * @return The amount of viewers
-     */
+    /** Gets the amount of people watching this thread */
     @JsonProperty
     public Integer getViewerCount() {
         return data("viewer_count", Integer.class);
     }
 
-    /**
-     * Checks if the viewer count is "fuzzed". This most often happens when there are less than 100 viewers.
-     * @return If the viewer count is fuzzed
-     */
+    /** Checks if the viewer count is "fuzzed". This most often happens when there are less than 100 viewers. */
     @JsonProperty
     public Boolean isViewerCountFuzzed() {
         return data("viewer_count_fuzzed", Boolean.class);
     }
 
-    /**
-     * This LiveEvent's ID. Do not confuse this with {@link Thing#getId()}.
-     * @return The thread's ID
-     */
+    /** This LiveEvent's ID. Not to be confused with {@link Thing#getId()}. */
     @JsonProperty
     public String getId() {
         return data("id");
     }
 
-    /**
-     * Gets the data under the "resources" header displayed on the right side of the Reddit Live page.
-     * @return The resources
-     */
+    /** Any additional information provided by the updaters for the viewers' benefit. */
     @JsonProperty
     public String getResources() {
         return data("resources");

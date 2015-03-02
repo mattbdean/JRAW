@@ -12,35 +12,28 @@ import java.util.Date;
  */
 @Model(kind = Model.Kind.MOD_ACTION)
 public class ModAction extends Thing implements Created {
-    /**
-     * Instantiates a new ModAction
-     *
-     * @param dataNode The node to parse data from
-     */
+    /** Instantiates a new ModAction */
     public ModAction(JsonNode dataNode) {
         super(dataNode);
     }
 
-    /**
-     * The action's description. May be null if the action is generic such as "sticky" or "unsticky"
-     */
+    /** Gets the action's description. May be null if the action is generic such as "sticky" or "unsticky" */
     @JsonProperty(nullable = true)
     public String getDescription() {
         return data("description");
     }
 
     /**
-     * The moderator's ID (note: not full name)
-     * @return An alphanumeric ID representing the moderator who did this action. For example: "ejdfb"
+     * The moderator's ID (not their username)
+     *
+     * @see #getModerator()
      */
     @JsonProperty
     public String getModeratorId() {
         return data("mod_id36");
     }
 
-    /**
-     * The name of the moderator who did the action
-     */
+    /** The name of the moderator who did the action */
     @JsonProperty
     public String getModerator() {
         return data("mod");
@@ -63,41 +56,31 @@ public class ModAction extends Thing implements Created {
         return data("target_permalink");
     }
 
-    /**
-     * Extra details about the action. Will be an empty string if there are none.
-     */
+    /** Gets any extra details about the action. Will be an empty string if there are none. */
     @JsonProperty
     public String getDetails() {
         return data("details");
     }
 
-    /**
-     * The action that was performed. For example, "sticky", "unsticky"
-     */
+    /** Gets the action that was performed. For example, "sticky", "unsticky" */
     @JsonProperty
     public String getAction() {
         return data("action");
     }
 
-    /**
-     * The name of the author whose post was targeted
-     */
+    /** The name of the author whose post was targeted */
     @JsonProperty
     public String getTargetAuthor() {
         return data("jraw_test");
     }
 
-    /**
-     * The full name of the author whose post was targeted
-     */
+    /** The username of the author whose post was targeted */
     @JsonProperty
     public String getTargetFullName() {
         return data("target_fullname");
     }
 
-    /**
-     * The subreddit's ID in which this action occurred. For example, "31qvo"
-     */
+    /** The subreddit's ID in which this action occurred. For example, "31qvo" */
     @JsonProperty
     public String getSubredditId() {
         return data("sr_id36");
@@ -105,7 +88,7 @@ public class ModAction extends Thing implements Created {
 
     @Override
     public Date getCreated() {
-        // No "created" field, on "created_utc"
+        // No "created" field, use "created_utc" instead
         return getCreatedUtc();
     }
 

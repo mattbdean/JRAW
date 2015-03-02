@@ -5,41 +5,26 @@ import net.dean.jraw.models.meta.Model;
 import com.fasterxml.jackson.databind.JsonNode;
 
 /**
- * This class adds extra properties to {@link Message} that is only available in some inbox entries. This class is
- * necessary because the kind is not "t4" (message), but instead is "t1" (comment).
+ * This class represents a message that appears in a user's inbox because another user has replied to his or her comment.
  */
 @Model(kind = Model.Kind.COMMENT)
 public class CommentMessage extends Message {
     /**
-     * Instantiates a new Thing
-     *
-     * @param dataNode The node to parse data from
+     * Instantiates a new CommentMessage
      */
     public CommentMessage(JsonNode dataNode) {
         super(dataNode);
     }
 
-    /**
-     * Gets the title of the link this comment was posted in
-     * @return The parent link's title
-     */
+    /** Gets the title of the link this comment was posted in */
     @JsonProperty
     public String getLinkTitle() {
         return data("link_title");
     }
 
-    /**
-     * If this message represents a comment, then this method will return the way in which the logged in user voted.
-     * If this message represents a private message, then this method will always return null.
-     * @return The way in which the logged in user voted
-     */
+    /** Gets the way the logged in user voted on the comment that this message represents. */
     @JsonProperty(nullable = true)
     public VoteDirection getVote() {
-        // If "was_comment" == false then "likes" will not exist
-        if (!isComment()) {
-            return null;
-        }
-
         JsonNode likes = getDataNode().get("likes");
         if (likes.isNull()) {
             return VoteDirection.NO_VOTE;

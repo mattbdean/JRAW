@@ -1,17 +1,18 @@
 package net.dean.jraw.models;
 
+import net.dean.jraw.RedditClient;
+
 /**
- * Represents the effective flair of an author or a submission
+ * Represents the flair of a user or submission in a specific subreddit.
  */
 public class Flair {
-    private String cssClass;
-    private String text;
+    private final String cssClass;
+    private final String text;
 
     /**
      * Instantiates a new Flair
      *
-     * @param cssClass The CSS class
-     * @param text     The text
+     * @param cssClass The name of the class in the subreddit's stylesheet.
      */
     public Flair(String cssClass, String text) {
         this.cssClass = cssClass;
@@ -19,19 +20,15 @@ public class Flair {
     }
 
     /**
-     * Gets the CSS class which will be used on the Reddit site to style the author's name or the link
+     * Gets the name of the class in the subreddit's stylesheet.
      *
-     * @return The CSS class
+     * @see RedditClient#getStylesheet(String)
      */
     public String getCssClass() {
         return cssClass;
     }
 
-    /**
-     * Gets the text of the flair
-     *
-     * @return The text of the flair
-     */
+    /** Gets the value of the flair. */
     public String getText() {
         return text;
     }

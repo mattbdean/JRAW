@@ -97,7 +97,7 @@ public class InternalsTest extends RedditTest {
     public void testCaptcha() {
         try {
             Captcha c = reddit.getNewCaptcha();
-            Captcha c2 = new Captcha(c.getId(), c.getImageUrl());
+            Captcha c2 = new Captcha(c.getId());
             basicObjectTest(c, c2);
         } catch (NetworkException | ApiException e) {
             handle(e);

@@ -274,14 +274,7 @@ public class RedditClient extends RestClient {
      */
     @EndpointImplementation(Endpoints.CAPTCHA_IDEN)
     public Captcha getCaptcha(String id) {
-        // Use Request to format the URL
-        HttpRequest request = request()
-                .host(HOST_SPECIAL)
-                .endpoint(Endpoints.CAPTCHA_IDEN, id)
-                .get()
-                .build();
-
-        return new Captcha(id, request.getUrl());
+        return new Captcha(id);
     }
 
     /**

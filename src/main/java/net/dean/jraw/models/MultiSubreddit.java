@@ -19,12 +19,12 @@ public class MultiSubreddit extends RedditObject {
 
     // NOTE: Much of this class is undocumented because this part of the API is fairly new.
 
-    @JsonProperty
+    @JsonProperty(nullable = true)
     public String getIconImage() {
         return data("icon_img");
     }
 
-    @JsonProperty
+    @JsonProperty(nullable = true)
     public String getKeyColor() {
         return data("key_color");
     }
@@ -35,19 +35,19 @@ public class MultiSubreddit extends RedditObject {
     }
 
     /** Checks if the user is a moderator of this subreddit */
-    @JsonProperty
+    @JsonProperty(nullable = true)
     public Boolean isUserModerator() {
         return data("user_is_moderator", Boolean.class);
     }
 
     /** Checks if the user is banned from this subreddit */
-    @JsonProperty
+    @JsonProperty(nullable = true)
     public Boolean isUserBanned() {
         return data("user_is_banned", Boolean.class);
     }
 
     /** Checks if the user is an approved contributor of this subreddit */
-    @JsonProperty
+    @JsonProperty(nullable = true)
     public Boolean isUserContributor() {
         return data("user_is_contributor", Boolean.class);
     }
@@ -57,13 +57,13 @@ public class MultiSubreddit extends RedditObject {
         return _getHeaderSize();
     }
 
-    @JsonProperty
+    @JsonProperty(nullable = true)
     public Dimension getIconSize() {
         return _getDimension("icon_size");
     }
 
     /** Gets this subreddit's fullname (ex: "t5_2qh33") */
-    @JsonProperty
+    @JsonProperty(nullable = true)
     public String getFullName() {
         return data("fullname");
     }

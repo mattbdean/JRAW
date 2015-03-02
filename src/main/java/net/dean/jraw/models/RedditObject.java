@@ -6,8 +6,8 @@ import net.dean.jraw.Dimension;
 import java.util.Date;
 
 /**
- * Provides another layer of abstraction between "normal" models (as seen <a href="http://www.reddit.com/dev/api#fullnames">here</a>)
- * like Submission and "abnormal" models like Listing and More.
+ * A RedditObject represents an abstract data structure presented by the Reddit API. Its most notable subclass is
+ * {@link Thing}, from which all common Reddit-based models are derived.
  */
 public abstract class RedditObject extends JsonModel {
 
@@ -70,7 +70,7 @@ public abstract class RedditObject extends JsonModel {
 
     protected final Dimension _getDimension(String jsonKey) {
         JsonNode node = data.get(jsonKey);
-        if (node.isNull())
+        if (node == null || node.isNull())
             return null;
         return new Dimension(node.get(0).asInt(-1), node.get(1).asInt(-1));
     }

@@ -1,5 +1,6 @@
 package net.dean.jraw.models;
 
+import net.dean.jraw.NoSuchEnumConstantException;
 import net.dean.jraw.models.meta.JsonProperty;
 import net.dean.jraw.models.meta.Model;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -8,25 +9,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Represents the settings of a wiki page
+ * Represents a wiki page's settings
  */
 @Model(kind = Model.Kind.WIKI_PAGE_SETTINGS)
 public class WikiPageSettings extends RedditObject {
 
-    /**
-     * Instantiates a new RedditObject
-     *
-     * @param dataNode The node to parse data from
-     */
+    /** Instantiates a new RedditObject */
     public WikiPageSettings(JsonNode dataNode) {
         super(dataNode);
     }
 
-    /**
-     * Get the approved editors of this wiki page.
-     *
-     * @return The approved editors
-     */
+    /** Gets the approved editors of this wiki page. */
     @JsonProperty
     public List<Account> getEditors() {
         JsonNode editors = data.get("editors");
@@ -38,25 +31,39 @@ public class WikiPageSettings extends RedditObject {
         return editorsList;
     }
 
-    /**
-     * Checks if this wiki page is shown in the index of pages
-     *
-     * @return If this page is listed
-     */
+    /** Checks if this wiki page is shown in the index of pages */
     @JsonProperty
     public Boolean isListed() {
         return data("listed", Boolean.class);
     }
 
-    /**
-     * Returns an integer from 0 to 2 inclusive that represents the permissions of that page. A permlevel of 0 means
-     * that this wiki page is following the default subreddit permissions, 1 means that on approved wiki contributors
-     * for this page may edit, and 2 means only mods may edit and view.
-     *
-     * @return An integer from 0 to 2 inclusive
-     */
+    /** Gets the editing restrictions on this page */
     @JsonProperty
-    public Integer getPermLevel() {
-        return data("permlevel", Integer.class);
+    public PermissionLevel getPermissionLevel() {
+        return PermissionLevel.getByJsonValue(data("permlevel", Integer.class));
+    }
+
+    public static enum PermissionLevel {
+        /** Follows default (subreddit-wiki-wide) permissions */
+        DEFAULT(0),
+        /** Only approved wiki contributors may edit this page */
+        APPROVED_ONLY(1),
+        /** Only moderators may edit this page */
+        MODERATOR_ONLY(2);
+
+        private int jsonValue;
+        private PermissionLevel(int jsonValue) {
+            this.jsonValue = jsonValue;
+        }
+
+        public static PermissionLevel getByJsonValue(int jsonValue) {
+            for (PermissionLevel level : values()) {
+                if (level.jsonValue == jsonValue) {
+                    return level;
+                }
+            }
+
+            throw new NoSuchEnumConstantException(PermissionLevel.class, "" + jsonValue);
+        }
     }
 }

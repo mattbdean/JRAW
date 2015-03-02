@@ -7,11 +7,7 @@ import com.fasterxml.jackson.databind.JsonNode;
  * Represents a single flair template on a subreddit
  */
 public class FlairTemplate extends JsonModel {
-    /**
-     * Instantiates a new FlairTemplate
-     *
-     * @param dataNode The node to parse data from
-     */
+    /** Instantiates a new FlairTemplate */
     public FlairTemplate(JsonNode dataNode) {
         super(dataNode);
     }
@@ -32,10 +28,7 @@ public class FlairTemplate extends JsonModel {
         return flairData("template_id");
     }
 
-    /**
-     * Checks if the template's text is editable
-     * @return False if this template is the current flair, or if the template's text is editable if else
-     */
+    /** Checks if the template's text can be changed by the user. */
     @JsonProperty
     public Boolean isTextEditable() {
         if (!data.has("flair_text_editable")) {
@@ -45,17 +38,13 @@ public class FlairTemplate extends JsonModel {
         return data("flair_text_editable", Boolean.class);
     }
 
-    /**
-     * Either "left" or "right"
-     */
+    /** Where the flair will appear relative to the title/username: Either "left" or "right" */
     @JsonProperty
     public String getPosition() {
         return flairData("position");
     }
 
-    /**
-     * The flair's text
-     */
+    /** The value of the flair */
     @JsonProperty
     public String getText() {
         return flairData("text");

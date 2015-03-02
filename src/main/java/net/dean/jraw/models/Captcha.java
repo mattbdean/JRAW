@@ -1,9 +1,13 @@
 package net.dean.jraw.models;
 
+import net.dean.jraw.JrawUtils;
+
 import java.net.URL;
 
 /**
- * Represents a Captcha
+ * Represents a Captcha (an acronym for "Completely Automated Public Turing test to tell Computers and Humans Apart").
+ * These are required by the Reddit API for some actions that are susceptible to spam, like creating subreddits or
+ * accounts.
  */
 public class Captcha {
     private final String id;
@@ -13,11 +17,10 @@ public class Captcha {
      * Instantiates a new Captcha
      *
      * @param id The captcha's ID
-     * @param url The URL to the captcha (as in the image)
      */
-    public Captcha(String id, URL url) {
+    public Captcha(String id) {
         this.id = id;
-        this.imageUrl = url;
+        this.imageUrl = JrawUtils.newUrl("https://www.reddit.com/captcha/" + JrawUtils.urlEncode(id) + ".png");
     }
 
     /**

@@ -14,68 +14,48 @@ import java.util.Date;
  */
 @Model(kind = Model.Kind.ACCOUNT)
 public class Account extends Thing implements Created {
-    /**
-     * Instantiates a new Account
-     * @param data The node to get data from
-     */
+    /** Instantiates a new Account */
     public Account(JsonNode data) {
         super(data);
     }
 
-    /**
-     * Gets the user's comment karma
-     * @return the user's comment karma
-     */
+    /** Gets the user's comment karma */
     @JsonProperty
     public Integer getCommentKarma() {
         return data("comment_karma", Integer.class);
     }
 
-    /**
-     * Checks whether or not the logged-in user has this user set as a friend
-     * @return Whether the logged-in user has this user set as a friend
-     */
+    /** Checks whether or not the logged-in user has this user set as a friend */
     @JsonProperty
     public Boolean isFriend() {
         return data("is_friend", Boolean.class);
     }
 
-    /**
-     * Checks if the user has Reddit Gold
-     * @return Reddit gold status
-     */
+    /** Checks if the user has Reddit Gold */
     @JsonProperty
     public Boolean hasGold() {
         return data("is_gold", Boolean.class);
     }
 
-    /**
-     * Checks whether this account moderates any subreddits
-     * @return True if this account moderates any subreddits
-     */
+    /** Checks whether this account moderates any subreddits */
     @JsonProperty
     public Boolean isMod() {
         return data("is_mod", Boolean.class);
     }
 
-    /**
-     * Gets the user's link karma
-     * @return The user's link karma
-     */
+    /** Gets the user's link karma */
     @JsonProperty
     public Integer getLinkKarma() {
         return data("link_karma", Integer.class);
     }
 
-    /**
-     * Whether this account is set to be over 18
-     * @return If this account is set to be over 18
-     */
+    /** Checks if this account is said to be over 18 and "willing to view adult content." */
     @JsonProperty(nullable = true)
     public Boolean isOver18() {
         return data("over_18", Boolean.class);
     }
 
+    @Override
     public Date getCreated() {
         return _getCreated();
     }

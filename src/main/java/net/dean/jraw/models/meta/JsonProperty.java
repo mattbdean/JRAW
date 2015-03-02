@@ -9,7 +9,8 @@ import java.lang.annotation.Target;
 /**
  * <p>Used for testing purposes to signify that a method retrieves data from a JSON node. For a given JsonModel, each
  * method annotated with this annotation will be invoked via reflection. If the method throws an exception of any kind
- * or the return value was null and {@link #nullable()} returns false, then the test will fail.
+ * or the return value was null and {@link #nullable()} returns false, then the test will fail. Methods annotated with
+ * this class must take zero parameters.
  *
  * <p>Note that this class is different from Jackson's JsonProperty annotation.
  */

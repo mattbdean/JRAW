@@ -6,6 +6,7 @@ import net.dean.jraw.models.meta.Model;
 import net.dean.jraw.models.meta.SubmissionSerializer;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Represents content that the user has submitted, whether that be a self post or a link. More information can be found
@@ -15,11 +16,7 @@ import java.util.Date;
 public class Submission extends PublicContribution {
     private CommentNode rootNode;
 
-    /**
-     * Instantiates a new Submission with no comments
-     *
-     * @param dataNode The JsonNode that is used to look up JSON values
-     */
+    /** Instantiates a new Submission with no comments */
     public Submission(JsonNode dataNode) {
         this(dataNode, null);
     }
@@ -27,45 +24,36 @@ public class Submission extends PublicContribution {
     /**
      * Instantiates a new Submission
      *
-     * @param dataNode The JsonNode that is used to look up JSON values
-     * @param comments The comments that belong to this link
+     * @param comments Gets the root CommentNode. See {@link CommentNode#CommentNode(String, List, MoreChildren, CommentSort)}.
      */
     public Submission(JsonNode dataNode, CommentNode comments) {
         super(dataNode);
         this.rootNode = comments;
     }
 
-    /**
-     * The name of the poster, or null if this is a promotional link
-     * @return The name of the poster
-     */
+    /** Gets the name of the poster, or null if this is a promotional link */
     @JsonProperty
     public String getAuthor() {
         return data("author");
     }
 
-    /**
-     * The flair used for the poster of the link (subreddit specific)
-     * @return Poster's flair
-     */
-    @JsonProperty
+    /** Gets the flair used for the poster of the link (subreddit specific) */
+    @JsonProperty(nullable = true)
     public Flair getAuthorFlair() {
+        if (data.get("author_flair_css_class").isNull() && data.get("author_flair_text").isNull())
+            return null;
         return new Flair(data("author_flair_css_class"),
                 data("author_flair_text"));
     }
 
-    /**
-     * Whether the user has clicked this link. Most likely false unless the user has Reddit Gold
-     * @return If the user has clicked this link
-     */
+    /** Checks whether the user has clicked this link. Most likely false unless the user has Reddit Gold. */
     @JsonProperty
     public Boolean isClicked() {
         return data("clicked", Boolean.class);
     }
 
     /**
-     * The domain of this link. Self posts will be "self.reddit.com". Other examples: "en.wikipedia.org" and "s3.amazon.com"
-     * @return This link's domain
+     * Gets the domain of this link. Self posts will be "self.{subreddit}".
      */
     @JsonProperty
     public String getDomain() {
@@ -73,8 +61,8 @@ public class Submission extends PublicContribution {
     }
 
     /**
-     * The type of submission
-     * @return The type of submission
+     * Gets the type of submission
+     * @return Gets the type of submission
      */
     @JsonProperty
     public Boolean isSelfPost() {
@@ -91,8 +79,8 @@ public class Submission extends PublicContribution {
     }
 
     /**
-     * The ratio of upvotes to downvotes
-     * @return The ratio of upvotes to downvotes
+     * Gets the ratio of upvotes to downvotes
+     * @return Gets the ratio of upvotes to downvotes
      */
     @JsonProperty
     public Double getUpvoteRatio() {
@@ -121,7 +109,7 @@ public class Submission extends PublicContribution {
 
     /**
      * Gets the oEmbed data of this submission
-     * @return The oEmbed data of this submission
+     * @return Gets the oEmbed data of this submission
      */
     @JsonProperty(nullable = true)
     public OEmbed getOEmbedMedia() {
@@ -132,8 +120,8 @@ public class Submission extends PublicContribution {
     }
 
     /**
-     * The number of comments that belong to this submission. Includes removed comments.
-     * @return The total number of comments that belong to this submission
+     * Gets the number of comments that belong to this submission. Includes removed comments.
+     * @return Gets the total number of comments that belong to this submission
      */
     @JsonProperty
     public Integer getCommentCount() {
@@ -151,7 +139,7 @@ public class Submission extends PublicContribution {
 
     /**
      * Relative URL (of reddit.com) of the permanent URL for this Submission
-     * @return The permalink of this submission
+     * @return Gets the permalink of this submission
      */
     @JsonProperty
     public String getPermalink() {
@@ -168,9 +156,9 @@ public class Submission extends PublicContribution {
     }
 
     /**
-     * The raw text of the self post. The string is unformatted, so it includes Markdown markup such as "**" for bold.
+     * Gets the raw text of the self post. The string is unformatted, so it includes Markdown markup such as "**" for bold.
      * HTML entities such as '&amp;lt;', '&amp;gt;', and '&amp;amp;' are escaped.
-     * @return The raw text of the self post
+     * @return Gets the raw text of the self post
      */
     @JsonProperty
     public String getSelftext() {
@@ -178,8 +166,8 @@ public class Submission extends PublicContribution {
     }
 
     /**
-     * The subreddit that the submission is posted in (ex: "pics", "funny")
-     * @return The subreddit that the submission was posted in
+     * Gets the subreddit that the submission is posted in (ex: "pics", "funny")
+     * @return Gets the subreddit that the submission was posted in
      */
     @JsonProperty
     public String getSubredditName() {
@@ -187,8 +175,8 @@ public class Submission extends PublicContribution {
     }
 
     /**
-     * The full name of the subreddit which the link is posted in (ex: "t5_2s5oq")
-     * @return The full name of the subreddit
+     * Gets the full name of the subreddit which the link is posted in (ex: "t5_2s5oq")
+     * @return Gets the full name of the subreddit
      */
     @JsonProperty
     public String getSubredditId() {
@@ -196,8 +184,8 @@ public class Submission extends PublicContribution {
     }
 
     /**
-     * The full URL to the thumbnail for this submission
-     * @return The URL to this submission's thumbnail
+     * Gets the full URL to the thumbnail for this submission
+     * @return Gets the URL to this submission's thumbnail
      */
     @JsonProperty(nullable = true)
     public String getThumbnail() {
@@ -237,8 +225,8 @@ public class Submission extends PublicContribution {
     }
 
     /**
-     * The title of the submission. May contain newlines (\n).
-     * @return The title of the submission
+     * Gets the title of the submission. May contain newlines (\n).
+     * @return Gets the title of the submission
      */
     @JsonProperty
     public String getTitle() {
@@ -246,7 +234,7 @@ public class Submission extends PublicContribution {
     }
 
     /**
-     * The URL of this post, or the permalink if this is a self post
+     * Gets the URL of this post, or the permalink if this is a self post
      * @return This submission's URL
      */
     @JsonProperty
@@ -254,10 +242,7 @@ public class Submission extends PublicContribution {
         return data("url");
     }
 
-    /**
-     * Indicates if the link has been edited. Null if it has not.
-     * @return The UTC date when this submission was edited, null if it has not been edited
-     */
+    /** Gets the date in UTC when this submission was edited, null if it has not been edited */
     @JsonProperty
     public Date getEdited() {
         JsonNode node = data.get("edited");
@@ -270,28 +255,19 @@ public class Submission extends PublicContribution {
         return new Date(node.longValue() * 1000);
     }
 
-    /**
-     * Gets the comments of this Submission
-     * @return This Submission's comments
-     */
+    /** Gets this Submission's root CommentNode. See {@link CommentNode} for more information about this node. */
     @JsonProperty(nullable = true)
     public CommentNode getComments() {
         return rootNode;
     }
 
-    /**
-     * True if the post is set as the sticky in its respective subreddit
-     * @return If this submission is a sticky
-     */
+    /** Checks if the post is set as the sticky in its respective subreddit */
     @JsonProperty
     public Boolean isStickied() {
         return data("stickied", Boolean.class);
     }
 
-    /**
-     * Gets a URL on the redd.it domain. For example, <a href="http://redd.it/92dd8">http://redd.it/92dd8</a>
-     * @return The short URL to this post
-     */
+    /** Gets a URL on the redd.it domain. For example, <a href="http://redd.it/92dd8">http://redd.it/92dd8</a> */
     public String getShortURL() {
         return "http://redd.it/" + getId();
     }

@@ -119,6 +119,7 @@ public class CommentNode {
         return moreChildren != null;
     }
 
+    /** Gets any more replies to this comment. Can be null. */
     public MoreChildren getMoreChildren() {
         return moreChildren;
     }

@@ -17,36 +17,21 @@ import java.util.List;
 @Model(kind = Model.Kind.MULTIREDDIT)
 public class MultiReddit extends Thing implements Created {
 
-    /**
-     * Instantiates a new Thing
-     *
-     * @param dataNode The node to parse data from
-     */
+    /** Instantiates a new MultiReddit */
     public MultiReddit(JsonNode dataNode) {
         super(dataNode);
     }
 
-    /**
-     * Checks if the logged in user can edit this MultiReddit
-     * @return If the logged in user can edit this MultiReddit
-     */
+    /** Checks if the logged-in user can edit this MultiReddit */
     @JsonProperty
     public boolean canEdit() {
         return data("can_edit", Boolean.class);
     }
 
-    /**
-     * Gets the name of the multireddit
-     * @return The multireddit's name
-     */
+    @Override
     @JsonProperty
     public String getFullName() {
         return data("name");
-    }
-
-    @JsonProperty
-    public String getDisplayName() {
-        return data("display_name");
     }
 
     /**
@@ -98,6 +83,11 @@ public class MultiReddit extends Thing implements Created {
     @JsonProperty
     public String getKeyColor() {
         return data("key_color");
+    }
+
+    @JsonProperty
+    public String getDisplayName() {
+        return data("display_name");
     }
 
     /**

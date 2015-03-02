@@ -208,6 +208,6 @@ public class MultiRedditTest extends RedditTest {
             handle(e);
         }
 
-        throw new SetupRequiredException("Create a multireddit NOT named " + MULTI_NAME);
+        throw new SetupRequiredException("Create a multireddit that is NOT named " + MULTI_NAME);
     }
 }

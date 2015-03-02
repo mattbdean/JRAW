@@ -4,7 +4,8 @@ import java.util.EnumMap;
 
 /**
  * Hints at where some data in a tree structure might be. The "top" of the tree is the root node, while the "bottom" is
- * the deepest level in the tree. Instances of this class are immutable.
+ * the deepest level in the tree. There will only be (at maximum) one instance of this class for every value in
+ * {@link TraversalMethod}. Instances of this class are immutable.
  */
 public final class LocationHint {
     private final TraversalMethod method;
