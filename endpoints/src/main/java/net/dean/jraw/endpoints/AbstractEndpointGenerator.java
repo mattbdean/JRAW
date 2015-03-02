@@ -130,7 +130,7 @@ public abstract class AbstractEndpointGenerator {
     }
 
     protected String getJavadocUrl(Endpoint endpoint) {
-        StringBuilder base = new StringBuilder("https://thatjavanerd.github.io/JRAW/docs/git/latest");
+        StringBuilder base = new StringBuilder("https://thatjavanerd.github.io/JRAW/docs/git");
 
         Method m = endpoint.getMethod();
         // "/net/dean/jraw/ClassName.html#"
