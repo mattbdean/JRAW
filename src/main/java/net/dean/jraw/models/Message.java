@@ -33,7 +33,7 @@ public abstract class Message extends Contribution implements Distinguishable {
         return data("body");
     }
 
-    /** Gets the full name of the first message's ID */
+    /** Gets the fullname of the first message's ID */
     @JsonProperty
     public String getFirstMessage() {
         return data("first_message_name");

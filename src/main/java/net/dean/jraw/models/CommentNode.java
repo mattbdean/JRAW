@@ -70,7 +70,7 @@ public class CommentNode {
      * Instantiates a new root CommentNode. This will create a CommentNode for every Comment in {@code topLevelReplies},
      * and then for their children, and so on.
      *
-     * @param ownerId The Submission's full name (ex: t3_92dd8)
+     * @param ownerId The Submission's fullname (ex: t3_92dd8)
      * @param topLevelReplies A list of top level replies to this submission
      * @param more A More object which can be used to retrieve more comments later
      */
@@ -104,7 +104,7 @@ public class CommentNode {
         return children;
     }
 
-    /** Gets full name of the submission to which this CommentNode belongs (ex: t3_92dd8). */
+    /** Gets fullname of the submission to which this CommentNode belongs (ex: t3_92dd8). */
     public String getSubmissionName() {
         return ownerId;
     }
@@ -125,16 +125,16 @@ public class CommentNode {
     }
 
     /**
-     * Attempts to find a CommentNode in this node's children by its full name. No optimization will be used.
-     * @param fullName The full name of the comment to find. For example: t1_c0b75sp
+     * Attempts to find a CommentNode in this node's children by its fullname. No optimization will be used.
+     * @param fullName The fullname of the comment to find. For example: t1_c0b75sp
      */
     public Optional<CommentNode> findChild(String fullName) {
         return findChild(fullName, LocationHint.anywhere());
     }
 
     /**
-     * Attempts to find a CommentNode in this node's children by its full name.
-     * @param fullName The full name of the comment to find. For example: t1_c0b75sp
+     * Attempts to find a CommentNode in this node's children by its fullname.
+     * @param fullName The fullname of the comment to find. For example: t1_c0b75sp
      * @param hint A hint at where the comment is most likely to be
      */
     public Optional<CommentNode> findChild(String fullName, LocationHint hint) {
@@ -231,7 +231,7 @@ public class CommentNode {
             JrawUtils.logger().warn("Unable to find parent for " + c);
         }
 
-        // Map of the More's parent_id (which is a full name) to the More itself
+        // Map of the More's parent_id (which is a fullname) to the More itself
         Map<String, MoreChildren> mores = new HashMap<>();
         for (MoreChildren m : newMores) {
             mores.put(m.getParentId(), m);

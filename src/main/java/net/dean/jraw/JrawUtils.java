@@ -109,15 +109,15 @@ public final class JrawUtils {
     }
 
     /**
-     * Tests if the given string could possibly be the full name of an Thing. In order to pass, the first character must
+     * Tests if the given string could possibly be the fullname of an Thing. In order to pass, the first character must
      * be "t", the second character must be a digit in the range of 1-6 or 8, the third character must be an underscore,
      * and the rest of the letters must be alphanumeric. See <a href="http://www.reddit.com/dev/api#fullnames">here</a>
      * for more information.
      *
      * @param name The String to test
-     * @return If the name given could be a Thing's full name
+     * @return If the name given could be a Thing's fullname
      */
-    public static boolean isFullName(String name) {
+    public static boolean isFullname(String name) {
         if (name.length() < 3) {
             throw new IllegalArgumentException("Name must be at least three characters");
         }

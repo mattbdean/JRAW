@@ -165,8 +165,8 @@ public class Submission extends PublicContribution {
     }
 
     /**
-     * Gets the full name of the subreddit which the link is posted in (ex: "t5_2s5oq")
-     * @return Gets the full name of the subreddit
+     * Gets the fullname of the subreddit which the link is posted in (ex: "t5_2s5oq")
+     * @return Gets the fullname of the subreddit
      */
     @JsonProperty
     public String getSubredditId() {

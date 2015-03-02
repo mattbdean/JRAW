@@ -32,16 +32,16 @@ public class UtilsTest extends RedditTest {
 
     @Test
     public void testFullName() {
-        assertTrue(isFullName("t2_f25asl"));
-        assertFalse(isFullName("t9_s9al4"));
-        assertFalse(isFullName("t0_ula8k"));
-        assertFalse(isFullName("jfdklsa"));
-        assertFalse(isFullName("t7_fd01ll"));
+        assertTrue(isFullname("t2_f25asl"));
+        assertFalse(isFullname("t9_s9al4"));
+        assertFalse(isFullname("t0_ula8k"));
+        assertFalse(isFullname("jfdklsa"));
+        assertFalse(isFullname("t7_fd01ll"));
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void testFullNameEmpty() {
-        isFullName("");
+        isFullname("");
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)

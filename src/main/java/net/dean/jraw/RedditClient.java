@@ -312,7 +312,7 @@ public class RedditClient extends RestClient {
             args.put("context", Integer.toString(request.getContext()));
         if (request.getLimit() != null)
             args.put("limit", Integer.toString(request.getLimit()));
-        if (request.getFocus() != null && !JrawUtils.isFullName(request.getFocus()))
+        if (request.getFocus() != null && !JrawUtils.isFullname(request.getFocus()))
             args.put("comment", request.getFocus());
 
         CommentSort sort = request.getSort();
@@ -534,8 +534,8 @@ public class RedditClient extends RestClient {
     }
 
     /**
-     * Gets a Listing of the given full names. Only submissions, comments, and subreddits will be returned
-     * @param fullNames A list of full names
+     * Gets a Listing of the given fullnames. Only submissions, comments, and subreddits will be returned
+     * @param fullNames A list of fullnames
      * @return A Listing of Things
      * @throws NetworkException If the request was not successful
      */
