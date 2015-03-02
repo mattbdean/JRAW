@@ -97,16 +97,6 @@ public class Submission extends PublicContribution {
                 data("link_flair_text"));
     }
 
-
-    /**
-     * Gets a simplified version of the oEmbed data that includes embedded HTML
-     * @return A simplified version of the oEmbed data
-     */
-    @JsonProperty(nullable = true)
-    public EmbeddedMedia getEmbeddedMedia() {
-        return new EmbeddedMedia(data.get("media_embed"));
-    }
-
     /**
      * Gets the oEmbed data of this submission
      * @return Gets the oEmbed data of this submission

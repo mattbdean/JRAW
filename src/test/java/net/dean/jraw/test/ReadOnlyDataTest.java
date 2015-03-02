@@ -55,30 +55,6 @@ public class ReadOnlyDataTest extends RedditTest {
     }
 
     @Test
-    public void testEmbeddedMedia() {
-        try {
-            SubredditPaginator frontPage = new SubredditPaginator(reddit);
-            Listing<Submission> submissions = frontPage.next();
-
-            int count = 0;
-            // Validate all the EmbeddedMedia models on the front page
-            for (Submission s : submissions) {
-                if (s.getEmbeddedMedia() != null) {
-                    validateModel(s.getEmbeddedMedia());
-                    count++;
-                }
-            }
-
-            if (count == 0) {
-                // Did not perform any validation, so the test was essentially skipped.
-                throw new SkipException("No EmbeddedMedia models were found on the front page");
-            }
-        } catch (IllegalStateException e) {
-            handle(e);
-        }
-    }
-
-    @Test
     public void testSubmission() {
         try {
             Submission submission = reddit.getSubmission(SUBMISSION_ID);
