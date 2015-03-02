@@ -3,9 +3,6 @@
 set -e
 shopt -s extglob
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-cd "$DIR"
-
 ## Where the docs will be found after building them in master
 BUILD_DOC="build/docs/javadoc/"
 ## Name of the 'javadoc' folder
@@ -17,23 +14,25 @@ LATEST_TAG=$(git describe --abbrev=0 --tags)
 ## Generic commit message
 COMMIT_MSG="Update Javadoc to commit $COMMIT_SHA"
 ## Where the docs will be placed in the gh-pages branch
-OUT_DIR="docs/git/$COMMIT_SHA"
-## Location of the latest git commit docs
-OUT_DIR_LATEST="docs/git/latest"
+OUT_DIR="docs/git"
 ## Use 'dumb' Gradle output
 TERM=dumb
+## Where the commit SHA will be placed
+VERSION_FILE="$OUT_DIR/version.txt"
+
+# cd into the script's directory
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+cd "$DIR"
 
 # See if the docs are already uploaded by querying GitHub Pages
-status=$(curl -s -o /dev/null -w "%{http_code}" -L -I \
-    http://thatjavanerd.github.io/JRAW/docs/git/$COMMIT_SHA/index.html)
-if [[ $status == "200" ]]; then
+latest_version=$(curl "http://thatjavanerd.github.io/JRAW/${VERSION_FILE}")
+if [[ ${latest_version} == "${COMMIT_SHA}" ]]; then
     echo "Docs already uploaded. Exiting"
     exit
 fi
 
 # Travis uses the git:// URL. When pushing, GitHub will return an error.
-# Use the HTTPS version instead
-# See http://stackoverflow.com/q/7548661/1275092
+# Use smart HTTP instead. See http://stackoverflow.com/q/7548661/1275092.
 git remote set-url origin https://github.com/thatJavaNerd/JRAW
 
 # Fetch the other branches since Travis only clones master
@@ -45,16 +44,11 @@ rm -rf "$BUILD_DOC" # Remove all old javadoc
 cp -r "$BUILD_DOC" -r .. # Move the javadoc out of git's reach
 
 git checkout gh-pages
-if [ -d "$OUT_DIR" ]; then
-    echo "Docs already uploaded. Exiting"
-    exit
-fi
 
 mkdir -p "$OUT_DIR"
 mv ../$DOC_FOLDER/* "$OUT_DIR" # Move the javadoc to its corresponding folder
-rm -r "$OUT_DIR_LATEST"
-cp -r "$OUT_DIR/." "$OUT_DIR_LATEST"
-rm -r ../$DOC_FOLDER/
+rm -r ../$DOC_FOLDER/ # Remove the temp folder
+echo "$COMMIT_SHA" > "$VERSION_FILE" # Update the version
 
 # Configure git
 git config user.name "$GIT_NAME"
