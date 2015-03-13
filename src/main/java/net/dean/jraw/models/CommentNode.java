@@ -192,6 +192,7 @@ public class CommentNode {
         int relativeRootDepth = depth + 1;
         List<CommentNode> newRootNodes = new ArrayList<>();
         List<Thing> thingsToAdd = getMoreComments(reddit);
+        this.moreChildren = null;
 
         List<Comment> newComments = new ArrayList<>();
         List<MoreChildren> newMores = new ArrayList<>();
