@@ -1,6 +1,7 @@
 package net.dean.jraw.http;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.common.base.Charsets;
 import com.google.common.net.MediaType;
 import com.squareup.okhttp.Headers;
 import net.dean.jraw.ApiException;
@@ -47,7 +48,7 @@ public class RestResponse {
         if (contentType == null)
             throw new IllegalStateException("No Content-Type header was found");
         this.type = JrawUtils.parseMediaType(contentType);
-        String charset = type.charset().or("UTF-8");
+        String charset = type.charset().or(Charsets.UTF_8).name();
         this.raw = readContent(body, charset);
         this.statusCode = statusCode;
         this.statusMessage = statusMessage;
