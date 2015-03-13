@@ -11,15 +11,14 @@ import net.dean.jraw.models.RedditObject;
 import net.dean.jraw.models.meta.ModelManager;
 
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
 /**
  * This class is used to show the result of a request to a RESTful web service, such as Reddit's JSON API.
  *
  * This class provides automatic parsing of ApiExceptions, as well as quick RedditObject and Listing
- * creation. Note that constructing a RedditResponse will <em>not</em> throw an ApiException. This must be done by the
- * implementer. To see if the response has any errors, use {@link #hasErrors()} and {@link #getError()}
+ * creation. Note that constructing a RestResponse will <em>not</em> throw an ApiException. This must be done by whomever
+ * handles the exception. To see if the response has any errors, use {@link #hasErrors()} and {@link #getError()}
  */
 public class RestResponse {
     private final HttpRequest origin;
@@ -48,7 +47,7 @@ public class RestResponse {
         if (contentType == null)
             throw new IllegalStateException("No Content-Type header was found");
         this.type = JrawUtils.parseMediaType(contentType);
-        String charset = type.charset().or(StandardCharsets.UTF_8).name();
+        String charset = type.charset().or("UTF-8");
         this.raw = readContent(body, charset);
         this.statusCode = statusCode;
         this.statusMessage = statusMessage;
