@@ -1,8 +1,8 @@
 package net.dean.jraw;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import net.dean.jraw.models.AccountPreferences;
 import net.dean.jraw.models.ThumbnailDisplayPreference;
-import com.fasterxml.jackson.databind.JsonNode;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -31,7 +31,8 @@ public class AccountPreferencesEditor {
         if (original != null) {
             for (Iterator<Map.Entry<String, JsonNode>> it = original.getDataNode().fields(); it.hasNext(); ) {
                 Map.Entry<String, JsonNode> entry = it.next();
-                args.put(entry.getKey(), val(entry.getValue()));
+                if (!entry.getValue().isNull())
+                    args.put(entry.getKey(), val(entry.getValue()));
             }
         }
     }
