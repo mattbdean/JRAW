@@ -12,38 +12,7 @@
  - Simple HTTP framework capable of wrapping most any HTTP library
  - Dynamic ratelimit adjustment
 
-##Getting Started
-####Adding the Dependency
- 
-JRAW is hosted on Bintray's [jCenter](http://jcenter.bintray.com/net/dean/jraw/JRAW/).
-
-**Gradle**:
-```groovy
-repositories {
-    jcenter()
-}
-
-dependencies {
-    compile "net.dean.jraw:JRAW:$jrawVersion"
-}
-```
-
-**Maven**:
-
-Add jCenter (`https://jcenter.bintray.com`) to your repositories and then add the repository:
-
-```xml
-<dependency>
-    <groupId>net.dean.jraw</groupId>
-    <artifactId>JRAW</artifactId>
-    <version>${jraw.version}</version>
-</dependency>
-```
-
-####Using the Library
-See [Quickstart](https://github.com/thatJavaNerd/JRAW/wiki/Quickstart) to get you up and running
-
-Javadoc can be found [here](https://thatjavanerd.github.io/JRAW/)
+See [Quickstart](https://github.com/thatJavaNerd/JRAW/wiki/Quickstart) to get you up and running. Javadoc can be found [here](https://thatjavanerd.github.io/JRAW/)
 
 ##Building
 
@@ -81,4 +50,4 @@ The [`:testingUser`](https://github.com/thatJavaNerd/JRAW/tree/master/testingUse
 3. Record the username, password, client ID, and client secret in `credentials.json`
 4. Prompt you to create a subreddit (JRAW can't do this as of now)
 5. Create a multireddit
-6. Submit a self post to /r/jraw_testing2
+6. Submit a self post to [/r/jraw_testing2](https://www.reddit.com/r/jraw_testing2)
