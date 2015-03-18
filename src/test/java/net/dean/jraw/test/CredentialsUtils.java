@@ -53,7 +53,7 @@ public final class CredentialsUtils {
         }
 
         this.script = Credentials.script(username, password, scriptId, scriptSecret);
-        this.installed = Credentials.installedApp(username, password, installedId, installedRedirectUri);
+        this.installed = Credentials.installedApp(installedId, installedRedirectUri);
     }
 
     public Credentials script() {

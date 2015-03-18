@@ -58,7 +58,7 @@ public class OAuthHelperTest {
                         "scope", "scope1 scope2"
                 ).build();
         HttpRequest actual = HttpRequest.from("GET", helper.getAuthorizationUrl(
-                Credentials.webapp("", "", "myClientId", "", "http://www.example.com"), true, "scope1", "scope2"
+                Credentials.webapp("myClientId", "", "http://www.example.com"), true, "scope1", "scope2"
         ));
 
         URL actualUrl = actual.getUrl();
@@ -150,7 +150,7 @@ public class OAuthHelperTest {
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void testEasyAuthBadMethod() throws OAuthException {
-        reddit.getOAuthHelper().easyAuth(Credentials.webapp("", "", "", "", ""));
+        reddit.getOAuthHelper().easyAuth(Credentials.webapp("", "", ""));
     }
 
     private void emulateBrowserAuth() throws OAuthException {
@@ -176,8 +176,10 @@ public class OAuthHelperTest {
             HtmlForm loginForm = getFirstChild(loginPage.getBody(), "form", "id", "login-form");
 
             // Change the value of the username and password forms
-            loginForm.getInputByName("user").setValueAttribute(creds.getUsername());
-            loginForm.getInputByName("passwd").setValueAttribute(creds.getPassword());
+            Credentials userPassCreds = CredentialsUtils.instance().script();
+            // Use the 'script' app credentials because the 'installed' app does not include a username or password
+            loginForm.getInputByName("user").setValueAttribute(userPassCreds.getUsername());
+            loginForm.getInputByName("passwd").setValueAttribute(userPassCreds.getPassword());
 
             // Submit the form
             HtmlPage authorizePage = getFirstChild(loginForm, "button", "type", "submit").click();
