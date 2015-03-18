@@ -10,6 +10,7 @@
  - All common actions (login, vote, submit, comment, messages, etc.)
  - Java 7 compatible
  - Simple HTTP framework capable of wrapping most any HTTP library
+ - Dynamic ratelimit adjustment
 
 ##Getting Started
 ####Adding the Dependency
