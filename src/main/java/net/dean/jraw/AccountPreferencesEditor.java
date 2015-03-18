@@ -244,6 +244,36 @@ public class AccountPreferencesEditor {
         return this;
     }
 
+    /** Whether or not to receive email notifications of new messages or not */
+    public AccountPreferencesEditor emailMessages(boolean flag) {
+        args.put("email_messages", flag);
+        return this;
+    }
+
+    /** Whether or not to automatically renew reddit gold creddits */
+    public AccountPreferencesEditor autorenewCredits(boolean flag) {
+        args.put("creddit_autorenew", flag);
+        return this;
+    }
+
+    /** Whether or not to send username mentions to your inbox */
+    public AccountPreferencesEditor monitorMentions(boolean flag) {
+        args.put("monitor_mentions", flag);
+        return this;
+    }
+
+    /** Whether or not to show the user's Snoovatar */
+    public AccountPreferencesEditor showSnoovatar(boolean flag) {
+        args.put("show_snoovatar", flag);
+        return this;
+    }
+
+    /** Whether or not to force the use of HTTPS while browsing the website. API clients may choose not to obey this. */
+    public AccountPreferencesEditor forceHttps(boolean flag) {
+        args.put("force_https", flag);
+        return this;
+    }
+
     /** Gets a new copy of the arguments that will be sent to the API */
     public Map<String, Object> getArgs() {
         return new HashMap<>(args);

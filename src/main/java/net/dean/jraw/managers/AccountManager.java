@@ -371,7 +371,7 @@ public class AccountManager extends AbstractManager {
     /**
      * Gets the preferences for this account
      * @param names The specific names of the desired preferences. These can be found
-     *              <a href="https://www.reddit.com/dev/api#GET_api_v1_me_prefs">here</a>.
+     *              <a href="https://www.reddit.com/dev/api#GET_api_v1_me_prefs">here</a>. Leave empty to fetch all.
      * @return An AccountPreferences that represent this account's preferences
      * @throws NetworkException If the request was not successful
      */
