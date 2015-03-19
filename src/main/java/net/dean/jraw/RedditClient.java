@@ -106,8 +106,13 @@ public class RedditClient extends RestClient {
     /**
      * Gets the name of the currently logged in user. Will be null if the "identity" scope was not included or when
      * using application-only authentication.
+     *
+     * @throws IllegalStateException If this client has not been authenticated or if this client used application-only
+     *                               OAuth to authenticated.
      */
     public String getAuthenticatedUser() {
+        if (!(isAuthenticated() && hasActiveUserContext()))
+            throw new IllegalStateException("Not authenticated or no active user context");
         return authenticatedUser;
     }
 
