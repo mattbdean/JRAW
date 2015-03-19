@@ -36,7 +36,7 @@ public abstract class RedditTest {
     protected final ModerationManager moderation;
 
     protected RedditTest() {
-        reddit.setLoggingMode(LoggingMode.ALWAYS);
+        reddit.setLoggingMode(LoggingMode.ON_FAIL);
         Credentials creds = getCredentials();
         if (!reddit.isAuthenticated()) {
             try {
