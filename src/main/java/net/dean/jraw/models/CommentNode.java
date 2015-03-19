@@ -51,9 +51,12 @@ import java.util.concurrent.locks.ReentrantLock;
  * tree can be traversed using several different methods: Pre-order ({@code abcfghdi}), post-order ({@code bfghcida}),
  * and breadth-first ({@code abcdfghi}).
  *
+ * <p>Note that although this class implements {@link Iterable}, the provided Iterator will not have the same function
+ * as using {@link #walkTree()}; only direct children will be implemented.
+ *
  * @author Matthew Dean
  */
-public class CommentNode {
+public class CommentNode implements Iterable<CommentNode> {
     private static final SimpleTreeTraverser traverser = new SimpleTreeTraverser();
     private static final int TOP_LEVEL_DEPTH = 1;
     private static final Lock morechildrenLock = new ReentrantLock();
@@ -461,6 +464,11 @@ public class CommentNode {
         result = 31 * result + (children != null ? children.hashCode() : 0);
         result = 31 * result + depth;
         return result;
+    }
+
+    @Override
+    public Iterator<CommentNode> iterator() {
+        return children.iterator();
     }
 
     private static class SimpleTreeTraverser extends TreeTraverser<CommentNode> {
