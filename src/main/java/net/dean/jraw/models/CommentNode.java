@@ -115,7 +115,7 @@ public class CommentNode {
     }
 
     /** Checks if there exists a More object for this CommentNode. */
-    public boolean hasMoreChildren() {
+    public boolean hasMoreComments() {
         return moreChildren != null;
     }
 
@@ -176,16 +176,64 @@ public class CommentNode {
     }
 
     /**
+     * Fully expands the comment tree below this node. This can be a very expensive call depending on how large the
+     * thread is, as every {@link MoreChildren} requires its own HTTP request. It is therefore advised to use
+     * {@link #loadFully(RedditClient, int, int)} instead to restrict the number of HTTP requests sent.
+     *
+     * @param reddit Used to make requests
+     */
+    public void loadFully(RedditClient reddit) {
+        loadFully(reddit, -1, -1);
+    }
+
+    /**
+     * Fully expands the comment tree below this node by finding all {@link MoreChildren} objects belonging to and below
+     * this node and loading them into the tree using {@link #loadMoreComments(RedditClient)}. Be aware that without
+     * setting a depth or request limit this may be a very costly operation, requiring potentially hundreds of requests
+     * to fully satisfy the method call. Note that one request must be sent for every {@link MoreChildren} found.
+     *
+     * @param reddit Used to make requests
+     * @param depthLimit The maximum depth to look into. A value of -1 disable the limit.
+     * @param requestLimit The maximum amount of requests to send; there will be one request for every MoreChildren
+     *                     object found. A value of -1 will disable the limit.
+     * @throws NetworkException If there was a problem sending the request
+     */
+    public void loadFully(RedditClient reddit, int depthLimit, int requestLimit) throws NetworkException {
+        int requests = 0;
+        if (depthLimit < -1 || depthLimit < -1)
+            throw new IllegalArgumentException("Expecting a number greater than or equal to -1, got " +
+                    (requestLimit < -1 ? requestLimit : depthLimit));
+        // Load this node's comments first
+        while (hasMoreComments()) {
+            loadMoreComments(reddit);
+            if (++requests > requestLimit && depthLimit != -1)
+                return;
+        }
+
+        // Load the children's comments next
+        for (CommentNode node : walkTree(TraversalMethod.BREADTH_FIRST)) {
+            // Travel breadth first so we can accurately compare depths
+            if (depthLimit != -1 && node.depth > depthLimit)
+                return;
+            while (node.hasMoreComments()) {
+                node.loadMoreComments(reddit);
+                if (++requests > requestLimit && depthLimit != -1)
+                    return;
+            }
+        }
+    }
+
+    /**
      * Gets more comments from {@link #getMoreComments(RedditClient)} and inserts them into the tree.
-     * This method returns only new <em>root</em> nodes. If this CommentNode is not associated with a More, then an
-     * empty list is returned. Null is never returned.
+     * This method returns only new <em>root</em> nodes. If this CommentNode is not associated with a
+     * {@link MoreChildren}, then an empty list is returned. A null value is never returned.
      *
      * @param reddit Used to make the request
      * @return A List of new root nodes
      * @throws NetworkException If the request was not successful
      */
     public List<CommentNode> loadMoreComments(RedditClient reddit) throws NetworkException {
-        if (!hasMoreChildren())
+        if (!hasMoreComments())
             // Nothing to do
             return new ArrayList<>();
 
@@ -264,7 +312,7 @@ public class CommentNode {
     /**
      * Gets a list of {@link Comment} and {@link MoreChildren} objects from this node's More object. The resulting Things will
      * be listed as if they were iterated in pre-order traversal. To add these new comments to the tree, use
-     * {@link #loadMoreComments(RedditClient)}.
+     * {@link #loadMoreComments(RedditClient)} instead.
      *
      * @param reddit The RedditClient to make the HTTP request with
      * @return A list of new Comments and Mores
@@ -273,7 +321,7 @@ public class CommentNode {
     @EndpointImplementation(Endpoints.MORECHILDREN)
     public List<Thing> getMoreComments(RedditClient reddit)
             throws NetworkException {
-        if (!hasMoreChildren())
+        if (!hasMoreComments())
             return new ArrayList<>();
 
         List<String> moreIds = moreChildren.getChildrenIds();

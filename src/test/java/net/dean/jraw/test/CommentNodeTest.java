@@ -172,6 +172,17 @@ public class CommentNodeTest extends RedditTest {
         assertEquals(simpleTree.get(0).getImmediateSize(), 3);
     }
 
+    @Test
+    public void testLoadFully() {
+        CommentNode node = reddit.getSubmission("2kx1ly").getComments();
+        node.loadFully(reddit);
+
+        for (CommentNode child : node.walkTree()) {
+            assertFalse(child.hasMoreComments(), "Child had more comments: " + child);
+        }
+        assertFalse(node.hasMoreComments(), "Root node had more comments: " + node);
+    }
+
     private static class MockComment extends Comment {
         private final String identifier;
         private final Listing<Comment> replies;
