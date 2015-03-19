@@ -55,15 +55,17 @@ public abstract class JsonModel {
      *     <li>{@code java.util.Date}
      * </ul>
      *
-     * @param key The key to look up in the JSON node.
+     * @param key The key to look up in the JSON node. Must not be null.
      * @param type The wanted return value. Supported values are any class representing a primitive data type, such as
-     *             {@link Integer} or {@link Boolean}.
+     *             {@link Integer} or {@link Boolean}. Must not be null.
      * @param <T> The desired return data type
      * @return An object of type T in the JSON node
      * @throws IllegalArgumentException If the class given was not one mentioned above
      */
     @SuppressWarnings("unchecked")
     public <T> T data(String key, Class<T> type) {
+        if (key == null || type == null)
+            throw new NullPointerException("Key or class type was null");
         if (data == null)
             throw new NullPointerException("Trying to retrieve data from a null JsonNode");
 
