@@ -53,7 +53,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * and breadth-first ({@code abcdfghi}).
  *
  * <p>Note that although this class implements {@link Iterable}, the provided Iterator will not have the same function
- * as using {@link #walkTree()}; only direct children will be implemented.
+ * as using {@link #walkTree()}; only direct children will be iterated.
  *
  * @author Matthew Dean
  */
