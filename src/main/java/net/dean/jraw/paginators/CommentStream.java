@@ -12,7 +12,7 @@ public class CommentStream extends Paginator<Comment> {
 
     /**
      * Instantiates a new CommentStream that will pull comments from any subreddit
-     * 
+     *
      * @param reddit The RedditClient that will be used to send HTTP requests
      */
     public CommentStream(RedditClient reddit) {

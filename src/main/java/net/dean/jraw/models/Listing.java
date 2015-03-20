@@ -1,8 +1,6 @@
 package net.dean.jraw.models;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import net.dean.jraw.JrawUtils;
 import net.dean.jraw.models.meta.JsonProperty;
 import net.dean.jraw.models.meta.Model;
 import net.dean.jraw.models.meta.ModelManager;
@@ -14,7 +12,7 @@ import java.util.List;
 import java.util.ListIterator;
 
 /**
- * Represents a Listing: How Reddit returns paginated data. A Listing has three main keys: the fullanme of the item
+ * Represents a Listing: How Reddit returns paginated data. A Listing has three main keys: the fullnames of the items
  * before and after, and its children. Listing uses an {@link ArrayList} to implement the method inherited by
  * {@link java.util.List}. For all intents and purposes, Listing children are unmodifiable.
  *
@@ -254,14 +252,4 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
     public List<T> subList(int start, int end) {
         return getChildren().subList(start, end);
     }
-
-    protected static JsonNode getEmptyListingJSON() {
-        ObjectNode dataTable = JrawUtils.objectMapper().createObjectNode();
-        dataTable.putArray("children");
-        dataTable.put("after", "");
-        dataTable.put("before", "");
-        dataTable.put("modhash", "");
-        return dataTable;
-    }
-
 }
