@@ -76,7 +76,7 @@ public class CommentNode implements Iterable<CommentNode> {
      *
      * @param ownerId The Submission's fullname (ex: t3_92dd8)
      * @param topLevelReplies A list of top level replies to this submission
-     * @param more A More object which can be used to retrieve more comments later
+     * @param more A MoreChildren object which can be used to retrieve more comments later
      */
     public CommentNode(String ownerId, List<Comment> topLevelReplies, MoreChildren more, CommentSort commentSort) {
         // Validate only the public constructor because this value will be passed to the private constructor when the
@@ -122,7 +122,7 @@ public class CommentNode implements Iterable<CommentNode> {
         return children.isEmpty();
     }
 
-    /** Checks if there exists a More object for this CommentNode. */
+    /** Checks if there exists a MoreChildren object for this CommentNode. */
     public boolean hasMoreComments() {
         return moreChildren != null;
     }
@@ -256,7 +256,7 @@ public class CommentNode implements Iterable<CommentNode> {
         List<Comment> newComments = new ArrayList<>();
         List<MoreChildren> newMores = new ArrayList<>();
 
-        // Assert every Thing is either a Comment or a More
+        // Assert every Thing is either a Comment or a MoreChildren
         for (Thing t : thingsToAdd) {
             if (t instanceof Comment) {
                 newComments.add((Comment) t);
@@ -276,7 +276,7 @@ public class CommentNode implements Iterable<CommentNode> {
             while (!newComment.getParentId().equals(parent.getComment().getFullName())) {
                 parent = parent.parent;
             }
-            // Instantiate a new CommentNode. The More, if applicable, will be instantiated later.
+            // Instantiate a new CommentNode. The MoreChildren, if applicable, will be instantiated later.
             CommentNode node = new CommentNode(ownerId, parent, newComment, null, commentSort, parent.depth + 1);
             // Remove the Comment from the list
             it.remove();
@@ -291,13 +291,13 @@ public class CommentNode implements Iterable<CommentNode> {
             JrawUtils.logger().warn("Unable to find parent for " + c);
         }
 
-        // Map of the More's parent_id (which is a fullname) to the More itself
+        // Map of the MoreChildren's parent_id (which is a fullname) to the MoreChildren itself
         Map<String, MoreChildren> mores = new HashMap<>();
         for (MoreChildren m : newMores) {
             mores.put(m.getParentId(), m);
         }
 
-        // Iterate the tree and insert Mores
+        // Iterate the tree and insert MoreChildren objects
         for (CommentNode node : walkTree()) {
             if (mores.containsKey(node.getComment().getFullName())) {
                 MoreChildren m = mores.get(node.getComment().getFullName());
@@ -306,7 +306,7 @@ public class CommentNode implements Iterable<CommentNode> {
             }
         }
 
-        // Special handling for the More of the root node
+        // Special handling for the root node's MoreChildren
         if (mores.containsKey(ownerId)) {
             MoreChildren m = mores.get(ownerId);
             this.moreChildren = m;
@@ -367,12 +367,12 @@ public class CommentNode implements Iterable<CommentNode> {
     }
 
     /**
-     * Gets a list of {@link Comment} and {@link MoreChildren} objects from this node's More object. The resulting Things will
-     * be listed as if they were iterated in pre-order traversal. To add these new comments to the tree, use
-     * {@link #loadMoreComments(RedditClient)} instead.
+     * Gets a list of {@link Comment} and {@link MoreChildren} objects from this node's MoreChildren object. The
+     * resulting Things will be listed as if they were iterated in pre-order traversal. To add these new comments to the
+     * tree, use {@link #loadMoreComments(RedditClient)} instead.
      *
      * @param reddit The RedditClient to make the HTTP request with
-     * @return A list of new Comments and Mores
+     * @return A list of new Comments and MoreChildren objects
      * @throws NetworkException If the request was not successful
      */
     @EndpointImplementation(Endpoints.MORECHILDREN)
