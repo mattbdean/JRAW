@@ -71,7 +71,7 @@ public class CommentNodeTest extends RedditTest {
         topLevelList.add(new MockComment("a", new FauxListing<>(aChildrenList, null, null)));
 
         // Create and test the expected depths
-        return new CommentNode("ownerId", topLevelList, null, CommentSort.TOP);
+        return new CommentNode("t3_ownerId", topLevelList, null, CommentSort.TOP);
     }
 
     @Test
@@ -181,6 +181,27 @@ public class CommentNodeTest extends RedditTest {
             assertFalse(child.hasMoreComments(), "Child had more comments: " + child);
         }
         assertFalse(node.hasMoreComments(), "Root node had more comments: " + node);
+    }
+
+    @Test
+    public void testContinueThread() {
+        CommentNode node = reddit.getSubmission("2onit4").getComments();
+        node.loadFully(reddit);
+        CommentNode subject = null;
+        for (CommentNode n : node.walkTree()) {
+            if (n.isThreadContinuation()) {
+                subject = n;
+                break;
+            }
+        }
+
+        if (subject == null)
+            throw new IllegalStateException("Could not find a node that is a thread continuation");
+
+        subject.loadMoreComments(reddit);
+        assertFalse(subject.hasMoreComments());
+        assertFalse(subject.isThreadContinuation());
+        assertTrue(subject.getImmediateSize() > 0);
     }
 
     private static class MockComment extends Comment {

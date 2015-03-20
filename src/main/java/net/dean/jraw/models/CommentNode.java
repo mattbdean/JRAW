@@ -10,6 +10,7 @@ import net.dean.jraw.JrawUtils;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.RestResponse;
+import net.dean.jraw.http.SubmissionRequest;
 import net.dean.jraw.models.meta.Model;
 
 import java.util.ArrayList;
@@ -78,6 +79,10 @@ public class CommentNode implements Iterable<CommentNode> {
      * @param more A More object which can be used to retrieve more comments later
      */
     public CommentNode(String ownerId, List<Comment> topLevelReplies, MoreChildren more, CommentSort commentSort) {
+        // Validate only the public constructor because this value will be passed to the private constructor when the
+        // children are instantiated.
+        if (!JrawUtils.isFullname(ownerId))
+            throw new IllegalArgumentException("Expecting fullname. Input '" + ownerId + "' not suitable.");
         this.ownerId = ownerId;
         // This CommentNode is actually representing the Submission, whose depth is 0
         this.depth = 0;
@@ -240,6 +245,9 @@ public class CommentNode implements Iterable<CommentNode> {
             // Nothing to do
             return new ArrayList<>();
 
+        if (isThreadContinuation())
+            return continueThread(reddit);
+
         int relativeRootDepth = depth + 1;
         List<CommentNode> newRootNodes = new ArrayList<>();
         List<Thing> thingsToAdd = getMoreComments(reddit);
@@ -312,6 +320,52 @@ public class CommentNode implements Iterable<CommentNode> {
         return newRootNodes;
     }
 
+    private List<CommentNode> continueThread(RedditClient reddit) {
+        if (!isThreadContinuation())
+            throw new IllegalArgumentException("This CommentNode's MoreChildren is not a thread continuation");
+        if (!hasMoreComments())
+            return new ArrayList<>();
+
+        // ownerId is a fullname, we only want the ID
+        String id = ownerId.substring("t3_".length());
+        CommentNode newNode = reddit.getSubmission(new SubmissionRequest.Builder(id)
+                .focus(getComment().getId())
+                .build()).getComments();
+        this.moreChildren = null;
+
+        // newNode is the RootComment, newNode[0] is the same as this CommentNode, so use newNode[0].children
+        List<CommentNode> newRootNodes = newNode.children.get(0).children;
+        int baseDepth = depth - 1;
+        for (CommentNode node : newRootNodes) {
+            children.add(new CommentNode(ownerId, this, node.comment, node.moreChildren, node.commentSort, node.depth + baseDepth));
+        }
+
+        return newRootNodes;
+    }
+
+    /**
+     * <p>Checks if this node's {@link MoreChildren} object represents a truncated thread. This normally happens when
+     * the depth of a particular branch of the tree continues to a depth exceeding 10. On the website, the MoreChildren
+     * will be represented as a link with the text "continue this thread &rarr;." If a MoreChildren object points to a
+     * truncated branch, then two things must be true:
+     *
+     * <ol>
+     *     <li>The MoreChildren's "count" attribute is zero
+     *     <li>The first ID listed in the MoreChildren is the same as its own ID.
+     * </ol>
+     *
+     * <p>If these things are true, then this method will return true.
+     *
+     * @return If this comment's MoreChildren object represents a truncated comment branch.
+     */
+    public boolean isThreadContinuation() {
+        // A 'continue this thread' type MoreChildren will have a count of 0 and the first child will be the ID of this
+        // node's comment
+        return hasMoreComments() &&
+                moreChildren.getCount() == 0 &&
+                moreChildren.getChildrenIds().get(0).equals(moreChildren.getId());
+    }
+
     /**
      * Gets a list of {@link Comment} and {@link MoreChildren} objects from this node's More object. The resulting Things will
      * be listed as if they were iterated in pre-order traversal. To add these new comments to the tree, use
@@ -375,6 +429,9 @@ public class CommentNode implements Iterable<CommentNode> {
 
     /** Gets the Comment this CommentNode is representing. */
     public Comment getComment() { return comment; }
+
+    /** Gets this node's immediate children */
+    public List<CommentNode> getChildren() { return children; }
 
     public CommentNode getParent() { return parent; }
 
