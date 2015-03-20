@@ -28,7 +28,7 @@ public interface RedditIterable<T extends Thing> extends Iterable<Listing<T>> {
     /**
      * Creates a list of listings whose size is less than or equal to the given number of pages. The amount of time this
      * method takes to return will grow linearly based on the maximum number of pages, as there will be one request for
-     * each
+     * each new page.
      *
      * @param maxPages The maximum amount of pages to retrieve
      * @return A list of listings

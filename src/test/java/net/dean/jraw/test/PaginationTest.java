@@ -287,6 +287,14 @@ public class PaginationTest extends RedditTest {
         commonTest(paginator);
     }
 
+    @Test
+    public void testCommentStream() {
+        CommentStream stream = new CommentStream(reddit);
+        commonTest(stream);
+        stream = new CommentStream(reddit, "all");
+        commonTest(stream);
+    }
+
     protected <T extends Thing> void commonTest(Paginator<T> p) {
         int numPages = 2;
         // Test that the paginator can retrieve the data
