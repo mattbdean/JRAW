@@ -31,7 +31,7 @@ public class MarkdownGenerator extends AbstractEndpointGenerator {
     @Override
     protected void _generate(File dest, IndentAwareFileWriter bw) throws IOException {
         // http://stackoverflow.com/a/4829998/1275092
-        bw.write(String.format("<!--- Generated %s. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->%n",
+        bw.write(String.format("<!--- Generated %s. Use `gradle endpoints:update` to update. DO NOT MODIFY DIRECTLY -->%n",
                 dateFormat.format(new Date())));
 
         // Main header

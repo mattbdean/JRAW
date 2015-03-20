@@ -8,15 +8,12 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.List;
 
 public class ReadmeUpdater extends AbstractEndpointGenerator {
+    private static final String IMG_URL = "https://img.shields.io/badge/api--coverage-%s-blue.svg";
     private static final String SEARCH_REGEX =
-            "http[s]?://img\\.shields\\.io/badge/api--coverage-(\\d{1,2}\\.\\d{1,2})%-blue\\.svg";
-
-    private NumberFormat format;
+            "http[s]?://img\\.shields\\.io/badge/api--coverage-(\\d{1,3})%-blue\\.svg";
 
     /**
      * Instantiates a new AbstractEndpointGenerator
@@ -25,14 +22,14 @@ public class ReadmeUpdater extends AbstractEndpointGenerator {
      */
     public ReadmeUpdater(List<Endpoint> endpoints) {
         super(endpoints, false);
-        this.format = new DecimalFormat("#.##");
     }
 
     @Override
     protected void _generate(File dest, IndentAwareFileWriter bw) throws IOException {
         double percentage = (getImplementedEndpointsCount() / (double) getTotalEndpoints()) * 100;
-        String percentageString = format.format(percentage) + "%";
-        String url = String.format("https://img.shields.io/badge/api--coverage-%s-blue.svg", percentageString);
+        int roundedPercentage = (int) Math.round(percentage);
+        String percentageString = roundedPercentage + "%";
+        String url = String.format(IMG_URL, percentageString);
 
         byte[] encoded = Files.readAllBytes(Paths.get(dest.toURI()));
         String readme = new String(encoded, StandardCharsets.UTF_8);
