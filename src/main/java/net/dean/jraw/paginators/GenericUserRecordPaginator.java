@@ -9,7 +9,9 @@ import net.dean.jraw.models.Listing;
 import net.dean.jraw.models.UserRecord;
 
 /**
- * This class provides the basic framework required to create a Paginator that returns listings of UserRecords
+ * This class provides a bridge between GenericPaginator and concrete subclasses of {@code GenericPaginator<UserRecord>}
+ * by providing an implementation of {@link #parseListing(RestResponse)} suitable for creating
+ * {@code Listing<UserRecord>} objects.
  */
 public abstract class GenericUserRecordPaginator extends GenericPaginator<UserRecord> {
     /**

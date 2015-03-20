@@ -7,9 +7,9 @@ import net.dean.jraw.models.Listing;
 import net.dean.jraw.models.Subreddit;
 
 /**
- * This paginator will iterate through either the newest or the most popular subreddits
+ * This paginator will iterate through subreddits based on certain criteria.
  */
-public class AllSubredditsPaginator extends GenericPaginator<Subreddit> {
+public class SubredditStream extends GenericPaginator<Subreddit> {
 
     /**
      * Instantiates a new AllSubredditsPaginator
@@ -17,7 +17,7 @@ public class AllSubredditsPaginator extends GenericPaginator<Subreddit> {
      * @param creator The RedditClient that will be used to send HTTP requests
      * @param where One of "popular", "new", "gold", or "employee."
      */
-    public AllSubredditsPaginator(RedditClient creator, String where) {
+    public SubredditStream(RedditClient creator, String where) {
         super(creator, Subreddit.class, where);
     }
 

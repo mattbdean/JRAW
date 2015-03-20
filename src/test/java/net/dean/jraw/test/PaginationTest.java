@@ -111,7 +111,7 @@ public class PaginationTest extends RedditTest {
     public void testAllSubredditsPaginator() throws NetworkException {
         // Test all Where values
         for (String where : new String[] {"popular", "new"}) {
-            AllSubredditsPaginator paginator = new AllSubredditsPaginator(reddit, where);
+            SubredditStream paginator = new SubredditStream(reddit, where);
             commonTest(paginator);
         }
     }
@@ -246,7 +246,7 @@ public class PaginationTest extends RedditTest {
 
     @Test(expectedExceptions = IllegalStateException.class)
     public void testChangeRequestParameters() {
-        AllSubredditsPaginator paginator = new AllSubredditsPaginator(reddit, "new");
+        SubredditStream paginator = new SubredditStream(reddit, "new");
         paginator.next();
         // Modifying the request parameters after the initial request, without calling reset
         paginator.setLimit(Paginator.DEFAULT_LIMIT);
@@ -256,7 +256,7 @@ public class PaginationTest extends RedditTest {
 
     @Test
     public void testResetRequestParameters() {
-        AllSubredditsPaginator paginator = new AllSubredditsPaginator(reddit, "new");
+        SubredditStream paginator = new SubredditStream(reddit, "new");
         paginator.next();
         paginator.setLimit(Paginator.DEFAULT_LIMIT);
         // We know it has already started, but just making sure this method works as expected
