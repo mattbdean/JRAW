@@ -210,8 +210,7 @@ public class ReadOnlyDataTest extends RedditTest {
             List<String> subs = Arrays.asList("programming", "java", "git");
             List<String> omit = Arrays.asList("git");
             List<String> recommendations = reddit.getRecommendations(subs, omit);
-            // As of Feb 16 2015, this seems to always return an empty array. See http://redd.it/2w1fpu
-//            assertFalse(recommendations.isEmpty());
+            assertFalse(recommendations.isEmpty());
         } catch (NetworkException e) {
             handle(e);
         }
