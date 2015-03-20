@@ -312,6 +312,10 @@ public enum Endpoints {
     SEARCH("GET /search", "read"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_sort">{@code GET /sort}</a>" included in the "read" scope */
     SORT("GET /sort", "read"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_subreddits_employee">{@code GET /subreddits/employee}</a>" included in the "read" scope */
+    SUBREDDITS_EMPLOYEE("GET /subreddits/employee", "read"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_subreddits_gold">{@code GET /subreddits/gold}</a>" included in the "read" scope */
+    SUBREDDITS_GOLD("GET /subreddits/gold", "read"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_subreddits_new">{@code GET /subreddits/new}</a>" included in the "read" scope */
     SUBREDDITS_NEW("GET /subreddits/new", "read"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_subreddits_popular">{@code GET /subreddits/popular}</a>" included in the "read" scope */

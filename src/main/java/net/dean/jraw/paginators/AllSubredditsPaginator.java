@@ -15,7 +15,7 @@ public class AllSubredditsPaginator extends GenericPaginator<Subreddit> {
      * Instantiates a new AllSubredditsPaginator
      *
      * @param creator The RedditClient that will be used to send HTTP requests
-     * @param where The criteria in which to return Subreddits
+     * @param where One of "popular", "new", "gold", or "employee."
      */
     public AllSubredditsPaginator(RedditClient creator, String where) {
         super(creator, Subreddit.class, where);
@@ -25,6 +25,8 @@ public class AllSubredditsPaginator extends GenericPaginator<Subreddit> {
     @EndpointImplementation({
             Endpoints.SUBREDDITS_POPULAR,
             Endpoints.SUBREDDITS_NEW,
+            Endpoints.SUBREDDITS_EMPLOYEE,
+            Endpoints.SUBREDDITS_GOLD,
             Endpoints.SUBREDDITS_WHERE
     })
     public Listing<Subreddit> next() {
@@ -39,6 +41,6 @@ public class AllSubredditsPaginator extends GenericPaginator<Subreddit> {
 
     @Override
     public String[] getWhereValues() {
-        return new String[] {"popular", "new"};
+        return new String[] {"popular", "new", "gold", "employee"};
     }
 }

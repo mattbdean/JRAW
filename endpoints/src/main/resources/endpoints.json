@@ -169,6 +169,8 @@
     "GET /sticky",
     "GET /subreddits/new",
     "GET /subreddits/popular",
+    "GET /subreddits/employee",
+    "GET /subreddits/gold",
     "GET /subreddits/search",
     "GET /subreddits/where",
     "GET /top",

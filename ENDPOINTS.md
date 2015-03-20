@@ -1,9 +1,9 @@
-<!--- Generated 2015-03-20 at 08:34:09 EDT. Use ./gradlew endpoints:update to update. DO NOT MODIFY DIRECTLY -->
+<!--- Generated 2015-03-20 at 10:47:47 EDT. Use `gradle endpoints:update` to update. DO NOT MODIFY DIRECTLY -->
 #Endpoints
 
 This file contains a list of all the endpoints (regardless of if they have been implemented) that can be found at the [official Reddit API docs](https://www.reddit.com/dev/api). To update this file, run `./gradlew endpoints:update`.
 
-So far **112** endpoints (out of 177 total) have been implemented.
+So far **114** endpoints (out of 179 total) have been implemented.
 
 ##(any scope)
 Method|Endpoint|Implemented?
@@ -212,6 +212,8 @@ Method|Endpoint|Implemented?
 `GET`|[`/related/{article}`](https://www.reddit.com/dev/api/oauth#GET_related_%7Barticle%7D)|[`RelatedPaginator.next(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/paginators/RelatedPaginator.html#next(boolean))
 `GET`|[`/search`](https://www.reddit.com/dev/api/oauth#GET_search)|[`SubmissionSearchPaginator.next(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/paginators/SubmissionSearchPaginator.html#next(boolean))
 `GET`|[`/sort`](https://www.reddit.com/dev/api/oauth#GET_sort)|[`SubredditPaginator.next(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/paginators/SubredditPaginator.html#next(boolean))
+`GET`|[`/subreddits/employee`](https://www.reddit.com/dev/api/oauth#GET_subreddits_employee)|[`AllSubredditsPaginator.next()`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/paginators/AllSubredditsPaginator.html#next())
+`GET`|[`/subreddits/gold`](https://www.reddit.com/dev/api/oauth#GET_subreddits_gold)|[`AllSubredditsPaginator.next()`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/paginators/AllSubredditsPaginator.html#next())
 `GET`|[`/subreddits/new`](https://www.reddit.com/dev/api/oauth#GET_subreddits_new)|[`AllSubredditsPaginator.next()`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/paginators/AllSubredditsPaginator.html#next())
 `GET`|[`/subreddits/popular`](https://www.reddit.com/dev/api/oauth#GET_subreddits_popular)|[`AllSubredditsPaginator.next()`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/paginators/AllSubredditsPaginator.html#next())
 `GET`|[`/subreddits/search`](https://www.reddit.com/dev/api/oauth#GET_subreddits_search)|[`SubredditSearchPaginator.next(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/paginators/SubredditSearchPaginator.html#next(boolean))
