@@ -45,6 +45,8 @@ public class RedditClient extends RestClient {
     public static final String HOST_SPECIAL = "www.reddit.com";
     /** The amount of requests allowed per minute when using OAuth2 */
     public static final int REQUESTS_PER_MINUTE = 60;
+    /** The default amount of times a request will be retried if a 503 Service Unavailable is received. */
+    public static final int DEFAULT_RETRY_LIMIT = 5;
     /** The amount of trending subreddits that appear in each /r/trendingsubreddits post */
     private static final int NUM_TRENDING_SUBREDDITS = 5;
     private static final String HEADER_AUTHORIZATION = "Authorization";
@@ -53,6 +55,7 @@ public class RedditClient extends RestClient {
     /** The username of the user who is currently authenticated */
     private String authenticatedUser;
     private boolean adjustRatelimit;
+    private int retryLimit;
 
     /** The method of authentication currently being used */
     private AuthenticationMethod authMethod;
@@ -100,6 +103,7 @@ public class RedditClient extends RestClient {
         this.authMethod = AuthenticationMethod.NOT_YET;
         this.authHelper = new OAuthHelper(this);
         this.adjustRatelimit = true;
+        this.retryLimit = DEFAULT_RETRY_LIMIT;
         setHttpsDefault(true);
     }
 
@@ -152,14 +156,25 @@ public class RedditClient extends RestClient {
 
     @Override
     public RestResponse execute(HttpRequest request) throws NetworkException, InvalidScopeException {
+        return execute(request, 0);
+    }
+
+    private RestResponse execute(HttpRequest request, int retryCount) throws NetworkException, InvalidScopeException {
         RestResponse response;
         try {
             response = super.execute(request);
         } catch (NetworkException e) {
             RestResponse errorResponse = e.getResponse();
-            if (errorResponse.getStatusCode() == 403 && errorResponse.getHeaders().get("WWW-Authenticate") != null) {
+            final int code = errorResponse.getStatusCode();
+            if (code == 403 && errorResponse.getHeaders().get("WWW-Authenticate") != null) {
                 // Invalid scope
                 throw new InvalidScopeException(errorResponse.getOrigin().getUrl());
+            } else if (code == 503) {
+                // 503 Service Unavailable, retry
+                if (retryCount++ > retryLimit) {
+                    throw new IllegalStateException("Reached retry limit", e);
+                }
+                return execute(request, retryCount);
             }
             throw e;
         }
@@ -208,6 +223,21 @@ public class RedditClient extends RestClient {
      */
     public void setAdjustRatelimit(boolean flag) {
         this.adjustRatelimit = flag;
+    }
+
+    /** Gets the amount of times a request will be retried if a 503 Service Unavailable is received. */
+    public int getRetryLimit() {
+        return retryLimit;
+    }
+
+    /**
+     * Sets the amount of times a request will be retried if a 503 Service Unavailable is received. A negative value is
+     * not accepted.
+     *
+     * @see #DEFAULT_RETRY_LIMIT
+     */
+    public void setRetryLimit(int retryLimit) {
+        this.retryLimit = retryLimit;
     }
 
     /** Checks if this RedditClient is current authenticated. */
