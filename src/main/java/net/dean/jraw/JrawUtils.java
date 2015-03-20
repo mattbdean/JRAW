@@ -121,7 +121,7 @@ public final class JrawUtils {
         if (name.length() < 3) {
             throw new IllegalArgumentException("Name must be at least three characters");
         }
-        return name.matches("t[1-6|8]_[a-zA-Z].*");
+        return name.matches("t[1-6|8]_[a-zA-Z0-9]+");
     }
 
     /** Compares the type and subtype of two MediaTypes. Will recognize the asterisk ('*') as a wildcard. */
