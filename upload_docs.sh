@@ -6,7 +6,7 @@ shopt -s extglob
 ## Where the docs will be found after building them in master
 BUILD_DOC="build/docs/javadoc/"
 ## Name of the 'javadoc' folder
-DOC_FOLDER=$(basename $BUILD_DOC)
+DOC_FOLDER=$(basename ${BUILD_DOC})
 ## First seven characters of the latest commit SHA
 COMMIT_SHA=$(git rev-parse --short HEAD --verify)
 ## Last release (vX.X.X)
@@ -45,9 +45,10 @@ cp -r "$BUILD_DOC" -r .. # Move the javadoc out of git's reach
 
 git checkout gh-pages
 
+rm -r ${OUT_DIR} # Remove current version of the docs
 mkdir -p "$OUT_DIR"
-mv ../$DOC_FOLDER/* "$OUT_DIR" # Move the javadoc to its corresponding folder
-rm -r ../$DOC_FOLDER/ # Remove the temp folder
+mv ../${DOC_FOLDER}/* "$OUT_DIR" # Move the javadoc to its corresponding folder
+rm -r ../${DOC_FOLDER}/ # Remove the temp folder
 echo "$COMMIT_SHA" > "$VERSION_FILE" # Update the version
 
 # Configure git
