@@ -93,19 +93,19 @@ public class HttpLogger {
         return INDENT + header + ": {";
     }
 
-    private void logHeaders(Headers headers) {
+    private void logHeaders(boolean successful, Headers h) {
         Map<String, String> map = new HashMap<>();
-        for (String key : headers.names()) {
-            map.put(key, headers.get(key));
+        for (String key : h.names()) {
+            map.put(key, h.get(key));
         }
-        logMap("headers", map, null, ": ");
+        logMap(successful, "headers", map, null, ": ");
     }
 
-    private void logMap(String header, Map<String, String> data, String[] sensitiveKeys) {
-        logMap(header, data, sensitiveKeys, "=");
+    private void logMap(boolean successful, String header, Map<String, String> data, String[] sensitiveKeys) {
+        logMap(successful, header, data, sensitiveKeys, "=");
     }
 
-    private void logMap(String header, Map<String, String> data, String[] sensitiveKeys, String separator) {
+    private void logMap(boolean successful, String header, Map<String, String> data, String[] sensitiveKeys, String separator) {
         if (isEnabled(ALPHABETIZE_MAPS)) {
             Map<String, String> unsorted = data;
             data = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
@@ -114,14 +114,14 @@ public class HttpLogger {
         header = formatHeader(header);
 
         if (data == null || data.size() == 0) {
-            l.info("{}}", header); // my-data: {}
+            logBySuccess(successful, "{}}", header); // my-data: {}
             return;
         }
 
         String indent = getIndent(header);
         int counter = 0;
         for (Map.Entry<String, String> entry : data.entrySet()) {
-            l.info("{}{}{}{}{}",
+            logBySuccess(successful, "{}{}{}{}{}",
                     counter != 0 ? indent : header, // If the first one, output the header, otherwise indent
                     JrawUtils.urlDecode(entry.getKey()),
                     separator,
@@ -144,10 +144,20 @@ public class HttpLogger {
      * @param params Passed to {@link Logger#info(String, Object...)} or its {@code error()} sibling
      */
     private void logBySuccess(RestResponse r, String format, Object... params) {
-        if (r.isSuccessful())
+        logBySuccess(r.isSuccessful(), format, params);
+    }
+
+    /**
+     * Logs at INFO {@code successful}, otherwise at ERROR.
+     * @param format Passed to {@link Logger#info(String, Object...)} or its {@code error()} sibling
+     * @param params Passed to {@link Logger#info(String, Object...)} or its {@code error()} sibling
+     */
+    private void logBySuccess(boolean successful, String format, Object... params) {
+        if (successful)
             l.info(format, params);
         else
             l.error(format, params);
+
     }
 
     private String getContent(RequestBody body) {
@@ -179,16 +189,34 @@ public class HttpLogger {
      * @param r The request to log
      */
     public void log(HttpRequest r) {
+        log(r, true);
+    }
+
+    /**
+     * Logs an HTTP request in this format:
+     *
+     * <pre>{@code
+     * $method $url
+     *     form-data: {$key1=$val2,
+     *                 $key2=$val2}
+     *     headers: {$key1: $val1}
+     * }</pre>
+     *
+     * Where {@code $requestDescriptor} is the combination of the HTTP method and URL (ex: "POST http://www.example.com").
+     * @param r The request to log
+     * @param wasSuccessful If true, then the message will be logged at INFO, otherwise ERROR.
+     */
+    public void log(HttpRequest r, boolean wasSuccessful) {
         if (isEnabled(REQUEST)) {
             if (isEnabled(REQUEST_DESCRIPTOR)) {
-                l.info("{} {}", r.getMethod(), r.getUrl());
+                logBySuccess(wasSuccessful, "{} {}", r.getMethod(), r.getUrl());
             }
             if (isEnabled(REQUEST_BODY) && r.getBody() != null) {
                 if (isEnabled(REQUEST_FORMAT_FORM) &&
                         r.getBody().contentType() != null && // Will be null if no body was sent
                         JrawUtils.isEqual(r.getBody().contentType(), MediaTypes.FORM_ENCODED.type())) {
                     // Body Content-Type was x-www-form-urlencoded
-                    logMap("form-data", parseUrlEncoded(r.getBody()), r.getSensitiveArgs());
+                    logMap(true, "form-data", parseUrlEncoded(r.getBody()), r.getSensitiveArgs());
                 } else {
                     // Other Content-Type
                     logBody("body", getContent(r.getBody()));
@@ -196,13 +224,13 @@ public class HttpLogger {
             }
             if (isEnabled(REQUEST_HEADERS)) {
                 // Create a map out of the request's Headers
-                logHeaders(r.getHeaders());
+                logHeaders(wasSuccessful, r.getHeaders());
             }
             if (isEnabled(REQUEST_BASIC_AUTH) && r.isUsingBasicAuth()) {
                 Map<String, String> data = new HashMap<>();
                 data.put("username", r.getBasicAuthData().getUsername());
                 data.put("password", CENSOR); // Don't even make 'password' a sensitive arg, just go right for it
-                logMap("basic-auth", data, new String[0]);
+                logMap(wasSuccessful, "basic-auth", data, new String[0]);
             }
         }
     }
@@ -222,7 +250,7 @@ public class HttpLogger {
         if (isEnabled(RESPONSE)) {
             logBySuccess(r, "{} {} {}", r.getProtocol(), r.getStatusCode(), r.getStatusMessage());
             if (isEnabled(RESPONSE_HEADERS)) {
-                logHeaders(r.getHeaders());
+                logHeaders(r.isSuccessful(), r.getHeaders());
             }
             if (isEnabled(RESPONSE_BODY)) {
                 String raw = r.getRaw();

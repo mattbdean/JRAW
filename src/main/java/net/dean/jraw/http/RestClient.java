@@ -126,7 +126,7 @@ public abstract class RestClient implements HttpClient {
 
             // Log the request and response if it was not successful
             if (loggingMode == LoggingMode.ON_FAIL && !response.isSuccessful()) {
-                logger.log(request);
+                logger.log(request, false);
                 logger.log(response);
             }
 
