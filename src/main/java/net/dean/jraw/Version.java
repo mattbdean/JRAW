@@ -4,9 +4,9 @@ package net.dean.jraw;
  * This class provides a standard way to version the library
  */
 public class Version {
-    /** If a field is equal to this constant, then it will be excluded in {@link #formatted()}. */
+    /** If the 'build' field is equal to this constant, then it will be excluded in {@link #formatted()}. */
     public static final int EXCLUDE = -1;
-    private static final Version INSTANCE = new Version(0, 7, 0, 2);
+    private static final Version INSTANCE = new Version(0, 7, 0, 3);
 
     /** Gets the current version of the library */
     public static Version get() {
