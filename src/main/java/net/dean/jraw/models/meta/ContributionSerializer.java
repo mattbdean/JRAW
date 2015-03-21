@@ -10,7 +10,7 @@ import com.fasterxml.jackson.databind.JsonNode;
  * This class is responsible for serializing Contribution subclasses. It accepts JsonNodes whose "kind" node are equal
  * to {@link Model.Kind#LINK}, {@link Model.Kind#COMMENT}, and {@link Model.Kind#MESSAGE}.
  */
-public class ContributionSerializer implements JsonSerializer<Contribution> {
+public final class ContributionSerializer implements JsonSerializer<Contribution> {
 
     @Override
     @SuppressWarnings("unchecked")

@@ -45,6 +45,7 @@ public class RedditClient extends RestClient {
     public static final String HOST_SPECIAL = "www.reddit.com";
     /** The amount of requests allowed per minute when using OAuth2 */
     public static final int REQUESTS_PER_MINUTE = 60;
+
     /** The default amount of times a request will be retried if a server-side error is encountered. */
     public static final int DEFAULT_RETRY_LIMIT = 5;
     /** The amount of trending subreddits that appear in each /r/trendingsubreddits post */

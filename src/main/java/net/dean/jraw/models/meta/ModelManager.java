@@ -11,7 +11,7 @@ import java.util.Map;
  * This class is responsible for managing the creation of JsonModels. It keeps a cache of common {@link JsonSerializer}s
  * and {@link Model} classes. This class is a singleton.
  */
-public class ModelManager {
+public final class ModelManager {
     public static final Class<? extends JsonSerializer> DEFAULT_SERIALIZER = DefaultJsonSerializer.class;
     private static ModelManager instance = new ModelManager();
     public static ModelManager getInstance() { return instance; }

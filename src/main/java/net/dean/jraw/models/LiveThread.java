@@ -11,7 +11,7 @@ import java.util.Date;
  * Represents a live thread. See <a href="https://www.reddit.com/r/live/wiki/index">here</a> for more information.
  */
 @Model(kind = Model.Kind.LIVE_THREAD)
-public class LiveThread extends RedditObject implements Created {
+public final class LiveThread extends RedditObject implements Created {
     /**
      * Instantiates a new LiveEvent
      *

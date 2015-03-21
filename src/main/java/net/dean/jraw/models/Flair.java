@@ -5,7 +5,7 @@ import net.dean.jraw.RedditClient;
 /**
  * Represents the flair of a user or submission in a specific subreddit.
  */
-public class Flair {
+public final class Flair {
     private final String cssClass;
     private final String text;
 

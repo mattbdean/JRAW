@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.JsonNode;
  * Represents an award (trophy) displayed in a user's trophy case on the website.
  */
 @Model(kind = Model.Kind.AWARD)
-public class Award extends Thing {
+public final class Award extends Thing {
     /**
      * Instantiates a new Trophy
      */

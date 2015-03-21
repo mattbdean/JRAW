@@ -7,7 +7,7 @@ import net.dean.jraw.models.meta.JsonProperty;
 /**
  * Represents a subreddit as it is displayed in the multireddit data structure.
  */
-public class MultiSubreddit extends RedditObject {
+public final class MultiSubreddit extends RedditObject {
     /**
      * Instantiates a new MultiSubreddit
      *

@@ -11,7 +11,7 @@ import java.lang.reflect.InvocationTargetException;
  * Using the JsonSerializer on an abstract type or a class that does not provide an acceptable constructor will cause
  * an exception to be thrown.
  */
-public class DefaultJsonSerializer implements JsonSerializer<JsonModel> {
+public final class DefaultJsonSerializer implements JsonSerializer<JsonModel> {
 
     @Override
     public <T extends JsonModel> T parse(JsonNode node, Class<T> clazz, Model.Kind kind) {

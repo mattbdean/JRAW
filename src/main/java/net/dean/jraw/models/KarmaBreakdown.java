@@ -14,7 +14,7 @@ import java.util.Map;
  * @see AccountManager#getKarmaBreakdown()
  */
 @Model(kind = Model.Kind.KARMA_BREAKDOWN)
-public class KarmaBreakdown extends RedditObject {
+public final class KarmaBreakdown extends RedditObject {
     private final Map<String, SubredditKarma> summaries;
 
     /**

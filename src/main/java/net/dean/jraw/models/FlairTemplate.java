@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 /**
  * Represents a single flair template on a subreddit
  */
-public class FlairTemplate extends JsonModel {
+public final class FlairTemplate extends JsonModel {
     /** Instantiates a new FlairTemplate */
     public FlairTemplate(JsonNode dataNode) {
         super(dataNode);

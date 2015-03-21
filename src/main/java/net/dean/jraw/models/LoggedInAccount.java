@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.JsonNode;
  * Represents an account with additional information visible only to the logged-in user.
  */
 @Model(kind = Model.Kind.ACCOUNT)
-public class LoggedInAccount extends Account {
+public final class LoggedInAccount extends Account {
     /** Instantiates a new LoggedInAccount */
     public LoggedInAccount(JsonNode data) {
         super(data);

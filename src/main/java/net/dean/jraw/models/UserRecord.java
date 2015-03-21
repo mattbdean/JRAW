@@ -13,7 +13,7 @@ import java.util.List;
  * and moderators. Also used when using friends and blocked users.
  */
 @Model(kind = Model.Kind.NONE)
-public class UserRecord extends Thing {
+public final class UserRecord extends Thing {
 
     /**
      * Instantiates a new UserRecord

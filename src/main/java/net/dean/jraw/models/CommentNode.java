@@ -57,7 +57,7 @@ import java.util.concurrent.locks.ReentrantLock;
  *
  * @author Matthew Dean
  */
-public class CommentNode implements Iterable<CommentNode> {
+public final class CommentNode implements Iterable<CommentNode> {
     private static final SimpleTreeTraverser traverser = new SimpleTreeTraverser();
     private static final int TOP_LEVEL_DEPTH = 1;
     private static final Lock morechildrenLock = new ReentrantLock();

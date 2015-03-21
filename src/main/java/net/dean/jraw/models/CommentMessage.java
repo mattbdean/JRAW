@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.JsonNode;
  * This class represents a message that appears in a user's inbox because another user has replied to his or her comment.
  */
 @Model(kind = Model.Kind.COMMENT)
-public class CommentMessage extends Message {
+public final class CommentMessage extends Message {
     /**
      * Instantiates a new CommentMessage
      */

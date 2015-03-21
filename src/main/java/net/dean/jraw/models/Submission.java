@@ -13,7 +13,7 @@ import java.util.List;
  * <a href="https://github.com/reddit/reddit/wiki/JSON#link-implements-votable--created">here</a>.
  */
 @Model(kind = Model.Kind.LINK, serializer = SubmissionSerializer.class, validate = false)
-public class Submission extends PublicContribution {
+public final class Submission extends PublicContribution {
     private CommentNode rootNode;
 
     /** Instantiates a new Submission with no comments */

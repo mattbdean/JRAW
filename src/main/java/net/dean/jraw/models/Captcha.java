@@ -9,7 +9,7 @@ import java.net.URL;
  * These are required by the Reddit API for some actions that are susceptible to spam, like creating subreddits or
  * accounts.
  */
-public class Captcha {
+public final class Captcha {
     private final String id;
     private final URL imageUrl;
 

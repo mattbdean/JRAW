@@ -9,7 +9,7 @@ import java.net.URL;
  * Represents media provided by an oEmbed-style JSON object. Documentation in this class is borrowed heavily from the
  * <a href="http://oembed.com/#section2.3">oEmbed website</a>.
  */
-public class OEmbed extends JsonModel {
+public final class OEmbed extends JsonModel {
 
     /** Instantiates a new OEmbed object */
     public OEmbed(JsonNode oembedNode) {

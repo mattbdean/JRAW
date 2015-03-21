@@ -14,7 +14,7 @@ import net.dean.jraw.models.Submission;
  * node is actually an array containing two elements. The first is a Listing of authors (always one Account instance),
  * and the second is a Listing of Comments.
  */
-public class SubmissionSerializer implements JsonSerializer<Submission> {
+public final class SubmissionSerializer implements JsonSerializer<Submission> {
     @Override
     @SuppressWarnings("unchecked")
     public <T extends Submission> T parse(JsonNode node, Class<T> clazz, Model.Kind kind) {

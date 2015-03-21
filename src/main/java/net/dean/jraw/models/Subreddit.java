@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 /** This class represents a subreddit, such as /r/pics. */
 @Model(kind = Model.Kind.SUBREDDIT)
-public class Subreddit extends Thing {
+public final class Subreddit extends Thing {
 
     /** Instantiates a new Subreddit */
     public Subreddit(JsonNode dataNode) {

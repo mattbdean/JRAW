@@ -11,7 +11,7 @@ import java.util.Date;
  * Represents an administrative action from a moderator of a subreddit
  */
 @Model(kind = Model.Kind.MOD_ACTION)
-public class ModAction extends Thing implements Created {
+public final class ModAction extends Thing implements Created {
     /** Instantiates a new ModAction */
     public ModAction(JsonNode dataNode) {
         super(dataNode);

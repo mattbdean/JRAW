@@ -12,7 +12,7 @@ import java.util.Date;
  * Represents an update in a live thread
  */
 @Model(kind = Model.Kind.LIVE_UPDATE)
-public class LiveUpdate extends Thing implements Created {
+public final class LiveUpdate extends Thing implements Created {
     /** Instantiates a new LiveUpdate */
     public LiveUpdate(JsonNode dataNode) {
         super(dataNode);

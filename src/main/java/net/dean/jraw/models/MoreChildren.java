@@ -17,7 +17,7 @@ import java.util.List;
  * @see CommentNode#loadMoreComments(RedditClient)
  */
 @Model(kind = Model.Kind.MORE)
-public class MoreChildren extends Thing {
+public final class MoreChildren extends Thing {
 
     /**
      * Instantiates a new MoreChildren

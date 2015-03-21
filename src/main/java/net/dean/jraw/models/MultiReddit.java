@@ -15,7 +15,7 @@ import java.util.List;
  * Represents a collection of subreddits. See <a href="http://www.reddit.com/r/multihub">here</a> for some examples.
  */
 @Model(kind = Model.Kind.MULTIREDDIT)
-public class MultiReddit extends Thing implements Created {
+public final class MultiReddit extends Thing implements Created {
 
     /** Instantiates a new MultiReddit */
     public MultiReddit(JsonNode dataNode) {

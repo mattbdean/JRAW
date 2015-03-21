@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 /**
  * This class represents an account's preferences.
  */
-public class AccountPreferences extends JsonModel {
+public final class AccountPreferences extends JsonModel {
     /** Instantiates a new AccountPreferences */
     public AccountPreferences(JsonNode dataNode) {
         super(dataNode);

@@ -8,7 +8,7 @@ import java.util.Date;
 
 /** This class represents a Reddit-hosted wiki page. */
 @Model(kind = Model.Kind.WIKI_PAGE)
-public class WikiPage extends RedditObject {
+public final class WikiPage extends RedditObject {
     /** Instantiates a new WikiPage */
     public WikiPage(JsonNode dataNode) {
         super(dataNode);

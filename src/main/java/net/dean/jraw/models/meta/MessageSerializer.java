@@ -9,7 +9,7 @@ import com.fasterxml.jackson.databind.JsonNode;
  * This class is responsible for serializing Message subclasses. It accepts JsonNodes whose "kind" node are equal
  * to {@link Model.Kind#COMMENT} and {@link Model.Kind#MESSAGE}.
  */
-public class MessageSerializer implements JsonSerializer<Message> {
+public final class MessageSerializer implements JsonSerializer<Message> {
     @Override
     @SuppressWarnings("unchecked")
     public <T extends Message> T parse(JsonNode node, Class<T> clazz, Model.Kind kind) {

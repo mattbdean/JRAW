@@ -12,7 +12,7 @@ import java.util.List;
  * Represents a wiki page's settings
  */
 @Model(kind = Model.Kind.WIKI_PAGE_SETTINGS)
-public class WikiPageSettings extends RedditObject {
+public final class WikiPageSettings extends RedditObject {
 
     /** Instantiates a new RedditObject */
     public WikiPageSettings(JsonNode dataNode) {
