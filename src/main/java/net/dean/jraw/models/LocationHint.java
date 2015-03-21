@@ -12,6 +12,8 @@ public final class LocationHint {
     private static final EnumMap<TraversalMethod, LocationHint> instances = new EnumMap<>(TraversalMethod.class);
 
     private LocationHint(TraversalMethod method) {
+        if (method == null)
+            throw new NullPointerException("Traversal method cannot be null");
         this.method = method;
     }
 
@@ -43,5 +45,27 @@ public final class LocationHint {
 
     TraversalMethod getTraversalMethod() {
         return method;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        LocationHint that = (LocationHint) o;
+
+        return method == that.method;
+    }
+
+    @Override
+    public int hashCode() {
+        return method.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "LocationHint {" +
+                "method=" + method +
+                '}';
     }
 }
