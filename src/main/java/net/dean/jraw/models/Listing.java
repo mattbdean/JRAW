@@ -14,7 +14,7 @@ import java.util.ListIterator;
 /**
  * Represents a Listing: How Reddit returns paginated data. A Listing has three main keys: the fullnames of the items
  * before and after, and its children. Listing uses an {@link ArrayList} to implement the method inherited by
- * {@link java.util.List}. For all intents and purposes, Listing children are unmodifiable.
+ * {@link java.util.List}. For all intents and purposes, Listing properties are immutable.
  *
  * @param <T> The type of elements that will be in this listing
  * @author Matthew Dean
@@ -25,7 +25,7 @@ public class Listing<T extends RedditObject> extends RedditObject implements Lis
     private final List<T> children;
     private final String before;
     private final String after;
-    private MoreChildren moreChildren;
+    private final MoreChildren moreChildren;
 
     /**
      * Instantiates a new Listing

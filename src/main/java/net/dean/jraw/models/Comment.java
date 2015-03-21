@@ -14,21 +14,11 @@ import java.util.Date;
 @Model(kind = Model.Kind.COMMENT)
 public class Comment extends PublicContribution {
 
-    private Listing<Comment> replies;
-
     /**
      * Instantiates a new Comment
      */
     public Comment(JsonNode dataNode) {
         super(dataNode);
-
-        // If it has no replies, the value for the replies key will be an empty string or null
-        JsonNode replies = data.get("replies");
-        if (replies.isNull() || (replies.isTextual() && replies.asText().isEmpty())) {
-            this.replies = new Listing<>(Comment.class);
-        } else {
-            this.replies = new Listing<>(data.get("replies").get("data"), Comment.class);
-        }
     }
 
     /** Gets who approved this comment, or null if the logged in account is not a moderator */
@@ -120,15 +110,6 @@ public class Comment extends PublicContribution {
     @JsonProperty(nullable = true)
     public String getSubmissionAuthor() {
         return data("link_author");
-    }
-
-    /**
-     * Gets the comments made in reply to this one. Not recommended. Use the {@link CommentNode} provided by
-     * {@link Submission#getComments()} instead.
-     */
-    @JsonProperty(nullable = true)
-    public Listing<Comment> getReplies() {
-        return replies;
     }
 
     /** Gets the ID of the submission this comment is located in */

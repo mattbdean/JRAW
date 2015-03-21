@@ -31,10 +31,10 @@ public class SubmissionRequestTest extends RedditTest {
         request.depth(1);
         s = get();
         for (CommentNode c : s.getComments().walkTree()) {
-            if (c.getComment().getReplies() == null) {
+            if (c.getChildren() == null) {
                 continue;
             }
-            assertEquals(c.getComment().getReplies().size(), 0);
+            assertEquals(c.getChildren().size(), 0);
         }
     }
 

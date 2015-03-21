@@ -62,8 +62,8 @@ public class CommentNode implements Iterable<CommentNode> {
     private static final int TOP_LEVEL_DEPTH = 1;
     private static final Lock morechildrenLock = new ReentrantLock();
 
-    private final String ownerId;
     private MoreChildren moreChildren;
+    private final String ownerId;
     private final Comment comment;
     private final CommentNode parent;
     private final List<CommentNode> children;
@@ -82,7 +82,7 @@ public class CommentNode implements Iterable<CommentNode> {
         // Validate only the public constructor because this value will be passed to the private constructor when the
         // children are instantiated.
         if (!JrawUtils.isFullname(ownerId))
-            throw new IllegalArgumentException("Expecting fullname. Input '" + ownerId + "' not suitable.");
+            throw new IllegalArgumentException("Expecting fullname. Input for ownerId ('" + ownerId + "') is not suitable.");
         this.ownerId = ownerId;
         // This CommentNode is actually representing the Submission, whose depth is 0
         this.depth = 0;
@@ -93,23 +93,37 @@ public class CommentNode implements Iterable<CommentNode> {
         this.children = createChildNodes(topLevelReplies);
     }
 
-    private CommentNode(String ownerId, CommentNode parent, Comment data, MoreChildren more, CommentSort commentSort, int depth) {
+    private CommentNode(String ownerId, CommentNode parent, Comment data, MoreChildren moreChildren, CommentSort commentSort, int depth) {
         this.ownerId = ownerId;
         this.depth = depth;
         this.parent = parent;
         this.comment = data;
-        this.moreChildren = more;
+        this.moreChildren = moreChildren;
         this.commentSort = commentSort;
-        this.children = createChildNodes(data.getReplies());
+        this.children = createChildNodes(data.getDataNode());
+    }
+
+    private List<CommentNode> createChildNodes(JsonNode dataNode) {
+        return createChildNodes(parseReplies(dataNode));
     }
 
     private List<CommentNode> createChildNodes(List<Comment> comments) {
         // Create a CommentNode for every Comment
         List<CommentNode> children = new LinkedList<>();
         for (Comment c : comments) {
-            children.add(new CommentNode(this.ownerId, this, c, c.getReplies().getMoreChildren(), commentSort, depth + 1));
+            children.add(new CommentNode(this.ownerId, this, c, parseReplies(c.getDataNode()).getMoreChildren(), commentSort, depth + 1));
         }
         return children;
+    }
+
+    private Listing<Comment> parseReplies(JsonNode commentDataNode) {
+        // If it has no replies, the value for the replies key will be an empty string or null
+        JsonNode replies = commentDataNode.get("replies");
+        if (replies.isNull() || (replies.isTextual() && replies.asText().isEmpty())) {
+            return new Listing<>(Comment.class);
+        } else {
+            return new Listing<>(commentDataNode.get("replies").get("data"), Comment.class);
+        }
     }
 
     /** Gets fullname of the submission to which this CommentNode belongs (ex: t3_92dd8). */
