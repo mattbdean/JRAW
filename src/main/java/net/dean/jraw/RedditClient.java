@@ -45,7 +45,7 @@ public class RedditClient extends RestClient {
     public static final String HOST_SPECIAL = "www.reddit.com";
     /** The amount of requests allowed per minute when using OAuth2 */
     public static final int REQUESTS_PER_MINUTE = 60;
-    /** The default amount of times a request will be retried if a 503 Service Unavailable is received. */
+    /** The default amount of times a request will be retried if a server-side error is encountered. */
     public static final int DEFAULT_RETRY_LIMIT = 5;
     /** The amount of trending subreddits that appear in each /r/trendingsubreddits post */
     private static final int NUM_TRENDING_SUBREDDITS = 5;
@@ -169,8 +169,8 @@ public class RedditClient extends RestClient {
             if (code == 403 && errorResponse.getHeaders().get("WWW-Authenticate") != null) {
                 // Invalid scope
                 throw new InvalidScopeException(errorResponse.getOrigin().getUrl());
-            } else if (code == 503) {
-                // 503 Service Unavailable, retry
+            } else if (code >= 500 && code < 600) {
+                // Server-side error, retry
                 if (retryCount++ > retryLimit) {
                     throw new IllegalStateException("Reached retry limit", e);
                 }
@@ -225,18 +225,20 @@ public class RedditClient extends RestClient {
         this.adjustRatelimit = flag;
     }
 
-    /** Gets the amount of times a request will be retried if a 503 Service Unavailable is received. */
+    /** Gets the amount of times a request will be retried if a server-side error is encountered. */
     public int getRetryLimit() {
         return retryLimit;
     }
 
     /**
-     * Sets the amount of times a request will be retried if a 503 Service Unavailable is received. A negative value is
-     * not accepted.
+     * Sets the amount of times a request will be retried if a server-side error is encountered. A negative value is not
+     * accepted.
      *
      * @see #DEFAULT_RETRY_LIMIT
      */
     public void setRetryLimit(int retryLimit) {
+        if (retryLimit < 0)
+            throw new IllegalArgumentException("Limit cannot be less than 0");
         this.retryLimit = retryLimit;
     }
 
