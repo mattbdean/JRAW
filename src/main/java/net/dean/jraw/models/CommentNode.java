@@ -16,7 +16,6 @@ import net.dean.jraw.models.meta.Model;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.locks.Lock;
@@ -109,7 +108,7 @@ public final class CommentNode implements Iterable<CommentNode> {
 
     private List<CommentNode> createChildNodes(List<Comment> comments) {
         // Create a CommentNode for every Comment
-        List<CommentNode> children = new LinkedList<>();
+        List<CommentNode> children = new ArrayList<>();
         for (Comment c : comments) {
             children.add(new CommentNode(this.ownerId, this, c, parseReplies(c.getDataNode()).getMoreChildren(), commentSort, depth + 1));
         }
