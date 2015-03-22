@@ -28,14 +28,14 @@ public enum Endpoints {
     OAUTH_GOLD_GIVE_USERNAME("POST /api/v1/gold/give/{username}", "creddits"),
 
     ///////// edit /////////
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#POST_api_live_%7Bthread%7D_delete_update">{@code POST /api/live/{thread}/delete_update}</a>" included in the "edit" scope */
-    LIVE_THREAD_DELETE_UPDATE("POST /api/live/{thread}/delete_update", "edit"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#POST_api_live_%7Bthread%7D_strike_update">{@code POST /api/live/{thread}/strike_update}</a>" included in the "edit" scope */
-    LIVE_THREAD_STRIKE_UPDATE("POST /api/live/{thread}/strike_update", "edit"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#POST_api_del">{@code POST /api/del}</a>" included in the "edit" scope */
     DEL("POST /api/del", "edit"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#POST_api_editusertext">{@code POST /api/editusertext}</a>" included in the "edit" scope */
     EDITUSERTEXT("POST /api/editusertext", "edit"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#POST_api_live_%7Bthread%7D_delete_update">{@code POST /api/live/{thread}/delete_update}</a>" included in the "edit" scope */
+    LIVE_THREAD_DELETE_UPDATE("POST /api/live/{thread}/delete_update", "edit"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#POST_api_live_%7Bthread%7D_strike_update">{@code POST /api/live/{thread}/strike_update}</a>" included in the "edit" scope */
+    LIVE_THREAD_STRIKE_UPDATE("POST /api/live/{thread}/strike_update", "edit"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#POST_api_sendreplies">{@code POST /api/sendreplies}</a>" included in the "edit" scope */
     SENDREPLIES("POST /api/sendreplies", "edit"),
 
@@ -80,8 +80,6 @@ public enum Endpoints {
     LIVE_THREAD_ACCEPT_CONTRIBUTOR_INVITE("POST /api/live/{thread}/accept_contributor_invite", "livemanage"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#POST_api_live_%7Bthread%7D_close_thread">{@code POST /api/live/{thread}/close_thread}</a>" included in the "livemanage" scope */
     LIVE_THREAD_CLOSE_THREAD("POST /api/live/{thread}/close_thread", "livemanage"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#POST_api_live_%7Bthread%7D_edit">{@code POST /api/live/{thread}/edit}</a>" included in the "livemanage" scope */
-    LIVE_THREAD_EDIT("POST /api/live/{thread}/edit", "livemanage"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#POST_api_live_%7Bthread%7D_invite_contributor">{@code POST /api/live/{thread}/invite_contributor}</a>" included in the "livemanage" scope */
     LIVE_THREAD_INVITE_CONTRIBUTOR("POST /api/live/{thread}/invite_contributor", "livemanage"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#POST_api_live_%7Bthread%7D_leave_contributor">{@code POST /api/live/{thread}/leave_contributor}</a>" included in the "livemanage" scope */
@@ -92,6 +90,8 @@ public enum Endpoints {
     LIVE_THREAD_RM_CONTRIBUTOR_INVITE("POST /api/live/{thread}/rm_contributor_invite", "livemanage"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#POST_api_live_%7Bthread%7D_set_contributor_permissions">{@code POST /api/live/{thread}/set_contributor_permissions}</a>" included in the "livemanage" scope */
     LIVE_THREAD_SET_CONTRIBUTOR_PERMISSIONS("POST /api/live/{thread}/set_contributor_permissions", "livemanage"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#POST_api_live_%7Bthread%7D_edit">{@code POST /api/live/{thread}/edit}</a>" included in the "livemanage" scope */
+    LIVE_THREAD_EDIT("POST /api/live/{thread}/edit", "livemanage"),
 
     ///////// modconfig /////////
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#POST_api_delete_sr_header">{@code POST /api/delete_sr_header}</a>" included in the "modconfig" scope */
@@ -220,10 +220,6 @@ public enum Endpoints {
     FILTER_FILTERPATH_GET("GET /api/filter/{filterpath}", "read"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_api_filter_%7Bfilterpath%7D_r_%7Bsrname%7D">{@code GET /api/filter/{filterpath}/r/{srname}}</a>" included in the "read" scope */
     FILTER_FILTERPATH_R_SRNAME_GET("GET /api/filter/{filterpath}/r/{srname}", "read"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_live_%7Bthread%7D_contributors.json">{@code GET /live/{thread}/contributors.json}</a>" included in the "read" scope */
-    LIVE_THREAD_CONTRIBUTORS("GET /live/{thread}/contributors.json", "read"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_live_%7Bthread%7D_discussions">{@code GET /live/{thread}/discussions}</a>" included in the "read" scope */
-    LIVE_THREAD_DISCUSSIONS("GET /live/{thread}/discussions", "read"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_sidebar">{@code GET /sidebar}</a>" included in the "read" scope */
     SIDEBAR("GET /sidebar", "read"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_sticky">{@code GET /sticky}</a>" included in the "read" scope */
@@ -294,6 +290,10 @@ public enum Endpoints {
     LIVE_THREAD("GET /live/{thread}", "read"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_live_%7Bthread%7D_about.json">{@code GET /live/{thread}/about.json}</a>" included in the "read" scope */
     LIVE_THREAD_ABOUT("GET /live/{thread}/about.json", "read"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_live_%7Bthread%7D_contributors">{@code GET /live/{thread}/contributors}</a>" included in the "read" scope */
+    LIVE_THREAD_CONTRIBUTORS("GET /live/{thread}/contributors", "read"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_live_%7Bthread%7D_discussions">{@code GET /live/{thread}/discussions}</a>" included in the "read" scope */
+    LIVE_THREAD_DISCUSSIONS("GET /live/{thread}/discussions", "read"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_new">{@code GET /new}</a>" included in the "read" scope */
     NEW("GET /new", "read"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_prefs_blocked">{@code GET /prefs/blocked}</a>" included in the "read" scope */
@@ -350,12 +350,12 @@ public enum Endpoints {
     UNSAVE("POST /api/unsave", "save"),
 
     ///////// submit /////////
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#POST_api_comment">{@code POST /api/comment}</a>" included in the "submit" scope */
+    COMMENT("POST /api/comment", "submit"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#POST_api_live_create">{@code POST /api/live/create}</a>" included in the "submit" scope */
     LIVE_CREATE("POST /api/live/create", "submit"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#POST_api_live_%7Bthread%7D_update">{@code POST /api/live/{thread}/update}</a>" included in the "submit" scope */
     LIVE_THREAD_UPDATE("POST /api/live/{thread}/update", "submit"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#POST_api_comment">{@code POST /api/comment}</a>" included in the "submit" scope */
-    COMMENT("POST /api/comment", "submit"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#POST_api_submit">{@code POST /api/submit}</a>" included in the "submit" scope */
     SUBMIT("POST /api/submit", "submit"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_api_submit_text.json">{@code GET /api/submit_text.json}</a>" included in the "submit" scope */

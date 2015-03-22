@@ -20,7 +20,6 @@ import net.dean.jraw.models.Award;
 import net.dean.jraw.models.Captcha;
 import net.dean.jraw.models.CommentSort;
 import net.dean.jraw.models.Listing;
-import net.dean.jraw.models.LiveThread;
 import net.dean.jraw.models.LoggedInAccount;
 import net.dean.jraw.models.Submission;
 import net.dean.jraw.models.Subreddit;
@@ -503,19 +502,6 @@ public class RedditClient extends RestClient {
         RestResponse response = execute(r);
 
         return response.getRaw();
-    }
-
-    /**
-     * Gets a live thread by ID
-     * @param id The thread's ID
-     * @return Information about a LiveThread with the given ID
-     * @throws NetworkException If the request was not successful
-     */
-    @EndpointImplementation(Endpoints.LIVE_THREAD_ABOUT)
-    public LiveThread getLiveThread(String id) throws NetworkException {
-        return execute(request()
-                .endpoint(Endpoints.LIVE_THREAD_ABOUT, id)
-                .build()).as(LiveThread.class);
     }
 
     /**

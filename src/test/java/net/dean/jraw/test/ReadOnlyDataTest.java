@@ -7,7 +7,6 @@ import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.RestResponse;
 import net.dean.jraw.models.CommentNode;
 import net.dean.jraw.models.Listing;
-import net.dean.jraw.models.LiveThread;
 import net.dean.jraw.models.Submission;
 import net.dean.jraw.models.Subreddit;
 import net.dean.jraw.models.Thing;
@@ -173,16 +172,6 @@ public class ReadOnlyDataTest extends RedditTest {
             for (String sub : trending) {
                 validateModel(reddit.getSubreddit(sub));
             }
-        } catch (NetworkException e) {
-            handle(e);
-        }
-    }
-
-    @Test
-    public void testLiveThread() {
-        try {
-            LiveThread t = reddit.getLiveThread("ts4r8m1g99ys");
-            validateModel(t);
         } catch (NetworkException e) {
             handle(e);
         }

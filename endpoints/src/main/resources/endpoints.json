@@ -156,7 +156,7 @@
     "GET /hot",
     "GET /live/{thread}",
     "GET /live/{thread}/about.json",
-    "GET /live/{thread}/contributors.json",
+    "GET /live/{thread}/contributors",
     "GET /live/{thread}/discussions",
     "GET /new",
     "GET /prefs/blocked",

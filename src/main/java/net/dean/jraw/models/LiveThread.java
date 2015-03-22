@@ -1,11 +1,13 @@
 package net.dean.jraw.models;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import net.dean.jraw.models.attr.Created;
 import net.dean.jraw.models.meta.JsonProperty;
 import net.dean.jraw.models.meta.Model;
-import com.fasterxml.jackson.databind.JsonNode;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Represents a live thread. See <a href="https://www.reddit.com/r/live/wiki/index">here</a> for more information.
@@ -80,5 +82,23 @@ public final class LiveThread extends RedditObject implements Created {
     @Override
     public Date getCreatedUtc() {
         return _getCreatedUtc();
+    }
+
+    @Model(kind = Model.Kind.NONE)
+    public static class Contributor extends Thing {
+
+        /** Instantiates a new Contributor */
+        public Contributor(JsonNode dataNode) {
+            super(dataNode);
+        }
+
+        @JsonProperty
+        public List<String> getPermissions() {
+            List<String> perms = new ArrayList<>();
+            for (JsonNode node : data.get("permissions")) {
+                perms.add(node.asText());
+            }
+            return perms;
+        }
     }
 }
