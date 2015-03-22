@@ -29,7 +29,7 @@ Before contributing, it is recommended that you have a decent knowledge of how t
 Some references:
  - [reddit/reddit's 'API' wiki page](https://github.com/reddit/reddit/wiki/API): Quick overview of the API and its rules
  - [reddit/reddit's 'JSON' wiki page](https://github.com/reddit/reddit/wiki/JSON): Shows the data structure of the objects returned by the API
- - And of course, don't forget the [official Reddit API documentation](https://www.reddit.com/dev/api)
+ - And of course, don't forget the [official Reddit API documentation](https://www.reddit.com/dev/api/oauth)
 
 ####Want to contribute? Follow these steps:
 
