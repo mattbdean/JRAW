@@ -47,7 +47,7 @@ public class LiveThreadManagerTest extends RedditTest {
     public void testPostStrikeDeleteUpdate() {
         try {
             manager.postUpdate(thread, "New update!");
-            LiveUpdate latestUpdate = manager.stream(thread.getId()).next().get(0);
+            LiveUpdate latestUpdate = manager.stream(thread).next().get(0);
             manager.strikeUpdate(thread, latestUpdate);
             manager.deleteUpdate(thread, latestUpdate);
         } catch (ApiException e) {
