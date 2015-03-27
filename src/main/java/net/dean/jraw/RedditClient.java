@@ -68,17 +68,7 @@ public class RedditClient extends RestClient {
      * @param userAgent The User-Agent header that will be sent with all the HTTP requests.
      */
     public RedditClient(UserAgent userAgent) {
-        this(userAgent, REQUESTS_PER_MINUTE);
-    }
-
-    /**
-     * Instantiates a new RedditClient and adds the given user agent to the default headers
-     *
-     * @param userAgent The User-Agent header that will be sent with all the HTTP requests.
-     * @param requestsPerMinute The upper bound on the amount of requests allowed in one minute
-     */
-    public RedditClient(UserAgent userAgent, int requestsPerMinute) {
-        this(userAgent, requestsPerMinute, new OkHttpAdapter());
+        this(userAgent, new OkHttpAdapter());
     }
 
     /**
@@ -88,18 +78,7 @@ public class RedditClient extends RestClient {
      * @param adapter How the client will send HTTP requests
      */
     public RedditClient(UserAgent userAgent, HttpAdapter adapter) {
-        this(userAgent, REQUESTS_PER_MINUTE, adapter);
-    }
-
-    /**
-     * Instantiates a new RedditClient and adds the given user agent to the default headers
-     *
-     * @param userAgent The User-Agent header that will be sent with all the HTTP requests.
-     * @param requestsPerMinute The upper bound on the amount of requests allowed in one minute
-     * @param adapter How the client will send HTTP requests
-     */
-    public RedditClient(UserAgent userAgent, int requestsPerMinute, HttpAdapter adapter) {
-        super(adapter, HOST, userAgent, requestsPerMinute);
+        super(adapter, HOST, userAgent, REQUESTS_PER_MINUTE);
         this.authMethod = AuthenticationMethod.NOT_YET;
         this.authHelper = new OAuthHelper(this);
         this.adjustRatelimit = true;
