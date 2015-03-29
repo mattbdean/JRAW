@@ -79,6 +79,43 @@ public class OAuthHelperTest {
         }
     }
 
+    @Test
+    public void testMobileAuthUrl() throws MalformedURLException {
+        OAuthHelper helper = reddit.getOAuthHelper();
+        HttpRequest expected = new HttpRequest.Builder()
+                .https(true)
+                .host(RedditClient.HOST_SPECIAL)
+                .path("/api/v1/authorize.compact")
+                .query(
+                        "client_id", "myClientId",
+                        "response_type", "code",
+                        "state", "untestable",
+                        "redirect_uri", "http://www.example.com",
+                        "duration", "permanent",
+                        "scope", "scope1 scope2"
+                ).build();
+        HttpRequest actual = HttpRequest.from("GET", helper.getAuthorizationUrl(
+                Credentials.webapp("myClientId", "", "http://www.example.com"), true, "scope1", "scope2"
+        ));
+
+        URL actualUrl = actual.getUrl();
+        URL expectedUrl = expected.getUrl();
+        assertEquals(actualUrl.getProtocol(), expectedUrl.getProtocol(), "Scheme was different");
+        assertEquals(actualUrl.getHost(), expectedUrl.getHost(), "Host was different");
+        assertEquals(actualUrl.getPath(), expectedUrl.getPath(), "Path was different");
+
+        Map<String, String> actualQuery = parseQuery(actual.getUrl().getQuery());
+        Map<String, String> expectedQuery = parseQuery(expected.getUrl().getQuery());
+
+        for (Map.Entry<String, String> pair : expectedQuery.entrySet()) {
+            if (pair.getKey().equals("state")) {
+                // State is random
+                continue;
+            }
+            assertEquals(pair.getValue(), actualQuery.get(pair.getKey()));
+        }
+    }
+
     @Test(expectedExceptions = InvalidScopeException.class)
     public void testInvalidScope() throws OAuthException {
         // This class really belongs in a different class but remains here because emulateBrowserAuth is also here

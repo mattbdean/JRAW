@@ -73,6 +73,40 @@ public class OAuthHelper {
         HttpRequest r = new HttpRequest.Builder()
                 .https(true)
                 .host(RedditClient.HOST_SPECIAL)
+                .path("/api/v1/authorize.compact")
+                .expected(MediaTypes.HTML.type())
+                .query(JrawUtils.mapOf(
+                        "client_id", creds.getClientId(),
+                        "response_type", "code",
+                        "state", state,
+                        "redirect_uri", creds.getRedirectUrl().toExternalForm(),
+                        "duration", permanent ? "permanent" : "temporary",
+                        "scope", JrawUtils.join(' ', scopes)
+                )).build();
+
+        this.authStatus = AuthStatus.WAITING_FOR_CHALLENGE;
+        return r.getUrl();
+    }
+
+    /**
+     * Generates a URL used to return a mobile friendly view that can be used to authorize a user using OAuth2 'installed' or 'web' type app.
+     *
+     * @param creds The app's credentials
+     * @param permanent Whether or not to request a refresh token which can be exchanged for an additional authorization
+     *                  token in the future.
+     * @param scopes OAuth scopes to be requested. A full list of scopes can be found
+     *               <a href="https://www.reddit.com/dev/api/oauth">here</a>.
+     * @return The URL clients are sent to in order to authorize themselves
+     */
+    public URL getAuthorizationUrlForMobile(Credentials creds, boolean permanent, String... scopes) {
+        if (secureRandom == null)
+            secureRandom = new SecureRandom();
+        // http://stackoverflow.com/a/41156/1275092
+        this.state = new BigInteger(130, secureRandom).toString(32);
+
+        HttpRequest r = new HttpRequest.Builder()
+                .https(true)
+                .host(RedditClient.HOST_SPECIAL)
                 .path("/api/v1/authorize")
                 .expected(MediaTypes.HTML.type())
                 .query(JrawUtils.mapOf(
