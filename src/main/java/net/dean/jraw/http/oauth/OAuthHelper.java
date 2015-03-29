@@ -73,7 +73,7 @@ public class OAuthHelper {
         HttpRequest r = new HttpRequest.Builder()
                 .https(true)
                 .host(RedditClient.HOST_SPECIAL)
-                .path("/api/v1/authorize.compact")
+                .path("/api/v1/authorize")
                 .expected(MediaTypes.HTML.type())
                 .query(JrawUtils.mapOf(
                         "client_id", creds.getClientId(),
@@ -107,7 +107,7 @@ public class OAuthHelper {
         HttpRequest r = new HttpRequest.Builder()
                 .https(true)
                 .host(RedditClient.HOST_SPECIAL)
-                .path("/api/v1/authorize")
+                .path("/api/v1/authorize.compact")
                 .expected(MediaTypes.HTML.type())
                 .query(JrawUtils.mapOf(
                         "client_id", creds.getClientId(),

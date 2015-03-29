@@ -94,7 +94,7 @@ public class OAuthHelperTest {
                         "duration", "permanent",
                         "scope", "scope1 scope2"
                 ).build();
-        HttpRequest actual = HttpRequest.from("GET", helper.getAuthorizationUrl(
+        HttpRequest actual = HttpRequest.from("GET", helper.getAuthorizationUrlForMobile(
                 Credentials.webapp("myClientId", "", "http://www.example.com"), true, "scope1", "scope2"
         ));
 
