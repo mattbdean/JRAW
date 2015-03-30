@@ -109,8 +109,11 @@ public class RedditClient extends RestClient {
     public void authenticate(OAuthData authData) throws NetworkException {
         if (authHelper.getAuthStatus() != OAuthHelper.AuthStatus.AUTHORIZED)
             throw new IllegalStateException("OAuthHelper says it is not authorized");
-        if (authData.getAuthenticationMethod() == null)
-            throw new NullPointerException("Authentication method cannot be null");
+        if (authData.getAuthenticationMethod() == null ||
+                authData.getScopes() == null ||
+                authData.getAccessToken() == null ||
+                authData.getExpirationDate() == null)
+            throw new NullPointerException("Missing important data from OAuth JSON: " + authData.getDataNode());
 
         this.authMethod = authData.getAuthenticationMethod();
         this.authData = authData;
