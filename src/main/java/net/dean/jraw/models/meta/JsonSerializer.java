@@ -18,5 +18,5 @@ public interface JsonSerializer<B extends JsonModel> {
      * @param <T> The type of object to return
      * @return A new JsonModel
      */
-    public <T extends B> T parse(JsonNode node, Class<T> clazz, Model.Kind kind);
+    <T extends B> T parse(JsonNode node, Class<T> clazz, Model.Kind kind);
 }

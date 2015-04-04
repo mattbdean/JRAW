@@ -13,12 +13,12 @@ public interface Created extends JsonAttribute {
      * @return Date created in local time
      */
     @JsonProperty
-    public Date getCreated();
+    Date getCreated();
 
     /**
      * Gets the date this model was created in UTC
      * @return Date created in UTC
      */
     @JsonProperty
-    public Date getCreatedUtc();
+    Date getCreatedUtc();
 }

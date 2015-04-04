@@ -55,18 +55,18 @@ public @interface Model {
      * The expected value of the "kind" JSON node. If the value is {@link Kind#ABSTRACT} or {@link Kind#NONE}, the
      * class annotated with this model will not be validated using {@link ModelManager#validate(JsonNode, Class)}.
      */
-    public Kind kind();
+    Kind kind();
 
     /** The class used to serialize instances of this model */
-    public Class<? extends JsonSerializer> serializer() default DefaultJsonSerializer.class;
+    Class<? extends JsonSerializer> serializer() default DefaultJsonSerializer.class;
 
     /** Whether or not to validate JsonNodes that are attempting to bind themselves to model */
-    public boolean validate() default true;
+    boolean validate() default true;
 
     /**
      * A list of possible values of "kind" nodes from the Reddit API
      */
-    public static enum Kind {
+    enum Kind {
         /** Represents an abstract type */
         ABSTRACT("__ABSTRACT__", null),
         NONE("__NONE__", null),
@@ -104,7 +104,7 @@ public @interface Model {
 
         private final String value;
         private final Class<? extends JsonModel> defaultClass;
-        private Kind(String value, Class<? extends JsonModel> defaultClass) {
+        Kind(String value, Class<? extends JsonModel> defaultClass) {
             this.value = value;
             this.defaultClass = defaultClass;
         }

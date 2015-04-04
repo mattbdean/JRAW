@@ -22,5 +22,5 @@ public @interface JsonProperty {
      * Whether the return value of this method is allowed to be null
      * @return If this method is allowed to return null
      */
-    public boolean nullable() default false;
+    boolean nullable() default false;
 }

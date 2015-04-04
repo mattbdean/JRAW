@@ -15,7 +15,7 @@ public interface Votable extends JsonAttribute {
      * @return The link's net score
      */
     @JsonProperty
-    public Integer getScore();
+    Integer getScore();
 
 
     /**
@@ -25,5 +25,5 @@ public interface Votable extends JsonAttribute {
      * @return The way in which the logged in user voted
      */
     @JsonProperty
-    public VoteDirection getVote();
+    VoteDirection getVote();
 }

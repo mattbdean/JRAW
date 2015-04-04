@@ -13,5 +13,5 @@ public interface Distinguishable extends JsonAttribute {
      * @return The role of the poster of this Thing
      */
     @JsonProperty
-    public DistinguishedStatus getDistinguishedStatus();
+    DistinguishedStatus getDistinguishedStatus();
 }

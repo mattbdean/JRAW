@@ -13,5 +13,5 @@ public interface Gildable extends JsonAttribute {
      * @return The number of times this comment has received Reddit Gold
      */
     @JsonProperty
-    public Integer getTimesGilded();
+    Integer getTimesGilded();
 }

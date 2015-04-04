@@ -16,7 +16,7 @@ public interface HttpClient extends NetworkAccessible {
      *
      * @return A new RestRequest Builder
      */
-    public HttpRequest.Builder request();
+    HttpRequest.Builder request();
 
     /**
      * Executes a HTTP request. HTTP Basic Authentication, rate limiting, request and response logging, and Content-Type
@@ -28,13 +28,13 @@ public interface HttpClient extends NetworkAccessible {
      *                               priority over NetworkException.
      * @throws NetworkException If the request returned had a failing status code (not 2XX).
      */
-    public RestResponse execute(HttpRequest request) throws NetworkException, InvalidScopeException;
+    RestResponse execute(HttpRequest request) throws NetworkException, InvalidScopeException;
 
     /**
      * Gets the HttpLogger that will log the HTTP requests and responses that this class sends and receives.
      * @return This RestClient's HttpLogger
      */
-    public HttpLogger getHttpLogger();
+    HttpLogger getHttpLogger();
 
     /**
      * Gets when this HttpClient is logging HTTP requests.
@@ -42,14 +42,14 @@ public interface HttpClient extends NetworkAccessible {
      * @return If requests are being logged
      * @see #getHttpLogger()
      */
-    public LoggingMode getLoggingMode();
+    LoggingMode getLoggingMode();
 
     /**
      * Sets when to log HTTP requests and responses.
      *
      * @see #getHttpLogger()
      */
-    public void setLoggingMode(LoggingMode mode);
+    void setLoggingMode(LoggingMode mode);
 
     /**
      * Sets whether or not {@link HttpRequest.Builder}s returned from {@link #request()} will be executed with HTTPS by
@@ -58,7 +58,7 @@ public interface HttpClient extends NetworkAccessible {
      * @param flag If HTTPS will be used by default
      * @see HttpRequest.Builder#https(boolean)
      */
-    public void setHttpsDefault(boolean flag);
+    void setHttpsDefault(boolean flag);
 
     /**
      * Checks to see if {@link HttpRequest.Builder}s returned from {@link #request()} will be executed with HTTPS. Note
@@ -66,14 +66,14 @@ public interface HttpClient extends NetworkAccessible {
      * @return If HTTPS will be used by default
      * @see HttpRequest.Builder#https(boolean)
      */
-    public boolean isHttpsDefault();
+    boolean isHttpsDefault();
 
     /**
      * Notifies the client to log every response received. You can access this data by using {@link #getHistory()}.
      * @param flag Whether or not to save the HTTP responses received
      * @see #getHistory()
      */
-    public void setSaveResponseHistory(boolean flag);
+    void setSaveResponseHistory(boolean flag);
 
     /**
      * Notifies the client to log every response received. You can access this data by using {@link #getHistory()}. This
@@ -82,18 +82,18 @@ public interface HttpClient extends NetworkAccessible {
      * @return Checks if this client is saving response history
      * @see #getHistory()
      */
-    public boolean isSavingResponseHistory();
+    boolean isSavingResponseHistory();
 
     /**
      * Gets a map of responses to Dates, in which the Date refers to the time that the response was received. Will be
      * empty unless saving response history was enabled changed using {@link #setSaveResponseHistory(boolean)}.
      * @return The response history
      */
-    public LinkedHashMap<RestResponse, Date> getHistory();
+    LinkedHashMap<RestResponse, Date> getHistory();
 
     /** Gets the default value of the User-Agent header */
-    public String getUserAgent();
+    String getUserAgent();
 
     /** Sets the default value of the User-Agent header */
-    public void setUserAgent(UserAgent userAgent);
+    void setUserAgent(UserAgent userAgent);
 }

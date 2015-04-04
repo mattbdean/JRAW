@@ -19,19 +19,19 @@ public interface HttpAdapter<T> {
      * @return A RestResponse from the resulting request
      * @throws IOException If an implementation-specific error occurred.
      */
-    public RestResponse execute(HttpRequest request) throws IOException;
+    RestResponse execute(HttpRequest request) throws IOException;
 
     /**
      * Gets the time in milliseconds the HTTP client will wait while trying to connect before timing out
      * @return Connection timeout in milliseconds
      */
-    public int getConnectTimeout();
+    int getConnectTimeout();
 
     /**
      * Sets the time in milliseconds the HTTP client will wait while trying to connect before timing out
      * @param timeout Length of timeout, or 0 for none
      */
-    public void setConnectTimeout(long timeout, TimeUnit unit);
+    void setConnectTimeout(long timeout, TimeUnit unit);
 
     /**
      * Gets the maximum amount of time in milliseconds the HTTP client will spend trying to read new connections.
@@ -39,7 +39,7 @@ public interface HttpAdapter<T> {
      *
      * @return Read timeout in milliseconds
      */
-    public int getReadTimeout();
+    int getReadTimeout();
 
     /**
      * Sets the maximum amount of time in milliseconds the HTTP client will spend trying to read new connections.
@@ -47,7 +47,7 @@ public interface HttpAdapter<T> {
      *
      * @param timeout Length of timeout, or 0 for none
      */
-    public void setReadTimeout(long timeout, TimeUnit unit);
+    void setReadTimeout(long timeout, TimeUnit unit);
 
     /**
      * Gets the maximum amount of time in milliseconds the HTTP client will spend trying to write to new connections.
@@ -55,7 +55,7 @@ public interface HttpAdapter<T> {
      *
      * @return Write timeout in milliseconds
      */
-    public int getWriteTimeout();
+    int getWriteTimeout();
 
     /**
      * Gets the maximum amount of time in milliseconds the HTTP client will spend trying to write to new connections.
@@ -63,36 +63,36 @@ public interface HttpAdapter<T> {
      *
      * @param timeout Length of timeout, or 0 for none
      */
-    public void setWriteTimeout(long timeout, TimeUnit unit);
+    void setWriteTimeout(long timeout, TimeUnit unit);
 
     /** Checks if this adapter will follow redirects (3xx status codes) */
-    public boolean isFollowingRedirects();
+    boolean isFollowingRedirects();
 
     /** Enables or disables following redirects */
-    public void setFollowRedirects(boolean flag);
+    void setFollowRedirects(boolean flag);
 
     /** Gets the effective HTTP proxy */
-    public Proxy getProxy();
+    Proxy getProxy();
 
     /** Sets a proxy for the HTTP client to send requests through */
-    public void setProxy(Proxy proxy);
+    void setProxy(Proxy proxy);
 
     /** Gets the CookieManager being used by the HTTP client */
-    public CookieManager getCookieManager();
+    CookieManager getCookieManager();
 
     /**
      * Sets the CookieManager for the HTTP client to use. If the HTTP library does not support setting a CookieHandler
      * but <em>does</em> use the Java default handler, then it is recommended to use
      * {@link CookieHandler#setDefault(CookieHandler)} in addition.
      */
-    public void setCookieManager(CookieManager manager);
+    void setCookieManager(CookieManager manager);
 
     /** Gets a not-null, mutable Map of the headers that will be sent with every new HTTP request. */
-    public Map<String, String> getDefaultHeaders();
+    Map<String, String> getDefaultHeaders();
 
     /**
      * Gets the object used to send HTTP requests for this adapter. For example, an HttpAdapter that utilizes OkHttp
      * will return an OkHttpClient.
      */
-    public T getNativeClient();
+    T getNativeClient();
 }
