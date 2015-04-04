@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Provides a concrete HttpAdapter implementation using Square's OkHttp
  */
-public final class OkHttpAdapter implements HttpAdapter {
+public final class OkHttpAdapter implements HttpAdapter<OkHttpClient> {
     private static final Protocol DEFAULT_PROTOCOL = Protocol.SPDY_3;
     private static final Protocol FALLBACK_PROTOCOL = Protocol.HTTP_1_1;
     private OkHttpClient http;
@@ -121,7 +121,7 @@ public final class OkHttpAdapter implements HttpAdapter {
         http.setProxy(proxy);
     }
 
-    @Override
+   @Override
     public CookieManager getCookieManager() {
         return cookieManager;
     }
@@ -135,6 +135,11 @@ public final class OkHttpAdapter implements HttpAdapter {
     @Override
     public Map<String, String> getDefaultHeaders() {
         return defaultHeaders;
+    }
+
+    @Override
+    public OkHttpClient getNativeClient() {
+        return http;
     }
 
     /** Mirrors a JRAW RequestBody to an OkHttp RequestBody */

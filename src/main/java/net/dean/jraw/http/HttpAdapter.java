@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * This interface provides a library-inspecific way of executing HTTP requests.
  */
-public interface HttpAdapter {
+public interface HttpAdapter<T> {
     /**
      * Executes an HTTP request. A fully functional HttpAdapter should support all features described by
      * {@link HttpRequest}. GET, POST, PATCH, PUT, and DELETE should all be supported, as well as HTTP Basic
@@ -89,4 +89,10 @@ public interface HttpAdapter {
 
     /** Gets a not-null, mutable Map of the headers that will be sent with every new HTTP request. */
     public Map<String, String> getDefaultHeaders();
+
+    /**
+     * Gets the object used to send HTTP requests for this adapter. For example, an HttpAdapter that utilizes OkHttp
+     * will return an OkHttpClient.
+     */
+    public T getNativeClient();
 }

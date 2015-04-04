@@ -77,7 +77,7 @@ public class RedditClient extends RestClient {
      * @param userAgent The User-Agent header that will be sent with all the HTTP requests.
      * @param adapter How the client will send HTTP requests
      */
-    public RedditClient(UserAgent userAgent, HttpAdapter adapter) {
+    public RedditClient(UserAgent userAgent, HttpAdapter<?> adapter) {
         super(adapter, HOST, userAgent, REQUESTS_PER_MINUTE);
         this.authMethod = AuthenticationMethod.NOT_YET;
         this.authHelper = new OAuthHelper(this);

@@ -113,7 +113,7 @@ public class HttpAdapterTest {
 
     @DataProvider
     public static Object[][] provideAdapters() {
-        HttpAdapter[] adapters = {new OkHttpAdapter()};
+        HttpAdapter<?>[] adapters = {new OkHttpAdapter()};
 
         // Create a two-dimensional array where the first layer is adapters.length and the second layer has the same
         // amount of arguments as the HttpAdapterTest constructor

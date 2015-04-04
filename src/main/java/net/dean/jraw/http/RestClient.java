@@ -5,16 +5,14 @@ import com.squareup.okhttp.Headers;
 import net.dean.jraw.JrawUtils;
 
 import java.io.IOException;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * This class provides a high-level API to send REST-oriented HTTP requests with.
  */
 public abstract class RestClient implements HttpClient {
     /** The HttpAdapter used to send HTTP requests */
-    protected final HttpAdapter httpAdapter;
+    protected final HttpAdapter<?> httpAdapter;
     private final String defaultHost;
     /** The CookieStore that will contain all the cookies saved by {@link #httpAdapter} */
     protected final HttpLogger logger;
