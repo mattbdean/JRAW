@@ -6,6 +6,7 @@ package net.dean.jraw.paginators;
 public enum TimePeriod {
     HOUR,
     DAY,
+    WEEK,
     MONTH,
     YEAR,
     ALL
