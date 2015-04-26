@@ -221,7 +221,7 @@ public final class CommentNode implements Iterable<CommentNode> {
      */
     public void loadFully(RedditClient reddit, int depthLimit, int requestLimit) throws NetworkException {
         int requests = 0;
-        if (depthLimit < -1 || depthLimit < -1)
+        if (depthLimit < -1 || requestLimit < -1)
             throw new IllegalArgumentException("Expecting a number greater than or equal to -1, got " +
                     (requestLimit < -1 ? requestLimit : depthLimit));
         // Load this node's comments first
