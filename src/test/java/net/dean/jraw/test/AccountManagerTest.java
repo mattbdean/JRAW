@@ -170,7 +170,7 @@ public class AccountManagerTest extends RedditTest {
     @Test(dependsOnMethods = "testReplySubmission")
     public void testDeleteComment() {
         try {
-            moderation.delete(newCommentId);
+            moderation.delete("t1_" + newCommentId);
 
             for (CommentNode c : reddit.getSubmission(SUBMISSION_ID).getComments().walkTree()) {
                 if (c.getComment().getId().equals(newCommentId)) {

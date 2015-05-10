@@ -58,18 +58,19 @@ public class ModerationManager extends AbstractManager {
 	}
 
 	/**
-	 * Deletes a comment or submission that you posted
-	 *
-	 * @param id The ID of the submission or comment to delete
-	 * @throws NetworkException If the request was not successful
-	 * @throws ApiException     If the API returned an error
-	 */
+     * Deletes a comment or submission that the authenticated user posted. Note that this call will never fail, even if
+     * the given fullname does not exist.
+     *
+     * @param fullname The fullname of the submission or comment to delete
+     * @throws NetworkException If the request was not successful
+     * @throws ApiException If the API returned an error
+     */
 	@EndpointImplementation(Endpoints.DEL)
-	public void delete(String id) throws NetworkException, ApiException {
+	public void delete(String fullname) throws NetworkException, ApiException {
 		genericPost(reddit.request()
 				.endpoint(Endpoints.DEL)
 				.post(JrawUtils.mapOf(
-						"id", id
+						"id", fullname
 				)).build());
 	}
 
