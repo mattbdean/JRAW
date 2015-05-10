@@ -105,6 +105,11 @@ public class SubmissionSearchPaginator extends Paginator<Submission> {
         return sorting;
     }
 
+    @Override
+    protected String getSortingString() {
+        return sorting.name().toLowerCase();
+    }
+
     /**
      * How the search results can be sorted
      */

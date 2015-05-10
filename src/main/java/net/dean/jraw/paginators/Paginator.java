@@ -84,8 +84,9 @@ public abstract class Paginator<T extends Thing> implements RedditIterable<T> {
         if (current != null && current.getAfter() != null)
             args.put("after", current.getAfter());
 
-        boolean sortingUsed = timePeriod != null;
-        if (sortingUsed && (sorting == Sorting.CONTROVERSIAL || sorting == Sorting.TOP)) {
+        String sorting = getSortingString();
+        boolean sortingUsed = sorting != null;
+        if (sortingUsed && timePeriod != null) {
             // Time period only applies to controversial and top listings
             args.put("t", timePeriod.name().toLowerCase());
         }
@@ -99,7 +100,8 @@ public abstract class Paginator<T extends Thing> implements RedditIterable<T> {
                 .path(path)
                 .query(args)
                 // Force a network response if sorting by new or explicitly declared
-                .cacheControl(forceNetwork || (sortingUsed && sorting == Sorting.NEW) ? CacheControl.FORCE_NETWORK : null)
+                .cacheControl(forceNetwork || (sortingUsed && sorting.toLowerCase().equals("new")) ?
+                        CacheControl.FORCE_NETWORK : null)
                 .build();
 
 
@@ -178,6 +180,11 @@ public abstract class Paginator<T extends Thing> implements RedditIterable<T> {
      */
     public Sorting getSorting() {
         return sorting;
+    }
+
+    protected String getSortingString() {
+        if (timePeriod == null || !(sorting == Sorting.CONTROVERSIAL || sorting == Sorting.TOP)) return null;
+        return sorting.name().toLowerCase();
     }
 
     /**
