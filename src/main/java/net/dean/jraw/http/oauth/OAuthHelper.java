@@ -86,14 +86,8 @@ public class OAuthHelper {
         // http://stackoverflow.com/a/41156/1275092
         this.state = new BigInteger(130, secureRandom).toString(32);
 
-        String urlPath;
-
-        if (useMobileSite){
-            urlPath = "/api/v1/authorize.compact";
-        }
-        else{
-            urlPath = "/api/v1/authorize";
-        }
+        String urlPath = "/api/v1/authorize";
+        if (useMobileSite) urlPath += ".compact";
 
         HttpRequest r = new HttpRequest.Builder()
                 .https(true)
