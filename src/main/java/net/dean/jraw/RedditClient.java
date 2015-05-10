@@ -476,7 +476,7 @@ public class RedditClient extends RestClient {
     @EndpointImplementation(Endpoints.STYLESHEET)
     public String getStylesheet(String subreddit) throws NetworkException {
         if (subreddit == null) throw new NullPointerException("subreddit cannot be null");
-        String path = subreddit + "/stylesheet";
+        String path = "/r/" + subreddit + "/stylesheet";
 
         HttpRequest r = request()
                 .path(path)

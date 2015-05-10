@@ -34,7 +34,7 @@ import static org.testng.Assert.*;
  */
 public class AccountManagerTest extends RedditTest {
     private static final String SUBMISSION_ID = "35giol";
-    private static final String COMMENT_ID = "clpgpjk";
+    private static final String COMMENT_ID = "cr47i9b";
     private String newSubmssionId;
     private String newCommentId;
 
