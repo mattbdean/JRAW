@@ -33,7 +33,7 @@ import static org.testng.Assert.*;
  * This class tests methods that require authentication, such as voting, saving, hiding, and posting.
  */
 public class AccountManagerTest extends RedditTest {
-    private static final String SUBMISSION_ID = "2kx1ly";
+    private static final String SUBMISSION_ID = "35giol";
     private static final String COMMENT_ID = "clpgpjk";
     private String newSubmssionId;
     private String newCommentId;

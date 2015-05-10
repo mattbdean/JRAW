@@ -468,14 +468,15 @@ public class RedditClient extends RestClient {
     }
 
     /**
-     * Gets the contents of the CSS file affiliated with a given subreddit (or the front page)
-     * @param subreddit The subreddit to use, or null for the front page.
+     * Gets the contents of the CSS file affiliated with a given subreddit
+     * @param subreddit The name of the subreddit whose stylesheet will be fetched. Must not be null.
      * @return The content of the raw CSS file
      * @throws NetworkException If the request was not successful or the Content-Type header was not {@code text/css}.
      */
     @EndpointImplementation(Endpoints.STYLESHEET)
     public String getStylesheet(String subreddit) throws NetworkException {
-        String path = JrawUtils.getSubredditPath(subreddit, "/stylesheet");
+        if (subreddit == null) throw new NullPointerException("subreddit cannot be null");
+        String path = subreddit + "/stylesheet";
 
         HttpRequest r = request()
                 .path(path)
