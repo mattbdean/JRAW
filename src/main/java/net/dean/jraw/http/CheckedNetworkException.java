@@ -11,12 +11,17 @@ public class CheckedNetworkException extends Exception {
     }
 
     public CheckedNetworkException(RestResponse response) {
-        super(String.format("Request returned non-successful status code: %s %s",
-                response.getStatusCode(),
-                response.getStatusMessage()));
+        super(getExceptionMessage(response));
+        this.response = response;
+    }
+
+    private static String getExceptionMessage(RestResponse response) {
         if (response == null)
             throw new NullPointerException("response cannot be null");
-        this.response = response;
+
+        return String.format("Request returned non-successful status code: %s %s",
+                response.getStatusCode(),
+                response.getStatusMessage());
     }
 
     public RestResponse getResponse() {

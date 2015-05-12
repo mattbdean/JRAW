@@ -14,12 +14,17 @@ public class NetworkException extends RuntimeException {
      * @param response The cause of this exception
      */
     public NetworkException(RestResponse response) {
-        super(String.format("Request returned non-successful status code: %s %s",
-                response.getStatusCode(),
-                response.getStatusMessage()));
+        super(getExceptionMessage(response));
+        this.response = response;
+    }
+
+    private static String getExceptionMessage(RestResponse response) {
         if (response == null)
             throw new NullPointerException("response cannot be null");
-        this.response = response;
+
+        return String.format("Request returned non-successful status code: %s %s",
+                response.getStatusCode(),
+                response.getStatusMessage());
     }
 
     public RestResponse getResponse() {
