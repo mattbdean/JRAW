@@ -4,11 +4,20 @@ import net.dean.jraw.EndpointImplementation;
 import net.dean.jraw.Endpoints;
 import net.dean.jraw.JrawUtils;
 import net.dean.jraw.RedditClient;
+import net.dean.jraw.http.SubmissionRequest;
 import net.dean.jraw.models.Listing;
 import net.dean.jraw.models.Submission;
 
 /**
  * This class is used to paginate through the front page or a subreddit with different time periods or sortings.
+ *
+ * <p>Please note that the Submissions that are returned by this Paginator will <em>always</em> null comments.
+ * The reason for this is that reddit does not include them in general pagination (which is what this Paginator does).
+ * Only when that Submission is queried directly does reddit give you that post's comments.
+ *
+ * <p>To query a Submission directly, use {@link RedditClient#getSubmission(String)}.
+ *
+ * @see RedditClient#getSubmission(SubmissionRequest)
  */
 public class SubredditPaginator extends Paginator<Submission> {
     private String subreddit;
