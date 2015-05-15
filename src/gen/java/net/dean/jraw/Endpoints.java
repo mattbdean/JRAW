@@ -312,6 +312,8 @@ public enum Endpoints {
     SEARCH("GET /search", "read"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_sort">{@code GET /sort}</a>" included in the "read" scope */
     SORT("GET /sort", "read"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_subreddits_default">{@code GET /subreddits/default}</a>" included in the "read" scope */
+    SUBREDDITS_DEFAULT("GET /subreddits/default", "read"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_subreddits_employee">{@code GET /subreddits/employee}</a>" included in the "read" scope */
     SUBREDDITS_EMPLOYEE("GET /subreddits/employee", "read"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_subreddits_gold">{@code GET /subreddits/gold}</a>" included in the "read" scope */
@@ -322,8 +324,8 @@ public enum Endpoints {
     SUBREDDITS_POPULAR("GET /subreddits/popular", "read"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_subreddits_search">{@code GET /subreddits/search}</a>" included in the "read" scope */
     SUBREDDITS_SEARCH("GET /subreddits/search", "read"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_subreddits_where">{@code GET /subreddits/where}</a>" included in the "read" scope */
-    SUBREDDITS_WHERE("GET /subreddits/where", "read"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_subreddits_%7Bwhere%7D">{@code GET /subreddits/{where}}</a>" included in the "read" scope */
+    SUBREDDITS_WHERE("GET /subreddits/{where}", "read"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_top">{@code GET /top}</a>" included in the "read" scope */
     TOP("GET /top", "read"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_user_%7Busername%7D_about.json">{@code GET /user/{username}/about.json}</a>" included in the "read" scope */

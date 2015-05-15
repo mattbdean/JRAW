@@ -15,7 +15,7 @@ public class SubredditStream extends GenericPaginator<Subreddit> {
      * Instantiates a new AllSubredditsPaginator
      *
      * @param creator The RedditClient that will be used to send HTTP requests
-     * @param where One of "popular", "new", "gold", or "employee."
+     * @param where One of "popular", "new", "gold", "default", or "employee."
      */
     public SubredditStream(RedditClient creator, String where) {
         super(creator, Subreddit.class, where);
@@ -27,6 +27,7 @@ public class SubredditStream extends GenericPaginator<Subreddit> {
             Endpoints.SUBREDDITS_NEW,
             Endpoints.SUBREDDITS_EMPLOYEE,
             Endpoints.SUBREDDITS_GOLD,
+            Endpoints.SUBREDDITS_DEFAULT,
             Endpoints.SUBREDDITS_WHERE
     })
     public Listing<Subreddit> next() {
