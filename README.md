@@ -12,7 +12,7 @@
  - Simple HTTP framework capable of wrapping most any HTTP library
  - Dynamic ratelimit adjustment
 
-See [Quickstart](https://github.com/thatJavaNerd/JRAW/wiki/Quickstart) to get you up and running. Javadoc can be found [here](https://thatjavanerd.github.io/JRAW/)
+See [Quickstart](https://github.com/thatJavaNerd/JRAW/wiki/Quickstart) to get you up and running. Javadoc can be found [here](https://thatjavanerd.github.io/JRAW#javadoc)
 
 ##Building
 
