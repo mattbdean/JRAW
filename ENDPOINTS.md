@@ -1,7 +1,7 @@
-<!--- Generated 2015-05-14 at 22:12:55 EDT. Use `gradle endpoints:update` to update. DO NOT MODIFY DIRECTLY -->
+<!--- Generated 2015-05-22 at 22:10:11 EDT. Use `gradle endpoints:update` to update. DO NOT MODIFY DIRECTLY -->
 #Endpoints
 
-This file contains a list of all the endpoints (regardless of if they have been implemented) that can be found at the [official Reddit API docs](https://www.reddit.com/dev/api). To update this file, run `./gradlew endpoints:update`.
+This file contains a list of all the endpoints (regardless of if they have been implemented) that can be found at the [official Reddit API docs](https://www.reddit.com/dev/api). To update this file, run `gradle endpoints:update`.
 
 So far **122** endpoints (out of 180 total) have been implemented.
 
@@ -45,13 +45,13 @@ Method|Endpoint|Implemented?
 Method|Endpoint|Implemented?
 :----:|--------|------------
 `GET`|[`/user/{username}/comments`](https://www.reddit.com/dev/api/oauth#GET_user_%7Busername%7D_comments)|[`UserContributionPaginator.next(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/paginators/UserContributionPaginator.html#next(boolean))
-`GET`|[`/user/{username}/disliked`](https://www.reddit.com/dev/api/oauth#GET_user_%7Busername%7D_disliked)|[`UserContributionPaginator.next(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/paginators/UserContributionPaginator.html#next(boolean))
+`GET`|[`/user/{username}/downvoted`](https://www.reddit.com/dev/api/oauth#GET_user_%7Busername%7D_downvoted)|[`UserContributionPaginator.next(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/paginators/UserContributionPaginator.html#next(boolean))
 `GET`|[`/user/{username}/gilded`](https://www.reddit.com/dev/api/oauth#GET_user_%7Busername%7D_gilded)|[`UserContributionPaginator.next(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/paginators/UserContributionPaginator.html#next(boolean))
 `GET`|[`/user/{username}/hidden`](https://www.reddit.com/dev/api/oauth#GET_user_%7Busername%7D_hidden)|[`UserContributionPaginator.next(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/paginators/UserContributionPaginator.html#next(boolean))
-`GET`|[`/user/{username}/liked`](https://www.reddit.com/dev/api/oauth#GET_user_%7Busername%7D_liked)|[`UserContributionPaginator.next(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/paginators/UserContributionPaginator.html#next(boolean))
 `GET`|[`/user/{username}/overview`](https://www.reddit.com/dev/api/oauth#GET_user_%7Busername%7D_overview)|[`UserContributionPaginator.next(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/paginators/UserContributionPaginator.html#next(boolean))
 `GET`|[`/user/{username}/saved`](https://www.reddit.com/dev/api/oauth#GET_user_%7Busername%7D_saved)|[`UserContributionPaginator.next(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/paginators/UserContributionPaginator.html#next(boolean))
 `GET`|[`/user/{username}/submitted`](https://www.reddit.com/dev/api/oauth#GET_user_%7Busername%7D_submitted)|[`UserContributionPaginator.next(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/paginators/UserContributionPaginator.html#next(boolean))
+`GET`|[`/user/{username}/upvoted`](https://www.reddit.com/dev/api/oauth#GET_user_%7Busername%7D_upvoted)|[`UserContributionPaginator.next(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/paginators/UserContributionPaginator.html#next(boolean))
 `GET`|[`/user/{username}/{where}`](https://www.reddit.com/dev/api/oauth#GET_user_%7Busername%7D_%7Bwhere%7D)|[`UserContributionPaginator.next(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/paginators/UserContributionPaginator.html#next(boolean))
 
 ##identity

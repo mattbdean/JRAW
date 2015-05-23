@@ -27,10 +27,10 @@
   ],
   "history": [
     "GET /user/{username}/comments",
-    "GET /user/{username}/disliked",
+    "GET /user/{username}/downvoted",
     "GET /user/{username}/gilded",
     "GET /user/{username}/hidden",
-    "GET /user/{username}/liked",
+    "GET /user/{username}/upvoted",
     "GET /user/{username}/overview",
     "GET /user/{username}/saved",
     "GET /user/{username}/submitted",

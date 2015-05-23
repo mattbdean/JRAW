@@ -50,20 +50,20 @@ public enum Endpoints {
     ///////// history /////////
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_user_%7Busername%7D_comments">{@code GET /user/{username}/comments}</a>" included in the "history" scope */
     USER_USERNAME_COMMENTS("GET /user/{username}/comments", "history"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_user_%7Busername%7D_disliked">{@code GET /user/{username}/disliked}</a>" included in the "history" scope */
-    USER_USERNAME_DISLIKED("GET /user/{username}/disliked", "history"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_user_%7Busername%7D_downvoted">{@code GET /user/{username}/downvoted}</a>" included in the "history" scope */
+    USER_USERNAME_DOWNVOTED("GET /user/{username}/downvoted", "history"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_user_%7Busername%7D_gilded">{@code GET /user/{username}/gilded}</a>" included in the "history" scope */
     USER_USERNAME_GILDED("GET /user/{username}/gilded", "history"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_user_%7Busername%7D_hidden">{@code GET /user/{username}/hidden}</a>" included in the "history" scope */
     USER_USERNAME_HIDDEN("GET /user/{username}/hidden", "history"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_user_%7Busername%7D_liked">{@code GET /user/{username}/liked}</a>" included in the "history" scope */
-    USER_USERNAME_LIKED("GET /user/{username}/liked", "history"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_user_%7Busername%7D_overview">{@code GET /user/{username}/overview}</a>" included in the "history" scope */
     USER_USERNAME_OVERVIEW("GET /user/{username}/overview", "history"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_user_%7Busername%7D_saved">{@code GET /user/{username}/saved}</a>" included in the "history" scope */
     USER_USERNAME_SAVED("GET /user/{username}/saved", "history"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_user_%7Busername%7D_submitted">{@code GET /user/{username}/submitted}</a>" included in the "history" scope */
     USER_USERNAME_SUBMITTED("GET /user/{username}/submitted", "history"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_user_%7Busername%7D_upvoted">{@code GET /user/{username}/upvoted}</a>" included in the "history" scope */
+    USER_USERNAME_UPVOTED("GET /user/{username}/upvoted", "history"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_user_%7Busername%7D_%7Bwhere%7D">{@code GET /user/{username}/{where}}</a>" included in the "history" scope */
     USER_USERNAME_WHERE("GET /user/{username}/{where}", "history"),
 

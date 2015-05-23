@@ -29,8 +29,8 @@ public class UserContributionPaginator extends GenericPaginator<Contribution> {
             Endpoints.USER_USERNAME_OVERVIEW,
             Endpoints.USER_USERNAME_SUBMITTED,
             Endpoints.USER_USERNAME_COMMENTS,
-            Endpoints.USER_USERNAME_LIKED,
-            Endpoints.USER_USERNAME_DISLIKED,
+            Endpoints.USER_USERNAME_UPVOTED,
+            Endpoints.USER_USERNAME_DOWNVOTED,
             Endpoints.USER_USERNAME_HIDDEN,
             Endpoints.USER_USERNAME_SAVED,
             Endpoints.USER_USERNAME_GILDED
