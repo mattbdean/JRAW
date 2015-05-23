@@ -36,7 +36,7 @@ public class HttpAdapterTest {
 
     @Test(dataProvider = "provideHttpMethods")
     public void testMethod(String method, RequestBody body) throws IOException, NetworkException {
-        // Send a request to http://httpbind.org/{method} using the given method. If something goes wrong, then httpbin
+        // Send a request to http://httpbin.org/{method} using the given method. If something goes wrong, then httpbin
         // will return a bad status code, else 200
         HttpRequest request = new HttpRequest.Builder()
                 .method(method.toUpperCase(), body)
