@@ -173,7 +173,7 @@ public abstract class Paginator<T extends Thing> implements RedditIterable<T> {
     }
 
     /**
-     * How the Reddit API will choose to return the listing. If the sorting is ${@link Sorting#TOP},
+     * How the reddit API will choose to return the listing. If the sorting is {@link Sorting#TOP},
      * then the time period will default to the last requested time period. If there was none, Reddit will use DAY.
      *
      * @return The current sorting
@@ -256,6 +256,10 @@ public abstract class Paginator<T extends Thing> implements RedditIterable<T> {
      */
     protected Listing<T> parseListing(RestResponse response) {
         return response.asListing(thingType);
+    }
+
+    public RedditClient getRedditClient() {
+        return reddit;
     }
 
     private final class ListingIterator implements Iterator<Listing<T>> {

@@ -40,4 +40,8 @@ public abstract class AbstractManager {
 
         return response;
     }
+
+    public RedditClient getRedditClient() {
+        return reddit;
+    }
 }

@@ -27,7 +27,7 @@ public class SubredditPaginator extends Paginator<Submission> {
      * @param creator The RedditClient that will be used to send HTTP requests
      */
     public SubredditPaginator(RedditClient creator) {
-        super(creator, Submission.class);
+        this(creator, null);
     }
     
     /**
@@ -59,10 +59,7 @@ public class SubredditPaginator extends Paginator<Submission> {
         return JrawUtils.getSubredditPath(subreddit, path);
     }
 
-    /**
-     * Gets the subreddit this Paginator is currently browsing
-     * @return The subreddit
-     */
+    /** Gets the subreddit this Paginator is currently browsing, or null for the front page. */
     public String getSubreddit() {
         return subreddit;
     }
