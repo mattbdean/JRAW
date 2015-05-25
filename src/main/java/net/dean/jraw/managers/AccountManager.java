@@ -556,5 +556,4 @@ public class AccountManager extends AbstractManager {
             return this;
         }
     }
-
 }

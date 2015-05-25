@@ -3,10 +3,11 @@ package net.dean.jraw.fluent;
 import net.dean.jraw.RedditClient;
 
 /**
- * <p>Provides the basis of the fluent API. Every Reference has three things in common:
+ * <p>Provides the basis of the fluent API. Every Reference has four things in common:
  *
  * <ol>
  *     <li>A Reference's constructor always has default (package-protected) visibility
+ *     <li>A concrete Reference is always immutable
  *     <li>A Reference is never meant to be constructed by users of the library; they will be instantiated by the
  *         library only inside of the {@code net.dean.jraw.fluent} package.
  *     <li>A Reference does the bare minimum amount of work to complete its task
