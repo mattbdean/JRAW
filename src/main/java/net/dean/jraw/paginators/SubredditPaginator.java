@@ -11,7 +11,7 @@ import net.dean.jraw.models.Submission;
 /**
  * This class is used to paginate through the front page or a subreddit with different time periods or sortings.
  *
- * <p>Please note that the Submissions that are returned by this Paginator will <em>always</em> null comments.
+ * <p>Please note that the Submissions that are returned by this Paginator will <em>always</em> have null comments.
  * The reason for this is that reddit does not include them in general pagination (which is what this Paginator does).
  * Only when that Submission is queried directly does reddit give you that post's comments.
  *
