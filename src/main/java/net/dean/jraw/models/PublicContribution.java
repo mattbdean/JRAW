@@ -77,4 +77,12 @@ public abstract class PublicContribution extends Contribution implements Disting
     public boolean isArchived() {
         return data("archived", Boolean.class);
     }
+
+    /**
+     * Gets removal reason for this contribution.
+     */
+    @JsonProperty(nullable = true)
+    public String getRemovalReason() {
+        return data("removal_reason");
+    }
 }
