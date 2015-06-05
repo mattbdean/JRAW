@@ -1,5 +1,6 @@
 package net.dean.jraw.test;
 
+import com.google.common.base.Optional;
 import net.dean.jraw.JrawUtils;
 import net.dean.jraw.http.HttpRequest;
 import net.dean.jraw.http.MediaTypes;
@@ -199,6 +200,29 @@ public class ReadOnlyDataTest extends RedditTest {
             List<String> omit = Arrays.asList("git");
             List<String> recommendations = reddit.getRecommendations(subs, omit);
             assertFalse(recommendations.isEmpty());
+        } catch (NetworkException e) {
+            handle(e);
+        }
+    }
+
+    @Test
+    public void testSubmissionRemovalReason() {
+        try {
+            Submission removedSubmission = reddit.getSubmission("35urvq");
+            assertEquals(removedSubmission.getRemovalReason(), "legal");
+        } catch (NetworkException e) {
+            handle(e);
+        }
+    }
+
+    @Test
+    public void testCommentRemovalReason() {
+        try {
+            CommentNode root = reddit.getSubmission("35urvq").getComments();
+            Optional<CommentNode> illegalComment = root.findChild("t1_cr7z8fp");
+
+            assertTrue(illegalComment.isPresent());
+            assertEquals(illegalComment.get().getComment().getRemovalReason(), "legal");
         } catch (NetworkException e) {
             handle(e);
         }
