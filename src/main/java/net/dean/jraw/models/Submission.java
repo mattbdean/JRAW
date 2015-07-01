@@ -257,6 +257,15 @@ public final class Submission extends PublicContribution {
         return data("stickied", Boolean.class);
     }
 
+    /**
+     * Gets the type of content reddit thinks the post will show the user if it is clicked on. For example, a link to
+     * Imgur would most likely have a post hint of {@link net.dean.jraw.models.Submission.PostHint#IMAGE IMAGE}.
+     */
+    @JsonProperty
+    public PostHint getPostHint() {
+        return PostHint.byJsonKey(data("post_hint"));
+    }
+
     /** Gets a URL on the redd.it domain. For example, <a href="http://redd.it/92dd8">http://redd.it/92dd8</a> */
     public String getShortURL() {
         return "http://redd.it/" + getId();
@@ -298,7 +307,7 @@ public final class Submission extends PublicContribution {
      * has created a thumbnail for specifically for that post. If {@code NONE} is returned, then there is no thumbnail
      * available.
      */
-    public static enum ThumbnailType {
+    public enum ThumbnailType {
         /** For when a post is marked as NSFW */
         NSFW,
         /** For when reddit couldn't create one */
@@ -309,5 +318,33 @@ public final class Submission extends PublicContribution {
         NONE,
         /** A custom thumbnail that can be accessed by calling {@link Submission#getThumbnail()} */
         URL
+    }
+
+    /**
+     * This enum is a list of the hints reddit can give about the type of content that lies at a certain URL. For
+     * example, a self post will have a PostHint of {@link #SELF}, while a submission with a link to Imgur might have a
+     * PostHint of {@link #IMAGE}.
+     */
+    public enum PostHint {
+        SELF("self"),
+        LINK("link"),
+        IMAGE("image"),
+        VIDEO("rich:video"),
+        UNKNOWN("");
+
+        private String jsonKey;
+        PostHint(String jsonKey) {
+            this.jsonKey = jsonKey;
+        }
+
+        public static PostHint byJsonKey(String postHint) {
+            for (PostHint p : values()) {
+                if (p.jsonKey.equals(postHint)) {
+                    return p;
+                }
+            }
+
+            return UNKNOWN;
+        }
     }
 }
