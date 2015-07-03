@@ -1,2 +1,2 @@
-include 'endpoints', 'testingUser'
+include 'endpoints'
 
