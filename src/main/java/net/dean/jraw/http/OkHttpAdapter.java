@@ -32,7 +32,11 @@ public final class OkHttpAdapter implements HttpAdapter<OkHttpClient> {
     }
 
     public OkHttpAdapter(Protocol protocol) {
-        this.http = new OkHttpClient();
+        this(new OkHttpClient(), protocol);
+    }
+
+    public OkHttpAdapter(OkHttpClient httpClient, Protocol protocol) {
+        this.http = httpClient;
         this.cookieManager = new CookieManager(null, CookiePolicy.ACCEPT_ALL);
         this.defaultHeaders = new HashMap<>();
 
