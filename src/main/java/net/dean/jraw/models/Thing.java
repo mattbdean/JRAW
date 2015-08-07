@@ -32,4 +32,26 @@ public abstract class Thing extends RedditObject {
     public String getFullName() {
         return data("name");
     }
+
+    @Override
+    public int hashCode() {
+        return getId().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object otherObject) {
+        if (this == otherObject) {
+            return true;
+        }
+
+        if (!(otherObject instanceof Thing)) {
+            return false;
+        }
+
+        // Now that we know that the object we are checking is a Thing, cast it as one.
+        Thing thing = (Thing) otherObject;
+
+        // Compare the ID String values and use that as the return value
+        return this.getId().equals(thing.getId());
+    }
 }
