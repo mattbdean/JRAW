@@ -54,7 +54,7 @@ public class OAuthData extends JsonModel {
      */
     @JsonProperty
     public String[] getScopes() {
-        return data("scope").split(",");
+        return data("scope").split(" ");
     }
 
     /**
