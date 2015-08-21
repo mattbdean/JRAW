@@ -452,7 +452,6 @@ public class AccountManagerTest extends RedditTest {
 
             // Brace yourself. This test exists purely for the sake of code coverage
             prefs.lang(original.getLanguage());
-            prefs.redditToolbarEnabled(original.isUsingToolbar());
             prefs.newWindow(original.isUsingNewWindow());
             prefs.thumbnailDisplayPreference(original.getThumbnailDisplayPreference());
             prefs.hideNsfwThumbnails(original.isHidingNsfwThumbs());

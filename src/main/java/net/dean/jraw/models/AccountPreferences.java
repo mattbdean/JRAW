@@ -18,12 +18,6 @@ public final class AccountPreferences extends JsonModel {
         return data("lang");
     }
 
-    /** Gets whether the user uses the Reddit toolbar to look at links on the website */
-    @JsonProperty(nullable = true)
-    public Boolean isUsingToolbar() {
-        return data("frame", Boolean.class);
-    }
-
     /** Gets whether links will open in a new tab (left click will function as a middle click) */
     @JsonProperty(nullable = true)
     public Boolean isUsingNewWindow() {

@@ -62,14 +62,6 @@ public class AccountPreferencesEditor {
         return this;
     }
 
-    /**
-     * Sets whether the user will use the Reddit toolbar to look at links on the website
-     */
-    public AccountPreferencesEditor redditToolbarEnabled(boolean flag) {
-        args.put("frame", flag);
-        return this;
-    }
-
     /** Sets whether links will open in a new tab (left click will function as a middle click) */
     public AccountPreferencesEditor newWindow(boolean flag) {
         args.put("newwindow", flag);
