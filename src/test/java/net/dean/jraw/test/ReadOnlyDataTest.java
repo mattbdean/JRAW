@@ -66,12 +66,7 @@ public class ReadOnlyDataTest extends RedditTest {
             assertFalse(comments.isEmpty());
 
             validateModel(comments);
-
-            RestResponse response = reddit.execute(HttpRequest.Builder.from("GET", new URL(submission.getShortURL()))
-                    .expected(MediaTypes.HTML.type())
-                    .build());
-            assertTrue(JrawUtils.isEqual(response.getType(), MediaTypes.HTML.type()));
-        } catch (NetworkException | MalformedURLException e) {
+        } catch (NetworkException e) {
             handle(e);
         }
     }
