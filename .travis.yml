@@ -21,3 +21,5 @@ env:
   - secure: KtdoQLj2zDTkysWyXVj+H5xY65dDo58+070SQM68Tg6EYiB2tx9EV1IOJ1UallaDWGCyPfZvM2eTXs0selM5+S9GzskWePsY1uhFv+tnbGMUMcwiioq+yIxpK3zq8LLodIuiI5wv/4QigC/hsXSlUzV7hDUXWkdHieYig44p2Vs=
 script: "./gradlew --console plain --stacktrace test"
 after_success: "./gradlew jacocoTestReport coveralls; ./upload_docs.sh"
+sudo: false
+
