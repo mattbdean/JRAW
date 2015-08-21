@@ -105,8 +105,8 @@ public class InboxManager extends AbstractManager {
     }
 
     /**
-     * Creates a new Paginator that will iterate through unread messages.
-     * @return
+     * Creates a new Paginator that will iterate through unread messages. Equivalent to
+     * {@code read("unread")}.
      */
     public Paginator<Message> read() {
         return read("unread");
