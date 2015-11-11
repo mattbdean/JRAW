@@ -94,7 +94,27 @@ public class ModerationManager extends AbstractManager {
                         "state", sticky
                 )).build());
     }
+    @EndpointImplementation(Endpoints.APPROVE)
+    public void approve(Submission s) throws NetworkException, ApiException {
+        genericPost(reddit.request()
+                .endpoint(Endpoints.APPROVE)
+                .post(JrawUtils.mapOf(
+                        "api_type", "json",
+                        "id", s.getFullName()
+                )).build());
+    }
 
+    @EndpointImplementation(Endpoints.REMOVE)
+    public void remove(Submission s, boolean spam) throws NetworkException, ApiException {
+        genericPost(reddit.request()
+                .endpoint(Endpoints.REMOVE)
+                .post(JrawUtils.mapOf(
+                        "api_type", "json",
+                        "id", s.getFullName(),
+                        "spam", spam
+
+                )).build());
+    }
     /**
      * Sets the flair for the currently authenticated user
      * @param subreddit The subreddit to set the flair on

@@ -59,12 +59,16 @@ task sourcesJar(type: Jar, dependsOn: classes) {
     from sourceSets.main.allSource
 }
 
+<<<<<<< 21d521fdd27bf1c3cc45380daf6937d3e055f3e1
 task renamePom(dependsOn: 'generatePomFileForMavenPublication') << {
     println(file('build/publications/maven/pom-default.xml'))
     file('build/publications/maven/pom-default.xml').renameTo("build/publications/maven/JRAW-${version}.pom")
 }
 
 task release(type: Jar, dependsOn: ['fatJar', 'javadocJar', 'sourcesJar', 'renamePom']) {
+=======
+task release(type: Jar, dependsOn: ['fatJar', 'sourcesJar']) {
+>>>>>>> First
     from sourceSets.main.output
     destinationDir = releaseDest
 }
@@ -110,9 +114,12 @@ publishing {
     }
 }
 
+<<<<<<< 21d521fdd27bf1c3cc45380daf6937d3e055f3e1
 defaultTasks "test"
 
 task wrapper(type: Wrapper) {
     gradleVersion = '2.10'
     distributionUrl = "https://services.gradle.org/distributions/gradle-$gradleVersion-all.zip"
 }
+=======
+>>>>>>> First
