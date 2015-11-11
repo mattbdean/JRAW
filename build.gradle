@@ -56,7 +56,7 @@ task sourcesJar(type: Jar, dependsOn: classes) {
     from sourceSets.main.allSource
 }
 
-task release(type: Jar, dependsOn: ['fatJar', 'javadocJar', 'sourcesJar']) {
+task release(type: Jar, dependsOn: ['fatJar', 'sourcesJar']) {
     from sourceSets.main.output
     destinationDir = releaseDest
 }
@@ -102,4 +102,3 @@ publishing {
     }
 }
 
-defaultTasks "test"
