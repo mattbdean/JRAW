@@ -33,8 +33,8 @@ import static org.testng.Assert.*;
  * This class tests methods that require authentication, such as voting, saving, hiding, and posting.
  */
 public class AccountManagerTest extends RedditTest {
-    private static final String SUBMISSION_ID = "35giol";
-    private static final String COMMENT_ID = "cr47i9b";
+    private static final String SUBMISSION_ID = "3tqv5r";
+    private static final String COMMENT_ID = "cx8ev9f";
     private String newSubmssionId;
     private String newCommentId;
 
@@ -212,7 +212,7 @@ public class AccountManagerTest extends RedditTest {
     @Test
     public void testVote() {
         try {
-            String submissionId = "28d6vv";
+            String submissionId = "3tox6a";
             Submission submission = reddit.getSubmission(submissionId);
 
             // Figure out a new vote direction: up if there is no vote, no vote if upvoted
@@ -230,7 +230,7 @@ public class AccountManagerTest extends RedditTest {
     @Test
     public void testSaveSubmission() {
         try {
-            Submission submission = reddit.getSubmission("28d6vv");
+            Submission submission = reddit.getSubmission("3tox6a");
             account.save(submission);
 
             UserContributionPaginator paginator = getPaginator("saved");
@@ -253,7 +253,7 @@ public class AccountManagerTest extends RedditTest {
     @Test(dependsOnMethods = "testSaveSubmission")
     public void testUnsaveSubmission() {
         try {
-            Submission submission = reddit.getSubmission("28d6vv");
+            Submission submission = reddit.getSubmission("3tox6a");
             account.unsave(submission);
 
             UserContributionPaginator paginator = getPaginator("saved");
@@ -273,7 +273,7 @@ public class AccountManagerTest extends RedditTest {
     @Test
     public void testHideSubmission() {
         try {
-            Submission submission = reddit.getSubmission("28d6vv");
+            Submission submission = reddit.getSubmission("3tox6a");
             account.hide(submission, true);
 
             UserContributionPaginator paginator = getPaginator("hidden");
@@ -295,7 +295,7 @@ public class AccountManagerTest extends RedditTest {
     @Test(dependsOnMethods = "testHideSubmission")
     public void testUnhideSubmission() {
         try {
-            Submission submission = reddit.getSubmission("28d6vv");
+            Submission submission = reddit.getSubmission("3tox6a");
             account.hide(submission, false);
 
             UserContributionPaginator paginator = getPaginator("hidden");
