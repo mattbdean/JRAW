@@ -209,7 +209,11 @@ public class AccountManager extends AbstractManager {
      * @throws ApiException If the API returned an error
      */
     @EndpointImplementation(Endpoints.EDITUSERTEXT)
+<<<<<<< b5c7e2088c616489ec36ee5d86586cb4c13e9e65
     public <T extends PublicContribution> void updateContribution(T contribution, String text) throws NetworkException, ApiException {
+=======
+    public <T extends Contribution> void updateSelfpost(T submission, String text) throws NetworkException, ApiException {
+>>>>>>> Lots of small changes, didnt really keep track of them
         genericPost(reddit.request().endpoint(Endpoints.EDITUSERTEXT)
                 .post(JrawUtils.mapOf(
                         "api_type", "json",
