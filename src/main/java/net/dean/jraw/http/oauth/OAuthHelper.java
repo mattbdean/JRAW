@@ -158,7 +158,12 @@ public class OAuthHelper {
                     .build());
             this.authStatus = AuthStatus.AUTHORIZED;
             OAuthData data = new OAuthData(creds.getAuthenticationMethod(), response.getJson());
-            this.refreshToken = data.getRefreshToken();
+
+            // Only overwrite the refresh token if none has previously been set. Since OAuthData objects that were requested
+            // using a refresh token do not contain a refresh token, refreshToken would have been set to null and
+            // the client would not have been able to reauthorize itself
+            if (refreshToken == null && data.getRefreshToken() != null)
+                this.refreshToken = data.getRefreshToken();
             return data;
         } catch (NetworkException e) {
             if (e.getResponse().getStatusCode() == 401) {
