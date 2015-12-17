@@ -127,7 +127,7 @@ public class AccountManager extends AbstractManager {
      * @throws NetworkException If the request was not successful
      * @throws ApiException If the API returned an error
      */
-    public void save(Submission s) throws NetworkException, ApiException {
+    public void save(PublicContribution s) throws NetworkException, ApiException {
         setSaved(s, true);
     }
 
@@ -137,7 +137,7 @@ public class AccountManager extends AbstractManager {
      * @throws NetworkException If the request was not successful
      * @throws ApiException If the API returned an error
      */
-    public void unsave(Submission s) throws NetworkException, ApiException {
+    public void unsave(PublicContribution s) throws NetworkException, ApiException {
         setSaved(s, false);
     }
 
@@ -150,7 +150,7 @@ public class AccountManager extends AbstractManager {
      * @throws ApiException If the API returned an error
      */
     @EndpointImplementation({Endpoints.SAVE, Endpoints.UNSAVE})
-    private void setSaved(Submission s, boolean save) throws NetworkException, ApiException {
+    private void setSaved(PublicContribution s, boolean save) throws NetworkException, ApiException {
         // Send it to "/api/save" if save == true, "/api/unsave" if save == false
         genericPost(reddit.request()
                 .endpoint(save ? Endpoints.SAVE : Endpoints.UNSAVE)
