@@ -230,8 +230,15 @@ public class OAuthHelperTest {
             loginForm.getInputByName("passwd").setValueAttribute(userPassCreds.getPassword());
 
             // Submit the form
-            HtmlPage authorizePage = getFirstChild(loginForm, "button", "type", "submit").click();
-
+            HtmlPage authorizePage = null;
+            try {
+                authorizePage = getFirstChild(loginForm, "button", "type", "submit").click();
+            } catch (FailingHttpStatusCodeException e) {
+                if (e.getStatusCode() == 503) {
+                    throw new SkipException("reddit servers are all busy, skipping");
+                }
+                Assert.fail("Failing HTTP status code", e);
+            }
             // Click the 'Allow' button on the authorize page
             HtmlInput allowInput = getFirstChild(authorizePage.getBody(), "input", "name", "authorize");
             HtmlPage finalPage = allowInput.click();
