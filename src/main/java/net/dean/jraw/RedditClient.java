@@ -1,6 +1,7 @@
 package net.dean.jraw;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import net.dean.jraw.auth.AuthenticationListener;
 import net.dean.jraw.http.AuthenticationMethod;
 import net.dean.jraw.http.HttpAdapter;
 import net.dean.jraw.http.HttpRequest;
@@ -59,6 +60,7 @@ public class RedditClient extends RestClient {
 
     /** The method of authentication currently being used */
     private AuthenticationMethod authMethod;
+    private AuthenticationListener authListener;
     private OAuthData authData;
     private OAuthHelper authHelper;
 
@@ -122,6 +124,8 @@ public class RedditClient extends RestClient {
         if (!authMethod.isUserless() && isAuthorizedFor(Endpoints.OAUTH_ME)) {
             this.authenticatedUser = me().getFullName();
         }
+        if (authListener != null)
+            authListener.onAuthenticated(authData);
     }
 
     /**
@@ -134,6 +138,14 @@ public class RedditClient extends RestClient {
         authData = null;
         httpAdapter.getDefaultHeaders().remove(HEADER_AUTHORIZATION);
         authMethod = AuthenticationMethod.NOT_YET;
+    }
+
+    /**
+     * Sets the AuthenticationListener. This listener will be invoked at the end of a successful call to
+     * {@link #authenticate(OAuthData)}.
+     */
+    public void setAuthenticationListener(AuthenticationListener listener) {
+        this.authListener = listener;
     }
 
     @Override
