@@ -1,5 +1,6 @@
 package net.dean.jraw.test;
 
+import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlForm;
@@ -15,6 +16,8 @@ import net.dean.jraw.http.oauth.OAuthData;
 import net.dean.jraw.http.oauth.OAuthException;
 import net.dean.jraw.http.oauth.OAuthHelper;
 import net.dean.jraw.paginators.SubredditPaginator;
+import org.testng.Assert;
+import org.testng.SkipException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -209,7 +212,15 @@ public class OAuthHelperTest {
             assertEquals(reddit.getOAuthHelper().getAuthStatus(), OAuthHelper.AuthStatus.WAITING_FOR_CHALLENGE);
 
             // Reddit prompts us to log in before we authorize the app
-            HtmlPage loginPage = client.getPage(url);
+            HtmlPage loginPage = null;
+            try {
+                loginPage = client.getPage(url);
+            } catch (FailingHttpStatusCodeException e) {
+                if (e.getStatusCode() == 503) {
+                    throw new SkipException("reddit servers are all busy, skipping");
+                }
+                Assert.fail("Failing HTTP status code", e);
+            }
             HtmlForm loginForm = getFirstChild(loginPage.getBody(), "form", "id", "login-form");
 
             // Change the value of the username and password forms
