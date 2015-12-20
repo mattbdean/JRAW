@@ -37,7 +37,10 @@ public final class AuthenticationManager {
 
     private AuthenticationManager() {}
 
-    /** Initializes the AuthenticationManager. Must be called before this class can be used */
+    /**
+     * Initializes the AuthenticationManager. Must be called before this class can be used. Sets the RedditClient's
+     * {@link AuthenticationListener}.
+     */
     public void init(RedditClient reddit, RefreshTokenHandler tokenHandler) {
         this.tokenHandler = tokenHandler;
         this.reddit = reddit;
