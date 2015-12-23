@@ -104,11 +104,6 @@ public final class MultiReddit extends Thing implements Created {
         return _getCreated();
     }
 
-    @Override
-    public Date getCreatedUtc() {
-        return _getCreatedUtc();
-    }
-
     public static enum WeightingScheme {
         CLASSIC,
         FRESH;

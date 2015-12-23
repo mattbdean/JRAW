@@ -277,11 +277,6 @@ public final class Submission extends PublicContribution {
     }
 
     @Override
-    public Date getCreatedUtc() {
-        return _getCreatedUtc();
-    }
-
-    @Override
     public DistinguishedStatus getDistinguishedStatus() {
         return _getDistinguishedStatus();
     }

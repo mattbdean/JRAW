@@ -79,11 +79,6 @@ public final class LiveThread extends RedditObject implements Created {
         return _getCreated();
     }
 
-    @Override
-    public Date getCreatedUtc() {
-        return _getCreatedUtc();
-    }
-
     @Model(kind = Model.Kind.NONE)
     public static class Contributor extends Thing {
 

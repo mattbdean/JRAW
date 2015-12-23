@@ -88,12 +88,6 @@ public final class ModAction extends Thing implements Created {
 
     @Override
     public Date getCreated() {
-        // No "created" field, use "created_utc" instead
-        return getCreatedUtc();
-    }
-
-    @Override
-    public Date getCreatedUtc() {
-        return _getCreatedUtc();
+        return _getCreated();
     }
 }

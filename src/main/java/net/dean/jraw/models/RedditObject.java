@@ -26,15 +26,6 @@ public abstract class RedditObject extends JsonModel {
      */
     protected final Date _getCreated() {
         // created in seconds, Date constructor wants milliseconds
-        return new Date(getDataNode().get("created").longValue() * 1000);
-    }
-
-    /**
-     * Gets the date this object was created in UTC
-     * @return Date created in UTC
-     */
-    protected final Date _getCreatedUtc() {
-        // created in seconds, Date constructor wants milliseconds
         return new Date(getDataNode().get("created_utc").longValue() * 1000);
     }
 

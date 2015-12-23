@@ -54,11 +54,6 @@ public final class LiveUpdate extends Thing implements Created {
         return _getCreated();
     }
 
-    @Override
-    public Date getCreatedUtc() {
-        return _getCreatedUtc();
-    }
-
     /** Represents embedded data in a LiveUpdate */
     public static class Embed extends JsonModel {
         public Embed(JsonNode dataNode) {

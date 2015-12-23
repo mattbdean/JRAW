@@ -49,7 +49,7 @@ public class PaginationTest extends RedditTest {
             Listing<Submission> submissions = frontPage.next();
 
             for (Submission post : submissions) {
-                long epochPosted = post.getCreatedUtc().getTime();
+                long epochPosted = post.getCreated().getTime();
                 long epochNow = new Date().getTime();
 
                 // Make sure the submissions have been posted in the past hour

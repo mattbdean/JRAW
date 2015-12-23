@@ -55,9 +55,4 @@ public class Account extends Thing implements Created {
     public Date getCreated() {
         return _getCreated();
     }
-
-    @Override
-    public Date getCreatedUtc() {
-        return _getCreatedUtc();
-    }
 }
