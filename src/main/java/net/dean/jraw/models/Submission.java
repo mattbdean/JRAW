@@ -1,6 +1,7 @@
 package net.dean.jraw.models;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import net.dean.jraw.JrawUtils;
 import net.dean.jraw.models.meta.JsonProperty;
 import net.dean.jraw.models.meta.Model;
 import net.dean.jraw.models.meta.SubmissionSerializer;
@@ -268,7 +269,7 @@ public final class Submission extends PublicContribution {
 
     /** Gets a URL on the redd.it domain. For example, <a href="http://redd.it/92dd8">http://redd.it/92dd8</a> */
     public String getShortURL() {
-        return "http://redd.it/" + getId();
+        return "http://redd.it/" + JrawUtils.urlEncode(getId());
     }
 
     @Override
