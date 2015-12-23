@@ -27,9 +27,9 @@ import java.lang.annotation.Target;
 
 /**
  * This annotation is used to verify that the correct data is being mapped to the correct object. This is accomplished
- * by looking at the JSON's {@code kind} node. For each root node of a JSON model, there are two nodes: "data" and
- * "kind". The data node stores properties related to the actual content of the model, while the kind node establishes
- * the model's type. For example, an Account model would look like this:
+ * by examining the JSON's {@code kind} node. In each JSON model there exists two top level nodes: "data" and "kind".
+ * The data node stores properties related to the actual content of the model, while the kind node establishes the
+ * model's type. For example, an Account model would look like this:
  *
  * <pre>
  * {@code
@@ -63,9 +63,7 @@ public @interface Model {
     /** Whether or not to validate JsonNodes that are attempting to bind themselves to model */
     boolean validate() default true;
 
-    /**
-     * A list of possible values of "kind" nodes from the Reddit API
-     */
+    /** A list of possible values of "kind" nodes from the reddit API */
     enum Kind {
         /** Represents an abstract type */
         ABSTRACT("__ABSTRACT__", null),

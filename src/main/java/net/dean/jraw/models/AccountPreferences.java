@@ -4,7 +4,8 @@ import net.dean.jraw.models.meta.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
 
 /**
- * This class represents an account's preferences.
+ * This class represents an account's preferences. Account preferences on the website can be found at
+ * <a href="https://www.reddit.com/prefs">/prefs</a>
  */
 public final class AccountPreferences extends JsonModel {
     /** Instantiates a new AccountPreferences */
@@ -12,7 +13,7 @@ public final class AccountPreferences extends JsonModel {
         super(dataNode);
     }
 
-    /** Gets the language that Reddit will use in its interface. For example, "en", "en-us", "fr" */
+    /** Gets the language that reddit will use in its interface. For example, "en", "en-us", "fr" */
     @JsonProperty(nullable = true)
     public String getLanguage() {
         return data("lang");

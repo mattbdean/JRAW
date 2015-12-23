@@ -1,11 +1,14 @@
 package net.dean.jraw.models;
 
+import net.dean.jraw.RedditClient;
 import net.dean.jraw.models.meta.JsonProperty;
 import net.dean.jraw.models.meta.Model;
 import com.fasterxml.jackson.databind.JsonNode;
 
 /**
- * Represents an award (trophy) displayed in a user's trophy case on the website.
+ * Represents an award (trophy) displayed in a user's trophy case
+ *
+ * @see RedditClient#getTrophies()
  */
 @Model(kind = Model.Kind.AWARD)
 public final class Award extends Thing {

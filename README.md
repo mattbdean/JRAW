@@ -1,6 +1,6 @@
 #Java Reddit API Wrapper
 
-[![travis-ci build status](https://img.shields.io/travis/thatJavaNerd/JRAW.svg)](https://travis-ci.org/thatJavaNerd/JRAW) [![Coverage Status](https://img.shields.io/coveralls/thatJavaNerd/JRAW.svg)](https://coveralls.io/r/thatJavaNerd/JRAW) [![Reddit API coverage](https://img.shields.io/badge/api--coverage-68%-blue.svg)](https://github.com/thatJavaNerd/JRAW/blob/master/ENDPOINTS.md) [![Latest release](https://img.shields.io/github/release/thatJavaNerd/JRAW.svg)](https://bintray.com/thatjavanerd/maven/JRAW/_latestVersion)
+[![travis-ci build status](https://img.shields.io/travis/thatJavaNerd/JRAW.svg)](https://travis-ci.org/thatJavaNerd/JRAW) [![Coverage Status](https://img.shields.io/coveralls/thatJavaNerd/JRAW.svg)](https://coveralls.io/r/thatJavaNerd/JRAW) [![reddit API coverage](https://img.shields.io/badge/api--coverage-68%-blue.svg)](https://github.com/thatJavaNerd/JRAW/blob/master/ENDPOINTS.md) [![Latest release](https://img.shields.io/github/release/thatJavaNerd/JRAW.svg)](https://bintray.com/thatjavanerd/maven/JRAW/_latestVersion)
 
 >JRAW is currently in an experimental stage, and therefore subject to breaking API changes that could occur at any time.
 
@@ -26,12 +26,12 @@ JRAW uses Gradle as its build system. If you come from a Maven background, see G
 
 ##Contributing
 
-Before contributing, it is recommended that you have a decent knowledge of how the Reddit API works.
+Before contributing, it is recommended that you have a decent knowledge of how the reddit API works.
 
 Some references:
  - [reddit/reddit's 'API' wiki page](https://github.com/reddit/reddit/wiki/API): Quick overview of the API and its rules
  - [reddit/reddit's 'JSON' wiki page](https://github.com/reddit/reddit/wiki/JSON): Shows the data structure of the objects returned by the API
- - And of course, don't forget the [official Reddit API documentation](https://www.reddit.com/dev/api/oauth)
+ - And of course, don't forget the [official reddit API documentation](https://www.reddit.com/dev/api/oauth)
 
 ####Want to contribute? Follow these steps:
 

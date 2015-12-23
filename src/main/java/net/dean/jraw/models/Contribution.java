@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import java.util.Date;
 
 /**
- * This class represents a contribution to the Reddit community (submissions, comments, messages, etc.).
+ * This class represents a contribution to the reddit community (submissions, comments, messages, etc.).
  */
 @Model(kind = Model.Kind.ABSTRACT, serializer = ContributionSerializer.class)
 public abstract class Contribution extends Thing implements Created {

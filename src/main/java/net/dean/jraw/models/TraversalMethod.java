@@ -3,9 +3,7 @@ package net.dean.jraw.models;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.TreeTraverser;
 
-/**
- * This class represents different ways a tree structure (such as a Reddit comment tree) can be traversed.
- */
+/** This class represents different ways a tree structure (such as a reddit comment tree) can be traversed. */
 public enum TraversalMethod {
     /** Each node's subtrees are traversed after the node itself is returned. */
     PRE_ORDER {

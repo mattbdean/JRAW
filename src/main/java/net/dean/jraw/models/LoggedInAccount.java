@@ -38,7 +38,7 @@ public final class LoggedInAccount extends Account {
         return data("inbox_count", Integer.class);
     }
 
-    /** Gets the amount of gold creddits (one month worth of Reddit Gold) the user has. */
+    /** Gets the amount of gold creddits (one month worth of reddit gold) the user has. */
     @JsonProperty
     public Integer getCreddits() {
         return data("gold_creddits", Integer.class);

@@ -4,7 +4,7 @@ import net.dean.jraw.models.meta.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
 
 /**
- * This interface is the base class for all model interfaces
+ * This interface is the base class for all model interfaces (e.g. {@link Created}).
  */
 public interface JsonAttribute {
 

@@ -8,8 +8,8 @@ import java.lang.reflect.InvocationTargetException;
 
 /**
  * This class attempts to serialize a JsonModel by invoking a constructor that takes a single JsonNode as an argument.
- * Using the JsonSerializer on an abstract type or a class that does not provide an acceptable constructor will cause
- * an exception to be thrown.
+ * Using the JsonSerializer on an abstract type or a class that does not provide a constructor exactly as described
+ * previously will cause an exception to be thrown.
  */
 public final class DefaultJsonSerializer implements JsonSerializer<JsonModel> {
 

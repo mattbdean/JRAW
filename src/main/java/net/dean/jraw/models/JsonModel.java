@@ -17,7 +17,7 @@ import java.util.List;
 
 /**
  * This class provides an abstract model for retrieving data from a JSON node, although not necessarily relating to the
- * Reddit API.
+ * reddit API.
  */
 public abstract class JsonModel {
     protected final JsonNode data;
@@ -45,7 +45,7 @@ public abstract class JsonModel {
     }
 
     /**
-     * <p>Retrieves a value from the JSON node (provided in the constructor) of type T. Supported types:
+     * <p>Retrieves a value from the JSON node of type T. Supported types:
      *
      * <ul>
      *     <li>Classes that autobox/unbox to primitive types (Boolean, Double, Integer, Float, Long)

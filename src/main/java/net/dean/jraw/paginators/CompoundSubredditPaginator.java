@@ -65,6 +65,6 @@ public class CompoundSubredditPaginator extends SubredditPaginator {
 
     @Override
     public void setSubreddit(String subreddit) {
-        setSubreddits(Arrays.asList(subreddit));
+        setSubreddits(Collections.singletonList(subreddit));
     }
 }

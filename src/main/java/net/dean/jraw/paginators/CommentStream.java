@@ -5,7 +5,8 @@ import net.dean.jraw.RedditClient;
 import net.dean.jraw.models.Comment;
 
 /**
- * Provides a way to iterate through all of the newest comments in a given subreddit.
+ * A Paginator geared towards viewing the comments on a subreddit. See
+ * <a href="https://www.reddit.com/pics/comments">here</a> for example data.
  */
 public class CommentStream extends Paginator<Comment> {
     private String subreddit;

@@ -149,43 +149,27 @@ public final class Subreddit extends Thing {
     }
 
     /** This class represents a list of all the available subreddit types */
-    public static enum Type {
-        /**
-         * Open to all users
-         */
+    public enum Type {
+        /** Open to all users */
         PUBLIC,
-        /**
-         * only approved members can view and submit
-         */
+        /** Only approved members can view and submit */
         PRIVATE,
-        /**
-         * Anyone can view, but only some are approved to submit links
-         */
+        /** Anyone can view, but only some are approved to submit links */
         RESTRICTED,
-        /**
-         * Only users with Reddit gold can post
-         */
+        /** Only users with reddit gold can post */
         GOLD_RESTRICTED,
         ARCHIVED
     }
 
-    /** A list of how a subreddit can restrict the type of submissions that can be posted */
-    public static enum SubmissionType {
-        /**
-         * Links and self posts
-         */
+    /** An enumeration of how a subreddit can restrict the type of submissions that can be posted */
+    public enum SubmissionType {
+        /** Links and self posts */
         ANY,
-        /**
-         * Only links
-         */
+        /** Only links */
         LINK,
-        /**
-         * Only self posts
-         */
+        /** Only self posts */
         SELF,
-        /**
-         * Restricted subreddit
-         */
+        /** Restricted subreddit */
         NONE
     }
 }

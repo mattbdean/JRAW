@@ -4,9 +4,7 @@ import net.dean.jraw.models.meta.JsonProperty;
 
 import java.util.Date;
 
-/**
- * Indicates that this model was created
- */
+/** Indicates that the object this model represents was created by a user. */
 public interface Created extends JsonAttribute {
     /**
      * Gets the date this model was created in local time

@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * This class represents a list of Thing IDs. This element, when present, is the last element of a Listing in the JSON
  * response. The purpose of this data structure is to notify the client that there are more replies to a comment than
- * what Reddit is willing to initially show.
+ * what reddit is willing to initially show.
  *
  * @see CommentNode#getMoreChildren()
  * @see CommentNode#loadMoreComments(RedditClient)

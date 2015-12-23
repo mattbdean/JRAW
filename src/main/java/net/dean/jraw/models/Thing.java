@@ -5,7 +5,7 @@ import net.dean.jraw.models.meta.JsonProperty;
 import net.dean.jraw.models.meta.Model;
 
 /**
- * The Thing class is the base class for most data structures returned by the Reddit API. Every Thing has an
+ * The Thing class is the base class for most data structures returned by the reddit API. Every Thing has an
  * ID and a fullname (referred to as an ID36 in the Reddit source code). To construct a fullname, simply prepend
  * {@code tX_}, where {@code X} is an integer. For a valid list of these prefixes, see
  * <a href="https://www.reddit.com/dev/api/oauth#fullnames">here</a>. However, this is not the same for all classes. The

@@ -6,7 +6,7 @@ import net.dean.jraw.Dimension;
 import java.util.Date;
 
 /**
- * A RedditObject represents an abstract data structure presented by the Reddit API. Its most notable subclass is
+ * A RedditObject represents an abstract data structure presented by the reddit API. Its most notable subclass is
  * {@link Thing}, from which all common Reddit-based models are derived.
  */
 public abstract class RedditObject extends JsonModel {

@@ -21,11 +21,11 @@ public enum DistinguishedStatus {
     /** The value of the "distinguished" JSON field */
     private String jsonValue;
 
-    private DistinguishedStatus() {
+    DistinguishedStatus() {
         this.jsonValue = this.name().toLowerCase();
     }
 
-    private DistinguishedStatus(String jsonValue) {
+    DistinguishedStatus(String jsonValue) {
         this.jsonValue = jsonValue;
     }
 

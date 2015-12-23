@@ -37,7 +37,7 @@ public class MarkdownGenerator extends AbstractEndpointGenerator {
         // Main header
         bw.writeLine("#Endpoints\n");
         bw.writeLine("This file contains a list of all the endpoints (regardless of if they have been implemented) that " +
-                "can be found at the [official Reddit API docs](https://www.reddit.com/dev/api). To update this file, " +
+                "can be found at the [official reddit API docs](https://www.reddit.com/dev/api). To update this file, " +
                 "run `gradle endpoints:update`.\n");
 
         // Summary

@@ -9,7 +9,7 @@ import net.dean.jraw.models.meta.Model;
 import java.util.Map;
 
 /**
- * Represents a breakdown of link and comment karma by subreddit. Only accessible with OAuth2
+ * Represents a breakdown of link and comment karma by subreddit.
  *
  * @see AccountManager#getKarmaBreakdown()
  */
