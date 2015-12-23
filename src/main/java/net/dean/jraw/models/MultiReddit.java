@@ -104,7 +104,7 @@ public final class MultiReddit extends Thing implements Created {
         return _getCreated();
     }
 
-    public static enum WeightingScheme {
+    public enum WeightingScheme {
         CLASSIC,
         FRESH;
 
