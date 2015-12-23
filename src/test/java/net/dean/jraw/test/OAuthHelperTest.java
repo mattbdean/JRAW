@@ -241,7 +241,15 @@ public class OAuthHelperTest {
             }
             // Click the 'Allow' button on the authorize page
             HtmlInput allowInput = getFirstChild(authorizePage.getBody(), "input", "name", "authorize");
-            HtmlPage finalPage = allowInput.click();
+            HtmlPage finalPage = null;
+            try {
+                finalPage = allowInput.click();
+            } catch (FailingHttpStatusCodeException e) {
+                if (e.getStatusCode() == 503) {
+                    throw new SkipException("reddit servers are all busy, skipping");
+                }
+                Assert.fail("Failing HTTP status code", e);
+            }
 
             // Retrieve the final URL and authorize the app
             URL finalUrl = finalPage.getWebResponse().getWebRequest().getUrl();
