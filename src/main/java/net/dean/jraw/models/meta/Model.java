@@ -2,7 +2,7 @@ package net.dean.jraw.models.meta;
 
 import net.dean.jraw.NoSuchEnumConstantException;
 import net.dean.jraw.models.Account;
-import net.dean.jraw.models.Award;
+import net.dean.jraw.models.Trophy;
 import net.dean.jraw.models.Comment;
 import net.dean.jraw.models.JsonModel;
 import net.dean.jraw.models.KarmaBreakdown;
@@ -80,7 +80,7 @@ public @interface Model {
         /** Represents a subreddit with the prefix "t5" */
         SUBREDDIT("t5", Subreddit.class),
         /** Represents an award with the prefix "t6" */
-        AWARD("t6", Award.class),
+        AWARD("t6", Trophy.class),
         /** Represents a listing */
         LISTING("Listing", Listing.class),
         /** Represents a "more" object. See {@link MoreChildren} */

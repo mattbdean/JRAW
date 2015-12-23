@@ -17,7 +17,7 @@ import net.dean.jraw.http.oauth.InvalidScopeException;
 import net.dean.jraw.http.oauth.OAuthData;
 import net.dean.jraw.http.oauth.OAuthHelper;
 import net.dean.jraw.models.Account;
-import net.dean.jraw.models.Award;
+import net.dean.jraw.models.Trophy;
 import net.dean.jraw.models.Captcha;
 import net.dean.jraw.models.CommentSort;
 import net.dean.jraw.models.Listing;
@@ -577,7 +577,7 @@ public class RedditClient extends RestClient {
      * Gets the trophies for the currently authenticated user
      * @throws NetworkException If the request was not successful
      */
-    public List<Award> getTrophies() throws NetworkException {
+    public List<Trophy> getTrophies() throws NetworkException {
         return getTrophies(null);
     }
 
@@ -591,7 +591,7 @@ public class RedditClient extends RestClient {
             Endpoints.OAUTH_ME_TROPHIES,
             Endpoints.OAUTH_USER_USERNAME_TROPHIES
     })
-    public List<Award> getTrophies(String username) throws NetworkException {
+    public List<Trophy> getTrophies(String username) throws NetworkException {
         if (username == null)
             assertNotUserless();
         username = authenticatedUser;
@@ -600,12 +600,12 @@ public class RedditClient extends RestClient {
                 .endpoint(Endpoints.OAUTH_USER_USERNAME_TROPHIES, username)
                 .build());
 
-        List<Award> awards = new ArrayList<>();
+        List<Trophy> trophies = new ArrayList<>();
         for (JsonNode awardNode : response.getJson().get("data").get("trophies")) {
-            awards.add(new Award(awardNode.get("data")));
+            trophies.add(new Trophy(awardNode.get("data")));
         }
 
-        return awards;
+        return trophies;
     }
     /**
      * Gets the object that will help clients authenticate users with their Reddit app

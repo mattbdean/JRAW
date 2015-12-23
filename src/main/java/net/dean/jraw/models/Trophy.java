@@ -6,16 +6,16 @@ import net.dean.jraw.models.meta.Model;
 import com.fasterxml.jackson.databind.JsonNode;
 
 /**
- * Represents an award (trophy) displayed in a user's trophy case
+ * Represents a trophy displayed in a user's trophy case
  *
  * @see RedditClient#getTrophies()
  */
 @Model(kind = Model.Kind.AWARD)
-public final class Award extends Thing {
+public final class Trophy extends Thing {
     /**
      * Instantiates a new Trophy
      */
-    public Award(JsonNode dataNode) {
+    public Trophy(JsonNode dataNode) {
         super(dataNode);
     }
 
