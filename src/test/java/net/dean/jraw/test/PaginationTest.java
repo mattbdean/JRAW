@@ -126,8 +126,7 @@ public class PaginationTest extends RedditTest {
 
     @Test
     public void testCompoundSubredditPaginator() {
-        SubredditPaginator paginator = new CompoundSubredditPaginator(reddit, Arrays.asList("programming", "java"));
-        assertTrue(paginator.getClass().equals(CompoundSubredditPaginator.class));
+        SubredditPaginator paginator = new SubredditPaginator(reddit, "programming", "java");
         commonTest(paginator);
     }
 
