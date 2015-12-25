@@ -6,7 +6,7 @@ import net.dean.jraw.RedditClient;
  * Provides a basic abstract implementation of {@link Reference}
  */
 public abstract class AbstractReference implements Reference {
-    protected RedditClient reddit;
+    protected final RedditClient reddit;
 
     protected AbstractReference(RedditClient reddit) {
         this.reddit = reddit;

@@ -33,4 +33,14 @@ public class FluentRedditClient {
     public SubredditReference subreddit(String subreddit) {
         return SubredditReference.subreddit(managers, subreddit);
     }
+
+    /** Gets a UserReference for the currently-authenticated user */
+    public AuthenticatedUserReference me() {
+        return new AuthenticatedUserReference(managers);
+    }
+
+    /** Gets a UserReference for the given user */
+    public UserReference user(String name) {
+        return new UserReference(managers, name);
+    }
 }
