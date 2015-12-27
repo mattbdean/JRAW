@@ -4,8 +4,6 @@ import net.dean.jraw.fluent.FluentRedditClient;
 import net.dean.jraw.paginators.TimePeriod;
 import org.testng.annotations.Test;
 
-import static org.testng.Assert.assertEquals;
-
 public class FluentTest extends RedditTest {
     private FluentRedditClient api;
 
@@ -17,9 +15,6 @@ public class FluentTest extends RedditTest {
     @Test
     public void testSubredditReference() {
         validateModel(api.frontPage().top(TimePeriod.HOUR).fetch());
-        assertEquals(api.subreddit("pics")
-                .limit(1)
-                .fetch().size(), 1);
     }
 
     @Test
