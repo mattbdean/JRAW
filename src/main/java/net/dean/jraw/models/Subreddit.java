@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 /** This class represents a subreddit, such as /r/pics. */
 @Model(kind = Model.Kind.SUBREDDIT)
-public final class Subreddit extends Thing {
+public final class Subreddit extends Thing implements Comparable<Subreddit> {
 
     /** Instantiates a new Subreddit */
     public Subreddit(JsonNode dataNode) {
@@ -146,6 +146,12 @@ public final class Subreddit extends Thing {
     @JsonProperty
     public Boolean isUserSubscriber() {
         return data("user_is_subscriber", Boolean.class);
+    }
+
+
+    @Override
+    public int compareTo(Subreddit subreddit) {
+        return getDisplayName().compareTo(subreddit.getDisplayName());
     }
 
     /** This class represents a list of all the available subreddit types */
