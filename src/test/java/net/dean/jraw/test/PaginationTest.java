@@ -1,21 +1,18 @@
 package net.dean.jraw.test;
 
+import com.google.common.collect.Ordering;
 import net.dean.jraw.ApiException;
 import net.dean.jraw.JrawUtils;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.managers.MultiRedditManager;
-import net.dean.jraw.models.Listing;
-import net.dean.jraw.models.MultiReddit;
-import net.dean.jraw.models.Submission;
-import net.dean.jraw.models.Thing;
+import net.dean.jraw.models.*;
 import net.dean.jraw.paginators.*;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.lang.reflect.Array;
+import java.util.*;
 
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
@@ -97,13 +94,27 @@ public class PaginationTest extends RedditTest {
     }
 
     @Test
-    public void testUserSubredditsPaginator() throws NetworkException {
+    public void testUserSubredditsPaginatorAccumulateMergedAll() throws NetworkException {
         String[] wheres = new UserSubredditsPaginator(reddit, "subscriber").getWhereValues();
         // Test all Where values
-
         for (String where : wheres) {
             UserSubredditsPaginator paginator = new UserSubredditsPaginator(reddit, where);
-            commonTest(paginator);
+            List<Subreddit> flatten = paginator.accumulateMergedAll();
+            for (int i = 0; i < flatten.size(); i++) {
+                Subreddit sub = flatten.get(i);
+                validateModel(sub);
+            }
+        }
+    }
+
+    @Test
+    public void testUserSubredditsPaginatorAccumulateMergedAllSorted() throws NetworkException {
+        String[] wheres = new UserSubredditsPaginator(reddit, "subscriber").getWhereValues();
+        for (String where : wheres) {
+            UserSubredditsPaginator paginator = new UserSubredditsPaginator(reddit, where);
+            List<Subreddit> flatten = paginator.accumulateMergedAllSorted();
+            boolean sorted = Ordering.natural().isOrdered(flatten);
+            Assert.assertEquals(sorted, true);
         }
     }
 
