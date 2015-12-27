@@ -26,4 +26,9 @@ public class FluentTest extends RedditTest {
     public void testWikiReference() {
         validateModel(api.frontPage().wiki().get(api.frontPage().wiki().pages().get(2)));
     }
+
+    @Test
+    public void testGetSubscribed() {
+        validateModels(api.me().subscribedSubreddits());
+    }
 }

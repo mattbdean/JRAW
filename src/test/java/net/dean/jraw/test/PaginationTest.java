@@ -11,8 +11,9 @@ import net.dean.jraw.paginators.*;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.lang.reflect.Array;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
@@ -100,8 +101,7 @@ public class PaginationTest extends RedditTest {
         for (String where : wheres) {
             UserSubredditsPaginator paginator = new UserSubredditsPaginator(reddit, where);
             List<Subreddit> flatten = paginator.accumulateMergedAll();
-            for (int i = 0; i < flatten.size(); i++) {
-                Subreddit sub = flatten.get(i);
+            for (Subreddit sub : flatten) {
                 validateModel(sub);
             }
         }

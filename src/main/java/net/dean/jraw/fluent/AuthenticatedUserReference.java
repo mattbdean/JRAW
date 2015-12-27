@@ -2,7 +2,11 @@ package net.dean.jraw.fluent;
 
 import net.dean.jraw.models.AccountPreferences;
 import net.dean.jraw.models.KarmaBreakdown;
+import net.dean.jraw.models.Subreddit;
 import net.dean.jraw.paginators.UserContributionPaginator;
+import net.dean.jraw.paginators.UserSubredditsPaginator;
+
+import java.util.List;
 
 /**
  * A special subclass of UserReference of the currently-authenticated user. Uses the {@link ManagerAggregation}'s
@@ -21,6 +25,15 @@ public final class AuthenticatedUserReference extends UserReference {
     @NetworkingCall
     public AccountPreferences accountPreferences() {
         return managers.account().getPreferences();
+    }
+
+    /**
+     *
+     * @return
+     */
+    @NetworkingCall
+    public List<Subreddit> subscribedSubreddits() {
+        return new UserSubredditsPaginator(managers.reddit(), "subscriber").accumulateMergedAll();
     }
 
     /** Gets a reference to the user's inbox */
