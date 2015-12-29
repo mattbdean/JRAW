@@ -12,6 +12,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -113,7 +114,13 @@ public class PaginationTest extends RedditTest {
         for (String where : wheres) {
             UserSubredditsPaginator paginator = new UserSubredditsPaginator(reddit, where);
             List<Subreddit> flatten = paginator.accumulateMergedAllSorted();
-            boolean sorted = Ordering.natural().isOrdered(flatten);
+            boolean sorted = Ordering.from(new Comparator<Subreddit>() {
+                @Override
+                public int compare(Subreddit sub1, Subreddit sub2) {
+                    return sub1.getDisplayName().compareToIgnoreCase(sub2.getDisplayName());
+                }
+            }).isOrdered(flatten);
+
             Assert.assertEquals(sorted, true);
         }
     }

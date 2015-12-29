@@ -151,7 +151,7 @@ public final class Subreddit extends Thing implements Comparable<Subreddit> {
 
     @Override
     public int compareTo(Subreddit subreddit) {
-        return getDisplayName().compareTo(subreddit.getDisplayName());
+        return getDisplayName().compareToIgnoreCase(subreddit.getDisplayName());
     }
 
     /** This class represents a list of all the available subreddit types */
