@@ -16,9 +16,12 @@ import java.util.Map;
  */
 public class SubmissionSearchPaginator extends Paginator<Submission> {
     public static final SearchSort DEFAULT_SORTING = SearchSort.RELEVANCE;
+    public static final SearchSyntax DEFAULT_SYNTAX = SearchSyntax.PLAIN;
+    public static final TimePeriod DEFAULT_TIME_PERIOD = TimePeriod.ALL;
     private SearchSort sorting;
     private String subreddit;
     private String query;
+    private SearchSyntax syntax;
 
     /**
      * Instantiates a new Paginator
@@ -30,6 +33,8 @@ public class SubmissionSearchPaginator extends Paginator<Submission> {
         super(creator, Submission.class);
         this.query = query;
         this.sorting = DEFAULT_SORTING;
+        this.syntax = DEFAULT_SYNTAX;
+        setTimePeriod(DEFAULT_TIME_PERIOD);
     }
 
     @Override
@@ -53,7 +58,8 @@ public class SubmissionSearchPaginator extends Paginator<Submission> {
         return JrawUtils.mapOf(
                 "q", query,
                 "restrict_sr", subreddit == null ? "off" : "on",
-                "sort", sorting.name().toLowerCase()
+                "sort", sorting.name().toLowerCase(),
+                "syntax", syntax.name().toLowerCase()
         );
     }
 
@@ -110,14 +116,35 @@ public class SubmissionSearchPaginator extends Paginator<Submission> {
         return sorting.name().toLowerCase();
     }
 
+    public SearchSyntax getSyntax() {
+        return syntax;
+    }
+
+    /** Sets the search syntax and invalidates the Paginator */
+    public void setSyntax(SearchSyntax syntax) {
+        this.syntax = syntax;
+        invalidate();
+    }
+
     /**
      * How the search results can be sorted
      */
-    public static enum SearchSort {
+    public enum SearchSort {
         NEW,
         HOT,
         TOP,
         RELEVANCE,
         COMMENTS
+    }
+
+    /** An enumeration of the syntaxes the reddit API can handle in its search functionality */
+    public enum SearchSyntax {
+        /** Search by plain text, keywords */
+        PLAIN,
+        /**
+         * Amazon's cloudsearch syntax. See <a href="https://www.reddit.com/wiki/search#wiki_cloudsearch_syntax">here</a>
+         * for more.
+         */
+        CLOUDSEARCH
     }
 }

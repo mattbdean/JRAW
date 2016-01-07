@@ -61,7 +61,8 @@ public class PaginationTest extends RedditTest {
 
     @Test
     public void testSearchPaginator() throws NetworkException {
-        SubmissionSearchPaginator paginator = new SubmissionSearchPaginator(reddit, "test");
+        SubmissionSearchPaginator paginator = new SubmissionSearchPaginator(reddit, "timestamp:1372982400..1373068800");
+        paginator.setSyntax(SubmissionSearchPaginator.SearchSyntax.CLOUDSEARCH);
         String subreddit = "AskReddit";
         paginator.setSubreddit(subreddit);
         commonTest(paginator);
