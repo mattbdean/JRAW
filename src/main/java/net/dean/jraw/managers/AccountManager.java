@@ -195,20 +195,20 @@ public class AccountManager extends AbstractManager {
     }
 
     /**
-     * Changes the text of your
+     * Updates the body of a self-text Submission or Comment
      *
-     * @param submission The submission that that you would like to edit the text for
-     * @param text The new text that you want the post to have
+     * @param contribution The self-post or comment that to edit the text for
+     * @param text The new body
      * @throws NetworkException If the request was not successful
      * @throws ApiException If the API returned an error
      */
     @EndpointImplementation(Endpoints.EDITUSERTEXT)
-    public void updateSelfpost(Submission submission, String text) throws NetworkException, ApiException {
+    public <T extends PublicContribution> void updateContribution(T contribution, String text) throws NetworkException, ApiException {
         genericPost(reddit.request().endpoint(Endpoints.EDITUSERTEXT)
                 .post(JrawUtils.mapOf(
                         "api_type", "json",
                         "text", text,
-                        "thing_id", submission.getFullName()
+                        "thing_id", contribution.getFullName()
                 )).build());
     }
 

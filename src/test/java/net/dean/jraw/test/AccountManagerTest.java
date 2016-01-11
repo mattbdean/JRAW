@@ -99,7 +99,7 @@ public class AccountManagerTest extends RedditTest {
         }
 
         try {
-            account.updateSelfpost(toEdit, newText);
+            account.updateContribution(toEdit, newText);
         } catch (NetworkException | ApiException e) {
             handle(e);
         }
