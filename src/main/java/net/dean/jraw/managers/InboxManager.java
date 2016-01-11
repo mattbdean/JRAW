@@ -4,7 +4,10 @@ import net.dean.jraw.*;
 import net.dean.jraw.http.MediaTypes;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.RestResponse;
+import net.dean.jraw.models.Captcha;
 import net.dean.jraw.models.Message;
+
+import java.util.Map;
 
 /**
  * This class is responsible for managing a user's inbox
@@ -84,15 +87,62 @@ public class InboxManager extends AbstractManager {
      */
     @EndpointImplementation(Endpoints.COMPOSE)
     public void compose(String from, String to, String subject, String body) throws NetworkException, ApiException {
+        compose(from, to, subject, body, null, null);
+    }
+
+    /**
+     * Sends a private message as the currently logged in user with a given captcha.
+     * Only really needed if the user has less than 10 link karma.
+     *
+     * @param to Who to send this message to
+     * @param subject The message's subject
+     * @param body The message's body
+     * @param captcha The Captcha the user is attempting
+     * @param captchaAttempt The user's guess at the captcha
+     * @throws NetworkException If the request did not complete successfully
+     * @throws ApiException If the Reddit API returned an error
+     */
+    public void compose(String to, String subject, String body, Captcha captcha, String captchaAttempt) throws NetworkException, ApiException {
+        compose("", to, subject, body, captcha, captchaAttempt);
+    }
+
+    /**
+     * Sends a private message.
+     *
+     * @param from Who to send this message as. If sending as the currently authenticated user, leave this empty. If
+     *             sending as a subreddit you moderate, use the name of the subreddit without "/r/" (for example: "pics")
+     * @param to Who to send this message to
+     * @param subject The message's subject
+     * @param body The message's body
+     * @param captcha The Captcha the user is attempting
+     * @param captchaAttempt The user's guess at the captcha
+     * @throws NetworkException If the request did not complete successfully
+     * @throws ApiException If the Reddit API returned an error
+     */
+    @EndpointImplementation(Endpoints.COMPOSE)
+    public void compose(String from, String to, String subject, String body, Captcha captcha, String captchaAttempt) throws NetworkException, ApiException {
+
+        Map<String, String> args = JrawUtils.mapOf(
+                "api_type", "json",
+                "from_sr", from,
+                "subject", subject,
+                "text", body,
+                "to", to
+        );
+
+        if (captcha != null) {
+            if (captchaAttempt == null) {
+                throw new IllegalArgumentException("Captcha present but the attempt is not");
+            }
+
+            args.put("iden", captcha.getId());
+            args.put("captcha", captchaAttempt);
+        }
+
         RestResponse response = reddit.execute(reddit.request()
                 .endpoint(Endpoints.COMPOSE)
-                .post(JrawUtils.mapOf(
-                        "api_type", "json",
-                        "from_sr", from,
-                        "subject", subject,
-                        "text", body,
-                        "to", to
-                )).build());
+                .post(args)
+                .build());
         if (response.hasErrors()) {
             throw response.getError();
         }
