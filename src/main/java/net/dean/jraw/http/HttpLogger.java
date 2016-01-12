@@ -16,9 +16,8 @@ import static net.dean.jraw.http.HttpLogger.Component.*;
 /**
  * This class is responsible for logging objects relating to HTTP network activity, particularly the {@link HttpRequest}
  * and {@link RestResponse} classes. The parts of the request and response are broken into parts called
- * {@link Component components}. By default, all of these components are enabled (except for
- * {@link Component#RESPONSE_BODY_ALWAYS_FULL}. To enable or disable a Component, you can use
- * {@link #enable(Component)} or {@link #disable(Component)} respectively.
+ * {@link Component components}. To enable or disable a Component, you can use {@link #enable(Component)} or
+ * {@link #disable(Component)} respectively.
  */
 public class HttpLogger {
     /** What will replace the latter part of the response body if it needs to be trimmed. */
@@ -28,6 +27,7 @@ public class HttpLogger {
     private static final int RESPONSE_BODY_CUTOFF = 100 - ELLIPSIS.length();
     private final Logger l;
     private Map<Component, Boolean> components;
+    private boolean responseBodyAlwaysFull;
 
     /**
      * Instantiates a new HttpLogger
@@ -39,7 +39,7 @@ public class HttpLogger {
         for (Component c : Component.values()) {
             components.put(c, true);
         }
-        disable(RESPONSE_BODY_ALWAYS_FULL); // Short response bodies by default
+        responseBodyAlwaysFull = false; // Short response bodies by default
     }
 
     /**
@@ -255,7 +255,7 @@ public class HttpLogger {
             if (isEnabled(RESPONSE_BODY)) {
                 String raw = r.getRaw();
 
-                if (!isEnabled(RESPONSE_BODY_ALWAYS_FULL) && r.isSuccessful()) {
+                if (!responseBodyAlwaysFull && r.isSuccessful()) {
                     // If the request was successful the response isn't as important.
                     // Display the full response if the request was not successful
                     raw = raw.replace("\n", "").replace("\r", "").replace("\t", "");
@@ -270,6 +270,26 @@ public class HttpLogger {
                 logBySuccess(r, "{}response-body: {}", INDENT, raw);
             }
         }
+    }
+
+    /**
+     * Sets whether or not to always log the full response body, regardless of the request's success. If this component
+     * is disabled, the body will be trimmed and an ellipsis will be appended.
+     *
+     * @see #ELLIPSIS
+     */
+    public void setResponseBodyAlwaysFull(boolean flag) {
+        this.responseBodyAlwaysFull = flag;
+    }
+
+    /**
+     * Whether or not to always log the full response body, regardless of the request's success. If this component
+     * is disabled, the body will be trimmed and an ellipsis will be appended.
+     *
+     * @see #ELLIPSIS
+     */
+    public boolean isResponseBodyAlwaysFull() {
+        return responseBodyAlwaysFull;
     }
 
     /**
@@ -298,17 +318,10 @@ public class HttpLogger {
         /** Response's headers. Depends on {@link #RESPONSE}. */
         RESPONSE_HEADERS,
         /**
-         * The raw response data. Newlines will be removed unless either {@link #RESPONSE_BODY_ALWAYS_FULL} is enabled
+         * The raw response data. Newlines will be removed unless either {@link #responseBodyAlwaysFull} is enabled
          * or the response was not successful. Depends on {@link #RESPONSE}.
          */
         RESPONSE_BODY,
-        /**
-         * Whether or not to always log the full response body, regardless of the request's success. If this component
-         * is disabled, the body will be trimmed and an ellipsis will be appended.
-         *
-         * @see #ELLIPSIS
-         */
-        RESPONSE_BODY_ALWAYS_FULL,
 
         /**
          * Will copy any data with keys and values (headers, form data, etc.) to a case-insensitive TreeMap before
