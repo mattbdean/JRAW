@@ -421,13 +421,13 @@ public class AccountManagerTest extends RedditTest {
             validateModel(prefs);
 
             prefs = account.getPreferences("over_18", "research", "hide_from_robots");
-            // Only these three should be not null
-            assertNotNull(prefs.isOver18());
-            assertNotNull(prefs.isResearchable());
-            assertNotNull(prefs.isHiddenFromSearchEngines());
+            // Only request preferences should be returned
+            assertNotNull(prefs.data("over_18"));
+            assertNotNull(prefs.data("research"));
+            assertNotNull(prefs.data("hide_from_robots"));
 
             // Anything else should be null
-            assertNull(prefs.getLanguage());
+            assertNull(prefs.data("lang"));
         } catch (NetworkException e) {
             handle(e);
         }
@@ -439,48 +439,6 @@ public class AccountManagerTest extends RedditTest {
             AccountPreferences original = account.getPreferences();
             AccountPreferencesEditor prefs = new AccountPreferencesEditor(original);
             validateModel(account.updatePreferences(prefs));
-        } catch (NetworkException e) {
-            handle(e);
-        }
-    }
-
-    @Test
-    public void testUpdatePreferencesManually() {
-        try {
-            AccountPreferences original = account.getPreferences();
-            AccountPreferencesEditor prefs = new AccountPreferencesEditor();
-
-            // Brace yourself. This test exists purely for the sake of code coverage
-            prefs.lang(original.getLanguage());
-            prefs.newWindow(original.isUsingNewWindow());
-            prefs.thumbnailDisplayPreference(original.getThumbnailDisplayPreference());
-            prefs.hideNsfwThumbnails(original.isHidingNsfwThumbs());
-            prefs.showSpotlightBox(original.isShowingSpotlightBox());
-            prefs.showTrending(original.isShowingTrending());
-            prefs.showRecentClicks(original.isShowingRecentlyViewedLinks());
-            prefs.compressLink(original.isCompressingLinks());
-            prefs.showDomainDetails(original.isShowingDomainDetails());
-            prefs.hideUpvotedPosts(original.isHidingUpvotedPosts());
-            prefs.hideDownvotedPosts(original.isHidingDownvotedPosts());
-            prefs.postsPerPage(original.getPostsPerPage());
-            prefs.linkScoreThreshold(original.getLinkScoreThreshold());
-            prefs.commentScoreThreshold(original.getCommentScoreThreshold());
-            prefs.defaultCommentCount(original.getDefaultCommentCount());
-            prefs.highlightControversial(original.isHighlightingControversial());
-            prefs.showPmThreads(original.isShowingPmThreads());
-            prefs.autoReadMessages(original.isAutoReadMessages());
-            prefs.messageAutoCollapse(original.isMessageAutoCollapse());
-            prefs.customStylesheets(original.isUsingCustomStylesheets());
-            prefs.showUserFlair(original.isShowingUserFlair());
-            prefs.showLinkFlair(original.isShowingLinkFlair());
-            prefs.over18(original.isOver18());
-            prefs.labelNsfwPosts(original.isLabelingNsfwPosts());
-            prefs.privateFeeds(original.isPrivateRssEnabled());
-            prefs.publicVoteHistory(original.isVoteHistoryPublic());
-            prefs.researchable(original.isResearchable());
-            prefs.hideFromSearchEngines(original.isHiddenFromSearchEngines());
-
-            account.updatePreferences(prefs);
         } catch (NetworkException e) {
             handle(e);
         }
