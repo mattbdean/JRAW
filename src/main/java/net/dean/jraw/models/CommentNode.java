@@ -6,7 +6,7 @@ import com.google.common.collect.FluentIterable;
 import com.google.common.collect.TreeTraverser;
 import net.dean.jraw.EndpointImplementation;
 import net.dean.jraw.Endpoints;
-import net.dean.jraw.JrawUtils;
+import net.dean.jraw.util.JrawUtils;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.RestResponse;
@@ -32,7 +32,7 @@ import java.util.concurrent.locks.ReentrantLock;
  *
  * <p>At the root of every comment tree there is a single root node, which represents the submission the comments belong
  * to. This node will have a depth of 0 and its children will be top-level replies to the submission. Although this node
- * is technically part of the tree, it will not be included when using {@link #walkTree()}.
+ * is technically part of the tree, it will not be included when iterating the nodes with {@link #walkTree()}.
  *
  * <p>For example, take this tree structure:
  *
@@ -51,14 +51,21 @@ import java.util.concurrent.locks.ReentrantLock;
  * tree can be traversed using several different methods: Pre-order ({@code abcfghdi}), post-order ({@code bfghcida}),
  * and breadth-first ({@code abcdfghi}).
  *
- * <p>Note that although this class implements {@link Iterable}, the provided Iterator will not have the same function
- * as using {@link #walkTree()}; only direct children will be iterated.
+ * <p>Note that although this class implements {@link Iterable}, the provided Iterator will only iterate through direct
+ * children. To walk the entire tree, use {@link #walkTree()}
  *
  * @author Matthew Dean
  */
 public final class CommentNode implements Iterable<CommentNode> {
-    private static final SimpleTreeTraverser traverser = new SimpleTreeTraverser();
+    /**
+     * A constant that can be passed as a parameter to {@link #loadFully(RedditClient, int, int)} to disable the request
+     * and/or depth limit
+     */
+    public static final int NO_LIMIT = -1;
     private static final int TOP_LEVEL_DEPTH = 1;
+    /** Amount of spaces to be included for each indent in {@link #visualize()} */
+    private static final int VISUALIZATION_INDENT = 2;
+    private static final SimpleTreeTraverser traverser = new SimpleTreeTraverser();
     private static final Lock morechildrenLock = new ReentrantLock();
 
     private MoreChildren moreChildren;
@@ -184,14 +191,16 @@ public final class CommentNode implements Iterable<CommentNode> {
         }
     }
 
+    /** Used by {@link #visualize()} to make an indentation */
     private String makeIndent(int depth) {
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < depth - 1; i++) {
-            sb.append("  ");
-        }
+        for (int i = 0; i < depth - 1; i++)
+            for (int j = 0; j < VISUALIZATION_INDENT; j++)
+                sb.append(' ');
         return sb.toString();
     }
 
+    /** Used by {@link #visualize()} to remove newlines and carriage returns from the body */
     private String formatCommentBody(String body) {
         return body.replace("\n", "\\n").replace("\r", "\\r");
     }
@@ -204,7 +213,7 @@ public final class CommentNode implements Iterable<CommentNode> {
      * @param reddit Used to make requests
      */
     public void loadFully(RedditClient reddit) {
-        loadFully(reddit, -1, -1);
+        loadFully(reddit, NO_LIMIT, NO_LIMIT);
     }
 
     /**
@@ -214,40 +223,40 @@ public final class CommentNode implements Iterable<CommentNode> {
      * to fully satisfy the method call. Note that one request must be sent for every {@link MoreChildren} found.
      *
      * @param reddit Used to make requests
-     * @param depthLimit The maximum depth to look into. A value of -1 disable the limit.
-     * @param requestLimit The maximum amount of requests to send; there will be one request for every MoreChildren
-     *                     object found. A value of -1 will disable the limit.
+     * @param depthLimit The maximum depth to look into. A value of {@link #NO_LIMIT} disable the limit.
+     * @param requestLimit The maximum amount of requests to send. There will be one request for every MoreChildren
+     *                     object found. A value of {@link #NO_LIMIT} will disable the limit.
      * @throws NetworkException If there was a problem sending the request
      */
     public void loadFully(RedditClient reddit, int depthLimit, int requestLimit) throws NetworkException {
         int requests = 0;
-        if (depthLimit < -1 || requestLimit < -1)
+        if (depthLimit < NO_LIMIT || requestLimit < NO_LIMIT)
             throw new IllegalArgumentException("Expecting a number greater than or equal to -1, got " +
-                    (requestLimit < -1 ? requestLimit : depthLimit));
+                    (requestLimit < NO_LIMIT ? requestLimit : depthLimit));
         // Load this node's comments first
         while (hasMoreComments()) {
             loadMoreComments(reddit);
-            if (++requests > requestLimit && depthLimit != -1)
+            if (++requests > requestLimit && depthLimit != NO_LIMIT)
                 return;
         }
 
         // Load the children's comments next
         for (CommentNode node : walkTree(TraversalMethod.BREADTH_FIRST)) {
             // Travel breadth first so we can accurately compare depths
-            if (depthLimit != -1 && node.depth > depthLimit)
+            if (depthLimit != NO_LIMIT && node.depth > depthLimit)
                 return;
             while (node.hasMoreComments()) {
                 node.loadMoreComments(reddit);
-                if (++requests > requestLimit && depthLimit != -1)
+                if (++requests > requestLimit && depthLimit != NO_LIMIT)
                     return;
             }
         }
     }
 
     /**
-     * Gets more comments from {@link #getMoreComments(RedditClient)} and inserts them into the tree.
-     * This method returns only new <em>root</em> nodes. If this CommentNode is not associated with a
-     * {@link MoreChildren}, then an empty list is returned. A null value is never returned.
+     * Gets more comments from {@link #getMoreComments(RedditClient)} and inserts them into the tree. This method
+     * returns only new <em>root</em> nodes. If this CommentNode is not associated with a {@link MoreChildren}, then an
+     * empty list is returned. A null value is never returned.
      *
      * @param reddit Used to make the request
      * @return A List of new root nodes
@@ -358,9 +367,9 @@ public final class CommentNode implements Iterable<CommentNode> {
 
     /**
      * <p>Checks if this node's {@link MoreChildren} object represents a truncated thread. This normally happens when
-     * the depth of a particular branch of the tree continues to a depth exceeding 10. On the website, the MoreChildren
-     * will be represented as a link with the text "continue this thread &rarr;." If a MoreChildren object points to a
-     * truncated branch, then two things must be true:
+     * the depth of a particular branch of the tree exceeds 10. On the website, the MoreChildren will be represented as
+     * a link with the text "continue this thread &rarr;." If a MoreChildren object points to a truncated branch, then
+     * two things must be true:
      *
      * <ol>
      *     <li>The MoreChildren's "count" attribute is zero
@@ -408,7 +417,7 @@ public final class CommentNode implements Iterable<CommentNode> {
         // error being returned."
         morechildrenLock.lock();
         try {
-            // POST with a body could be used instead of GET with a query to avoid a long URL, but Reddit seems to
+            // POST with a body could be used instead of GET with a query to avoid a long URL, but reddit seems to
             // handle it just fine.
             response = reddit.execute(reddit.request()
                     .endpoint(Endpoints.MORECHILDREN)
@@ -483,7 +492,7 @@ public final class CommentNode implements Iterable<CommentNode> {
         return size;
     }
 
-    /** Provides a {@link FluentIterable} that will iterate every CommentNode in the tree, including this one. */
+    /** Provides a {@link FluentIterable} that will iterate every CommentNode in the tree including this one in pre-order. */
     public FluentIterable<CommentNode> walkTree() {
         return walkTree(TraversalMethod.PRE_ORDER);
     }

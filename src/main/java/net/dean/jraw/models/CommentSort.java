@@ -9,6 +9,6 @@ public enum CommentSort {
     NEW,
     HOT,
     CONTROVERSIAL,
-    QA,
-    OLD
+    OLD,
+    QA
 }

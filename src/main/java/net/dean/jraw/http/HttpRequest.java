@@ -6,7 +6,7 @@ import com.squareup.okhttp.Headers;
 import com.squareup.okhttp.internal.Util;
 import com.squareup.okhttp.internal.http.HttpMethod;
 import net.dean.jraw.Endpoints;
-import net.dean.jraw.JrawUtils;
+import net.dean.jraw.util.JrawUtils;
 
 import java.net.MalformedURLException;
 import java.net.URL;

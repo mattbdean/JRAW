@@ -4,14 +4,13 @@ import net.dean.jraw.models.DistinguishedStatus;
 import net.dean.jraw.models.meta.JsonProperty;
 
 /**
- * Indicates this Thing was posted by a redditor of elevated role in the website, such as an administrator or moderator.
+ * Indicates this model was posted by a user of elevated privilege (usually moderators or administrators) speaking
+ * officially.
+ *
  * See {@link net.dean.jraw.models.DistinguishedStatus} for a full list of roles.
  */
 public interface Distinguishable extends JsonAttribute {
-    /**
-     * Gets the role of the poster of this Thing
-     * @return The role of the poster of this Thing
-     */
+    /** Gets the status of this model */
     @JsonProperty
     DistinguishedStatus getDistinguishedStatus();
 }

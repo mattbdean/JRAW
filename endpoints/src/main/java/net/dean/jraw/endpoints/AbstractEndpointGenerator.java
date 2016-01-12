@@ -4,7 +4,7 @@ import javassist.ClassPool;
 import javassist.CtMethod;
 import javassist.NotFoundException;
 import net.dean.jraw.Endpoint;
-import net.dean.jraw.JrawUtils;
+import net.dean.jraw.util.JrawUtils;
 
 import java.io.File;
 import java.io.IOException;

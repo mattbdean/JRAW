@@ -418,7 +418,7 @@ public enum Endpoints {
     private final net.dean.jraw.Endpoint endpoint;
     private final String scope;
 
-    private Endpoints(String requestDescriptor, String scope) {
+    Endpoints(String requestDescriptor, String scope) {
         this.endpoint = new net.dean.jraw.Endpoint(requestDescriptor);
         this.scope = scope;
     }

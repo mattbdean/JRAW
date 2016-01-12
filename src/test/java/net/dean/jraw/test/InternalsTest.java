@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.dean.jraw.ApiException;
 import net.dean.jraw.Endpoint;
-import net.dean.jraw.Version;
+import net.dean.jraw.util.Version;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.oauth.OAuthException;
 import net.dean.jraw.models.Captcha;
@@ -217,7 +217,7 @@ public class InternalsTest extends RedditTest {
     }
 
     private interface CodeBlock {
-        public void execute();
+        void execute();
     }
 
     // Normally this class would be private but JsonModel.toString() will throw an IllegalAccessException because it

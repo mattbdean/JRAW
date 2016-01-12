@@ -1,12 +1,13 @@
 package net.dean.jraw.test;
 
+import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlForm;
 import com.gargoylesoftware.htmlunit.html.HtmlInput;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import net.dean.jraw.RedditClient;
-import net.dean.jraw.Version;
+import net.dean.jraw.util.Version;
 import net.dean.jraw.http.HttpRequest;
 import net.dean.jraw.http.UserAgent;
 import net.dean.jraw.http.oauth.Credentials;
@@ -15,6 +16,8 @@ import net.dean.jraw.http.oauth.OAuthData;
 import net.dean.jraw.http.oauth.OAuthException;
 import net.dean.jraw.http.oauth.OAuthHelper;
 import net.dean.jraw.paginators.SubredditPaginator;
+import org.testng.Assert;
+import org.testng.SkipException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -209,7 +212,15 @@ public class OAuthHelperTest {
             assertEquals(reddit.getOAuthHelper().getAuthStatus(), OAuthHelper.AuthStatus.WAITING_FOR_CHALLENGE);
 
             // Reddit prompts us to log in before we authorize the app
-            HtmlPage loginPage = client.getPage(url);
+            HtmlPage loginPage = null;
+            try {
+                loginPage = client.getPage(url);
+            } catch (FailingHttpStatusCodeException e) {
+                if (e.getStatusCode() == 503) {
+                    throw new SkipException("reddit servers are all busy, skipping");
+                }
+                Assert.fail("Failing HTTP status code", e);
+            }
             HtmlForm loginForm = getFirstChild(loginPage.getBody(), "form", "id", "login-form");
 
             // Change the value of the username and password forms
@@ -219,11 +230,26 @@ public class OAuthHelperTest {
             loginForm.getInputByName("passwd").setValueAttribute(userPassCreds.getPassword());
 
             // Submit the form
-            HtmlPage authorizePage = getFirstChild(loginForm, "button", "type", "submit").click();
-
+            HtmlPage authorizePage = null;
+            try {
+                authorizePage = getFirstChild(loginForm, "button", "type", "submit").click();
+            } catch (FailingHttpStatusCodeException e) {
+                if (e.getStatusCode() == 503) {
+                    throw new SkipException("reddit servers are all busy, skipping");
+                }
+                Assert.fail("Failing HTTP status code", e);
+            }
             // Click the 'Allow' button on the authorize page
             HtmlInput allowInput = getFirstChild(authorizePage.getBody(), "input", "name", "authorize");
-            HtmlPage finalPage = allowInput.click();
+            HtmlPage finalPage = null;
+            try {
+                finalPage = allowInput.click();
+            } catch (FailingHttpStatusCodeException e) {
+                if (e.getStatusCode() == 503) {
+                    throw new SkipException("reddit servers are all busy, skipping");
+                }
+                Assert.fail("Failing HTTP status code", e);
+            }
 
             // Retrieve the final URL and authorize the app
             URL finalUrl = finalPage.getWebResponse().getWebRequest().getUrl();

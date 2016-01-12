@@ -2,7 +2,7 @@ package net.dean.jraw.http.oauth;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.net.MediaType;
-import net.dean.jraw.JrawUtils;
+import net.dean.jraw.util.JrawUtils;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.AuthenticationMethod;
 import net.dean.jraw.http.BasicAuthData;
@@ -158,7 +158,12 @@ public class OAuthHelper {
                     .build());
             this.authStatus = AuthStatus.AUTHORIZED;
             OAuthData data = new OAuthData(creds.getAuthenticationMethod(), response.getJson());
-            this.refreshToken = data.getRefreshToken();
+
+            // Only overwrite the refresh token if none has previously been set. Since OAuthData objects that were requested
+            // using a refresh token do not contain a refresh token, refreshToken would have been set to null and
+            // the client would not have been able to reauthorize itself
+            if (refreshToken == null && data.getRefreshToken() != null)
+                this.refreshToken = data.getRefreshToken();
             return data;
         } catch (NetworkException e) {
             if (e.getResponse().getStatusCode() == 401) {
@@ -365,7 +370,7 @@ public class OAuthHelper {
     /**
      * Represents the different states of authorization this class can be in
      */
-    public static enum AuthStatus {
+    public enum AuthStatus {
         /** No action has been performed */
         NOT_YET,
         /** An authorization URL has been created, but the user has not accepted/declined yet */

@@ -19,7 +19,7 @@ public final class MessageSerializer implements JsonSerializer<Message> {
             case MESSAGE:
                 return (T) new PrivateMessage(node.get("data"));
             default:
-                throw new IllegalArgumentException("Kind " + kind.getValue() + " is not applicable for class " + clazz.getName());
+                throw new IllegalArgumentException("Kind '" + kind.getValue() + "' is not applicable for class " + clazz.getName());
         }
     }
 }

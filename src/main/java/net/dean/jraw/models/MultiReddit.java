@@ -1,7 +1,7 @@
 package net.dean.jraw.models;
 
 import com.fasterxml.jackson.annotation.JsonValue;
-import net.dean.jraw.NoSuchEnumConstantException;
+import net.dean.jraw.util.NoSuchEnumConstantException;
 import net.dean.jraw.models.attr.Created;
 import net.dean.jraw.models.meta.JsonProperty;
 import net.dean.jraw.models.meta.Model;
@@ -104,12 +104,7 @@ public final class MultiReddit extends Thing implements Created {
         return _getCreated();
     }
 
-    @Override
-    public Date getCreatedUtc() {
-        return _getCreatedUtc();
-    }
-
-    public static enum WeightingScheme {
+    public enum WeightingScheme {
         CLASSIC,
         FRESH;
 
@@ -130,7 +125,7 @@ public final class MultiReddit extends Thing implements Created {
         }
     }
 
-    public static enum Visibility {
+    public enum Visibility {
         /** Available to everyone */
         PUBLIC,
         /** Will not appear with the rest of the multireddits */
@@ -155,7 +150,7 @@ public final class MultiReddit extends Thing implements Created {
         }
     }
 
-    public static enum Icon {
+    public enum Icon {
         ABSENT {
             @Override
             public String toString() {

@@ -1,6 +1,6 @@
 package net.dean.jraw.test;
 
-import net.dean.jraw.JrawUtils;
+import net.dean.jraw.util.JrawUtils;
 import net.dean.jraw.http.BasicAuthData;
 import net.dean.jraw.http.FormEncodedBodyBuilder;
 import net.dean.jraw.http.HttpAdapter;

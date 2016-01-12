@@ -2,9 +2,8 @@ package net.dean.jraw.paginators;
 
 import net.dean.jraw.EndpointImplementation;
 import net.dean.jraw.Endpoints;
-import net.dean.jraw.JrawUtils;
+import net.dean.jraw.util.JrawUtils;
 import net.dean.jraw.RedditClient;
-import net.dean.jraw.http.SubmissionRequest;
 import net.dean.jraw.models.Listing;
 import net.dean.jraw.models.Submission;
 
@@ -16,8 +15,6 @@ import net.dean.jraw.models.Submission;
  * Only when that Submission is queried directly does reddit give you that post's comments.
  *
  * <p>To query a Submission directly, use {@link RedditClient#getSubmission(String)}.
- *
- * @see RedditClient#getSubmission(SubmissionRequest)
  */
 public class SubredditPaginator extends Paginator<Submission> {
     private String subreddit;
@@ -31,13 +28,14 @@ public class SubredditPaginator extends Paginator<Submission> {
     }
     
     /**
-     * Instantiates a new SubredditPaginator that will iterate through submissions in a subreddit.
+     * Instantiates a new SubredditPaginator that will iterate through submissions of more than one subreddit.
      * @param creator The RedditClient that will be used to send HTTP requests
-     * @param subreddit The subreddit to paginate through
+     * @param subreddit The first subreddit to iterate through
+     * @param moreSubreddits More subreddits to iterate through
      */
-    public SubredditPaginator(RedditClient creator, String subreddit) {
+    public SubredditPaginator(RedditClient creator, String subreddit, String... moreSubreddits) {
         super(creator, Submission.class);
-        this.subreddit = subreddit;
+        setSubreddit(subreddit, moreSubreddits);
     }
 
     @Override
@@ -64,8 +62,19 @@ public class SubredditPaginator extends Paginator<Submission> {
         return subreddit;
     }
 
-    public void setSubreddit(String subreddit) {
-        this.subreddit = subreddit;
+    public void setSubreddit(String subreddit, String... moreSubreddits) {
+        if (subreddit != null && moreSubreddits != null) {
+            StringBuilder subreddits = new StringBuilder(subreddit);
+            for (String sub : moreSubreddits) {
+                subreddits.append("+")
+                        .append(sub);
+            }
+            this.subreddit = subreddits.toString();
+        } else if (subreddit != null) {
+            this.subreddit = subreddit;
+        } else {
+            this.subreddit = null;
+        }
         invalidate();
     }
 }

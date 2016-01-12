@@ -8,6 +8,7 @@ import net.dean.jraw.models.FlairTemplate;
 import net.dean.jraw.models.Submission;
 import net.dean.jraw.models.Thing;
 import net.dean.jraw.models.attr.Votable;
+import net.dean.jraw.util.JrawUtils;
 
 import java.util.Map;
 

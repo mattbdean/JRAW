@@ -2,7 +2,7 @@ package net.dean.jraw.http;
 
 import com.google.common.net.MediaType;
 import com.squareup.okhttp.internal.Util;
-import net.dean.jraw.JrawUtils;
+import net.dean.jraw.util.JrawUtils;
 
 import java.util.Map;
 

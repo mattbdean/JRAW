@@ -1,6 +1,6 @@
 package net.dean.jraw.models.meta;
 
-import net.dean.jraw.JrawUtils;
+import net.dean.jraw.util.JrawUtils;
 import net.dean.jraw.models.JsonModel;
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -12,7 +12,6 @@ import java.util.Map;
  * and {@link Model} classes. This class is a singleton.
  */
 public final class ModelManager {
-    public static final Class<? extends JsonSerializer> DEFAULT_SERIALIZER = DefaultJsonSerializer.class;
     private static ModelManager instance = new ModelManager();
     public static ModelManager getInstance() { return instance; }
 

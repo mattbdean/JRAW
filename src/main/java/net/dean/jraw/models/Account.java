@@ -7,11 +7,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import java.util.Date;
 
-/**
- * Represents a redditor's account.
- *
- * @author Matthew Dean
- */
+/** Represents a user's account. */
 @Model(kind = Model.Kind.ACCOUNT)
 public class Account extends Thing implements Created {
     /** Instantiates a new Account */
@@ -31,7 +27,7 @@ public class Account extends Thing implements Created {
         return data("is_friend", Boolean.class);
     }
 
-    /** Checks if the user has Reddit Gold */
+    /** Checks if the user has reddit gold */
     @JsonProperty
     public Boolean hasGold() {
         return data("is_gold", Boolean.class);
@@ -58,10 +54,5 @@ public class Account extends Thing implements Created {
     @Override
     public Date getCreated() {
         return _getCreated();
-    }
-
-    @Override
-    public Date getCreatedUtc() {
-        return _getCreatedUtc();
     }
 }

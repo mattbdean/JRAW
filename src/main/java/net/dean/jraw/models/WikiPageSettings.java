@@ -1,6 +1,6 @@
 package net.dean.jraw.models;
 
-import net.dean.jraw.NoSuchEnumConstantException;
+import net.dean.jraw.util.NoSuchEnumConstantException;
 import net.dean.jraw.models.meta.JsonProperty;
 import net.dean.jraw.models.meta.Model;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -43,7 +43,7 @@ public final class WikiPageSettings extends RedditObject {
         return PermissionLevel.getByJsonValue(data("permlevel", Integer.class));
     }
 
-    public static enum PermissionLevel {
+    public enum PermissionLevel {
         /** Follows default (subreddit-wiki-wide) permissions */
         DEFAULT(0),
         /** Only approved wiki contributors may edit this page */
@@ -52,7 +52,7 @@ public final class WikiPageSettings extends RedditObject {
         MODERATOR_ONLY(2);
 
         private int jsonValue;
-        private PermissionLevel(int jsonValue) {
+        PermissionLevel(int jsonValue) {
             this.jsonValue = jsonValue;
         }
 

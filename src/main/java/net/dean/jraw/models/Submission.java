@@ -1,6 +1,7 @@
 package net.dean.jraw.models;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import net.dean.jraw.util.JrawUtils;
 import net.dean.jraw.models.meta.JsonProperty;
 import net.dean.jraw.models.meta.Model;
 import net.dean.jraw.models.meta.SubmissionSerializer;
@@ -194,7 +195,7 @@ public final class Submission extends PublicContribution {
 
     /**
      * Gets this Submission's thumbnail type. Different thumbnail values are returned for different reasons, such as if
-     * the post is NSFW, a self post, etc. If the type is {@link ThumbnailType#URL}, then Reddit has created a thumbnail
+     * the post is NSFW, a self post, etc. If the type is {@link ThumbnailType#URL}, then reddit has created a thumbnail
      * for this post.
      * @return This Submission's thumbnail type
      */
@@ -273,17 +274,12 @@ public final class Submission extends PublicContribution {
 
     /** Gets a URL on the redd.it domain. For example, <a href="http://redd.it/92dd8">http://redd.it/92dd8</a> */
     public String getShortURL() {
-        return "http://redd.it/" + getId();
+        return "http://redd.it/" + JrawUtils.urlEncode(getId());
     }
 
     @Override
     public Date getCreated() {
         return _getCreated();
-    }
-
-    @Override
-    public Date getCreatedUtc() {
-        return _getCreatedUtc();
     }
 
     @Override
@@ -326,7 +322,7 @@ public final class Submission extends PublicContribution {
 
     /**
      * Represents a list of possible return values for the "thumbnail" JsonNode. All of the values in this enum can be
-     * returned by the Reddit API, except for {@link #URL} and {@link #NONE}. If {@code URL} is returned, then Reddit
+     * returned by the reddit API, except for {@link #URL} and {@link #NONE}. If {@code URL} is returned, then Reddit
      * has created a thumbnail for specifically for that post. If {@code NONE} is returned, then there is no thumbnail
      * available.
      */

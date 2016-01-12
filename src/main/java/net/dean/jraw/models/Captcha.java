@@ -1,12 +1,12 @@
 package net.dean.jraw.models;
 
-import net.dean.jraw.JrawUtils;
+import net.dean.jraw.util.JrawUtils;
 
 import java.net.URL;
 
 /**
- * Represents a Captcha (an acronym for "Completely Automated Public Turing test to tell Computers and Humans Apart").
- * These are required by the Reddit API for some actions that are susceptible to spam, like creating subreddits or
+ * Represents a CAPTCHA(an acronym for "Completely Automated Public Turing test to tell Computers and Humans Apart").
+ * These are required by the reddit API for some actions that are susceptible to spam, like creating subreddits or
  * accounts.
  */
 public final class Captcha {

@@ -1,13 +1,13 @@
 package net.dean.jraw.models;
 
-import net.dean.jraw.Dimension;
+import net.dean.jraw.util.Dimension;
 import net.dean.jraw.models.meta.JsonProperty;
 import net.dean.jraw.models.meta.Model;
 import com.fasterxml.jackson.databind.JsonNode;
 
 /** This class represents a subreddit, such as /r/pics. */
 @Model(kind = Model.Kind.SUBREDDIT)
-public final class Subreddit extends Thing {
+public final class Subreddit extends Thing implements Comparable<Subreddit> {
 
     /** Instantiates a new Subreddit */
     public Subreddit(JsonNode dataNode) {
@@ -148,44 +148,34 @@ public final class Subreddit extends Thing {
         return data("user_is_subscriber", Boolean.class);
     }
 
+
+    @Override
+    public int compareTo(Subreddit subreddit) {
+        return getDisplayName().compareToIgnoreCase(subreddit.getDisplayName());
+    }
+
     /** This class represents a list of all the available subreddit types */
-    public static enum Type {
-        /**
-         * Open to all users
-         */
+    public enum Type {
+        /** Open to all users */
         PUBLIC,
-        /**
-         * only approved members can view and submit
-         */
+        /** Only approved members can view and submit */
         PRIVATE,
-        /**
-         * Anyone can view, but only some are approved to submit links
-         */
+        /** Anyone can view, but only some are approved to submit links */
         RESTRICTED,
-        /**
-         * Only users with Reddit gold can post
-         */
+        /** Only users with reddit gold can post */
         GOLD_RESTRICTED,
         ARCHIVED
     }
 
-    /** A list of how a subreddit can restrict the type of submissions that can be posted */
-    public static enum SubmissionType {
-        /**
-         * Links and self posts
-         */
+    /** An enumeration of how a subreddit can restrict the type of submissions that can be posted */
+    public enum SubmissionType {
+        /** Links and self posts */
         ANY,
-        /**
-         * Only links
-         */
+        /** Only links */
         LINK,
-        /**
-         * Only self posts
-         */
+        /** Only self posts */
         SELF,
-        /**
-         * Restricted subreddit
-         */
+        /** Restricted subreddit */
         NONE
     }
 }

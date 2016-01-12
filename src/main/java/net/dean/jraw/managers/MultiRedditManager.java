@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import net.dean.jraw.ApiException;
 import net.dean.jraw.EndpointImplementation;
 import net.dean.jraw.Endpoints;
-import net.dean.jraw.JrawUtils;
+import net.dean.jraw.util.JrawUtils;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.HttpRequest;
 import net.dean.jraw.http.MultiRedditUpdateRequest;

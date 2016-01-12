@@ -72,7 +72,7 @@ public final class UserRecord extends Thing {
      * <a href="https://www.reddit.com/r/modhelp/wiki/mod_permissions">/r/modhelp wiki page on mod permissions</a> has
      * heavily influenced the documentation in this class.
      */
-    public static enum ModPermission {
+    public enum ModPermission {
         /** Access to all moderator resources */
         ALL,
         /** Manage the lists of approved submitters and banned users */

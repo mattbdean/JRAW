@@ -20,7 +20,7 @@ public enum MediaTypes {
 
     private final MediaType type;
     private final String typeString;
-    private MediaTypes(String typeString) {
+    MediaTypes(String typeString) {
         this.typeString = typeString;
         this.type = MediaType.parse(typeString);
     }

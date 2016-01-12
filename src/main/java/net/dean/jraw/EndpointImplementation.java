@@ -20,5 +20,5 @@ public @interface EndpointImplementation {
      *
      * @return A list of endpoints
      */
-    public Endpoints[] value();
+    Endpoints[] value();
 }

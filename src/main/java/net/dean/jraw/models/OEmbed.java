@@ -152,7 +152,7 @@ public final class OEmbed extends JsonModel {
     }
 
     /** The type of media that this OEmbed object represents */
-    public static enum MediaType {
+    public enum MediaType {
         /** Represents static photos */
         PHOTO,
         /** Represents playable videos */

@@ -1,7 +1,7 @@
 package net.dean.jraw.test;
 
 import net.dean.jraw.ApiException;
-import net.dean.jraw.Version;
+import net.dean.jraw.util.Version;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.managers.InboxManager;
 import net.dean.jraw.models.Contribution;

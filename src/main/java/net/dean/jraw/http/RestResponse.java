@@ -5,7 +5,7 @@ import com.google.common.base.Charsets;
 import com.google.common.net.MediaType;
 import com.squareup.okhttp.Headers;
 import net.dean.jraw.ApiException;
-import net.dean.jraw.JrawUtils;
+import net.dean.jraw.util.JrawUtils;
 import net.dean.jraw.models.JsonModel;
 import net.dean.jraw.models.Listing;
 import net.dean.jraw.models.RedditObject;

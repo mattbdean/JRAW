@@ -1,9 +1,8 @@
 plugins {
     id 'java'
-    id 'idea'
     id 'maven-publish'
     id 'jacoco'
-    id 'com.github.kt3k.coveralls' version '2.0.1'
+    id 'com.github.kt3k.coveralls' version '2.4.0x'
 }
 
 ext {
@@ -14,7 +13,7 @@ ext {
 allprojects {
     sourceCompatibility = 1.7
     group = 'net.dean.jraw'
-    version = '0.7.1'
+    version = '0.8.0'
 
     repositories {
         mavenCentral()
@@ -22,13 +21,13 @@ allprojects {
 }
 
 dependencies {
-    compile     'com.squareup.okhttp:okhttp:2.3.0'
-    compile     'com.fasterxml.jackson.core:jackson-databind:2.5.0'
-    compile     'com.google.guava:guava:18.0'
-    compile     'org.slf4j:slf4j-api:1.7.10'
-    testCompile 'org.slf4j:slf4j-simple:1.7.10'
-    testCompile 'org.testng:testng:6.1.1'
-    testCompile 'net.sourceforge.htmlunit:htmlunit:2.15'
+    compile     'com.squareup.okhttp:okhttp:2.7.0'
+    compile     'com.fasterxml.jackson.core:jackson-databind:2.6.0'
+    compile     'com.google.guava:guava:19.0'
+    compile     'org.slf4j:slf4j-api:1.7.13'
+    testCompile 'org.slf4j:slf4j-simple:1.7.13'
+    testCompile 'org.testng:testng:6.9.10'
+    testCompile 'net.sourceforge.htmlunit:htmlunit:2.19'
 }
 
 // Add the generated source to the main Java source directories
@@ -56,6 +55,7 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 }
 
 task release(type: Jar, dependsOn: ['fatJar', 'sourcesJar']) {
+
     from sourceSets.main.output
     destinationDir = releaseDest
 }

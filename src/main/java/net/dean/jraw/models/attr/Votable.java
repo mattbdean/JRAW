@@ -1,12 +1,13 @@
 package net.dean.jraw.models.attr;
 
+import net.dean.jraw.models.Thing;
 import net.dean.jraw.models.VoteDirection;
 import net.dean.jraw.models.meta.JsonProperty;
 
 /**
- * Provides a way to show that this Thing is able to be voted on.
+ * Indicates that this model can be voted on
  *
- * @see net.dean.jraw.models.VoteDirection
+ * @see net.dean.jraw.managers.AccountManager#vote(Thing, VoteDirection)
  */
 public interface Votable extends JsonAttribute {
     /**

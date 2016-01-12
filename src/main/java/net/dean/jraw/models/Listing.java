@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.ListIterator;
 
 /**
- * Represents a Listing: How Reddit returns paginated data. A Listing has three main keys: the fullnames of the items
+ * A Listing is how the reddit API returns paginated data. A Listing has three main parts: the fullnames of the items
  * before and after, and its children. Listing uses an {@link ArrayList} to implement the method inherited by
  * {@link java.util.List}. For all intents and purposes, Listing properties are immutable.
  *

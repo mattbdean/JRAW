@@ -6,17 +6,11 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import java.util.Date;
 
-/**
- * Represents a comment on a Submission.
- *
- * @author Matthew Dean
- */
+/** Represents a comment on a Submission */
 @Model(kind = Model.Kind.COMMENT)
 public class Comment extends PublicContribution {
 
-    /**
-     * Instantiates a new Comment
-     */
+    /** Instantiates a new Comment */
     public Comment(JsonNode dataNode) {
         super(dataNode);
     }
@@ -60,11 +54,11 @@ public class Comment extends PublicContribution {
     }
 
     /**
-     * Gets the edit date in UTC, or null if it has not been edited. Note that the Reddit API will return a boolean value
-     * for some old edited comments, in which this method will return null. If this comment was retrieved via the inbox,
-     * this will also return null.
+     * Gets the edit date in UTC, or null if it has not been edited. Note that the reddit API will return a boolean
+     * value for some old edited comments, in which case this method will return null. If this comment was retrieved via
+     * the inbox, this will also return null.
      *
-     * @return The edit date in UTC, or null if it has not been edited
+     * @return The edit date in UTC, or null if it has not been edited or if this is a comment retrieved from the inbox
      * @see #hasBeenEdited()
      */
     @JsonProperty(nullable = true)

@@ -6,7 +6,7 @@ import net.dean.jraw.AccountPreferencesEditor;
 import net.dean.jraw.ApiException;
 import net.dean.jraw.EndpointImplementation;
 import net.dean.jraw.Endpoints;
-import net.dean.jraw.JrawUtils;
+import net.dean.jraw.util.JrawUtils;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.MediaTypes;
 import net.dean.jraw.http.NetworkException;
@@ -127,7 +127,7 @@ public class AccountManager extends AbstractManager {
      * @throws NetworkException If the request was not successful
      * @throws ApiException If the API returned an error
      */
-    public void save(Submission s) throws NetworkException, ApiException {
+    public void save(PublicContribution s) throws NetworkException, ApiException {
         setSaved(s, true);
     }
 
@@ -137,7 +137,7 @@ public class AccountManager extends AbstractManager {
      * @throws NetworkException If the request was not successful
      * @throws ApiException If the API returned an error
      */
-    public void unsave(Submission s) throws NetworkException, ApiException {
+    public void unsave(PublicContribution s) throws NetworkException, ApiException {
         setSaved(s, false);
     }
 
@@ -150,7 +150,7 @@ public class AccountManager extends AbstractManager {
      * @throws ApiException If the API returned an error
      */
     @EndpointImplementation({Endpoints.SAVE, Endpoints.UNSAVE})
-    private void setSaved(Submission s, boolean save) throws NetworkException, ApiException {
+    private void setSaved(PublicContribution s, boolean save) throws NetworkException, ApiException {
         // Send it to "/api/save" if save == true, "/api/unsave" if save == false
         genericPost(reddit.request()
                 .endpoint(save ? Endpoints.SAVE : Endpoints.UNSAVE)
@@ -195,20 +195,21 @@ public class AccountManager extends AbstractManager {
     }
 
     /**
-     * Changes the text of your
+     * Updates the body of a self-text Submission or Comment
      *
-     * @param submission The submission that that you would like to edit the text for
-     * @param text The new text that you want the post to have
+     * @param contribution The self-post or comment that to edit the text for
+     * @param text The new body
      * @throws NetworkException If the request was not successful
      * @throws ApiException If the API returned an error
      */
     @EndpointImplementation(Endpoints.EDITUSERTEXT)
-    public <T extends Contribution> void updateSelfpost(T submission, String text) throws NetworkException, ApiException {
+
+    public <T extends PublicContribution> void updateContribution(T contribution, String text) throws NetworkException, ApiException {
         genericPost(reddit.request().endpoint(Endpoints.EDITUSERTEXT)
                 .post(JrawUtils.mapOf(
                         "api_type", "json",
                         "text", text,
-                        "thing_id", submission.getFullName()
+                        "thing_id", contribution.getFullName()
                 )).build());
     }
 

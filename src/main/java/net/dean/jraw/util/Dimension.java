@@ -1,4 +1,4 @@
-package net.dean.jraw;
+package net.dean.jraw.util;
 
 /**
  * Represents an immutable dimension, consisting of a width and height
@@ -33,9 +33,8 @@ public final class Dimension {
         Dimension dimension = (Dimension) o;
 
         if (height != dimension.height) return false;
-        if (width != dimension.width) return false;
+        return width == dimension.width;
 
-        return true;
     }
 
     @Override

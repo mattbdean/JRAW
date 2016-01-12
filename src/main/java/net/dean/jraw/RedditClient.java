@@ -1,6 +1,7 @@
 package net.dean.jraw;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import net.dean.jraw.auth.AuthenticationListener;
 import net.dean.jraw.http.AuthenticationMethod;
 import net.dean.jraw.http.HttpAdapter;
 import net.dean.jraw.http.HttpRequest;
@@ -16,7 +17,7 @@ import net.dean.jraw.http.oauth.InvalidScopeException;
 import net.dean.jraw.http.oauth.OAuthData;
 import net.dean.jraw.http.oauth.OAuthHelper;
 import net.dean.jraw.models.Account;
-import net.dean.jraw.models.Award;
+import net.dean.jraw.models.Trophy;
 import net.dean.jraw.models.Captcha;
 import net.dean.jraw.models.CommentSort;
 import net.dean.jraw.models.Listing;
@@ -28,6 +29,7 @@ import net.dean.jraw.models.meta.Model;
 import net.dean.jraw.models.meta.SubmissionSerializer;
 import net.dean.jraw.paginators.Sorting;
 import net.dean.jraw.paginators.SubredditPaginator;
+import net.dean.jraw.util.JrawUtils;
 
 import java.lang.System;
 import java.util.ArrayList;
@@ -60,6 +62,7 @@ public class RedditClient extends RestClient {
 
     /** The method of authentication currently being used */
     private AuthenticationMethod authMethod;
+    private AuthenticationListener authListener;
     private OAuthData authData;
     private OAuthHelper authHelper;
 
@@ -125,6 +128,11 @@ public class RedditClient extends RestClient {
         httpAdapter.getDefaultHeaders().put(HEADER_AUTHORIZATION, "bearer " + authData.getAccessToken());
 
 
+        if (!authMethod.isUserless() && isAuthorizedFor(Endpoints.OAUTH_ME)) {
+            this.authenticatedUser = me().getFullName();
+        }
+        if (authListener != null)
+            authListener.onAuthenticated(authData);
     }
 
     /**
@@ -137,6 +145,14 @@ public class RedditClient extends RestClient {
         authData = null;
         httpAdapter.getDefaultHeaders().remove(HEADER_AUTHORIZATION);
         authMethod = AuthenticationMethod.NOT_YET;
+    }
+
+    /**
+     * Sets the AuthenticationListener. This listener will be invoked at the end of a successful call to
+     * {@link #authenticate(OAuthData)}.
+     */
+    public void setAuthenticationListener(AuthenticationListener listener) {
+        this.authListener = listener;
     }
 
     @Override
@@ -568,7 +584,7 @@ public class RedditClient extends RestClient {
      * Gets the trophies for the currently authenticated user
      * @throws NetworkException If the request was not successful
      */
-    public List<Award> getTrophies() throws NetworkException {
+    public List<Trophy> getTrophies() throws NetworkException {
         return getTrophies(null);
     }
 
@@ -582,7 +598,7 @@ public class RedditClient extends RestClient {
             Endpoints.OAUTH_ME_TROPHIES,
             Endpoints.OAUTH_USER_USERNAME_TROPHIES
     })
-    public List<Award> getTrophies(String username) throws NetworkException {
+    public List<Trophy> getTrophies(String username) throws NetworkException {
         if (username == null)
             assertNotUserless();
         username = authenticatedUser;
@@ -591,12 +607,12 @@ public class RedditClient extends RestClient {
                 .endpoint(Endpoints.OAUTH_USER_USERNAME_TROPHIES, username)
                 .build());
 
-        List<Award> awards = new ArrayList<>();
+        List<Trophy> trophies = new ArrayList<>();
         for (JsonNode awardNode : response.getJson().get("data").get("trophies")) {
-            awards.add(new Award(awardNode.get("data")));
+            trophies.add(new Trophy(awardNode.get("data")));
         }
 
-        return awards;
+        return trophies;
     }
     /**
      * Gets the object that will help clients authenticate users with their Reddit app

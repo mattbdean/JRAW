@@ -2,7 +2,7 @@ package net.dean.jraw.http.oauth;
 
 import com.google.common.collect.ImmutableMap;
 import net.dean.jraw.ApiException;
-import net.dean.jraw.JrawUtils;
+import net.dean.jraw.util.JrawUtils;
 
 import java.util.Map;
 

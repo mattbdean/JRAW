@@ -3,7 +3,7 @@ package net.dean.jraw.models;
 import net.dean.jraw.RedditClient;
 
 /**
- * Represents the flair of a user or submission in a specific subreddit.
+ * Immutable class representing the flair of a user or submission in a specific subreddit.
  */
 public final class Flair {
     private final String cssClass;

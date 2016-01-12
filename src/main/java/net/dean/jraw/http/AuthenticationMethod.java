@@ -23,10 +23,10 @@ public enum AuthenticationMethod {
     USERLESS_APP(true);
 
     private boolean userless;
-    private AuthenticationMethod() {
+    AuthenticationMethod() {
         this(false);
     }
-    private AuthenticationMethod(boolean userless) {
+    AuthenticationMethod(boolean userless) {
         this.userless = userless;
     }
 

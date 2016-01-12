@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import java.util.Date;
 
-/** This class represents a Reddit-hosted wiki page. */
+/** This class represents a reddit-hosted wiki page. */
 @Model(kind = Model.Kind.WIKI_PAGE)
 public final class WikiPage extends RedditObject {
     /** Instantiates a new WikiPage */

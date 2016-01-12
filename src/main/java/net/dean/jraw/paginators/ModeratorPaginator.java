@@ -112,7 +112,7 @@ public class ModeratorPaginator extends GenericPaginator<PublicContribution> {
         return args;
     }
 
-    protected static enum Where {
+    protected enum Where {
         /** Submissions that have been reported. Supports filtering. */
         REPORTS(true),
         /** Submissions that have been marked as spam. Supports filtering. */
@@ -128,7 +128,7 @@ public class ModeratorPaginator extends GenericPaginator<PublicContribution> {
         EDITED(true);
 
         private boolean supportsFilter;
-        private Where(boolean supportsFilter) {
+        Where(boolean supportsFilter) {
             this.supportsFilter = supportsFilter;
         }
 
