@@ -1,11 +1,7 @@
 package net.dean.jraw.test;
 
 import com.google.common.base.Optional;
-import net.dean.jraw.JrawUtils;
-import net.dean.jraw.http.HttpRequest;
-import net.dean.jraw.http.MediaTypes;
 import net.dean.jraw.http.NetworkException;
-import net.dean.jraw.http.RestResponse;
 import net.dean.jraw.models.CommentNode;
 import net.dean.jraw.models.Listing;
 import net.dean.jraw.models.Submission;
@@ -16,8 +12,6 @@ import org.testng.Assert;
 import org.testng.SkipException;
 import org.testng.annotations.Test;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;

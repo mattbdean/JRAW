@@ -2,7 +2,7 @@ package net.dean.jraw.test;
 
 import net.dean.jraw.AccountPreferencesEditor;
 import net.dean.jraw.ApiException;
-import net.dean.jraw.JrawUtils;
+import net.dean.jraw.util.JrawUtils;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.managers.AccountManager;
 import net.dean.jraw.models.AccountPreferences;

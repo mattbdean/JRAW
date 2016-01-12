@@ -1,4 +1,4 @@
-package net.dean.jraw;
+package net.dean.jraw.util;
 
 /**
  * This class provides a standard way to version the library

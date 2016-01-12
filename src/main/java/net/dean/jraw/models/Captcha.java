@@ -1,6 +1,6 @@
 package net.dean.jraw.models;
 
-import net.dean.jraw.JrawUtils;
+import net.dean.jraw.util.JrawUtils;
 
 import java.net.URL;
 

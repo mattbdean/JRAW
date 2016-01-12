@@ -2,7 +2,7 @@ package net.dean.jraw.test;
 
 import com.google.common.collect.Ordering;
 import net.dean.jraw.ApiException;
-import net.dean.jraw.JrawUtils;
+import net.dean.jraw.util.JrawUtils;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.managers.MultiRedditManager;

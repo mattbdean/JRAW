@@ -1,4 +1,4 @@
-package net.dean.jraw;
+package net.dean.jraw.util;
 
 /**
  * Represents an immutable dimension, consisting of a width and height

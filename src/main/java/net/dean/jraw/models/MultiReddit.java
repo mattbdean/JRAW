@@ -1,7 +1,7 @@
 package net.dean.jraw.models;
 
 import com.fasterxml.jackson.annotation.JsonValue;
-import net.dean.jraw.NoSuchEnumConstantException;
+import net.dean.jraw.util.NoSuchEnumConstantException;
 import net.dean.jraw.models.attr.Created;
 import net.dean.jraw.models.meta.JsonProperty;
 import net.dean.jraw.models.meta.Model;

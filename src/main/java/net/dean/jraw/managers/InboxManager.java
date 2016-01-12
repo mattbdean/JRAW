@@ -5,6 +5,7 @@ import net.dean.jraw.http.MediaTypes;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.RestResponse;
 import net.dean.jraw.models.Message;
+import net.dean.jraw.util.JrawUtils;
 
 /**
  * This class is responsible for managing a user's inbox

@@ -29,6 +29,7 @@ import net.dean.jraw.models.meta.Model;
 import net.dean.jraw.models.meta.SubmissionSerializer;
 import net.dean.jraw.paginators.Sorting;
 import net.dean.jraw.paginators.SubredditPaginator;
+import net.dean.jraw.util.JrawUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;

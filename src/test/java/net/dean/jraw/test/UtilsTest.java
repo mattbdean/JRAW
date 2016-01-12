@@ -1,15 +1,16 @@
 package net.dean.jraw.test;
 
 import com.google.common.net.MediaType;
+import net.dean.jraw.util.JrawUtils;
 import org.testng.annotations.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static net.dean.jraw.JrawUtils.*;
+import static net.dean.jraw.util.JrawUtils.*;
 import static org.testng.Assert.*;
 
-/** Tests methods found in {@link net.dean.jraw.JrawUtils} */
+/** Tests methods found in {@link JrawUtils} */
 public class UtilsTest extends RedditTest {
     @Test
     public void testMapOf() {

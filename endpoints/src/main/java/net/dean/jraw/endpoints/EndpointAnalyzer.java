@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import net.dean.jraw.Endpoint;
 import net.dean.jraw.EndpointImplementation;
 import net.dean.jraw.Endpoints;
-import net.dean.jraw.JrawUtils;
+import net.dean.jraw.util.JrawUtils;
 import org.reflections.Reflections;
 import org.reflections.scanners.MethodAnnotationsScanner;
 import org.reflections.util.ClasspathHelper;

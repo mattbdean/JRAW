@@ -1,9 +1,9 @@
 package net.dean.jraw.test;
 
 import net.dean.jraw.ApiException;
-import net.dean.jraw.JrawUtils;
+import net.dean.jraw.util.JrawUtils;
 import net.dean.jraw.RedditClient;
-import net.dean.jraw.Version;
+import net.dean.jraw.util.Version;
 import net.dean.jraw.http.LoggingMode;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.UserAgent;

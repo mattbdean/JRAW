@@ -2,7 +2,7 @@ package net.dean.jraw.http.oauth;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.net.MediaType;
-import net.dean.jraw.JrawUtils;
+import net.dean.jraw.util.JrawUtils;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.AuthenticationMethod;
 import net.dean.jraw.http.BasicAuthData;

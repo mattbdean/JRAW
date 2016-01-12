@@ -1,6 +1,6 @@
 package net.dean.jraw.models.meta;
 
-import net.dean.jraw.JrawUtils;
+import net.dean.jraw.util.JrawUtils;
 import net.dean.jraw.models.JsonModel;
 import com.fasterxml.jackson.databind.JsonNode;
 

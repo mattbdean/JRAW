@@ -1,6 +1,6 @@
 package net.dean.jraw.http.oauth;
 
-import net.dean.jraw.JrawUtils;
+import net.dean.jraw.util.JrawUtils;
 import net.dean.jraw.http.AuthenticationMethod;
 
 import java.net.URL;

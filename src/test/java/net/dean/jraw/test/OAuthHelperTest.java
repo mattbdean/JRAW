@@ -7,7 +7,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlForm;
 import com.gargoylesoftware.htmlunit.html.HtmlInput;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import net.dean.jraw.RedditClient;
-import net.dean.jraw.Version;
+import net.dean.jraw.util.Version;
 import net.dean.jraw.http.HttpRequest;
 import net.dean.jraw.http.UserAgent;
 import net.dean.jraw.http.oauth.Credentials;

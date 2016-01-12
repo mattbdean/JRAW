@@ -6,7 +6,7 @@ import net.dean.jraw.AccountPreferencesEditor;
 import net.dean.jraw.ApiException;
 import net.dean.jraw.EndpointImplementation;
 import net.dean.jraw.Endpoints;
-import net.dean.jraw.JrawUtils;
+import net.dean.jraw.util.JrawUtils;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.MediaTypes;
 import net.dean.jraw.http.NetworkException;

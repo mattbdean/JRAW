@@ -1,7 +1,7 @@
 package net.dean.jraw.http;
 
 import com.squareup.okhttp.Headers;
-import net.dean.jraw.JrawUtils;
+import net.dean.jraw.util.JrawUtils;
 import okio.Buffer;
 import org.slf4j.Logger;
 

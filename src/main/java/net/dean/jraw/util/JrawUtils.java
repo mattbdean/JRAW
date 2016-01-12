@@ -1,4 +1,4 @@
-package net.dean.jraw;
+package net.dean.jraw.util;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

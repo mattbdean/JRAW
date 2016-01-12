@@ -1,4 +1,4 @@
-package net.dean.jraw;
+package net.dean.jraw.util;
 
 /**
  * Thrown when an enum constant could not be located based off some input string.

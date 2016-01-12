@@ -1,6 +1,6 @@
 package net.dean.jraw.models;
 
-import net.dean.jraw.NoSuchEnumConstantException;
+import net.dean.jraw.util.NoSuchEnumConstantException;
 import net.dean.jraw.models.meta.JsonProperty;
 import net.dean.jraw.models.meta.Model;
 import com.fasterxml.jackson.databind.JsonNode;

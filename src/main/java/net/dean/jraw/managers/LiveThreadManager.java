@@ -15,7 +15,7 @@ import net.dean.jraw.paginators.Paginator;
 import java.util.ArrayList;
 import java.util.List;
 
-import static net.dean.jraw.JrawUtils.mapOf;
+import static net.dean.jraw.util.JrawUtils.mapOf;
 
 /**
  * This class is responsible for managing live threads.

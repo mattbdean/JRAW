@@ -1,6 +1,6 @@
 package net.dean.jraw.models;
 
-import net.dean.jraw.NoSuchEnumConstantException;
+import net.dean.jraw.util.NoSuchEnumConstantException;
 
 /**
  * Represents the status of a link or comment poster
@@ -14,7 +14,7 @@ public enum DistinguishedStatus {
     ADMIN,
     /**
      * Various other special distinguishes (most commonly seen as the darker red [Δ] "admin emeritus"
-     * (<a href="http://www.reddit.com/r/bestof/comments/175prt/alilarter_connects_with_a_user_who_has_a/c82tlns">example</a>
+     * (<a href="http://www.reddit.com/r/bestof/comments/175prt/alilarter_connects_with_a_user_who_has_a/c82tlns">example</a>)
      */
     SPECIAL;
 

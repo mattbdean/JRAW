@@ -1,6 +1,6 @@
 package net.dean.jraw.models.meta;
 
-import net.dean.jraw.NoSuchEnumConstantException;
+import net.dean.jraw.util.NoSuchEnumConstantException;
 import net.dean.jraw.models.Account;
 import net.dean.jraw.models.Trophy;
 import net.dean.jraw.models.Comment;

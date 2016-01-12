@@ -1,7 +1,7 @@
 package net.dean.jraw.models;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import net.dean.jraw.Dimension;
+import net.dean.jraw.util.Dimension;
 
 import java.util.Date;
 
