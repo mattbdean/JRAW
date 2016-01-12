@@ -370,7 +370,7 @@ public class OAuthHelper {
     /**
      * Represents the different states of authorization this class can be in
      */
-    public static enum AuthStatus {
+    public enum AuthStatus {
         /** No action has been performed */
         NOT_YET,
         /** An authorization URL has been created, but the user has not accepted/declined yet */

@@ -295,7 +295,7 @@ public class HttpLogger {
     /**
      * Represents the components involved in logging an HTTP request and response
      */
-    public static enum Component {
+    public enum Component {
         /** The entire request */
         REQUEST,
         /** The HTTP verb and URL. For example, "{@code POST https://www.example.com}". Depends on {@link #REQUEST} */

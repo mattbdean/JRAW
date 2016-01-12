@@ -217,7 +217,7 @@ public class InternalsTest extends RedditTest {
     }
 
     private interface CodeBlock {
-        public void execute();
+        void execute();
     }
 
     // Normally this class would be private but JsonModel.toString() will throw an IllegalAccessException because it

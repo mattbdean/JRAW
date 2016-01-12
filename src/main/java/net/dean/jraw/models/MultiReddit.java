@@ -125,7 +125,7 @@ public final class MultiReddit extends Thing implements Created {
         }
     }
 
-    public static enum Visibility {
+    public enum Visibility {
         /** Available to everyone */
         PUBLIC,
         /** Will not appear with the rest of the multireddits */
@@ -150,7 +150,7 @@ public final class MultiReddit extends Thing implements Created {
         }
     }
 
-    public static enum Icon {
+    public enum Icon {
         ABSENT {
             @Override
             public String toString() {
