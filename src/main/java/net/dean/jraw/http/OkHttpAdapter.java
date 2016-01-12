@@ -23,6 +23,17 @@ import java.util.concurrent.TimeUnit;
 public final class OkHttpAdapter implements HttpAdapter<OkHttpClient> {
     private static final Protocol DEFAULT_PROTOCOL = Protocol.SPDY_3;
     private static final Protocol FALLBACK_PROTOCOL = Protocol.HTTP_1_1;
+
+    private static OkHttpClient newOkHttpClient() {
+        OkHttpClient client = new OkHttpClient();
+        int timeout = 10;
+        TimeUnit unit = TimeUnit.SECONDS;
+        client.setConnectTimeout(timeout, unit);
+        client.setReadTimeout(timeout, unit);
+        client.setWriteTimeout(timeout, unit);
+        return client;
+    }
+
     private OkHttpClient http;
     private CookieManager cookieManager;
     private Map<String, String> defaultHeaders;
@@ -32,7 +43,7 @@ public final class OkHttpAdapter implements HttpAdapter<OkHttpClient> {
     }
 
     public OkHttpAdapter(Protocol protocol) {
-        this(new OkHttpClient(), protocol);
+        this(newOkHttpClient(), protocol);
     }
 
     public OkHttpAdapter(OkHttpClient httpClient, Protocol protocol) {
