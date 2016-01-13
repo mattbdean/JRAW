@@ -85,7 +85,6 @@ public class InboxManager extends AbstractManager {
      * @throws NetworkException If the request did not complete successfully
      * @throws ApiException If the Reddit API returned an error
      */
-    @EndpointImplementation(Endpoints.COMPOSE)
     public void compose(String from, String to, String subject, String body) throws NetworkException, ApiException {
         compose(from, to, subject, body, null, null);
     }
