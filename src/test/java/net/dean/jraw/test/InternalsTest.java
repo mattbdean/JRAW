@@ -2,20 +2,12 @@ package net.dean.jraw.test;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import net.dean.jraw.ApiException;
 import net.dean.jraw.Endpoint;
-import net.dean.jraw.util.Version;
-import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.oauth.OAuthException;
-import net.dean.jraw.models.Captcha;
-import net.dean.jraw.models.DistinguishedStatus;
-import net.dean.jraw.models.Flair;
-import net.dean.jraw.models.JsonModel;
-import net.dean.jraw.models.Listing;
-import net.dean.jraw.models.MoreChildren;
-import net.dean.jraw.models.Submission;
+import net.dean.jraw.models.*;
 import net.dean.jraw.models.meta.JsonProperty;
 import net.dean.jraw.paginators.SubredditPaginator;
+import net.dean.jraw.util.Version;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
@@ -91,17 +83,6 @@ public class InternalsTest extends RedditTest {
     public void testDistinguishedStatus() {
         DistinguishedStatus status = DistinguishedStatus.ADMIN;
         assertEquals(status, DistinguishedStatus.getByJsonValue(status.getJsonValue()));
-    }
-
-    @Test
-    public void testCaptcha() {
-        try {
-            Captcha c = reddit.getNewCaptcha();
-            Captcha c2 = new Captcha(c.getId());
-            basicObjectTest(c, c2);
-        } catch (NetworkException | ApiException e) {
-            handle(e);
-        }
     }
 
     @Test

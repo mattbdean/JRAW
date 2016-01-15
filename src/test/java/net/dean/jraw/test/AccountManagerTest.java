@@ -2,6 +2,7 @@ package net.dean.jraw.test;
 
 import net.dean.jraw.AccountPreferencesEditor;
 import net.dean.jraw.ApiException;
+import net.dean.jraw.managers.CaptchaHelper;
 import net.dean.jraw.util.JrawUtils;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.managers.AccountManager;
@@ -107,12 +108,13 @@ public class AccountManagerTest extends RedditTest {
 
     @Test(expectedExceptions = {ApiException.class, SkipException.class})
     public void testPostWithInvalidCaptcha() throws ApiException {
+        CaptchaHelper helper = new CaptchaHelper(reddit);
         try {
-            if (!reddit.needsCaptcha()) {
+            if (!helper.isNecessary()) {
                 throw new SkipException("No captcha needed, request will return successfully either way");
             }
             account.submit(
-                    new AccountManager.SubmissionBuilder("content", "jraw_testing2", "title"), reddit.getNewCaptcha(), "invalid captcha attempt");
+                    new AccountManager.SubmissionBuilder("content", "jraw_testing2", "title"), helper.getNew(), "invalid captcha attempt");
         } catch (NetworkException e) {
             handle(e);
         } catch (ApiException e) {

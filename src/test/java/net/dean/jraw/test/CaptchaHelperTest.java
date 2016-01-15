@@ -4,21 +4,30 @@ import com.google.common.net.MediaType;
 import net.dean.jraw.ApiException;
 import net.dean.jraw.http.HttpRequest;
 import net.dean.jraw.http.NetworkException;
+import net.dean.jraw.managers.CaptchaHelper;
 import net.dean.jraw.models.Captcha;
 import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 /**
  * This class tests anything and everything related to captchas.
  */
-public class CaptchaTest extends RedditTest {
+public class CaptchaHelperTest extends RedditTest {
+    private CaptchaHelper helper;
+
+    @BeforeMethod
+    public void setUp() {
+        this.helper = new CaptchaHelper(reddit);
+    }
 
     @Test
-    public void testNeedsCaptcha() {
+    public void testById() {
         try {
-            // Make sure it doesn't error, could return true or false
-            reddit.needsCaptcha();
-        } catch (NetworkException e) {
+            CaptchaHelper helper = new CaptchaHelper(reddit);
+            Captcha c = helper.getNew();
+            helper.get(c.getId());
+        } catch (NetworkException | ApiException e) {
             handle(e);
         }
     }
@@ -26,7 +35,7 @@ public class CaptchaTest extends RedditTest {
     @Test
     public void testCaptchaComponents() {
         try {
-            Captcha c = reddit.getNewCaptcha();
+            Captcha c = helper.getNew();
             Assert.assertNotNull(c.getId());
             Assert.assertNotNull(c.getImageUrl());
 
@@ -36,6 +45,16 @@ public class CaptchaTest extends RedditTest {
                     .build();
             reddit.execute(imageRequest);
         } catch (NetworkException | ApiException e) {
+            handle(e);
+        }
+    }
+
+    @Test
+    public void testNeedsCaptcha() {
+        try {
+            // Make sure it doesn't error, could return true or false
+            helper.isNecessary();
+        } catch (NetworkException e) {
             handle(e);
         }
     }
