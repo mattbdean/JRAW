@@ -48,7 +48,6 @@ class EndpointIdentifier:
         'submit/text'
     ]
 
-
     def __init__(self):
         pass
 
@@ -88,5 +87,4 @@ class EndpointIdentifier:
 
 if __name__ == "__main__":
     print(json.dumps(EndpointIdentifier().find(), indent=4, sort_keys=True))
-    #print(EndpointIdentifier()._format_href("#GET_api_needs_captcha"))
 
