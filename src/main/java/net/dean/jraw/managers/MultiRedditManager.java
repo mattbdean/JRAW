@@ -143,13 +143,12 @@ public class MultiRedditManager extends AbstractManager {
      *                          case the authenticated user already has a multireddit of that name.
      * @throws ApiException If the Reddit API returned an error
      */
-    @EndpointImplementation(Endpoints.MULTI_MULTIPATH_COPY)
+    @EndpointImplementation(Endpoints.MULTI_COPY)
     public void copy(String sourceOwner, String sourceMulti, String destName) throws NetworkException, ApiException {
         String from = getMultiPath(sourceOwner, sourceMulti);
         String to = getMultiPath(destName);
         HttpRequest request = reddit.request()
-                // Using .endpoint(Endpoints.MULTI_MULTIPATH_COPY) returns 400 Bad Request, use this path instead.
-                .path("/api/multi/copy")
+                .endpoint(Endpoints.MULTI_COPY)
                 .post(JrawUtils.mapOf(
                         "from", from,
                         "to", to
@@ -176,13 +175,12 @@ public class MultiRedditManager extends AbstractManager {
      *                          means that the user already has a multireddit of that name
      * @throws ApiException If the Reddit API returns an error
      */
-    @EndpointImplementation(Endpoints.MULTI_MULTIPATH_RENAME)
+    @EndpointImplementation(Endpoints.MULTI_RENAME)
     public void rename(String prevName, String newName) throws NetworkException, ApiException {
         String from = getMultiPath(prevName);
         String to = getMultiPath(newName);
         HttpRequest request = reddit.request()
-                // Using .endpoint(Endpoints.MULTI_MULTIPATH_RENAME) returns 400 Bad Request, use this path instead.
-                .path("/api/multi/rename")
+                .endpoint(Endpoints.MULTI_RENAME)
                 .post(JrawUtils.mapOf(
                         "from", from,
                         "to", to
