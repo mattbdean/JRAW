@@ -29,7 +29,7 @@ public class MultiHubPaginator extends Paginator<MultiHubPaginator.MultiRedditId
      * (<a href="https://github.com/reddit/reddit/blob/3b7b74148/r2/r2/lib/validator/validator.py#L2622">source</a>)
      */
     public static final String MULTIREDDIT_URL_REGEX =
-            "http(s)?://(\\w.*\\.)?reddit\\.com/user/([a-zA-Z\\-_]*?)/m/([A-Za-z0-9][A-Za-z0-9_]{1,20})";
+            "http(s)?://(\\w.*\\.)?reddit\\.com/user/([a-zA-Z0-9\\-_]*?)/m/([A-Za-z0-9][A-Za-z0-9_]{1,20})";
     private static final int BACKREF_USERNAME = 3;
     private static final int BACKREF_MULTINAME = 4;
     private final Matcher matcher;
