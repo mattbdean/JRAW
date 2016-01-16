@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 public class MultiHubPaginator extends Paginator<MultiHubPaginator.MultiRedditId> {
 
     /**
-     * Matches a multireddit URL. See <a href="http://regexr.com/39k3v">here</a> for a demonstration, and
+     * Matches a multireddit URL. See <a href="http://regexr.com/3cjgr">here</a> for a demonstration, and
      * <a href="http://pastebin.com/raw.php?i=0dFYCMRb">here</a> for a list of URLs to test on<br>
      * <br>
      * Usernames must only contain alphanumeric characters, underscores, and hyphens with a max length of 20
