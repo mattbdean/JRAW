@@ -125,7 +125,7 @@
         "POST /api/compose",
         "POST /api/read_all_messages",
         "POST /api/read_message",
-        "POST /api/unblock/subreddit",
+        "POST /api/unblock_subreddit",
         "POST /api/unread_message",
         "GET /api/v1/me/notifications",
         "PATCH /api/v1/me/notifications/{id}",

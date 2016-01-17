@@ -216,8 +216,8 @@ public enum Endpoints {
     ///////// privatemessages /////////
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#POST_api_block">{@code POST /api/block}</a>" included in the "privatemessages" scope */
     BLOCK("POST /api/block", "privatemessages"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#POST_api_unblock_subreddit">{@code POST /api/unblock/subreddit}</a>" included in the "privatemessages" scope */
-    UNBLOCK_SUBREDDIT("POST /api/unblock/subreddit", "privatemessages"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#POST_api_unblock_subreddit">{@code POST /api/unblock_subreddit}</a>" included in the "privatemessages" scope */
+    UNBLOCK_SUBREDDIT("POST /api/unblock_subreddit", "privatemessages"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_api_v1_me_notifications">{@code GET /api/v1/me/notifications}</a>" included in the "privatemessages" scope */
     OAUTH_ME_NOTIFICATIONS("GET /api/v1/me/notifications", "privatemessages"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#PATCH_api_v1_me_notifications_%7Bid%7D">{@code PATCH /api/v1/me/notifications/{id}}</a>" included in the "privatemessages" scope */

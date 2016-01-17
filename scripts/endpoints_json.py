@@ -45,7 +45,8 @@ class EndpointIdentifier:
         'by/id',
         'saved/categories',
         'store/visits',
-        'submit/text'
+        'submit/text',
+        'unblock/subreddit'
     ]
 
     def __init__(self):

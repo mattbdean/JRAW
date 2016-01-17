@@ -1,4 +1,4 @@
-<!--- Generated 2016-01-16 at 18:55:52 EST. Use `gradle endpoints:update` to update. DO NOT MODIFY DIRECTLY -->
+<!--- Generated 2016-01-16 at 19:10:40 EST. Use `gradle endpoints:update` to update. DO NOT MODIFY DIRECTLY -->
 #Endpoints
 
 This file contains a list of all the endpoints (regardless of if they have been implemented) that can be found at the [official reddit API docs](https://www.reddit.com/dev/api). To update this file, run `gradle endpoints:update`.
@@ -164,7 +164,7 @@ Method|Endpoint|Implemented?
 Method|Endpoint|Implemented?
 :----:|--------|------------
 `POST`|[`/api/block`](https://www.reddit.com/dev/api/oauth#POST_api_block)|No
-`POST`|[`/api/unblock/subreddit`](https://www.reddit.com/dev/api/oauth#POST_api_unblock_subreddit)|No
+`POST`|[`/api/unblock_subreddit`](https://www.reddit.com/dev/api/oauth#POST_api_unblock_subreddit)|No
 `GET`|[`/api/v1/me/notifications`](https://www.reddit.com/dev/api/oauth#GET_api_v1_me_notifications)|No
 `PATCH`|[`/api/v1/me/notifications/{id}`](https://www.reddit.com/dev/api/oauth#PATCH_api_v1_me_notifications_%7Bid%7D)|No
 `POST`|[`/api/compose`](https://www.reddit.com/dev/api/oauth#POST_api_compose)|[`InboxManager.compose(String, String, String, String, Captcha, String)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/InboxManager.html#compose(java.lang.String, java.lang.String, java.lang.String, java.lang.String, net.dean.jraw.models.Captcha, java.lang.String))
