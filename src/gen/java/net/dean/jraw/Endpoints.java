@@ -10,14 +10,14 @@ public enum Endpoints {
     FRIEND("POST /api/friend", "(any scope)"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#POST_api_unfriend">{@code POST /api/unfriend}</a>" included in the "(any scope)" scope */
     UNFRIEND("POST /api/unfriend", "(any scope)"),
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_api_v1_scopes">{@code GET /api/v1/scopes}</a>" included in the "(any scope)" scope */
-    OAUTH_SCOPES("GET /api/v1/scopes", "(any scope)"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#POST_api_comment">{@code POST /api/comment}</a>" included in the "(any scope)" scope */
     COMMENT("POST /api/comment", "(any scope)"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_api_needs_captcha">{@code GET /api/needs_captcha}</a>" included in the "(any scope)" scope */
     NEEDS_CAPTCHA("GET /api/needs_captcha", "(any scope)"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#POST_api_new_captcha">{@code POST /api/new_captcha}</a>" included in the "(any scope)" scope */
     NEW_CAPTCHA("POST /api/new_captcha", "(any scope)"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_api_v1_scopes">{@code GET /api/v1/scopes}</a>" included in the "(any scope)" scope */
+    OAUTH_SCOPES("GET /api/v1/scopes", "(any scope)"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_captcha_%7Biden%7D">{@code GET /captcha/{iden}}</a>" included in the "(any scope)" scope */
     CAPTCHA_IDEN("GET /captcha/{iden}", "(any scope)"),
 

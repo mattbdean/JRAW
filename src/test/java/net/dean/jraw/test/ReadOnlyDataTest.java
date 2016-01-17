@@ -226,4 +226,17 @@ public class ReadOnlyDataTest extends RedditTest {
             handle(e);
         }
     }
+
+    @Test
+    public void testGetScopes() {
+        try {
+            List<OAuthScope> allScopes = reddit.getScopeDetails();
+            validateModels(allScopes);
+
+            List<OAuthScope> fewScopes = reddit.getScopeDetails("edit", "flair", "modwiki");
+            validateModels(fewScopes);
+        } catch (NetworkException e) {
+            handle(e);
+        }
+    }
 }

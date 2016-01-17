@@ -1,20 +1,20 @@
-<!--- Generated 2016-01-14 at 22:35:40 EST. Use `gradle endpoints:update` to update. DO NOT MODIFY DIRECTLY -->
+<!--- Generated 2016-01-16 at 18:55:52 EST. Use `gradle endpoints:update` to update. DO NOT MODIFY DIRECTLY -->
 #Endpoints
 
 This file contains a list of all the endpoints (regardless of if they have been implemented) that can be found at the [official reddit API docs](https://www.reddit.com/dev/api). To update this file, run `gradle endpoints:update`.
 
-So far **121** endpoints (out of 191 total) have been implemented.
+So far **122** endpoints (out of 191 total) have been implemented.
 
 ##(any scope)
 Method|Endpoint|Implemented?
 :----:|--------|------------
 `POST`|[`/api/friend`](https://www.reddit.com/dev/api/oauth#POST_api_friend)|No
 `POST`|[`/api/unfriend`](https://www.reddit.com/dev/api/oauth#POST_api_unfriend)|No
-`GET`|[`/api/v1/scopes`](https://www.reddit.com/dev/api/oauth#GET_api_v1_scopes)|No
 `POST`|[`/api/comment`](https://www.reddit.com/dev/api/oauth#POST_api_comment)|[`AccountManager.reply(Contribution, String)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/AccountManager.html#reply(net.dean.jraw.models.Contribution, java.lang.String))
-`GET`|[`/api/needs_captcha`](https://www.reddit.com/dev/api/oauth#GET_api_needs_captcha)|[`RedditClient.needsCaptcha()`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/RedditClient.html#needsCaptcha())
-`POST`|[`/api/new_captcha`](https://www.reddit.com/dev/api/oauth#POST_api_new_captcha)|[`RedditClient.getNewCaptcha()`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/RedditClient.html#getNewCaptcha())
-`GET`|[`/captcha/{iden}`](https://www.reddit.com/dev/api/oauth#GET_captcha_%7Biden%7D)|[`RedditClient.getCaptcha(String)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/RedditClient.html#getCaptcha(java.lang.String))
+`GET`|[`/api/needs_captcha`](https://www.reddit.com/dev/api/oauth#GET_api_needs_captcha)|[`CaptchaHelper.isNecessary()`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/CaptchaHelper.html#isNecessary())
+`POST`|[`/api/new_captcha`](https://www.reddit.com/dev/api/oauth#POST_api_new_captcha)|[`CaptchaHelper.getNew()`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/CaptchaHelper.html#getNew())
+`GET`|[`/api/v1/scopes`](https://www.reddit.com/dev/api/oauth#GET_api_v1_scopes)|[`RedditClient.getScopeDetails(String[])`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/RedditClient.html#getScopeDetails([Ljava.lang.String;))
+`GET`|[`/captcha/{iden}`](https://www.reddit.com/dev/api/oauth#GET_captcha_%7Biden%7D)|[`CaptchaHelper.get(String)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/CaptchaHelper.html#get(java.lang.String))
 
 ##account
 Method|Endpoint|Implemented?
@@ -167,7 +167,7 @@ Method|Endpoint|Implemented?
 `POST`|[`/api/unblock/subreddit`](https://www.reddit.com/dev/api/oauth#POST_api_unblock_subreddit)|No
 `GET`|[`/api/v1/me/notifications`](https://www.reddit.com/dev/api/oauth#GET_api_v1_me_notifications)|No
 `PATCH`|[`/api/v1/me/notifications/{id}`](https://www.reddit.com/dev/api/oauth#PATCH_api_v1_me_notifications_%7Bid%7D)|No
-`POST`|[`/api/compose`](https://www.reddit.com/dev/api/oauth#POST_api_compose)|[`InboxManager.compose(String, String, String, String)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/InboxManager.html#compose(java.lang.String, java.lang.String, java.lang.String, java.lang.String))
+`POST`|[`/api/compose`](https://www.reddit.com/dev/api/oauth#POST_api_compose)|[`InboxManager.compose(String, String, String, String, Captcha, String)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/InboxManager.html#compose(java.lang.String, java.lang.String, java.lang.String, java.lang.String, net.dean.jraw.models.Captcha, java.lang.String))
 `POST`|[`/api/read_all_messages`](https://www.reddit.com/dev/api/oauth#POST_api_read_all_messages)|[`InboxManager.setAllRead()`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/InboxManager.html#setAllRead())
 `POST`|[`/api/read_message`](https://www.reddit.com/dev/api/oauth#POST_api_read_message)|[`InboxManager.setRead(Message, boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/InboxManager.html#setRead(net.dean.jraw.models.Message, boolean))
 `POST`|[`/api/unread_message`](https://www.reddit.com/dev/api/oauth#POST_api_unread_message)|[`InboxManager.setRead(Message, boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/InboxManager.html#setRead(net.dean.jraw.models.Message, boolean))

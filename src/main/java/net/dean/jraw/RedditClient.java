@@ -538,6 +538,28 @@ public class RedditClient extends RestClient {
 
         return trophies;
     }
+
+    /**
+     * Gets details about one or more OAuth2 scopes. If {@code names} is not specified then all scopes will be returned.
+     */
+    @EndpointImplementation(Endpoints.OAUTH_SCOPES)
+    public List<OAuthScope> getScopeDetails(String... names) {
+        Map<String, String> query = names == null ? new HashMap<String, String>() : JrawUtils.mapOf("scopes", JrawUtils.join(',', names));
+
+        RestResponse response = execute(request()
+                .endpoint(Endpoints.OAUTH_SCOPES)
+                .query(query)
+                .build());
+
+        JsonNode root = response.getJson();
+        List<OAuthScope> scopes = new ArrayList<>(root.size());
+        for (JsonNode node : root) {
+            scopes.add(new OAuthScope(node));
+        }
+
+        return scopes;
+    }
+
     /**
      * Gets the object that will help clients authenticate users with their Reddit app
      */
