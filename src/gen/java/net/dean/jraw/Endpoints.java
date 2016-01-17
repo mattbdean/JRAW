@@ -240,8 +240,6 @@ public enum Endpoints {
     MESSAGE_WHERE("GET /message/{where}", "privatemessages"),
 
     ///////// read /////////
-    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_about_muted">{@code GET /about/muted}</a>" included in the "read" scope */
-    ABOUT_MUTED("GET /about/muted", "read"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_api_filter_%7Bfilterpath%7D">{@code GET /api/filter/{filterpath}}</a>" included in the "read" scope */
     FILTER_FILTERPATH_GET("GET /api/filter/{filterpath}", "read"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_api_filter_%7Bfilterpath%7D_r_%7Bsrname%7D">{@code GET /api/filter/{filterpath}/r/{srname}}</a>" included in the "read" scope */
@@ -262,6 +260,8 @@ public enum Endpoints {
     ABOUT_MODERATORS("GET /about/moderators", "read"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_about_modqueue">{@code GET /about/modqueue}</a>" included in the "read" scope */
     ABOUT_MODQUEUE("GET /about/modqueue", "read"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_about_muted">{@code GET /about/muted}</a>" included in the "read" scope */
+    ABOUT_MUTED("GET /about/muted", "read"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_about_reports">{@code GET /about/reports}</a>" included in the "read" scope */
     ABOUT_REPORTS("GET /about/reports", "read"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_about_spam">{@code GET /about/spam}</a>" included in the "read" scope */
