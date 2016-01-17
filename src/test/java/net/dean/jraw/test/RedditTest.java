@@ -54,7 +54,7 @@ public abstract class RedditTest {
         if (t instanceof NetworkException) {
             NetworkException e = (NetworkException) t;
             int code = e.getResponse().getStatusCode();
-            if (code >= 500 && code < 600)
+            if ((code >= 500 && code < 600) || code == 429)
                 throw new SkipException("Received " + code + ", skipping");
         }
         t.printStackTrace();
