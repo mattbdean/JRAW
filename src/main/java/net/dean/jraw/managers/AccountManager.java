@@ -186,11 +186,19 @@ public class AccountManager extends AbstractManager {
      * @throws ApiException If the API returned an error
      */
     @EndpointImplementation({Endpoints.HIDE, Endpoints.UNHIDE})
-    public void hide(Submission s, boolean hide) throws NetworkException, ApiException {
+    public void hide(boolean hide, Submission s, Submission... more) throws NetworkException, ApiException {
+        String ids = s.getFullName();
+        if (more != null) {
+            String[] idList = new String[more.length];
+            for (int i = 0; i < more.length; i++) {
+                idList[i] = more[i].getFullName();
+            }
+            ids = ids + "," + JrawUtils.join(idList);
+        }
         genericPost(reddit.request()
                 .endpoint(hide ? Endpoints.HIDE : Endpoints.UNHIDE)
                 .post(JrawUtils.mapOf(
-                        "id", s.getFullName()
+                        "id", ids
                 )).build());
     }
 

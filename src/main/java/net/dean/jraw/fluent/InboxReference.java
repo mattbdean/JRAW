@@ -45,8 +45,8 @@ public final class InboxReference extends ElevatedAbstractReference {
 
     /** Mark a given message as 'read' */
     @NetworkingCall
-    public void readMessage(Message m, boolean read) {
-        managers.inbox().setRead(m, read);
+    public void readMessage(boolean read, Message m, Message... more) {
+        managers.inbox().setRead(read, m, more);
     }
 
     /** Mark all unread messages as 'read' */

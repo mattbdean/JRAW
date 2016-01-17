@@ -28,6 +28,7 @@ public class InboxManager extends AbstractManager {
      * message).
      *
      * @param m The message to mark as read or unread.
+     * @param more Any additional messages
      * @param read Whether the message will be marked (true) or unread (false)
      * @throws NetworkException If the request was not successful
      */
@@ -35,10 +36,18 @@ public class InboxManager extends AbstractManager {
             Endpoints.READ_MESSAGE,
             Endpoints.UNREAD_MESSAGE
     })
-    public void setRead(Message m, boolean read) throws NetworkException {
+    public void setRead(boolean read, Message m, Message... more) throws NetworkException {
+        String ids = m.getFullName();
+        if (more != null) {
+            String[] idList = new String[more.length];
+            for (int i = 0; i < more.length; i++) {
+                idList[i] = more[i].getFullName();
+            }
+            ids = ids + "," + JrawUtils.join(idList);
+        }
         reddit.execute(reddit.request()
                 .endpoint(read ? Endpoints.READ_MESSAGE : Endpoints.UNREAD_MESSAGE)
-                .post(JrawUtils.mapOf("id", m.getFullName()))
+                .post(JrawUtils.mapOf("id", ids))
                 .build());
     }
 

@@ -5,6 +5,7 @@ import net.dean.jraw.Endpoints;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.models.Listing;
 import net.dean.jraw.models.Submission;
+import net.dean.jraw.util.JrawUtils;
 
 
 /**
@@ -31,16 +32,7 @@ public class SpecificPaginator extends Paginator<Submission> {
      */
     public void setSubmissions(String... submissionFullNames) {
         this.submissions = submissionFullNames;
-
-        // Compile the String array into a comma separated list
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < submissionFullNames.length; i++) {
-            sb.append(submissionFullNames[i]);
-            if (i + 1 != submissionFullNames.length) {
-                sb.append(",");
-            }
-        }
-        this.compiledFullnames = sb.toString();
+        this.compiledFullnames = JrawUtils.join(submissionFullNames);
         invalidate();
     }
 

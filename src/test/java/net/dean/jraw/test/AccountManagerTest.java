@@ -276,7 +276,7 @@ public class AccountManagerTest extends RedditTest {
     public void testHideSubmission() {
         try {
             Submission submission = reddit.getSubmission("3tox6a");
-            account.hide(submission, true);
+            account.hide(true, submission);
 
             UserContributionPaginator paginator = getPaginator("hidden");
             List<Contribution> hidden = paginator.next();
@@ -298,7 +298,7 @@ public class AccountManagerTest extends RedditTest {
     public void testUnhideSubmission() {
         try {
             Submission submission = reddit.getSubmission("3tox6a");
-            account.hide(submission, false);
+            account.hide(false, submission);
 
             UserContributionPaginator paginator = getPaginator("hidden");
             List<Contribution> hidden = paginator.next();
