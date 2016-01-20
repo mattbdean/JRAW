@@ -525,8 +525,7 @@ public class RedditClient extends RestClient {
     public List<Trophy> getTrophies(String username) throws NetworkException {
         if (username == null)
             assertNotUserless();
-        username = authenticatedUser;
-
+        
         RestResponse response = execute(request()
                 .endpoint(Endpoints.OAUTH_USER_USERNAME_TROPHIES, username)
                 .build());
