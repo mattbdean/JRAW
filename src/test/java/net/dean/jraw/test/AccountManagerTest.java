@@ -26,6 +26,7 @@ import org.testng.SkipException;
 import org.testng.annotations.Test;
 
 import java.net.URL;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.testng.Assert.*;
@@ -419,14 +420,11 @@ public class AccountManagerTest extends RedditTest {
     @Test
     public void testGetPreferences() {
         try {
-            AccountPreferences prefs = account.getPreferences();
-            validateModel(prefs);
-
-            prefs = account.getPreferences("over_18", "research", "hide_from_robots");
+            String[] names = {"over_18", "research", "hide_from_robots"};
+            AccountPreferences prefs = account.getPreferences(Arrays.asList(names));
             // Only request preferences should be returned
-            assertNotNull(prefs.data("over_18"));
-            assertNotNull(prefs.data("research"));
-            assertNotNull(prefs.data("hide_from_robots"));
+            for (String name : names)
+                assertNotNull(prefs.data(name));
 
             // Anything else should be null
             assertNull(prefs.data("lang"));
@@ -438,7 +436,7 @@ public class AccountManagerTest extends RedditTest {
     @Test
     public void testUpdatePreferences() {
         try {
-            AccountPreferences original = account.getPreferences();
+            AccountPreferences original = account.getPreferences("over_18");
             AccountPreferencesEditor prefs = new AccountPreferencesEditor(original);
             validateModel(account.updatePreferences(prefs));
         } catch (NetworkException e) {

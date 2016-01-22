@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Joiner;
 import com.google.common.net.MediaType;
+import net.dean.jraw.models.Thing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,6 +21,7 @@ import java.util.Map;
 public final class JrawUtils {
     private static final ObjectMapper mapper = new ObjectMapper();
     private static final String CHARSET = "UTF-8";
+    public static final char DEFAULT_SEPARATOR = ',';
 
     private JrawUtils() {
         // no instances
@@ -181,23 +183,33 @@ public final class JrawUtils {
         }
     }
 
-    /**
-     * Joins the given strings together with a comma
-     */
+    /** Joins the given strings together with {@link #DEFAULT_SEPARATOR} */
     public static String join(Iterable<String> args) {
         return Joiner.on(',').join(args);
     }
 
-    /**
-     * Joins the given Strings together with a comma
-     */
+    /** Joins the given Strings together with {@link #DEFAULT_SEPARATOR} */
     public static String join(String... args) {
-        return join(',', args);
+        return join(DEFAULT_SEPARATOR, args);
     }
 
-    /**
-     * Joins the given Strings together with a given character
-     */
+    /** Finds the fullnames of each Thing and joins them with {@link #DEFAULT_SEPARATOR} */
+    public static String joinVarargsFullname(Thing first, Thing... more) {
+        return joinVarargsFullname(DEFAULT_SEPARATOR, first, more);
+    }
+
+    /** Finds the fullnames of each Thing and joins them with the given separator */
+    public static String joinVarargsFullname(char sep, Thing first, Thing... more) {
+        String[] ids = new String[1 + (more == null ? 0 : more.length)];
+        ids[0] = first.getFullName();
+        if (more != null)
+            for (int i = 0; i < more.length; i++)
+                ids[i + 1] = more[i].getFullName();
+
+        return join(sep, ids);
+    }
+
+    /** Joins the given Strings together with a given character */
     public static String join(char separator, String... args) {
         switch (args.length) {
             case 0:

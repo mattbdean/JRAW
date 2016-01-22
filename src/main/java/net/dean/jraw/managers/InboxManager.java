@@ -37,17 +37,9 @@ public class InboxManager extends AbstractManager {
             Endpoints.UNREAD_MESSAGE
     })
     public void setRead(boolean read, Message m, Message... more) throws NetworkException {
-        String ids = m.getFullName();
-        if (more != null) {
-            String[] idList = new String[more.length];
-            for (int i = 0; i < more.length; i++) {
-                idList[i] = more[i].getFullName();
-            }
-            ids = ids + "," + JrawUtils.join(idList);
-        }
         reddit.execute(reddit.request()
                 .endpoint(read ? Endpoints.READ_MESSAGE : Endpoints.UNREAD_MESSAGE)
-                .post(JrawUtils.mapOf("id", ids))
+                .post(JrawUtils.mapOf("id", JrawUtils.joinVarargsFullname(m, more)))
                 .build());
     }
 
