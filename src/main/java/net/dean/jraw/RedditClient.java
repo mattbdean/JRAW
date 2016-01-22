@@ -525,10 +525,13 @@ public class RedditClient extends RestClient {
     public List<Trophy> getTrophies(String username) throws NetworkException {
         if (username == null)
             assertNotUserless();
-        
-        RestResponse response = execute(request()
-                .endpoint(Endpoints.OAUTH_USER_USERNAME_TROPHIES, username)
-                .build());
+
+        HttpRequest.Builder request = request();
+        if (username == null)
+            request = request.endpoint(Endpoints.OAUTH_ME_TROPHIES);
+        else
+            request = request.endpoint(Endpoints.OAUTH_USER_USERNAME_TROPHIES, username);
+        RestResponse response = execute(request.build());
 
         List<Trophy> trophies = new ArrayList<>();
         for (JsonNode awardNode : response.getJson().get("data").get("trophies")) {
