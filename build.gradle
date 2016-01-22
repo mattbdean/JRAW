@@ -19,6 +19,8 @@ allprojects {
     repositories {
         mavenCentral()
     }
+
+    compileJava.options.encoding = 'UTF-8'
 }
 
 dependencies {
