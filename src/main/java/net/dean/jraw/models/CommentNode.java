@@ -166,7 +166,7 @@ public final class CommentNode implements Iterable<CommentNode> {
      * @param hint A hint at where the comment is most likely to be
      */
     public Optional<CommentNode> findChild(String fullName, LocationHint hint) {
-        if (fullName ==  null)
+        if (fullName == null)
             throw new NullPointerException("fullName must not be null");
 
         for (CommentNode node : hint.getTraversalMethod().provideIterable(traverser, this)) {
