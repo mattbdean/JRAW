@@ -209,6 +209,7 @@ public class AccountManager extends AbstractManager {
      * @throws ApiException If the API returned an error
      */
     @EndpointImplementation(Endpoints.EDITUSERTEXT)
+
     public <T extends PublicContribution> void updateContribution(T contribution, String text) throws NetworkException, ApiException {
         genericPost(reddit.request().endpoint(Endpoints.EDITUSERTEXT)
                 .post(JrawUtils.mapOf(

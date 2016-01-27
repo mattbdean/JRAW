@@ -1,7 +1,6 @@
 plugins {
     id 'java'
     id 'maven-publish'
-    id 'findbugs'
     id 'jacoco'
     id 'com.github.kt3k.coveralls' version '2.4.0x'
 }
@@ -57,12 +56,8 @@ task sourcesJar(type: Jar, dependsOn: classes) {
     from sourceSets.main.allSource
 }
 
-task renamePom(dependsOn: 'generatePomFileForMavenPublication') << {
-    println(file('build/publications/maven/pom-default.xml'))
-    file('build/publications/maven/pom-default.xml').renameTo("build/publications/maven/JRAW-${version}.pom")
-}
+task release(type: Jar, dependsOn: ['fatJar', 'sourcesJar']) {
 
-task release(type: Jar, dependsOn: ['fatJar', 'javadocJar', 'sourcesJar', 'renamePom']) {
     from sourceSets.main.output
     destinationDir = releaseDest
 }
@@ -86,13 +81,6 @@ test {
     }
 }
 
-findbugsMain {
-    reports {
-        xml.enabled = false
-        html.enabled = true
-    }
-}
-
 jacocoTestReport {
     reports {
         xml.enabled = true // coveralls depends on XML reports
@@ -108,4 +96,3 @@ publishing {
     }
 }
 
-defaultTasks "test"

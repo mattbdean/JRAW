@@ -44,6 +44,25 @@ public class InboxManager extends AbstractManager {
     }
 
     /**
+     * Sets the message as read or unread. This message must not be a comment (in other words, it must be a private
+     * message).
+     *
+     * @param fullname The fullname of the message teo mark read.
+     * @param read Whether the message will be marked (true) or unread (false)
+     * @throws NetworkException If the request was not successful
+     */
+    @EndpointImplementation({
+            Endpoints.READ_MESSAGE,
+            Endpoints.UNREAD_MESSAGE
+    })
+    public void setRead(String fullname, boolean read) throws NetworkException {
+        reddit.execute(reddit.request()
+                .endpoint(read ? Endpoints.READ_MESSAGE : Endpoints.UNREAD_MESSAGE)
+                .post(JrawUtils.mapOf("id", fullname))
+                .build());
+    }
+
+    /**
      * Sets all unread messages as read.
      * @throws NetworkException If the response code was not 202
      */
