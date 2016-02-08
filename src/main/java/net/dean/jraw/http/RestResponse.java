@@ -3,7 +3,7 @@ package net.dean.jraw.http;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.base.Charsets;
 import com.google.common.net.MediaType;
-import com.squareup.okhttp.Headers;
+import okhttp3.Headers;
 import net.dean.jraw.ApiException;
 import net.dean.jraw.util.JrawUtils;
 import net.dean.jraw.models.JsonModel;

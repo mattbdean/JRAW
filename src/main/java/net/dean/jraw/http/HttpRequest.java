@@ -1,10 +1,10 @@
 package net.dean.jraw.http;
 
 import com.google.common.net.MediaType;
-import com.squareup.okhttp.CacheControl;
-import com.squareup.okhttp.Headers;
-import com.squareup.okhttp.internal.Util;
-import com.squareup.okhttp.internal.http.HttpMethod;
+import okhttp3.CacheControl;
+import okhttp3.Headers;
+import okhttp3.internal.Util;
+import okhttp3.internal.http.HttpMethod;
 import net.dean.jraw.Endpoints;
 import net.dean.jraw.util.JrawUtils;
 

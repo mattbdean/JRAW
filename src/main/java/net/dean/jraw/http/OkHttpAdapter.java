@@ -1,10 +1,6 @@
 package net.dean.jraw.http;
 
-import com.squareup.okhttp.Authenticator;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Protocol;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
+import okhttp3.*;
 import okio.BufferedSink;
 
 import java.io.IOException;
@@ -25,13 +21,13 @@ public final class OkHttpAdapter implements HttpAdapter<OkHttpClient> {
     private static final Protocol FALLBACK_PROTOCOL = Protocol.HTTP_1_1;
 
     private static OkHttpClient newOkHttpClient() {
-        OkHttpClient client = new OkHttpClient();
-        int timeout = 10;
         TimeUnit unit = TimeUnit.SECONDS;
-        client.setConnectTimeout(timeout, unit);
-        client.setReadTimeout(timeout, unit);
-        client.setWriteTimeout(timeout, unit);
-        return client;
+        int timeout = 10;
+        return new OkHttpClient.Builder()
+                .connectTimeout(timeout, unit)
+                .readTimeout(timeout, unit)
+                .writeTimeout(timeout, unit)
+                .build();
     }
 
     private OkHttpClient http;
@@ -56,84 +52,83 @@ public final class OkHttpAdapter implements HttpAdapter<OkHttpClient> {
         if (FALLBACK_PROTOCOL != protocol) {
             protocolList.add(protocol);
         }
-        http.setProtocols(protocolList);
-        http.setCookieHandler(cookieManager);
+        http = http.newBuilder()
+                .protocols(protocolList)
+                .cookieJar(new JavaNetCookieJar(cookieManager))
+                .build();
     }
 
     @Override
     public RestResponse execute(HttpRequest request) throws IOException {
+        OkHttpClient perRequestClient = http;
         if (request.isUsingBasicAuth()) {
-            http.setAuthenticator(new BasicAuthenticator(request.getBasicAuthData()));
+            BasicAuthenticator authenticator = new BasicAuthenticator(request.getBasicAuthData());
+            perRequestClient = http.newBuilder().authenticator(authenticator).build();
         }
 
-        try {
-            Request.Builder builder = new Request.Builder()
-                    .method(request.getMethod(), request.getBody() == null ? null : new OkHttpRequestBody(request.getBody()))
-                    .url(request.getUrl())
-                    .headers(request.getHeaders());
+        Request.Builder builder = new Request.Builder()
+                .method(request.getMethod(), request.getBody() == null ? null : new OkHttpRequestBody(request.getBody()))
+                .url(request.getUrl())
+                .headers(request.getHeaders());
 
-            Response response = http.newCall(builder.build()).execute();
+        Response response = perRequestClient.newCall(builder.build()).execute();
 
-            return new RestResponse(request,
-                    response.body().source().inputStream(),
-                    response.headers(),
-                    response.code(),
-                    response.message(),
-                    response.protocol().toString().toUpperCase());
-        } finally {
-            // Recover by removing the BasicAuthenticator
-            http.setAuthenticator(null);
-        }
+        return new RestResponse(request,
+                response.body().source().inputStream(),
+                response.headers(),
+                response.code(),
+                response.message(),
+                response.protocol().toString().toUpperCase());
     }
 
     @Override
     public int getConnectTimeout() {
-        return http.getConnectTimeout();
+        return http.connectTimeoutMillis();
     }
 
     @Override
     public void setConnectTimeout(long timeout, TimeUnit unit) {
-        http.setConnectTimeout(timeout, unit);
+        http = http.newBuilder().connectTimeout(timeout, unit).build();
     }
 
     @Override
     public int getReadTimeout() {
-        return http.getReadTimeout();
+        return http.readTimeoutMillis();
     }
 
     @Override
     public void setReadTimeout(long timeout, TimeUnit unit) {
-        http.setReadTimeout(timeout, unit);
+        http = http.newBuilder().readTimeout(timeout, unit).build();
     }
 
     @Override
     public int getWriteTimeout() {
-        return http.getWriteTimeout();
+        return http.writeTimeoutMillis();
     }
 
     @Override
     public void setWriteTimeout(long timeout, TimeUnit unit) {
-        http.setWriteTimeout(timeout, unit);
+        http = http.newBuilder().writeTimeout(timeout, unit).build();
     }
 
     @Override
     public boolean isFollowingRedirects() {
-        return http.getFollowRedirects();
+        return http.followRedirects();
     }
 
     @Override
     public void setFollowRedirects(boolean flag) {
-        http.setFollowRedirects(flag);
+        http = http.newBuilder().followRedirects(flag).build();
     }
 
     @Override
     public Proxy getProxy() {
-        return http.getProxy();
+        return http.proxy();
     }
 
     @Override
     public void setProxy(Proxy proxy) {
-        http.setProxy(proxy);
+        http = http.newBuilder().proxy(proxy).build();
     }
 
    @Override
@@ -144,7 +139,7 @@ public final class OkHttpAdapter implements HttpAdapter<OkHttpClient> {
     @Override
     public void setCookieManager(CookieManager manager) {
         this.cookieManager = manager;
-        http.setCookieHandler(cookieManager);
+        http = http.newBuilder().cookieJar(new JavaNetCookieJar(cookieManager)).build();
     }
 
     @Override
@@ -158,21 +153,21 @@ public final class OkHttpAdapter implements HttpAdapter<OkHttpClient> {
     }
 
     /** Mirrors a JRAW RequestBody to an OkHttp RequestBody */
-    private static class OkHttpRequestBody extends com.squareup.okhttp.RequestBody {
+    private static class OkHttpRequestBody extends okhttp3.RequestBody {
         private RequestBody mirror;
-        private com.squareup.okhttp.MediaType contentType = null; // Lazily initialized
+        private MediaType contentType = null; // Lazily initialized
 
         public OkHttpRequestBody(RequestBody mirror) {
             this.mirror = mirror;
         }
 
         @Override
-        public com.squareup.okhttp.MediaType contentType() {
+        public MediaType contentType() {
             if (mirror.contentType() == null)
                 return null;
             if (contentType != null)
                 return contentType;
-            contentType = com.squareup.okhttp.MediaType.parse(mirror.contentType().toString());
+            contentType = MediaType.parse(mirror.contentType().toString());
             return contentType;
         }
 
@@ -199,15 +194,10 @@ public final class OkHttpAdapter implements HttpAdapter<OkHttpClient> {
         }
 
         @Override
-        public Request authenticate(Proxy proxy, Response response) throws IOException {
-            String credential = com.squareup.okhttp.Credentials.basic(data.getUsername(), data.getPassword());
-            return response.request().newBuilder().header("Authorization", credential).build();
-        }
-
-        @Override
-        public Request authenticateProxy(Proxy proxy, Response response) throws IOException {
-            String credential = com.squareup.okhttp.Credentials.basic(data.getUsername(), data.getPassword());
-            return response.request().newBuilder().header("Proxy-Authorization", credential).build();
+        public Request authenticate(Route route, Response response) throws IOException {
+            String credential = Credentials.basic(data.getUsername(), data.getPassword());
+            String header = response.code() == 407 ? "Proxy-Authorization" : "Authorization";
+            return response.request().newBuilder().header(header, credential).build();
         }
     }
 }
