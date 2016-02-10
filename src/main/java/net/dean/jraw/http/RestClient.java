@@ -1,7 +1,7 @@
 package net.dean.jraw.http;
 
 import com.google.common.util.concurrent.RateLimiter;
-import com.squareup.okhttp.Headers;
+import okhttp3.Headers;
 import net.dean.jraw.util.JrawUtils;
 
 import java.io.IOException;

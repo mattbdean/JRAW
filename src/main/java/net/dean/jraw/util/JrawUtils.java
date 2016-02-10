@@ -127,7 +127,7 @@ public final class JrawUtils {
     }
 
     /** Compares the type and subtype of two MediaTypes. Will recognize the asterisk ('*') as a wildcard. */
-    public static boolean isEqual(com.squareup.okhttp.MediaType t1, com.google.common.net.MediaType t2) {
+    public static boolean isEqual(okhttp3.MediaType t1, com.google.common.net.MediaType t2) {
         return isEqual(t1.type(), t1.subtype(), t2.type(), t2.subtype());
     }
 

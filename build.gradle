@@ -24,7 +24,9 @@ allprojects {
 }
 
 dependencies {
-    compile     'com.squareup.okhttp:okhttp:2.7.0'
+    def okHttpVersion = '3.1.1'
+    compile     "com.squareup.okhttp3:okhttp:$okHttpVersion"
+    compile     "com.squareup.okhttp3:okhttp-urlconnection:$okHttpVersion"
     compile     'com.fasterxml.jackson.core:jackson-databind:2.6.0'
     compile     'com.google.guava:guava:19.0'
     compile     'org.slf4j:slf4j-api:1.7.13'

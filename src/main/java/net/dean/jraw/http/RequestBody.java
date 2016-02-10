@@ -1,7 +1,7 @@
 package net.dean.jraw.http;
 
 import com.google.common.net.MediaType;
-import com.squareup.okhttp.internal.Util;
+import okhttp3.internal.Util;
 import okio.BufferedSink;
 
 import java.io.IOException;
