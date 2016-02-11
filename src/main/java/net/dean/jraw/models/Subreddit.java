@@ -67,6 +67,12 @@ public final class Subreddit extends Thing implements Comparable<Subreddit> {
         return data("over18", Boolean.class);
     }
 
+    /** Checks if this subreddit is quarantined */
+    @JsonProperty
+    public Boolean isQuarantined() {
+        return data("quarantine", Boolean.class);
+    }
+
     /** Gets the information that will show when this subreddit appears in a search */
     @JsonProperty
     public String getPublicDescription() {
