@@ -1,10 +1,10 @@
 package net.dean.jraw.models;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import net.dean.jraw.util.JrawUtils;
 import net.dean.jraw.models.meta.JsonProperty;
 import net.dean.jraw.models.meta.Model;
 import net.dean.jraw.models.meta.SubmissionSerializer;
+import net.dean.jraw.util.JrawUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -270,6 +270,45 @@ public final class Submission extends PublicContribution {
     @JsonProperty
     public PostHint getPostHint() {
         return PostHint.byJsonKey(data("post_hint"));
+    }
+
+    /**
+     * Gets the suggested sorting for this thread's comments. For example, {@link CommentSort#QA} would likely be the
+     * suggested sorting for an AMA. May be null.
+     */
+    @JsonProperty(nullable = true)
+    public CommentSort getSuggestedSort() {
+        String key = "suggested_sort";
+        if (data.get(key).isNull()) {
+            return null;
+        }
+        return CommentSort.valueOf(data(key).toUpperCase());
+    }
+
+    /**
+     * Checks if this is a locked thread. If true, then no more commenting or voting is allowed, on both this submission
+     * or its comments.
+     */
+    @JsonProperty
+    public Boolean isLocked() {
+        return data("locked", Boolean.class);
+    }
+
+    @JsonProperty
+    public Boolean isQuarantined() {
+        return data("quarantined", Boolean.class);
+    }
+
+    /**
+     * Get the thumbnails for this submission, if any. May return null.
+     */
+    @JsonProperty(nullable = true)
+    public Thumbnails getThumbnails() {
+        String key = "preview";
+        if (!data.has(key) || data.get(key).isNull()) {
+            return null;
+        }
+        return new Thumbnails(data.get(key).get("images").get(0));
     }
 
     /** Gets a URL on the redd.it domain. For example, <a href="http://redd.it/92dd8">http://redd.it/92dd8</a> */

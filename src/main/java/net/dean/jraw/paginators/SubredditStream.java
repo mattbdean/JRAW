@@ -25,7 +25,6 @@ public class SubredditStream extends GenericPaginator<Subreddit> {
     @EndpointImplementation({
             Endpoints.SUBREDDITS_POPULAR,
             Endpoints.SUBREDDITS_NEW,
-            Endpoints.SUBREDDITS_EMPLOYEE,
             Endpoints.SUBREDDITS_GOLD,
             Endpoints.SUBREDDITS_DEFAULT,
             Endpoints.SUBREDDITS_WHERE

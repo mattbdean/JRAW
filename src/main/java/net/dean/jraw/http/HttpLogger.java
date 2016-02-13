@@ -1,6 +1,6 @@
 package net.dean.jraw.http;
 
-import com.squareup.okhttp.Headers;
+import okhttp3.Headers;
 import net.dean.jraw.util.JrawUtils;
 import okio.Buffer;
 import org.slf4j.Logger;
@@ -132,9 +132,9 @@ public class HttpLogger {
         }
     }
 
-    private void logBody(String header, String data) {
+    private void logBody(boolean success, String header, String data) {
         header = formatHeader(header);
-        l.info("{} {}}", header, data);
+        logBySuccess(success, "{} {}}", header, data);
     }
 
     /**
@@ -219,7 +219,7 @@ public class HttpLogger {
                     logMap(true, "form-data", parseUrlEncoded(r.getBody()), r.getSensitiveArgs());
                 } else {
                     // Other Content-Type
-                    logBody("body", getContent(r.getBody()));
+                    logBody(wasSuccessful, "body", getContent(r.getBody()));
                 }
             }
             if (isEnabled(REQUEST_HEADERS)) {

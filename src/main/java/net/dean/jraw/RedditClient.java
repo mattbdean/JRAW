@@ -2,29 +2,12 @@ package net.dean.jraw;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import net.dean.jraw.auth.AuthenticationListener;
-import net.dean.jraw.http.AuthenticationMethod;
-import net.dean.jraw.http.HttpAdapter;
-import net.dean.jraw.http.HttpRequest;
-import net.dean.jraw.http.MediaTypes;
-import net.dean.jraw.http.NetworkException;
-import net.dean.jraw.http.OkHttpAdapter;
-import net.dean.jraw.http.RestClient;
-import net.dean.jraw.http.RestResponse;
-import net.dean.jraw.http.SubmissionRequest;
-import net.dean.jraw.http.UserAgent;
+import net.dean.jraw.http.*;
 import net.dean.jraw.http.oauth.Credentials;
 import net.dean.jraw.http.oauth.InvalidScopeException;
 import net.dean.jraw.http.oauth.OAuthData;
 import net.dean.jraw.http.oauth.OAuthHelper;
-import net.dean.jraw.models.Account;
-import net.dean.jraw.models.Trophy;
-import net.dean.jraw.models.Captcha;
-import net.dean.jraw.models.CommentSort;
-import net.dean.jraw.models.Listing;
-import net.dean.jraw.models.LoggedInAccount;
-import net.dean.jraw.models.Submission;
-import net.dean.jraw.models.Subreddit;
-import net.dean.jraw.models.Thing;
+import net.dean.jraw.models.*;
 import net.dean.jraw.models.meta.Model;
 import net.dean.jraw.models.meta.SubmissionSerializer;
 import net.dean.jraw.paginators.Sorting;
@@ -262,59 +245,6 @@ public class RedditClient extends RestClient {
         // Usually we would use response.as(), but /api/v1/me does not return a "data" or "kind" node.
         return new LoggedInAccount(response.getJson());
     }
-
-    /**
-     * Checks if the current user needs a captcha to do specific actions such as submit links and compose private
-     * messages. This will always be true if there is no logged in user. Usually, this method will return {@code true}
-     * if the current logged in user has more than 10 link karma
-     *
-     * @return True if the user needs a captcha to do a specific action, else if not or not logged in.
-     * @throws NetworkException If the request was not successful
-     */
-    @EndpointImplementation(Endpoints.NEEDS_CAPTCHA)
-    public boolean needsCaptcha() throws NetworkException {
-        // This endpoint does not return JSON, but rather just "true" or "false"
-        RestResponse response = execute(request()
-                .endpoint(Endpoints.NEEDS_CAPTCHA)
-                .get()
-                .build());
-        return Boolean.parseBoolean(response.getRaw());
-    }
-
-    /**
-     * Fetches a new captcha from the API
-     *
-     * @return A new Captcha
-     * @throws NetworkException If the request was not successful
-     * @throws ApiException If the Reddit API returned an error
-     */
-    @EndpointImplementation(Endpoints.NEW_CAPTCHA)
-    public Captcha getNewCaptcha() throws NetworkException, ApiException {
-        RestResponse response = execute(request()
-                .endpoint(Endpoints.NEW_CAPTCHA)
-                .post(JrawUtils.mapOf(
-                        "api_type", "json"
-                )).build());
-
-        if (response.hasErrors()) {
-            throw response.getError();
-        }
-        String id = response.getJson().get("json").get("data").get("iden").asText();
-
-        return getCaptcha(id);
-    }
-
-    /**
-     * Gets a Captcha by its ID
-     *
-     * @param id The ID of the wanted captcha
-     * @return A new Captcha object
-     */
-    @EndpointImplementation(Endpoints.CAPTCHA_IDEN)
-    public Captcha getCaptcha(String id) {
-        return new Captcha(id);
-    }
-
     /**
      * Gets a user with a specific username
      *
@@ -601,11 +531,13 @@ public class RedditClient extends RestClient {
     public List<Trophy> getTrophies(String username) throws NetworkException {
         if (username == null)
             assertNotUserless();
-        username = authenticatedUser;
 
-        RestResponse response = execute(request()
-                .endpoint(Endpoints.OAUTH_USER_USERNAME_TROPHIES, username)
-                .build());
+        HttpRequest.Builder request = request();
+        if (username == null)
+            request = request.endpoint(Endpoints.OAUTH_ME_TROPHIES);
+        else
+            request = request.endpoint(Endpoints.OAUTH_USER_USERNAME_TROPHIES, username);
+        RestResponse response = execute(request.build());
 
         List<Trophy> trophies = new ArrayList<>();
         for (JsonNode awardNode : response.getJson().get("data").get("trophies")) {
@@ -614,6 +546,28 @@ public class RedditClient extends RestClient {
 
         return trophies;
     }
+
+    /**
+     * Gets details about one or more OAuth2 scopes. If {@code names} is not specified then all scopes will be returned.
+     */
+    @EndpointImplementation(Endpoints.OAUTH_SCOPES)
+    public List<OAuthScope> getScopeDetails(String... names) {
+        Map<String, String> query = names == null ? new HashMap<String, String>() : JrawUtils.mapOf("scopes", JrawUtils.join(',', names));
+
+        RestResponse response = execute(request()
+                .endpoint(Endpoints.OAUTH_SCOPES)
+                .query(query)
+                .build());
+
+        JsonNode root = response.getJson();
+        List<OAuthScope> scopes = new ArrayList<>(root.size());
+        for (JsonNode node : root) {
+            scopes.add(new OAuthScope(node));
+        }
+
+        return scopes;
+    }
+
     /**
      * Gets the object that will help clients authenticate users with their Reddit app
      */

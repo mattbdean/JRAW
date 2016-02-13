@@ -2,6 +2,7 @@ package net.dean.jraw.test;
 
 import net.dean.jraw.AccountPreferencesEditor;
 import net.dean.jraw.ApiException;
+import net.dean.jraw.managers.CaptchaHelper;
 import net.dean.jraw.util.JrawUtils;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.managers.AccountManager;
@@ -25,6 +26,7 @@ import org.testng.SkipException;
 import org.testng.annotations.Test;
 
 import java.net.URL;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.testng.Assert.*;
@@ -107,12 +109,13 @@ public class AccountManagerTest extends RedditTest {
 
     @Test(expectedExceptions = {ApiException.class, SkipException.class})
     public void testPostWithInvalidCaptcha() throws ApiException {
+        CaptchaHelper helper = new CaptchaHelper(reddit);
         try {
-            if (!reddit.needsCaptcha()) {
+            if (!helper.isNecessary()) {
                 throw new SkipException("No captcha needed, request will return successfully either way");
             }
             account.submit(
-                    new AccountManager.SubmissionBuilder("content", "jraw_testing2", "title"), reddit.getNewCaptcha(), "invalid captcha attempt");
+                    new AccountManager.SubmissionBuilder("content", "jraw_testing2", "title"), helper.getNew(), "invalid captcha attempt");
         } catch (NetworkException e) {
             handle(e);
         } catch (ApiException e) {
@@ -274,7 +277,7 @@ public class AccountManagerTest extends RedditTest {
     public void testHideSubmission() {
         try {
             Submission submission = reddit.getSubmission("3tox6a");
-            account.hide(submission, true);
+            account.hide(true, submission);
 
             UserContributionPaginator paginator = getPaginator("hidden");
             List<Contribution> hidden = paginator.next();
@@ -296,7 +299,7 @@ public class AccountManagerTest extends RedditTest {
     public void testUnhideSubmission() {
         try {
             Submission submission = reddit.getSubmission("3tox6a");
-            account.hide(submission, false);
+            account.hide(false, submission);
 
             UserContributionPaginator paginator = getPaginator("hidden");
             List<Contribution> hidden = paginator.next();
@@ -417,14 +420,11 @@ public class AccountManagerTest extends RedditTest {
     @Test
     public void testGetPreferences() {
         try {
-            AccountPreferences prefs = account.getPreferences();
-            validateModel(prefs);
-
-            prefs = account.getPreferences("over_18", "research", "hide_from_robots");
+            String[] names = {"over_18", "research", "hide_from_robots"};
+            AccountPreferences prefs = account.getPreferences(Arrays.asList(names));
             // Only request preferences should be returned
-            assertNotNull(prefs.data("over_18"));
-            assertNotNull(prefs.data("research"));
-            assertNotNull(prefs.data("hide_from_robots"));
+            for (String name : names)
+                assertNotNull(prefs.data(name));
 
             // Anything else should be null
             assertNull(prefs.data("lang"));
@@ -436,7 +436,7 @@ public class AccountManagerTest extends RedditTest {
     @Test
     public void testUpdatePreferences() {
         try {
-            AccountPreferences original = account.getPreferences();
+            AccountPreferences original = account.getPreferences("over_18");
             AccountPreferencesEditor prefs = new AccountPreferencesEditor(original);
             validateModel(account.updatePreferences(prefs));
         } catch (NetworkException e) {

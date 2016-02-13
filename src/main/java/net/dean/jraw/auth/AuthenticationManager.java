@@ -10,8 +10,9 @@ import java.util.Date;
 
 /**
  * Helps developers manage the OAuth2 authentication process better, especially if the app will need to be
- * reauthenticated using a refresh token. For apps that do not use refresh tokens (such as script and application only apps), this class may be a bit over the top.
- * However, if need be, an {@link ApatheticTokenStore} can be used to initialize the manager.
+ * reauthenticated using a refresh token. For apps that do not use refresh tokens (such as script and application only
+ * apps), this class may be a bit over the top. However, if need be, an {@link ApatheticTokenStore} can be used to
+ * initialize the manager.
  *
  * <p>This class attempts to manage a synchronous RedditClient in an asynchronous environment such as how Android is
  * encouraged to run in. AuthenticationManager's singleton instance can be retrieved using {@link #get()}. If the

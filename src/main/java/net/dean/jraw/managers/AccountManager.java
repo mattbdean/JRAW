@@ -26,9 +26,7 @@ import net.dean.jraw.models.VoteDirection;
 import net.dean.jraw.models.attr.Votable;
 
 import java.net.URL;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * This class manages common user actions, such as voting, commenting, saving, etc.
@@ -186,11 +184,19 @@ public class AccountManager extends AbstractManager {
      * @throws ApiException If the API returned an error
      */
     @EndpointImplementation({Endpoints.HIDE, Endpoints.UNHIDE})
-    public void hide(Submission s, boolean hide) throws NetworkException, ApiException {
+    public void hide(boolean hide, Submission s, Submission... more) throws NetworkException, ApiException {
+        String ids = s.getFullName();
+        if (more != null) {
+            String[] idList = new String[more.length];
+            for (int i = 0; i < more.length; i++) {
+                idList[i] = more[i].getFullName();
+            }
+            ids = ids + "," + JrawUtils.join(idList);
+        }
         genericPost(reddit.request()
                 .endpoint(hide ? Endpoints.HIDE : Endpoints.UNHIDE)
                 .post(JrawUtils.mapOf(
-                        "id", s.getFullName()
+                        "id", ids
                 )).build());
     }
 
@@ -371,21 +377,27 @@ public class AccountManager extends AbstractManager {
 
     /**
      * Gets the preferences for this account
-     * @param names The specific names of the desired preferences. These can be found
+     * @param prefs The specifics name of the desired preferences. These can be found
      *              <a href="https://www.reddit.com/dev/api#GET_api_v1_me_prefs">here</a>. Leave empty to fetch all.
      * @return An AccountPreferences that represent this account's preferences
      * @throws NetworkException If the request was not successful
      */
-    @EndpointImplementation(Endpoints.OAUTH_ME_PREFS_GET)
-    public AccountPreferences getPreferences(String... names) throws NetworkException {
-        Map<String, String> query = new HashMap<>();
-        if (names.length > 0) {
-            query.put("fields", JrawUtils.join(',', names));
-        }
+    public AccountPreferences getPreferences(String... prefs) {
+        return getPreferences(Arrays.asList(prefs));
+    }
 
+    /**
+     * Gets the preferences for this account
+     * @param prefs The specific names of the desired preferences. These can be found
+     *              <a href="https://www.reddit.com/dev/api#GET_api_v1_me_prefs">here</a>.
+     * @return An AccountPreferences that represent this account's preferences
+     * @throws NetworkException If the request was not successful
+     */
+    @EndpointImplementation(Endpoints.OAUTH_ME_PREFS_GET)
+    public AccountPreferences getPreferences(List<String> prefs) {
         RestResponse response = reddit.execute(reddit.request()
                 .endpoint(Endpoints.OAUTH_ME_PREFS_GET)
-                .query(query)
+                .query(JrawUtils.mapOf("fields", JrawUtils.join(prefs)))
                 .build());
         return new AccountPreferences(response.getJson());
     }

@@ -32,6 +32,7 @@ public class UserRecordPaginator extends GenericUserRecordPaginator {
             Endpoints.ABOUT_CONTRIBUTORS,
             Endpoints.ABOUT_WIKICONTRIBUTORS,
             Endpoints.ABOUT_MODERATORS,
+            Endpoints.ABOUT_MUTED,
             Endpoints.ABOUT_WHERE
     })
     public Listing<UserRecord> next(boolean forceNetwork) {
@@ -46,7 +47,7 @@ public class UserRecordPaginator extends GenericUserRecordPaginator {
 
     @Override
     public String[] getWhereValues() {
-        return new String[] {"banned", "wikibanned", "contributors", "wikicontributors", "moderators"};
+        return new String[] {"banned", "wikibanned", "contributors", "wikicontributors", "moderators", "muted"};
     }
 
     public String getSubreddit() {

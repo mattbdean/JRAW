@@ -1,6 +1,6 @@
 package net.dean.jraw.paginators;
 
-import com.squareup.okhttp.CacheControl;
+import okhttp3.CacheControl;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.*;
 import net.dean.jraw.models.Listing;

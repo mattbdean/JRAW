@@ -25,7 +25,7 @@ public class InboxManagerTest extends RedditTest {
             if (m1 instanceof PrivateMessage) {
                 PrivateMessage m = (PrivateMessage) m1;
                 boolean expected = !m.isRead();
-                inbox.setRead(m, expected);
+                inbox.setRead(expected, m);
             }
         } catch (NetworkException e) {
             handle(e);

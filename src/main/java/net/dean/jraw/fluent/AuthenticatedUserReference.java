@@ -27,10 +27,6 @@ public final class AuthenticatedUserReference extends UserReference {
         return managers.account().getPreferences();
     }
 
-    /**
-     *
-     * @return
-     */
     @NetworkingCall
     public List<Subreddit> subscribedSubreddits() {
         return new UserSubredditsPaginator(managers.reddit(), "subscriber").accumulateMergedAll();

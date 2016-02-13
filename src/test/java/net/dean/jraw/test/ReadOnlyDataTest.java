@@ -2,11 +2,7 @@ package net.dean.jraw.test;
 
 import com.google.common.base.Optional;
 import net.dean.jraw.http.NetworkException;
-import net.dean.jraw.models.CommentNode;
-import net.dean.jraw.models.Listing;
-import net.dean.jraw.models.Submission;
-import net.dean.jraw.models.Subreddit;
-import net.dean.jraw.models.Thing;
+import net.dean.jraw.models.*;
 import net.dean.jraw.paginators.SubredditPaginator;
 import org.testng.Assert;
 import org.testng.SkipException;
@@ -60,6 +56,17 @@ public class ReadOnlyDataTest extends RedditTest {
             assertFalse(comments.isEmpty());
 
             validateModel(comments);
+        } catch (NetworkException e) {
+            handle(e);
+        }
+    }
+
+    @Test
+    public void testThumbnails() {
+        try {
+            Submission s = reddit.getSubmission("40z3ti");
+            Thumbnails prev = s.getThumbnails();
+            validateModel(prev);
         } catch (NetworkException e) {
             handle(e);
         }
@@ -215,6 +222,19 @@ public class ReadOnlyDataTest extends RedditTest {
 
             assertTrue(illegalComment.isPresent());
             assertEquals(illegalComment.get().getComment().getRemovalReason(), "legal");
+        } catch (NetworkException e) {
+            handle(e);
+        }
+    }
+
+    @Test
+    public void testGetScopes() {
+        try {
+            List<OAuthScope> allScopes = reddit.getScopeDetails();
+            validateModels(allScopes);
+
+            List<OAuthScope> fewScopes = reddit.getScopeDetails("edit", "flair", "modwiki");
+            validateModels(fewScopes);
         } catch (NetworkException e) {
             handle(e);
         }

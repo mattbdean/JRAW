@@ -96,7 +96,7 @@ public class JavaGenerator extends AbstractEndpointGenerator {
         writer.writeLine("private final net.dean.jraw.Endpoint endpoint;");
         writer.writeLine("private final String scope;");
         writer.newline();
-        writer.writeLine("private Endpoints(String requestDescriptor, String scope) {");
+        writer.writeLine("Endpoints(String requestDescriptor, String scope) {");
         writer.incIndent();
         writer.writeLine("this.endpoint = new net.dean.jraw.Endpoint(requestDescriptor);");
         writer.writeLine("this.scope = scope;");

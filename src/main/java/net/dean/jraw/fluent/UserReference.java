@@ -35,7 +35,6 @@ public class UserReference extends ElevatedAbstractReference {
     }
 
     public UserContributionPaginator gilded() {
-        FluentRedditClient reddit = new FluentRedditClient(managers.reddit());
         return new UserContributionPaginator(managers.reddit(), "gilded", user);
     }
 

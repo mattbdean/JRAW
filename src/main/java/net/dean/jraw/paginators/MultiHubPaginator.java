@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 public class MultiHubPaginator extends Paginator<MultiHubPaginator.MultiRedditId> {
 
     /**
-     * Matches a multireddit URL. See <a href="http://regexr.com/39k3v">here</a> for a demonstration, and
+     * Matches a multireddit URL. See <a href="http://regexr.com/3cjgr">here</a> for a demonstration, and
      * <a href="http://pastebin.com/raw.php?i=0dFYCMRb">here</a> for a list of URLs to test on<br>
      * <br>
      * Usernames must only contain alphanumeric characters, underscores, and hyphens with a max length of 20
@@ -29,7 +29,7 @@ public class MultiHubPaginator extends Paginator<MultiHubPaginator.MultiRedditId
      * (<a href="https://github.com/reddit/reddit/blob/3b7b74148/r2/r2/lib/validator/validator.py#L2622">source</a>)
      */
     public static final String MULTIREDDIT_URL_REGEX =
-            "http(s)?://(\\w.*\\.)?reddit\\.com/user/([a-zA-Z\\-_]*?)/m/([A-Za-z0-9][A-Za-z0-9_]{1,20})";
+            "http(s)?://(\\w.*\\.)?reddit\\.com/user/([a-zA-Z0-9\\-_]*?)/m/([A-Za-z0-9][A-Za-z0-9_]{1,20})";
     private static final int BACKREF_USERNAME = 3;
     private static final int BACKREF_MULTINAME = 4;
     private final Matcher matcher;
