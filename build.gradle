@@ -25,11 +25,11 @@ allprojects {
 
 dependencies {
     def okHttpVersion = '3.1.2'
-    compile "com.squareup.okhttp3:okhttp:$okHttpVersion"
-    compile "com.squareup.okhttp3:okhttp-urlconnection:$okHttpVersion"
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.6.0'
-    compile 'com.google.guava:guava:19.0'
-    compile 'org.slf4j:slf4j-api:1.7.13'
+    compile     "com.squareup.okhttp3:okhttp:$okHttpVersion"
+    compile     "com.squareup.okhttp3:okhttp-urlconnection:$okHttpVersion"
+    compile     'com.fasterxml.jackson.core:jackson-databind:2.6.0'
+    compile     'com.google.guava:guava:19.0'
+    compile     'org.slf4j:slf4j-api:1.7.13'
     testCompile 'org.slf4j:slf4j-simple:1.7.13'
     testCompile 'org.testng:testng:6.9.10'
     testCompile 'net.sourceforge.htmlunit:htmlunit:2.19'
@@ -47,16 +47,60 @@ task fatJar(type: Jar, dependsOn: assemble) {
     )
 }
 
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    destinationDir = releaseDest
+    from javadoc.destinationDir
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    destinationDir = releaseDest
+    from sourceSets.main.allSource
+}
+
 task renamePom(dependsOn: 'generatePomFileForMavenPublication') << {
     println(file('build/publications/maven/pom-default.xml'))
     file('build/publications/maven/pom-default.xml').renameTo("build/publications/maven/JRAW-${version}.pom")
 }
 
-task release(type: Jar, dependsOn: ['fatJar']) {
+task release(type: Jar, dependsOn: ['fatJar', 'javadocJar', 'sourcesJar', 'renamePom']) {
     from sourceSets.main.output
     destinationDir = releaseDest
 }
 
+javadoc {
+    def overrideVersion = System.properties.'javadoc-version'
+    def version = overrideVersion != null ? overrideVersion : project.version
+    title = "${project.name} $version API"
+}
+
+test {
+    useTestNG()
+
+    testLogging {
+        // Show stderr and stdout (useful for exceptions)
+        showStandardStreams = true
+    }
+
+    beforeTest { descriptor ->
+        logger.lifecycle("Running test: ${descriptor.className}.${descriptor.name}")
+    }
+}
+
+findbugsMain {
+    reports {
+        xml.enabled = false
+        html.enabled = true
+    }
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled = true // coveralls depends on XML reports
+        html.enabled = true
+    }
+}
 
 publishing {
     publications {
@@ -65,6 +109,8 @@ publishing {
         }
     }
 }
+
+defaultTasks "test"
 
 task wrapper(type: Wrapper) {
     gradleVersion = '2.10'
