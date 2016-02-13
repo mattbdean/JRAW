@@ -88,13 +88,6 @@ test {
     }
 }
 
-findbugsMain {
-    reports {
-        xml.enabled = false
-        html.enabled = true
-    }
-}
-
 jacocoTestReport {
     reports {
         xml.enabled = true // coveralls depends on XML reports
