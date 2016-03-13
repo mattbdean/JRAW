@@ -3,6 +3,8 @@ package net.dean.jraw.paginators;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.models.MultiReddit;
 import net.dean.jraw.models.Submission;
+import net.dean.jraw.EndpointImplementation;
+import net.dean.jraw.Endpoints;
 
 /**
  * Iterates through the posts in a multireddit.
@@ -34,7 +36,7 @@ public class MultiRedditPaginator extends Paginator<Submission> {
         return super.next(forceNetwork);
     }
 
-    
+
     @Override
     protected String getBaseUri() {
         String path = sorting == null ? "" : "/" + sorting.name().toLowerCase();
