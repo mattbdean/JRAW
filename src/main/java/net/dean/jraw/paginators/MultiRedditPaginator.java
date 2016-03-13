@@ -22,6 +22,20 @@ public class MultiRedditPaginator extends Paginator<Submission> {
     }
 
     @Override
+    @EndpointImplementation({
+            Endpoints.CONTROVERSIAL,
+            Endpoints.HOT,
+            Endpoints.NEW,
+            Endpoints.TOP,
+            Endpoints.SORT
+    })
+    public Listing<Submission> next(boolean forceNetwork) {
+        // Just call super so that we can add the @EndpointImplementation annotation
+        return super.next(forceNetwork);
+    }
+
+    
+    @Override
     protected String getBaseUri() {
         String path = sorting == null ? "" : "/" + sorting.name().toLowerCase();
         return multiReddit.getPath() + path;
