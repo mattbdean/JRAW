@@ -5,6 +5,7 @@ import net.dean.jraw.models.MultiReddit;
 import net.dean.jraw.models.Submission;
 import net.dean.jraw.EndpointImplementation;
 import net.dean.jraw.Endpoints;
+import net.dean.jraw.models.Listing;
 
 /**
  * Iterates through the posts in a multireddit.
