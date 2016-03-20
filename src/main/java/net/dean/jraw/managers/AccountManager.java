@@ -124,7 +124,25 @@ public class AccountManager extends AbstractManager {
                 ).build());
     }
 
-
+    /**
+     * Reports a comment or submission.
+     *
+     * @param s             The submission to vote on
+     * @param voteDirection How to vote
+     * @param <T>           The Votable Thing to vote on
+     * @throws NetworkException If the request was not successful
+     * @throws ApiException     If the API returned an error
+     */
+    @EndpointImplementation(Endpoints.REPORT)
+    public <T extends Thing> void report(T s, String reason) throws NetworkException, ApiException {
+        genericPost(reddit.request()
+                .endpoint(Endpoints.REPORT)
+                .post(JrawUtils.mapOf(
+                                "api_type", "json",
+                                "reason", reason,
+                                "thing_id", s.getFullName())
+                ).build());
+    }
 
     /**
      * Stores visited links (Reddit Gold feature)
