@@ -85,7 +85,7 @@ public class ModerationManager extends AbstractManager {
      * @throws ApiException If the Reddit API returned an error
      */
     @EndpointImplementation(Endpoints.SET_SUBREDDIT_STICKY)
-    public void setSticky(Submission s, boolean sticky) throws NetworkException, ApiException {
+    public void setSticky(Thing s, boolean sticky) throws NetworkException, ApiException {
         genericPost(reddit.request()
                 .endpoint(Endpoints.SET_SUBREDDIT_STICKY)
                 .post(JrawUtils.mapOf(
@@ -95,7 +95,7 @@ public class ModerationManager extends AbstractManager {
                 )).build());
     }
     @EndpointImplementation(Endpoints.APPROVE)
-    public void approve(Submission s) throws NetworkException, ApiException {
+    public void approve(Thing s) throws NetworkException, ApiException {
         genericPost(reddit.request()
                 .endpoint(Endpoints.APPROVE)
                 .post(JrawUtils.mapOf(
@@ -105,7 +105,7 @@ public class ModerationManager extends AbstractManager {
     }
 
     @EndpointImplementation(Endpoints.REMOVE)
-    public void remove(Submission s, boolean spam) throws NetworkException, ApiException {
+    public void remove(Thing s, boolean spam) throws NetworkException, ApiException {
         genericPost(reddit.request()
                 .endpoint(Endpoints.REMOVE)
                 .post(JrawUtils.mapOf(
