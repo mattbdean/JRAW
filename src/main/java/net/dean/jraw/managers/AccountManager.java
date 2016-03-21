@@ -353,6 +353,25 @@ public class AccountManager extends AbstractManager {
     }
 
     /**
+     * Gets a list of possible flair templates for submissions in this subreddit. See also: {@link #getFlairChoices(Submission)},
+     * {@link #getCurrentFlair(String)}, {@link #getCurrentFlair(Submission)}
+     *
+     * @param subreddit The subreddit to look up
+     * @param submission The link to look up
+     * @return A list of flair templates
+     * @throws NetworkException If the request was not successful
+     * @throws ApiException     If the Reddit API returned an error
+     */
+    @EndpointImplementation(Endpoints.FLAIRSELECTOR)
+    public List<FlairTemplate> getFlairChoicesSubmission(String subreddit, Submission submission) throws NetworkException, ApiException {
+        ImmutableList.Builder<FlairTemplate> templates = ImmutableList.builder();
+        for (JsonNode choiceNode : getFlairChoicesRootNode(subreddit, submission.getFullName()).get("choices")) {
+            templates.add(new FlairTemplate(choiceNode));
+        }
+
+        return templates.build();
+    }
+    /**
      * Gets a list of possible flair templates for this submission
      *
      * @param link The submission to look up
