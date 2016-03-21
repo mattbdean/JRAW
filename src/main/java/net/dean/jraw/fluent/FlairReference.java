@@ -36,7 +36,7 @@ public final class FlairReference extends ElevatedAbstractReference {
     public List<FlairTemplate> options(Submission submission) throws ApiException {
         return managers.account().getFlairChoicesSubmission(subreddit, submission);
     }
-    
+
     /** Enables or disables flair on this subreddit. */
     @NetworkingCall
     public void enable(boolean flag) throws ApiException {

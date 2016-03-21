@@ -362,7 +362,7 @@ public class AccountManager extends AbstractManager {
     @EndpointImplementation(Endpoints.FLAIRSELECTOR)
     public List<FlairTemplate> getFlairChoicesSubmission(String subreddit, Submission submission) throws NetworkException, ApiException {
         ImmutableList.Builder<FlairTemplate> templates = ImmutableList.builder();
-        for (JsonNode choiceNode : getFlairChoicesRootNode(subreddit, submission.getFullName()).get("choices")) {
+        for (JsonNode choiceNode : getFlairChoicesRootNode(subreddit, submission).get("choices")) {
             templates.add(new FlairTemplate(choiceNode));
         }
 
