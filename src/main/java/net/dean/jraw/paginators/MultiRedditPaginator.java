@@ -1,11 +1,11 @@
 package net.dean.jraw.paginators;
 
-import net.dean.jraw.RedditClient;
-import net.dean.jraw.models.MultiReddit;
-import net.dean.jraw.models.Submission;
 import net.dean.jraw.EndpointImplementation;
 import net.dean.jraw.Endpoints;
+import net.dean.jraw.RedditClient;
 import net.dean.jraw.models.Listing;
+import net.dean.jraw.models.MultiReddit;
+import net.dean.jraw.models.Submission;
 
 /**
  * Iterates through the posts in a multireddit.
@@ -17,7 +17,7 @@ public class MultiRedditPaginator extends Paginator<Submission> {
      * Instantiates a new MultiRedditPaginator
      *
      * @param creator The RedditClient that will be used to send HTTP requests
-     * @param multi The multireddit to iterate
+     * @param multi   The multireddit to iterate
      */
     public MultiRedditPaginator(RedditClient creator, MultiReddit multi) {
         super(creator, Submission.class);
@@ -46,6 +46,7 @@ public class MultiRedditPaginator extends Paginator<Submission> {
 
     /**
      * Gets the MultiReddit that this paginator is iterating through
+     *
      * @return The MultiReddit
      */
     public MultiReddit getMultiReddit() {
@@ -54,6 +55,7 @@ public class MultiRedditPaginator extends Paginator<Submission> {
 
     /**
      * Sets the MultiReddit to iterate through
+     *
      * @param multiReddit The new MultiReddit
      */
     public void setMultiReddit(MultiReddit multiReddit) {
