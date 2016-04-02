@@ -91,6 +91,7 @@ public class ModerationManager extends AbstractManager {
     public void setDistinguishedStatus(Thing s, DistinguishedStatus status) throws NetworkException, ApiException {
         String distinguish = status.getJsonValue();
         if(distinguish.equals("null")) distinguish = "no";
+        if(distinguish.equals("moderator")) distinguish = "yes";
         genericPost(reddit.request()
                 .endpoint(Endpoints.DISTINGUISH)
                 .post(JrawUtils.mapOf(
