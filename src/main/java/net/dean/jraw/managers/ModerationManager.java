@@ -1,9 +1,13 @@
 package net.dean.jraw.managers;
 
+import net.dean.jraw.ApiException;
 import net.dean.jraw.*;
+import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.AuthenticationMethod;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.RestResponse;
+import net.dean.jraw.models.Comment;
+import net.dean.jraw.models.DistinguishedStatus;
 import net.dean.jraw.models.FlairTemplate;
 import net.dean.jraw.models.Submission;
 import net.dean.jraw.models.Thing;
@@ -64,7 +68,7 @@ public class ModerationManager extends AbstractManager {
      *
      * @param fullname The fullname of the submission or comment to delete
      * @throws NetworkException If the request was not successful
-     * @throws ApiException If the API returned an error
+     * @throws ApiException     If the API returned an error
      */
     @EndpointImplementation(Endpoints.DEL)
     public void delete(String fullname) throws NetworkException, ApiException {
@@ -76,16 +80,58 @@ public class ModerationManager extends AbstractManager {
     }
 
     /**
+     * Distinguishes a comment or submission that a user posted.
+     *
+     * @param s The thing to distinguish
+     * @param status How to distinguish 's'
+     * @throws NetworkException If the request was not successful
+     * @throws ApiException     If the API returned an error
+     */
+    @EndpointImplementation(Endpoints.DISTINGUISH)
+    public void setDistinguishedStatus(Thing s, DistinguishedStatus status) throws NetworkException, ApiException {
+        String distinguish = status.getJsonValue();
+        if(distinguish.equals("null")) distinguish = "no";
+        genericPost(reddit.request()
+                .endpoint(Endpoints.DISTINGUISH)
+                .post(JrawUtils.mapOf(
+                        "id", s.getFullName(),
+                        "api_type", "json",
+                        "how", distinguish
+                )).build());
+    }
+
+    /**
+     * Stickies a top-level comment that a user posted. Not that this ONLY applies to top-level
+     * comments and will not return an error if run on a non top-level comment
+     *
+     * @param s The top-level comment to sticky
+     * @param sticky Whether to sticky or unsticky the comment
+     * @throws NetworkException If the request was not successful
+     * @throws ApiException     If the API returned an error
+     */
+    @EndpointImplementation(Endpoints.DISTINGUISH)
+    public void setSticky(Comment s, boolean sticky) throws NetworkException, ApiException {
+        genericPost(reddit.request()
+                .endpoint(Endpoints.DISTINGUISH)
+                .post(JrawUtils.mapOf(
+                        "id", s.getFullName(),
+                        "api_type", "json",
+                        "how", "yes",
+                        "sticky", sticky
+                )).build());
+    }
+
+    /**
      * Set or unset a self post as a sticky. You must be a moderator of the subreddit the submission was posted in for
      * this request to complete successfully.
      *
-     * @param s The submission to set as a sticky. Must be a self post
+     * @param s      The submission to set as a sticky. Must be a self post
      * @param sticky Whether or not to set the submission as a stickied post
      * @throws NetworkException If the request was not successful
-     * @throws ApiException If the Reddit API returned an error
+     * @throws ApiException     If the Reddit API returned an error
      */
     @EndpointImplementation(Endpoints.SET_SUBREDDIT_STICKY)
-    public void setSticky(Thing s, boolean sticky) throws NetworkException, ApiException {
+    public void setSticky(Submission s, boolean sticky) throws NetworkException, ApiException {
         genericPost(reddit.request()
                 .endpoint(Endpoints.SET_SUBREDDIT_STICKY)
                 .post(JrawUtils.mapOf(
@@ -94,6 +140,7 @@ public class ModerationManager extends AbstractManager {
                         "state", sticky
                 )).build());
     }
+
     @EndpointImplementation(Endpoints.APPROVE)
     public void approve(Thing s) throws NetworkException, ApiException {
         genericPost(reddit.request()
@@ -115,14 +162,16 @@ public class ModerationManager extends AbstractManager {
 
                 )).build());
     }
+
     /**
      * Sets the flair for the currently authenticated user
+     *
      * @param subreddit The subreddit to set the flair on
-     * @param template The template to use
-     * @param text Optional text that will be used if the FlairTemplate's text is editable. If this is null and the
-     *             template is editable, the template's default text will be used.
+     * @param template  The template to use
+     * @param text      Optional text that will be used if the FlairTemplate's text is editable. If this is null and the
+     *                  template is editable, the template's default text will be used.
      * @throws NetworkException If the request was not successful
-     * @throws ApiException If the API returned an error
+     * @throws ApiException     If the API returned an error
      */
     public void setFlair(String subreddit, FlairTemplate template, String text) throws NetworkException, ApiException {
         setFlair(subreddit, template, text, (String) null);
@@ -133,13 +182,13 @@ public class ModerationManager extends AbstractManager {
      * authenticated user.
      *
      * @param subreddit The subreddit to set the flair on
-     * @param template The template to use
-     * @param text Optional text that will be used if the FlairTemplate's text is editable. If this is null and the
-     *             template is editable, the template's default text will be used.
-     * @param username The name of the user to set the flair for. If this is null the authenticated user's name will be
-     *                 used.
+     * @param template  The template to use
+     * @param text      Optional text that will be used if the FlairTemplate's text is editable. If this is null and the
+     *                  template is editable, the template's default text will be used.
+     * @param username  The name of the user to set the flair for. If this is null the authenticated user's name will be
+     *                  used.
      * @throws NetworkException If the request was not successful
-     * @throws ApiException If the API returned an error
+     * @throws ApiException     If the API returned an error
      */
     public void setFlair(String subreddit, FlairTemplate template, String text, String username) throws NetworkException, ApiException {
         setFlair(subreddit, template, text, null, username);
@@ -149,13 +198,13 @@ public class ModerationManager extends AbstractManager {
      * Sets the flair for a certain submission. If the currently authenticated user is <em>not</em> a moderator of the
      * subreddit where the submission was posted, then the user must have posted the submission.
      *
-     * @param subreddit The subreddit to set the flair on
-     * @param template The template to use
-     * @param text Optional text that will be used if the FlairTemplate's text is editable. If this is null and the
-     *             template is editable, the template's default text will be used.
+     * @param subreddit  The subreddit to set the flair on
+     * @param template   The template to use
+     * @param text       Optional text that will be used if the FlairTemplate's text is editable. If this is null and the
+     *                   template is editable, the template's default text will be used.
      * @param submission The submission to set the flair for
      * @throws NetworkException If the request was not successful
-     * @throws ApiException If the API returned an error
+     * @throws ApiException     If the API returned an error
      */
     public void setFlair(String subreddit, FlairTemplate template, String text, Submission submission) throws NetworkException, ApiException {
         setFlair(subreddit, template, text, submission, null);
@@ -166,15 +215,15 @@ public class ModerationManager extends AbstractManager {
      * submission will be used in the request. If they are both null and there is no authenticated user, then an
      * IllegalArgumentException will be thrown.
      *
-     * @param subreddit The subreddit where the flair will take effect
-     * @param template The template to use
-     * @param text Optional text that will be used if the FlairTemplate's text is editable. If this is null and the
-     *             template is editable, the template's default text will be used.
+     * @param subreddit  The subreddit where the flair will take effect
+     * @param template   The template to use
+     * @param text       Optional text that will be used if the FlairTemplate's text is editable. If this is null and the
+     *                   template is editable, the template's default text will be used.
      * @param submission The submission to set the flair for
-     * @param username The name of the user to set the flair for. If this is null the authenticated user's name will be
-     *                 used.
+     * @param username   The name of the user to set the flair for. If this is null the authenticated user's name will be
+     *                   used.
      * @throws IllegalArgumentException If both the submission and the username are null
-     * @throws NetworkException If the request was not successful
+     * @throws NetworkException         If the request was not successful
      */
     @EndpointImplementation(Endpoints.SELECTFLAIR)
     private void setFlair(String subreddit, FlairTemplate template, String text, Submission submission, String username)
