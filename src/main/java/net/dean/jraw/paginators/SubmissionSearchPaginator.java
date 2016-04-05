@@ -57,6 +57,7 @@ public class SubmissionSearchPaginator extends Paginator<Submission> {
     protected Map<String, String> getExtraQueryArgs() {
         return JrawUtils.mapOf(
                 "q", query,
+                "t", timePeriod.name().toLowerCase(),
                 "restrict_sr", subreddit == null ? "off" : "on",
                 "sort", sorting.name().toLowerCase(),
                 "syntax", syntax.name().toLowerCase()
