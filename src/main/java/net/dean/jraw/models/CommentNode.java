@@ -4,14 +4,15 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.base.Optional;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.TreeTraverser;
+
 import net.dean.jraw.EndpointImplementation;
 import net.dean.jraw.Endpoints;
-import net.dean.jraw.util.JrawUtils;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.RestResponse;
 import net.dean.jraw.http.SubmissionRequest;
 import net.dean.jraw.models.meta.Model;
+import net.dean.jraw.util.JrawUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,13 +30,13 @@ import java.util.concurrent.locks.ReentrantLock;
  * has a depth of 2, and so on. It is only necessary to create one CommentNode, as the constructor will recursively
  * create a CommentNode for every reply to that comment, making a tree structure. For every Comment in the Submission,
  * there will be one CommentNode for it.
- *
+ * <p>
  * <p>At the root of every comment tree there is a single root node, which represents the submission the comments belong
  * to. This node will have a depth of 0 and its children will be top-level replies to the submission. Although this node
  * is technically part of the tree, it will not be included when iterating the nodes with {@link #walkTree()}.
- *
+ * <p>
  * <p>For example, take this tree structure:
- *
+ * <p>
  * <pre>
  *       z
  *       |
@@ -45,12 +46,12 @@ import java.util.concurrent.locks.ReentrantLock;
  *       |   \
  *     f,g,h  i
  * </pre>
- *
+ * <p>
  * <p>Node {@code z} represents the root node (submission) with a depth of 0. Node {@code a} is a top level reply to
  * that submission with a depth of 1. Nodes {@code f}, {@code g} and {@code h}, and {@code i} have a depth of 3. This
  * tree can be traversed using several different methods: Pre-order ({@code abcfghdi}), post-order ({@code bfghcida}),
  * and breadth-first ({@code abcdfghi}).
- *
+ * <p>
  * <p>Note that although this class implements {@link Iterable}, the provided Iterator will only iterate through direct
  * children. To walk the entire tree, use {@link #walkTree()}
  *
@@ -63,7 +64,9 @@ public final class CommentNode implements Iterable<CommentNode> {
      */
     public static final int NO_LIMIT = -1;
     private static final int TOP_LEVEL_DEPTH = 1;
-    /** Amount of spaces to be included for each indent in {@link #visualize()} */
+    /**
+     * Amount of spaces to be included for each indent in {@link #visualize()}
+     */
     private static final int VISUALIZATION_INDENT = 2;
     private static final SimpleTreeTraverser traverser = new SimpleTreeTraverser();
     private static final Lock morechildrenLock = new ReentrantLock();
@@ -80,9 +83,9 @@ public final class CommentNode implements Iterable<CommentNode> {
      * Instantiates a new root CommentNode. This will create a CommentNode for every Comment in {@code topLevelReplies},
      * and then for their children, and so on.
      *
-     * @param ownerId The Submission's fullname (ex: t3_92dd8)
+     * @param ownerId         The Submission's fullname (ex: t3_92dd8)
      * @param topLevelReplies A list of top level replies to this submission
-     * @param more A MoreChildren object which can be used to retrieve more comments later
+     * @param more            A MoreChildren object which can be used to retrieve more comments later
      */
     public CommentNode(String ownerId, List<Comment> topLevelReplies, MoreChildren more, CommentSort commentSort) {
         // Validate only the public constructor because this value will be passed to the private constructor when the
@@ -132,28 +135,37 @@ public final class CommentNode implements Iterable<CommentNode> {
         }
     }
 
-    /** Gets fullname of the submission to which this CommentNode belongs (ex: t3_92dd8). */
+    /**
+     * Gets fullname of the submission to which this CommentNode belongs (ex: t3_92dd8).
+     */
     public String getSubmissionName() {
         return ownerId;
     }
 
-    /** Checks if this CommentNode has any children. */
+    /**
+     * Checks if this CommentNode has any children.
+     */
     public boolean isEmpty() {
         return children.isEmpty();
     }
 
-    /** Checks if there exists a MoreChildren object for this CommentNode. */
+    /**
+     * Checks if there exists a MoreChildren object for this CommentNode.
+     */
     public boolean hasMoreComments() {
         return moreChildren != null;
     }
 
-    /** Gets any more replies to this comment. Can be null. */
+    /**
+     * Gets any more replies to this comment. Can be null.
+     */
     public MoreChildren getMoreChildren() {
         return moreChildren;
     }
 
     /**
      * Attempts to find a CommentNode in this node's children by its fullname. No optimization will be used.
+     *
      * @param fullName The fullname of the comment to find. For example: t1_c0b75sp
      */
     public Optional<CommentNode> findChild(String fullName) {
@@ -162,8 +174,9 @@ public final class CommentNode implements Iterable<CommentNode> {
 
     /**
      * Attempts to find a CommentNode in this node's children by its fullname.
+     *
      * @param fullName The fullname of the comment to find. For example: t1_c0b75sp
-     * @param hint A hint at where the comment is most likely to be
+     * @param hint     A hint at where the comment is most likely to be
      */
     public Optional<CommentNode> findChild(String fullName, LocationHint hint) {
         if (fullName == null)
@@ -191,7 +204,9 @@ public final class CommentNode implements Iterable<CommentNode> {
         }
     }
 
-    /** Used by {@link #visualize()} to make an indentation */
+    /**
+     * Used by {@link #visualize()} to make an indentation
+     */
     private String makeIndent(int depth) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < depth - 1; i++)
@@ -200,7 +215,9 @@ public final class CommentNode implements Iterable<CommentNode> {
         return sb.toString();
     }
 
-    /** Used by {@link #visualize()} to remove newlines and carriage returns from the body */
+    /**
+     * Used by {@link #visualize()} to remove newlines and carriage returns from the body
+     */
     private String formatCommentBody(String body) {
         return body.replace("\n", "\\n").replace("\r", "\\r");
     }
@@ -222,8 +239,8 @@ public final class CommentNode implements Iterable<CommentNode> {
      * setting a depth or request limit this may be a very costly operation, requiring potentially hundreds of requests
      * to fully satisfy the method call. Note that one request must be sent for every {@link MoreChildren} found.
      *
-     * @param reddit Used to make requests
-     * @param depthLimit The maximum depth to look into. A value of {@link #NO_LIMIT} disable the limit.
+     * @param reddit       Used to make requests
+     * @param depthLimit   The maximum depth to look into. A value of {@link #NO_LIMIT} disable the limit.
      * @param requestLimit The maximum amount of requests to send. There will be one request for every MoreChildren
      *                     object found. A value of {@link #NO_LIMIT} will disable the limit.
      * @throws NetworkException If there was a problem sending the request
@@ -251,6 +268,63 @@ public final class CommentNode implements Iterable<CommentNode> {
                     return;
             }
         }
+    }
+
+    /**
+     * Inserts a comment with a fullname into the tree. This method
+     * returns only new <em>root</em> nodes. If this CommentNode is not associated with a {@link MoreChildren}, then an
+     * empty list is returned. A null value is never returned.
+     * <p>
+     * This is useful to insert a reply directly into the tree instead of reloading the thread to see
+     * the reply.
+     *
+     * @param fullname The comment fullname to insert
+     * @return A list of the thing t
+     * @throws NetworkException If the request was not successful
+     */
+    public List<CommentNode> insertComment(RedditClient reddit, String fullname) throws NetworkException {
+
+        int relativeRootDepth = depth + 1;
+        List<CommentNode> newRootNodes = new ArrayList<>();
+        this.moreChildren = null;
+
+        List<Comment> newComments = new ArrayList<>();
+
+        // Assert every Thing is either a Comment or a MoreChildren
+        Thing t = reddit.get(fullname).get(0);
+        if (t instanceof Comment) {
+            newComments.add((Comment) t);
+        } else {
+            throw new IllegalStateException("Received a Thing that was not a Comment, was "
+                    + t.getClass().getName());
+        }
+
+
+        // Comments from /api/morechildren are listed as if they were iterated in pre-order traversal
+        CommentNode parent = this;
+        for (Iterator<Comment> it = newComments.iterator(); it.hasNext(); ) {
+            Comment newComment = it.next();
+            // Navigate up the tree until we find the comment whose ID matches the new comment's parent_id
+            while (!newComment.getParentId().equals(parent.getComment().getFullName())) {
+                parent = parent.parent;
+            }
+            // Instantiate a new CommentNode. The MoreChildren, if applicable, will be instantiated later.
+            CommentNode node = new CommentNode(ownerId, parent, newComment, null, commentSort, parent.depth + 1);
+            // Remove the Comment from the list
+            it.remove();
+            if (node.depth == relativeRootDepth)
+                newRootNodes.add(node);
+            parent.children.add(node);
+            parent = node;
+        }
+
+        // newComments should be empty if everything was successful
+        for (Comment c : newComments) {
+            JrawUtils.logger().warn("Unable to find parent for " + c);
+        }
+
+
+        return newRootNodes;
     }
 
     /**
@@ -370,12 +444,12 @@ public final class CommentNode implements Iterable<CommentNode> {
      * the depth of a particular branch of the tree exceeds 10. On the website, the MoreChildren will be represented as
      * a link with the text "continue this thread &rarr;." If a MoreChildren object points to a truncated branch, then
      * two things must be true:
-     *
+     * <p>
      * <ol>
      *     <li>The MoreChildren's "count" attribute is zero
      *     <li>The MoreChildren's ID is "_"
      * </ol>
-     *
+     * <p>
      * <p>If these things are true, then this method will return true.
      *
      * @return If this comment's MoreChildren object represents a truncated comment branch.
@@ -449,28 +523,45 @@ public final class CommentNode implements Iterable<CommentNode> {
         return commentList;
     }
 
-    /** Gets the Comment this CommentNode is representing. */
-    public Comment getComment() { return comment; }
+    /**
+     * Gets the Comment this CommentNode is representing.
+     */
+    public Comment getComment() {
+        return comment;
+    }
 
-    /** Gets this node's immediate children */
-    public List<CommentNode> getChildren() { return children; }
+    /**
+     * Gets this node's immediate children
+     */
+    public List<CommentNode> getChildren() {
+        return children;
+    }
 
-    public CommentNode getParent() { return parent; }
+    public CommentNode getParent() {
+        return parent;
+    }
 
-    public int getDepth() { return depth; }
+    public int getDepth() {
+        return depth;
+    }
 
-    /** Checks if this comment is a top-level reply */
+    /**
+     * Checks if this comment is a top-level reply
+     */
     public boolean isTopLevel() {
         return depth == TOP_LEVEL_DEPTH;
     }
 
-    /** Gets a CommentNode at the specified index */
+    /**
+     * Gets a CommentNode at the specified index
+     */
     public CommentNode get(int i) {
         return children.get(i);
     }
 
     /**
      * Gets how many direct children this node has
+     *
      * @see #getTotalSize()
      */
     public int getImmediateSize() {
@@ -492,13 +583,16 @@ public final class CommentNode implements Iterable<CommentNode> {
         return size;
     }
 
-    /** Provides a {@link FluentIterable} that will iterate every CommentNode in the tree including this one in pre-order. */
+    /**
+     * Provides a {@link FluentIterable} that will iterate every CommentNode in the tree including this one in pre-order.
+     */
     public FluentIterable<CommentNode> walkTree() {
         return walkTree(TraversalMethod.PRE_ORDER);
     }
 
     /**
      * Provides a {@link FluentIterable} that will iterate every CommentNode in the tree, including this one.
+     *
      * @param method How the tree should be traversed.
      */
     public FluentIterable<CommentNode> walkTree(TraversalMethod method) {
@@ -525,9 +619,11 @@ public final class CommentNode implements Iterable<CommentNode> {
         CommentNode that = (CommentNode) o;
 
         if (depth != that.depth) return false;
-        if (children != null ? !children.equals(that.children) : that.children != null) return false;
+        if (children != null ? !children.equals(that.children) : that.children != null)
+            return false;
         if (comment != null ? !comment.equals(that.comment) : that.comment != null) return false;
-        if (moreChildren != null ? !moreChildren.equals(that.moreChildren) : that.moreChildren != null) return false;
+        if (moreChildren != null ? !moreChildren.equals(that.moreChildren) : that.moreChildren != null)
+            return false;
         if (ownerId != null ? !ownerId.equals(that.ownerId) : that.ownerId != null) return false;
         if (parent != null ? !parent.equals(that.parent) : that.parent != null) return false;
 
@@ -559,6 +655,7 @@ public final class CommentNode implements Iterable<CommentNode> {
 
     static class RootComment extends Comment {
         private String submissionId;
+
         public RootComment(String submissionId) {
             super(JrawUtils.fromString("{\"replies\":null}"));
             this.submissionId = submissionId;
