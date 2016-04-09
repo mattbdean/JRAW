@@ -83,6 +83,9 @@ public class RedditClient extends RestClient {
     public String getAuthenticatedUser() {
         if (!(isAuthenticated() && hasActiveUserContext()))
             throw new IllegalStateException("Not authenticated or no active user context");
+        if(authenticatedUser == null){
+            this.authenticatedUser = me().getFullName();
+        }
         return authenticatedUser;
     }
 
@@ -111,9 +114,6 @@ public class RedditClient extends RestClient {
         httpAdapter.getDefaultHeaders().put(HEADER_AUTHORIZATION, "bearer " + authData.getAccessToken());
 
 
-        if (!authMethod.isUserless() && isAuthorizedFor(Endpoints.OAUTH_ME)) {
-            this.authenticatedUser = me().getFullName();
-        }
         if (authListener != null)
             authListener.onAuthenticated(authData);
     }
