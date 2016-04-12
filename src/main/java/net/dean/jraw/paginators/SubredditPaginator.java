@@ -21,7 +21,7 @@ import java.util.Map;
  */
 public class SubredditPaginator extends Paginator<Submission> {
     private String subreddit;
-    private boolean obeyOver18;
+    private boolean obeyOver18 = true;
 
     /**
      * Instantiates a new SubredditPaginator that will iterate through submissions on the front page.
