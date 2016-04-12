@@ -10,7 +10,7 @@ import net.dean.jraw.models.Thing;
 public class FullnamesPaginator {
     private String[] fullnames;
     private int index;
-    private int count = 20;
+    private int count = 25;
     RedditClient reddit;
 
     /**
@@ -31,8 +31,12 @@ public class FullnamesPaginator {
         }
     }
 
+    public boolean hasNext(){
+        return (index < fullnames.length);
+    }
+
     /* Override next to utilize RedditClient.get() instead of the default paginator code*/
-    public Listing<Thing> next(boolean forceNetwork) {
+    public Listing<Thing> next() {
         String[] toGet = new String[count];
 
         int target = index + count;
