@@ -142,6 +142,7 @@ public class SubmissionSearchPaginator extends Paginator<Submission> {
     public enum SearchSyntax {
         /** Search by plain text, keywords */
         PLAIN,
+        LUCENE,
         /**
          * Amazon's cloudsearch syntax. See <a href="https://www.reddit.com/wiki/search#wiki_cloudsearch_syntax">here</a>
          * for more.
