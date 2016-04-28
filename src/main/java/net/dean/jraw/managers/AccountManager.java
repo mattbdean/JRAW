@@ -348,7 +348,14 @@ public class AccountManager extends AbstractManager {
 
         return templates.build();
     }
+    public List<FlairTemplate> getFlairChoices(String subreddit, JsonNode json) {
+        ImmutableList.Builder<FlairTemplate> templates = ImmutableList.builder();
+        for (JsonNode choiceNode : json.get("choices")) {
+            templates.add(new FlairTemplate(choiceNode));
+        }
 
+        return templates.build();
+    }
     /**
      * Gets a list of possible flair templates for submissions in this subreddit. See also: {@link #getFlairChoices(Submission)},
      * {@link #getCurrentFlair(String)}, {@link #getCurrentFlair(Submission)}
@@ -396,7 +403,9 @@ public class AccountManager extends AbstractManager {
     public FlairTemplate getCurrentFlair(String subreddit) throws NetworkException, ApiException {
         return new FlairTemplate(getFlairChoicesRootNode(subreddit, null).get("current"));
     }
-
+    public FlairTemplate getCurrentFlair(String subreddit, JsonNode json) {
+        return new FlairTemplate(json.get("current"));
+    }
     /**
      * Gets the current user flair for this subreddit
      *
@@ -569,7 +578,7 @@ public class AccountManager extends AbstractManager {
         }
     }
 
-    private JsonNode getFlairChoicesRootNode(String subreddit, Submission link) throws NetworkException, ApiException {
+    public JsonNode getFlairChoicesRootNode(String subreddit, Submission link) throws NetworkException, ApiException {
         String linkFullname = link != null ? link.getFullName() : null;
         Map<String, String> formArgs = new HashMap<>();
         if (linkFullname != null) {
