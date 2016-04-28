@@ -316,6 +316,7 @@ public class OAuthHelper {
         }
 
         try {
+            String basicCredentials = okhttp3.Credentials.basic(creds.getClientId(), creds.getClientSecret());
             RestResponse response = reddit.execute(reddit.request()
                     .https(true)
                     .host(RedditClient.HOST_SPECIAL)
@@ -325,7 +326,7 @@ public class OAuthHelper {
                             "grant_type", "refresh_token",
                             "refresh_token", refreshToken
                     ))
-                    .basicAuth(new BasicAuthData(creds.getClientId(), creds.getClientSecret()))
+                    .header("Authorization", basicCredentials)
                     .build());
             this.authStatus = AuthStatus.AUTHORIZED;
             return new OAuthData(creds.getAuthenticationMethod(), response.getJson());
