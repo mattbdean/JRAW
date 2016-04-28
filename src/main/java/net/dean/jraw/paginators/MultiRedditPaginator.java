@@ -1,6 +1,9 @@
 package net.dean.jraw.paginators;
 
+import net.dean.jraw.EndpointImplementation;
+import net.dean.jraw.Endpoints;
 import net.dean.jraw.RedditClient;
+import net.dean.jraw.models.Listing;
 import net.dean.jraw.models.MultiReddit;
 import net.dean.jraw.models.Submission;
 
@@ -14,7 +17,7 @@ public class MultiRedditPaginator extends Paginator<Submission> {
      * Instantiates a new MultiRedditPaginator
      *
      * @param creator The RedditClient that will be used to send HTTP requests
-     * @param multi The multireddit to iterate
+     * @param multi   The multireddit to iterate
      */
     public MultiRedditPaginator(RedditClient creator, MultiReddit multi) {
         super(creator, Submission.class);
@@ -22,12 +25,28 @@ public class MultiRedditPaginator extends Paginator<Submission> {
     }
 
     @Override
+    @EndpointImplementation({
+            Endpoints.CONTROVERSIAL,
+            Endpoints.HOT,
+            Endpoints.NEW,
+            Endpoints.TOP,
+            Endpoints.SORT
+    })
+    public Listing<Submission> next(boolean forceNetwork) {
+        // Just call super so that we can add the @EndpointImplementation annotation
+        return super.next(forceNetwork);
+    }
+
+
+    @Override
     protected String getBaseUri() {
-        return multiReddit.getPath();
+        String path = sorting == null ? "" : "/" + sorting.name().toLowerCase();
+        return multiReddit.getPath() + path;
     }
 
     /**
      * Gets the MultiReddit that this paginator is iterating through
+     *
      * @return The MultiReddit
      */
     public MultiReddit getMultiReddit() {
@@ -36,6 +55,7 @@ public class MultiRedditPaginator extends Paginator<Submission> {
 
     /**
      * Sets the MultiReddit to iterate through
+     *
      * @param multiReddit The new MultiReddit
      */
     public void setMultiReddit(MultiReddit multiReddit) {

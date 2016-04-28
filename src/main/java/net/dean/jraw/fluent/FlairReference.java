@@ -2,6 +2,7 @@ package net.dean.jraw.fluent;
 
 import net.dean.jraw.ApiException;
 import net.dean.jraw.models.FlairTemplate;
+import net.dean.jraw.models.Submission;
 
 import java.util.List;
 
@@ -28,6 +29,12 @@ public final class FlairReference extends ElevatedAbstractReference {
     @NetworkingCall
     public List<FlairTemplate> options() throws ApiException {
         return managers.account().getFlairChoices(subreddit);
+    }
+
+    /** Gets a list of flair the user has the option of using for this submission. */
+    @NetworkingCall
+    public List<FlairTemplate> options(Submission submission) throws ApiException {
+        return managers.account().getFlairChoicesSubmission(subreddit, submission);
     }
 
     /** Enables or disables flair on this subreddit. */
