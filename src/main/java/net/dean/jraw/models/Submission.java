@@ -196,7 +196,12 @@ public final class Submission extends PublicContribution {
      */
     @JsonProperty
     public ThumbnailType getThumbnailType() {
-        String thumb = data.get("thumbnail").textValue();
+        JsonNode node = data.get("thumbnail");
+        if (node.isNull()) {
+            return ThumbnailType.NONE;
+        }
+
+        String thumb = node.textValue();
 
         // Try to find the type
         ThumbnailType type;
