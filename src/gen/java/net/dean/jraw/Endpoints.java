@@ -312,6 +312,8 @@ public enum Endpoints {
     CONTROVERSIAL("GET /controversial", "read"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_duplicates_%7Barticle%7D">{@code GET /duplicates/{article}}</a>" included in the "read" scope */
     DUPLICATES_ARTICLE("GET /duplicates/{article}", "read"),
+    /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_gilded">{@code GET /gilded}</a>" included in the "read" scope */
+    GILDED("GET /gilded", "read"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_hot">{@code GET /hot}</a>" included in the "read" scope */
     HOT("GET /hot", "read"),
     /** Represents the endpoint "<a href="https://www.reddit.com/dev/api/oauth#GET_live_%7Bthread%7D">{@code GET /live/{thread}}</a>" included in the "read" scope */

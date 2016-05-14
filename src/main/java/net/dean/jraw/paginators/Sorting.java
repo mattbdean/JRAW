@@ -5,6 +5,7 @@ package net.dean.jraw.paginators;
  */
 public enum Sorting {
     HOT,
+    GILDED,
     NEW,
     RISING,
     CONTROVERSIAL(true),

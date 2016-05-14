@@ -168,6 +168,7 @@
         "GET /comments/{article}",
         "GET /controversial",
         "GET /duplicates/{article}",
+        "GET /gilded",
         "GET /hot",
         "GET /live/{thread}",
         "GET /live/{thread}/about",
