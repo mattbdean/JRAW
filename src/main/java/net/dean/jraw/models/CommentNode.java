@@ -22,7 +22,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
- * <p>This class represents one comment a comment tree.
+ * <p>This class represents one comment in a comment tree.
  *
  * <p>Each CommentNode has a depth, a {@link Comment} instance, and zero or more CommentNode children. Depth is defined
  * as the level at which the comment exists. For example, a top-level reply has a depth of 1, a reply to that comment
