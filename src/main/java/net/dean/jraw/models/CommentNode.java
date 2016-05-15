@@ -385,7 +385,7 @@ public final class CommentNode implements Iterable<CommentNode> {
         // node's comment
         return hasMoreComments() &&
                 moreChildren.getCount() == 0 &&
-                moreChildren.getChildrenIds().get(0).equals(moreChildren.getId());
+                moreChildren.getId().equals("_");
     }
 
     /**
