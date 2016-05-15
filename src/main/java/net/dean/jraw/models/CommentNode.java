@@ -373,7 +373,7 @@ public final class CommentNode implements Iterable<CommentNode> {
      *
      * <ol>
      *     <li>The MoreChildren's "count" attribute is zero
-     *     <li>The first ID listed in the MoreChildren is the same as its own ID.
+     *     <li>The MoreChildren's ID is "_"
      * </ol>
      *
      * <p>If these things are true, then this method will return true.
