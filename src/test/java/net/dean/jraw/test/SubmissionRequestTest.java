@@ -20,6 +20,8 @@ public class SubmissionRequestTest extends RedditTest {
     private SubmissionRequest.Builder request;
     private Submission s;
 
+    private static final String SUBMISSION_WITH_NULL_THUMBNAIL = "4b85hi";
+
     @BeforeMethod
     public void setUp() {
         this.request = new SubmissionRequest.Builder(SUBMISSION_ID);
@@ -74,6 +76,17 @@ public class SubmissionRequestTest extends RedditTest {
         request.limit(1);
         s = get();
         assertEquals(s.getComments().getTotalSize(), 1);
+    }
+
+    @Test
+    public void testNullThumbnail() {
+        try {
+            Submission s = reddit.getSubmission(SUBMISSION_WITH_NULL_THUMBNAIL);
+            Submission.ThumbnailType t = s.getThumbnailType();
+            assertEquals(Submission.ThumbnailType.NONE, t);
+        } catch (NetworkException e) {
+            handle(e);
+        }
     }
 
     private Submission get() {

@@ -47,6 +47,8 @@ public abstract class AbstractPaginatorWrapper<W, T extends Thing> extends Abstr
     public W rising() { return sorting(Sorting.RISING, null); }
     /** Sets this Reference to retrieve the newest posts */
     public W newest() { return sorting(Sorting.NEW, null); }
+    /** Sets this Reference to retrieve gilded posts */
+    public W gilded() { return sorting(Sorting.GILDED, null); }
     /** Sets this Reference to retrieve hot posts */
     public W hot() { return sorting(Sorting.HOT, null); }
 
