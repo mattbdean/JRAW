@@ -297,12 +297,19 @@ public class RedditClient extends RestClient {
      * @param name The subreddit's name
      * @return A new Subreddit object
      * @throws NetworkException If the request was not successful
+     * @throws IllegalArgumentException If the subreddit does not exist
      */
     @EndpointImplementation(Endpoints.SUBREDDIT_ABOUT)
     public Subreddit getSubreddit(String name) throws NetworkException {
-        return execute(request()
+        RestResponse response = execute(request()
                 .endpoint(Endpoints.SUBREDDIT_ABOUT, name)
-                .build()).as(Subreddit.class);
+                .build());
+
+        // When the subreddit doesn't exit, reddit redirects /{subreddit}/about to /search which returns a Listing
+        String kind = response.getJson().get("kind").textValue();
+        if (kind.startsWith(Model.Kind.LISTING.getValue()))
+            throw new IllegalArgumentException("Subreddit does not exist");
+        return response.as(Subreddit.class);
     }
 
     /**
