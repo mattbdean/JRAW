@@ -250,4 +250,9 @@ public class ReadOnlyDataTest extends RedditTest {
         }
         reddit.getSubreddit("pics"); // Ensure subreddits that exist don't throw an Exception
     }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void testInviteOnlySubreddit() {
+        reddit.getSubreddit("inviteonly"); // /r/inviteonly is invite only
+    }
 }
