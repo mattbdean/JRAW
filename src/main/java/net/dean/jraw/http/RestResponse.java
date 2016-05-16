@@ -80,8 +80,7 @@ public class RestResponse {
             }
 
             this.apiException = error;
-        }
-        else { // Empty RestResponse for a 204 No Content
+        } else { // Empty RestResponse for a 204 No Content
             this.type = MediaType.ANY_TYPE; // HTTP 204 does not require a MediaType, ANY_TYPE is fine
             this.raw = null;
             this.rootNode = null;
