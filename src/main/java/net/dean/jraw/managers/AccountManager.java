@@ -118,9 +118,9 @@ public class AccountManager extends AbstractManager {
         genericPost(reddit.request()
                 .endpoint(Endpoints.VOTE)
                 .post(JrawUtils.mapOf(
-                                "api_type", "json",
-                                "dir", voteDirection.getValue(),
-                                "id", s.getFullName())
+                        "api_type", "json",
+                        "dir", voteDirection.getValue(),
+                        "id", s.getFullName())
                 ).build());
     }
 
@@ -138,9 +138,9 @@ public class AccountManager extends AbstractManager {
         genericPost(reddit.request()
                 .endpoint(Endpoints.REPORT)
                 .post(JrawUtils.mapOf(
-                                "api_type", "json",
-                                "reason", reason,
-                                "thing_id", s.getFullName())
+                        "api_type", "json",
+                        "reason", reason,
+                        "thing_id", s.getFullName())
                 ).build());
     }
 
@@ -162,7 +162,7 @@ public class AccountManager extends AbstractManager {
         genericPost(reddit.request()
                 .endpoint(Endpoints.STORE_VISITS)
                 .post(JrawUtils.mapOf(
-                                "links", listFullnames)
+                        "links", listFullnames)
                 ).build());
     }
 
@@ -174,7 +174,18 @@ public class AccountManager extends AbstractManager {
      * @throws ApiException     If the API returned an error
      */
     public void save(PublicContribution s) throws NetworkException, ApiException {
-        setSaved(s, true);
+        setSaved(s, true, null);
+    }
+
+    /**
+     * Saves a given submission
+     *
+     * @param s The submission to save
+     * @throws NetworkException If the request was not successful
+     * @throws ApiException     If the API returned an error
+     */
+    public void save(PublicContribution s, String category) throws NetworkException, ApiException {
+        setSaved(s, true, category);
     }
 
     /**
@@ -185,7 +196,7 @@ public class AccountManager extends AbstractManager {
      * @throws ApiException     If the API returned an error
      */
     public void unsave(PublicContribution s) throws NetworkException, ApiException {
-        setSaved(s, false);
+        setSaved(s, false, null);
     }
 
     /**
@@ -197,13 +208,22 @@ public class AccountManager extends AbstractManager {
      * @throws ApiException     If the API returned an error
      */
     @EndpointImplementation({Endpoints.SAVE, Endpoints.UNSAVE})
-    private void setSaved(PublicContribution s, boolean save) throws NetworkException, ApiException {
+    private void setSaved(PublicContribution s, boolean save, String category) throws NetworkException, ApiException {
         // Send it to "/api/save" if save == true, "/api/unsave" if save == false
+        Map<String, String> params = new HashMap<>();
+        if (category != null) {
+            params = JrawUtils.mapOf(
+                    "id", s.getFullName(),
+                    "category", category
+            );
+        } else {
+            params = JrawUtils.mapOf(
+                    "id", s.getFullName()
+            );
+        }
         genericPost(reddit.request()
                 .endpoint(save ? Endpoints.SAVE : Endpoints.UNSAVE)
-                .post(JrawUtils.mapOf(
-                        "id", s.getFullName()
-                )).build());
+                .post(params).build());
     }
 
     /**
@@ -303,6 +323,21 @@ public class AccountManager extends AbstractManager {
     }
 
     /**
+     * Gets the available saved categories
+     *
+     * @return List of saved categories for the logged in user
+     * @throws NetworkException If the request was not successful
+     */
+    @EndpointImplementation(Endpoints.SAVED_CATEGORIES)
+    public List<String> getSavedCategories() throws NetworkException, ApiException {
+        ImmutableList.Builder<String> categories = ImmutableList.builder();
+        for (JsonNode categoryNode : reddit.execute(reddit.request().endpoint(Endpoints.SAVED_CATEGORIES).query().build()).getJson().get("categories")) {
+            categories.add(categoryNode.get("category").asText());
+        }
+        return categories.build();
+    }
+
+    /**
      * Unsubscribes from a subreddit
      *
      * @param subreddit The subreddit to unsubscribe to
@@ -348,6 +383,7 @@ public class AccountManager extends AbstractManager {
 
         return templates.build();
     }
+
     public List<FlairTemplate> getFlairChoices(String subreddit, JsonNode json) {
         ImmutableList.Builder<FlairTemplate> templates = ImmutableList.builder();
         for (JsonNode choiceNode : json.get("choices")) {
@@ -356,11 +392,12 @@ public class AccountManager extends AbstractManager {
 
         return templates.build();
     }
+
     /**
      * Gets a list of possible flair templates for submissions in this subreddit. See also: {@link #getFlairChoices(Submission)},
      * {@link #getCurrentFlair(String)}, {@link #getCurrentFlair(Submission)}
      *
-     * @param subreddit The subreddit to look up
+     * @param subreddit  The subreddit to look up
      * @param submission The link to look up
      * @return A list of flair templates
      * @throws NetworkException If the request was not successful
@@ -375,6 +412,7 @@ public class AccountManager extends AbstractManager {
 
         return templates.build();
     }
+
     /**
      * Gets a list of possible flair templates for this submission
      *
@@ -403,9 +441,11 @@ public class AccountManager extends AbstractManager {
     public FlairTemplate getCurrentFlair(String subreddit) throws NetworkException, ApiException {
         return new FlairTemplate(getFlairChoicesRootNode(subreddit, null).get("current"));
     }
+
     public FlairTemplate getCurrentFlair(String subreddit, JsonNode json) {
         return new FlairTemplate(json.get("current"));
     }
+
     /**
      * Gets the current user flair for this subreddit
      *
