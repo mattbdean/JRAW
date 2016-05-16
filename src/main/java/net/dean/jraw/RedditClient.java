@@ -112,7 +112,6 @@ public class RedditClient extends RestClient {
         this.authMethod = authData.getAuthenticationMethod();
         this.authData = authData;
         httpAdapter.getDefaultHeaders().put(HEADER_AUTHORIZATION, "bearer " + authData.getAccessToken());
-
         if (authListener != null)
             authListener.onAuthenticated(authData);
     }

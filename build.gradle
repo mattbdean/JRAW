@@ -41,8 +41,8 @@ task fatJar(type: Jar, dependsOn: assemble) {
     classifier = 'fat'
     destinationDir = releaseDest
     from(
-        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) },
-        sourceSets.main.output
+            configurations.compile.collect { it.isDirectory() ? it : zipTree(it) },
+            sourceSets.main.output
     )
 }
 
