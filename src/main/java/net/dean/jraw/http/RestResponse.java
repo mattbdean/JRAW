@@ -44,40 +44,48 @@ public class RestResponse {
     RestResponse(HttpRequest origin, InputStream body, Headers headers, int statusCode, String statusMessage, String protocol) {
         this.origin = origin;
         this.headers = headers;
-        String contentType = headers.get("Content-Type");
-        if (contentType == null)
-            throw new IllegalStateException("No Content-Type header was found");
-        this.type = JrawUtils.parseMediaType(contentType);
-        String charset = type.charset().or(Charsets.UTF_8).name();
-        this.raw = readContent(body, charset);
         this.statusCode = statusCode;
         this.statusMessage = statusMessage;
         this.protocol = protocol;
 
-        // Assume there aren't any exceptions
-        ApiException error = null;
+        if (statusCode != 204) {
+            String contentType = headers.get("Content-Type");
+            if (contentType == null)
+                throw new IllegalStateException("No Content-Type header was found");
+            this.type = JrawUtils.parseMediaType(contentType);
+            String charset = type.charset().or(Charsets.UTF_8).name();
+            this.raw = readContent(body, charset);
 
-        if (JrawUtils.isEqual(type, MediaTypes.JSON.type()) && !raw.isEmpty()) {
-            // Body is JSON, parse it and try to find ApiExceptions
-            this.rootNode = JrawUtils.fromString(raw);
+            // Assume there aren't any exceptions
+            ApiException error = null;
+
             if (JrawUtils.isEqual(type, MediaTypes.JSON.type()) && !raw.isEmpty()) {
-                // Parse the errors into ApiExceptions
-                JsonNode errorsNode = rootNode.get("json");
-                if (errorsNode != null) {
-                    errorsNode = errorsNode.get("errors");
-                }
+                // Body is JSON, parse it and try to find ApiExceptions
+                this.rootNode = JrawUtils.fromString(raw);
+                if (JrawUtils.isEqual(type, MediaTypes.JSON.type()) && !raw.isEmpty()) {
+                    // Parse the errors into ApiExceptions
+                    JsonNode errorsNode = rootNode.get("json");
+                    if (errorsNode != null) {
+                        errorsNode = errorsNode.get("errors");
+                    }
 
-                if (errorsNode != null && errorsNode.size() > 0) {
-                    JsonNode errorNode = errorsNode.get(0);
-                    error = new ApiException(errorNode.get(0).asText(), errorNode.get(1).asText());
+                    if (errorsNode != null && errorsNode.size() > 0) {
+                        JsonNode errorNode = errorsNode.get(0);
+                        error = new ApiException(errorNode.get(0).asText(), errorNode.get(1).asText());
+                    }
                 }
+            } else {
+                // Init JSON-related final variables
+                this.rootNode = null;
             }
-        } else {
-            // Init JSON-related final variables
-            this.rootNode = null;
-        }
 
-        this.apiException = error;
+            this.apiException = error;
+        } else { // Empty RestResponse for a 204 No Content
+            this.type = MediaType.ANY_TYPE; // HTTP 204 does not require a MediaType, ANY_TYPE is fine
+            this.raw = null;
+            this.rootNode = null;
+            this.apiException = null;
+        }
     }
 
     private String readContent(InputStream entity, String charset) {
