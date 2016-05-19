@@ -6,7 +6,7 @@ package net.dean.jraw.util;
 public class Version {
     /** If the 'build' field is equal to this constant, then it will be excluded in {@link #formatted()}. */
     public static final int EXCLUDE = -1;
-    private static final Version INSTANCE = new Version(0, 8, 0);
+    private static final Version INSTANCE = new Version(0, 9, 0);
 
     /** Gets the current version of the library */
     public static Version get() {
