@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'maven'
     id 'maven-publish'
     id 'findbugs'
     id 'jacoco'
@@ -110,9 +111,14 @@ publishing {
     }
 }
 
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}
+
 defaultTasks "test"
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.10'
+    gradleVersion = '2.13'
     distributionUrl = "https://services.gradle.org/distributions/gradle-$gradleVersion-all.zip"
 }
