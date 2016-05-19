@@ -215,7 +215,7 @@ public class AccountManagerTest extends RedditTest {
     @Test
     public void testVote() {
         try {
-            String submissionId = "3tox6a";
+            String submissionId = "4k2aq2";
             Submission submission = reddit.getSubmission(submissionId);
 
             // Figure out a new vote direction: up if there is no vote, no vote if upvoted
