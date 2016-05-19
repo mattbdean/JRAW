@@ -41,7 +41,7 @@ public enum DistinguishedStatus {
         }
 
         for (DistinguishedStatus state : values()) {
-            if (state.getJsonValue().equals(jsonValue)) {
+            if (state.getJsonValue().equalsIgnoreCase(jsonValue)) {
                 return state;
             }
         }
