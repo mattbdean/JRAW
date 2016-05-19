@@ -42,7 +42,7 @@ public abstract class Message extends Contribution implements Distinguishable {
     /**
      * Checks if this message has been read
      *
-     * @see InboxManager#setRead(Message, boolean)
+     * @see InboxManager#setRead(boolean, Message, Message...)
      */
     @JsonProperty
     public Boolean isRead() {
