@@ -15,4 +15,6 @@ src/test/resources/credentials.json
 # Local todo list
 todo.txt
 
+# Other
 bin/
+*.swp
