@@ -348,6 +348,18 @@ public class AccountManager extends AbstractManager {
     }
 
     /**
+     * Unsubscribes from a subreddit
+     *
+     * @param subreddit The subreddit to unsubscribe to
+     * @throws NetworkException If the request was not successful
+     * @see #subscribe(Subreddit)
+     */
+    public void unsubscribe(String subreddit) throws NetworkException {
+        setSubscribed(subreddit, false);
+    }
+
+
+    /**
      * Subscribe or unsubscribe to a subreddit
      *
      * @param subreddit The subreddit to (un)subscribe to
@@ -363,7 +375,16 @@ public class AccountManager extends AbstractManager {
                         // JSON is returned on subscribe, HTML is returned on unsubscribe
                 )).build());
     }
-
+    
+    private void setSubscribed(String subreddit, boolean sub) throws NetworkException {
+        reddit.execute(reddit.request()
+                .endpoint(Endpoints.SUBSCRIBE)
+                .post(JrawUtils.mapOf(
+                        "sr", subreddit,
+                        "action", sub ? "sub" : "unsub"
+                        // JSON is returned on subscribe, HTML is returned on unsubscribe
+                )).build());
+    }
     /**
      * Gets a list of possible flair templates for this subreddit. See also: {@link #getFlairChoices(Submission)},
      * {@link #getCurrentFlair(String)}, {@link #getCurrentFlair(Submission)}
