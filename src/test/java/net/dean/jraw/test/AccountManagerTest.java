@@ -35,8 +35,8 @@ import static org.testng.Assert.*;
  * This class tests methods that require authentication, such as voting, saving, hiding, and posting.
  */
 public class AccountManagerTest extends RedditTest {
-    private static final String SUBMISSION_ID = "3tqv5r";
-    private static final String COMMENT_ID = "cx8ev9f";
+    private static final String SUBMISSION_ID = "4k5sog";
+    private static final String COMMENT_ID = "d3cdmuh";
     private String newSubmssionId;
     private String newCommentId;
 
@@ -215,7 +215,7 @@ public class AccountManagerTest extends RedditTest {
     @Test
     public void testVote() {
         try {
-            String submissionId = "3tox6a";
+            String submissionId = "4k2aq2";
             Submission submission = reddit.getSubmission(submissionId);
 
             // Figure out a new vote direction: up if there is no vote, no vote if upvoted

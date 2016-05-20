@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'maven'
     id 'maven-publish'
     id 'jacoco'
     id 'com.github.kt3k.coveralls' version '2.4.0x'
@@ -13,7 +14,7 @@ ext {
 allprojects {
     sourceCompatibility = 1.7
     group = 'net.dean.jraw'
-    version = '0.8.0'
+    version = '0.9.0'
 
     repositories {
         mavenCentral()
@@ -102,9 +103,14 @@ publishing {
     }
 }
 
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}
+
 defaultTasks "test"
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.10'
+    gradleVersion = '2.13'
     distributionUrl = "https://services.gradle.org/distributions/gradle-$gradleVersion-all.zip"
 }

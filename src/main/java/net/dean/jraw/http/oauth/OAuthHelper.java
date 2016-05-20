@@ -203,27 +203,26 @@ public class OAuthHelper {
      * password and the app's client ID and secret. However, only users listed as developers of the app my be
      * authorized. This method is most frequently used to authorize a user in a headless environment or a bot.
      *
-     * @param credentials The credentials to use. The authentication method must be {@link AuthenticationMethod#SCRIPT}.
+     * @param creds The credentials to use. The authentication method must be {@link AuthenticationMethod#SCRIPT}.
      * @return The data returned from the authorization request
      * @throws NetworkException If the request was not successful
      */
-    private OAuthData doScriptApp(Credentials credentials) throws NetworkException {
-        if (credentials.getAuthenticationMethod() != AuthenticationMethod.SCRIPT) {
+    private OAuthData doScriptApp(Credentials creds) throws NetworkException {
+        if (creds.getAuthenticationMethod() != AuthenticationMethod.SCRIPT) {
             throw new IllegalArgumentException("This method only authenticates 'script' apps");
         }
 
-        RestResponse response = reddit.execute(accessTokenRequest(
-                new BasicAuthData(credentials.getClientId(), credentials.getClientSecret()))
+        RestResponse response = reddit.execute(accessTokenRequest(creds)
                 .post(JrawUtils.mapOf(
                         "grant_type", "password",
-                        "username", credentials.getUsername(),
-                        "password", credentials.getPassword()
+                        "username", creds.getUsername(),
+                        "password", creds.getPassword()
                 ))
                 .sensitiveArgs("password")
                 .build());
         authStatus = AuthStatus.AUTHORIZED;
         state = null;
-        return new OAuthData(credentials.getAuthenticationMethod(), response.getJson());
+        return new OAuthData(creds.getAuthenticationMethod(), response.getJson());
     }
 
     /**
@@ -234,27 +233,25 @@ public class OAuthHelper {
      * @return The data returned from the authorization request
      * @throws NetworkException If the request was not successful
      */
-    private OAuthData doApplicationOnly(Credentials credentials) throws NetworkException, OAuthException {
-        if (credentials.getAuthenticationMethod() != AuthenticationMethod.USERLESS &&
-                credentials.getAuthenticationMethod() != AuthenticationMethod.USERLESS_APP) {
+    private OAuthData doApplicationOnly(Credentials creds) throws NetworkException, OAuthException {
+        if (creds.getAuthenticationMethod() != AuthenticationMethod.USERLESS &&
+                creds.getAuthenticationMethod() != AuthenticationMethod.USERLESS_APP) {
             throw new IllegalArgumentException("This method is for user-less authorizations only");
         }
 
         Map<String, String> args = new HashMap<>();
         args.put("grant_type", GRANT_TYPE);
-        if (credentials.getAuthenticationMethod().isUserless()) {
-            if (credentials.getDeviceId() == null)
+        if (creds.getAuthenticationMethod().isUserless()) {
+            if (creds.getDeviceId() == null)
                 throw new NullPointerException("Authentication method was userless but no device ID was present");
-            args.put("device_id", credentials.getDeviceId().toString());
+            args.put("device_id", creds.getDeviceId().toString());
         }
-
-        RestResponse response = reddit.execute(accessTokenRequest(
-                new BasicAuthData(credentials.getClientId(), credentials.getClientSecret()))
+        RestResponse response = reddit.execute(accessTokenRequest(creds)
                 .post(args)
                 .build());
         checkError(response.getJson());
         authStatus = AuthStatus.AUTHORIZED;
-        return new OAuthData(credentials.getAuthenticationMethod(), response.getJson());
+        return new OAuthData(creds.getAuthenticationMethod(), response.getJson());
     }
 
     /**
@@ -316,17 +313,11 @@ public class OAuthHelper {
         }
 
         try {
-            String basicCredentials = okhttp3.Credentials.basic(creds.getClientId(), creds.getClientSecret());
-            RestResponse response = reddit.execute(reddit.request()
-                    .https(true)
-                    .host(RedditClient.HOST_SPECIAL)
-                    .path("/api/v1/access_token")
-                    .expected(MediaType.ANY_TYPE)
+            RestResponse response = reddit.execute(accessTokenRequest(creds)
                     .post(JrawUtils.mapOf(
                             "grant_type", "refresh_token",
                             "refresh_token", refreshToken
                     ))
-                    .header("Authorization", basicCredentials)
                     .build());
             this.authStatus = AuthStatus.AUTHORIZED;
             return new OAuthData(creds.getAuthenticationMethod(), response.getJson());
@@ -404,12 +395,13 @@ public class OAuthHelper {
         }
     }
 
-    private HttpRequest.Builder accessTokenRequest(BasicAuthData authData) {
+    private HttpRequest.Builder accessTokenRequest(Credentials creds) {
+        String basicCreds = okhttp3.Credentials.basic(creds.getClientId(), creds.getClientSecret());
         return reddit.request()
                 .https(true)
                 .host(RedditClient.HOST_SPECIAL)
                 .path("/api/v1/access_token")
-                .basicAuth(authData);
+                .header("Authorization", basicCreds);
     }
 
 
