@@ -322,6 +322,17 @@ public class AccountManager extends AbstractManager {
     }
 
     /**
+     * Subscribes to a subreddit
+     *
+     * @param subreddit The subreddit to subscribe to
+     * @throws NetworkException If the request was not successful
+     * @see #unsubscribe(Subreddit)
+     */
+    @EndpointImplementation(Endpoints.SUBSCRIBE)
+    public void subscribe(String subreddit) throws NetworkException {
+        setSubscribed(subreddit, true);
+    }
+    /**
      * Gets the available saved categories
      *
      * @return List of saved categories for the logged in user
@@ -375,7 +386,7 @@ public class AccountManager extends AbstractManager {
                         // JSON is returned on subscribe, HTML is returned on unsubscribe
                 )).build());
     }
-    
+
     private void setSubscribed(String subreddit, boolean sub) throws NetworkException {
         reddit.execute(reddit.request()
                 .endpoint(Endpoints.SUBSCRIBE)
