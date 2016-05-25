@@ -36,7 +36,7 @@ Some references:
 ####Want to contribute? Follow these steps:
 
 1. Fork the repository
-2. Put your testing user's credentials in `src/test/resources/credentials.json`. It should be in [this format](https://gist.github.com/thatJavaNerd/e393a7af4c3a8c564833). If you don't have a testing user, see below.
+2. Put your testing user's credentials in `src/test/java/resources/credentials.json`. It should be in [this format](https://gist.github.com/thatJavaNerd/e393a7af4c3a8c564833). If you don't have a testing user, see below.
 3. Add your code. Implement an endpoint, make the code prettier, or even just fix up some whitespace or documentation.
 4. Write TestNG tests covering your changes
 5. Test your code by executing `gradle test`
@@ -49,7 +49,7 @@ Here's how to create a testing user:
 
 1. Register a new user
 2. [Create an OAuth2 app](https://www.reddit.com/prefs/apps)
-3. Record the username, password, client ID, and client secret in `src/test/resources/credentials.json`
+3. Record the username, password, client ID, and client secret in `src/test/java/resources/credentials.json`
 4. [Create a subreddit](https://www.reddit.com/subreddits/create)
 5. [Create a multireddit](http://www.redditblog.com/2013/06/browse-future-of-reddit-re-introducing.html)
 6. [Submit a self post to /r/jraw_testing2](https://www.reddit.com/r/jraw_testing2/submit?selftext=true)
