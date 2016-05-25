@@ -6,6 +6,7 @@ import net.dean.jraw.models.meta.Model;
 import net.dean.jraw.models.meta.SubmissionSerializer;
 import net.dean.jraw.util.JrawUtils;
 
+import java.text.NumberFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -122,6 +123,18 @@ public final class Submission extends PublicContribution {
     @JsonProperty
     public Integer getCommentCount() {
         return data("num_comments", Integer.class);
+    }
+
+    /**
+     * Gets the localized number of comments that belong to this submission. Includes removed comments.
+     * @return Gets the total number of comments that belong to this submission localized for the current locale
+     */
+    public String getLocalizedCommentCount() {
+        try {
+            return NumberFormat.getInstance().format(getCommentCount());
+        } catch (final IllegalArgumentException ex) {
+            return null;
+        }
     }
 
     /**
