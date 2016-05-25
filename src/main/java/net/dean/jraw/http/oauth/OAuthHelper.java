@@ -1,8 +1,5 @@
 package net.dean.jraw.http.oauth;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.google.common.net.MediaType;
-
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.AuthenticationMethod;
 import net.dean.jraw.http.BasicAuthData;
@@ -73,14 +70,13 @@ public class OAuthHelper {
 
     /**
      * Generates a URL used to authorize a user using OAuth2 'installed' or 'web' type app.
-     *
-     * @param creds         The app's credentials
-     * @param permanent     Whether or not to request a refresh token which can be exchanged for an additional authorization
-     *                      token in the future.
+     * @param creds The app's credentials
+     * @param permanent Whether or not to request a refresh token which can be exchanged for an additional authorization
+     *                  token in the future.
      * @param useMobileSite Wether or not to return the mobile friendly auth page, which is
      *                      designed for small screens
-     * @param scopes        OAuth scopes to be requested. A full list of scopes can be found
-     *                      <a href="https://www.reddit.com/dev/api/oauth">here</a>.
+     * @param scopes OAuth scopes to be requested. A full list of scopes can be found
+     *               <a href="https://www.reddit.com/dev/api/oauth">here</a>.
      * @return The URL clients are sent to in order to authorize themselves
      */
     public URL getAuthorizationUrl(Credentials creds, boolean permanent, boolean useMobileSite, String... scopes) {
@@ -114,16 +110,15 @@ public class OAuthHelper {
      * Used obtain an access token for 'web' or 'installed' app types. This method parses the query arguments passed to
      * this URI. If no error is present and the 'state' code matches the one <em>most recently</em> generated, then an
      * access token is requested.
-     *
      * @param finalUrl The URL that the HTTP client redirected to after the user chose either to authorize or not
      *                 authorize the application. This will be the app's redirect URI with the addition of a few query
      *                 parameters.
-     * @param creds    The credentials to retrieve the access token with. If the authorization method is
-     *                 {@link AuthenticationMethod#SCRIPT} or application-only, stop what you're doing and use
-     *                 {@link #easyAuth(Credentials)} instead.
+     * @param creds The credentials to retrieve the access token with. If the authorization method is
+     *              {@link AuthenticationMethod#SCRIPT} or application-only, stop what you're doing and use
+     *              {@link #easyAuth(Credentials)} instead.
      * @return An OAuthData that holds the new access token among other things
-     * @throws OAuthException        If there was a problem with any of the parameters given
-     * @throws NetworkException      If the request was not successful
+     * @throws OAuthException If there was a problem with any of the parameters given
+     * @throws NetworkException If the request was not successful
      * @throws IllegalStateException If the state last generated with {@link #getAuthorizationUrl} did not match the
      *                               value of the 'state' query parameter.
      */
@@ -179,6 +174,7 @@ public class OAuthHelper {
     /**
      * Authorizes a 'script' app or any other in application-only (user-less) mode.
      *
+     * @param creds The credentials to use.
      * @return A new OAuthData representing the access token response
      * @throws NetworkException If the request was not successful. If the HTTP status code is 403, then it is likely
      *                          that the Credentials object provided had incorrect data.
@@ -198,11 +194,31 @@ public class OAuthHelper {
     }
 
     /**
+     * Wrapper method for {@link #easyAuth(Credentials)} that uses cached JSON data for Authentication.
+     * <p>
+     * NOTE: This will NOT try to refresh the token if the OAuthData is expired
+     *
+     * @param creds The credentials to use.
+     * @param jsonData The cached JSON data to use. If the passed-in JSON data is null, this method will return the
+     *                 result of {@link #easyAuth(Credentials)}
+     * @return A new OAuthData representing the access token response
+     * @throws RuntimeException If the passed-in JSON data was not empty, but invalid
+     * @throws OAuthException If the API returned a JSON error. Only thrown when using application-only authentication.
+     */
+    public OAuthData easyAuth(Credentials creds, String jsonData) throws RuntimeException, OAuthException {
+        if (jsonData != null && !jsonData.isEmpty()) {
+            this.authStatus = AuthStatus.AUTHORIZED;
+            return new OAuthData(creds.getAuthenticationMethod(), JrawUtils.fromString(jsonData));
+        } else {
+            return easyAuth(creds);
+        }
+    }
+
+    /**
      * Authorizes a 'script' app by utilizing a shortcut specific to Reddit's OAuth2 implementation which allows
      * 'script' apps to skip the authorization prompt in-browser and directly authorize with their Reddit username and
      * password and the app's client ID and secret. However, only users listed as developers of the app my be
      * authorized. This method is most frequently used to authorize a user in a headless environment or a bot.
-     *
      * @param creds The credentials to use. The authentication method must be {@link AuthenticationMethod#SCRIPT}.
      * @return The data returned from the authorization request
      * @throws NetworkException If the request was not successful
@@ -272,7 +288,6 @@ public class OAuthHelper {
     /**
      * Revokes the OAuth2 refresh token. You will need to have the user reauthenticate using
      * {@link #getAuthorizationUrl}.
-     *
      * @param creds The credentials used to request the original token
      */
     public void revokeRefreshToken(Credentials creds) throws NetworkException {
@@ -301,10 +316,10 @@ public class OAuthHelper {
 
     /**
      * Refreshes the access token. Must have requested an access token when calling {@link #getAuthorizationUrl}.
-     *
      * @param creds The credentials used to request the original access token. Only the client ID and client secret will
      *              be used.
      * @return A new OAuthData
+     * @throws NetworkException If the request was not successful
      * @throws OAuthException If the client ID or secret was incorrect
      */
     public OAuthData refreshToken(Credentials creds) throws NetworkException, OAuthException {
@@ -330,45 +345,31 @@ public class OAuthHelper {
     }
 
     /**
-     * Allows authentication with a cached OAuthData object
+     * Wrapper method for {@link #refreshToken(Credentials)} that uses cached JSON data for Authentication.
      * <p>
-     * NOTE: This will try to refresh the token if the OAuthData is expired
-     *
-     * @param creds   The credentials used to request the original access token. Only the client ID and client secret will
-     *                be used.
-     * @param rawData The JSON string for the OAuthData
+     * NOTE: This will NOT try to refresh the token if the OAuthData is expired
+     * @param creds The credentials used to request the original access token. Only the client ID and client secret will
+     *              be used.
+     * @param jsonData The cached JSON data to use. If the passed-in JSON data is null, this method will return the
+     *                 result of {@link #refreshToken(Credentials)}
      * @return The cached OAuthData
+     * @throws RuntimeException If the refresh token is missing or the JSON data was invalid
      * @throws OAuthException If the client ID or secret was incorrect
+     * @see JsonModel#getDataNode() getDataNode to get the JSON String for caching
      */
-    public OAuthData refreshToken(Credentials creds, String rawData) throws NetworkException, OAuthException {
+    public OAuthData refreshToken(Credentials creds, String jsonData) throws RuntimeException, OAuthException {
         if (!canRefresh()) {
             throw new IllegalStateException("No refresh token");
         }
-
-        try {
-            OAuthData data = new OAuthData(creds.getAuthenticationMethod(), JrawUtils.fromString(rawData));
-            if (data.getExpirationDate().getTime() < Calendar.getInstance().getTimeInMillis()) {
-                this.authStatus = AuthStatus.AUTHORIZED;
-                return refreshToken(creds);
-            } else {
-                this.authStatus = AuthStatus.AUTHORIZED;
-                return data;
-            }
-        } catch (Exception e) {
-            if (e instanceof NetworkException) {
-                if (((NetworkException) e).getResponse().getStatusCode() == 401) {
-                    throw new OAuthException("Invalid client ID/secret", e);
-                }
-            }
-            throw e;
-
+        if (jsonData != null && !jsonData.isEmpty()) {
+            this.authStatus = AuthStatus.AUTHORIZED;
+            return new OAuthData(creds.getAuthenticationMethod(), JrawUtils.fromString(jsonData));
+        } else {
+            return refreshToken(creds);
         }
     }
 
-    /**
-     * Gets the token that will allow the client to get more access tokens
-     */
-
+    /** Gets the token that will allow the client to get more access tokens */
     public String getRefreshToken() {
         return refreshToken;
     }
@@ -412,9 +413,7 @@ public class OAuthHelper {
         return authStatus;
     }
 
-    /**
-     * Represents the different states of authorization this class can be in
-     */
+    /** Represents the different states of authorization this class can be in */
     public enum AuthStatus {
         /**
          * No action has been performed
