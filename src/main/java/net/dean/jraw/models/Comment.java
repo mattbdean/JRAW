@@ -1,9 +1,11 @@
 package net.dean.jraw.models;
 
-import net.dean.jraw.models.meta.JsonProperty;
-import net.dean.jraw.models.meta.Model;
 import com.fasterxml.jackson.databind.JsonNode;
 
+import net.dean.jraw.models.meta.JsonProperty;
+import net.dean.jraw.models.meta.Model;
+
+import java.text.NumberFormat;
 import java.util.Date;
 
 /** Represents a comment on a Submission */
@@ -131,6 +133,15 @@ public class Comment extends PublicContribution {
     @JsonProperty(nullable = true)
     public Integer getReportCount() {
         return data("num_reports", Integer.class);
+    }
+
+    /** Gets the localized amount of times this comment has been reported, or null if the logged in user is not a mod */
+    public String getLocalizedReportCount() {
+        try {
+            return NumberFormat.getInstance().format(getReportCount());
+        } catch (final IllegalArgumentException ex) {
+            return null;
+        }
     }
 
     /**

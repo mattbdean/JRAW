@@ -1,9 +1,12 @@
 package net.dean.jraw.models;
 
-import net.dean.jraw.util.Dimension;
+import com.fasterxml.jackson.databind.JsonNode;
+
 import net.dean.jraw.models.meta.JsonProperty;
 import net.dean.jraw.models.meta.Model;
-import com.fasterxml.jackson.databind.JsonNode;
+import net.dean.jraw.util.Dimension;
+
+import java.text.NumberFormat;
 
 /** This class represents a subreddit, such as /r/pics. */
 @Model(kind = Model.Kind.SUBREDDIT)
@@ -89,6 +92,15 @@ public final class Subreddit extends Thing implements Comparable<Subreddit> {
     @JsonProperty
     public Long getSubscriberCount() {
         return data("subscribers", Long.class);
+    }
+
+    /** Gets the localized amount of users subscribed to this subreddit */
+    public String getLocalizedSubscriberCount() {
+        try {
+            return NumberFormat.getInstance().format(getSubscriberCount());
+        } catch (final IllegalArgumentException ex) {
+            return null;
+        }
     }
 
     /** Gets the types of submissions allowed to be posted on this subreddit */

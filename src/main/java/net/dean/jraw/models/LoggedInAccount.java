@@ -1,8 +1,11 @@
 package net.dean.jraw.models;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 import net.dean.jraw.models.meta.JsonProperty;
 import net.dean.jraw.models.meta.Model;
-import com.fasterxml.jackson.databind.JsonNode;
+
+import java.text.NumberFormat;
 
 /**
  * Represents an account with additional information visible only to the logged-in user.
@@ -36,6 +39,15 @@ public final class LoggedInAccount extends Account {
     @JsonProperty
     public Integer getInboxCount() {
         return data("inbox_count", Integer.class);
+    }
+
+    /** Gets the localized amount of non-moderator mail the user has. */
+    public String getLocalizedInboxCount() {
+        try {
+            return NumberFormat.getInstance().format(getInboxCount());
+        } catch (final IllegalArgumentException ex) {
+            return null;
+        }
     }
 
     /** Gets the amount of gold creddits (one month worth of reddit gold) the user has. */
