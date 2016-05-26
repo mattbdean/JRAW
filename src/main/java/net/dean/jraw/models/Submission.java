@@ -341,6 +341,14 @@ public final class Submission extends PublicContribution {
         return _getScore();
     }
 
+    public String getLocalizedScore() {
+        try {
+            return NumberFormat.getInstance().format(getScore());
+        } catch (final IllegalArgumentException ex) {
+            return null;
+        }
+    }
+
     boolean voted;
     public boolean voted(){
         return voted;
