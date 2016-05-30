@@ -8,6 +8,7 @@ import net.dean.jraw.models.meta.ContributionSerializer;
 import net.dean.jraw.models.meta.JsonProperty;
 import net.dean.jraw.models.meta.Model;
 
+import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -63,6 +64,14 @@ public abstract class PublicContribution extends Contribution implements Disting
     @Override
     public Integer getScore() {
         return _getScore();
+    }
+
+    public String getLocalizedScore() {
+        try {
+            return NumberFormat.getInstance().format(getScore());
+        } catch (final IllegalArgumentException ex) {
+            return null;
+        }
     }
 
     @Override
