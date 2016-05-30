@@ -417,11 +417,9 @@ public final class CommentNode implements Iterable<CommentNode> {
         // error being returned."
         morechildrenLock.lock();
         try {
-            // POST with a body could be used instead of GET with a query to avoid a long URL, but reddit seems to
-            // handle it just fine.
             response = reddit.execute(reddit.request()
                     .endpoint(Endpoints.MORECHILDREN)
-                    .query(JrawUtils.mapOf(
+                    .post(JrawUtils.mapOf(
                             "children", ids.toString(),
                             "link_id", ownerId,
                             "sort", commentSort.name().toLowerCase(),
