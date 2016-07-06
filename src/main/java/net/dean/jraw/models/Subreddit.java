@@ -23,6 +23,15 @@ public final class Subreddit extends Thing implements Comparable<Subreddit> {
         return data("accounts_active", Integer.class);
     }
 
+    /** Gets the localized amount of active users this subreddit has seen in the last 15 minutes */
+    public String getLocalizedAccountsActive() {
+        try {
+            return NumberFormat.getInstance().format(getAccountsActive());
+        } catch (final IllegalArgumentException ex) {
+            return null;
+        }
+    }
+
     /** Gets the number of minutes the subreddit will initially hide comment scores for */
     @JsonProperty
     public Integer getCommentScoreHideDuration() {
