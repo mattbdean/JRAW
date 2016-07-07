@@ -154,6 +154,12 @@ public final class Subreddit extends Thing implements Comparable<Subreddit> {
         return data("user_is_subscriber", Boolean.class);
     }
 
+    /** Gets the URL to the banner displayed at the top of the subreddit. May be empty if none is available. */
+    @JsonProperty
+    public String getBannerImage() {
+        return data("banner_img", String.class);
+    }
+
 
     @Override
     public int compareTo(Subreddit subreddit) {
