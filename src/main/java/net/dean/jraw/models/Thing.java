@@ -35,7 +35,7 @@ public abstract class Thing extends RedditObject {
 
     @Override
     public int hashCode() {
-        return getId().hashCode();
+        return getId() != null ? getId().hashCode() : 0;
     }
 
     @Override
