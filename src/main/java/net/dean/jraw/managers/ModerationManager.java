@@ -69,6 +69,7 @@ public class ModerationManager extends AbstractManager {
      * Bans a user for a set amount of days with a reason, message, and ability to PM the user
      *
      * @param name   The user to ban
+     * @param subreddit   The subreddit to ban from
      * @param reason Why the user is being banned
      * @param note Note (not required)
      * @param message Message to send to the user (not required)
@@ -77,7 +78,7 @@ public class ModerationManager extends AbstractManager {
      * @throws ApiException     If the API returned an error
      */
     @EndpointImplementation(Endpoints.OAUTH_ME_FRIENDS_USERNAME_PUT)
-    public void banUser(String name, String reason, String note, String message, int days) throws NetworkException, ApiException {
+    public void banUser(String subreddit, String name, String reason, String note, String message, int days) throws NetworkException, ApiException {
         Map<String, String> args = JrawUtils.mapOf(
                 "name", name,
                 "type", "banned",
@@ -91,7 +92,7 @@ public class ModerationManager extends AbstractManager {
             args.put("note", note);
 
         genericPost(reddit.request()
-                .endpoint(Endpoints.OAUTH_ME_FRIENDS_USERNAME_PUT)
+                .path("/r/" + subreddit + "/api/friend")
                 .post(args)
                 .build());
     }
