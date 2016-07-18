@@ -76,7 +76,7 @@ public class ModerationManager extends AbstractManager {
      * @throws NetworkException If the request was not successful
      * @throws ApiException     If the API returned an error
      */
-    @EndpointImplementation(Endpoints.FRIEND)
+    @EndpointImplementation(Endpoints.OAUTH_ME_FRIENDS_USERNAME_PUT)
     public void banUser(String name, String reason, String note, String message, int days) throws NetworkException, ApiException {
         Map<String, String> args = JrawUtils.mapOf(
                 "name", name,
@@ -91,7 +91,7 @@ public class ModerationManager extends AbstractManager {
             args.put("note", note);
 
         genericPost(reddit.request()
-                .endpoint(Endpoints.FRIEND)
+                .endpoint(Endpoints.OAUTH_ME_FRIENDS_USERNAME_PUT)
                 .post(args)
                 .build());
     }
