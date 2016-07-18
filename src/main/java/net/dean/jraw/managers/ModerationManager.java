@@ -1,16 +1,21 @@
 package net.dean.jraw.managers;
 
+import com.sun.istack.internal.Nullable;
+
 import net.dean.jraw.ApiException;
 import net.dean.jraw.*;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.AuthenticationMethod;
+import net.dean.jraw.http.MediaTypes;
 import net.dean.jraw.http.NetworkException;
+import net.dean.jraw.http.RequestBody;
 import net.dean.jraw.http.RestResponse;
 import net.dean.jraw.models.Comment;
 import net.dean.jraw.models.DistinguishedStatus;
 import net.dean.jraw.models.FlairTemplate;
 import net.dean.jraw.models.Submission;
 import net.dean.jraw.models.Thing;
+import net.dean.jraw.models.UserRecord;
 import net.dean.jraw.models.attr.Votable;
 import net.dean.jraw.util.JrawUtils;
 
@@ -63,6 +68,37 @@ public class ModerationManager extends AbstractManager {
     }
 
     /**
+     * Bans a user for a set amount of days with a reason, message, and ability to PM the user
+     *
+     * @param name   The user to ban
+     * @param reason Why the user is being banned
+     * @param note Note (not required)
+     * @param message Message to send to the user (not required)
+     * @param days Number of days the ban is active
+     * @throws NetworkException If the request was not successful
+     * @throws ApiException     If the API returned an error
+     */
+    @EndpointImplementation(Endpoints.FRIEND)
+    public void banUser(String name, String reason, @Nullable String note, @Nullable String message, int days) throws NetworkException, ApiException {
+        Map<String, String> args = JrawUtils.mapOf(
+                "name", name,
+                "type", "banned",
+                "ban_reason", reason,
+                "duration", days
+        );
+
+        if (message != null)
+            args.put("ban_message", message);
+        if (note != null)
+            args.put("note", note);
+
+        genericPost(reddit.request()
+                .endpoint(Endpoints.FRIEND)
+                .post(args)
+                .build());
+    }
+
+    /**
      * Deletes a comment or submission that the authenticated user posted. Note that this call will never fail, even if
      * the given fullname does not exist.
      *
@@ -82,7 +118,7 @@ public class ModerationManager extends AbstractManager {
     /**
      * Distinguishes a comment or submission that a user posted.
      *
-     * @param s The thing to distinguish
+     * @param s      The thing to distinguish
      * @param status How to distinguish 's'
      * @throws NetworkException If the request was not successful
      * @throws ApiException     If the API returned an error
@@ -90,8 +126,8 @@ public class ModerationManager extends AbstractManager {
     @EndpointImplementation(Endpoints.DISTINGUISH)
     public void setDistinguishedStatus(Thing s, DistinguishedStatus status) throws NetworkException, ApiException {
         String distinguish = status.getJsonValue();
-        if(distinguish.equals("null")) distinguish = "no";
-        if(distinguish.equals("moderator")) distinguish = "yes";
+        if (distinguish.equals("null")) distinguish = "no";
+        if (distinguish.equals("moderator")) distinguish = "yes";
         genericPost(reddit.request()
                 .endpoint(Endpoints.DISTINGUISH)
                 .post(JrawUtils.mapOf(
@@ -105,7 +141,7 @@ public class ModerationManager extends AbstractManager {
      * Stickies a top-level comment that a user posted. Not that this ONLY applies to top-level
      * comments and will not return an error if run on a non top-level comment
      *
-     * @param s The top-level comment to sticky
+     * @param s      The top-level comment to sticky
      * @param sticky Whether to sticky or unsticky the comment
      * @throws NetworkException If the request was not successful
      * @throws ApiException     If the API returned an error

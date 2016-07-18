@@ -622,7 +622,7 @@ public class AccountManager extends AbstractManager {
     }
 
     /**
-     * Adds of updates a friend
+     * Adds or updates a friend
      *
      * @param name The name of the user
      * @return A UserRecord representing the new or updated relationship
