@@ -1,7 +1,5 @@
 package net.dean.jraw.managers;
 
-import com.sun.istack.internal.Nullable;
-
 import net.dean.jraw.ApiException;
 import net.dean.jraw.*;
 import net.dean.jraw.RedditClient;
@@ -79,7 +77,7 @@ public class ModerationManager extends AbstractManager {
      * @throws ApiException     If the API returned an error
      */
     @EndpointImplementation(Endpoints.FRIEND)
-    public void banUser(String name, String reason, @Nullable String note, @Nullable String message, int days) throws NetworkException, ApiException {
+    public void banUser(String name, String reason, String note, String message, int days) throws NetworkException, ApiException {
         Map<String, String> args = JrawUtils.mapOf(
                 "name", name,
                 "type", "banned",
