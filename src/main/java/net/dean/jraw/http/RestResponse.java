@@ -1,18 +1,16 @@
 package net.dean.jraw.http;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.google.common.base.Charsets;
 import com.google.common.net.MediaType;
-import okhttp3.Headers;
+
 import net.dean.jraw.ApiException;
-import net.dean.jraw.util.JrawUtils;
 import net.dean.jraw.models.JsonModel;
 import net.dean.jraw.models.Listing;
 import net.dean.jraw.models.RedditObject;
 import net.dean.jraw.models.meta.ModelManager;
+import net.dean.jraw.util.JrawUtils;
 
-import java.io.InputStream;
-import java.util.Scanner;
+import okhttp3.Headers;
 
 /**
  * This class is used to show the result of a request to a RESTful web service, such as Reddit's JSON API.
@@ -41,7 +39,7 @@ public class RestResponse {
      * Instantiates a new RedditResponse
      */
     @SuppressWarnings("ThrowableInstanceNeverThrown")
-    RestResponse(HttpRequest origin, InputStream body, Headers headers, int statusCode, String statusMessage, String protocol) {
+    RestResponse(HttpRequest origin, String body, Headers headers, int statusCode, String statusMessage, String protocol) {
         this.origin = origin;
         this.headers = headers;
         this.statusCode = statusCode;
@@ -53,8 +51,7 @@ public class RestResponse {
             if (contentType == null)
                 throw new IllegalStateException("No Content-Type header was found");
             this.type = JrawUtils.parseMediaType(contentType);
-            String charset = type.charset().or(Charsets.UTF_8).name();
-            this.raw = readContent(body, charset);
+            this.raw = body;
 
             // Assume there aren't any exceptions
             ApiException error = null;
@@ -85,16 +82,6 @@ public class RestResponse {
             this.raw = null;
             this.rootNode = null;
             this.apiException = null;
-        }
-    }
-
-    private String readContent(InputStream entity, String charset) {
-        try {
-            Scanner s = new Scanner(entity, charset).useDelimiter("\\A");
-            return s.hasNext() ? s.next() : "";
-        } catch (Exception e) {
-            JrawUtils.logger().error("Could not read the body of the given response");
-            throw e;
         }
     }
 

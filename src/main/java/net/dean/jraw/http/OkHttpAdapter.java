@@ -1,8 +1,5 @@
 package net.dean.jraw.http;
 
-import okhttp3.*;
-import okio.BufferedSink;
-
 import java.io.IOException;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
@@ -12,6 +9,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+
+import okhttp3.Authenticator;
+import okhttp3.Credentials;
+import okhttp3.JavaNetCookieJar;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Protocol;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.Route;
+import okio.BufferedSink;
 
 /**
  * Provides a concrete HttpAdapter implementation using Square's OkHttp
@@ -72,9 +80,8 @@ public final class OkHttpAdapter implements HttpAdapter<OkHttpClient> {
                 .headers(request.getHeaders());
 
         Response response = perRequestClient.newCall(builder.build()).execute();
-
         return new RestResponse(request,
-                response.body().source().inputStream(),
+                response.body().string(),
                 response.headers(),
                 response.code(),
                 response.message(),
