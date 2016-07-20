@@ -216,7 +216,7 @@ public class HttpLogger {
                         r.getBody().contentType() != null && // Will be null if no body was sent
                         JrawUtils.isEqual(r.getBody().contentType(), MediaTypes.FORM_ENCODED.type())) {
                     // Body Content-Type was x-www-form-urlencoded
-                    logMap(true, "form-data", parseUrlEncoded(r.getBody()), r.getSensitiveArgs());
+                    logMap(wasSuccessful, "form-data", parseUrlEncoded(r.getBody()), r.getSensitiveArgs());
                 } else {
                     // Other Content-Type
                     logBody(wasSuccessful, "body", getContent(r.getBody()));

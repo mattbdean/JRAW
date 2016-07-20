@@ -86,9 +86,14 @@ public abstract class Paginator<T extends Thing> implements RedditIterable<T> {
 
         String sorting = getSortingString();
         boolean sortingUsed = sorting != null;
-        if (sortingUsed && timePeriod != null) {
-            // Time period only applies to controversial and top listings
-            args.put("t", timePeriod.name().toLowerCase());
+
+        if (sortingUsed) {
+            args.put("sort", sorting);
+
+            if (timePeriod != null) {
+                // Time period only applies to controversial and top listings
+                args.put("t", timePeriod.name().toLowerCase());
+            }
         }
 
         if(!(this instanceof SubredditPaginator) && sorting != null && !sorting.isEmpty()){
