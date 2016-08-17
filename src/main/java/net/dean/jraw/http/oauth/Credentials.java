@@ -118,6 +118,21 @@ public final class Credentials {
 
     /**
      * Creates a new Credentials object for a Reddit app whose type is 'web app.' All parameters must be non-null.
+     *
+     * @param username The app owner's username
+     * @param password The app owner's password
+     * @param clientId The publicly-available app ID
+     * @param clientSecret The secret value for the application
+     * @param redirectUrl The url to be redirected to
+     * @return A new Credentials
+     */
+    public static Credentials script(String username, String password, String clientId, String clientSecret, String redirectUrl) {
+        assertNotNull(username, password, clientId, clientSecret);
+        return new Credentials(AuthenticationMethod.SCRIPT, username, password, clientId, clientSecret, redirectUrl);
+    }
+
+    /**
+     * Creates a new Credentials object for a Reddit app whose type is 'web app.' All parameters must be non-null.
      * @param clientId The publicly-available app ID
      * @param clientSecret The secret value for the application
      * @return A new Credentials

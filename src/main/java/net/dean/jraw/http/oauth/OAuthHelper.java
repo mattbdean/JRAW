@@ -83,6 +83,12 @@ public class OAuthHelper {
         String urlPath = "/api/v1/authorize";
         if (useMobileSite) urlPath += ".compact";
 
+        URL url = creds.getRedirectUrl();
+        String extenalForm = "";
+        if(url != null){
+            extenalForm = url.toExternalForm();
+        }
+
         HttpRequest r = new HttpRequest.Builder()
                 .https(true)
                 .host(RedditClient.HOST_SPECIAL)
@@ -92,7 +98,7 @@ public class OAuthHelper {
                         "client_id", creds.getClientId(),
                         "response_type", "code",
                         "state", state,
-                        "redirect_uri", creds.getRedirectUrl().toExternalForm(),
+                        "redirect_uri", extenalForm,
                         "duration", permanent ? "permanent" : "temporary",
                         "scope", JrawUtils.join(' ', scopes)
                 )).build();
