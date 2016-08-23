@@ -6,18 +6,14 @@ import com.google.common.collect.FluentIterable;
 import com.google.common.collect.TreeTraverser;
 import net.dean.jraw.EndpointImplementation;
 import net.dean.jraw.Endpoints;
-import net.dean.jraw.util.JrawUtils;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.http.NetworkException;
 import net.dean.jraw.http.RestResponse;
 import net.dean.jraw.http.SubmissionRequest;
 import net.dean.jraw.models.meta.Model;
+import net.dean.jraw.util.JrawUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -279,34 +275,9 @@ public final class CommentNode implements Iterable<CommentNode> {
         List<MoreChildren> newMores = new ArrayList<>();
 
         // Assert every Thing is either a Comment or a MoreChildren
-        for (Thing t : thingsToAdd) {
-            if (t instanceof Comment) {
-                newComments.add((Comment) t);
-            } else if (t instanceof MoreChildren) {
-                newMores.add((MoreChildren) t);
-            } else {
-                throw new IllegalStateException("Received a Thing that was not a Comment or MoreChildren, was "
-                        + t.getClass().getName());
-            }
-        }
+        assertThingsAreComments(thingsToAdd, newComments, newMores);
 
-        // Comments from /api/morechildren are listed as if they were iterated in pre-order traversal
-        CommentNode parent = this;
-        for (Iterator<Comment> it = newComments.iterator(); it.hasNext(); ) {
-            Comment newComment = it.next();
-            // Navigate up the tree until we find the comment whose ID matches the new comment's parent_id
-            while (!newComment.getParentId().equals(parent.getComment().getFullName())) {
-                parent = parent.parent;
-            }
-            // Instantiate a new CommentNode. The MoreChildren, if applicable, will be instantiated later.
-            CommentNode node = new CommentNode(ownerId, parent, newComment, null, commentSort, parent.depth + 1);
-            // Remove the Comment from the list
-            it.remove();
-            if (node.depth == relativeRootDepth)
-                newRootNodes.add(node);
-            parent.children.add(node);
-            parent = node;
-        }
+        buildCommentTree(relativeRootDepth, newRootNodes, newComments);
 
         // newComments should be empty if everything was successful
         for (Comment c : newComments) {
@@ -340,6 +311,99 @@ public final class CommentNode implements Iterable<CommentNode> {
         }
 
         return newRootNodes;
+    }
+
+    /**
+     * In the case where a user has replied to a comment node, this method will get the reply from
+     * {@link #getMoreComments(RedditClient)} and insert it into the tree
+     *
+     * @param reddit Used to make the request
+     * @param replyId The id of the reply
+     * @return A List of new root nodes
+     * @throws NetworkException If the request was not successful
+     */
+    public List<CommentNode> loadReply(RedditClient reddit, String replyId) throws NetworkException {
+
+        if (isThreadContinuation())
+            return continueThread(reddit);
+
+        int relativeRootDepth = depth + 1;
+        List<CommentNode> newRootNodes = new ArrayList<>();
+        List<Thing> thingsToAdd = getReply(reddit, replyId);
+        this.moreChildren = null;
+
+        List<Comment> newComments = new ArrayList<>();
+        List<MoreChildren> newMores = new ArrayList<>();
+        assertThingsAreComments(thingsToAdd, newComments, newMores);
+        buildCommentTree(relativeRootDepth, newRootNodes, newComments);
+
+
+        // newComments should be empty if everything was successful
+        for (Comment c : newComments) {
+            JrawUtils.logger().warn("Unable to find parent for " + c);
+        }
+
+        // Map of the MoreChildren's parent_id (which is a fullname) to the MoreChildren itself
+        Map<String, MoreChildren> mores = new HashMap<>();
+        for (MoreChildren m : newMores) {
+            mores.put(m.getParentId(), m);
+        }
+
+        // Iterate the tree and insert MoreChildren objects
+        for (CommentNode node : walkTree()) {
+            if (mores.containsKey(node.getComment().getFullName())) {
+                MoreChildren m = mores.get(node.getComment().getFullName());
+                node.moreChildren = m;
+                newMores.remove(m);
+            }
+        }
+
+        // Special handling for the root node's MoreChildren
+        if (mores.containsKey(ownerId)) {
+            MoreChildren m = mores.get(ownerId);
+            this.moreChildren = m;
+            newMores.remove(m);
+        }
+
+        for (MoreChildren m : newMores) {
+            JrawUtils.logger().warn("Unable to find parent for " + m);
+        }
+
+        return newRootNodes;
+    }
+
+    private void buildCommentTree(int relativeRootDepth, List<CommentNode> newRootNodes, List<Comment> newComments) {
+        // Comments from /api/morechildren are listed as if they were iterated in pre-order traversal
+        CommentNode parent = this;
+        for (Iterator<Comment> it = newComments.iterator(); it.hasNext(); ) {
+            Comment newComment = it.next();
+            // Navigate up the tree until we find the comment whose ID matches the new comment's parent_id
+            while (!newComment.getParentId().equals(parent.getComment().getFullName())) {
+                parent = parent.parent;
+            }
+            // Instantiate a new CommentNode. The MoreChildren, if applicable, will be instantiated later.
+            CommentNode node = new CommentNode(ownerId, parent, newComment, null, commentSort, parent.depth + 1);
+            // Remove the Comment from the list
+            it.remove();
+            if (node.depth == relativeRootDepth)
+                newRootNodes.add(node);
+            parent.children.add(node);
+            parent = node;
+        }
+    }
+
+    private void assertThingsAreComments(List<Thing> thingsToAdd, List<Comment> newComments, List<MoreChildren> newMores) {
+        // Assert every Thing is either a Comment or a MoreChildren
+        for (Thing t : thingsToAdd) {
+            if (t instanceof Comment) {
+                newComments.add((Comment) t);
+            } else if (t instanceof MoreChildren) {
+                newMores.add((MoreChildren) t);
+            } else {
+                throw new IllegalStateException("Received a Thing that was not a Comment or MoreChildren, was "
+                        + t.getClass().getName());
+            }
+        }
     }
 
     private List<CommentNode> continueThread(RedditClient reddit) {
@@ -431,6 +495,51 @@ public final class CommentNode implements Iterable<CommentNode> {
 
         JsonNode things = response.getJson().get("json").get("data").get("things");
         List<Thing> commentList = new ArrayList<>(things.size());
+        parseComments(things, commentList);
+
+        return commentList;
+    }
+
+    /**
+     * Gets a list of {@link Comment} and {@link MoreChildren} objects from this node's MoreChildren object. The
+     * resulting Things will be listed as if they were iterated in pre-order traversal. To add these new comments to the
+     * tree, use {@link #loadMoreComments(RedditClient)} instead.
+     *
+     * @param reddit The RedditClient to make the HTTP request with
+     * @return A list of new Comments and MoreChildren objects
+     * @throws NetworkException If the request was not successful
+     */
+    @EndpointImplementation(Endpoints.MORECHILDREN)
+    public List<Thing> getReply(RedditClient reddit, String replyId)
+            throws NetworkException {
+
+        RestResponse response;
+
+        // Make sure we are only making one request to this endpoint at a time, as noted by the docs:
+        // "**NOTE**: you may only make one request at a time to this API endpoint. Higher concurrency will result in an
+        // error being returned."
+        morechildrenLock.lock();
+        try {
+            response = reddit.execute(reddit.request()
+                    .endpoint(Endpoints.MORECHILDREN)
+                    .post(JrawUtils.mapOf(
+                            "children", replyId,
+                            "link_id", ownerId,
+                            "sort", commentSort.name().toLowerCase(),
+                            "api_type", "json"
+                    )).build());
+        } finally {
+            morechildrenLock.unlock();
+        }
+
+        JsonNode things = response.getJson().get("json").get("data").get("things");
+        List<Thing> commentList = new ArrayList<>(things.size());
+        parseComments(things, commentList);
+
+        return commentList;
+    }
+
+    private void parseComments(JsonNode things, List<Thing> commentList) {
         for (JsonNode node : things) {
             String kind = node.get("kind").asText();
             JsonNode data = node.get("data");
@@ -443,8 +552,6 @@ public final class CommentNode implements Iterable<CommentNode> {
                         kind, Model.Kind.COMMENT, Model.Kind.MORE));
             }
         }
-
-        return commentList;
     }
 
     /** Gets the Comment this CommentNode is representing. */
