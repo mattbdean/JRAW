@@ -113,6 +113,7 @@ public class LiveThreadManager extends AbstractManager {
                 .build());
     }
 
+    /** Strikes an update so that it will appear <del>like this</del> on the website. */
     @EndpointImplementation(Endpoints.LIVE_THREAD_STRIKE_UPDATE)
     public void strikeUpdate(LiveThread host, LiveUpdate update) throws ApiException {
         genericPost(reddit.request()
