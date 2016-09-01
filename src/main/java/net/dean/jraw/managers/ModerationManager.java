@@ -177,6 +177,62 @@ public class ModerationManager extends AbstractManager {
                 )).build());
     }
 
+    /**
+     * Set or unset a self post to Contest Mode. You must be a moderator of the subreddit the submission was posted in for
+     * this request to complete successfully.
+     *
+     * @param s      The submission to set as a sticky. Must be a self post
+     * @param enabled Whether or not to set the submission to contest mode
+     * @throws NetworkException If the request was not successful
+     * @throws ApiException     If the Reddit API returned an error
+     */
+    @EndpointImplementation(Endpoints.SET_CONTEST_MODE)
+    public void setContestMode(Submission s, boolean enabled) throws NetworkException, ApiException {
+        genericPost(reddit.request()
+                .endpoint(Endpoints.SET_CONTEST_MODE)
+                .post(JrawUtils.mapOf(
+                        "api_type", "json",
+                        "id", s.getFullName(),
+                        "state", enabled
+                )).build());
+    }
+
+    /**
+     * Locks a submission. You must be a moderator of the subreddit the submission was posted in for
+     * this request to complete successfully.
+     *
+     * @param s      The submission to set as a sticky. Must be a self post
+     * @throws NetworkException If the request was not successful
+     * @throws ApiException     If the Reddit API returned an error
+     */
+    @EndpointImplementation(Endpoints.LOCK)
+    public void setLocked(Submission s) throws NetworkException, ApiException {
+        genericPost(reddit.request()
+                .endpoint(Endpoints.LOCK)
+                .post(JrawUtils.mapOf(
+                        "api_type", "json",
+                        "id", s.getFullName()
+                )).build());
+    }
+
+    /**
+     *Unlocks a submission. You must be a moderator of the subreddit the submission was posted in for
+     * this request to complete successfully.
+     *
+     * @param s      The submission to set as a sticky. Must be a self post
+     * @throws NetworkException If the request was not successful
+     * @throws ApiException     If the Reddit API returned an error
+     */
+    @EndpointImplementation(Endpoints.UNLOCK)
+    public void setUnlocked(Submission s) throws NetworkException, ApiException {
+        genericPost(reddit.request()
+                .endpoint(Endpoints.UNLOCK)
+                .post(JrawUtils.mapOf(
+                        "api_type", "json",
+                        "id", s.getFullName()
+                )).build());
+    }
+
     @EndpointImplementation(Endpoints.APPROVE)
     public void approve(Thing s) throws NetworkException, ApiException {
         genericPost(reddit.request()
