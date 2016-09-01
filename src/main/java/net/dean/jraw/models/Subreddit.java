@@ -122,6 +122,19 @@ public final class Subreddit extends Thing implements Comparable<Subreddit> {
         return SubmissionType.valueOf(submissionType.asText().toUpperCase());
     }
 
+    /** Gets who approved this submission, or null if the logged in account is not a moderator */
+    @JsonProperty(nullable = true)
+    public String getApprovedBy() {
+        return data("approved_by");
+    }
+
+    /** Gets who removed this submission, or null if you are not a mod */
+    @JsonProperty(nullable = true)
+    public String getBannedBy() {
+        return data("banned_by");
+    }
+
+
     /** Gets the subreddit's custom label for the "submit link" button, if any. */
     @JsonProperty
     public String getSubmitLinkLabel() {
