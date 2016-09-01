@@ -37,6 +37,18 @@ public final class Submission extends PublicContribution {
 
     }
 
+    /** Gets who approved this submission, or null if the logged in account is not a moderator */
+    @JsonProperty(nullable = true)
+    public String getApprovedBy() {
+        return data("approved_by");
+    }
+
+    /** Gets who removed this submission, or null if you are not a mod */
+    @JsonProperty(nullable = true)
+    public String getBannedBy() {
+        return data("banned_by");
+    }
+    
     /** Gets the name of the poster, or null if this is a promotional link */
     @JsonProperty
     public String getAuthor() {
