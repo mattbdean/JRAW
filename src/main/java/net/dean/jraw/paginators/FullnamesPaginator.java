@@ -37,7 +37,7 @@ public class FullnamesPaginator {
 
     /* Override next to utilize RedditClient.get() instead of the default paginator code*/
     public Listing<Thing> next() {
-        String[] toGet = new String[count];
+        String[] toGet = new String[count>fullnames.length?fullnames.length:count];
 
         int target = index + count;
         if(target > fullnames.length - 1) target = fullnames.length - 1;

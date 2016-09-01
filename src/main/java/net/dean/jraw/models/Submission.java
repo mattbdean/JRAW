@@ -48,7 +48,7 @@ public final class Submission extends PublicContribution {
     public String getBannedBy() {
         return data("banned_by");
     }
-    
+
     /** Gets the name of the poster, or null if this is a promotional link */
     @JsonProperty
     public String getAuthor() {
