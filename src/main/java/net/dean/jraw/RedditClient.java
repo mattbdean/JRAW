@@ -510,6 +510,7 @@ public class RedditClient extends RestClient {
     @EndpointImplementation(Endpoints.INFO)
     public Listing<Thing> get(String... fullNames) throws NetworkException {
         for (String name : fullNames) {
+            if(name != null)
             if (!(name.startsWith(Model.Kind.LINK.getValue()) ||
                     name.startsWith(Model.Kind.COMMENT.getValue()) ||
                     name.startsWith(Model.Kind.SUBREDDIT.getValue()))) {
