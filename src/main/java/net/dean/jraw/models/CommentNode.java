@@ -24,7 +24,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * <p>This class represents one comment in a comment tree.
- *
+ * <p>
  * <p>Each CommentNode has a depth, a {@link Comment} instance, and zero or more CommentNode children. Depth is defined
  * as the level at which the comment exists. For example, a top-level reply has a depth of 1, a reply to that comment
  * has a depth of 2, and so on. It is only necessary to create one CommentNode, as the constructor will recursively
@@ -73,7 +73,7 @@ public final class CommentNode implements Iterable<CommentNode> {
 
     private MoreChildren moreChildren;
     private final String ownerId;
-    private final Comment comment;
+    private Comment comment;
     private final CommentNode parent;
     private final List<CommentNode> children;
     private final int depth;
@@ -327,6 +327,21 @@ public final class CommentNode implements Iterable<CommentNode> {
         return newRootNodes;
     }
 
+
+    /**
+     * Notifies the tree that a comment was edited
+     *
+     * @param reddit Used to make the request
+     * @return
+     * @throws NetworkException
+     */
+    public CommentNode notifyCommentChanged(RedditClient reddit) throws NetworkException {
+        // Assert every Thing is either a Comment or a MoreChildren
+        Thing t = reddit.get(comment.getFullName()).get(0);
+        comment = ((Comment) t);
+        return this;
+    }
+
     /**
      * Gets more comments from {@link #getMoreComments(RedditClient)} and inserts them into the tree. This method
      * returns only new <em>root</em> nodes. If this CommentNode is not associated with a {@link MoreChildren}, then an
@@ -446,8 +461,8 @@ public final class CommentNode implements Iterable<CommentNode> {
      * two things must be true:
      * <p>
      * <ol>
-     *     <li>The MoreChildren's "count" attribute is zero
-     *     <li>The MoreChildren's ID is "_"
+     * <li>The MoreChildren's "count" attribute is zero
+     * <li>The MoreChildren's ID is "_"
      * </ol>
      * <p>
      * <p>If these things are true, then this method will return true.
