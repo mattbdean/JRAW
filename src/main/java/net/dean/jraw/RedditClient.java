@@ -98,8 +98,8 @@ public class RedditClient extends RestClient {
      */
     public void setHeader(String oldToken){
         httpAdapter.getDefaultHeaders().put(HEADER_AUTHORIZATION, "bearer " + oldToken);
-
     }
+
     public void authenticate(OAuthData authData) throws NetworkException {
         if (authHelper.getAuthStatus() != OAuthHelper.AuthStatus.AUTHORIZED)
             throw new IllegalStateException("OAuthHelper says it is not authorized");
@@ -112,6 +112,7 @@ public class RedditClient extends RestClient {
         this.authMethod = authData.getAuthenticationMethod();
         this.authData = authData;
         httpAdapter.getDefaultHeaders().put(HEADER_AUTHORIZATION, "bearer " + authData.getAccessToken());
+        httpAdapter.getDefaultHeaders().put("raw_json", "1");
         if (authListener != null)
             authListener.onAuthenticated(authData);
     }
