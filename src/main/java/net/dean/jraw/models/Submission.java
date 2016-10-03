@@ -312,7 +312,11 @@ public final class Submission extends PublicContribution {
         if (data.get(key).isNull()) {
             return null;
         }
-        return CommentSort.valueOf(data(key).toUpperCase());
+        try {
+            return CommentSort.valueOf(data(key).toUpperCase());
+        } catch(IllegalArgumentException e){
+            return CommentSort.CONFIDENCE;
+        }
     }
 
     /**
