@@ -8,6 +8,7 @@ import net.dean.jraw.models.JsonModel;
 import net.dean.jraw.util.JrawUtils;
 
 import java.math.BigInteger;
+import java.net.URI;
 import java.net.URL;
 import java.security.SecureRandom;
 import java.util.HashMap;
@@ -83,10 +84,10 @@ public class OAuthHelper {
         String urlPath = "/api/v1/authorize";
         if (useMobileSite) urlPath += ".compact";
 
-        URL url = creds.getRedirectUrl();
-        String extenalForm = "";
-        if(url != null){
-            extenalForm = url.toExternalForm();
+        URI uri = creds.getRedirectUri();
+        String externalForm = "";
+        if(uri != null){
+            externalForm = uri.toString();
         }
 
         HttpRequest r = new HttpRequest.Builder()
@@ -98,7 +99,7 @@ public class OAuthHelper {
                         "client_id", creds.getClientId(),
                         "response_type", "code",
                         "state", state,
-                        "redirect_uri", extenalForm,
+                        "redirect_uri", externalForm,
                         "duration", permanent ? "permanent" : "temporary",
                         "scope", JrawUtils.join(' ', scopes)
                 )).build();
@@ -111,7 +112,7 @@ public class OAuthHelper {
      * Used obtain an access token for 'web' or 'installed' app types. This method parses the query arguments passed to
      * this URI. If no error is present and the 'state' code matches the one <em>most recently</em> generated, then an
      * access token is requested.
-     * @param finalUrl The URL that the HTTP client redirected to after the user chose either to authorize or not
+     * @param finalUri The URL that the HTTP client redirected to after the user chose either to authorize or not
      *                 authorize the application. This will be the app's redirect URI with the addition of a few query
      *                 parameters.
      * @param creds The credentials to retrieve the access token with. If the authorization method is
@@ -123,14 +124,17 @@ public class OAuthHelper {
      * @throws IllegalStateException If the state last generated with {@link #getAuthorizationUrl} did not match the
      *                               value of the 'state' query parameter.
      */
-    public OAuthData onUserChallenge(String finalUrl, Credentials creds) throws NetworkException,
+    public OAuthData onUserChallenge(String finalUri, Credentials creds) throws NetworkException,
             OAuthException, IllegalStateException {
         if (authStatus != AuthStatus.WAITING_FOR_CHALLENGE) {
             throw new IllegalStateException("Auth flow not started yet. See getAuthorizationUrl()");
         }
 
-        HttpRequest request = HttpRequest.from("irrelevant", JrawUtils.newUrl(finalUrl));
-        Map<String, String> query = JrawUtils.parseUrlEncoded(request.getUrl().getQuery());
+        URI requestUri = JrawUtils.newUri(finalUri);
+        if(requestUri == null) {
+            throw new IllegalArgumentException("Final redirect URI was null");
+        }
+        Map<String, String> query = JrawUtils.parseUrlEncoded(requestUri.getQuery());
         if (!query.containsKey("state"))
             throw new IllegalArgumentException("Final redirect URI did not contain the 'state' query parameter");
         if (!query.get("state").equals(state))
@@ -151,7 +155,7 @@ public class OAuthHelper {
                     .post(JrawUtils.mapOf(
                             "grant_type", "authorization_code",
                             "code", code,
-                            "redirect_uri", creds.getRedirectUrl()
+                            "redirect_uri", creds.getRedirectUri()
                     ))
                     .basicAuth(new BasicAuthData(creds.getClientId(), creds.getClientSecret()))
                     .build());
