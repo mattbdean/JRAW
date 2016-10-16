@@ -1,9 +1,9 @@
 package net.dean.jraw.http.oauth;
 
-import net.dean.jraw.util.JrawUtils;
 import net.dean.jraw.http.AuthenticationMethod;
+import net.dean.jraw.util.JrawUtils;
 
-import java.net.URL;
+import java.net.URI;
 import java.util.UUID;
 
 /**
@@ -16,22 +16,22 @@ public final class Credentials {
     private final String clientId;
     private final String clientSecret;
     private final UUID deviceId;
-    private final URL redirectUrl;
+    private final URI redirectUri;
 
     private Credentials(AuthenticationMethod authenticationMethod, String username, String password, String clientId,
-                        String clientSecret, String redirectUrl) {
-        this(authenticationMethod, username, password, clientId, clientSecret, null, redirectUrl);
+                        String clientSecret, String redirectUri) {
+        this(authenticationMethod, username, password, clientId, clientSecret, null, redirectUri);
     }
 
     public Credentials(AuthenticationMethod authenticationMethod, String username, String password, String clientId,
-                       String clientSecret, UUID deviceId, String redirectUrl) {
+                       String clientSecret, UUID deviceId, String redirectUri) {
         this.authenticationMethod = authenticationMethod;
         this.username = username;
         this.password = password;
         this.clientId = clientId;
         this.clientSecret = clientSecret;
         this.deviceId = deviceId;
-        this.redirectUrl = redirectUrl != null ? JrawUtils.newUrl(redirectUrl) : null;
+        this.redirectUri = redirectUri != null ? JrawUtils.newUri(redirectUri) : null;
     }
 
     /**
@@ -80,8 +80,8 @@ public final class Credentials {
         return deviceId;
     }
 
-    public URL getRedirectUrl() {
-        return redirectUrl;
+    public URI getRedirectUri() {
+        return redirectUri;
     }
 
     private static void assertNotNull(Object... objects) {
@@ -95,11 +95,11 @@ public final class Credentials {
      * @param clientId The publicly-available app ID
      * @return A new Credentials
      */
-    public static Credentials installedApp(String clientId, String redirectUrl) {
+    public static Credentials installedApp(String clientId, String redirectUri) {
         // Use an empty string as the client secret because "The 'password' for non-confidential clients
         // (installed apps) is an empty string". See https://github.com/reddit/reddit/wiki/OAuth2#token-retrieval
-        assertNotNull(clientId, redirectUrl);
-        return new Credentials(AuthenticationMethod.APP, null, null, clientId, "", redirectUrl);
+        assertNotNull(clientId, redirectUri);
+        return new Credentials(AuthenticationMethod.APP, null, null, clientId, "", redirectUri);
     }
 
     /**
@@ -123,12 +123,12 @@ public final class Credentials {
      * @param password The app owner's password
      * @param clientId The publicly-available app ID
      * @param clientSecret The secret value for the application
-     * @param redirectUrl The url to be redirected to
+     * @param redirectUri The uri to be redirected to
      * @return A new Credentials
      */
-    public static Credentials script(String username, String password, String clientId, String clientSecret, String redirectUrl) {
+    public static Credentials script(String username, String password, String clientId, String clientSecret, String redirectUri) {
         assertNotNull(username, password, clientId, clientSecret);
-        return new Credentials(AuthenticationMethod.SCRIPT, username, password, clientId, clientSecret, redirectUrl);
+        return new Credentials(AuthenticationMethod.SCRIPT, username, password, clientId, clientSecret, redirectUri);
     }
 
     /**
@@ -137,9 +137,9 @@ public final class Credentials {
      * @param clientSecret The secret value for the application
      * @return A new Credentials
      */
-    public static Credentials webapp(String clientId, String clientSecret, String redirectUrl) {
-        assertNotNull(clientId, clientSecret, redirectUrl);
-        return new Credentials(AuthenticationMethod.WEBAPP, null, null, clientId, clientSecret, redirectUrl);
+    public static Credentials webapp(String clientId, String clientSecret, String redirectUri) {
+        assertNotNull(clientId, clientSecret, redirectUri);
+        return new Credentials(AuthenticationMethod.WEBAPP, null, null, clientId, clientSecret, redirectUri);
     }
 
     /**
