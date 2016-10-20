@@ -136,7 +136,7 @@ public final class Subreddit extends Thing implements Comparable<Subreddit> {
 
     /** Gets this subreddit's traffic restriction type */
     @JsonProperty
-    public Type getSubredditType() {191
+    public Type getSubredditType() {
         try {
             return Type.valueOf(data("subreddit_type").toUpperCase());
         } catch(IllegalArgumentException e){
