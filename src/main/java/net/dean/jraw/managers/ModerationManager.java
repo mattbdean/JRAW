@@ -98,6 +98,37 @@ public class ModerationManager extends AbstractManager {
     }
 
     /**
+     * Bans a user permanently with a reason, message, and ability to PM the user
+     *
+     * @param name   The user to ban
+     * @param subreddit   The subreddit to ban from
+     * @param reason Why the user is being banned
+     * @param note Note (not required)
+     * @param message Message to send to the user (not required)
+     * @param days Number of days the ban is active
+     * @throws NetworkException If the request was not successful
+     * @throws ApiException     If the API returned an error
+     */
+    @EndpointImplementation(Endpoints.OAUTH_ME_FRIENDS_USERNAME_PUT)
+    public void banUserpPermanently(String subreddit, String name, String reason, String note, String message) throws NetworkException, ApiException {
+        Map<String, String> args = JrawUtils.mapOf(
+                "name", name,
+                "type", "banned",
+                "ban_reason", reason,
+        );
+
+        if (message != null)
+            args.put("ban_message", message);
+        if (note != null)
+            args.put("note", note);
+
+        genericPost(reddit.request()
+                .path("/r/" + subreddit + "/api/friend")
+                .post(args)
+                .build());
+    }
+
+    /**
      * Deletes a comment or submission that the authenticated user posted. Note that this call will never fail, even if
      * the given fullname does not exist.
      *
