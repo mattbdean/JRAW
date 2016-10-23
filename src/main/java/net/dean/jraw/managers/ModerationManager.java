@@ -109,7 +109,7 @@ public class ModerationManager extends AbstractManager {
      * @throws ApiException     If the API returned an error
      */
     @EndpointImplementation(Endpoints.OAUTH_ME_FRIENDS_USERNAME_PUT)
-    public void banUserpPermanently(String subreddit, String name, String reason, String note, String message) throws NetworkException, ApiException {
+    public void banUserPermanently(String subreddit, String name, String reason, String note, String message) throws NetworkException, ApiException {
         Map<String, String> args = JrawUtils.mapOf(
                 "name", name,
                 "type", "banned",
