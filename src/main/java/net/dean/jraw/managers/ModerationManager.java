@@ -105,7 +105,6 @@ public class ModerationManager extends AbstractManager {
      * @param reason Why the user is being banned
      * @param note Note (not required)
      * @param message Message to send to the user (not required)
-     * @param days Number of days the ban is active
      * @throws NetworkException If the request was not successful
      * @throws ApiException     If the API returned an error
      */
@@ -114,7 +113,7 @@ public class ModerationManager extends AbstractManager {
         Map<String, String> args = JrawUtils.mapOf(
                 "name", name,
                 "type", "banned",
-                "ban_reason", reason,
+                "ban_reason", reason
         );
 
         if (message != null)
