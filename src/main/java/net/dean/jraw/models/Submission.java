@@ -20,7 +20,9 @@ public final class Submission extends PublicContribution {
     /** Instantiates a new Submission with no comments */
     public Submission(JsonNode dataNode) {
         this(dataNode, null);
+        saved = data("saved", Boolean.class);
     }
+    public boolean saved = false;
 
     /**
      * Instantiates a new Submission
@@ -30,6 +32,8 @@ public final class Submission extends PublicContribution {
     public Submission(JsonNode dataNode, CommentNode comments) {
         super(dataNode);
         this.rootNode = comments;
+        saved = data("saved", Boolean.class);
+
     }
 
     /** Gets the name of the poster, or null if this is a promotional link */
@@ -46,6 +50,7 @@ public final class Submission extends PublicContribution {
         return new Flair(data("author_flair_css_class"),
                 data("author_flair_text"));
     }
+
 
     /** Checks whether the user has clicked this link. Most likely false unless the user has Reddit Gold. */
     @JsonProperty
@@ -143,7 +148,7 @@ public final class Submission extends PublicContribution {
      */
     @JsonProperty
     public Boolean isSaved() {
-        return data("saved", Boolean.class);
+        return saved;
     }
 
     /**
@@ -334,6 +339,24 @@ public final class Submission extends PublicContribution {
     @Override
     public Integer getScore() {
         return _getScore();
+    }
+
+    boolean voted;
+    public boolean voted(){
+        return voted;
+    }
+
+    public void setVoted(Boolean b){
+        voted= b;
+    }
+
+
+    boolean upvoted;
+    public void setVote(Boolean b){
+        upvoted = b;
+    }
+    public boolean getIsUpvoted(){
+        return upvoted;
     }
 
     @Override

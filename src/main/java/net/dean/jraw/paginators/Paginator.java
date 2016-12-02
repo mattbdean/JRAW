@@ -96,6 +96,11 @@ public abstract class Paginator<T extends Thing> implements RedditIterable<T> {
             }
         }
 
+        if(!(this instanceof SubredditPaginator) && sorting != null && !sorting.isEmpty()){
+            //Add sorting to args if this is not a subreddit paginator (profiles, multis, etc)
+            args.put("sort", sorting);
+        }
+
         Map<String, String> extraArgs = getExtraQueryArgs();
         if (extraArgs != null && extraArgs.size() > 0) {
             args.putAll(extraArgs);

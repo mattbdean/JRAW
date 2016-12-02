@@ -85,7 +85,7 @@ public class ModerationManager extends AbstractManager {
      * @throws ApiException If the Reddit API returned an error
      */
     @EndpointImplementation(Endpoints.SET_SUBREDDIT_STICKY)
-    public void setSticky(Submission s, boolean sticky) throws NetworkException, ApiException {
+    public void setSticky(Thing s, boolean sticky) throws NetworkException, ApiException {
         genericPost(reddit.request()
                 .endpoint(Endpoints.SET_SUBREDDIT_STICKY)
                 .post(JrawUtils.mapOf(
@@ -94,7 +94,27 @@ public class ModerationManager extends AbstractManager {
                         "state", sticky
                 )).build());
     }
+    @EndpointImplementation(Endpoints.APPROVE)
+    public void approve(Thing s) throws NetworkException, ApiException {
+        genericPost(reddit.request()
+                .endpoint(Endpoints.APPROVE)
+                .post(JrawUtils.mapOf(
+                        "api_type", "json",
+                        "id", s.getFullName()
+                )).build());
+    }
 
+    @EndpointImplementation(Endpoints.REMOVE)
+    public void remove(Thing s, boolean spam) throws NetworkException, ApiException {
+        genericPost(reddit.request()
+                .endpoint(Endpoints.REMOVE)
+                .post(JrawUtils.mapOf(
+                        "api_type", "json",
+                        "id", s.getFullName(),
+                        "spam", spam
+
+                )).build());
+    }
     /**
      * Sets the flair for the currently authenticated user
      * @param subreddit The subreddit to set the flair on
