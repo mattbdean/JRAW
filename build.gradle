@@ -2,7 +2,6 @@ plugins {
     id 'java'
     id 'maven'
     id 'maven-publish'
-    id 'findbugs'
     id 'jacoco'
     id 'com.github.kt3k.coveralls' version '2.4.0x'
 }
@@ -43,8 +42,8 @@ task fatJar(type: Jar, dependsOn: assemble) {
     classifier = 'fat'
     destinationDir = releaseDest
     from(
-        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) },
-        sourceSets.main.output
+            configurations.compile.collect { it.isDirectory() ? it : zipTree(it) },
+            sourceSets.main.output
     )
 }
 
@@ -86,13 +85,6 @@ test {
 
     beforeTest { descriptor ->
         logger.lifecycle("Running test: ${descriptor.className}.${descriptor.name}")
-    }
-}
-
-findbugsMain {
-    reports {
-        xml.enabled = false
-        html.enabled = true
     }
 }
 

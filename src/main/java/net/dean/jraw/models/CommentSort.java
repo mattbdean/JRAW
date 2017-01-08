@@ -10,5 +10,7 @@ public enum CommentSort {
     HOT,
     CONTROVERSIAL,
     OLD,
+    LIVE,
+    RANDOM,
     QA
 }

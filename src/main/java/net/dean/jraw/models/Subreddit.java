@@ -1,9 +1,12 @@
 package net.dean.jraw.models;
 
-import net.dean.jraw.util.Dimension;
+import com.fasterxml.jackson.databind.JsonNode;
+
 import net.dean.jraw.models.meta.JsonProperty;
 import net.dean.jraw.models.meta.Model;
-import com.fasterxml.jackson.databind.JsonNode;
+import net.dean.jraw.util.Dimension;
+
+import java.text.NumberFormat;
 
 /** This class represents a subreddit, such as /r/pics. */
 @Model(kind = Model.Kind.SUBREDDIT)
@@ -18,6 +21,15 @@ public final class Subreddit extends Thing implements Comparable<Subreddit> {
     @JsonProperty
     public Integer getAccountsActive() {
         return data("accounts_active", Integer.class);
+    }
+
+    /** Gets the localized amount of active users this subreddit has seen in the last 15 minutes */
+    public String getLocalizedAccountsActive() {
+        try {
+            return NumberFormat.getInstance().format(getAccountsActive());
+        } catch (final IllegalArgumentException ex) {
+            return null;
+        }
     }
 
     /** Gets the number of minutes the subreddit will initially hide comment scores for */
@@ -91,6 +103,15 @@ public final class Subreddit extends Thing implements Comparable<Subreddit> {
         return data("subscribers", Long.class);
     }
 
+    /** Gets the localized amount of users subscribed to this subreddit */
+    public String getLocalizedSubscriberCount() {
+        try {
+            return NumberFormat.getInstance().format(getSubscriberCount());
+        } catch (final IllegalArgumentException ex) {
+            return null;
+        }
+    }
+
     /** Gets the types of submissions allowed to be posted on this subreddit */
     @JsonProperty
     public SubmissionType getAllowedSubmissionType() {
@@ -116,7 +137,11 @@ public final class Subreddit extends Thing implements Comparable<Subreddit> {
     /** Gets this subreddit's traffic restriction type */
     @JsonProperty
     public Type getSubredditType() {
-        return Type.valueOf(data("subreddit_type").toUpperCase());
+        try {
+            return Type.valueOf(data("subreddit_type").toUpperCase());
+        } catch(IllegalArgumentException e){
+            return Type.PUBLIC;
+        }
     }
 
     @JsonProperty

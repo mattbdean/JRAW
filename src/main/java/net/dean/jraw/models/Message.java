@@ -21,6 +21,7 @@ public abstract class Message extends Contribution implements Distinguishable {
      */
     public Message(JsonNode dataNode) {
         super(dataNode);
+        read = data.has("new") && !data("new", Boolean.class);
     }
 
     @JsonProperty
@@ -44,9 +45,10 @@ public abstract class Message extends Contribution implements Distinguishable {
      *
      * @see InboxManager#setRead(boolean, Message, Message...)
      */
+    public boolean read;
     @JsonProperty
     public Boolean isRead() {
-        return data.has("new") && !data("new", Boolean.class);
+       return read;
     }
 
     /**

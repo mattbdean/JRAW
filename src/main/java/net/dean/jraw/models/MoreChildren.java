@@ -5,6 +5,7 @@ import net.dean.jraw.models.meta.JsonProperty;
 import net.dean.jraw.models.meta.Model;
 import com.fasterxml.jackson.databind.JsonNode;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +36,18 @@ public final class MoreChildren extends Thing {
     @JsonProperty
     public Integer getCount() {
         return data("count", Integer.class);
+    }
+
+    /**
+     * Gets the localized amount of IDs in this list
+     * @return The localized amount of IDs in this list
+     */
+    public String getLocalizedCount() {
+        try {
+            return NumberFormat.getInstance().format(getCount());
+        } catch (final IllegalArgumentException ex) {
+            return null;
+        }
     }
 
     /**

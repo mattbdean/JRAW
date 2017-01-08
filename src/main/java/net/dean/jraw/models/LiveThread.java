@@ -5,6 +5,7 @@ import net.dean.jraw.models.attr.Created;
 import net.dean.jraw.models.meta.JsonProperty;
 import net.dean.jraw.models.meta.Model;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -54,6 +55,15 @@ public final class LiveThread extends RedditObject implements Created {
     @JsonProperty
     public Integer getViewerCount() {
         return data("viewer_count", Integer.class);
+    }
+
+    /** Gets the localized amount of people watching this thread */
+    public String getLocalizedViewerCount() {
+        try {
+            return NumberFormat.getInstance().format(getViewerCount());
+        } catch (final IllegalArgumentException ex) {
+            return null;
+        }
     }
 
     /** Checks if the viewer count is "fuzzed". This most often happens when there are less than 100 viewers. */

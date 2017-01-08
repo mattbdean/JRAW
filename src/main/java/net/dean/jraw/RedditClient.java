@@ -14,6 +14,7 @@ import net.dean.jraw.paginators.Sorting;
 import net.dean.jraw.paginators.SubredditPaginator;
 import net.dean.jraw.util.JrawUtils;
 
+import java.lang.System;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -82,6 +83,9 @@ public class RedditClient extends RestClient {
     public String getAuthenticatedUser() {
         if (!(isAuthenticated() && hasActiveUserContext()))
             throw new IllegalStateException("Not authenticated or no active user context");
+        if(authenticatedUser == null){
+            this.authenticatedUser = me().getFullName();
+        }
         return authenticatedUser;
     }
 
@@ -92,6 +96,10 @@ public class RedditClient extends RestClient {
      * @throws NetworkException Thrown when there was a problem setting the authenticated user. Can only happen when
      *                          the authentication method is not userless.
      */
+    public void setHeader(String oldToken){
+        httpAdapter.getDefaultHeaders().put(HEADER_AUTHORIZATION, "bearer " + oldToken);
+    }
+
     public void authenticate(OAuthData authData) throws NetworkException {
         if (authHelper.getAuthStatus() != OAuthHelper.AuthStatus.AUTHORIZED)
             throw new IllegalStateException("OAuthHelper says it is not authorized");
@@ -104,10 +112,7 @@ public class RedditClient extends RestClient {
         this.authMethod = authData.getAuthenticationMethod();
         this.authData = authData;
         httpAdapter.getDefaultHeaders().put(HEADER_AUTHORIZATION, "bearer " + authData.getAccessToken());
-
-        if (!authMethod.isUserless() && isAuthorizedFor(Endpoints.OAUTH_ME)) {
-            this.authenticatedUser = me().getFullName();
-        }
+        httpAdapter.getDefaultHeaders().put("raw_json", "1");
         if (authListener != null)
             authListener.onAuthenticated(authData);
     }
@@ -506,6 +511,7 @@ public class RedditClient extends RestClient {
     @EndpointImplementation(Endpoints.INFO)
     public Listing<Thing> get(String... fullNames) throws NetworkException {
         for (String name : fullNames) {
+            if(name != null)
             if (!(name.startsWith(Model.Kind.LINK.getValue()) ||
                     name.startsWith(Model.Kind.COMMENT.getValue()) ||
                     name.startsWith(Model.Kind.SUBREDDIT.getValue()))) {

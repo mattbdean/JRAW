@@ -7,6 +7,9 @@ import net.dean.jraw.RedditClient;
 import net.dean.jraw.models.Listing;
 import net.dean.jraw.models.Submission;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * This class is used to paginate through the front page or a subreddit with different time periods or sortings.
  *
@@ -18,6 +21,7 @@ import net.dean.jraw.models.Submission;
  */
 public class SubredditPaginator extends Paginator<Submission> {
     private String subreddit;
+    private boolean obeyOver18 = true;
 
     /**
      * Instantiates a new SubredditPaginator that will iterate through submissions on the front page.
@@ -38,6 +42,20 @@ public class SubredditPaginator extends Paginator<Submission> {
         setSubreddit(subreddit, moreSubreddits);
     }
 
+    /**
+     * Sets whether to ignore a user's over_18 reddit preference
+     * @param obeyOver18 Whether to obey the preference
+     */
+    public void setObeyOver18(boolean obeyOver18){
+        this.obeyOver18 = obeyOver18;
+    }
+
+    @Override
+    protected Map<String, String> getExtraQueryArgs() {
+        Map<String, String> args = new HashMap<>(super.getExtraQueryArgs());
+        args.put("obey_over18", String.valueOf(obeyOver18));
+        return args;
+    }
     @Override
     @EndpointImplementation({
             Endpoints.CONTROVERSIAL,

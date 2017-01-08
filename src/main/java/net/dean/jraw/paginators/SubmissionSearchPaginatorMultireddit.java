@@ -2,10 +2,11 @@ package net.dean.jraw.paginators;
 
 import net.dean.jraw.EndpointImplementation;
 import net.dean.jraw.Endpoints;
-import net.dean.jraw.util.JrawUtils;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.models.Listing;
+import net.dean.jraw.models.MultiReddit;
 import net.dean.jraw.models.Submission;
+import net.dean.jraw.util.JrawUtils;
 
 import java.util.Map;
 
@@ -14,14 +15,14 @@ import java.util.Map;
  * uses a special enum for sorting the values retrieved called {@link SearchSort}. To set this new sorting, use
  * {@link #setSearchSorting(SearchSort)}.
  */
-public class SubmissionSearchPaginator extends Paginator<Submission> {
+public class SubmissionSearchPaginatorMultireddit extends Paginator<Submission> {
     public static final SearchSort DEFAULT_SORTING = SearchSort.RELEVANCE;
     public static final SearchSyntax DEFAULT_SYNTAX = SearchSyntax.PLAIN;
     public static final TimePeriod DEFAULT_TIME_PERIOD = TimePeriod.ALL;
     private SearchSort sorting;
-    private String subreddit;
     private String query;
     private SearchSyntax syntax;
+    private MultiReddit multiReddit;
 
     /**
      * Instantiates a new Paginator
@@ -29,7 +30,7 @@ public class SubmissionSearchPaginator extends Paginator<Submission> {
      * @param creator The RedditClient that will be used to send HTTP requests
      * @param query   What to search for
      */
-    public SubmissionSearchPaginator(RedditClient creator, String query) {
+    public SubmissionSearchPaginatorMultireddit(RedditClient creator, String query) {
         super(creator, Submission.class);
         this.query = query;
         this.sorting = DEFAULT_SORTING;
@@ -46,9 +47,9 @@ public class SubmissionSearchPaginator extends Paginator<Submission> {
 
     @Override
     protected String getBaseUri() {
-        String base = "/search";
-        if (subreddit != null) {
-            base = "/r/" + subreddit + base;
+        String base = "search";
+        if (multiReddit != null) {
+            base = multiReddit.getPath()+  base;
         }
         return base;
     }
@@ -58,18 +59,18 @@ public class SubmissionSearchPaginator extends Paginator<Submission> {
         return JrawUtils.mapOf(
                 "q", query,
                 "t", timePeriod.name().toLowerCase(),
-                "restrict_sr", subreddit == null ? "off" : "on",
+                "restrict_sr", multiReddit == null ? "off" : "on",
                 "sort", sorting.name().toLowerCase(),
                 "syntax", syntax.name().toLowerCase()
         );
     }
 
-    public String getSubreddit() {
-        return subreddit;
+    public MultiReddit getMultiReddit() {
+        return multiReddit;
     }
 
-    public void setSubreddit(String subreddit) {
-        this.subreddit = subreddit;
+    public void setMultiReddit(MultiReddit multiReddit) {
+        this.multiReddit = multiReddit;
         invalidate();
     }
 
