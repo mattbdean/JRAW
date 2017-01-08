@@ -253,7 +253,7 @@ public class HttpLogger {
                 logHeaders(r.isSuccessful(), r.getHeaders());
             }
             if (isEnabled(RESPONSE_BODY)) {
-                String raw = r.getRaw();
+                String raw = r.getRaw() == null ? "" : r.getRaw();
 
                 if (!responseBodyAlwaysFull && r.isSuccessful()) {
                     // If the request was successful the response isn't as important.

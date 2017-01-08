@@ -1,9 +1,12 @@
 package net.dean.jraw.test;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableMap;
 import net.dean.jraw.http.NetworkException;
+import net.dean.jraw.managers.AccountManager;
 import net.dean.jraw.models.CommentNode;
 import net.dean.jraw.models.LocationHint;
+import net.dean.jraw.models.Submission;
 import net.dean.jraw.models.TraversalMethod;
 import org.testng.annotations.Test;
 
@@ -14,10 +17,12 @@ import static org.testng.Assert.*;
 public class CommentNodeTest extends RedditTest {
     private final CommentNode simpleTree;
     private final int simpleTreeSize = 8;
+    private final Submission submission;
 
     public CommentNodeTest() {
         super();
         this.simpleTree = reddit.getSubmission("2zsyu4").getComments();
+        this.submission = reddit.getSubmission("4z8xs2");
     }
 
     @Test
@@ -87,6 +92,7 @@ public class CommentNodeTest extends RedditTest {
     public void testWalkPostorder() {
         testWalkTree(TraversalMethod.POST_ORDER);
     }
+
     @Test
     public void testWalkBreadthFirst() {
         testWalkTree(TraversalMethod.BREADTH_FIRST);
@@ -149,4 +155,34 @@ public class CommentNodeTest extends RedditTest {
         assertFalse(subject.isThreadContinuation());
         assertTrue(subject.getImmediateSize() > 0);
     }
+
+    @Test
+    public void testLoadReplyToSubmission() {
+
+        String reply = "1, 2, test";
+        AccountManager accountManager = new AccountManager(reddit);
+        CommentNode commentNode = null;
+
+        try {
+
+            // Create a new comment for the submission
+            String submissionCommentId = accountManager.reply(submission, reply);
+            submission.getComments().loadReply(reddit, submissionCommentId);
+
+            Optional<CommentNode> comment = submission.getComments().findChild("t1_" + submissionCommentId);
+            assertTrue(comment.isPresent());
+
+            if (comment.isPresent()) {
+                commentNode = comment.get();
+            }
+
+        } catch (Exception e) {
+            assertFalse(true, "An exception occurred");
+        }
+
+        assertNotNull(commentNode);
+        assertEquals(commentNode.getComment().getBody(), reply);
+
+    }
+
 }
