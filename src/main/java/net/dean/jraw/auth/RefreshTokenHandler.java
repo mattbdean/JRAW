@@ -4,20 +4,20 @@ import net.dean.jraw.RedditClient;
 
 /**
  * Handles the saving of refresh tokens. Supports multiple users.
- *
+ * <p>
  * <p>This class is a specialized implementation of TokenStore whose only objective is to store refresh tokens for
  * various users. This class combines two sources for reading, writing, and checking: a RedditClient and a generic
  * TokenStore. The {@link #isStored(String)} and {@link #readToken(String)} methods will use both sources, while
  * {@link #writeToken(String, String)} will only use the TokenStore. Although it is not required, it is
  * recommended that the TokenStore source write to some place more permanent, such as a file or a database.
- *
+ * <p>
  * <p>In the TokenStore, the key for a particular username is itself prefixed with {@link #REFRESH_TOKEN_PREFIX}.
- *
+ * <p>
  * <p>For a RedditClient to be a valid token source for a given username, it must
  * <ol>
- *    <li>Be currently authenticated,
- *    <li>Return the same value as the given username when {@link RedditClient#getAuthenticatedUser()} is called, and
- *    <li>Have an OAuthData object containing a refresh token.
+ * <li>Be currently authenticated,
+ * <li>Return the same value as the given username when {@link RedditClient#getAuthenticatedUser()} is called, and
+ * <li>Have an OAuthData object containing a refresh token.
  * </ol>
  */
 public final class RefreshTokenHandler implements TokenStore {
@@ -51,11 +51,18 @@ public final class RefreshTokenHandler implements TokenStore {
 
     @Override
     public String readToken(String username) throws NoSuchTokenException {
-        if (reddit.getOAuthData() == null)
+        if (reddit.getOAuthData() == null) {
             return store.readToken(getKeyFor(username));
-        if (reddit.getOAuthData().getRefreshToken() != null)
+
+        } else if (reddit.getOAuthData().getRefreshToken() != null) {
             return reddit.getOAuthData().getRefreshToken();
-        throw new NoSuchTokenException("Refresh token does not exist in the TokenStore nor the RedditClient");
+
+        } else if (reddit.getOAuthHelper().getRefreshToken() != null) {
+            return reddit.getOAuthHelper().getRefreshToken();
+
+        } else {
+            throw new NoSuchTokenException("Refresh token does not exist in the TokenStore nor the RedditClient");
+        }
     }
 
     @Override
