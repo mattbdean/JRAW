@@ -13,10 +13,23 @@ public final class ApatheticTokenStore implements TokenStore {
     }
 
     @Override
+    public boolean isAcquiredTimeStored(String key) {
+        return false;
+    }
+
+    @Override
     public String readToken(String key) throws NoSuchTokenException {
         throw new NoSuchTokenException("TokenStore is apathetic");
     }
 
     @Override
     public void writeToken(String key, String token) {}
+
+    @Override
+    public long readAcquireTimeMillis(String key) {
+        throw new UnsupportedOperationException("TokenStore is apathetic");
+    }
+
+    @Override
+    public void writeAcquireTimeMillis(String key, long acquireTimeMs) {}
 }

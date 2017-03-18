@@ -45,6 +45,11 @@ public final class RefreshTokenHandler implements TokenStore {
     }
 
     @Override
+    public boolean isAcquiredTimeStored(String username) {
+        return store.isAcquiredTimeStored(getKeyFor(username)) || isClientValidSource(username);
+    }
+
+    @Override
     public String readToken(String username) throws NoSuchTokenException {
         if (reddit.getOAuthData() == null)
             return store.readToken(getKeyFor(username));
@@ -57,6 +62,16 @@ public final class RefreshTokenHandler implements TokenStore {
     public void writeToken(String username, String token) {
         store.writeToken(getKeyFor(username), token);
         store.writeToken(KEY_LAST_USER, username);
+    }
+
+    @Override
+    public long readAcquireTimeMillis(String username) {
+        return store.readAcquireTimeMillis(getKeyFor(username));
+    }
+
+    @Override
+    public void writeAcquireTimeMillis(String username, long acquireTimeMs) {
+        store.writeAcquireTimeMillis(getKeyFor(username), acquireTimeMs);
     }
 
     /**

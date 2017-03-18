@@ -8,6 +8,9 @@ public interface TokenStore {
     /** Checks if a token is already stored */
     boolean isStored(String key);
 
+    /** Checks if a token's acquire time is stored. */
+    boolean isAcquiredTimeStored(String key);
+
     /**
      * Gets a token. If none is found, then a {@link NoSuchTokenException} is thrown
      * @throws NoSuchTokenException If the given key does not have a value
@@ -16,4 +19,8 @@ public interface TokenStore {
 
     /** Writes a token. */
     void writeToken(String key, String token);
+
+    long readAcquireTimeMillis(String key);
+
+    void writeAcquireTimeMillis(String key, long acquireTimeMs);
 }

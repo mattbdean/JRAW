@@ -6,8 +6,6 @@ import net.dean.jraw.http.oauth.OAuthData;
 import net.dean.jraw.http.oauth.OAuthException;
 import net.dean.jraw.http.oauth.OAuthHelper;
 
-import java.util.Date;
-
 /**
  * Helps developers manage the OAuth2 authentication process better, especially if the app will need to be
  * reauthenticated using a refresh token. For apps that do not use refresh tokens (such as script and application only
@@ -27,11 +25,6 @@ import java.util.Date;
 public final class AuthenticationManager {
     private static final AuthenticationManager INSTANCE = new AuthenticationManager();
     public static AuthenticationManager get() { return INSTANCE; }
-
-    /** Returns true if the given OAuthData is not null and its access token is not expired */
-    private static boolean isValid(OAuthData data) {
-        return data != null && data.getExpirationDate().after(new Date());
-    }
 
     private RedditClient reddit;
     private RefreshTokenHandler tokenHandler;
@@ -70,12 +63,17 @@ public final class AuthenticationManager {
         OAuthData authData = reddit.getOAuthData();
 
         // The client is authenticated with an unexpired access token
-        if (reddit.isAuthenticated() && isValid(authData))
-            return AuthenticationState.READY;
+        if (reddit.isAuthenticated() && authData != null && tokenHandler.isAcquiredTimeStored(getUsername())) {
+            long expirationTimeMillis = tokenHandler.readAcquireTimeMillis(getUsername()) + authData.getExpirationDurationMillis();
+            if (expirationTimeMillis > System.currentTimeMillis()) {
+                return AuthenticationState.READY;
+            }
+        }
 
         // At this point the RedditClient either has an expired access token or no access token at all
-        if (tokenHandler.isStored(getUsername()))
+        if (tokenHandler.isStored(getUsername()) && tokenHandler.isAcquiredTimeStored(getUsername())) {
             return AuthenticationState.NEED_REFRESH;
+        }
 
         return AuthenticationState.NONE;
     }
@@ -110,8 +108,10 @@ public final class AuthenticationManager {
      * by the RedditClient's implementation of {@link RedditClient#authenticate(OAuthData)}.
      */
     public void onAuthenticated(OAuthData o) {
-        if (o.getRefreshToken() != null)
+        if (o.getRefreshToken() != null) {
             tokenHandler.writeToken(getUsername(), o.getRefreshToken());
+            tokenHandler.writeAcquireTimeMillis(getUsername(), System.currentTimeMillis());
+        }
     }
 
     private String getUsername() {
