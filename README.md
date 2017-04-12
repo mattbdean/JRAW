@@ -6,7 +6,7 @@
 
 >*Quick Note*: Due to the fact that the unit tests rely on a solid internet connection and that the reddit API is working properly, a failing build *does not* necessarily mean that the library is currently unstable. For example, [this build](https://travis-ci.org/thatJavaNerd/JRAW/builds/69069754) failed because reddit was having issues with SSL at the time. JRAW tries its best to recover from server errors, but it can only do so much.
 
-##Notable Features
+## Notable Features
  - OAuth2 support
  - Full multireddit support
  - All common actions (login, vote, submit, comment, messages, etc.)
