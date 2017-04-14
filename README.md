@@ -6,7 +6,7 @@
 
 >*Quick Note*: Due to the fact that the unit tests rely on a solid internet connection and that the reddit API is working properly, a failing build *does not* necessarily mean that the library is currently unstable. For example, [this build](https://travis-ci.org/thatJavaNerd/JRAW/builds/69069754) failed because reddit was having issues with SSL at the time. JRAW tries its best to recover from server errors, but it can only do so much.
 
-##Notable Features
+## Notable Features
  - OAuth2 support
  - Full multireddit support
  - All common actions (login, vote, submit, comment, messages, etc.)
@@ -16,7 +16,7 @@
 
 See [Quickstart](https://github.com/thatJavaNerd/JRAW/wiki/Quickstart) to get you up and running. Javadoc can be found [here](https://thatjavanerd.github.io/JRAW#javadoc)
 
-##Building
+## Building
 
 JRAW uses Gradle as its build system. If you come from a Maven background, see Gradle's [user guide](https://gradle.org/docs/current/userguide/tutorial_using_tasks.html) to get you started.
 
@@ -24,7 +24,7 @@ JRAW uses Gradle as its build system. If you come from a Maven background, see G
 
 `gradle test` will run the unit tests
 
-##Contributing
+## Contributing
 
 Before contributing, it is recommended that you have a decent knowledge of how the reddit API works.
 
@@ -33,7 +33,7 @@ Some references:
  - [reddit/reddit's 'JSON' wiki page](https://github.com/reddit/reddit/wiki/JSON): Shows the data structure of the objects returned by the API
  - And of course, don't forget the [official reddit API documentation](https://www.reddit.com/dev/api/oauth)
 
-####Want to contribute? Follow these steps:
+#### Want to contribute? Follow these steps:
 
 1. Fork the repository
 2. Put your testing user's credentials in `src/test/resources/credentials.json`. It should be in [this format](https://gist.github.com/thatJavaNerd/e393a7af4c3a8c564833). If you don't have a testing user, see below.
@@ -43,7 +43,7 @@ Some references:
 6. Update `ENDPOINTS.md` and `Endpoints.java` by running `gradle endpoints:update` (see [the wiki](https://github.com/thatJavaNerd/JRAW/wiki/Endpoints))
 7. Send the pull request
 
-####Creating a user for unit testing
+#### Creating a user for unit testing
 
 Here's how to create a testing user:
 
