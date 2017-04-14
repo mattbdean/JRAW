@@ -25,15 +25,15 @@ allprojects {
 }
 
 dependencies {
-    def okHttpVersion = '3.1.2'
+    def okHttpVersion = '3.6.0'
     compile     "com.squareup.okhttp3:okhttp:$okHttpVersion"
     compile     "com.squareup.okhttp3:okhttp-urlconnection:$okHttpVersion"
-    compile     'com.fasterxml.jackson.core:jackson-databind:2.6.0'
-    compile     'com.google.guava:guava:19.0'
-    compile     'org.slf4j:slf4j-api:1.7.13'
-    testCompile 'org.slf4j:slf4j-simple:1.7.13'
-    testCompile 'org.testng:testng:6.9.10'
-    testCompile 'net.sourceforge.htmlunit:htmlunit:2.19'
+    compile     'com.fasterxml.jackson.core:jackson-databind:2.8.8'
+    compile     'com.google.guava:guava:21.0'
+    compile     'org.slf4j:slf4j-api:1.7.25'
+    testCompile 'org.slf4j:slf4j-simple:1.7.25'
+    testCompile 'org.testng:testng:6.11'
+    testCompile 'net.sourceforge.htmlunit:htmlunit:2.26'
 }
 
 // Add the generated source to the main Java source directories
