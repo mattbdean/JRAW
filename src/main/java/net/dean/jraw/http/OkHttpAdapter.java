@@ -12,6 +12,7 @@ import java.util.concurrent.TimeUnit;
 
 import okhttp3.Authenticator;
 import okhttp3.Credentials;
+import okhttp3.HttpUrl;
 import okhttp3.JavaNetCookieJar;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -41,6 +42,7 @@ public final class OkHttpAdapter implements HttpAdapter<OkHttpClient> {
     private OkHttpClient http;
     private CookieManager cookieManager;
     private Map<String, String> defaultHeaders;
+    private boolean isRawJson;
 
     public OkHttpAdapter() {
         this(DEFAULT_PROTOCOL);
@@ -74,9 +76,16 @@ public final class OkHttpAdapter implements HttpAdapter<OkHttpClient> {
             perRequestClient = http.newBuilder().authenticator(authenticator).build();
         }
 
+        HttpUrl url = HttpUrl.get(request.getUrl());
+        if (isRawJson) {
+            HttpUrl.Builder urlBuilder = HttpUrl.get(request.getUrl()).newBuilder();
+            urlBuilder.addQueryParameter("raw_json", "1");
+            url = urlBuilder.build();
+        }
+
         Request.Builder builder = new Request.Builder()
                 .method(request.getMethod(), request.getBody() == null ? null : new OkHttpRequestBody(request.getBody()))
-                .url(request.getUrl())
+                .url(url)
                 .headers(request.getHeaders());
 
         Response response = perRequestClient.newCall(builder.build()).execute();
@@ -157,6 +166,18 @@ public final class OkHttpAdapter implements HttpAdapter<OkHttpClient> {
     @Override
     public OkHttpClient getNativeClient() {
         return http;
+    }
+
+    /**
+     * Response body encoding: For legacy reasons, all reddit JSON response bodies currently have
+     * &lt;, &gt;, and &amp; replaced with &amp;lt;, &amp;gt;, and &amp;amp;, respectively.
+     *
+     * @param rawJson True to have JSON body characters &lt;, &gt;, and &amp; replaced with
+     *                &amp;lt;, &amp;gt;, and &amp;amp;, respectively. False to use encoded
+     *                characters in JSON bodies
+     */
+    public void setRawJson(boolean rawJson) {
+        isRawJson = rawJson;
     }
 
     /** Mirrors a JRAW RequestBody to an OkHttp RequestBody */
