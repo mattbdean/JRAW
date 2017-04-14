@@ -29,11 +29,14 @@ dependencies {
     compile     "com.squareup.okhttp3:okhttp:$okHttpVersion"
     compile     "com.squareup.okhttp3:okhttp-urlconnection:$okHttpVersion"
     compile     'com.fasterxml.jackson.core:jackson-databind:2.8.8'
-    compile     'com.google.guava:guava:21.0'
+    // Guava 21.0 requires Java 8, but "Guava 22.0 and on will introduce a Java 6/Android compatible backport of Guava
+    // that includes all of the latest changes that don't require Java 8"
+    compile     'com.google.guava:guava:20.0'
     compile     'org.slf4j:slf4j-api:1.7.25'
     testCompile 'org.slf4j:slf4j-simple:1.7.25'
     testCompile 'org.testng:testng:6.11'
-    testCompile 'net.sourceforge.htmlunit:htmlunit:2.26'
+    // HtmlUnit 2.25 requires Java 8
+    testCompile 'net.sourceforge.htmlunit:htmlunit:2.24'
 }
 
 // Add the generated source to the main Java source directories
