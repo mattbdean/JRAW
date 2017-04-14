@@ -35,8 +35,8 @@ import static org.testng.Assert.*;
  * This class tests methods that require authentication, such as voting, saving, hiding, and posting.
  */
 public class AccountManagerTest extends RedditTest {
-    private static final String SUBMISSION_ID = "4k5sog";
-    private static final String COMMENT_ID = "d3cdmuh";
+    private static final String SUBMISSION_ID = "659sly";
+    private static final String COMMENT_ID = "dg8kqb0";
     private String newSubmssionId;
     private String newCommentId;
 
@@ -103,31 +103,6 @@ public class AccountManagerTest extends RedditTest {
         try {
             account.updateContribution(toEdit, newText);
         } catch (NetworkException | ApiException e) {
-            handle(e);
-        }
-    }
-
-    @Test(expectedExceptions = {ApiException.class, SkipException.class})
-    public void testPostWithInvalidCaptcha() throws ApiException {
-        CaptchaHelper helper = new CaptchaHelper(reddit);
-        try {
-            if (!helper.isNecessary()) {
-                throw new SkipException("No captcha needed, request will return successfully either way");
-            }
-            account.submit(
-                    new AccountManager.SubmissionBuilder("content", "jraw_testing2", "title"), helper.getNew(), "invalid captcha attempt");
-        } catch (NetworkException e) {
-            handle(e);
-        } catch (ApiException e) {
-            if (isRateLimit(e)) {
-                // Nothing we can really do about this
-                handlePostingQuota(e);
-            }
-            if (e.getReason().equals("BAD_CAPTCHA")) {
-                // What we want
-                throw e;
-            }
-            // Some other reason
             handle(e);
         }
     }
@@ -215,7 +190,7 @@ public class AccountManagerTest extends RedditTest {
     @Test
     public void testVote() {
         try {
-            String submissionId = "4k2aq2";
+            String submissionId = "655eoo";
             Submission submission = reddit.getSubmission(submissionId);
 
             // Figure out a new vote direction: up if there is no vote, no vote if upvoted

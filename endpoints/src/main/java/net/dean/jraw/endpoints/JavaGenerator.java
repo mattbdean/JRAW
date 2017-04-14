@@ -160,7 +160,8 @@ public class JavaGenerator extends AbstractEndpointGenerator {
         enumName = enumName.toUpperCase()
                 .replace("/", "_")
                 .replace("{", "")
-                .replace("}", "");
+                .replace("}", "")
+                .replace(":", "");
 
         if (isDuplicate) {
             enumName += "_" + ep.getVerb();

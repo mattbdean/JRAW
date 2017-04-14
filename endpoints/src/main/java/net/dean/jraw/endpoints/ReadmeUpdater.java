@@ -16,7 +16,7 @@ public class ReadmeUpdater extends AbstractEndpointGenerator {
             "http[s]?://img\\.shields\\.io/badge/api--coverage-(\\d{1,3})%-blue\\.svg";
 
     /**
-     * Instantiates a new AbstractEndpointGenerator
+     * Instantiates a new ReadmeUpdater
      *
      * @param endpoints A list of endpoints
      */

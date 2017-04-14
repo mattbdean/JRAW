@@ -49,10 +49,10 @@ public class MarkdownGenerator extends AbstractEndpointGenerator {
             List<Endpoint> endpointList = category.getValue();
 
             // Category header
-            bw.writeLine("\n##" + catName);
+            bw.writeLine("\n## " + catName);
             // Start table
-            bw.writeLine("Method|Endpoint|Implemention");
-            bw.writeLine(":----:|--------|------------");
+            bw.writeLine("|Method|Endpoint|Implemention|");
+            bw.writeLine("|:----:|--------|------------|");
 
             for (Endpoint e : endpointList) {
                 StringBuilder sb = new StringBuilder();
@@ -64,12 +64,12 @@ public class MarkdownGenerator extends AbstractEndpointGenerator {
                             getJavadocUrl(e));
                 }
 
-                // ex: `GET`|[`/api/me.json`](https://www.reddit.com/dev/api#GET_api_me.json)|[`RedditClient.me()`](url and line #)
-                // or: `POST`|[`/api/clear_sessions`](https://www.reddit.com/dev/api#POST_api_clear_sessions)|No
+                // ex: `|GET`|[`/api/me.json`](https://www.reddit.com/dev/api#GET_api_me.json)|[`RedditClient.me()`](url and line #)|
+                // or: `|POST`|[`/api/clear_sessions`](https://www.reddit.com/dev/api#POST_api_clear_sessions)|No|
 
-                sb.append('`').append(e.getVerb()).append("`|")
+                sb.append("|`").append(e.getVerb()).append("`|")
                         .append("[`").append(e.getUri()).append("`](").append(getRedditDocUrl(e)).append(")|")
-                        .append(implString);
+                        .append(implString).append('|');
 
                 bw.writeLine(sb.toString());
             }

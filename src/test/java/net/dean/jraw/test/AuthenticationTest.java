@@ -24,7 +24,7 @@ public class AuthenticationTest extends RedditTest {
     public void testIsLoggedIn() {
         try {
             LoggedInAccount acc = reddit.me();
-            // /api/me.json returns '{}' when there is no logged in user
+            // /api/me returns '{}' when there is no logged in user
             boolean expected = acc.getDataNode() != null;
 
             assertEquals(reddit.isAuthenticated(), expected);

@@ -3,10 +3,8 @@
         "POST /api/comment",
         "POST /api/friend",
         "GET /api/needs_captcha",
-        "POST /api/new_captcha",
         "POST /api/unfriend",
-        "GET /api/v1/scopes",
-        "GET /captcha/{iden}"
+        "GET /api/v1/scopes"
     ],
     "account": [
         "PATCH /api/v1/me/prefs"
@@ -24,6 +22,7 @@
     ],
     "flair": [
         "POST /api/flairselector",
+        "GET /api/link/flair",
         "POST /api/selectflair",
         "POST /api/setflairenabled"
     ],
@@ -81,6 +80,24 @@
     "modlog": [
         "GET /about/log"
     ],
+    "modmail": [
+        "POST /api/mod/bulk/read",
+        "GET /api/mod/conversations",
+        "POST /api/mod/conversations",
+        "GET /api/mod/conversations/:conversation/id",
+        "POST /api/mod/conversations/:conversation/id",
+        "POST /api/mod/conversations/:conversation/id/archive",
+        "DELETE /api/mod/conversations/:conversation/id/highlight",
+        "POST /api/mod/conversations/:conversation/id/highlight",
+        "POST /api/mod/conversations/:conversation/id/mute",
+        "POST /api/mod/conversations/:conversation/id/unarchive",
+        "POST /api/mod/conversations/:conversation/id/unmute",
+        "GET /api/mod/conversations/:conversation/id/user",
+        "POST /api/mod/conversations/read",
+        "GET /api/mod/conversations/subreddits",
+        "POST /api/mod/conversations/unread",
+        "GET /api/mod/conversations/unread/count"
+    ],
     "modothers": [
         "POST /api/setpermissions"
     ],
@@ -94,9 +111,11 @@
         "POST /api/set_contest_mode",
         "POST /api/set_subreddit_sticky",
         "POST /api/set_suggested_sort",
+        "POST /api/spoiler",
         "POST /api/unignore_reports",
         "POST /api/unlock",
-        "POST /api/unmarknsfw"
+        "POST /api/unmarknsfw",
+        "POST /api/unspoiler"
     ],
     "modself": [
         "POST /api/accept_moderator_invite",
@@ -123,12 +142,11 @@
     "privatemessages": [
         "POST /api/block",
         "POST /api/compose",
+        "POST /api/del/msg",
         "POST /api/read_all_messages",
         "POST /api/read_message",
         "POST /api/unblock_subreddit",
         "POST /api/unread_message",
-        "GET /api/v1/me/notifications",
-        "PATCH /api/v1/me/notifications/{id}",
         "GET /message/inbox",
         "GET /message/sent",
         "GET /message/unread",
@@ -151,6 +169,8 @@
         "GET /api/filter/{filterpath}",
         "GET /api/filter/{filterpath}/r/{srname}",
         "GET /api/info",
+        "GET /api/live/by_id/{names}",
+        "GET /api/live/happening/now",
         "GET /api/morechildren",
         "GET /api/multi/mine",
         "GET /api/multi/user/{username}",
@@ -160,6 +180,7 @@
         "GET /api/multi/{multipath}/r/{srname}",
         "GET /api/recommend/sr/{srnames}",
         "POST /api/search_reddit_names",
+        "POST /api/search/subreddits",
         "GET /api/subreddits_by_topic",
         "GET /api/v1/me/blocked",
         "GET /api/v1/me/friends",
@@ -168,7 +189,6 @@
         "GET /comments/{article}",
         "GET /controversial",
         "GET /duplicates/{article}",
-        "GET /gilded",
         "GET /hot",
         "GET /live/{thread}",
         "GET /live/{thread}/about",
@@ -177,11 +197,13 @@
         "GET /new",
         "GET /prefs/blocked",
         "GET /prefs/friends",
+        "GET /prefs/messaging",
+        "GET /prefs/trusted",
         "GET /prefs/{where}",
         "GET /r/{subreddit}/about",
+        "GET /r/{subreddit}/about/rules",
         "GET /random",
-        "GET /related/{article}",
-        "GET /rules",
+        "GET /rising",
         "GET /search",
         "GET /sidebar",
         "GET /sticky",

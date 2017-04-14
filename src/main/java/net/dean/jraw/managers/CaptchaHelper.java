@@ -34,39 +34,4 @@ public class CaptchaHelper extends AbstractManager {
                 .build());
         return Boolean.parseBoolean(response.getRaw());
     }
-
-    /**
-     * Fetches a new captcha from the API
-     *
-     * @return A new Captcha
-     * @throws NetworkException If the request was not successful
-     * @throws ApiException If the Reddit API returned an error
-     */
-    @EndpointImplementation(Endpoints.NEW_CAPTCHA)
-    public Captcha getNew() throws NetworkException, ApiException {
-        RestResponse response = reddit.execute(reddit.request()
-                .endpoint(Endpoints.NEW_CAPTCHA)
-                .post(JrawUtils.mapOf(
-                        "api_type", "json"
-                )).build());
-
-        if (response.hasErrors()) {
-            throw response.getError();
-        }
-        String id = response.getJson().get("json").get("data").get("iden").asText();
-
-        return get(id);
-    }
-
-    /**
-     * Gets a Captcha by its ID
-     *
-     * @param id The ID of the wanted captcha
-     * @return A new Captcha object
-     */
-    @EndpointImplementation(Endpoints.CAPTCHA_IDEN)
-    public Captcha get(String id) {
-        return new Captcha(id);
-    }
-
 }

@@ -22,7 +22,7 @@ public class CommentNodeTest extends RedditTest {
     public CommentNodeTest() {
         super();
         this.simpleTree = reddit.getSubmission("2zsyu4").getComments();
-        this.submission = reddit.getSubmission("4z8xs2");
+        this.submission = reddit.getSubmission("659z3l");
     }
 
     @Test
@@ -172,12 +172,10 @@ public class CommentNodeTest extends RedditTest {
             Optional<CommentNode> comment = submission.getComments().findChild("t1_" + submissionCommentId);
             assertTrue(comment.isPresent());
 
-            if (comment.isPresent()) {
-                commentNode = comment.get();
-            }
+            commentNode = comment.get();
 
         } catch (Exception e) {
-            assertFalse(true, "An exception occurred");
+            fail("An exception occurred", e);
         }
 
         assertNotNull(commentNode);

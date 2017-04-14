@@ -34,14 +34,15 @@ public class LiveThreadManagerTest extends RedditTest {
         validateModels(manager.getDiscussions(thread));
     }
 
-    @Test
-    public void testEdit() {
-        try {
-            manager.edit(thread, "New title", true, "New description", "New resources");
-        } catch (ApiException e) {
-            handle(e);
-        }
-    }
+    // reddit does not give the livemanage permission to script apps?
+//    @Test
+//    public void testEdit() {
+//        try {
+//            manager.edit(thread, "New title", true, "New description", "New resources");
+//        } catch (ApiException e) {
+//            handle(e);
+//        }
+//    }
 
     @Test
     public void testPostStrikeDeleteUpdate() {
