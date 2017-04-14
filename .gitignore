@@ -3,6 +3,7 @@
 *.iml
 *.ipr
 *.iws
+local.properties
 
 # Gradle
 .gradle/

@@ -1,11 +1,10 @@
 package net.dean.jraw.http.oauth;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 import net.dean.jraw.http.AuthenticationMethod;
 import net.dean.jraw.models.JsonModel;
 import net.dean.jraw.models.meta.JsonProperty;
-import com.fasterxml.jackson.databind.JsonNode;
-
-import java.util.Date;
 
 /**
  * This class represents the data provided from a successful request to {@code /api/v1/access_token}. See
@@ -42,11 +41,8 @@ public class OAuthData extends JsonModel {
      * Gets the date at which the access token expires, which will be in one hour from when it was originally requested.
      */
     @JsonProperty
-    public Date getExpirationDate() {
-        Date tokenExpiration = new Date();
-        // Add the time the token expires
-        tokenExpiration.setTime(tokenExpiration.getTime() + data("expires_in", Integer.class) * 1000);
-        return tokenExpiration;
+    public Long getExpirationDurationMillis() {
+        return data("expires_in", Long.class) * 1000;
     }
 
     /**

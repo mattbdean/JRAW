@@ -98,7 +98,7 @@ public class RedditClient extends RestClient {
         if (authData.getAuthenticationMethod() == null ||
                 authData.getScopes() == null ||
                 authData.getAccessToken() == null ||
-                authData.getExpirationDate() == null)
+                authData.getExpirationDurationMillis() == null)
             throw new NullPointerException("Missing important data from OAuth JSON: " + authData.getDataNode());
 
         this.authMethod = authData.getAuthenticationMethod();
