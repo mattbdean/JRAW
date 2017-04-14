@@ -1,4 +1,4 @@
-<!--- Generated 2017-04-13 at 22:10:53 EDT. Use `gradle endpoints:update` to update. DO NOT MODIFY DIRECTLY -->
+<!--- Generated 2017-04-14 at 10:29:15 EDT. Use `gradle endpoints:update` to update. DO NOT MODIFY DIRECTLY -->
 #Endpoints
 
 This file contains a list of all the endpoints (regardless of if they have been implemented) that can be found at the [official reddit API docs](https://www.reddit.com/dev/api/oauth). To update this file, run `gradle endpoints:update`.
@@ -10,7 +10,7 @@ So far **120** endpoints (out of 212 total) have been implemented.
 |:----:|--------|------------|
 |`POST`|[`/api/friend`](https://www.reddit.com/dev/api/oauth#POST_api_friend)|None|
 |`POST`|[`/api/unfriend`](https://www.reddit.com/dev/api/oauth#POST_api_unfriend)|None|
-|`POST`|[`/api/comment`](https://www.reddit.com/dev/api/oauth#POST_api_comment)|[`AccountManager.reply(Contribution, String)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/AccountManager.html#reply(net.dean.jraw.models.Contribution, java.lang.String))|
+|`POST`|[`/api/comment`](https://www.reddit.com/dev/api/oauth#POST_api_comment)|[`AccountManager.reply(Contribution, String)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/AccountManager.html#reply(net.dean.jraw.models.Contribution,%20java.lang.String))|
 |`GET`|[`/api/needs_captcha`](https://www.reddit.com/dev/api/oauth#GET_api_needs_captcha)|[`CaptchaHelper.isNecessary()`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/CaptchaHelper.html#isNecessary())|
 |`GET`|[`/api/v1/scopes`](https://www.reddit.com/dev/api/oauth#GET_api_v1_scopes)|[`RedditClient.getScopeDetails(String[])`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/RedditClient.html#getScopeDetails([Ljava.lang.String;))|
 
@@ -23,24 +23,24 @@ So far **120** endpoints (out of 212 total) have been implemented.
 |Method|Endpoint|Implemention|
 |:----:|--------|------------|
 |`POST`|[`/api/v1/gold/gild/{fullname}`](https://www.reddit.com/dev/api/oauth#POST_api_v1_gold_gild_%7Bfullname%7D)|[`AccountManager.giveGold(PublicContribution)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/AccountManager.html#giveGold(net.dean.jraw.models.PublicContribution))|
-|`POST`|[`/api/v1/gold/give/{username}`](https://www.reddit.com/dev/api/oauth#POST_api_v1_gold_give_%7Busername%7D)|[`AccountManager.giveGold(String, int)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/AccountManager.html#giveGold(java.lang.String, int))|
+|`POST`|[`/api/v1/gold/give/{username}`](https://www.reddit.com/dev/api/oauth#POST_api_v1_gold_give_%7Busername%7D)|[`AccountManager.giveGold(String, int)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/AccountManager.html#giveGold(java.lang.String,%20int))|
 
 ## edit
 |Method|Endpoint|Implemention|
 |:----:|--------|------------|
 |`POST`|[`/api/del`](https://www.reddit.com/dev/api/oauth#POST_api_del)|[`ModerationManager.delete(String)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/ModerationManager.html#delete(java.lang.String))|
-|`POST`|[`/api/editusertext`](https://www.reddit.com/dev/api/oauth#POST_api_editusertext)|[`AccountManager.updateContribution(PublicContribution, String)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/AccountManager.html#updateContribution(net.dean.jraw.models.PublicContribution, java.lang.String))|
-|`POST`|[`/api/live/{thread}/delete_update`](https://www.reddit.com/dev/api/oauth#POST_api_live_%7Bthread%7D_delete_update)|[`LiveThreadManager.deleteUpdate(LiveThread, LiveUpdate)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/LiveThreadManager.html#deleteUpdate(net.dean.jraw.models.LiveThread, net.dean.jraw.models.LiveUpdate))|
-|`POST`|[`/api/live/{thread}/strike_update`](https://www.reddit.com/dev/api/oauth#POST_api_live_%7Bthread%7D_strike_update)|[`LiveThreadManager.strikeUpdate(LiveThread, LiveUpdate)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/LiveThreadManager.html#strikeUpdate(net.dean.jraw.models.LiveThread, net.dean.jraw.models.LiveUpdate))|
-|`POST`|[`/api/sendreplies`](https://www.reddit.com/dev/api/oauth#POST_api_sendreplies)|[`AccountManager.sendRepliesToInbox(Submission, boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/AccountManager.html#sendRepliesToInbox(net.dean.jraw.models.Submission, boolean))|
+|`POST`|[`/api/editusertext`](https://www.reddit.com/dev/api/oauth#POST_api_editusertext)|[`AccountManager.updateContribution(PublicContribution, String)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/AccountManager.html#updateContribution(net.dean.jraw.models.PublicContribution,%20java.lang.String))|
+|`POST`|[`/api/live/{thread}/delete_update`](https://www.reddit.com/dev/api/oauth#POST_api_live_%7Bthread%7D_delete_update)|[`LiveThreadManager.deleteUpdate(LiveThread, LiveUpdate)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/LiveThreadManager.html#deleteUpdate(net.dean.jraw.models.LiveThread,%20net.dean.jraw.models.LiveUpdate))|
+|`POST`|[`/api/live/{thread}/strike_update`](https://www.reddit.com/dev/api/oauth#POST_api_live_%7Bthread%7D_strike_update)|[`LiveThreadManager.strikeUpdate(LiveThread, LiveUpdate)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/LiveThreadManager.html#strikeUpdate(net.dean.jraw.models.LiveThread,%20net.dean.jraw.models.LiveUpdate))|
+|`POST`|[`/api/sendreplies`](https://www.reddit.com/dev/api/oauth#POST_api_sendreplies)|[`AccountManager.sendRepliesToInbox(Submission, boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/AccountManager.html#sendRepliesToInbox(net.dean.jraw.models.Submission,%20boolean))|
 
 ## flair
 |Method|Endpoint|Implemention|
 |:----:|--------|------------|
 |`GET`|[`/api/link/flair`](https://www.reddit.com/dev/api/oauth#GET_api_link_flair)|None|
 |`POST`|[`/api/flairselector`](https://www.reddit.com/dev/api/oauth#POST_api_flairselector)|[`AccountManager.getFlairChoices(String)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/AccountManager.html#getFlairChoices(java.lang.String))|
-|`POST`|[`/api/selectflair`](https://www.reddit.com/dev/api/oauth#POST_api_selectflair)|[`ModerationManager.setFlair(String, FlairTemplate, String, Submission, String)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/ModerationManager.html#setFlair(java.lang.String, net.dean.jraw.models.FlairTemplate, java.lang.String, net.dean.jraw.models.Submission, java.lang.String))|
-|`POST`|[`/api/setflairenabled`](https://www.reddit.com/dev/api/oauth#POST_api_setflairenabled)|[`AccountManager.setFlairEnabled(String, boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/AccountManager.html#setFlairEnabled(java.lang.String, boolean))|
+|`POST`|[`/api/selectflair`](https://www.reddit.com/dev/api/oauth#POST_api_selectflair)|[`ModerationManager.setFlair(String, FlairTemplate, String, Submission, String)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/ModerationManager.html#setFlair(java.lang.String,%20net.dean.jraw.models.FlairTemplate,%20java.lang.String,%20net.dean.jraw.models.Submission,%20java.lang.String))|
+|`POST`|[`/api/setflairenabled`](https://www.reddit.com/dev/api/oauth#POST_api_setflairenabled)|[`AccountManager.setFlairEnabled(String, boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/AccountManager.html#setFlairEnabled(java.lang.String,%20boolean))|
 
 ## history
 |Method|Endpoint|Implemention|
@@ -72,7 +72,7 @@ So far **120** endpoints (out of 212 total) have been implemented.
 |`POST`|[`/api/live/{thread}/rm_contributor`](https://www.reddit.com/dev/api/oauth#POST_api_live_%7Bthread%7D_rm_contributor)|None|
 |`POST`|[`/api/live/{thread}/rm_contributor_invite`](https://www.reddit.com/dev/api/oauth#POST_api_live_%7Bthread%7D_rm_contributor_invite)|None|
 |`POST`|[`/api/live/{thread}/set_contributor_permissions`](https://www.reddit.com/dev/api/oauth#POST_api_live_%7Bthread%7D_set_contributor_permissions)|None|
-|`POST`|[`/api/live/{thread}/edit`](https://www.reddit.com/dev/api/oauth#POST_api_live_%7Bthread%7D_edit)|[`LiveThreadManager.edit(LiveThread, String, boolean, String, String)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/LiveThreadManager.html#edit(net.dean.jraw.models.LiveThread, java.lang.String, boolean, java.lang.String, java.lang.String))|
+|`POST`|[`/api/live/{thread}/edit`](https://www.reddit.com/dev/api/oauth#POST_api_live_%7Bthread%7D_edit)|[`LiveThreadManager.edit(LiveThread, String, boolean, String, String)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/LiveThreadManager.html#edit(net.dean.jraw.models.LiveThread,%20java.lang.String,%20boolean,%20java.lang.String,%20java.lang.String))|
 
 ## modconfig
 |Method|Endpoint|Implemention|
@@ -149,9 +149,9 @@ So far **120** endpoints (out of 212 total) have been implemented.
 |`POST`|[`/api/unignore_reports`](https://www.reddit.com/dev/api/oauth#POST_api_unignore_reports)|None|
 |`POST`|[`/api/unlock`](https://www.reddit.com/dev/api/oauth#POST_api_unlock)|None|
 |`POST`|[`/api/unspoiler`](https://www.reddit.com/dev/api/oauth#POST_api_unspoiler)|None|
-|`POST`|[`/api/marknsfw`](https://www.reddit.com/dev/api/oauth#POST_api_marknsfw)|[`ModerationManager.setNsfw(Submission, boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/ModerationManager.html#setNsfw(net.dean.jraw.models.Submission, boolean))|
-|`POST`|[`/api/set_subreddit_sticky`](https://www.reddit.com/dev/api/oauth#POST_api_set_subreddit_sticky)|[`ModerationManager.setSticky(Submission, boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/ModerationManager.html#setSticky(net.dean.jraw.models.Submission, boolean))|
-|`POST`|[`/api/unmarknsfw`](https://www.reddit.com/dev/api/oauth#POST_api_unmarknsfw)|[`ModerationManager.setNsfw(Submission, boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/ModerationManager.html#setNsfw(net.dean.jraw.models.Submission, boolean))|
+|`POST`|[`/api/marknsfw`](https://www.reddit.com/dev/api/oauth#POST_api_marknsfw)|[`ModerationManager.setNsfw(Submission, boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/ModerationManager.html#setNsfw(net.dean.jraw.models.Submission,%20boolean))|
+|`POST`|[`/api/set_subreddit_sticky`](https://www.reddit.com/dev/api/oauth#POST_api_set_subreddit_sticky)|[`ModerationManager.setSticky(Submission, boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/ModerationManager.html#setSticky(net.dean.jraw.models.Submission,%20boolean))|
+|`POST`|[`/api/unmarknsfw`](https://www.reddit.com/dev/api/oauth#POST_api_unmarknsfw)|[`ModerationManager.setNsfw(Submission, boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/ModerationManager.html#setNsfw(net.dean.jraw.models.Submission,%20boolean))|
 
 ## modself
 |Method|Endpoint|Implemention|
@@ -169,7 +169,7 @@ So far **120** endpoints (out of 212 total) have been implemented.
 |`POST`|[`/api/wiki/hide`](https://www.reddit.com/dev/api/oauth#POST_api_wiki_hide)|None|
 |`POST`|[`/api/wiki/revert`](https://www.reddit.com/dev/api/oauth#POST_api_wiki_revert)|None|
 |`POST`|[`/wiki/settings/{page}`](https://www.reddit.com/dev/api/oauth#POST_wiki_settings_%7Bpage%7D)|None|
-|`GET`|[`/wiki/settings/{page}`](https://www.reddit.com/dev/api/oauth#GET_wiki_settings_%7Bpage%7D)|[`WikiManager.getSettings(String, String)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/WikiManager.html#getSettings(java.lang.String, java.lang.String))|
+|`GET`|[`/wiki/settings/{page}`](https://www.reddit.com/dev/api/oauth#GET_wiki_settings_%7Bpage%7D)|[`WikiManager.getSettings(String, String)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/WikiManager.html#getSettings(java.lang.String,%20java.lang.String))|
 
 ## mysubreddits
 |Method|Endpoint|Implemention|
@@ -187,10 +187,10 @@ So far **120** endpoints (out of 212 total) have been implemented.
 |`POST`|[`/api/block`](https://www.reddit.com/dev/api/oauth#POST_api_block)|None|
 |`POST`|[`/api/del/msg`](https://www.reddit.com/dev/api/oauth#POST_api_del_msg)|None|
 |`POST`|[`/api/unblock_subreddit`](https://www.reddit.com/dev/api/oauth#POST_api_unblock_subreddit)|None|
-|`POST`|[`/api/compose`](https://www.reddit.com/dev/api/oauth#POST_api_compose)|[`InboxManager.compose(String, String, String, String, Captcha, String)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/InboxManager.html#compose(java.lang.String, java.lang.String, java.lang.String, java.lang.String, net.dean.jraw.models.Captcha, java.lang.String))|
+|`POST`|[`/api/compose`](https://www.reddit.com/dev/api/oauth#POST_api_compose)|[`InboxManager.compose(String, String, String, String, Captcha, String)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/InboxManager.html#compose(java.lang.String,%20java.lang.String,%20java.lang.String,%20java.lang.String,%20net.dean.jraw.models.Captcha,%20java.lang.String))|
 |`POST`|[`/api/read_all_messages`](https://www.reddit.com/dev/api/oauth#POST_api_read_all_messages)|[`InboxManager.setAllRead()`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/InboxManager.html#setAllRead())|
-|`POST`|[`/api/read_message`](https://www.reddit.com/dev/api/oauth#POST_api_read_message)|[`InboxManager.setRead(boolean, Message, Message[])`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/InboxManager.html#setRead(boolean, net.dean.jraw.models.Message, [Lnet.dean.jraw.models.Message;))|
-|`POST`|[`/api/unread_message`](https://www.reddit.com/dev/api/oauth#POST_api_unread_message)|[`InboxManager.setRead(boolean, Message, Message[])`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/InboxManager.html#setRead(boolean, net.dean.jraw.models.Message, [Lnet.dean.jraw.models.Message;))|
+|`POST`|[`/api/read_message`](https://www.reddit.com/dev/api/oauth#POST_api_read_message)|[`InboxManager.setRead(boolean, Message, Message[])`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/InboxManager.html#setRead(boolean,%20net.dean.jraw.models.Message,%20[Lnet.dean.jraw.models.Message;))|
+|`POST`|[`/api/unread_message`](https://www.reddit.com/dev/api/oauth#POST_api_unread_message)|[`InboxManager.setRead(boolean, Message, Message[])`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/InboxManager.html#setRead(boolean,%20net.dean.jraw.models.Message,%20[Lnet.dean.jraw.models.Message;))|
 |`GET`|[`/message/inbox`](https://www.reddit.com/dev/api/oauth#GET_message_inbox)|[`InboxPaginator.next(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/paginators/InboxPaginator.html#next(boolean))|
 |`GET`|[`/message/sent`](https://www.reddit.com/dev/api/oauth#GET_message_sent)|[`InboxPaginator.next(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/paginators/InboxPaginator.html#next(boolean))|
 |`GET`|[`/message/unread`](https://www.reddit.com/dev/api/oauth#GET_message_unread)|[`InboxPaginator.next(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/paginators/InboxPaginator.html#next(boolean))|
@@ -224,15 +224,15 @@ So far **120** endpoints (out of 212 total) have been implemented.
 |`GET`|[`/about/{location}`](https://www.reddit.com/dev/api/oauth#GET_about_%7Blocation%7D)|[`ModeratorPaginator.next(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/paginators/ModeratorPaginator.html#next(boolean))|
 |`GET`|[`/about/{where}`](https://www.reddit.com/dev/api/oauth#GET_about_%7Bwhere%7D)|[`UserRecordPaginator.next(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/paginators/UserRecordPaginator.html#next(boolean))|
 |`GET`|[`/api/info`](https://www.reddit.com/dev/api/oauth#GET_api_info)|[`RedditClient.get(String[])`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/RedditClient.html#get([Ljava.lang.String;))|
-|`GET`|[`/api/morechildren`](https://www.reddit.com/dev/api/oauth#GET_api_morechildren)|[`CommentNode.getReply(RedditClient, String)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/models/CommentNode.html#getReply(net.dean.jraw.RedditClient, java.lang.String))|
+|`GET`|[`/api/morechildren`](https://www.reddit.com/dev/api/oauth#GET_api_morechildren)|[`CommentNode.getReply(RedditClient, String)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/models/CommentNode.html#getReply(net.dean.jraw.RedditClient,%20java.lang.String))|
 |`GET`|[`/api/multi/mine`](https://www.reddit.com/dev/api/oauth#GET_api_multi_mine)|[`MultiRedditManager.mine()`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/MultiRedditManager.html#mine())|
 |`GET`|[`/api/multi/user/{username}`](https://www.reddit.com/dev/api/oauth#GET_api_multi_user_%7Busername%7D)|[`MultiRedditManager.getPublicMultis(String)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/MultiRedditManager.html#getPublicMultis(java.lang.String))|
-|`GET`|[`/api/multi/{multipath}`](https://www.reddit.com/dev/api/oauth#GET_api_multi_%7Bmultipath%7D)|[`MultiRedditManager.get(String, String)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/MultiRedditManager.html#get(java.lang.String, java.lang.String))|
-|`GET`|[`/api/multi/{multipath}/description`](https://www.reddit.com/dev/api/oauth#GET_api_multi_%7Bmultipath%7D_description)|[`MultiRedditManager.get(String, String)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/MultiRedditManager.html#get(java.lang.String, java.lang.String))|
-|`PUT`|[`/api/multi/{multipath}/description`](https://www.reddit.com/dev/api/oauth#PUT_api_multi_%7Bmultipath%7D_description)|[`MultiRedditManager.updateDescription(String, String)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/MultiRedditManager.html#updateDescription(java.lang.String, java.lang.String))|
-|`GET`|[`/api/multi/{multipath}/r/{srname}`](https://www.reddit.com/dev/api/oauth#GET_api_multi_%7Bmultipath%7D_r_%7Bsrname%7D)|[`MultiRedditManager.get(String, String)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/MultiRedditManager.html#get(java.lang.String, java.lang.String))|
-|`GET`|[`/api/recommend/sr/{srnames}`](https://www.reddit.com/dev/api/oauth#GET_api_recommend_sr_%7Bsrnames%7D)|[`RedditClient.getRecommendations(List, List)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/RedditClient.html#getRecommendations(java.util.List, java.util.List))|
-|`POST`|[`/api/search_reddit_names`](https://www.reddit.com/dev/api/oauth#POST_api_search_reddit_names)|[`RedditClient.searchSubreddits(String, boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/RedditClient.html#searchSubreddits(java.lang.String, boolean))|
+|`GET`|[`/api/multi/{multipath}`](https://www.reddit.com/dev/api/oauth#GET_api_multi_%7Bmultipath%7D)|[`MultiRedditManager.get(String, String)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/MultiRedditManager.html#get(java.lang.String,%20java.lang.String))|
+|`GET`|[`/api/multi/{multipath}/description`](https://www.reddit.com/dev/api/oauth#GET_api_multi_%7Bmultipath%7D_description)|[`MultiRedditManager.get(String, String)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/MultiRedditManager.html#get(java.lang.String,%20java.lang.String))|
+|`PUT`|[`/api/multi/{multipath}/description`](https://www.reddit.com/dev/api/oauth#PUT_api_multi_%7Bmultipath%7D_description)|[`MultiRedditManager.updateDescription(String, String)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/MultiRedditManager.html#updateDescription(java.lang.String,%20java.lang.String))|
+|`GET`|[`/api/multi/{multipath}/r/{srname}`](https://www.reddit.com/dev/api/oauth#GET_api_multi_%7Bmultipath%7D_r_%7Bsrname%7D)|[`MultiRedditManager.get(String, String)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/MultiRedditManager.html#get(java.lang.String,%20java.lang.String))|
+|`GET`|[`/api/recommend/sr/{srnames}`](https://www.reddit.com/dev/api/oauth#GET_api_recommend_sr_%7Bsrnames%7D)|[`RedditClient.getRecommendations(List, List)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/RedditClient.html#getRecommendations(java.util.List,%20java.util.List))|
+|`POST`|[`/api/search_reddit_names`](https://www.reddit.com/dev/api/oauth#POST_api_search_reddit_names)|[`RedditClient.searchSubreddits(String, boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/RedditClient.html#searchSubreddits(java.lang.String,%20boolean))|
 |`GET`|[`/api/subreddits_by_topic`](https://www.reddit.com/dev/api/oauth#GET_api_subreddits_by_topic)|[`RedditClient.getSubredditsByTopic(String)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/RedditClient.html#getSubredditsByTopic(java.lang.String))|
 |`GET`|[`/api/v1/me/blocked`](https://www.reddit.com/dev/api/oauth#GET_api_v1_me_blocked)|[`ImportantUserPaginator.next(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/paginators/ImportantUserPaginator.html#next(boolean))|
 |`GET`|[`/api/v1/me/friends`](https://www.reddit.com/dev/api/oauth#GET_api_v1_me_friends)|[`ImportantUserPaginator.next(boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/paginators/ImportantUserPaginator.html#next(boolean))|
@@ -268,23 +268,23 @@ So far **120** endpoints (out of 212 total) have been implemented.
 |:----:|--------|------------|
 |`POST`|[`/api/live/{thread}/report`](https://www.reddit.com/dev/api/oauth#POST_api_live_%7Bthread%7D_report)|None|
 |`POST`|[`/api/report`](https://www.reddit.com/dev/api/oauth#POST_api_report)|None|
-|`POST`|[`/api/hide`](https://www.reddit.com/dev/api/oauth#POST_api_hide)|[`AccountManager.hide(boolean, Submission, Submission[])`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/AccountManager.html#hide(boolean, net.dean.jraw.models.Submission, [Lnet.dean.jraw.models.Submission;))|
-|`POST`|[`/api/unhide`](https://www.reddit.com/dev/api/oauth#POST_api_unhide)|[`AccountManager.hide(boolean, Submission, Submission[])`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/AccountManager.html#hide(boolean, net.dean.jraw.models.Submission, [Lnet.dean.jraw.models.Submission;))|
+|`POST`|[`/api/hide`](https://www.reddit.com/dev/api/oauth#POST_api_hide)|[`AccountManager.hide(boolean, Submission, Submission[])`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/AccountManager.html#hide(boolean,%20net.dean.jraw.models.Submission,%20[Lnet.dean.jraw.models.Submission;))|
+|`POST`|[`/api/unhide`](https://www.reddit.com/dev/api/oauth#POST_api_unhide)|[`AccountManager.hide(boolean, Submission, Submission[])`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/AccountManager.html#hide(boolean,%20net.dean.jraw.models.Submission,%20[Lnet.dean.jraw.models.Submission;))|
 
 ## save
 |Method|Endpoint|Implemention|
 |:----:|--------|------------|
 |`GET`|[`/api/saved_categories`](https://www.reddit.com/dev/api/oauth#GET_api_saved_categories)|None|
 |`POST`|[`/api/store_visits`](https://www.reddit.com/dev/api/oauth#POST_api_store_visits)|None|
-|`POST`|[`/api/save`](https://www.reddit.com/dev/api/oauth#POST_api_save)|[`AccountManager.setSaved(PublicContribution, boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/AccountManager.html#setSaved(net.dean.jraw.models.PublicContribution, boolean))|
-|`POST`|[`/api/unsave`](https://www.reddit.com/dev/api/oauth#POST_api_unsave)|[`AccountManager.setSaved(PublicContribution, boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/AccountManager.html#setSaved(net.dean.jraw.models.PublicContribution, boolean))|
+|`POST`|[`/api/save`](https://www.reddit.com/dev/api/oauth#POST_api_save)|[`AccountManager.setSaved(PublicContribution, boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/AccountManager.html#setSaved(net.dean.jraw.models.PublicContribution,%20boolean))|
+|`POST`|[`/api/unsave`](https://www.reddit.com/dev/api/oauth#POST_api_unsave)|[`AccountManager.setSaved(PublicContribution, boolean)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/AccountManager.html#setSaved(net.dean.jraw.models.PublicContribution,%20boolean))|
 
 ## submit
 |Method|Endpoint|Implemention|
 |:----:|--------|------------|
-|`POST`|[`/api/live/create`](https://www.reddit.com/dev/api/oauth#POST_api_live_create)|[`LiveThreadManager.create(String, boolean, String, String)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/LiveThreadManager.html#create(java.lang.String, boolean, java.lang.String, java.lang.String))|
-|`POST`|[`/api/live/{thread}/update`](https://www.reddit.com/dev/api/oauth#POST_api_live_%7Bthread%7D_update)|[`LiveThreadManager.postUpdate(LiveThread, String)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/LiveThreadManager.html#postUpdate(net.dean.jraw.models.LiveThread, java.lang.String))|
-|`POST`|[`/api/submit`](https://www.reddit.com/dev/api/oauth#POST_api_submit)|[`AccountManager.submit(SubmissionBuilder, Captcha, String)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/AccountManager.html#submit(net.dean.jraw.managers.AccountManager$SubmissionBuilder, net.dean.jraw.models.Captcha, java.lang.String))|
+|`POST`|[`/api/live/create`](https://www.reddit.com/dev/api/oauth#POST_api_live_create)|[`LiveThreadManager.create(String, boolean, String, String)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/LiveThreadManager.html#create(java.lang.String,%20boolean,%20java.lang.String,%20java.lang.String))|
+|`POST`|[`/api/live/{thread}/update`](https://www.reddit.com/dev/api/oauth#POST_api_live_%7Bthread%7D_update)|[`LiveThreadManager.postUpdate(LiveThread, String)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/LiveThreadManager.html#postUpdate(net.dean.jraw.models.LiveThread,%20java.lang.String))|
+|`POST`|[`/api/submit`](https://www.reddit.com/dev/api/oauth#POST_api_submit)|[`AccountManager.submit(SubmissionBuilder, Captcha, String)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/AccountManager.html#submit(net.dean.jraw.managers.AccountManager$SubmissionBuilder,%20net.dean.jraw.models.Captcha,%20java.lang.String))|
 |`GET`|[`/api/submit_text`](https://www.reddit.com/dev/api/oauth#GET_api_submit_text)|[`RedditClient.getSubmitText(String)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/RedditClient.html#getSubmitText(java.lang.String))|
 
 ## subscribe
@@ -295,13 +295,13 @@ So far **120** endpoints (out of 212 total) have been implemented.
 |`PUT`|[`/api/filter/{filterpath}`](https://www.reddit.com/dev/api/oauth#PUT_api_filter_%7Bfilterpath%7D)|None|
 |`DELETE`|[`/api/filter/{filterpath}/r/{srname}`](https://www.reddit.com/dev/api/oauth#DELETE_api_filter_%7Bfilterpath%7D_r_%7Bsrname%7D)|None|
 |`PUT`|[`/api/filter/{filterpath}/r/{srname}`](https://www.reddit.com/dev/api/oauth#PUT_api_filter_%7Bfilterpath%7D_r_%7Bsrname%7D)|None|
-|`POST`|[`/api/multi/copy`](https://www.reddit.com/dev/api/oauth#POST_api_multi_copy)|[`MultiRedditManager.copy(String, String, String)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/MultiRedditManager.html#copy(java.lang.String, java.lang.String, java.lang.String))|
-|`POST`|[`/api/multi/rename`](https://www.reddit.com/dev/api/oauth#POST_api_multi_rename)|[`MultiRedditManager.rename(String, String)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/MultiRedditManager.html#rename(java.lang.String, java.lang.String))|
+|`POST`|[`/api/multi/copy`](https://www.reddit.com/dev/api/oauth#POST_api_multi_copy)|[`MultiRedditManager.copy(String, String, String)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/MultiRedditManager.html#copy(java.lang.String,%20java.lang.String,%20java.lang.String))|
+|`POST`|[`/api/multi/rename`](https://www.reddit.com/dev/api/oauth#POST_api_multi_rename)|[`MultiRedditManager.rename(String, String)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/MultiRedditManager.html#rename(java.lang.String,%20java.lang.String))|
 |`DELETE`|[`/api/multi/{multipath}`](https://www.reddit.com/dev/api/oauth#DELETE_api_multi_%7Bmultipath%7D)|[`MultiRedditManager.delete(String)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/MultiRedditManager.html#delete(java.lang.String))|
 |`POST`|[`/api/multi/{multipath}`](https://www.reddit.com/dev/api/oauth#POST_api_multi_%7Bmultipath%7D)|[`MultiRedditManager.createOrUpdate(MultiRedditUpdateRequest)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/MultiRedditManager.html#createOrUpdate(net.dean.jraw.http.MultiRedditUpdateRequest))|
 |`PUT`|[`/api/multi/{multipath}`](https://www.reddit.com/dev/api/oauth#PUT_api_multi_%7Bmultipath%7D)|[`MultiRedditManager.createOrUpdate(MultiRedditUpdateRequest)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/MultiRedditManager.html#createOrUpdate(net.dean.jraw.http.MultiRedditUpdateRequest))|
-|`DELETE`|[`/api/multi/{multipath}/r/{srname}`](https://www.reddit.com/dev/api/oauth#DELETE_api_multi_%7Bmultipath%7D_r_%7Bsrname%7D)|[`MultiRedditManager.removeSubreddit(String, String)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/MultiRedditManager.html#removeSubreddit(java.lang.String, java.lang.String))|
-|`PUT`|[`/api/multi/{multipath}/r/{srname}`](https://www.reddit.com/dev/api/oauth#PUT_api_multi_%7Bmultipath%7D_r_%7Bsrname%7D)|[`MultiRedditManager.addSubreddit(String, String)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/MultiRedditManager.html#addSubreddit(java.lang.String, java.lang.String))|
+|`DELETE`|[`/api/multi/{multipath}/r/{srname}`](https://www.reddit.com/dev/api/oauth#DELETE_api_multi_%7Bmultipath%7D_r_%7Bsrname%7D)|[`MultiRedditManager.removeSubreddit(String, String)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/MultiRedditManager.html#removeSubreddit(java.lang.String,%20java.lang.String))|
+|`PUT`|[`/api/multi/{multipath}/r/{srname}`](https://www.reddit.com/dev/api/oauth#PUT_api_multi_%7Bmultipath%7D_r_%7Bsrname%7D)|[`MultiRedditManager.addSubreddit(String, String)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/MultiRedditManager.html#addSubreddit(java.lang.String,%20java.lang.String))|
 |`POST`|[`/api/subscribe`](https://www.reddit.com/dev/api/oauth#POST_api_subscribe)|[`AccountManager.subscribe(Subreddit)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/AccountManager.html#subscribe(net.dean.jraw.models.Subreddit))|
 |`DELETE`|[`/api/v1/me/friends/{username}`](https://www.reddit.com/dev/api/oauth#DELETE_api_v1_me_friends_%7Busername%7D)|[`AccountManager.deleteFriend(String)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/AccountManager.html#deleteFriend(java.lang.String))|
 |`PUT`|[`/api/v1/me/friends/{username}`](https://www.reddit.com/dev/api/oauth#PUT_api_v1_me_friends_%7Busername%7D)|[`AccountManager.updateFriend(String)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/AccountManager.html#updateFriend(java.lang.String))|
@@ -309,7 +309,7 @@ So far **120** endpoints (out of 212 total) have been implemented.
 ## vote
 |Method|Endpoint|Implemention|
 |:----:|--------|------------|
-|`POST`|[`/api/vote`](https://www.reddit.com/dev/api/oauth#POST_api_vote)|[`AccountManager.vote(Thing, VoteDirection)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/AccountManager.html#vote(net.dean.jraw.models.Thing, net.dean.jraw.models.VoteDirection))|
+|`POST`|[`/api/vote`](https://www.reddit.com/dev/api/oauth#POST_api_vote)|[`AccountManager.vote(Thing, VoteDirection)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/AccountManager.html#vote(net.dean.jraw.models.Thing,%20net.dean.jraw.models.VoteDirection))|
 
 ## wikiedit
 |Method|Endpoint|Implemention|
@@ -323,4 +323,4 @@ So far **120** endpoints (out of 212 total) have been implemented.
 |`GET`|[`/wiki/revisions`](https://www.reddit.com/dev/api/oauth#GET_wiki_revisions)|None|
 |`GET`|[`/wiki/revisions/{page}`](https://www.reddit.com/dev/api/oauth#GET_wiki_revisions_%7Bpage%7D)|None|
 |`GET`|[`/wiki/pages`](https://www.reddit.com/dev/api/oauth#GET_wiki_pages)|[`WikiManager.getPages(String)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/WikiManager.html#getPages(java.lang.String))|
-|`GET`|[`/wiki/{page}`](https://www.reddit.com/dev/api/oauth#GET_wiki_%7Bpage%7D)|[`WikiManager.get(String, String)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/WikiManager.html#get(java.lang.String, java.lang.String))|
+|`GET`|[`/wiki/{page}`](https://www.reddit.com/dev/api/oauth#GET_wiki_%7Bpage%7D)|[`WikiManager.get(String, String)`](https://thatjavanerd.github.io/JRAW/docs/git/net/dean/jraw/managers/WikiManager.html#get(java.lang.String,%20java.lang.String))|

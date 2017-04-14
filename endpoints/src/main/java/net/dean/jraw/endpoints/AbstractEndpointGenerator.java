@@ -150,7 +150,7 @@ public abstract class AbstractEndpointGenerator {
             ref.append(parameterType.getName());
             if (counter != parameterTypes.length - 1) {
                 // Parameters are separated with a hyphen
-                ref.append(", ");
+                ref.append(",%20");
             }
 
             counter++;
