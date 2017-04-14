@@ -87,6 +87,9 @@ test {
     testLogging {
         // Show stderr and stdout (useful for exceptions)
         showStandardStreams = true
+        // Show failed tests
+        events "failed"
+        exceptionFormat "short"
     }
 
     beforeTest { descriptor ->
