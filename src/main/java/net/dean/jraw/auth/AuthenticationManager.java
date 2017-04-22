@@ -43,6 +43,11 @@ public final class AuthenticationManager {
             public void onAuthenticated(OAuthData data) {
                 AuthenticationManager.this.onAuthenticated(data);
             }
+
+            @Override
+            public void onDeauthenticated() {
+                AuthenticationManager.this.onDeauthenticated();
+            }
         });
     }
 
@@ -108,10 +113,19 @@ public final class AuthenticationManager {
      * by the RedditClient's implementation of {@link RedditClient#authenticate(OAuthData)}.
      */
     public void onAuthenticated(OAuthData o) {
+        // Refresh token is only received when authenticating for the first time.
+        // Subsequent calls for refreshing the token don't receive the refresh
+        // token again.
         if (o.getRefreshToken() != null) {
             tokenHandler.writeToken(getUsername(), o.getRefreshToken());
         }
         tokenHandler.writeAcquireTimeMillis(getUsername(), System.currentTimeMillis());
+    }
+
+    private void onDeauthenticated() {
+        String lastLoggedInUsername = getUsername();
+        tokenHandler.removeAcquireTimeMillis(lastLoggedInUsername);
+        tokenHandler.removeToken(lastLoggedInUsername);
     }
 
     private String getUsername() {

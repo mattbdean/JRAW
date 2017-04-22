@@ -7,4 +7,5 @@ import net.dean.jraw.http.oauth.OAuthData;
  */
 public interface AuthenticationListener {
     void onAuthenticated(OAuthData data);
+    void onDeauthenticated();
 }
