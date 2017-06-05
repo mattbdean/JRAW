@@ -1,9 +1,9 @@
+package net.dean.jraw.test
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.winterbe.expekt.should
 import net.dean.jraw.http.HttpRequest
 import net.dean.jraw.http.RestClient
-import net.dean.jraw.test.httpAsync
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
