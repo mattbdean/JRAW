@@ -1,6 +1,8 @@
 package net.dean.jraw.http
 
+import okhttp3.FormBody
 import okhttp3.Request
+import okhttp3.RequestBody
 import java.io.IOException
 import java.net.URLEncoder
 import java.util.*
@@ -24,6 +26,7 @@ import java.util.regex.Pattern
 class HttpRequest private constructor(
     val url: String,
     val method: String,
+    val body: RequestBody?,
     internal val success: (response: HttpResponse) -> Unit,
     internal val failure: (response: HttpResponse) -> Unit,
     internal val internalFailure: (original: Request, e: IOException) -> Unit,
@@ -32,6 +35,7 @@ class HttpRequest private constructor(
     private constructor(b: Builder) : this(
         url = buildUrl(b),
         method = b.method,
+        body = b.body,
         success = b.success,
         failure = b.failure,
         internalFailure = b.internalFailure,
@@ -107,6 +111,7 @@ class HttpRequest private constructor(
 
     class Builder {
         internal var method: String = "GET"
+        internal var body: RequestBody? = null
         internal var success: (response: HttpResponse) -> Unit = {}
         internal var failure: (response: HttpResponse) -> Unit = { res ->
             val req = res.raw.request()
@@ -126,7 +131,27 @@ class HttpRequest private constructor(
         internal var query: Map<String, String> = mapOf()
 
         /** Sets the HTTP method (GET, POST, PUT, etc.). Defaults to GET. Case insensitive. */
-        fun method(method: String): Builder { this.method = method.trim().toUpperCase(); return this }
+        fun method(method: String, body: RequestBody? = null): Builder {
+            this.method = method.trim().toUpperCase()
+            this.body = body
+            return this
+        }
+        fun method(method: String, body: Map<String, String>): Builder {
+            this.method = method
+            val formBodyBuilder = FormBody.Builder()
+            for ((k, v) in body)
+                formBodyBuilder.addEncoded(k, v)
+            this.body = formBodyBuilder.build()
+            return this
+        }
+
+        fun get() = method("GET")
+        fun delete() = method("DELETE")
+        fun post(body: Map<String, String>) = method("POST", body)
+        fun post(body: RequestBody) = method("POST", body)
+        fun put(body: Map<String, String>) = method("PUT", body)
+        fun put(body: RequestBody) = method("PUT", body)
+
         fun url(url: String): Builder { this.url = url; return this }
 
         /** Sets the function that gets called on a 2XX status code */

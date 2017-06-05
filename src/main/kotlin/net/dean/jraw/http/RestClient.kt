@@ -15,7 +15,7 @@ open class RestClient(override var userAgent: String) : HttpClient {
 
         fun handleNonError(response: Response) {
             val httpResponse = HttpResponse(response)
-            if (response.code() in 200..299)
+            if (response.isSuccessful)
                 r.success(httpResponse)
             else
                 r.failure(httpResponse)

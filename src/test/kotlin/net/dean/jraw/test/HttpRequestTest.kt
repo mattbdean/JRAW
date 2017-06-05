@@ -10,12 +10,14 @@ class HttpRequestTest: Spek({
     it("should let us use url() only") {
         val url = "https://google.com"
         HttpRequest.Builder()
+            .get()
             .url(url)
             .build().url.should.equal(url)
     }
 
     it("should let us use secure(), host(), path(), and query() instead of url()") {
         HttpRequest.Builder()
+            .get()
             .secure(true)
             .host("google.com")
             .path("/search")
