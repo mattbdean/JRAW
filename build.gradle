@@ -1,132 +1,75 @@
-plugins {
-    id 'java'
-    id 'maven'
-    id 'maven-publish'
-    id 'findbugs'
-    id 'jacoco'
-    id 'com.github.kt3k.coveralls' version '2.4.0x'
-}
-
-ext {
-    releaseDest = new File(project.buildDir, "releases")
-    generatedJavaSrc = file("src/gen/java/")
-}
-
-allprojects {
-    sourceCompatibility = 1.7
-    group = 'net.dean.jraw'
-    version = '0.9.0'
+buildscript {
+    ext.kotlinVersion = '1.1.2-2'
+    ext.spekVersion = '1.1.2'
+    ext.jacksonVersion = '2.9.0.pr3'
+    ext.dokkaVersion = '0.9.14'
 
     repositories {
-        mavenCentral()
+        jcenter()
     }
 
-    compileJava.options.encoding = 'UTF-8'
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+        classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.0-M4'
+        classpath "org.jetbrains.dokka:dokka-gradle-plugin:${dokkaVersion}"
+    }
+}
+
+apply plugin: 'org.junit.platform.gradle.plugin'
+apply plugin: 'org.jetbrains.dokka'
+apply plugin: 'jacoco'
+apply plugin: 'kotlin'
+
+repositories {
+    jcenter()
+    maven { url 'https://d.bintray.com/jetbrains/spek' }
 }
 
 dependencies {
-    def okHttpVersion = '3.6.0'
-    compile     "com.squareup.okhttp3:okhttp:$okHttpVersion"
-    compile     "com.squareup.okhttp3:okhttp-urlconnection:$okHttpVersion"
-    compile     'com.fasterxml.jackson.core:jackson-databind:2.8.8'
-    // Guava 21.0 requires Java 8, but "Guava 22.0 and on will introduce a Java 6/Android compatible backport of Guava
-    // that includes all of the latest changes that don't require Java 8"
-    compile     'com.google.guava:guava:20.0'
-    compile     'org.slf4j:slf4j-api:1.7.25'
-    testCompile 'org.slf4j:slf4j-simple:1.7.25'
-    testCompile 'org.testng:testng:6.11'
-    // HtmlUnit 2.25 requires Java 8
-    testCompile 'net.sourceforge.htmlunit:htmlunit:2.24'
-}
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+    compile 'com.squareup.okhttp3:okhttp:3.8.0'
+    compile "com.fasterxml.jackson.module:jackson-module-kotlin:${jacksonVersion}"
+    compile "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
 
-// Add the generated source to the main Java source directories
-sourceSets.main.java.srcDir ext.generatedJavaSrc
-
-task fatJar(type: Jar, dependsOn: assemble) {
-    classifier = 'fat'
-    destinationDir = releaseDest
-    from(
-        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) },
-        sourceSets.main.output
-    )
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    destinationDir = releaseDest
-    from javadoc.destinationDir
-}
-
-task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = 'sources'
-    destinationDir = releaseDest
-    from sourceSets.main.allSource
-}
-
-task renamePom(dependsOn: 'generatePomFileForMavenPublication') {
-    doLast {
-        println(file('build/publications/maven/pom-default.xml'))
-        file('build/publications/maven/pom-default.xml').renameTo("build/publications/maven/JRAW-${version}.pom")
+    // Required since we manually excluded org.jetbrains.kotlin from spek
+    testCompile "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
+    testCompile 'com.winterbe:expekt:0.2.0'
+    testCompile 'org.awaitility:awaitility:3.0.0'
+    testCompile ("org.jetbrains.spek:spek-api:$spekVersion") {
+        exclude group: 'org.jetbrains.kotlin'
+    }
+    testCompile 'org.junit.platform:junit-platform-runner:1.0.0-M4'
+    testRuntime ("org.jetbrains.spek:spek-junit-platform-engine:$spekVersion") {
+        exclude group: 'org.junit.platform'
+        exclude group: 'org.jetbrains.kotlin'
     }
 }
 
-task release(type: Jar, dependsOn: ['fatJar', 'javadocJar', 'sourcesJar', 'renamePom']) {
-    from sourceSets.main.output
-    destinationDir = releaseDest
-}
-
-javadoc {
-    def overrideVersion = System.properties.'javadoc-version'
-    def version = overrideVersion != null ? overrideVersion : project.version
-    title = "${project.name} $version API"
-}
-
-test {
-    useTestNG()
-
-    testLogging {
-        // Show stderr and stdout (useful for exceptions)
-        showStandardStreams = true
-        // Show failed tests
-        events "failed"
-        exceptionFormat "short"
-    }
-
-    beforeTest { descriptor ->
-        logger.lifecycle("Running test: ${descriptor.className}.${descriptor.name}")
-    }
-}
-
-findbugsMain {
-    reports {
-        xml.enabled = false
-        html.enabled = true
-    }
-}
-
-jacocoTestReport {
-    reports {
-        xml.enabled = true // coveralls depends on XML reports
-        html.enabled = true
-    }
-}
-
-publishing {
-    publications {
-        maven(MavenPublication) {
-            from components.java
+junitPlatform {
+    filters {
+        engines {
+            include 'spek'
         }
     }
 }
 
-artifacts {
-    archives sourcesJar
-    archives javadocJar
+project.afterEvaluate {
+    def junitPlatformTestTask = project.tasks.getByName('junitPlatformTest')
+
+    jacoco {
+        toolVersion = "+"
+        reportsDir = file("$buildDir/reports/jacoco")
+        applyTo junitPlatformTestTask
+    }
+
+    project.task(type: JacocoReport, "junitPlatformJacocoReport", {
+        sourceDirectories = files("src/main/kotlin")
+        classDirectories = files("$buildDir/classes/main")
+        reports {
+            xml.enabled = true
+            html.enabled = true
+        }
+        executionData junitPlatformTestTask
+    })
 }
 
-defaultTasks "test"
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '3.5'
-    distributionUrl = "https://services.gradle.org/distributions/gradle-$gradleVersion-all.zip"
-}

@@ -1,26 +1,8 @@
+sudo: false
 language: java
 jdk:
-- oraclejdk7
-env:
-  global:
-  # USERNAME
-  - secure: Lyr51sid6i2IR22Jwkvs0itzd/E7B9K++G/zOB7fnWjEaCrc/8lT+OVoZGqzShtthWPUzPWvF0LC5OmhniUpjDerdgTcV+loCd56o+53sba0Ca9DzowTOoVKp0+rQIjLFoUwEKC4KxGsPwzcF3Plhts7gdze+fq5D2K+jUgeJAo=
-  # PASSWORD
-  - secure: qdaN//0RVPeU9dwf+VWg8k25ybRuO9xMWA+yZklzinL8nNV8xKO8k/+cjtG9SclvCc2IiwF7309V5TfQi7K86Vnm8gumizL6IDspxSXossOXeWHHjtWxdm7FbJq84h5hHKmHRC+Es7eaoX7f5WROJ8xHVsVLVsCNkeKQFt8Py0w=
-  # SCRIPT_CLIENT_ID
-  - secure: kp2GfLRcEmCGlRwFtZ9a7UpSjz2AFVfTvk1rdM5y7/X6DN3m4Hny0Bhui8ESPcCfJucfuGllyRlYYYArGeAUK7K8trZ2L7hIsE3NlOMRqhZSC5xWiAKxlMI+AFh+RCoRfskvUVc+cdMdLjiy4IAfgeWLRam+I2MzfUbhwCgdP8Q=
-  # SCRIPT_CLIENT_SECRET
-  - secure: LhY7CylOzgLBZ+Ivbsw+OpxCoezduNaaNWrvGzlDbqSUmtstWjS6+KXMAm3cO5sWx52tvMTPuwf246OgrB6kmieAKauf/qVWYmIbFzyeD+6gB56CuR7C5kWcunQRUw9vDi8yoOckbNUYHTuBjZk/2jA9DR/RTyZDNwl8R8UeST0=
-  # INSTALLED_CLIENT_ID
-  - secure: n8sxNsPzp+5BA3qcBvX8r0b8NNUQxF+lVrUVjPNOUXgtFz6eClslh+Bx7xhyl6Mt5Z+Wlmk/FO8QVXzqbgeqK/brHGS7AeWvgB8+S7UG3tx7BqyRXuBSoHtGXNMwzSl+ULHLJfNQv35KoimHkmWTMYxBz/K6z3KnW69Y9PA2yHI=
-  # INSTALLED_REDIRECT_URI
-  - secure: DU1yOURjDTkXgxtt/DG/Uym1CYryqt20fsLGGwcU1O544/WlWHJz0Y/ZvfeyChLtrsvJNyhjI/46xRbr/yeHJTI6OHnlTxTcAtT/DqUd0D7R+U3CN+/ju/qAmwyTR0i5f9PUFu4Gdv6CBhr/4hZjRHMnXAPS7ns7h73UBvUJ8ts=
-  # GIT_NAME and GIT_EMAIL
-  - secure: Jn+ssE7+DEnpqxH3BiY5u6b37Uf6op7nrhS30bZ4FsxGSeh4yNBCd4oj8vQn4eG/GDHSL5HmDCpeHMw0Wo6cDYAv/n1ft9IcghO5WGTSYoa2LBrtF4t0468RR447adBOT367PPBD8H/kOFZyyiRaYniA3Bax9K69uVe4B/aUyKI=
-  # GIT_USER and GIT_PASS
-  - secure: KtdoQLj2zDTkysWyXVj+H5xY65dDo58+070SQM68Tg6EYiB2tx9EV1IOJ1UallaDWGCyPfZvM2eTXs0selM5+S9GzskWePsY1uhFv+tnbGMUMcwiioq+yIxpK3zq8LLodIuiI5wv/4QigC/hsXSlUzV7hDUXWkdHieYig44p2Vs=
-script: "./gradlew --console plain --stacktrace test"
-after_success: "./gradlew jacocoTestReport coveralls; ./upload_docs.sh"
-sudo: false
-SCRIPT_CLIENT_ID=vgMHmurocRkiPg:
-  secure: mw/hyeCHaf9QvyM1wp0q1k2aT+r4XPGCUqa7pzDcIuwQRrlBRrCGY3h+hMCv1DYP7HGxyn5zPoTvoMANoA2id2bfaUvTlW/A/L87NBzSf5LXqw5e2OSrM04EqEa5a0zoZKkMLxTceNq1FcbQ77JYiTnXXDmFgawH2TqmhfelfUs=
+  - oraclejdk8
+script:
+  - ./gradlew check junitPlatformJacocoReport
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
