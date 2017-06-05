@@ -110,8 +110,8 @@ public final class AuthenticationManager {
     public void onAuthenticated(OAuthData o) {
         if (o.getRefreshToken() != null) {
             tokenHandler.writeToken(getUsername(), o.getRefreshToken());
-            tokenHandler.writeAcquireTimeMillis(getUsername(), System.currentTimeMillis());
         }
+        tokenHandler.writeAcquireTimeMillis(getUsername(), System.currentTimeMillis());
     }
 
     private String getUsername() {
