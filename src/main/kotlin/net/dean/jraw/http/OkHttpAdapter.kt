@@ -3,8 +3,8 @@ package net.dean.jraw.http
 import okhttp3.*
 import java.io.IOException
 
-open class RestClient(override var userAgent: String): HttpClient {
-    protected val http: OkHttpClient = OkHttpClient()
+class OkHttpAdapter(override var userAgent: String): HttpAdapter {
+    private val http: OkHttpClient = OkHttpClient()
 
     override fun execute(r: HttpRequest) {
         createCall(r).enqueue(object: Callback {

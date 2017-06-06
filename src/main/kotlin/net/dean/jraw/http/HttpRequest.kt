@@ -24,7 +24,7 @@ import java.util.regex.Pattern
  * println(response.json)
  * ```
  *
- * Note that [HttpClient.executeSync] will ignore [success] and [failure]. You'll have to handle possible errors via
+ * Note that [HttpAdapter.executeSync] will ignore [success] and [failure]. You'll have to handle possible errors via
  * try/catch.
  */
 class HttpRequest private constructor(

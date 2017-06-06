@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.winterbe.expekt.should
 import net.dean.jraw.http.HttpRequest
 import net.dean.jraw.http.HttpResponse
-import net.dean.jraw.http.RestClient
+import net.dean.jraw.http.OkHttpAdapter
 import okhttp3.internal.http.HttpMethod
 import org.awaitility.Awaitility.await
 import org.jetbrains.spek.api.Spek
@@ -15,10 +15,10 @@ import java.net.URL
 private val userAgent = "net.dean.jraw.test"
 private val formBody = mapOf("foo" to "bar", "baz" to "qux")
 
-class RestClientTest: Spek({
-    var http: RestClient = RestClient(userAgent)
+class OkHttpAdapterTest: Spek({
+    var http: OkHttpAdapter = OkHttpAdapter(userAgent)
     beforeEachTest {
-        http = RestClient(userAgent)
+        http = OkHttpAdapter(userAgent)
     }
 
     describe("execute") {
