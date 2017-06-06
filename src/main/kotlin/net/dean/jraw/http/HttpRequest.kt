@@ -178,10 +178,7 @@ class HttpRequest private constructor(
         }
 
         /** Convenience function for `basicAuth(BasicAuthData)` */
-        fun basicAuth(creds: Pair<String, String>): Builder {
-            this.basicAuth = BasicAuthData(creds.first, creds.second)
-            return this
-        }
+        fun basicAuth(creds: Pair<String, String>) = basicAuth(BasicAuthData(creds.first, creds.second))
 
         /** Executes the request with HTTP basic authentication */
         fun basicAuth(creds: BasicAuthData): Builder { this.basicAuth = creds; return this }
