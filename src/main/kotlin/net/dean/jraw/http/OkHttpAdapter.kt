@@ -3,7 +3,7 @@ package net.dean.jraw.http
 import okhttp3.*
 import java.io.IOException
 
-class OkHttpAdapter(override var userAgent: String): HttpAdapter {
+class OkHttpAdapter(override var userAgent: UserAgent): HttpAdapter {
     private val http: OkHttpClient = OkHttpClient()
 
     override fun execute(r: HttpRequest) {
@@ -40,7 +40,7 @@ class OkHttpAdapter(override var userAgent: String): HttpAdapter {
 
     private fun compileRequest(r: HttpRequest): Request =
         Request.Builder()
-            .header("User-Agent", userAgent)
+            .header("User-Agent", userAgent.value)
             .url(r.url)
             .method(r.method, r.body)
             .build()

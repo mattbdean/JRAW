@@ -1,7 +1,7 @@
 package net.dean.jraw.http;
 
 interface HttpAdapter {
-    var userAgent: String
+    var userAgent: UserAgent
     fun execute(r: HttpRequest)
     fun executeSync(r: HttpRequest): HttpResponse
 }
