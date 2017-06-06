@@ -10,16 +10,22 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 /**
- * Models a HTTP request. Create instances using the Builder model.
+ * Models a HTTP request. Create instances using the Builder model and are executed asynchronously by default.
  *
  * ```
- * HttpRequest.Builder()
+ * val request = HttpRequest.Builder()
  *     .method("DELETE") // defaults to GET
  *     .url("https://httpbin.org/delete")
  *     .success({ println(it.json) })
  *     .failure({ println("Failed: $it" })
  *     .build()
+ *
+ * val response = httpClient.execute(request)
+ * println(response.json)
  * ```
+ *
+ * Note that [HttpClient.executeSync] will ignore [success] and [failure]. You'll have to handle possible errors via
+ * try/catch.
  */
 class HttpRequest private constructor(
     val url: String,
@@ -28,8 +34,7 @@ class HttpRequest private constructor(
     internal val basicAuth: BasicAuthData?,
     internal val success: (response: HttpResponse) -> Unit,
     internal val failure: (response: HttpResponse) -> Unit,
-    internal val internalFailure: (original: Request, e: IOException) -> Unit,
-    val sync: Boolean
+    internal val internalFailure: (original: Request, e: IOException) -> Unit
 ) {
     private constructor(b: Builder) : this(
         url = buildUrl(b),
@@ -38,11 +43,20 @@ class HttpRequest private constructor(
         basicAuth = b.basicAuth,
         success = b.success,
         failure = b.failure,
-        internalFailure = b.internalFailure,
-        sync = b.sync
+        internalFailure = b.internalFailure
     )
 
     companion object {
+        internal val DEFAULT_FAILURE_HANDLER: (response: HttpResponse) -> Unit = { res ->
+            val req = res.raw.request()
+            throw RuntimeException("Unhandled HTTP request with non-success status: ${req.method()} ${req.url()} -> ${res.code}")
+        }
+        internal val DEFAULT_INTERNAL_FAILURE_HANDLER: (original: Request, e: IOException) -> Unit = { r, e ->
+            throw createInternalFailureException(r, e)
+        }
+        internal fun createInternalFailureException(r: Request, e: IOException): RuntimeException =
+            RuntimeException("HTTP request engine encountered an error: ${r.method()} ${r.url()}", e)
+
         /** This Pattern will match a URI parameter. For example, /api/{param1}/{param2}  */
         private val PATH_PARAM_PATTERN = Pattern.compile("\\{(.*?)\\}")
 
@@ -113,14 +127,8 @@ class HttpRequest private constructor(
         internal var method: String = "GET"
         internal var body: RequestBody? = null
         internal var success: (response: HttpResponse) -> Unit = {}
-        internal var failure: (response: HttpResponse) -> Unit = { res ->
-            val req = res.raw.request()
-            throw RuntimeException("Unhandled HTTP request with non-success status: ${req.method()} ${req.url()} -> ${res.code}")
-        }
-        internal var internalFailure: (original: Request, e: IOException) -> Unit = { r, e ->
-            throw RuntimeException("HTTP request engine encountered an error: ${r.method()} ${r.url()}", e)
-        }
-        internal var sync: Boolean = false
+        internal var failure: (response: HttpResponse) -> Unit = DEFAULT_FAILURE_HANDLER
+        internal var internalFailure: (original: Request, e: IOException) -> Unit = DEFAULT_INTERNAL_FAILURE_HANDLER
 
         // URL-related variables
         internal var url: String? = null
@@ -177,12 +185,6 @@ class HttpRequest private constructor(
 
         /** Executes the request with HTTP basic authentication */
         fun basicAuth(creds: BasicAuthData): Builder { this.basicAuth = creds; return this }
-
-        /**
-         * Enable/disable executing the request synchronously. Defaults to false (async). Calling this method with no
-         * arguments sets this request to execute synchronously.
-         */
-        fun sync(sync: Boolean = true): Builder { this.sync = sync; return this }
 
         /** Enables/disables HTTPS (enabled by default) */
         fun secure(flag: Boolean = true): Builder { this.secure = flag; return this }

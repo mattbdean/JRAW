@@ -3,6 +3,7 @@ package net.dean.jraw.test
 import com.fasterxml.jackson.databind.JsonNode
 import com.winterbe.expekt.should
 import net.dean.jraw.http.HttpRequest
+import net.dean.jraw.http.HttpResponse
 import net.dean.jraw.http.RestClient
 import okhttp3.internal.http.HttpMethod
 import org.awaitility.Awaitility.await
@@ -31,7 +32,6 @@ class RestClientTest: Spek({
         it("should allow sync via a builder flag") {
             http.execute(createTestRequestBuilder("GET")
                 .success({ validateResponse(it.json) })
-                .sync()
                 .build())
         }
 
@@ -46,6 +46,16 @@ class RestClientTest: Spek({
                 .build())
 
             await().until({ challenged })
+        }
+    }
+
+    describe("executeSync") {
+        it("should ignore success and failure callbacks") {
+            val fail: (res: HttpResponse) -> Unit = { throw IllegalStateException("should not have reached here") }
+            http.execute(createTestRequestBuilder("GET")
+                .success(fail)
+                .failure(fail)
+                .build())
         }
     }
 })
