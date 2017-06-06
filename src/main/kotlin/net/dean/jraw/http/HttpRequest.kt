@@ -152,6 +152,8 @@ class HttpRequest private constructor(
         fun post(body: RequestBody) = method("POST", body)
         fun put(body: Map<String, String>) = method("PUT", body)
         fun put(body: RequestBody) = method("PUT", body)
+        fun patch(body: Map<String, String>) = method("PATCH", body)
+        fun patch(body: RequestBody) = method("PATCH", body)
 
         fun url(url: String): Builder { this.url = url; return this }
 

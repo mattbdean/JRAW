@@ -23,7 +23,7 @@ class RestClientTest: Spek({
     describe("execute") {
         it("should execute asynchronously by default") {
             // Pick these two because they don't need a response body
-            for (method in listOf("GET", "POST", "PUT", "DELETE")) {
+            for (method in listOf("GET", "POST", "PUT", "PATCH", "DELETE")) {
                 httpAsync(http, createTestRequestBuilder(method), ::validateResponse)
             }
         }
