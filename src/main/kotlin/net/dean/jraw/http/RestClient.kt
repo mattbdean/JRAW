@@ -21,6 +21,8 @@ open class RestClient(override var userAgent: String) : HttpClient {
                 r.failure(httpResponse)
         }
 
+        val http = if (r.basicAuth != null) createAuthenticatedClient(r.basicAuth) else http
+
         if (r.sync) {
             try {
                 handleNonError(http.newCall(request).execute())
@@ -39,4 +41,7 @@ open class RestClient(override var userAgent: String) : HttpClient {
             })
         }
     }
+
+    private fun createAuthenticatedClient(data: BasicAuthData): OkHttpClient =
+        http.newBuilder().authenticator(BasicAuthenticator(data)).build()
 }

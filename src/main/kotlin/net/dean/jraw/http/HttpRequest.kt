@@ -9,8 +9,6 @@ import java.util.*
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
-
-
 /**
  * Models a HTTP request. Create instances using the Builder model.
  *
@@ -19,7 +17,7 @@ import java.util.regex.Pattern
  *     .method("DELETE") // defaults to GET
  *     .url("https://httpbin.org/delete")
  *     .success({ println(it.json) })
- *     .failure({ println("Failed: ${raw.method()} ${raw.url()}) })
+ *     .failure({ println("Failed: $it" })
  *     .build()
  * ```
  */
@@ -27,6 +25,7 @@ class HttpRequest private constructor(
     val url: String,
     val method: String,
     val body: RequestBody?,
+    internal val basicAuth: BasicAuthData?,
     internal val success: (response: HttpResponse) -> Unit,
     internal val failure: (response: HttpResponse) -> Unit,
     internal val internalFailure: (original: Request, e: IOException) -> Unit,
@@ -36,6 +35,7 @@ class HttpRequest private constructor(
         url = buildUrl(b),
         method = b.method,
         body = b.body,
+        basicAuth = b.basicAuth,
         success = b.success,
         failure = b.failure,
         internalFailure = b.internalFailure,
@@ -129,6 +129,7 @@ class HttpRequest private constructor(
         internal var path = ""
         internal var pathParams = listOf<String>()
         internal var query: Map<String, String> = mapOf()
+        internal var basicAuth: BasicAuthData? = null
 
         /** Sets the HTTP method (GET, POST, PUT, etc.). Defaults to GET. Case insensitive. */
         fun method(method: String, body: RequestBody? = null): Builder {
@@ -165,6 +166,15 @@ class HttpRequest private constructor(
             this.internalFailure = internalFailure
             return this
         }
+
+        /** Convenience function for `basicAuth(BasicAuthData)` */
+        fun basicAuth(creds: Pair<String, String>): Builder {
+            this.basicAuth = BasicAuthData(creds.first, creds.second)
+            return this
+        }
+
+        /** Executes the request with HTTP basic authentication */
+        fun basicAuth(creds: BasicAuthData): Builder { this.basicAuth = creds; return this }
 
         /**
          * Enable/disable executing the request synchronously. Defaults to false (async). Calling this method with no

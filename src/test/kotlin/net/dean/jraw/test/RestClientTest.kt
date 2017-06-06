@@ -5,6 +5,7 @@ import com.winterbe.expekt.should
 import net.dean.jraw.http.HttpRequest
 import net.dean.jraw.http.RestClient
 import okhttp3.internal.http.HttpMethod
+import org.awaitility.Awaitility.await
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
@@ -32,6 +33,19 @@ class RestClientTest: Spek({
                 .success({ validateResponse(it.json) })
                 .sync()
                 .build())
+        }
+
+        it("should handle basic authentication") {
+            var challenged = false
+
+            http.execute(HttpRequest.Builder()
+                .url("https://httpbin.org/basic-auth/user/passwd")
+                .basicAuth("user" to "passwd")
+                .success { challenged = true }
+                .failure({ challenged = true; throw IllegalStateException("should have passed basic auth") })
+                .build())
+
+            await().until({ challenged })
         }
     }
 })
