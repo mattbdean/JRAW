@@ -166,7 +166,10 @@ class HttpRequest private constructor(
             return this
         }
 
-        /** Enable/disable executing the request synchronously. Defaults to false (async) */
+        /**
+         * Enable/disable executing the request synchronously. Defaults to false (async). Calling this method with no
+         * arguments sets this request to execute synchronously.
+         */
         fun sync(sync: Boolean = true): Builder { this.sync = sync; return this }
 
         /** Enables/disables HTTPS (enabled by default) */

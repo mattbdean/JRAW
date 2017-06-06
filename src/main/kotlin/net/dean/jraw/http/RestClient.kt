@@ -10,7 +10,7 @@ open class RestClient(override var userAgent: String) : HttpClient {
         val request = Request.Builder()
             .header("User-Agent", userAgent)
             .url(r.url)
-            .method(r.method, null)
+            .method(r.method, r.body)
             .build()
 
         fun handleNonError(response: Response) {
