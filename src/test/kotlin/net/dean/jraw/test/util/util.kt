@@ -1,4 +1,4 @@
-package net.dean.jraw.test
+package net.dean.jraw.test.util
 
 import com.fasterxml.jackson.databind.JsonNode
 import net.dean.jraw.http.HttpAdapter

@@ -2,11 +2,11 @@ package net.dean.jraw.test
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.winterbe.expekt.should
-import net.dean.jraw.Version
 import net.dean.jraw.http.HttpRequest
 import net.dean.jraw.http.HttpResponse
 import net.dean.jraw.http.OkHttpAdapter
-import net.dean.jraw.http.UserAgent
+import net.dean.jraw.test.util.TestConfig.userAgent
+import net.dean.jraw.test.util.httpAsync
 import okhttp3.internal.http.HttpMethod
 import org.awaitility.Awaitility.await
 import org.jetbrains.spek.api.Spek
@@ -14,7 +14,7 @@ import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
 import java.net.URL
 
-private val userAgent = UserAgent.of("lib", "net.dean.jraw.test", Version.get(), "thatJavaNerd")
+private val otherHeader = "X-Foo" to "Bar"
 private val formBody = mapOf("foo" to "bar", "baz" to "qux")
 
 class OkHttpAdapterTest: Spek({
@@ -64,6 +64,7 @@ class OkHttpAdapterTest: Spek({
 
 fun validateResponse(body: JsonNode) {
     body.get("headers").get("User-Agent").textValue().should.equal(userAgent.value)
+    body.get("headers").get(otherHeader.first).textValue().should.equal(otherHeader.second)
 
     val method = URL(body.get("url").asText()).path.substring(1).toUpperCase()
     if (HttpMethod.requiresRequestBody(method)) {
@@ -79,6 +80,7 @@ fun validateResponse(body: JsonNode) {
 fun createTestRequestBuilder(method: String): HttpRequest.Builder {
     val b = HttpRequest.Builder()
         .url("https://httpbin.org/${method.toLowerCase()}")
+        .addHeader(otherHeader.first, otherHeader.second)
 
     if (HttpMethod.requiresRequestBody(method.toUpperCase()))
         b.method(method, formBody)

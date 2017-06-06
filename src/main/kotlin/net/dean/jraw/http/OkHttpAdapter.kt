@@ -22,7 +22,6 @@ class OkHttpAdapter(override var userAgent: UserAgent): HttpAdapter {
         })
     }
 
-    @Throws(NetworkException::class)
     override fun executeSync(r: HttpRequest): HttpResponse {
         val res = createCall(r)
         try {
@@ -40,7 +39,7 @@ class OkHttpAdapter(override var userAgent: UserAgent): HttpAdapter {
 
     private fun compileRequest(r: HttpRequest): Request =
         Request.Builder()
-            .header("User-Agent", userAgent.value)
+            .headers(r.headers.set("User-Agent", userAgent.value).build())
             .url(r.url)
             .method(r.method, r.body)
             .build()

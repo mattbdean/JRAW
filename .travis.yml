@@ -1,8 +1,17 @@
 sudo: false
 language: java
 jdk:
-  - oraclejdk8
+- oraclejdk8
 script:
-  - ./gradlew check junitPlatformJacocoReport
+- "./gradlew check junitPlatformJacocoReport"
 after_success:
-  - bash <(curl -s https://codecov.io/bash) -f build/reports/jacoco/junitPlatformJacocoReport/junitPlatformJacocoReport.xml
+- bash <(curl -s https://codecov.io/bash) -f build/reports/jacoco/junitPlatformJacocoReport/junitPlatformJacocoReport.xml
+env:
+  global:
+  # Environmental variables required by CredentialsUtil for CI testing in Travis
+  - secure: q4y8mksZHqu4hOK+5bBXneI/hbg/lmpXD4FWJQ/AONI8bI1YO57LwmZqA3peGYFz78+ExYchdIFZHul6Bi8DLYUXujKpKHl3CCvM5IAS6qLddGv2GyNFPmaaJWQz6WX2rQKq+LOK+HUHtFuwgkyAcHy4S+IlmbLXKnVVdgDv4aY=
+  - secure: Vj2pDbLBpHf46j1EkK9zXmf2C5O0IGiaD8eAeb387Q6T26Q3epGf1j0DaoqKimw5lJAmPV9GIdimWCPrcDvBdJIDNgEbOIhX/jMQFgaDrl+Z9NeFPtATAdKS156Ki+O3Iem/u12Zz2h9pv81p4V5S262+fXUA0CLrCSGQubKyYY=
+  - secure: YoywqU9GWnW55U3ucM0kg/mztWaAKtRIQy90ItYXlzQI8vK++TjivOFEaOaKCI6HIsULb14y5M5v4aN+9vJ0hCd+A5XB+E3i+lZRG1ypPdVBHcFOZ+RD+7gAEzcaylTX3Fd2slJ2fdxqNeLmQXtOC6J0kTvdyHcvX1nx9BqMNCo=
+  - secure: hNYHnZJR/GElL7lgRUS3TPfFEuw1xboXL4VXVknDjfuWK8DU54DcERxq8b5x7JNq2N4nnrqcORbWrcyvciOQo5Sidq5x+JiTIyBJh8sPWy8ijkinE7C/wOHoVF2uMtxXzFeGev+ZL5vMbu53WUEQAUDV/2jVtRd8CZ66zDQpWaE=
+  - secure: siKHQ1lS8cbtY+lfFpX2mZf2KLrIwjGuGsmEfsJZILsyOD61hq7KyLnCs42nbiVND7vZxyyBTcFOS85I78+RoxaiIXP03VOY6IPanCGL0t4imL7nALl4wejQqiYdeanvI0enmaODiaff5Sbm0r5Iwk7sz3lu52haIj1aWuTp9Zo=
+  - secure: WmSk6+kXllsteujcIpY0Yo045kMjdrA/lB1HPr7E0f8yBPwox6YtJVas/8Fi31iLeX0kleh0VvySZB0mDbeKVIf5SZ6aoYlFKjmmBvsK/oH4HWk1+IVHmiUFRJEAiq0ve0+i7J5hF9OX0pdLuKd/sL4UYvyu+ThurNxez/SIfdc=

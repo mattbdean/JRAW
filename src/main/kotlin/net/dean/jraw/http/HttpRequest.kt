@@ -1,6 +1,7 @@
 package net.dean.jraw.http
 
 import okhttp3.FormBody
+import okhttp3.Headers
 import okhttp3.Request
 import okhttp3.RequestBody
 import java.io.IOException
@@ -29,6 +30,7 @@ import java.util.regex.Pattern
  */
 class HttpRequest private constructor(
     val url: String,
+    val headers: Headers.Builder,
     val method: String,
     val body: RequestBody?,
     internal val basicAuth: BasicAuthData?,
@@ -38,6 +40,7 @@ class HttpRequest private constructor(
 ) {
     private constructor(b: Builder) : this(
         url = buildUrl(b),
+        headers = b.headers,
         method = b.method,
         body = b.body,
         basicAuth = b.basicAuth,
@@ -125,6 +128,7 @@ class HttpRequest private constructor(
 
     class Builder {
         internal var method: String = "GET"
+        internal var headers: Headers.Builder = Headers.Builder()
         internal var body: RequestBody? = null
         internal var success: (response: HttpResponse) -> Unit = {}
         internal var failure: (response: HttpResponse) -> Unit = DEFAULT_FAILURE_HANDLER
@@ -164,6 +168,8 @@ class HttpRequest private constructor(
         fun patch(body: RequestBody) = method("PATCH", body)
 
         fun url(url: String): Builder { this.url = url; return this }
+
+        fun addHeader(key: String, value: String): Builder { this.headers.add(key, value); return this }
 
         /** Sets the function that gets called on a 2XX status code */
         fun success(success: (response: HttpResponse) -> Unit): Builder { this.success = success; return this }
