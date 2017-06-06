@@ -11,9 +11,16 @@ class RedditClient(
     val authMethod: AuthenticationMethod,
     val oauthData: OAuthData
 ) {
+    /**
+     * Creates a [HttpRequest.Builder], setting `secure(true)`, `host("oauth.reddit.com")`, and the Authorization header
+     */
+    fun requestStub() = HttpRequest.Builder()
+        .secure(true)
+        .host("oauth.reddit.com")
+        .addHeader("Authorization", "bearer ${oauthData.accessToken}")
+
     fun me(): JsonNode =
-        http.executeSync(HttpRequest.Builder()
-            .url("https://oauth.reddit.com/api/v1/me")
-            .addHeader("Authorization", "bearer ${oauthData.accessToken}")
+        http.executeSync(requestStub()
+            .path("/api/v1/me")
             .build()).json
 }
