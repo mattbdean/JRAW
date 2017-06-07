@@ -1,0 +1,10 @@
+dependencies {
+    compile "org.jsoup:jsoup:1.10.2"
+}
+
+task run(type: JavaExec, dependsOn: classes) {
+    main = 'net.dean.jraw.meta.MainKt'
+    classpath = sourceSets.main.runtimeClasspath
+
+    args = ["foo"]
+}
