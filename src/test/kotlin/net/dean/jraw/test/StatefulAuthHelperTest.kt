@@ -12,6 +12,7 @@ import net.dean.jraw.http.oauth.OAuthHelper
 import net.dean.jraw.http.oauth.StatefulAuthHelper
 import net.dean.jraw.test.util.CredentialsUtil
 import net.dean.jraw.test.util.TestConfig
+import net.dean.jraw.test.util.expectException
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.it
 
@@ -19,18 +20,15 @@ class StatefulAuthHelperTest : Spek({
     it("should provide helpers to point the user in the right direction") {
         val reddit = emulateBrowserAuth()
         // Send a request that shouldn't fail
-        println(reddit.me())
+        reddit.me()
     }
 
     it("should throw an OAuthException when the user hits the 'decline' button instead") {
         val (helper, authorizePage) = doBrowserLogin()
         val redirectPage: HtmlPage = findChild<HtmlInput>(authorizePage.body, "input", "value" to "Decline").click()
 
-        try {
+        expectException(OAuthException::class) {
             helper.onUserChallenge(getUrlFrom(redirectPage))
-            throw IllegalStateException("Should have thrown OAuthException by now")
-        } catch (e: OAuthException) {
-            // pass
         }
     }
 })

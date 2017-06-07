@@ -2,9 +2,9 @@ package net.dean.jraw.test
 
 import com.winterbe.expekt.should
 import net.dean.jraw.http.HttpRequest
+import net.dean.jraw.test.util.expectException
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.it
-import java.lang.AssertionError
 
 class HttpRequestTest: Spek({
     it("should let us use url() only") {
@@ -26,17 +26,10 @@ class HttpRequestTest: Spek({
     }
 
     it("should throw an error if we leave the host out") {
-        try {
+        expectException(IllegalArgumentException::class) {
             HttpRequest.Builder()
                 .path("/foo")
                 .build()
-
-            throw AssertionError("Expecting an IllegalArgumentException")
-        } catch (ex: Exception) {
-            if (ex !is IllegalArgumentException) {
-                // We were expecting an IllegalArgumentException
-                throw AssertionError("Expecting an IllegalArgumentException")
-            }
         }
     }
 

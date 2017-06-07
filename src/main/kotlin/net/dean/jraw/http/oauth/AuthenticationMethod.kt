@@ -23,11 +23,13 @@ enum class AuthenticationMethod constructor(
     SCRIPT,
 
     /**
-     * Authentication without a user. Useful for when you don't need to
+     * OAuth2 authentication without a logged-in user. Web or script apps should use this type, which requires a secret.
+     * Installed apps (which cannot keep a secret) should use [USERLESS_APP].
      */
     USERLESS(true),
+
     /**
-     * OAuth2 authentication without the context of a user. Use this over [.USERLESS] if this is being used on a
+     * OAuth2 authentication without the context of a user. Use this over [USERLESS] if this is being used on a
      * mobile app and thus cannot retain a secret.
      */
     USERLESS_APP(true)
