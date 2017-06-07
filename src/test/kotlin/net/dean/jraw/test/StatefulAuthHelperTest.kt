@@ -11,8 +11,8 @@ import net.dean.jraw.http.oauth.OAuthException
 import net.dean.jraw.http.oauth.OAuthHelper
 import net.dean.jraw.http.oauth.StatefulAuthHelper
 import net.dean.jraw.test.util.CredentialsUtil
-import net.dean.jraw.test.util.TestConfig
 import net.dean.jraw.test.util.expectException
+import net.dean.jraw.test.util.newOkHttpAdapter
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.it
 
@@ -50,7 +50,7 @@ private fun createWebClient(): WebClient {
 fun getUrlFrom(page: HtmlPage) = page.webResponse.webRequest.url.toExternalForm()
 
 private fun doBrowserLogin(vararg scopes: String = arrayOf("identity")): Pair<StatefulAuthHelper, HtmlPage> {
-    val helper = OAuthHelper.installedApp(CredentialsUtil.app, TestConfig.newOkHttpAdapter())
+    val helper = OAuthHelper.installedApp(CredentialsUtil.app, newOkHttpAdapter())
 
     // Test state change once we get the authorization URL
     helper.authStatus.should.equal(StatefulAuthHelper.Status.INIT)

@@ -5,6 +5,8 @@ import net.dean.jraw.RedditClient
 import net.dean.jraw.http.HttpAdapter
 import net.dean.jraw.http.HttpRequest
 import net.dean.jraw.http.NetworkException
+import net.dean.jraw.http.OkHttpAdapter
+import net.dean.jraw.test.util.TestConfig.userAgent
 import org.awaitility.Awaitility.await
 import kotlin.reflect.KClass
 
@@ -47,3 +49,5 @@ fun ensureAuthenticated(reddit: RedditClient) {
         throw e
     }
 }
+
+fun newOkHttpAdapter() = OkHttpAdapter(userAgent)

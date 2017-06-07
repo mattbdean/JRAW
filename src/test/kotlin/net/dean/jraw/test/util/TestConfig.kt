@@ -2,7 +2,6 @@ package net.dean.jraw.test.util
 
 import net.dean.jraw.RedditClient
 import net.dean.jraw.Version
-import net.dean.jraw.http.OkHttpAdapter
 import net.dean.jraw.http.UserAgent
 import net.dean.jraw.http.oauth.OAuthHelper
 
@@ -12,6 +11,4 @@ object TestConfig {
 
     /** Lazy-initialized RedditClient authorized by a script app */
     val reddit: RedditClient by lazy { OAuthHelper.script(CredentialsUtil.script, newOkHttpAdapter()) }
-
-    fun newOkHttpAdapter() = OkHttpAdapter(userAgent)
 }
