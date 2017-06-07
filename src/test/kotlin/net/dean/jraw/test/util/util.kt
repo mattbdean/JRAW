@@ -28,7 +28,7 @@ fun ensureAuthenticated(reddit: RedditClient) {
         }
     } catch (e: NetworkException) {
         // Wrap the error to make sure the tester knows why the test failed
-        if (e.res.code() == 401)
+        if (e.res.code == 401)
             throw IllegalStateException("Not authenticated, API responded with 401", e)
 
         // Something else went wrong

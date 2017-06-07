@@ -75,7 +75,7 @@ class StatefulAuthHelper internal constructor(private val http: HttpAdapter, pri
                 oauthData = JrawUtils.jackson.readValue<OAuthData>(response)
             )
         } catch (ex: NetworkException) {
-            if (ex.res.code() == 401)
+            if (ex.res.code == 401)
                 throw OAuthException("Invalid client ID/secret", ex)
             throw ex
         }

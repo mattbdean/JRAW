@@ -27,7 +27,7 @@ object OAuthHelper {
 
             return createRedditClient(http, creds, data)
         } catch (e: NetworkException) {
-            if (e.res.code() == 401)
+            if (e.res.code == 401)
                 throw IllegalArgumentException("Invalid credentials", e)
             throw e
         }
