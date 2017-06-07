@@ -29,7 +29,7 @@ class RedditClient(
      * ```
      */
     fun request(r: HttpRequest): JsonNode =
-        http.executeSync(r).json
+        http.execute(r).json
 
     /**
      * Adds a little syntactic sugar to the vanilla `request` method.

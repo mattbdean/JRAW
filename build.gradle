@@ -34,7 +34,6 @@ dependencies {
     // Required since we manually excluded org.jetbrains.kotlin from spek
     testCompile "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
     testCompile 'com.winterbe:expekt:0.2.0'
-    testCompile 'org.awaitility:awaitility:3.0.0'
     testCompile ("org.jetbrains.spek:spek-api:$spekVersion") {
         exclude group: 'org.jetbrains.kotlin'
     }

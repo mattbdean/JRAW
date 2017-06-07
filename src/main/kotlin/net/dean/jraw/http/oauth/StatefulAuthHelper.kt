@@ -56,7 +56,7 @@ class StatefulAuthHelper internal constructor(private val http: HttpAdapter, pri
         val code = query["code"]!!
 
         try {
-            val response = http.executeSync(HttpRequest.Builder()
+            val response = http.execute(HttpRequest.Builder()
                 .secure(true)
                 .host(OAuthHelper.HOST_WWW)
                 .path("/api/v1/access_token")

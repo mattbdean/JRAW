@@ -3,12 +3,11 @@ package net.dean.jraw.test
 import com.fasterxml.jackson.databind.JsonNode
 import com.winterbe.expekt.should
 import net.dean.jraw.http.HttpRequest
-import net.dean.jraw.http.HttpResponse
+import net.dean.jraw.http.NetworkException
 import net.dean.jraw.http.OkHttpAdapter
 import net.dean.jraw.test.util.TestConfig.userAgent
-import net.dean.jraw.test.util.httpAsync
+import net.dean.jraw.test.util.expectException
 import okhttp3.internal.http.HttpMethod
-import org.awaitility.Awaitility.await
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
@@ -24,40 +23,27 @@ class OkHttpAdapterTest: Spek({
     }
 
     describe("execute") {
-        it("should execute asynchronously by default") {
+        it("should support sending request bodies") {
             // Pick these two because they don't need a response body
             for (method in listOf("GET", "POST", "PUT", "PATCH", "DELETE")) {
-                httpAsync(http, createTestRequestBuilder(method), ::validateResponse)
+                validateResponse(http.execute(createTestRequestBuilder(method).build()).json)
             }
         }
 
-        it("should allow sync via a builder flag") {
-            http.execute(createTestRequestBuilder("GET")
-                .success({ validateResponse(it.json) })
-                .build())
-        }
-
         it("should handle basic authentication") {
-            var challenged = false
-
+            // If basic authentication isn't working, execute() will throw a NetworkException
             http.execute(HttpRequest.Builder()
                 .url("https://httpbin.org/basic-auth/user/passwd")
                 .basicAuth("user" to "passwd")
-                .success { challenged = true }
-                .failure({ challenged = true; throw IllegalStateException("should have passed basic auth") })
                 .build())
-
-            await().until({ challenged })
         }
-    }
 
-    describe("executeSync") {
-        it("should ignore success and failure callbacks") {
-            val fail: (res: HttpResponse) -> Unit = { throw IllegalStateException("should not have reached here") }
-            http.execute(createTestRequestBuilder("GET")
-                .success(fail)
-                .failure(fail)
-                .build())
+        it("should throw a NetworkException on a failing status code") {
+            expectException(NetworkException::class) {
+                http.execute(HttpRequest.Builder()
+                    .url("https://httpbin.org/status/418")
+                    .build())
+            }
         }
     }
 })

@@ -1,65 +1,44 @@
 package net.dean.jraw.http
 
+import net.dean.jraw.http.HttpRequest.Builder
 import okhttp3.FormBody
 import okhttp3.Headers
-import okhttp3.Request
 import okhttp3.RequestBody
-import java.io.IOException
 import java.net.URLEncoder
 import java.util.*
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 /**
- * Models a HTTP request. Create instances using the Builder model and are executed asynchronously by default.
+ * Models a HTTP request. Instanes are created using the [builder pattern][Builder]
  *
  * ```
  * val request = HttpRequest.Builder()
- *     .method("DELETE") // defaults to GET
+ *     .delete() // defaults to GET
  *     .url("https://httpbin.org/delete")
- *     .success({ println(it.json) })
- *     .failure({ println("Failed: $it" })
+ *     .header("X-Foo", "Bar")
  *     .build()
  *
  * val response = httpClient.execute(request)
  * println(response.json)
  * ```
- *
- * Note that [HttpAdapter.executeSync] will ignore [success] and [failure]. You'll have to handle possible errors via
- * try/catch.
  */
 class HttpRequest private constructor(
     val url: String,
     val headers: Headers.Builder,
     val method: String,
     val body: RequestBody?,
-    internal val basicAuth: BasicAuthData?,
-    internal val success: (response: HttpResponse) -> Unit,
-    internal val failure: (response: HttpResponse) -> Unit,
-    internal val internalFailure: (original: Request, e: IOException) -> Unit
+    internal val basicAuth: BasicAuthData?
 ) {
     private constructor(b: Builder) : this(
         url = buildUrl(b),
         headers = b.headers,
         method = b.method,
         body = b.body,
-        basicAuth = b.basicAuth,
-        success = b.success,
-        failure = b.failure,
-        internalFailure = b.internalFailure
+        basicAuth = b.basicAuth
     )
 
     companion object {
-        internal val DEFAULT_FAILURE_HANDLER: (response: HttpResponse) -> Unit = { res ->
-            val req = res.raw.request()
-            throw RuntimeException("Unhandled HTTP request with non-success status: ${req.method()} ${req.url()} -> ${res.code}")
-        }
-        internal val DEFAULT_INTERNAL_FAILURE_HANDLER: (original: Request, e: IOException) -> Unit = { r, e ->
-            throw createInternalFailureException(r, e)
-        }
-        internal fun createInternalFailureException(r: Request, e: IOException): RuntimeException =
-            RuntimeException("HTTP request engine encountered an error: ${r.method()} ${r.url()}", e)
-
         /** This Pattern will match a URI parameter. For example, /api/{param1}/{param2}  */
         private val PATH_PARAM_PATTERN = Pattern.compile("\\{(.*?)\\}")
 
@@ -132,9 +111,6 @@ class HttpRequest private constructor(
         internal var method: String = "GET"
         internal var headers: Headers.Builder = Headers.Builder()
         internal var body: RequestBody? = null
-        internal var success: (response: HttpResponse) -> Unit = {}
-        internal var failure: (response: HttpResponse) -> Unit = DEFAULT_FAILURE_HANDLER
-        internal var internalFailure: (original: Request, e: IOException) -> Unit = DEFAULT_INTERNAL_FAILURE_HANDLER
 
         // URL-related variables
         internal var url: String? = null
@@ -172,18 +148,6 @@ class HttpRequest private constructor(
         fun url(url: String): Builder { this.url = url; return this }
 
         fun addHeader(key: String, value: String): Builder { this.headers.add(key, value); return this }
-
-        /** Sets the function that gets called on a 2XX status code */
-        fun success(success: (response: HttpResponse) -> Unit): Builder { this.success = success; return this }
-
-        /** Sets the function that gets called on a non-2XX status code  */
-        fun failure(failure: (response: HttpResponse) -> Unit): Builder { this.failure = failure; return this }
-
-        /** Sets the callback to handle an internal HTTP engine failure */
-        fun internalFailure(internalFailure: (original: Request, e: IOException) -> Unit): Builder {
-            this.internalFailure = internalFailure
-            return this
-        }
 
         /** Convenience function for `basicAuth(BasicAuthData)` */
         fun basicAuth(creds: Pair<String, String>) = basicAuth(BasicAuthData(creds.first, creds.second))

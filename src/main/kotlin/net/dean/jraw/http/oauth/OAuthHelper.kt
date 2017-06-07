@@ -15,7 +15,7 @@ object OAuthHelper {
             throw IllegalArgumentException("This function is for script apps only")
 
         try {
-            val data = http.executeSync(HttpRequest.Builder()
+            val data = http.execute(HttpRequest.Builder()
                 .post(mapOf(
                     "grant_type" to "password",
                     "username" to creds.username!!,
@@ -52,7 +52,7 @@ object OAuthHelper {
         if (creds.authenticationMethod == AuthenticationMethod.USERLESS_APP)
             postBody.put("device_id", creds.deviceId.toString())
 
-        val data = http.executeSync(HttpRequest.Builder()
+        val data = http.execute(HttpRequest.Builder()
             .host(HOST_WWW)
             .path("/api/v1/access_token")
             .post(postBody)

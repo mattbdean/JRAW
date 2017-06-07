@@ -1,24 +1,10 @@
 package net.dean.jraw.test.util
 
-import com.fasterxml.jackson.databind.JsonNode
 import net.dean.jraw.RedditClient
-import net.dean.jraw.http.HttpAdapter
-import net.dean.jraw.http.HttpRequest
 import net.dean.jraw.http.NetworkException
 import net.dean.jraw.http.OkHttpAdapter
 import net.dean.jraw.test.util.TestConfig.userAgent
-import org.awaitility.Awaitility.await
 import kotlin.reflect.KClass
-
-fun httpAsync(http: HttpAdapter, r: HttpRequest.Builder, handle: (body: JsonNode) -> Unit) {
-    var json: JsonNode? = null
-
-    http.execute(r
-        .success { json = it.json }
-        .build())
-    await().until({ json != null })
-    handle(json!!)
-}
 
 fun <T : Exception> expectException(clazz: KClass<T>, doWork: () -> Unit) {
     val message = "Should have thrown ${clazz.qualifiedName}"
