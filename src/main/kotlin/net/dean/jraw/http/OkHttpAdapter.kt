@@ -16,7 +16,8 @@ class OkHttpAdapter(userAgent: UserAgent) : AbstractHttpAdapter(userAgent) {
             code = res.code(),
             readBody = { res.body()!!.string() },
             requestMethod = res.request().method(),
-            requestUrl = res.request().url().toString()
+            requestUrl = res.request().url().toString(),
+            contentType = res.body()!!.contentType().toString()
         )
     }
 

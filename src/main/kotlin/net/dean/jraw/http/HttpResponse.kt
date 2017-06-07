@@ -12,6 +12,8 @@ data class HttpResponse(
     val code: Int,
     /** A function that will read the body of a request. Used to lazy initialize the [body] property */
     private val readBody: () -> String,
+    /** The response body's content type (eg. "application/json") */
+    val contentType: String,
     /** HTTP request's method ("GET", "POST", etc.) */
     val requestMethod: String,
     /** The URL that the request was targeted at */

@@ -1,16 +1,24 @@
 package net.dean.jraw
 
 import com.fasterxml.jackson.databind.JsonNode
-import net.dean.jraw.http.HttpAdapter
-import net.dean.jraw.http.HttpRequest
+import net.dean.jraw.http.*
 import net.dean.jraw.http.oauth.AuthenticationMethod
 import net.dean.jraw.http.oauth.OAuthData
 
+/**
+ * Specialized class for sending requests to [oauth.reddit.com](https://www.reddit.com/dev/api/oauth).
+ *
+ * By default, HTTP requests and responses created through this class are logged with [logger]. You can provide your own
+ * [HttpLogger] implementation or turn it off entirely using [logHttp]
+ */
 class RedditClient(
     val http: HttpAdapter,
     val authMethod: AuthenticationMethod,
     val oauthData: OAuthData
 ) {
+    var logger: HttpLogger = SimpleHttpLogger()
+    var logHttp = true
+
     /**
      * Creates a [HttpRequest.Builder], setting `secure(true)`, `host("oauth.reddit.com")`, and the Authorization header
      */
@@ -28,8 +36,21 @@ class RedditClient(
      *     .build())
      * ```
      */
-    fun request(r: HttpRequest): JsonNode =
-        http.execute(r).json
+    fun request(r: HttpRequest): JsonNode {
+        return doExecute(r).json
+    }
+
+    private fun doExecute(r: HttpRequest): HttpResponse {
+        return if (logHttp) {
+            // Log the request and response, returning 'res'
+            val tag = logger.request(r)
+            val res = http.execute(r)
+            logger.response(tag, res)
+            res
+        } else {
+            http.execute(r)
+        }
+    }
 
     /**
      * Adds a little syntactic sugar to the vanilla `request` method.
