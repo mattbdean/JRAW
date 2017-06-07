@@ -147,7 +147,8 @@ class HttpRequest private constructor(
 
         fun url(url: String): Builder { this.url = url; return this }
 
-        fun addHeader(key: String, value: String): Builder { this.headers.add(key, value); return this }
+        /** Sets a header */
+        fun header(key: String, value: String): Builder { this.headers.set(key, value); return this }
 
         /** Convenience function for `basicAuth(BasicAuthData)` */
         fun basicAuth(creds: Pair<String, String>) = basicAuth(BasicAuthData(creds.first, creds.second))

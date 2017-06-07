@@ -66,7 +66,7 @@ fun validateResponse(body: JsonNode) {
 fun createTestRequestBuilder(method: String): HttpRequest.Builder {
     val b = HttpRequest.Builder()
         .url("https://httpbin.org/${method.toLowerCase()}")
-        .addHeader(otherHeader.first, otherHeader.second)
+        .header(otherHeader.first, otherHeader.second)
 
     if (HttpMethod.requiresRequestBody(method.toUpperCase()))
         b.method(method, formBody)

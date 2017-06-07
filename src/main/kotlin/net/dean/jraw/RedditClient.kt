@@ -17,7 +17,7 @@ class RedditClient(
     fun requestStub() = HttpRequest.Builder()
         .secure(true)
         .host("oauth.reddit.com")
-        .addHeader("Authorization", "bearer ${oauthData.accessToken}")
+        .header("Authorization", "bearer ${oauthData.accessToken}")
 
     /**
      * Uses the [HttpAdapter] to execute a synchronous HTTP request and returns its JSON value
@@ -56,7 +56,7 @@ class RedditClient(
      * ```
      * val json = reddit.request(reddit.requestStub()
      *     .path("/api/v1/me")
-     *     .addHeader("X-Foo", "Bar")
+     *     .header("X-Foo", "Bar")
      *     .post(mapOf(
      *         "baz" to "qux"
      *     )).build())
