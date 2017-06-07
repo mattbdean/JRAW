@@ -15,61 +15,59 @@ buildscript {
     }
 }
 
-apply plugin: 'org.junit.platform.gradle.plugin'
-apply plugin: 'org.jetbrains.dokka'
-apply plugin: 'jacoco'
-apply plugin: 'kotlin'
+subprojects {
+    apply plugin: 'org.junit.platform.gradle.plugin'
+    apply plugin: 'kotlin'
 
-repositories {
-    jcenter()
-    maven { url 'https://d.bintray.com/jetbrains/spek' }
-}
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    group = 'net.dean.jraw'
+    version = '0.9.0'
 
-dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
-    compile 'com.squareup.okhttp3:okhttp:3.8.0'
-    compile "com.fasterxml.jackson.module:jackson-module-kotlin:${jacksonVersion}"
-    compile "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
-
-    // Required since we manually excluded org.jetbrains.kotlin from spek
-    testCompile "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
-    testCompile 'com.winterbe:expekt:0.2.0'
-    testCompile ("org.jetbrains.spek:spek-api:$spekVersion") {
-        exclude group: 'org.jetbrains.kotlin'
+    repositories {
+        jcenter()
+        maven { url 'https://d.bintray.com/jetbrains/spek' }
     }
-    testCompile 'org.junit.platform:junit-platform-runner:1.0.0-M4'
-    testRuntime ("org.jetbrains.spek:spek-junit-platform-engine:$spekVersion") {
-        exclude group: 'org.junit.platform'
-        exclude group: 'org.jetbrains.kotlin'
-    }
-    testCompile 'net.sourceforge.htmlunit:htmlunit:2.27'
-}
 
-junitPlatform {
-    filters {
-        engines {
-            include 'spek'
+    dependencies {
+        compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+
+        testCompile 'com.winterbe:expekt:0.2.0'
+        testCompile ("org.jetbrains.spek:spek-api:$spekVersion") {
+            exclude group: 'org.jetbrains.kotlin'
+        }
+        testCompile 'org.junit.platform:junit-platform-runner:1.0.0-M4'
+        testRuntime ("org.jetbrains.spek:spek-junit-platform-engine:$spekVersion") {
+            exclude group: 'org.junit.platform'
+            exclude group: 'org.jetbrains.kotlin'
         }
     }
-}
 
-project.afterEvaluate {
-    def junitPlatformTestTask = project.tasks.getByName('junitPlatformTest')
-
-    jacoco {
-        toolVersion = "+"
-        reportsDir = file("$buildDir/reports/jacoco")
-        applyTo junitPlatformTestTask
+    junitPlatform {
+        filters {
+            engines {
+                include 'spek'
+            }
+        }
     }
 
-    project.task(type: JacocoReport, "junitPlatformJacocoReport", {
-        sourceDirectories = files("src/main/kotlin")
-        classDirectories = files("$buildDir/classes/main")
-        reports {
-            xml.enabled = true
-            html.enabled = true
+    project.afterEvaluate {
+        def junitPlatformTestTask = project.tasks.getByName('junitPlatformTest')
+
+        jacoco {
+            toolVersion = "+"
+            reportsDir = file("$buildDir/reports/jacoco")
+            applyTo junitPlatformTestTask
         }
-        executionData junitPlatformTestTask
-    })
+
+        project.task(type: JacocoReport, "junitPlatformJacocoReport", {
+            sourceDirectories = files("src/main/kotlin")
+            classDirectories = files("$buildDir/classes/main")
+            reports {
+                xml.enabled = true
+                html.enabled = true
+            }
+            executionData junitPlatformTestTask
+        })
+    }
 }
 
