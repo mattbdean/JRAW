@@ -21,7 +21,7 @@ object OAuthHelper {
                 ))
                 .url("https://www.reddit.com/api/v1/access_token")
                 .basicAuth(creds.clientId to creds.clientSecret)
-                .build()).json.toString()
+                .build()).body
             return RedditClient(http, creds.authenticationMethod, JrawUtils.jackson.readValue<OAuthData>(data))
         } catch (e: NetworkException) {
             if (e.res.code() == 401)
@@ -29,4 +29,6 @@ object OAuthHelper {
             throw e
         }
     }
+
+    @JvmStatic fun installedApp(creds: Credentials, http: HttpAdapter) = StatefulAuthHelper(http, creds)
 }

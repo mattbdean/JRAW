@@ -84,6 +84,8 @@ class HttpRequest private constructor(
                     append(URLEncoder.encode(k, "UTF-8"))
                     append('=')
                     append(URLEncoder.encode(v, "UTF-8"))
+                    if (it.hasNext())
+                        append('&')
                 }
             }
 

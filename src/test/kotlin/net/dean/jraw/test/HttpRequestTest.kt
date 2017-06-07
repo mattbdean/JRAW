@@ -21,8 +21,8 @@ class HttpRequestTest: Spek({
             .secure(true)
             .host("google.com")
             .path("/search")
-            .query(mapOf("q" to "hello"))
-            .build().url.should.equal("https://google.com/search?q=hello")
+            .query(mapOf("q" to "hello", "foo" to "bar"))
+            .build().url.should.equal("https://google.com/search?q=hello&foo=bar")
     }
 
     it("should throw an error if we leave the host out") {

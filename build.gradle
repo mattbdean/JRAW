@@ -43,6 +43,7 @@ dependencies {
         exclude group: 'org.junit.platform'
         exclude group: 'org.jetbrains.kotlin'
     }
+    testCompile 'net.sourceforge.htmlunit:htmlunit:2.27'
 }
 
 junitPlatform {

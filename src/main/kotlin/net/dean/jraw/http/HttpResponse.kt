@@ -10,6 +10,7 @@ import okhttp3.Response
 class HttpResponse internal constructor(val raw: Response) {
     /** The JSON value of the response body. Lazy initialized. */
     val json: JsonNode by lazy { JrawUtils.parseJson(raw.body()!!.string() ) }
+    val body: String by lazy { raw.body()!!.string() }
 
     /** HTTP status code */
     val code = raw.code()
