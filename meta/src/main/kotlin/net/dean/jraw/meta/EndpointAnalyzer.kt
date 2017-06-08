@@ -1,7 +1,6 @@
 package net.dean.jraw.meta
 
 import javassist.ClassPool
-import net.dean.jraw.Endpoint
 import net.dean.jraw.EndpointImplementation
 import org.reflections.Reflections
 import org.reflections.scanners.MethodAnnotationsScanner
@@ -27,19 +26,22 @@ object EndpointAnalyzer {
     private val classPool = ClassPool.getDefault()
 
     /**
-     * Gets an EndpointMeta object for the given [Endpoint]
+     * Gets an EndpointMeta object for the given [ParsedEndpoint]
      */
-    fun getFor(e: Endpoint): EndpointMeta? {
-        val javaMethod = implementations.firstOrNull {
+    fun getFor(e: ParsedEndpoint): EndpointMeta? {
+        val method = implementations.firstOrNull {
             val other = it.getAnnotation(EndpointImplementation::class.java).endpoint
             other.method == e.method && other.path == e.path
         } ?: return null
 
-        val ctMethod = classPool.getMethod(javaMethod.declaringClass.name, javaMethod.name)
 
         return EndpointMeta(
-            implementation = javaMethod,
-            sourceLine = ctMethod.methodInfo.getLineNumber(0)
+            implementation = method,
+            sourceUrl = "https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/" +
+                method.declaringClass.name.replace(".", "/") + ".kt#L" + lineNumber(method)
         )
     }
+
+    private fun lineNumber(m: Method) =
+        classPool.getMethod(m.declaringClass.name, m.name).methodInfo.getLineNumber(0)
 }

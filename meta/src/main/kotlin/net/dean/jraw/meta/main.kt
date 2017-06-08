@@ -9,7 +9,6 @@ import java.io.File
  * @see EndpointParser
  */
 fun main(args: Array<String>) {
-    println(EndpointAnalyzer.getFor(net.dean.jraw.Endpoint.GET_ME))
     val opts = parseArgsArray(args)
     val tasks = filterArguments(opts)
 
@@ -34,6 +33,14 @@ val tasks: List<Task> = listOf(
             true to "Created file ${File(location, EnumCreator.RELATIVE_OUTPUT_FILE).absolutePath}"
         } catch (e: Exception) {
             false to "Failed to generate Java source: ${e.message}"
+        }
+    },
+    Task("md-overview") { endpoints, location ->
+        try {
+            MarkdownOverviewCreator.create(endpoints, location)
+            true to "Created file ${location.absolutePath}"
+        } catch (e: Exception) {
+            false to "Failed to generate markdown summary: ${e.message}"
         }
     }
 )

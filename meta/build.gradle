@@ -9,6 +9,7 @@ dependencies {
     compile 'com.github.agrosner:KPoet:1.0.0'
     compile 'javassist:javassist:3.12.1.GA'
     compile 'org.reflections:reflections:0.9.10'
+    compile 'net.steppschuh.markdowngenerator:markdowngenerator:1.3.0.0'
     compile project(':lib')
 }
 
@@ -18,5 +19,8 @@ task update(type: JavaExec, dependsOn: classes) {
 
     // Extract source dir from the lib project's "gen" set for Java files
     def generatedJavaDir = findProject(':lib').sourceSets.getByName('gen').java.srcDirs[0]
-    args = ["--enum", generatedJavaDir]
+    args = [
+        "--enum", generatedJavaDir,
+        "--md-overview", file("../ENDPOINTS.md").absolutePath
+    ]
 }

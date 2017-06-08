@@ -4,6 +4,6 @@ import java.lang.reflect.Method
 
 data class EndpointMeta(
     val implementation: Method,
-    val sourceLine: Int
+    val sourceUrl: String
 )
 
