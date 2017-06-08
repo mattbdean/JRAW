@@ -16,9 +16,13 @@ fun main(args: Array<String>) {
         val endpoints = EndpointParser().fetch()
 
         tasks.forEach {
-            val (success, message) = it(endpoints, opts[it.argKey]!!)
             // Print to stdout if successful, otherwise print to stderr
-            (if (success) System.out else System.err).println("${it.name}: $message")
+            try {
+                val message = it(endpoints, opts[it.argKey]!!)
+                println("${it.name}: $message")
+            } catch (e: Exception) {
+                System.err.println("${it.name}: ${e.message}")
+            }
         }
     } else {
         println("Nothing to do")
@@ -28,20 +32,16 @@ fun main(args: Array<String>) {
 val tasks: List<Task> = listOf(
     // enum task -- create an enum class to list Endpoints
     Task("enum") { endpoints, location ->
-        try {
-            EnumCreator(endpoints).writeTo(location)
-            true to "Created file ${File(location, EnumCreator.RELATIVE_OUTPUT_FILE).absolutePath}"
-        } catch (e: Exception) {
-            false to "Failed to generate Java source: ${e.message}"
-        }
+        EnumCreator(endpoints).writeTo(location)
+        "Created file ${File(location, EnumCreator.RELATIVE_OUTPUT_FILE).absolutePath}"
     },
     Task("md-overview") { endpoints, location ->
-        try {
-            MarkdownOverviewCreator.create(endpoints, location)
-            true to "Created file ${location.absolutePath}"
-        } catch (e: Exception) {
-            false to "Failed to generate markdown summary: ${e.message}"
-        }
+        MarkdownOverviewCreator.create(endpoints, location)
+        "Created file ${location.absolutePath}"
+    },
+    Task("readme-badge") { endpoints, location ->
+        ReadmeBadgeUpdater.update(endpoints, location)
+        "Updated API coverage badge in file"
     }
 )
 
@@ -57,13 +57,13 @@ val tasks: List<Task> = listOf(
 data class Task(
     val name: String,
     /** Does some work with the parsed Endpoints and a file system path */
-    val doWork: (List<ParsedEndpoint>, File) -> Pair<Boolean, String>)
+    val doWork: (List<ParsedEndpoint>, File) -> String)
 {
     /** Including this key in the command line triggers this task to run. See [main] for more. */
     val argKey: String = "--$name"
 
     // Propagate parameters to `doWork`
-    operator fun invoke(endpoints: List<ParsedEndpoint>, location: File): Pair<Boolean, String> = doWork(endpoints, location)
+    operator fun invoke(endpoints: List<ParsedEndpoint>, location: File): String = doWork(endpoints, location)
 }
 
 /**

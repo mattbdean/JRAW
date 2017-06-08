@@ -21,6 +21,7 @@ task update(type: JavaExec, dependsOn: classes) {
     def generatedJavaDir = findProject(':lib').sourceSets.getByName('gen').java.srcDirs[0]
     args = [
         "--enum", generatedJavaDir,
-        "--md-overview", file("../ENDPOINTS.md").absolutePath
+        "--md-overview", file("../ENDPOINTS.md").absolutePath,
+        "--readme-badge", file("../README.md").absolutePath
     ]
 }
