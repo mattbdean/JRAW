@@ -1,6 +1,12 @@
 package net.dean.jraw.meta
 
+import net.dean.jraw.EndpointImplementation
 import org.jsoup.Jsoup
+import org.reflections.Reflections
+import org.reflections.scanners.MethodAnnotationsScanner
+import org.reflections.util.ClasspathHelper
+import org.reflections.util.ConfigurationBuilder
+import java.lang.reflect.Method
 import java.net.URL
 
 class EndpointParser {
@@ -33,7 +39,7 @@ class EndpointParser {
         }
     }
 
-    fun removeSubredditPrefix(path: String): Pair<String, Boolean> {
+    private fun removeSubredditPrefix(path: String): Pair<String, Boolean> {
         return if (path.startsWith("[/r/subreddit]")) {
             path.substring("[/r/subreddit]".length) to true
         } else {
@@ -41,7 +47,7 @@ class EndpointParser {
         }
     }
 
-    fun trimPath(path: String, oauthScope: String): String {
+    private fun trimPath(path: String, oauthScope: String): String {
         var newPath = path
 
         // path might also include the string "rss support" if the endpoints supports RSS
@@ -58,7 +64,7 @@ class EndpointParser {
     /**
      * Transforms colon parameters into brace parameters and inserts missing braces
      */
-    fun fixPathParams(path: String, redditDocLink: String): String {
+    private fun fixPathParams(path: String, redditDocLink: String): String {
         var newPath = path
 
         if (newPath.contains(":"))
@@ -83,14 +89,14 @@ class EndpointParser {
      *
      * `/api/mod/conversations/{conversation_id}`
      */
-    fun transformColonParameters(path: String): String =
+    private fun transformColonParameters(path: String): String =
         path.split("/").map { if (it.startsWith(":")) "{${it.substring(1)}}" else it }.joinToString("/")
 
     /**
      * Inserts braces around path parameters. Parameter names are located through the [redditDocLink] fragment
      * (something like "GET_subreddits_mine_{where}") and braces are injected into the given path.
      */
-    fun injectPathParams(path: String, redditDocLink: String): String {
+    private fun injectPathParams(path: String, redditDocLink: String): String {
         var newPath = path
 
         val linkFragment = URL(redditDocLink).ref

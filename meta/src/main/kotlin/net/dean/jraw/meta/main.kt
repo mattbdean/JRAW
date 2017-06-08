@@ -9,6 +9,7 @@ import java.io.File
  * @see EndpointParser
  */
 fun main(args: Array<String>) {
+    println(EndpointAnalyzer.getFor(net.dean.jraw.Endpoint.GET_ME))
     val opts = parseArgsArray(args)
     val tasks = filterArguments(opts)
 

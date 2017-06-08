@@ -87,5 +87,6 @@ class RedditClient(
      */
     fun request(configure: (stub: HttpRequest.Builder) -> HttpRequest.Builder) = request(configure(requestStub()).build())
 
+    @EndpointImplementation(Endpoint.GET_ME)
     fun me(): JsonNode = request { it.path("/api/v1/me") }
 }
