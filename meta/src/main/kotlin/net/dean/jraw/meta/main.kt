@@ -1,5 +1,6 @@
 package net.dean.jraw.meta
 
 fun main(args: Array<String>) {
-    EndpointParser().fetch().forEach(::println)
+    val endpoints = EndpointParser().fetch()
+    EnumCreator(endpoints).writeTo(System.out)
 }
