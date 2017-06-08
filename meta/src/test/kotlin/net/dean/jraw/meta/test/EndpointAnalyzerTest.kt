@@ -18,8 +18,7 @@ class EndpointAnalyzerTest : Spek({
         // This method should originate from this library
         meta!!.implementation.declaringClass.`package`.name.should.startWith("net.dean.jraw")
 
-        // There's no way we can really test this
-        meta.sourceLine.should.be.above(0)
+        meta.sourceUrl.should.startWith("https://github.com/thatJavaNerd/JRAW/tree/")
     }
 
     it("should return null for non-implemented endpoints") {
