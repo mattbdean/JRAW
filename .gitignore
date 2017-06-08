@@ -13,9 +13,6 @@ out/
 # Testing account credentials
 lib/src/test/resources/credentials.json
 
-# Generated code
-lib/src/gen
-
 # Local todo list
 todo.txt
 
