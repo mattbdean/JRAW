@@ -12,4 +12,8 @@ dependencies {
 task update(type: JavaExec, dependsOn: classes) {
     main = 'net.dean.jraw.meta.MainKt'
     classpath = sourceSets.main.runtimeClasspath
+
+    // Extract source dir from the lib project's "gen" set for Java files
+    def generatedJavaDir = findProject(':lib').sourceSets.getByName('gen').java.srcDirs[0]
+    args = ["--enum", generatedJavaDir]
 }

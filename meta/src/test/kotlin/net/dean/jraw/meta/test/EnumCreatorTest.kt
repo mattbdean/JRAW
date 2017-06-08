@@ -44,11 +44,8 @@ class EnumCreatorTest : Spek({
         try {
             EnumCreator(endpoints).writeTo(tmpDir)
 
-            // Folder where the file will be written to
-            val packageDir = EnumCreator.PACKAGE.replace('.', '/')
-
             // Create a Process to compile the generated code
-            val process = ProcessBuilder("javac", "$packageDir/${EnumCreator.ENUM_NAME}.java")
+            val process = ProcessBuilder("javac", EnumCreator.RELATIVE_OUTPUT_FILE)
                 .directory(tmpDir)
                 .redirectErrorStream(true)
                 .start()

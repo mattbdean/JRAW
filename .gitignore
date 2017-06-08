@@ -11,7 +11,10 @@ build/
 out/
 
 # Testing account credentials
-jraw/src/test/resources/credentials.json
+lib/src/test/resources/credentials.json
+
+# Generated code
+lib/src/gen
 
 # Local todo list
 todo.txt

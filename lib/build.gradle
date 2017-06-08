@@ -6,3 +6,13 @@ dependencies {
     compile "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
     testCompile 'net.sourceforge.htmlunit:htmlunit:2.27'
 }
+
+sourceSets {
+    gen // Generated Java code (see the :meta project)
+    main {
+        java {
+            // Include generated sources
+            source gen.allSource
+        }
+    }
+}

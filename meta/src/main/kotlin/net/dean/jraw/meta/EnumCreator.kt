@@ -55,6 +55,7 @@ class EnumCreator(val endpoints: List<Endpoint>, val indent: Int = 4) {
     companion object {
         const val ENUM_NAME = "Endpoint"
         const val PACKAGE = "net.dean.jraw"
+        @JvmField val RELATIVE_OUTPUT_FILE = PACKAGE.replace('.', File.separatorChar) + "/$ENUM_NAME.java"
 
         private val stripPrefixes = listOf("/api/v1/", "/api/", "/")
 
