@@ -3,7 +3,7 @@ language: java
 jdk:
 - oraclejdk8
 script:
-- "./gradlew check junitPlatformJacocoReport"
+- "./gradlew :meta:update check junitPlatformJacocoReport"
 after_success:
 - bash <(curl -s https://codecov.io/bash) -f lib/build/reports/jacoco/junitPlatformJacocoReport/junitPlatformJacocoReport.xml
 before_cache:
