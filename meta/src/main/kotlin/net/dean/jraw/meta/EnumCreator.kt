@@ -3,7 +3,7 @@ package net.dean.jraw.meta
 import com.grosner.kpoet.*
 import java.io.File
 
-class EnumCreator(val endpoints: List<Endpoint>, val indent: Int = 4) {
+class EnumCreator(val endpoints: List<ParsedEndpoint>, val indent: Int = 4) {
     fun writeTo(out: File) = createJavaFile().writeTo(out)
     fun writeTo(out: Appendable) = createJavaFile().writeTo(out)
 
@@ -59,7 +59,7 @@ class EnumCreator(val endpoints: List<Endpoint>, val indent: Int = 4) {
 
         private val stripPrefixes = listOf("/api/v1/", "/api/", "/")
 
-        private fun enumName(e: Endpoint): String {
+        private fun enumName(e: ParsedEndpoint): String {
             var name = e.path
 
             stripPrefixes
@@ -76,7 +76,7 @@ class EnumCreator(val endpoints: List<Endpoint>, val indent: Int = 4) {
                 .replace("}", "")
         }
 
-        private fun javadocFor(e: Endpoint): String =
+        private fun javadocFor(e: ParsedEndpoint): String =
             "Represents the endpoint `${e.method} ${e.path}`. Requires OAuth scope '${e.oauthScope}'. See " +
                 "[here](${e.redditDocLink}) for more information"
     }

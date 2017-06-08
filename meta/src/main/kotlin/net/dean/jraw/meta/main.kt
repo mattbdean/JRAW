@@ -2,9 +2,9 @@ package net.dean.jraw.meta
 import java.io.File
 
 /**
- * This entry point carries out tasks on files based on some [Endpoint] objects. Every argument expects a file, so if we
+ * This entry point carries out tasks on files based on some [ParsedEndpoint] objects. Every argument expects a file, so if we
  * run this program with the command line arguments `--foo /path/to/directory`, it will execute a pre-defined task
- * called "foo" providing it with a list of [Endpoint]s parsed from [https://www.reddit.com/dev/api/oauth]
+ * called "foo" providing it with a list of [ParsedEndpoint]s parsed from [https://www.reddit.com/dev/api/oauth]
  *
  * @see EndpointParser
  */
@@ -50,13 +50,13 @@ val tasks: List<Task> = listOf(
 data class Task(
     val name: String,
     /** Does some work with the parsed Endpoints and a file system path */
-    val doWork: (List<Endpoint>, File) -> Pair<Boolean, String>)
+    val doWork: (List<ParsedEndpoint>, File) -> Pair<Boolean, String>)
 {
     /** Including this key in the command line triggers this task to run. See [main] for more. */
     val argKey: String = "--$name"
 
     // Propagate parameters to `doWork`
-    operator fun invoke(endpoints: List<Endpoint>, location: File): Pair<Boolean, String> = doWork(endpoints, location)
+    operator fun invoke(endpoints: List<ParsedEndpoint>, location: File): Pair<Boolean, String> = doWork(endpoints, location)
 }
 
 /**

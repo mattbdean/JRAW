@@ -1,6 +1,6 @@
 package net.dean.jraw.meta
 
-data class Endpoint(
+data class ParsedEndpoint(
     /** HTTP request method ("GET", "POST", etc.) */
     val method: String,
 

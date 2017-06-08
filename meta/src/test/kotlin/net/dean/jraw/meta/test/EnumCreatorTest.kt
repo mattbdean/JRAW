@@ -1,7 +1,7 @@
 package net.dean.jraw.meta.test
 
 import com.winterbe.expekt.should
-import net.dean.jraw.meta.Endpoint
+import net.dean.jraw.meta.ParsedEndpoint
 import net.dean.jraw.meta.EnumCreator
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.it
@@ -9,14 +9,14 @@ import java.util.*
 
 class EnumCreatorTest : Spek({
     val endpoints = listOf(
-        Endpoint(
+        ParsedEndpoint(
             "GET",
             "/api/v1/foo/{bar}",
             oauthScope = "fooscope",
             redditDocLink = "<reddit doc url>",
             subredditPrefix = false
         ),
-        Endpoint(
+        ParsedEndpoint(
             "POST",
             "/api/v1/foo/{bar}",
             oauthScope = "fooscope",

@@ -1,16 +1,10 @@
 package net.dean.jraw.meta
 
-import net.dean.jraw.EndpointImplementation
 import org.jsoup.Jsoup
-import org.reflections.Reflections
-import org.reflections.scanners.MethodAnnotationsScanner
-import org.reflections.util.ClasspathHelper
-import org.reflections.util.ConfigurationBuilder
-import java.lang.reflect.Method
 import java.net.URL
 
 class EndpointParser {
-    fun fetch(): List<Endpoint> {
+    fun fetch(): List<ParsedEndpoint> {
         val doc = Jsoup.connect(BASE_URL).get()
 
         val containers = doc.select("div.endpoint")
@@ -35,7 +29,7 @@ class EndpointParser {
 
             path = fixPathParams(trimPath(path, oauthScope), redditDocLink)
 
-            Endpoint(method, path, oauthScope, redditDocLink, subredditPrefix)
+            ParsedEndpoint(method, path, oauthScope, redditDocLink, subredditPrefix)
         }
     }
 

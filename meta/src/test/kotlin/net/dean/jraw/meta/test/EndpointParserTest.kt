@@ -1,5 +1,5 @@
 import com.winterbe.expekt.should
-import net.dean.jraw.meta.Endpoint
+import net.dean.jraw.meta.ParsedEndpoint
 import net.dean.jraw.meta.EndpointParser
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
@@ -9,7 +9,7 @@ import kotlin.properties.Delegates
 class EndpointParserTest : Spek({
     describe("fetch") {
         val METHODS = listOf("GET", "POST", "PUT", "PATCH", "DELETE")
-        var endpoints: List<Endpoint> by Delegates.notNull()
+        var endpoints: List<ParsedEndpoint> by Delegates.notNull()
 
         beforeGroup {
             endpoints = EndpointParser().fetch()

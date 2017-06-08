@@ -1,6 +1,7 @@
 package net.dean.jraw.meta
 
 import javassist.ClassPool
+import net.dean.jraw.Endpoint
 import net.dean.jraw.EndpointImplementation
 import org.reflections.Reflections
 import org.reflections.scanners.MethodAnnotationsScanner
@@ -26,9 +27,9 @@ object EndpointAnalyzer {
     private val classPool = ClassPool.getDefault()
 
     /**
-     * Gets an EndpointMeta object for the given [net.dean.jraw.Endpoint]
+     * Gets an EndpointMeta object for the given [Endpoint]
      */
-    fun getFor(e: net.dean.jraw.Endpoint): EndpointMeta? {
+    fun getFor(e: Endpoint): EndpointMeta? {
         val javaMethod = implementations.firstOrNull {
             val other = it.getAnnotation(EndpointImplementation::class.java).endpoint
             other.method == e.method && other.path == e.path
