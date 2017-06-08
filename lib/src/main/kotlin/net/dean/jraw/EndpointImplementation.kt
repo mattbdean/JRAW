@@ -1,7 +1,8 @@
 package net.dean.jraw
 
 /**
- * Shows that a function sends a request to an API endpoint.
+ * Shows that a function sends a request to an API endpoint. This function should be considered to be a
+ * **blocking call**.
  *
  * For JRAW developers: functions that are decorated with this annotation should contain an example of how to use it.
  */
