@@ -52,7 +52,8 @@ class RedditClientTest : Spek({
 
     describe("randomSubreddit") {
         it("should return a random subreddit") {
-            val random = reddit.randomSubreddit()
+            // Just make sure it deserializes
+            reddit.randomSubreddit()
         }
     }
 })
