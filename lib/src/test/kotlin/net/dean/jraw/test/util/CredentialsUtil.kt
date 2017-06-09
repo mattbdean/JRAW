@@ -1,5 +1,6 @@
 package net.dean.jraw.test.util
 
+import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import net.dean.jraw.http.oauth.Credentials
@@ -37,8 +38,20 @@ object CredentialsUtil {
     private fun getLocalCredentialStream() = CredentialsUtil::class.java.getResourceAsStream("/credentials.json") ?:
         throw SetupRequiredException("Could not load credentials.json")
 
-    private fun getLocalCredentials(): TestingCredentials =
-        jacksonObjectMapper().readValue<TestingCredentials>(getLocalCredentialStream())
+    private fun getLocalCredentials(): TestingCredentials {
+        try {
+            return jacksonObjectMapper().readValue<TestingCredentials>(getLocalCredentialStream())
+        } catch (e: Exception) {
+            // If there's an error in CredentialsUtil's init block, a NoClassDefFoundError will be thrown instead of the
+            // real cause, this error right here. Make sure the user knows about it.
+            if (e is MissingKotlinParameterException) {
+                System.err.println("credentials.json: missing property '${e.parameter.name}'")
+            } else {
+                System.err.println("${e.javaClass.name}: ${e.message}")
+            }
+            throw e
+        }
+    }
 
     private fun getenv(name: String) = System.getenv(name) ?:
         throw IllegalStateException("Expecting environmental variable $name to exist")
