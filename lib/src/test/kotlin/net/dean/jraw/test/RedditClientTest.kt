@@ -41,7 +41,7 @@ class RedditClientTest : Spek({
     describe("subreddit") {
         it("should return a Subreddit") {
             val pics = reddit.subreddit("pics")
-            println(pics.displayName)
+            pics.displayName.should.equal("pics")
         }
     }
 })

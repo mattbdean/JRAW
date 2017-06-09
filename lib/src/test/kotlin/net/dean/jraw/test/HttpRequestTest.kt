@@ -1,6 +1,7 @@
 package net.dean.jraw.test
 
 import com.winterbe.expekt.should
+import net.dean.jraw.Endpoint
 import net.dean.jraw.http.HttpRequest
 import net.dean.jraw.test.util.expectException
 import org.jetbrains.spek.api.Spek
@@ -46,5 +47,16 @@ class HttpRequestTest: Spek({
             .host("github.com")
             .path("/{user}/{repo}", "JetBrains", "kotlin")
             .build().url.should.equal("https://github.com/JetBrains/kotlin")
+    }
+
+    it("should set the host and path for endpoint()") {
+        val r = HttpRequest.Builder()
+            .endpoint(Endpoint.DELETE_MULTI_MULTIPATH_R_SRNAME, "foo", "bar")
+            .build()
+
+        r.url.should.equal("https://oauth.reddit.com/api/multi/foo/r/bar")
+
+        // endpoint() doesn't change the HTTP method
+        r.method.should.equal("GET")
     }
 })

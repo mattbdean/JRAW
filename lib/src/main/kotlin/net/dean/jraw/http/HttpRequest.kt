@@ -1,5 +1,6 @@
 package net.dean.jraw.http
 
+import net.dean.jraw.Endpoint
 import net.dean.jraw.http.HttpRequest.Builder
 import okhttp3.FormBody
 import okhttp3.Headers
@@ -160,6 +161,15 @@ class HttpRequest private constructor(
         fun secure(flag: Boolean = true): Builder { this.secure = flag; return this }
         /** Sets the hostname (e.g. "google.com" or "oauth.reddit.com") */
         fun host(host: String): Builder { this.host = host; return this }
+
+        /**
+         * Sets this Builder's path to the given Endpoint's path and changes the host to `oauth.reddit.com`. This method
+         * does not change the HTTP method.
+         */
+        fun endpoint(e: Endpoint, vararg pathParams: String): Builder {
+            this.host = "oauth.reddit.com"
+            return path(e.path, *pathParams)
+        }
 
         /**
          * Sets the URL's path. For example, "/thatJavaNerd/JRAW." Positional path parameters are supported, so if
