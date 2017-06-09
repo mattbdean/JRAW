@@ -7,7 +7,7 @@ import net.dean.jraw.databind.ThingDeserializer
 
 object JrawUtils {
     @JvmStatic val jackson: ObjectMapper = jacksonObjectMapper()
-        .registerModule(ThingDeserializer.Module())
+        .registerModule(ThingDeserializer.Module)
 
     @JvmStatic fun parseJson(json: String): JsonNode = jackson.readTree(json)!!
 

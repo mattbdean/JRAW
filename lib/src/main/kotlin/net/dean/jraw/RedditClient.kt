@@ -1,12 +1,10 @@
 package net.dean.jraw
 
 import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.module.kotlin.readValue
 import net.dean.jraw.http.*
 import net.dean.jraw.http.oauth.AuthenticationMethod
 import net.dean.jraw.http.oauth.OAuthData
 import net.dean.jraw.models.Subreddit
-import net.dean.jraw.models.Thing
 
 /**
  * Specialized class for sending requests to [oauth.reddit.com](https://www.reddit.com/dev/api/oauth).
@@ -90,5 +88,5 @@ class RedditClient(
     fun me(): JsonNode = request { it.path("/api/v1/me") }.json
 
     @EndpointImplementation(Endpoint.GET_SUBREDDIT_ABOUT)
-    fun subreddit(name: String): Subreddit = JrawUtils.jackson.readValue<Thing>(request { it.path("/r/$name/about") }.body) as Subreddit
+    fun subreddit(name: String): Subreddit = request { it.path("/r/$name/about") }.deserialize()
 }

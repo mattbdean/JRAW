@@ -1,6 +1,7 @@
 package net.dean.jraw.http
 
 import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.module.kotlin.readValue
 import net.dean.jraw.JrawUtils
 
 /**
@@ -25,4 +26,15 @@ data class HttpResponse(
     val body: String by lazy(readBody)
     /** Lazily initialized response body as a Jackson JsonNode */
     val json: JsonNode by lazy { JrawUtils.parseJson(body) }
+
+    /**
+     * Uses Jackson to deserialize the body of this response to a given type
+     *
+     * ```kotlin
+     * val foo = response.deserialize<Foo>()
+     * // OR
+     * val foo: Foo = response.deserialize()
+     * ```
+     */
+    inline fun <reified  T : Any> deserialize() = JrawUtils.jackson.readValue<T>(body)
 }

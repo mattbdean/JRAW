@@ -1,7 +1,5 @@
 package net.dean.jraw.http.oauth
 
-import com.fasterxml.jackson.module.kotlin.readValue
-import net.dean.jraw.JrawUtils
 import net.dean.jraw.RedditClient
 import net.dean.jraw.http.HttpAdapter
 import net.dean.jraw.http.HttpRequest
@@ -56,7 +54,7 @@ class StatefulAuthHelper internal constructor(private val http: HttpAdapter, pri
         val code = query["code"]!!
 
         try {
-            val response = http.execute(HttpRequest.Builder()
+            val response: OAuthData = http.execute(HttpRequest.Builder()
                 .secure(true)
                 .host(OAuthHelper.HOST_WWW)
                 .path("/api/v1/access_token")
@@ -66,13 +64,13 @@ class StatefulAuthHelper internal constructor(private val http: HttpAdapter, pri
                     "redirect_uri" to creds.redirectUrl!!
                 ))
                 .basicAuth(creds.clientId to creds.clientSecret)
-                .build()).body
+                .build()).deserialize()
 
             this._authStatus = Status.AUTHORIZED
             return RedditClient(
                 http = http,
                 authMethod = creds.authenticationMethod,
-                oauthData = JrawUtils.jackson.readValue<OAuthData>(response)
+                oauthData = response
             )
         } catch (ex: NetworkException) {
             if (ex.res.code == 401)
