@@ -37,4 +37,11 @@ class RedditClientTest : Spek({
 
         baos.size().should.equal(0)
     }
+
+    describe("subreddit") {
+        it("should return a Subreddit") {
+            val pics = reddit.subreddit("pics")
+            println(pics.displayName)
+        }
+    }
 })

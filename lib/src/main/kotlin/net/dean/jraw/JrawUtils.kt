@@ -1,10 +1,14 @@
 package net.dean.jraw
 
 import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import net.dean.jraw.databind.ThingDeserializer
 
 object JrawUtils {
-    @JvmStatic val jackson = jacksonObjectMapper()
+    @JvmStatic val jackson: ObjectMapper = jacksonObjectMapper()
+        .registerModule(ThingDeserializer.Module())
+
     @JvmStatic fun parseJson(json: String): JsonNode = jackson.readTree(json)!!
 
     @JvmStatic fun parseUrlEncoded(str: String): Map<String, String> =

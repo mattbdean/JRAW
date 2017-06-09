@@ -1,9 +1,12 @@
 package net.dean.jraw
 
 import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.module.kotlin.readValue
 import net.dean.jraw.http.*
 import net.dean.jraw.http.oauth.AuthenticationMethod
 import net.dean.jraw.http.oauth.OAuthData
+import net.dean.jraw.models.Subreddit
+import net.dean.jraw.models.Thing
 
 /**
  * Specialized class for sending requests to [oauth.reddit.com](https://www.reddit.com/dev/api/oauth).
@@ -31,16 +34,12 @@ class RedditClient(
      * Uses the [HttpAdapter] to execute a synchronous HTTP request and returns its JSON value
      *
      * ```
-     * val json = reddit.request(reddit.requestStub()
+     * val response = reddit.request(reddit.requestStub()
      *     .path("/api/v1/me")
      *     .build())
      * ```
      */
-    fun request(r: HttpRequest): JsonNode {
-        return doExecute(r).json
-    }
-
-    private fun doExecute(r: HttpRequest): HttpResponse {
+    fun request(r: HttpRequest): HttpResponse {
         return if (logHttp) {
             // Log the request and response, returning 'res'
             val tag = logger.request(r)
@@ -88,5 +87,8 @@ class RedditClient(
     fun request(configure: (stub: HttpRequest.Builder) -> HttpRequest.Builder) = request(configure(requestStub()).build())
 
     @EndpointImplementation(Endpoint.GET_ME)
-    fun me(): JsonNode = request { it.path("/api/v1/me") }
+    fun me(): JsonNode = request { it.path("/api/v1/me") }.json
+
+    @EndpointImplementation(Endpoint.GET_SUBREDDIT_ABOUT)
+    fun subreddit(name: String): Subreddit = JrawUtils.jackson.readValue<Thing>(request { it.path("/r/$name/about") }.body) as Subreddit
 }
