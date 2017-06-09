@@ -4,16 +4,19 @@ import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import net.dean.jraw.http.oauth.Credentials
+import java.util.*
 
 object CredentialsUtil {
     val script: Credentials
     val app: Credentials
+    val applicationOnly: Credentials
 
     init {
         val creds = getCredentials()
         val (script, app) = creds.script to creds.app
         this.script = Credentials.script(script.username, script.password, script.clientId, script.clientSecret)
         this.app = Credentials.installedApp(app.clientId, app.redirectUrl)
+        this.applicationOnly = Credentials.userless(script.clientId, script.clientSecret, UUID.randomUUID())
     }
 
     private fun isTravis() =

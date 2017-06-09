@@ -45,10 +45,7 @@ class OAuthHelperTest: Spek({
         }
 
         it("should produce an authorized RedditClient for a userless Credentials") {
-            val sourceCreds = CredentialsUtil.script
-            val creds = Credentials.userless(sourceCreds.clientId, sourceCreds.clientSecret, UUID.randomUUID())
-
-            ensureAuthenticated(OAuthHelper.applicationOnly(creds, newOkHttpAdapter()))
+            ensureAuthenticated(OAuthHelper.applicationOnly(CredentialsUtil.applicationOnly, newOkHttpAdapter()))
         }
 
         it("should throw an Exception when given a non-userless Credentials") {

@@ -12,6 +12,7 @@ import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
 import java.io.ByteArrayOutputStream
 import java.io.PrintStream
+import java.util.*
 
 class RedditClientTest : Spek({
     describe("requestStub") {
@@ -41,7 +42,11 @@ class RedditClientTest : Spek({
     describe("subreddit") {
         it("should return a Subreddit") {
             val pics = reddit.subreddit("pics")
-            pics.displayName.should.equal("pics")
+            pics.name.should.equal("pics")
+
+            // Test Date deserialization
+            // See /r/pics.json --> created_utc
+            pics.created.should.be.above(Date(1201132800))
         }
     }
 })
