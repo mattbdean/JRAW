@@ -89,4 +89,8 @@ class RedditClient(
 
     @EndpointImplementation(Endpoint.GET_SUBREDDIT_ABOUT)
     fun subreddit(name: String): Subreddit = request { it.path("/r/$name/about") }.deserialize()
+
+    // TODO: This endpoint can also return a random submission: /r/{subreddit}/random
+    @EndpointImplementation(Endpoint.GET_RANDOM)
+    fun randomSubreddit(): Subreddit = request { it.path("/r/random/about") }.deserialize()
 }

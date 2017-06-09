@@ -49,4 +49,10 @@ class RedditClientTest : Spek({
             pics.created.should.be.above(Date(1201132800))
         }
     }
+
+    describe("randomSubreddit") {
+        it("should return a random subreddit") {
+            val random = reddit.randomSubreddit()
+        }
+    }
 })
