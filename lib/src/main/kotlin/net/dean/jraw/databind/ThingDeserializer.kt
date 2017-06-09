@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.*
 import com.fasterxml.jackson.databind.deser.BeanDeserializerModifier
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer
 import com.fasterxml.jackson.databind.module.SimpleModule
-import com.fasterxml.jackson.module.kotlin.registerKotlinModule
+import net.dean.jraw.JrawUtils
 import net.dean.jraw.models.Subreddit
 import net.dean.jraw.models.Thing
 import net.dean.jraw.models.ThingType
@@ -31,10 +31,9 @@ import kotlin.reflect.full.isSubclassOf
  * @see ThingType
  */
 class ThingDeserializer : StdDeserializer<Thing>(Thing::class.java) {
-    // Keep a reference to an ObjectMapper with no configuration besides the Kotlin module. This is a little bit of a
-    // hack, if someone can find a way to implement the same behavior without creating a new ObjectMapper, I'd be very
-    // happy
-    private val defaultMapper = ObjectMapper().registerKotlinModule()
+    // Keep a reference to an ObjectMapper with the default configuration. This is a little bit of a hack, if someone
+    // can find a way to implement the same behavior without creating a new ObjectMapper, I'd be very happy
+    private val defaultMapper = JrawUtils.defaultObjectMapper()
 
     override fun deserialize(p: JsonParser, ctxt: DeserializationContext?): Thing {
         val mapper = p.codec as ObjectMapper

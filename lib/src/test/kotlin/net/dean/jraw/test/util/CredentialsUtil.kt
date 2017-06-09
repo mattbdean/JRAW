@@ -1,7 +1,7 @@
 package net.dean.jraw.test.util
 
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import net.dean.jraw.JrawUtils
 import net.dean.jraw.http.oauth.Credentials
 
 object CredentialsUtil {
@@ -38,7 +38,7 @@ object CredentialsUtil {
         throw SetupRequiredException("Could not load credentials.json")
 
     private fun getLocalCredentials(): TestingCredentials =
-        JrawUtils.jackson.readValue<TestingCredentials>(getLocalCredentialStream())
+        jacksonObjectMapper().readValue<TestingCredentials>(getLocalCredentialStream())
 
     private fun getenv(name: String) = System.getenv(name) ?:
         throw IllegalStateException("Expecting environmental variable $name to exist")

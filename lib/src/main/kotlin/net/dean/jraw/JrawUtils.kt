@@ -2,11 +2,17 @@ package net.dean.jraw
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.databind.PropertyNamingStrategy
+import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import net.dean.jraw.databind.ThingDeserializer
 
 object JrawUtils {
-    @JvmStatic val jackson: ObjectMapper = jacksonObjectMapper()
+    @JvmStatic internal fun defaultObjectMapper(): ObjectMapper = ObjectMapper()
+        .registerKotlinModule()
+        // Use snake case by default because that's what reddit uses
+        .setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE)
+
+    @JvmStatic val jackson: ObjectMapper = defaultObjectMapper()
         .registerModule(ThingDeserializer.Module)
 
     @JvmStatic fun parseJson(json: String): JsonNode = jackson.readTree(json)!!
