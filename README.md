@@ -1,4 +1,4 @@
-<img src="https://i.imgur.com/fOC6ehB.png" alt="The Java Reddit API Wrapper" />
+<img src="https://raw.githubusercontent.com/thatJavaNerd/JRAW/kotlin/art/header.png" alt="The Java Reddit API Wrapper" />
 
 [![travis-ci build status](https://img.shields.io/travis/thatJavaNerd/JRAW.svg)](https://travis-ci.org/thatJavaNerd/JRAW)
 [![Latest release](https://img.shields.io/github/release/thatJavaNerd/JRAW.svg)](https://bintray.com/thatjavanerd/maven/JRAW/_latestVersion)
