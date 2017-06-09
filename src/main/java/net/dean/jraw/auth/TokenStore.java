@@ -20,7 +20,11 @@ public interface TokenStore {
     /** Writes a token. */
     void writeToken(String key, String token);
 
+    void removeToken(String key);
+
     long readAcquireTimeMillis(String key);
 
     void writeAcquireTimeMillis(String key, long acquireTimeMs);
+
+    void removeAcquireTimeMillis(String key);
 }

@@ -26,10 +26,20 @@ public final class ApatheticTokenStore implements TokenStore {
     public void writeToken(String key, String token) {}
 
     @Override
+    public void removeToken(String key) {
+
+    }
+
+    @Override
     public long readAcquireTimeMillis(String key) {
         throw new UnsupportedOperationException("TokenStore is apathetic");
     }
 
     @Override
     public void writeAcquireTimeMillis(String key, long acquireTimeMs) {}
+
+    @Override
+    public void removeAcquireTimeMillis(String key) {
+
+    }
 }

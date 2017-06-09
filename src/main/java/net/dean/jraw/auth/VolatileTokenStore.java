@@ -29,6 +29,11 @@ public class VolatileTokenStore implements TokenStore {
     }
 
     @Override
+    public void removeToken(String key) {
+        tokenMap.remove(key);
+    }
+
+    @Override
     public long readAcquireTimeMillis(String key) {
         return acquireTimeMap.get(key);
     }
@@ -36,5 +41,10 @@ public class VolatileTokenStore implements TokenStore {
     @Override
     public void writeAcquireTimeMillis(String key, long acquireTimeMs) {
         acquireTimeMap.put(key, acquireTimeMs);
+    }
+
+    @Override
+    public void removeAcquireTimeMillis(String key) {
+        acquireTimeMap.remove(key);
     }
 }

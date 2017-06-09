@@ -72,6 +72,11 @@ public final class RefreshTokenHandler implements TokenStore {
     }
 
     @Override
+    public void removeToken(String username) {
+        store.removeToken(getKeyFor(username));
+    }
+
+    @Override
     public long readAcquireTimeMillis(String username) {
         return store.readAcquireTimeMillis(getKeyFor(username));
     }
@@ -79,6 +84,11 @@ public final class RefreshTokenHandler implements TokenStore {
     @Override
     public void writeAcquireTimeMillis(String username, long acquireTimeMs) {
         store.writeAcquireTimeMillis(getKeyFor(username), acquireTimeMs);
+    }
+
+    @Override
+    public void removeAcquireTimeMillis(String key) {
+        store.removeAcquireTimeMillis(getKeyFor(key));
     }
 
     /**
