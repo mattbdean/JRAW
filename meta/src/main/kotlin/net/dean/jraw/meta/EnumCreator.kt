@@ -77,7 +77,13 @@ class EnumCreator(val endpoints: List<ParsedEndpoint>, val indent: Int = 4) {
         }
 
         private fun javadocFor(e: ParsedEndpoint): String =
-            "Represents the endpoint `${e.method} ${e.path}`. Requires OAuth scope '${e.oauthScope}'. See " +
-                "[here](${e.redditDocLink}) for more information"
+            "Represents the endpoint ${code(e.method + " " + e.path)}. Requires OAuth scope '${e.oauthScope}'. See " +
+                link("here", e.redditDocLink) + " for more information"
+
+        private fun link(displayText: String, url: String) =
+            "<a href=\"$url\">$displayText</a>"
+
+        private fun code(text: String) =
+            "{@code $text}"
     }
 }
