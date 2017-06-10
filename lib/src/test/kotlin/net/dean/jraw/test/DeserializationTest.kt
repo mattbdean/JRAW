@@ -2,6 +2,7 @@ package net.dean.jraw.test
 
 import net.dean.jraw.RedditClient
 import net.dean.jraw.http.oauth.OAuthHelper
+import net.dean.jraw.models.Submission
 import net.dean.jraw.models.Subreddit
 import net.dean.jraw.models.Thing
 import net.dean.jraw.test.util.CredentialsUtil
@@ -11,7 +12,7 @@ import org.jetbrains.spek.api.dsl.it
 import kotlin.properties.Delegates
 import kotlin.reflect.KClass
 
-typealias DeserializeTest = (RedditClient) -> Thing
+typealias DeserializeTest = (RedditClient) -> List<Thing>
 
 /**
  * We're testing to see if we have our models and Jackson ObjectMapper instance set up correctly. We test deserializing
@@ -22,9 +23,14 @@ class DeserializationTest : Spek({
     val testCases = mapOf<KClass<out Thing>, Array<DeserializeTest>>(
         Subreddit::class to arrayOf<DeserializeTest>(
             // Test both /r/pics and /r/redditdev, two very different subreddits (both content-wise and settings-wise)
-            { it.subreddit("pics").about() },
-            { it.subreddit("redditdev" ).about() },
-            { it.randomSubreddit().about() }
+            { listOf(it.subreddit("pics").about()) },
+            { listOf(it.subreddit("redditdev" ).about()) },
+            { listOf(it.randomSubreddit().about()) }
+        ),
+        Submission::class to arrayOf<DeserializeTest>(
+            { it.subreddit("pics").posts().hot() },
+            { it.subreddit("redditdev").posts().hot() },
+            { it.randomSubreddit().posts().hot() }
         )
     )
 
