@@ -22,8 +22,9 @@ class DeserializationTest : Spek({
     val testCases = mapOf<KClass<out Thing>, Array<DeserializeTest>>(
         Subreddit::class to arrayOf<DeserializeTest>(
             // Test both /r/pics and /r/redditdev, two very different subreddits (both content-wise and settings-wise)
-            { it.subreddit("pics") },
-            { it.subreddit("redditdev" ) }
+            { it.subreddit("pics").about() },
+            { it.subreddit("redditdev" ).about() },
+            { it.randomSubreddit().about() }
         )
     )
 

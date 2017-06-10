@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode
 import net.dean.jraw.http.*
 import net.dean.jraw.http.oauth.AuthenticationMethod
 import net.dean.jraw.http.oauth.OAuthData
-import net.dean.jraw.models.Subreddit
+import net.dean.jraw.references.SubredditReference
 import org.isomorphism.util.TokenBuckets
 import java.util.concurrent.TimeUnit
 
@@ -97,12 +97,20 @@ class RedditClient(
     @EndpointImplementation(Endpoint.GET_ME)
     fun me(): JsonNode = request { it.path("/api/v1/me") }.json
 
-    @EndpointImplementation(Endpoint.GET_SUBREDDIT_ABOUT)
-    fun subreddit(name: String): Subreddit = request { it.path("/r/$name/about") }.deserialize()
+    /** Creates a [SubredditReference] */
+    fun subreddit(name: String) = SubredditReference(this, name)
 
     // TODO: This endpoint can also return a random submission: /r/{subreddit}/random
+    /**
+     * Gets a random subreddit. Although this method is decorated with [EndpointImplementation], it does not execute a
+     * HTTP request and is not a blocking call. This method is equivalent to
+     *
+     * ```kotlin
+     * reddit.subreddit("random")
+     * ```
+     */
     @EndpointImplementation(Endpoint.GET_RANDOM)
-    fun randomSubreddit(): Subreddit = request { it.path("/r/random/about") }.deserialize()
+    fun randomSubreddit() = subreddit("random")
 
     companion object {
         /** Amount of requests per minute reddit allows for OAuth2 apps */

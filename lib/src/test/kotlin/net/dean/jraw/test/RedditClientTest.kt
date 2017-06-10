@@ -41,10 +41,10 @@ class RedditClientTest : Spek({
 
     describe("subreddit") {
         it("should return a Subreddit") {
-            val pics = reddit.subreddit("pics")
+            val pics = reddit.subreddit("pics").about()
             pics.name.should.equal("pics")
 
-            // Test Date deserialization
+            // Make sure the Date serialization treats this as seconds instead of milliseconds
             // See /r/pics.json --> created_utc
             pics.created.should.be.above(Date(1201132800))
         }
