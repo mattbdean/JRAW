@@ -4,6 +4,7 @@ dependencies {
     compile 'com.squareup.okhttp3:okhttp:3.8.0'
     compile "com.fasterxml.jackson.module:jackson-module-kotlin:${jacksonVersion}"
     compile "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
+    compile 'org.isomorphism:token-bucket:1.6'
     testCompile 'net.sourceforge.htmlunit:htmlunit:2.27'
 }
 

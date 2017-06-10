@@ -5,6 +5,8 @@ import net.dean.jraw.http.*
 import net.dean.jraw.http.oauth.AuthenticationMethod
 import net.dean.jraw.http.oauth.OAuthData
 import net.dean.jraw.models.Subreddit
+import org.isomorphism.util.TokenBuckets
+import java.util.concurrent.TimeUnit
 
 /**
  * Specialized class for sending requests to [oauth.reddit.com](https://www.reddit.com/dev/api/oauth).
@@ -19,6 +21,11 @@ class RedditClient(
 ) {
     var logger: HttpLogger = SimpleHttpLogger()
     var logHttp = true
+
+    private var rateLimiter = TokenBuckets.builder()
+        .withCapacity(BURST_LIMIT)
+        .withFixedIntervalRefillStrategy(RATE_LIMIT, 1, TimeUnit.SECONDS)
+        .build()
 
     /**
      * Creates a [HttpRequest.Builder], setting `secure(true)`, `host("oauth.reddit.com")`, and the Authorization header
@@ -39,6 +46,9 @@ class RedditClient(
      */
     fun request(r: HttpRequest): HttpResponse {
         return if (logHttp) {
+            // Try to prevent API errors
+            rateLimiter.consume()
+
             // Log the request and response, returning 'res'
             val tag = logger.request(r)
             val res = http.execute(r)
@@ -93,4 +103,10 @@ class RedditClient(
     // TODO: This endpoint can also return a random submission: /r/{subreddit}/random
     @EndpointImplementation(Endpoint.GET_RANDOM)
     fun randomSubreddit(): Subreddit = request { it.path("/r/random/about") }.deserialize()
+
+    companion object {
+        /** Amount of requests per minute reddit allows for OAuth2 apps */
+        const val RATE_LIMIT = 60L
+        const val BURST_LIMIT = 5L
+    }
 }
