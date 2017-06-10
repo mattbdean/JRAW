@@ -12,6 +12,7 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
         classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.0-M4'
         classpath "org.jetbrains.dokka:dokka-gradle-plugin:${dokkaVersion}"
+        classpath "com.github.jengelman.gradle.plugins:shadow:2.0.0"
     }
 }
 
@@ -20,13 +21,14 @@ subprojects {
     apply plugin: 'kotlin'
     apply plugin: 'jacoco'
 
-    sourceCompatibility = JavaVersion.VERSION_1_8
+    sourceCompatibility = JavaVersion.VERSION_1_6
+    targetCompatibility = JavaVersion.VERSION_1_6
     group = 'net.dean.jraw'
     version = '0.9.0'
 
     repositories {
         jcenter()
-        maven { url 'https://d.bintray.com/jetbrains/spek' }
+        maven { url 'https://dl.bintray.com/jetbrains/spek' }
     }
 
     dependencies {
@@ -41,6 +43,13 @@ subprojects {
         testRuntime ("org.jetbrains.spek:spek-junit-platform-engine:$spekVersion") {
             exclude group: 'org.junit.platform'
             exclude group: 'org.jetbrains.kotlin'
+        }
+    }
+
+    compileKotlin {
+        kotlinOptions {
+            apiVersion = "1.1"
+            languageVersion = "1.1"
         }
     }
 
