@@ -2,6 +2,7 @@ package net.dean.jraw.models
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
+import net.dean.jraw.databind.DistinguishedStatusDeserializer
 import net.dean.jraw.databind.UnixTimeDeserializer
 import java.util.*
 
@@ -25,7 +26,12 @@ data class Submission(
 
     val contestMode: Boolean,
 
-    val distinguished: String?, // TODO enum value,
+    /** The status of the person who created this Submission. Always non-null */
+    @JsonDeserialize(using = DistinguishedStatusDeserializer::class)
+    // Because of how the way the Kotlin Jackson module works, this property has to be marked as nullable even though
+    // its deserializer always returns a non-null value. Jackson sees that the "distinguished" property is null and
+    // immediately throws an Exception
+    val distinguished: DistinguishedStatus?,
 
     /**
      * Domain of this Submission's URL. If this is a self post, this property will be equal to `self.{subreddit}`,
