@@ -18,10 +18,9 @@ data class Subreddit(
     /** How many minutes reddit hides new comments for */
     val commentScoreHideMins: Int,
 
-    /** When this subreddit was created */
     @JsonProperty("created_utc")
     @JsonDeserialize(using = UnixTimeDeserializer::class)
-    val created: Date,
+    override val created: Date,
 
     /** The result of "t5_" + [id] */
     @JsonProperty("name")
@@ -83,7 +82,7 @@ data class Subreddit(
 
     /** If this subreddit's wiki is enabled */
     val wikiEnabled: Boolean
-) : Thing(ThingType.SUBREDDIT) {
+) : Thing(ThingType.SUBREDDIT), Created {
 
     enum class Type {
         /** Open to all users */
