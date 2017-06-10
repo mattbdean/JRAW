@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
+import net.dean.jraw.databind.ListingDeserializer
 import net.dean.jraw.databind.ThingDeserializer
 
 object JrawUtils {
@@ -14,6 +15,7 @@ object JrawUtils {
 
     @JvmStatic val jackson: ObjectMapper = defaultObjectMapper()
         .registerModule(ThingDeserializer.Module)
+        .registerModule(ListingDeserializer.Module)
 
     @JvmStatic fun parseJson(json: String): JsonNode = jackson.readTree(json)!!
 

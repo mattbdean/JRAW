@@ -3,6 +3,7 @@ package net.dean.jraw.references
 import net.dean.jraw.Endpoint
 import net.dean.jraw.EndpointImplementation
 import net.dean.jraw.RedditClient
+import net.dean.jraw.models.Submission
 import net.dean.jraw.models.Subreddit
 
 /**
@@ -17,4 +18,6 @@ class SubredditReference(reddit: RedditClient, subreddit: String) : AbstractRefe
      */
     @EndpointImplementation(Endpoint.GET_SUBREDDIT_ABOUT)
     fun about(): Subreddit = reddit.request { it.path("/r/$subject/about") }.deserialize()
+
+    fun posts() = PaginatorReference<Submission>(reddit, "/r/$subject")
 }

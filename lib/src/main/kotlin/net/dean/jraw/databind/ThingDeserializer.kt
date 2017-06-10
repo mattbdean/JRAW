@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.deser.BeanDeserializerModifier
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer
 import com.fasterxml.jackson.databind.module.SimpleModule
 import net.dean.jraw.JrawUtils
+import net.dean.jraw.models.Submission
 import net.dean.jraw.models.Subreddit
 import net.dean.jraw.models.Thing
 import net.dean.jraw.models.ThingType
@@ -39,11 +40,10 @@ class ThingDeserializer : StdDeserializer<Thing>(Thing::class.java) {
         val mapper = p.codec as ObjectMapper
         val node = mapper.readTree<JsonNode>(p)
 
-        val kind = node.get("kind").asText("<no kind property>")
+        val (dataNode, kind) = verifyRootStructure(node)
         val clazz = registry[kind] ?:
             throw IllegalArgumentException("Unknown kind '$kind'")
 
-        val dataNode = node.get("data") ?: throw IllegalArgumentException("no data node")
         val thing = defaultMapper.treeToValue(dataNode, clazz)
         thing.data = dataNode
         return thing
@@ -51,8 +51,27 @@ class ThingDeserializer : StdDeserializer<Thing>(Thing::class.java) {
 
     companion object {
         @JvmStatic private val registry: Map<String, Class<out Thing>> = mapOf(
+            ThingType.SUBMISSION.prefix to Submission::class.java,
             ThingType.SUBREDDIT.prefix to Subreddit::class.java
         )
+
+        /**
+         * Asserts the following conditions:
+         *
+         * 1. `root.get("kind")` is a non-null node and its content is textual
+         * 2. `root.get("data")` is a non-null node and represents a JSON object
+         *
+         * Returns the 'data' node and the value of the 'kind' node.
+         */
+        internal fun verifyRootStructure(root: JsonNode): Pair<JsonNode, String> {
+            val kindNode = root["kind"] ?: throw IllegalArgumentException("Expecting a node 'kind' on $root")
+            val kind = kindNode.textValue() ?: "Not a string: $kindNode"
+
+            val data = root["data"] ?: throw IllegalArgumentException("Expecting a node 'data' on $root")
+            if (!data.isObject) throw IllegalArgumentException("Expecting 'data' node to be a JSON object: $data")
+
+            return data to kind
+        }
     }
 
     /**
