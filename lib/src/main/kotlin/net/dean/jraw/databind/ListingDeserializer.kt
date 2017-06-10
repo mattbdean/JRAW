@@ -9,7 +9,7 @@ import net.dean.jraw.models.Listing
 import net.dean.jraw.models.Thing
 
 /**
- * Enables the deserialization of L
+ * Enables the deserialization of Listings
  */
 class ListingDeserializer private constructor() : JsonDeserializer<Listing<Thing>>(), ContextualDeserializer {
     private lateinit var type: JavaType
