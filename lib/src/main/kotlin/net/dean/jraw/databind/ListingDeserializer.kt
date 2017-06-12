@@ -24,8 +24,8 @@ class ListingDeserializer private constructor() : JsonDeserializer<Listing<Thing
         val rootNode = mapper.readTree<JsonNode>(p)
 
         // Since the root structure of the Listing response is exactly the same as the root structure of a Thing
-        // response (see ThingDeserializer class documentation), we can reuse ThingDeserializer's verification function
-        val (dataNode, kind) = ThingDeserializer.verifyRootStructure(rootNode)
+        // response (see RedditObjectDeserializer class documentation), we can reuse RedditObjectDeserializer's verification function
+        val (dataNode, kind) = RedditObjectDeserializer.verifyRootStructure(rootNode)
         if (kind != "Listing") throw IllegalArgumentException("Expecting kind to be 'Listing', was '$kind'")
 
         // Validation
@@ -48,7 +48,7 @@ class ListingDeserializer private constructor() : JsonDeserializer<Listing<Thing
     }
 
     /**
-     * A Jackson module that enables the use of [ThingDeserializer].
+     * A Jackson module that enables the use of [RedditObjectDeserializer].
      */
     object Module : SimpleModule() {
         init {

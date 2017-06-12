@@ -13,10 +13,10 @@ import net.dean.jraw.models.ThingType
 import kotlin.reflect.full.isSubclassOf
 
 /**
- * This class parses specific data structures from the reddit API into Thing subclasses.
+ * This class parses specific data structures from the reddit API into RedditObject subclasses.
  *
- * This deserializer works by examining the structure of the two root nodes of the provided JSON. Any Thing structure
- * looks something like this:
+ * This deserializer works by examining the structure of the two root nodes of the provided JSON. Any RedditObject
+ * structure looks something like this:
  *
  * ```json
  * {
@@ -25,13 +25,14 @@ import kotlin.reflect.full.isSubclassOf
  * }
  * ```
  *
- * where `kind` is a type prefix defined in the [reddit docs](https://www.reddit.com/dev/api/oauth). This class keeps a
- * mapping of all known type prefixes to their corresponding classes, so when this deserializer encounters JSON with a
- * `kind` of "t5", it returns a [Subreddit].
+ * where `kind` is either a type prefix defined in the [reddit docs](https://www.reddit.com/dev/api/oauth) or something
+ * like "Listing" or "more" (for Listings and MoreChildren objects respectively). This class keeps a mapping of all
+ * known kinds to their corresponding classes, so when this deserializer encounters JSON with a `kind` of "t5", it
+ * returns a [Subreddit].
  *
  * @see ThingType
  */
-class ThingDeserializer : StdDeserializer<Thing>(Thing::class.java) {
+class RedditObjectDeserializer : StdDeserializer<Thing>(Thing::class.java) {
     // Keep a reference to an ObjectMapper with the default configuration. This is a little bit of a hack, if someone
     // can find a way to implement the same behavior without creating a new ObjectMapper, I'd be very happy
     private val defaultMapper = JrawUtils.defaultObjectMapper()
@@ -75,13 +76,13 @@ class ThingDeserializer : StdDeserializer<Thing>(Thing::class.java) {
     }
 
     /**
-     * A Jackson module that enables the use of [ThingDeserializer].
+     * A Jackson module that enables the use of [RedditObjectDeserializer].
      */
     object Module : SimpleModule() {
         init {
             setDeserializerModifier(object: BeanDeserializerModifier() {
                 override fun modifyDeserializer(config: DeserializationConfig?, beanDesc: BeanDescription, deserializer: JsonDeserializer<*>): JsonDeserializer<*> {
-                    return if (beanDesc.beanClass.kotlin.isSubclassOf(Thing::class)) ThingDeserializer() else deserializer
+                    return if (beanDesc.beanClass.kotlin.isSubclassOf(Thing::class)) RedditObjectDeserializer() else deserializer
                 }
             })
         }

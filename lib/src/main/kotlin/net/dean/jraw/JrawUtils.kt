@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import net.dean.jraw.databind.ListingDeserializer
-import net.dean.jraw.databind.ThingDeserializer
+import net.dean.jraw.databind.RedditObjectDeserializer
 
 object JrawUtils {
     @JvmStatic internal fun defaultObjectMapper(): ObjectMapper = ObjectMapper()
@@ -14,7 +14,7 @@ object JrawUtils {
         .setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE)
 
     @JvmStatic val jackson: ObjectMapper = defaultObjectMapper()
-        .registerModule(ThingDeserializer.Module)
+        .registerModule(RedditObjectDeserializer.Module)
         .registerModule(ListingDeserializer.Module)
 
     @JvmStatic fun parseJson(json: String): JsonNode = jackson.readTree(json)!!
