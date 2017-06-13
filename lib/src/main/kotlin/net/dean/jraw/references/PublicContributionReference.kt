@@ -7,7 +7,7 @@ import net.dean.jraw.models.ThingType
 import net.dean.jraw.models.VoteDirection
 
 /**
- * Base class for References that can voted upon and saved.
+ * Base class for References that can be publicly voted upon and saved (in essence, Submissions and Comments).
  *
  * Provides methods for [upvoting][upvote], [downvoting][downvote], and [removing the current vote][unvote], and also
  * one method for [manually setting the vote direction by enum value][setVote].

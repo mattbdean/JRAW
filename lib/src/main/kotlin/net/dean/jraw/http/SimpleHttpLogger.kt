@@ -21,7 +21,7 @@ import java.util.concurrent.atomic.AtomicInteger
  * [12 ->] POST https://oauth.reddit.com/foo?bar=baz
  *         form: form=foo
  *               abc=123
- * [12 <-] application/json: '{"foo":"bar"}'
+ * [12 <-] 200 application/json: '{"foo":"bar"}'
  * ```
  *
  * @see LINE_LENGTH
@@ -58,7 +58,7 @@ class SimpleHttpLogger(val out: PrintStream = System.out) : HttpLogger {
         val formattedTag = "[<- ${tag.requestId}]"
 
         synchronized(lock) {
-            out.println(truncate("$formattedTag $formattedType: '$body'", LINE_LENGTH))
+            out.println(truncate("$formattedTag ${res.code} $formattedType: '$body'", LINE_LENGTH))
         }
     }
 

@@ -39,7 +39,7 @@ class SimpleHttpLoggerTest : Spek({
         val output = loggerOutput()
         output.size.should.equal(2)
         output[0].should.equal("[0 ->] GET $url")
-        output[1].should.startWith("[<- 0] application/json: '")
+        output[1].should.startWith("[<- 0] 200 application/json: '")
         // The request response should be more than LINE_LENGTH, so SimpleHttpLogger should truncate it
         output[1].should.have.length(SimpleHttpLogger.LINE_LENGTH)
     }
