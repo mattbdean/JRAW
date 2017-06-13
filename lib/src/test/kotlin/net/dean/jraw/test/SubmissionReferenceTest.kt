@@ -11,7 +11,7 @@ import org.jetbrains.spek.api.dsl.it
 class SubmissionReferenceTest : Spek({
     val ref: SubmissionReference = TestConfig.reddit.submission("65eeke")
 
-    describe("upvote/downvote") {
+    describe("upvote/downvote/unvote") {
         it("should have an effect on a model") {
             fun expectVote(dir: VoteDirection) {
                 val value = if (dir == VoteDirection.UP) true else if (dir == VoteDirection.DOWN) false else null
