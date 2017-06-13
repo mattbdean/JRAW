@@ -33,7 +33,6 @@ subprojects {
 
     dependencies {
         compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
-        compile "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
 
         testCompile 'com.winterbe:expekt:0.2.0'
         testCompile ("org.jetbrains.spek:spek-api:$spekVersion") {
