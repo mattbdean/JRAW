@@ -13,8 +13,8 @@ class CommentNodeTest : Spek({
     var root: RootCommentNode by Delegates.notNull()
     var a: ReplyCommentNode by Delegates.notNull()
     beforeGroup {
-        root = TestConfig.reddit.getSubmission(SUBMISSION_ID)
-        a = root.replies[0] as ReplyCommentNode
+        root = TestConfig.reddit.submission(SUBMISSION_ID).comments()
+        a = root.replies[0]
     }
 
     /*
