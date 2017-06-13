@@ -42,8 +42,8 @@ data class Comment(
     @JsonDeserialize(using = UnixTimeDeserializer::class)
     override val created: Date,
 
-    /** The level of distinguishment */
-    @JsonDeserialize(using = DistinguishedStatusDeserializer::class) val distinguished: DistinguishedStatus?,
+    @JsonDeserialize(using = DistinguishedStatusDeserializer::class)
+    override val distinguished: DistinguishedStatus?,
 
     /** When this comment was edited, if any */
     @JsonDeserialize(using = UnixTimeDeserializer::class)
@@ -59,14 +59,12 @@ data class Comment(
     /** The unique base 36 identifier given to this comment by reddit */
     val id: String,
 
-    /** True for upvote, false for downvote, null for no vote */
-    val likes: Boolean?,
+    override val likes: Boolean?,
 
     /** If the user has saved this comment or not */
     val saved: Boolean,
 
-    /** The amount of upvotes minus downvotes */
-    val score: Int,
+    override val score: Int,
 
     /** If reddit is masking the score of a new comment */
     val scoreHidden: Boolean,
@@ -88,4 +86,4 @@ data class Comment(
 
     /** The restrictions for accessing this subreddit */
     val subredditType: Subreddit.Type
-) : Thing(ThingType.COMMENT), Created
+) : Thing(ThingType.COMMENT), Created, Distinguishable, Votable

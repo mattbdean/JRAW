@@ -17,8 +17,7 @@ data class Submission(
     /** Submissions are archived once they reach a certain age. At that point, they become unmodifiable */
     val archived: Boolean,
 
-    /** If the currently-logged-in-user can give reddit Gold to this submission */
-    val canGild: Boolean,
+    override val canGild: Boolean,
 
     @JsonProperty("created_utc")
     @JsonDeserialize(using = UnixTimeDeserializer::class)
@@ -31,7 +30,7 @@ data class Submission(
     // Because of how the way the Kotlin Jackson module works, this property has to be marked as nullable even though
     // its deserializer always returns a non-null value. Jackson sees that the "distinguished" property is null and
     // immediately throws an Exception
-    val distinguished: DistinguishedStatus?,
+    override val distinguished: DistinguishedStatus?,
 
     /**
      * Domain of this Submission's URL. If this is a self post, this property will be equal to `self.{subreddit}`,
@@ -53,8 +52,7 @@ data class Submission(
     @JsonProperty("name")
     val fullName: String,
 
-    /** How many times this submission has been given reddit Gold */
-    val gilded: Short,
+    override val gilded: Short,
 
     /** Is this post hidden from the current user? */
     val hidden: Boolean,
@@ -70,7 +68,7 @@ data class Submission(
     val isSelfPost: Boolean,
 
     /** Logged-in-user vote status. True for upvote, false for downvote, null for no vote. */
-    val likes: Boolean?,
+    override val likes: Boolean?,
 
     /** Flair to display next to the Submission, if any */
     val linkFlairText: String?,
@@ -98,8 +96,7 @@ data class Submission(
     /** If the user has saved this to their profile for later */
     val saved: Boolean,
 
-    /** Upvotes minus downvotes */
-    val score: Int,
+    override val score: Int,
 
     /** Markdown-formatted content, non-null when [isSelfPost] is true */
     val selftext: String?,
@@ -146,4 +143,4 @@ data class Submission(
 //    val preview: Preview,
 //    val vote: VoteDirection // instead of `likes`
 //    val postHint: Hint
-) : Thing(ThingType.SUBMISSION), Created
+) : Thing(ThingType.SUBMISSION), Created, Distinguishable, Gildable, Votable
