@@ -7,12 +7,12 @@ import net.dean.jraw.models.ThingType
 import net.dean.jraw.models.VoteDirection
 
 /**
- * Base class for References that can voted upon.
+ * Base class for References that can voted upon and saved.
  *
- * Contains three methods for [upvoting][upvote], [downvoting][downvote], and [removing the current vote][unvote], and
- * also one method for [manually setting the vote direction by enum value][setVote].
+ * Provides methods for [upvoting][upvote], [downvoting][downvote], and [removing the current vote][unvote], and also
+ * one method for [manually setting the vote direction by enum value][setVote].
  */
-abstract class VotableReference internal constructor(reddit: RedditClient, id: String, val type: ThingType) :
+abstract class PublicContributionReference internal constructor(reddit: RedditClient, id: String, val type: ThingType) :
     AbstractReference<String>(reddit, id) {
 
     /** Equivalent to `setVote(VoteDirection.UP)` */
