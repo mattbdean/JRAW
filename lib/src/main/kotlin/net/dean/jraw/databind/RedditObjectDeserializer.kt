@@ -6,10 +6,7 @@ import com.fasterxml.jackson.databind.deser.BeanDeserializerModifier
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer
 import com.fasterxml.jackson.databind.module.SimpleModule
 import net.dean.jraw.JrawUtils
-import net.dean.jraw.models.Submission
-import net.dean.jraw.models.Subreddit
-import net.dean.jraw.models.Thing
-import net.dean.jraw.models.ThingType
+import net.dean.jraw.models.*
 import kotlin.reflect.full.isSubclassOf
 
 /**
@@ -32,12 +29,12 @@ import kotlin.reflect.full.isSubclassOf
  *
  * @see ThingType
  */
-class RedditObjectDeserializer : StdDeserializer<Thing>(Thing::class.java) {
+class RedditObjectDeserializer : StdDeserializer<RedditObject>(RedditObject::class.java) {
     // Keep a reference to an ObjectMapper with the default configuration. This is a little bit of a hack, if someone
     // can find a way to implement the same behavior without creating a new ObjectMapper, I'd be very happy
     private val defaultMapper = JrawUtils.defaultObjectMapper()
 
-    override fun deserialize(p: JsonParser, ctxt: DeserializationContext?): Thing {
+    override fun deserialize(p: JsonParser, ctxt: DeserializationContext?): RedditObject {
         val mapper = p.codec as ObjectMapper
         val node = mapper.readTree<JsonNode>(p)
 
@@ -45,15 +42,16 @@ class RedditObjectDeserializer : StdDeserializer<Thing>(Thing::class.java) {
         val clazz = registry[kind] ?:
             throw IllegalArgumentException("Unknown kind '$kind'")
 
-        val thing = defaultMapper.treeToValue(dataNode, clazz)
-        thing.data = dataNode
-        return thing
+        return defaultMapper.treeToValue(dataNode, clazz)
     }
 
     companion object {
-        @JvmStatic private val registry: Map<String, Class<out Thing>> = mapOf(
+        @JvmStatic private val registry: Map<String, Class<out RedditObject>> = mapOf(
+            ThingType.COMMENT.prefix to Comment::class.java,
             ThingType.SUBMISSION.prefix to Submission::class.java,
-            ThingType.SUBREDDIT.prefix to Subreddit::class.java
+            ThingType.SUBREDDIT.prefix to Subreddit::class.java,
+
+            MoreChildren.KIND to MoreChildren::class.java
         )
 
         /**
@@ -82,7 +80,7 @@ class RedditObjectDeserializer : StdDeserializer<Thing>(Thing::class.java) {
         init {
             setDeserializerModifier(object: BeanDeserializerModifier() {
                 override fun modifyDeserializer(config: DeserializationConfig?, beanDesc: BeanDescription, deserializer: JsonDeserializer<*>): JsonDeserializer<*> {
-                    return if (beanDesc.beanClass.kotlin.isSubclassOf(Thing::class)) RedditObjectDeserializer() else deserializer
+                    return if (beanDesc.beanClass.kotlin.isSubclassOf(RedditObject::class)) RedditObjectDeserializer() else deserializer
                 }
             })
         }

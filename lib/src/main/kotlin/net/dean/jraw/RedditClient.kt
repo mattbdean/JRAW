@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode
 import net.dean.jraw.http.*
 import net.dean.jraw.http.oauth.AuthenticationMethod
 import net.dean.jraw.http.oauth.OAuthData
+import net.dean.jraw.models.RootCommentNode
 import net.dean.jraw.references.SubredditReference
 import org.isomorphism.util.TokenBuckets
 import java.util.concurrent.TimeUnit
@@ -111,6 +112,9 @@ class RedditClient(
      */
     @EndpointImplementation(Endpoint.GET_RANDOM)
     fun randomSubreddit() = subreddit("random")
+
+    @EndpointImplementation(Endpoint.GET_COMMENTS_ARTICLE)
+    fun getSubmission(id: String): RootCommentNode = RootCommentNode(request { it.path("/comments/$id") }.json)
 
     companion object {
         /** Amount of requests per minute reddit allows for OAuth2 apps */
