@@ -62,7 +62,10 @@ class SimpleHttpLogger(val out: PrintStream = System.out) : HttpLogger {
         }
     }
 
-    private fun truncate(str: String, limit: Int) = str.substring(0, limit - ELLIPSIS.length) + ELLIPSIS
+    private fun truncate(str: String, limit: Int) = if (str.length > limit)
+        str.substring(0, limit - ELLIPSIS.length) + ELLIPSIS
+    else
+        str
 
     private fun parseForm(r: HttpRequest): Map<String, String> {
         if (r.body == null) return mapOf()
