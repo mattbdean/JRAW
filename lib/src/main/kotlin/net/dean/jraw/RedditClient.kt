@@ -2,7 +2,6 @@ package net.dean.jraw
 
 import com.fasterxml.jackson.databind.JsonNode
 import net.dean.jraw.http.*
-import net.dean.jraw.http.oauth.AuthenticationMethod
 import net.dean.jraw.http.oauth.OAuthData
 import net.dean.jraw.references.SubmissionReference
 import net.dean.jraw.references.SubredditReference
@@ -12,12 +11,22 @@ import java.util.concurrent.TimeUnit
 /**
  * Specialized class for sending requests to [oauth.reddit.com](https://www.reddit.com/dev/api/oauth).
  *
+ * This class can also be used to send HTTP requests to other domains, but it is recommended to just use an
+ * [HttpAdapter] to do that.
+ *
+ * RedditClients **must** be authenticated before they can be of any use. The
+ * [OAuthHelper][net.dean.jraw.http.oauth.OAuthHelper] class can help you get authenticated.
+ *
  * By default, HTTP requests and responses created through this class are logged with [logger]. You can provide your own
  * [HttpLogger] implementation or turn it off entirely using [logHttp]
+ *
+ * Any requests sent by RedditClients are rate-limited on a per-instance basis. That means that it is possible to
+ * consume your app's quota of 60 requests per second using more than one RedditClient authenticated under the same
+ * OAuth2 app credentials operating independently of each other. For that reason, it is recommended to have only one
+ * instance of the RedditClient per application.
  */
 class RedditClient(
     val http: HttpAdapter,
-    val authMethod: AuthenticationMethod,
     val oauthData: OAuthData
 ) {
     var logger: HttpLogger = SimpleHttpLogger()
