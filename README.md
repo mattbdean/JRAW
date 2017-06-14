@@ -13,7 +13,7 @@ This branch is a rewrite of the library in [Kotlin](https://kotlinlang.org/). Pl
 val oauthCreds = Credentials.script(username, password, clientId, clientSecret)
 
 // Create a unique User-Agent for our bot
-val userAgent = UserAgent.of("desktop", "my.cool.bot", "1.0.0", "myRedditUsername")
+val userAgent = UserAgent("desktop", "my.cool.bot", "1.0.0", "myRedditUsername")
 
 // Create our RedditClient
 val reddit = OAuthHelper.script(oauthCreds, OkHttpAdapter(userAgent))

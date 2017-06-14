@@ -9,7 +9,7 @@ import org.jetbrains.spek.api.dsl.it
 class UserAgentTest: Spek({
     describe("of") {
         it("should format a User-Agent string") {
-            UserAgent.of(
+            UserAgent(
                 platform = "lib",
                 appId = "net.dean.jraw",
                 version = "the best",

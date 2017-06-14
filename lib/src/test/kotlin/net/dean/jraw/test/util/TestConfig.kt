@@ -7,7 +7,7 @@ import net.dean.jraw.http.oauth.OAuthHelper
 
 object TestConfig {
     /** UserAgent used by all HttpAdapters used for testing */
-    val userAgent = UserAgent.of("lib", "net.dean.jraw.test", Version.get(), "thatJavaNerd")
+    val userAgent = UserAgent("lib", "net.dean.jraw.test", Version.get(), "thatJavaNerd")
 
     /** Lazy-initialized RedditClient authorized by a script app */
     val reddit: RedditClient by lazy { OAuthHelper.script(CredentialsUtil.script, newOkHttpAdapter()) }

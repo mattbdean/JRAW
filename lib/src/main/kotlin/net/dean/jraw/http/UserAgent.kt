@@ -20,8 +20,7 @@ package net.dean.jraw.http
  *         bots. We will ban liars with extreme prejudice.
  */
 data class UserAgent(val value: String) {
-    companion object {
-        @JvmStatic fun of(platform: String, appId: String, version: String, redditUsername: String) =
-            UserAgent("$platform:$appId:$version (by /u/$redditUsername)")
-    }
+    constructor(platform: String, appId: String, version: String, redditUsername: String) : this(
+        "$platform:$appId:$version (by /u/$redditUsername)"
+    )
 }
