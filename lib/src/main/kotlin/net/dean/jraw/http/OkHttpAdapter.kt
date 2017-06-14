@@ -7,10 +7,10 @@ import okhttp3.Request
 /**
  * [HttpAdapter] implementation backed by Square's fantastic [OkHttp](https://square.github.io/okhttp/)
  */
-class OkHttpAdapter(userAgent: UserAgent) : AbstractHttpAdapter(userAgent) {
+class OkHttpAdapter(override var userAgent: UserAgent) : HttpAdapter {
     private val http: OkHttpClient = OkHttpClient()
 
-    override fun executeRequest(r: HttpRequest): HttpResponse {
+    override fun execute(r: HttpRequest): HttpResponse {
         val res = createCall(r).execute()
         return HttpResponse(
             code = res.code(),

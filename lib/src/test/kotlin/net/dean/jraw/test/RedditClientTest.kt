@@ -1,12 +1,13 @@
 package net.dean.jraw.test
 
 import com.winterbe.expekt.should
+import net.dean.jraw.RedditClient
 import net.dean.jraw.http.HttpRequest
+import net.dean.jraw.http.NetworkException
 import net.dean.jraw.http.SimpleHttpLogger
 import net.dean.jraw.http.oauth.OAuthHelper
-import net.dean.jraw.test.util.CredentialsUtil
+import net.dean.jraw.test.util.*
 import net.dean.jraw.test.util.TestConfig.reddit
-import net.dean.jraw.test.util.newOkHttpAdapter
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
@@ -40,8 +41,36 @@ class RedditClientTest : Spek({
 
     describe("randomSubreddit") {
         it("should return a random subreddit") {
-            // Just make sure it deserializes
-            reddit.randomSubreddit()
+            // Just make sure the request succeeds and the JSON deserializes
+            reddit.randomSubreddit().about()
         }
     }
+
+    describe("retryLimit") {
+        it("should affect how many times a request is retried when it encounters a 5XX error") {
+            val retryLimit = 3
+            val httpAdapter = MockHttpAdapter()
+
+            // Enqueue (retryLimit + 1) responses. The client should execute the request and then retry [retryLimit] more
+            // times.
+            for (i in 0..retryLimit) {
+                // Use a dynamic code to make sure it's including all 5XX codes
+                httpAdapter.enqueue(MockHttpResponse(code = 500 + i))
+            }
+
+            val reddit = RedditClient(httpAdapter, createMockOAuthData())
+            reddit.retryLimit = retryLimit
+
+            expectException(NetworkException::class) {
+                // Doesn't matter what request is sent, responses are controlled by us. The client should receive these
+                // HTTP 500 Internal Server Error responses we enqueued earlier and retry up to [retryLimit] times,
+                // eventually giving up and throwing a NetworkException
+                reddit.request { it.path("foo") }
+            }
+
+            // We enqueued (retryLimit + 1) responses
+            httpAdapter.remaining().should.equal(0)
+        }
+    }
+
 })

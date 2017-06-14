@@ -24,6 +24,9 @@ import java.util.concurrent.TimeUnit
  * consume your app's quota of 60 requests per second using more than one RedditClient authenticated under the same
  * OAuth2 app credentials operating independently of each other. For that reason, it is recommended to have only one
  * instance of the RedditClient per application.
+ *
+ * By default, any request that responds with a server error code (5XX) will be retried up to five times. You can change
+ * this by changing [retryLimit].
  */
 class RedditClient(
     val http: HttpAdapter,
@@ -31,6 +34,8 @@ class RedditClient(
 ) {
     var logger: HttpLogger = SimpleHttpLogger()
     var logHttp = true
+
+    var retryLimit: Int = 5 // arbitrary number
 
     private var rateLimiter = TokenBuckets.builder()
         .withCapacity(BURST_LIMIT)
@@ -45,20 +50,12 @@ class RedditClient(
         .host("oauth.reddit.com")
         .header("Authorization", "bearer ${oauthData.accessToken}")
 
-    /**
-     * Uses the [HttpAdapter] to execute a synchronous HTTP request and returns its JSON value
-     *
-     * ```
-     * val response = reddit.request(reddit.requestStub()
-     *     .path("/api/v1/me")
-     *     .build())
-     * ```
-     */
-    fun request(r: HttpRequest): HttpResponse {
-        return if (logHttp) {
-            // Try to prevent API errors
-            rateLimiter.consume()
+    @Throws(NetworkException::class)
+    private fun request(r: HttpRequest, retryCount: Int = 0): HttpResponse {
+        // Try to prevent API errors
+        rateLimiter.consume()
 
+        val res = if (logHttp) {
             // Log the request and response, returning 'res'
             val tag = logger.request(r)
             val res = http.execute(r)
@@ -67,7 +64,30 @@ class RedditClient(
         } else {
             http.execute(r)
         }
+
+        if (res.code in 500..599 && retryCount < retryLimit) {
+            return request(r, retryCount + 1)
+        }
+
+        if (!res.successful)
+            throw NetworkException(res)
+
+        return res
     }
+
+    /**
+     * Uses the [HttpAdapter] to execute a synchronous HTTP request and returns its JSON value.
+     *
+     * Throws a [NetworkException] if the response is out of the range of 200..299
+     *
+     * ```
+     * val response = reddit.request(reddit.requestStub()
+     *     .path("/api/v1/me")
+     *     .build())
+     * ```
+     */
+    @Throws(NetworkException::class)
+    fun request(r: HttpRequest): HttpResponse = request(r, retryCount = 0)
 
     /**
      * Adds a little syntactic sugar to the vanilla `request` method.
@@ -102,6 +122,7 @@ class RedditClient(
      *
      * @see requestStub
      */
+    @Throws(NetworkException::class)
     fun request(configure: (stub: HttpRequest.Builder) -> HttpRequest.Builder) = request(configure(requestStub()).build())
 
     @EndpointImplementation(Endpoint.GET_ME)

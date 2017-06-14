@@ -3,10 +3,8 @@ package net.dean.jraw.test
 import com.fasterxml.jackson.databind.JsonNode
 import com.winterbe.expekt.should
 import net.dean.jraw.http.HttpRequest
-import net.dean.jraw.http.NetworkException
 import net.dean.jraw.http.OkHttpAdapter
 import net.dean.jraw.test.util.TestConfig.userAgent
-import net.dean.jraw.test.util.expectException
 import okhttp3.internal.http.HttpMethod
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
@@ -16,7 +14,7 @@ import java.net.URL
 private val otherHeader = "X-Foo" to "Bar"
 private val formBody = mapOf("foo" to "bar", "baz" to "qux")
 
-class OkHttpAdapterTest: Spek({
+class OkHttpAdapterTest : Spek({
     var http: OkHttpAdapter = OkHttpAdapter(userAgent)
     beforeEachTest {
         http = OkHttpAdapter(userAgent)
@@ -38,12 +36,11 @@ class OkHttpAdapterTest: Spek({
                 .build())
         }
 
-        it("should throw a NetworkException on a failing status code") {
-            expectException(NetworkException::class) {
-                http.execute(HttpRequest.Builder()
-                    .url("https://httpbin.org/status/418")
-                    .build())
-            }
+        it("should accurately report the status code") {
+            http.execute(HttpRequest.Builder()
+                .url("https://httpbin.org/status/418")
+                .build())
+                .code.should.equal(418) // I'm a teapot
         }
     }
 })
