@@ -3,6 +3,7 @@ package net.dean.jraw.references
 import net.dean.jraw.Endpoint
 import net.dean.jraw.EndpointImplementation
 import net.dean.jraw.RedditClient
+import net.dean.jraw.models.RootCommentNode
 import net.dean.jraw.models.Submission
 import net.dean.jraw.models.Subreddit
 
@@ -20,4 +21,12 @@ class SubredditReference(reddit: RedditClient, subreddit: String) : AbstractRefe
     fun about(): Subreddit = reddit.request { it.path("/r/$subject/about") }.deserialize()
 
     fun posts() = PaginatorReference<Submission>(reddit, "/r/$subject")
+
+    /**
+     * Gets a random submission from this subreddit. Although it is not marked with [EndpointImplementation], this
+     * method executes a network request.
+     *
+     * @see RedditClient.randomSubreddit
+     */
+    fun randomSubmission() = RootCommentNode(reddit.request { it.path("/r/$subject/random") }.json)
 }

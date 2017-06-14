@@ -12,7 +12,6 @@ import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
 import java.io.ByteArrayOutputStream
 import java.io.PrintStream
-import java.util.*
 
 class RedditClientTest : Spek({
     describe("requestStub") {
@@ -37,17 +36,6 @@ class RedditClientTest : Spek({
             .build())
 
         baos.size().should.equal(0)
-    }
-
-    describe("subreddit") {
-        it("should return a Subreddit") {
-            val pics = reddit.subreddit("pics").about()
-            pics.name.should.equal("pics")
-
-            // Make sure the Date serialization treats this as seconds instead of milliseconds
-            // See /r/pics.json --> created_utc
-            pics.created.should.be.above(Date(1201132800))
-        }
     }
 
     describe("randomSubreddit") {

@@ -101,7 +101,6 @@ class RedditClient(
     /** Creates a [SubredditReference] */
     fun subreddit(name: String) = SubredditReference(this, name)
 
-    // TODO: This endpoint can also return a random submission: /r/{subreddit}/random
     /**
      * Gets a random subreddit. Although this method is decorated with [EndpointImplementation], it does not execute a
      * HTTP request and is not a blocking call. This method is equivalent to
@@ -109,6 +108,8 @@ class RedditClient(
      * ```kotlin
      * reddit.subreddit("random")
      * ```
+     *
+     * @see SubredditReference.randomSubmission
      */
     @EndpointImplementation(Endpoint.GET_RANDOM)
     fun randomSubreddit() = subreddit("random")
