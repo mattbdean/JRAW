@@ -1,5 +1,5 @@
 buildscript {
-    ext.kotlinVersion = '1.1.2-2'
+    ext.kotlinVersion = '1.1.2-5'
     ext.spekVersion = '1.1.2'
     ext.jacksonVersion = '2.9.0.pr3'
     ext.dokkaVersion = '0.9.14'
