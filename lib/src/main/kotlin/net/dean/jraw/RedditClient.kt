@@ -3,9 +3,10 @@ package net.dean.jraw
 import com.fasterxml.jackson.databind.JsonNode
 import net.dean.jraw.http.*
 import net.dean.jraw.http.oauth.OAuthData
+import net.dean.jraw.ratelimit.LeakyBucketRateLimiter
+import net.dean.jraw.ratelimit.RateLimiter
 import net.dean.jraw.references.SubmissionReference
 import net.dean.jraw.references.SubredditReference
-import org.isomorphism.util.TokenBuckets
 import java.util.concurrent.TimeUnit
 
 /**
@@ -37,10 +38,7 @@ class RedditClient(
 
     var retryLimit: Int = 5 // arbitrary number
 
-    private var rateLimiter = TokenBuckets.builder()
-        .withCapacity(BURST_LIMIT)
-        .withFixedIntervalRefillStrategy(RATE_LIMIT, 1, TimeUnit.SECONDS)
-        .build()
+    var rateLimiter: RateLimiter = LeakyBucketRateLimiter(BURST_LIMIT, RATE_LIMIT, TimeUnit.SECONDS)
 
     /**
      * Creates a [HttpRequest.Builder], setting `secure(true)`, `host("oauth.reddit.com")`, and the Authorization header
@@ -53,7 +51,7 @@ class RedditClient(
     @Throws(NetworkException::class)
     private fun request(r: HttpRequest, retryCount: Int = 0): HttpResponse {
         // Try to prevent API errors
-        rateLimiter.consume()
+        rateLimiter.acquire()
 
         val res = if (logHttp) {
             // Log the request and response, returning 'res'
@@ -151,8 +149,8 @@ class RedditClient(
     fun submission(id: String) = SubmissionReference(this, id)
 
     companion object {
-        /** Amount of requests per minute reddit allows for OAuth2 apps */
-        const val RATE_LIMIT = 60L
+        /** Amount of requests per second reddit allows for OAuth2 apps */
+        const val RATE_LIMIT = 1L
         const val BURST_LIMIT = 5L
     }
 }
