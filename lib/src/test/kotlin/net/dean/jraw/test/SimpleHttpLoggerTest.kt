@@ -38,8 +38,8 @@ class SimpleHttpLoggerTest : Spek({
             .build())
         val output = loggerOutput()
         output.size.should.equal(2)
-        output[0].should.equal("[0 ->] GET $url")
-        output[1].should.startWith("[<- 0] 200 application/json: '")
+        output[0].should.equal("[1 ->] GET $url")
+        output[1].should.startWith("[<- 1] 200 application/json: '")
         // The request response should be more than LINE_LENGTH, so SimpleHttpLogger should truncate it
         output[1].should.have.length(SimpleHttpLogger.LINE_LENGTH)
     }
@@ -54,9 +54,9 @@ class SimpleHttpLoggerTest : Spek({
 
         val output = loggerOutput()
         output.should.have.size(times * 2) // 1 for the request, 1 for the response
-        for (i in 0..times - 1) {
-            output[i * 2].should.startWith("[$i ->] ")
-            output[(i * 2) + 1].should.startWith("[<- $i] ")
+        for (i in 1..times) {
+            output[(i - 1) * 2].should.startWith("[$i ->] ")
+            output[(i - 1) * 2 + 1].should.startWith("[<- $i] ")
         }
     }
 
