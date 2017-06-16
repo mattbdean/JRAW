@@ -6,21 +6,26 @@ import net.dean.jraw.RedditClient
 import net.dean.jraw.models.RootCommentNode
 import net.dean.jraw.models.Submission
 import net.dean.jraw.models.Subreddit
+import net.dean.jraw.pagination.Paginator
 
 /**
  * Allows the user to perform API actions against a subreddit
  *
  * @constructor Creates a new SubredditReference for the given subreddit. Do not include the "/r/" prefix (e.g. "pics")
  */
-class SubredditReference(reddit: RedditClient, subreddit: String) : AbstractReference<String>(reddit, subreddit) {
+class SubredditReference internal constructor(reddit: RedditClient, subreddit: String) : AbstractReference<String>(reddit, subreddit) {
 
     /**
-     * Returns a [Subreddit] instance for this subreddit
+     * Returns a [Subreddit] instance for this reference
      */
-    @EndpointImplementation(Endpoint.GET_SUBREDDIT_ABOUT)
+    @EndpointImplementation(arrayOf(Endpoint.GET_SUBREDDIT_ABOUT))
     fun about(): Subreddit = reddit.request { it.path("/r/$subject/about") }.deserialize()
 
-    fun posts() = PaginatorReference<Submission>(reddit, "/r/$subject")
+    /**
+     * Creates a new [Paginator.Builder] to iterate over this subreddit's posts.
+     */
+    @EndpointImplementation(arrayOf(Endpoint.GET_HOT, Endpoint.GET_NEW, Endpoint.GET_RISING, Endpoint.GET_SORT))
+    fun posts() = Paginator.Builder<Submission>(reddit, "/r/$subject")
 
     /**
      * Gets a random submission from this subreddit. Although it is not marked with [EndpointImplementation], this

@@ -123,7 +123,7 @@ class RedditClient(
     @Throws(NetworkException::class)
     fun request(configure: (stub: HttpRequest.Builder) -> HttpRequest.Builder) = request(configure(requestStub()).build())
 
-    @EndpointImplementation(Endpoint.GET_ME)
+    @EndpointImplementation(arrayOf(Endpoint.GET_ME))
     fun me(): JsonNode = request { it.path("/api/v1/me") }.json
 
     /** Creates a [SubredditReference] */
@@ -139,7 +139,7 @@ class RedditClient(
      *
      * @see SubredditReference.randomSubmission
      */
-    @EndpointImplementation(Endpoint.GET_RANDOM)
+    @EndpointImplementation(arrayOf(Endpoint.GET_RANDOM))
     fun randomSubreddit() = subreddit("random")
 
     /**

@@ -30,8 +30,8 @@ object EndpointAnalyzer {
      */
     fun getFor(e: ParsedEndpoint): EndpointMeta? {
         val method = implementations.firstOrNull {
-            val other = it.getAnnotation(EndpointImplementation::class.java).endpoint
-            other.method == e.method && other.path == e.path
+            val other = it.getAnnotation(EndpointImplementation::class.java).endpoints
+            other.find { it.method == e.method && it.path == e.path } != null
         } ?: return null
 
 

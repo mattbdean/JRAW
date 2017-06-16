@@ -32,7 +32,7 @@ abstract class PublicContributionReference internal constructor(reddit: RedditCl
      * > Note: votes must be cast by humans. That is, API clients proxying a human's action one-for-one are OK, but bots
      *   deciding how to vote on content or amplifying a human's vote are not.
      */
-    @EndpointImplementation(Endpoint.POST_VOTE)
+    @EndpointImplementation(arrayOf(Endpoint.POST_VOTE))
     fun setVote(dir: VoteDirection) {
         val value = when (dir) {
             VoteDirection.UP -> 1

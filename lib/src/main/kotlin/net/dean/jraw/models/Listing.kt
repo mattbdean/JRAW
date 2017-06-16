@@ -25,4 +25,8 @@ data class Listing<T : Thing>(
     override fun listIterator(): ListIterator<T> = children.listIterator()
     override fun listIterator(index: Int): ListIterator<T> = children.listIterator(index)
     override fun subList(fromIndex: Int, toIndex: Int): List<T> = children.subList(fromIndex, toIndex)
+
+    override fun toString(): String {
+        return "Listing(after=$after, before=$before, children=List(size=${children.size}), size=$size)"
+    }
 }

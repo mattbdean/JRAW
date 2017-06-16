@@ -2,6 +2,7 @@ package net.dean.jraw.test
 
 import net.dean.jraw.RedditClient
 import net.dean.jraw.http.oauth.OAuthHelper
+import net.dean.jraw.models.Sorting
 import net.dean.jraw.models.Submission
 import net.dean.jraw.models.Subreddit
 import net.dean.jraw.models.Thing
@@ -19,6 +20,7 @@ typealias DeserializeTest = (RedditClient) -> List<Thing>
  * both with and without a user because some properties are null without a logged-in user.
  */
 class DeserializationTest : Spek({
+    fun subredditPosts(reddit: RedditClient, sr: String) = reddit.subreddit(sr).posts().sorting(Sorting.HOT).build().next()
     // Map a Thing subclass an array of functions that uses Jackson to deserialize JSON into an instance of that Thing
     val testCases = mapOf<KClass<out Thing>, Array<DeserializeTest>>(
         Subreddit::class to arrayOf<DeserializeTest>(
@@ -28,9 +30,9 @@ class DeserializationTest : Spek({
             { listOf(it.randomSubreddit().about()) }
         ),
         Submission::class to arrayOf<DeserializeTest>(
-            { it.subreddit("pics").posts().hot() },
-            { it.subreddit("redditdev").posts().hot() },
-            { it.randomSubreddit().posts().hot() }
+            { subredditPosts(it, "pics") },
+            { subredditPosts(it, "redditdev") },
+            { subredditPosts(it, "random") }
         )
     )
 

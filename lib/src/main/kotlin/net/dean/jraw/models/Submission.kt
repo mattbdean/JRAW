@@ -127,6 +127,9 @@ data class Submission(
     /** An empty string for self posts, otherwise a reddit-generated-and-hosted thumbnail */
     val thumbnail: String,
 
+    /** Title of the submission */
+    val title: String,
+
     /** An absolute URL to the comments for a self post, otherwise an absolute URL to the Submission content */
     val url: String,
 

@@ -41,7 +41,7 @@ val tasks: List<Task> = listOf(
     },
     Task("readme-badge") { endpoints, location ->
         ReadmeBadgeUpdater.update(endpoints, location)
-        "Updated API coverage badge in file"
+        "Updated API coverage badge in file $location"
     }
 )
 

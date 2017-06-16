@@ -3,7 +3,7 @@
 [![travis-ci build status](https://img.shields.io/travis/thatJavaNerd/JRAW.svg)](https://travis-ci.org/thatJavaNerd/JRAW)
 [![Latest release](https://img.shields.io/github/release/thatJavaNerd/JRAW.svg)](https://bintray.com/thatjavanerd/maven/JRAW/_latestVersion)
 [![Kotlin 1.1.2-5](https://img.shields.io/badge/Kotlin-1.1.2--5-blue.svg)](http://kotlinlang.org)
-[![API coverage](https://img.shields.io/badge/API_coverage-4%25-9C27B0.svg)](https://github.com/thatJavaNerd/JRAW/blob/kotlin/ENDPOINTS.md)
+[![API coverage](https://img.shields.io/badge/API_coverage-5%25-9C27B0.svg)](https://github.com/thatJavaNerd/JRAW/blob/kotlin/ENDPOINTS.md)
 [![Codecov branch](https://img.shields.io/codecov/c/github/thatJavaNerd/JRAW/kotlin.svg)](https://codecov.io/gh/thatJavaNerd/JRAW/branch/kotlin)
 
 This branch is a rewrite of the library in [Kotlin](https://kotlinlang.org/). Please note that this branch is not even close to being production ready! There are still tons of missing features from JRAW v0.9.0.
@@ -20,6 +20,15 @@ val reddit = OAuthHelper.script(oauthCreds, OkHttpAdapter(userAgent))
 
 // GET https://oauth.reddit.com/some/endpoint
 val foo = reddit.request { it.path("/some/endpoint") }.deserialize<Foo>()
+
+// Iterate through posts
+val pics: Paginator<Submission> = reddit.subreddit("pics").posts()
+    .sorting(Sorting.TOP)
+    .timePeriod(TimePeriod.ALL)
+    .limit(100)
+    .build()
+    
+pics.next().forEach(::println)
 ```
 
 ## Proposed APIs
@@ -27,14 +36,6 @@ val foo = reddit.request { it.path("/some/endpoint") }.deserialize<Foo>()
 This section is a draft and is very likely to change as development continues
 
 ```kotlin
-// Pagination
-val pics = reddit.subreddit("pics").submissions()
-    .topOf(TimePeriod.ALL)
-    .limit(25)
-    .build()
-val top25 = pics.next() // List<Submission>
-val next25 = pics.next()
-
 // Users
 val davinci = reddit.user("Shitty_Watercolour")
 val about = davinci.info()
