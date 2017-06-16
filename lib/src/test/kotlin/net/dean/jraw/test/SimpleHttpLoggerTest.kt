@@ -5,6 +5,7 @@ import net.dean.jraw.RedditClient
 import net.dean.jraw.http.HttpRequest
 import net.dean.jraw.http.SimpleHttpLogger
 import net.dean.jraw.http.oauth.OAuthHelper
+import net.dean.jraw.ratelimit.NoopRateLimiter
 import net.dean.jraw.test.util.CredentialsUtil
 import net.dean.jraw.test.util.newOkHttpAdapter
 import org.jetbrains.spek.api.Spek
@@ -29,6 +30,7 @@ class SimpleHttpLoggerTest : Spek({
     beforeEachTest {
         baos = ByteArrayOutputStream()
         reddit.logger = SimpleHttpLogger(PrintStream(baos))
+        reddit.rateLimiter = NoopRateLimiter()
     }
 
     it("should log both input and output") {
