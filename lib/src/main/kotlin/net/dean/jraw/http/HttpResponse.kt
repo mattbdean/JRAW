@@ -5,8 +5,7 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import net.dean.jraw.JrawUtils
 
 /**
- * This class forms a bridge from an [AbstractHttpAdapter] implementation to the HTTP library's response class. You
- * shouldn't need to create instances of these yourself unless you're writing your own [AbstractHttpAdapter].
+ * This class forms a bridge from an [HttpAdapter] implementation to the HTTP library's response class
  */
 data class HttpResponse(
     /** HTTP status code (200, 404, etc.) */
