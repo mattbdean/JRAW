@@ -27,7 +27,7 @@ import java.util.concurrent.atomic.AtomicInteger
  * @see LINE_LENGTH
  */
 class SimpleHttpLogger(val out: PrintStream = System.out) : HttpLogger {
-    private val counter: AtomicInteger = AtomicInteger()
+    private val counter: AtomicInteger = AtomicInteger(1)
     private val lock = Any()
 
     override fun request(r: HttpRequest, sent: Date): HttpLogger.Tag {
