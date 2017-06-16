@@ -98,6 +98,3 @@ class SimpleHttpLogger(val out: PrintStream = System.out) : HttpLogger {
         const val LINE_LENGTH = 100
     }
 }
-
-/*
- */
