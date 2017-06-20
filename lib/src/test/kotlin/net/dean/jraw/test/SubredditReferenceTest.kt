@@ -17,14 +17,14 @@ class SubredditReferenceTest : Spek({
         it("should be able to submit a self post") {
             ignoreRateLimit {
                 val id = ref.submit(SubmissionKind.SELF, "test self post", "submitted $now", sendReplies = false)
-                reddit.submission(id).comments().submission.id.should.equal(id)
+                reddit.submission(id).inspect().id.should.equal(id)
             }
         }
 
         it("should be able to submit a link") {
             ignoreRateLimit {
                 val id = ref.submit(SubmissionKind.LINK, "test link post", "http://example.com/${now.time}", sendReplies = false)
-                reddit.submission(id).comments().submission.id.should.equal(id)
+                reddit.submission(id).inspect().id.should.equal(id)
             }
         }
     }

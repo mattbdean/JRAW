@@ -4,6 +4,7 @@ import net.dean.jraw.Endpoint
 import net.dean.jraw.EndpointImplementation
 import net.dean.jraw.RedditClient
 import net.dean.jraw.models.RootCommentNode
+import net.dean.jraw.models.Submission
 import net.dean.jraw.models.ThingType
 
 /**
@@ -14,4 +15,15 @@ class SubmissionReference internal constructor(reddit: RedditClient, id: String)
 
     @EndpointImplementation(arrayOf(Endpoint.GET_COMMENTS_ARTICLE))
     fun comments(): RootCommentNode = RootCommentNode(reddit.request { it.path("/comments/$subject") }.json)
+
+    /**
+     * Gets a [Submission] instance for this reference.
+     *
+     * Equivalent to
+     *
+     * ```kotlin
+     * comments().submission
+     * ```
+     */
+    fun inspect(): Submission = comments().submission
 }

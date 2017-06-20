@@ -18,7 +18,7 @@ class SubmissionReferenceTest : Spek({
         it("should have an effect on a model") {
             fun expectVote(dir: VoteDirection) {
                 val value = if (dir == VoteDirection.UP) true else if (dir == VoteDirection.DOWN) false else null
-                ref.comments().submission.likes.should.equal(value)
+                ref.inspect().likes.should.equal(value)
             }
             ref.upvote()
             expectVote(VoteDirection.UP)
