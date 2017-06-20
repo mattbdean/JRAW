@@ -2,9 +2,11 @@ package net.dean.jraw.references
 
 import net.dean.jraw.Endpoint
 import net.dean.jraw.EndpointImplementation
+import net.dean.jraw.JrawUtils
 import net.dean.jraw.RedditClient
 import net.dean.jraw.models.RootCommentNode
 import net.dean.jraw.models.Submission
+import net.dean.jraw.models.SubmissionKind
 import net.dean.jraw.models.Subreddit
 import net.dean.jraw.pagination.Paginator
 
@@ -34,4 +36,38 @@ class SubredditReference internal constructor(reddit: RedditClient, subreddit: S
      * @see RedditClient.randomSubreddit
      */
     fun randomSubmission() = RootCommentNode(reddit.request { it.path("/r/$subject/random") }.json)
+
+    /**
+     * Submits content to this subreddit
+     *
+     * @param kind Is this a self post (text) or a link post?
+     * @param content If `kind` is [SubmissionKind.SELF], the Markdown-formatted body, else a URL.
+     * @param sendReplies If direct replies to the submission should be sent to the user's inbox
+     */
+    @EndpointImplementation(arrayOf(Endpoint.POST_SUBMIT))
+    fun submit(kind: SubmissionKind, title: String, content: String, sendReplies: Boolean): String {
+        val args = mutableMapOf(
+            "api_type" to "json",
+            "extension" to "json",
+            "kind" to kind.name.toLowerCase(),
+            "resubmit" to "false",
+            "sendreplies" to sendReplies.toString(),
+            "sr" to subject,
+            "title" to title
+        )
+
+        args[if (kind == SubmissionKind.SELF) "text" else "url"] = content
+
+        val json = reddit.request {
+            it.endpoint(Endpoint.POST_SUBMIT)
+                .post(args)
+        }.json
+
+        JrawUtils.handleApiErrors(json)
+
+        val idNode = json.get("json")?.get("data")?.get("id") ?:
+            throw IllegalArgumentException("Unexpected JSON structure: cannot find json > data > id")
+
+        return idNode.asText()
+    }
 }

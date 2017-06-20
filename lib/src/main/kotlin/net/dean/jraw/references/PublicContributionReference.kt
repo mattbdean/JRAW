@@ -1,11 +1,8 @@
 package net.dean.jraw.references
 
 import com.fasterxml.jackson.module.kotlin.treeToValue
-import net.dean.jraw.ApiException
-import net.dean.jraw.Endpoint
-import net.dean.jraw.EndpointImplementation
+import net.dean.jraw.*
 import net.dean.jraw.JrawUtils.jackson
-import net.dean.jraw.RedditClient
 import net.dean.jraw.models.Comment
 import net.dean.jraw.models.ThingType
 import net.dean.jraw.models.VoteDirection
@@ -66,11 +63,10 @@ abstract class PublicContributionReference internal constructor(reddit: RedditCl
                     "text" to text,
                     "thing_id" to "${ThingType.SUBMISSION.prefix}_$subject"
                 ))
-        }.json.get("json")
+        }.json
 
         // Check for errors
-        if (json.has("errors") && json["errors"].isArray && json["errors"].has(0))
-            throw ApiException.from(json["errors"][0])
+        JrawUtils.handleApiErrors(json)
 
         // Deserialize specific JSON node to a Comment
         val commentNode = json.get("data")?.get("things")?.get(0) ?:

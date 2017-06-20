@@ -11,6 +11,9 @@ import java.lang.reflect.Method
 /**
  * Singleton that creates instances of [EndpointMeta] using reflection and bytecode manipulation libraries Reflections
  * and javassist.
+ *
+ * Note that [EndpointImplementation] methods **may not have default parameters** because of the way the Reflections
+ * library works.
  */
 object EndpointAnalyzer {
     /** A lazily-initialized set of methods that implement [EndpointImplementation] */
