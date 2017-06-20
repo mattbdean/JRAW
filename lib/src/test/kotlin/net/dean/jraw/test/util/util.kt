@@ -1,5 +1,6 @@
 package net.dean.jraw.test.util
 
+import net.dean.jraw.ApiException
 import net.dean.jraw.RedditClient
 import net.dean.jraw.http.*
 import net.dean.jraw.http.oauth.OAuthData
@@ -38,6 +39,16 @@ fun ensureAuthenticated(reddit: RedditClient) {
 }
 
 fun newOkHttpAdapter() = OkHttpAdapter(userAgent)
+
+fun ignoreRateLimit(block: () -> Unit) {
+    try {
+        block()
+    } catch (e: Exception) {
+        if (e is ApiException && e.code == "RATELIMIT")
+            return
+        throw e
+    }
+}
 
 /**
  * An HttpAdapter that we can pre-configure responses for.
