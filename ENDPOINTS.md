@@ -1,23 +1,23 @@
-<!--- Generated 2017-06-15 at 21:22:20 EDT. Use `./gradlew :meta:update` to update. DO NOT MODIFY DIRECTLY -->
+<!--- Generated 2017-06-19 at 23:04:11 EDT. Use `./gradlew :meta:update` to update. DO NOT MODIFY DIRECTLY -->
 
 Endpoints
 =========
 
 This file contains a list of all the endpoints (regardless of if they have been implemented) that can be found at the [official reddit API docs](https://www.reddit.com/dev/api/oauth). To update this file, run `./gradlew :meta:update`
 
-So far, **9** endpoints (out of 169) have been implemented.
+So far, **10** endpoints (out of 169) have been implemented.
 
 (any scope)
 -----------
 
-| Method | Endpoint                                                                                     | Implementation |
-|:------:| -------------------------------------------------------------------------------------------- | -------------- |
-| `POST` | [`/api/comment`](https://www.reddit.com/dev/api/oauth#POST_api_comment)                      | None           |
-| `POST` | [`/api/friend`](https://www.reddit.com/dev/api/oauth#POST_api_friend)                        | None           |
-| `GET`  | [`/api/needs_captcha`](https://www.reddit.com/dev/api/oauth#GET_api_needs_captcha)           | None           |
-| `POST` | [`/api/unfriend`](https://www.reddit.com/dev/api/oauth#POST_api_unfriend)                    | None           |
-| `GET`  | [`/api/username_available`](https://www.reddit.com/dev/api/oauth#GET_api_username_available) | None           |
-| `GET`  | [`/api/v1/scopes`](https://www.reddit.com/dev/api/oauth#GET_api_v1_scopes)                   | None           |
+| Method | Endpoint                                                                                     | Implementation                                                                                                                                                            |
+|:------:| -------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `POST` | [`/api/comment`](https://www.reddit.com/dev/api/oauth#POST_api_comment)                      | [`PublicContributionReference.reply()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/PublicContributionReference.kt#L62) |
+| `POST` | [`/api/friend`](https://www.reddit.com/dev/api/oauth#POST_api_friend)                        | None                                                                                                                                                                      |
+| `GET`  | [`/api/needs_captcha`](https://www.reddit.com/dev/api/oauth#GET_api_needs_captcha)           | None                                                                                                                                                                      |
+| `POST` | [`/api/unfriend`](https://www.reddit.com/dev/api/oauth#POST_api_unfriend)                    | None                                                                                                                                                                      |
+| `GET`  | [`/api/username_available`](https://www.reddit.com/dev/api/oauth#GET_api_username_available) | None                                                                                                                                                                      |
+| `GET`  | [`/api/v1/scopes`](https://www.reddit.com/dev/api/oauth#GET_api_v1_scopes)                   | None                                                                                                                                                                      |
 
 account
 -------
@@ -318,7 +318,7 @@ vote
 
 | Method | Endpoint                                                          | Implementation                                                                                                                                                              |
 |:------:| ----------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `POST` | [`/api/vote`](https://www.reddit.com/dev/api/oauth#POST_api_vote) | [`PublicContributionReference.setVote()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/PublicContributionReference.kt#L37) |
+| `POST` | [`/api/vote`](https://www.reddit.com/dev/api/oauth#POST_api_vote) | [`PublicContributionReference.setVote()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/PublicContributionReference.kt#L41) |
 
 wikiedit
 --------

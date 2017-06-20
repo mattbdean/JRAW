@@ -1,8 +1,12 @@
 package net.dean.jraw.references
 
+import com.fasterxml.jackson.module.kotlin.treeToValue
+import net.dean.jraw.ApiException
 import net.dean.jraw.Endpoint
 import net.dean.jraw.EndpointImplementation
+import net.dean.jraw.JrawUtils.jackson
 import net.dean.jraw.RedditClient
+import net.dean.jraw.models.Comment
 import net.dean.jraw.models.ThingType
 import net.dean.jraw.models.VoteDirection
 
@@ -27,7 +31,7 @@ abstract class PublicContributionReference internal constructor(reddit: RedditCl
     /**
      * Votes on a model on behalf of the user.
      *
-     * From the docs:
+     * From the reddit API docs:
      *
      * > Note: votes must be cast by humans. That is, API clients proxying a human's action one-for-one are OK, but bots
      *   deciding how to vote on content or amplifying a human's vote are not.
@@ -45,5 +49,32 @@ abstract class PublicContributionReference internal constructor(reddit: RedditCl
                 "id" to type.prefix + '_' + subject
             ))
         }
+    }
+
+    /**
+     * Creates a comment in response to this submission of comment
+     *
+     * @throws ApiException Most commonly for ratelimiting.
+     */
+    @Throws(ApiException::class)
+    @EndpointImplementation(arrayOf(Endpoint.POST_COMMENT))
+    fun reply(text: String): Comment {
+        val json = reddit.request {
+            it.endpoint(Endpoint.POST_COMMENT)
+                .post(mapOf(
+                    "api_type" to "json",
+                    "text" to text,
+                    "thing_id" to "${ThingType.SUBMISSION.prefix}_$subject"
+                ))
+        }.json.get("json")
+
+        // Check for errors
+        if (json.has("errors") && json["errors"].isArray && json["errors"].has(0))
+            throw ApiException.from(json["errors"][0])
+
+        // Deserialize specific JSON node to a Comment
+        val commentNode = json.get("data")?.get("things")?.get(0) ?:
+            throw IllegalArgumentException("Unexpected JSON structure")
+        return jackson.treeToValue(commentNode)
     }
 }
