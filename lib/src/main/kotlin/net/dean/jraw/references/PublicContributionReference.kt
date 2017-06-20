@@ -16,6 +16,8 @@ import net.dean.jraw.models.VoteDirection
 abstract class PublicContributionReference internal constructor(reddit: RedditClient, id: String, val type: ThingType) :
     AbstractReference<String>(reddit, id) {
 
+    val fullName = "${type.prefix}_$subject"
+
     /** Equivalent to `setVote(VoteDirection.UP)` */
     fun upvote() { setVote(VoteDirection.UP) }
 
@@ -43,7 +45,7 @@ abstract class PublicContributionReference internal constructor(reddit: RedditCl
         reddit.request {
             it.endpoint(Endpoint.POST_VOTE).post(mapOf(
                 "dir" to value.toString(),
-                "id" to type.prefix + '_' + subject
+                "id" to fullName
             ))
         }
     }
@@ -61,7 +63,7 @@ abstract class PublicContributionReference internal constructor(reddit: RedditCl
                 .post(mapOf(
                     "api_type" to "json",
                     "text" to text,
-                    "thing_id" to "${ThingType.SUBMISSION.prefix}_$subject"
+                    "thing_id" to fullName
                 ))
         }.json
 
@@ -69,8 +71,15 @@ abstract class PublicContributionReference internal constructor(reddit: RedditCl
         JrawUtils.handleApiErrors(json)
 
         // Deserialize specific JSON node to a Comment
-        val commentNode = json.get("data")?.get("things")?.get(0) ?:
-            throw IllegalArgumentException("Unexpected JSON structure")
-        return jackson.treeToValue(commentNode)
+        return jackson.treeToValue(JrawUtils.navigateJson(json, "json", "data", "things", 0))
+    }
+
+    @EndpointImplementation(arrayOf(Endpoint.POST_DEL))
+    fun delete() {
+        val json = reddit.request {
+            it.endpoint(Endpoint.POST_DEL)
+                .post(mapOf("id" to fullName))
+        }.json
+        println(json)
     }
 }

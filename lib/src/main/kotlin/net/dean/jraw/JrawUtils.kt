@@ -25,12 +25,31 @@ object JrawUtils {
         mapOf(*str.split("&").map { val parts = it.split("="); parts[0] to parts[1] }.toTypedArray())
 
     @JvmStatic
-    @Throws(ApiException::class)
+    @Throws(ApiException::class, RateLimitException::class)
     fun handleApiErrors(root: JsonNode) {
         if (!root.has("json")) return
         val json = root["json"]
 
+        if (json.has("ratelimit"))
+            throw RateLimitException(JrawUtils.navigateJson(root, "json", "ratelimit").asDouble(-1.0))
         if (json.has("errors") && json["errors"].isArray && json["errors"].has(0))
             throw ApiException.from(json["errors"][0])
+    }
+
+    fun navigateJson(json: JsonNode, vararg paths: Any): JsonNode {
+        var node = json
+        for (i in paths.indices) {
+            if (paths[i] !is Int && paths[i] !is String)
+                throw IllegalArgumentException("paths may be composed of either Strings or Ints, found '${paths[i]}'")
+
+            if (paths[i] is Int && node.has(paths[i] as Int))
+                node = node[paths[i] as Int]
+            else if (paths[i] is String && node.has(paths[i] as String))
+                node = node[paths[i] as String]
+            else
+                throw IllegalArgumentException("Unexpected JSON structure: cannot find '${paths.slice(0..i).joinToString(" > ")}'")
+        }
+
+        return node
     }
 }

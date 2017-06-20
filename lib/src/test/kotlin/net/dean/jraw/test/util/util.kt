@@ -1,10 +1,12 @@
 package net.dean.jraw.test.util
 
 import net.dean.jraw.ApiException
+import net.dean.jraw.RateLimitException
 import net.dean.jraw.RedditClient
 import net.dean.jraw.http.*
 import net.dean.jraw.http.oauth.OAuthData
 import net.dean.jraw.test.util.TestConfig.userAgent
+import org.junit.Assume.assumeTrue
 import java.util.*
 import kotlin.reflect.KClass
 
@@ -44,8 +46,10 @@ fun ignoreRateLimit(block: () -> Unit) {
     try {
         block()
     } catch (e: Exception) {
-        if (e is ApiException && e.code == "RATELIMIT")
+        if (e is RateLimitException) {
+            System.err.println("Skipping test due to rate limit (${e.message})")
             return
+        }
         throw e
     }
 }

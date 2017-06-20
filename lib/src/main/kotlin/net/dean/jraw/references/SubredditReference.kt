@@ -65,9 +65,6 @@ class SubredditReference internal constructor(reddit: RedditClient, subreddit: S
 
         JrawUtils.handleApiErrors(json)
 
-        val idNode = json.get("json")?.get("data")?.get("id") ?:
-            throw IllegalArgumentException("Unexpected JSON structure: cannot find json > data > id")
-
-        return idNode.asText()
+        return JrawUtils.navigateJson(json, "json", "data", "id").asText()
     }
 }
