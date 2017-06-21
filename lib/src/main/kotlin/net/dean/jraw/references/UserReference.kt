@@ -1,12 +1,14 @@
 package net.dean.jraw.references
 
 import com.fasterxml.jackson.module.kotlin.readValue
+import com.fasterxml.jackson.module.kotlin.treeToValue
 import net.dean.jraw.Endpoint
 import net.dean.jraw.EndpointImplementation
 import net.dean.jraw.JrawUtils
 import net.dean.jraw.RedditClient
 import net.dean.jraw.databind.ListingDeserializer
 import net.dean.jraw.models.Account
+import net.dean.jraw.models.Trophy
 
 class UserReference internal constructor(reddit: RedditClient, username: String) :
     AbstractReference<String>(reddit, username) {
@@ -22,6 +24,19 @@ class UserReference internal constructor(reddit: RedditClient, username: String)
         // /api/v1/me doesn't encapsulate the data with a "kind" and "data" node, use our custom ObjectMapper instance
         // when calling that endpoint
         return (if (isSelf) jackson else JrawUtils.jackson).readValue(body)
+    }
+
+    @EndpointImplementation(arrayOf(Endpoint.GET_ME_TROPHIES, Endpoint.GET_USER_USERNAME_TROPHIES))
+    fun trophies(): List<Trophy> {
+        val json = reddit.request {
+            if (isSelf)
+                it.endpoint(Endpoint.GET_ME_TROPHIES)
+            else
+                it.endpoint(Endpoint.GET_USER_USERNAME_TROPHIES, subject)
+        }.json
+
+        val trophies = JrawUtils.navigateJson(json, "data", "trophies")
+        return trophies.map { JrawUtils.jackson.treeToValue<Trophy>(it) }
     }
 
     companion object {

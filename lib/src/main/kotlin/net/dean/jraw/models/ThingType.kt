@@ -6,6 +6,6 @@ enum class ThingType(val prefix: String) {
     SUBMISSION("t3"),
     MESSAGE("t4"),
     SUBREDDIT("t5"),
-    AWARD("t6"),
+    TROPHY("t6"),
     PROMO_CAMPAIGN("t8")
 }

@@ -17,4 +17,12 @@ class UserReferenceTest : Spek({
             reddit.user(name).about().name.should.equal(name)
         }
     }
+
+    describe("trophies") {
+        it("should return a List of Trophies") {
+            // Just make sure it deserializes
+            reddit.me().trophies()
+            reddit.user("Shitty_Watercolour").trophies()
+        }
+    }
 })
