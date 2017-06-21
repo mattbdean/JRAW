@@ -11,4 +11,5 @@ object TestConfig {
 
     /** Lazy-initialized RedditClient authorized by a script app */
     val reddit: RedditClient by lazy { OAuthHelper.script(CredentialsUtil.script, newOkHttpAdapter()) }
+    val redditUserless: RedditClient by lazy { OAuthHelper.applicationOnly(CredentialsUtil.applicationOnly, newOkHttpAdapter()) }
 }

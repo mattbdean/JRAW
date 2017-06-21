@@ -7,6 +7,7 @@ import net.dean.jraw.models.Submission
 import net.dean.jraw.models.Subreddit
 import net.dean.jraw.models.Thing
 import net.dean.jraw.test.util.CredentialsUtil
+import net.dean.jraw.test.util.TestConfig
 import net.dean.jraw.test.util.newOkHttpAdapter
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.it
@@ -41,8 +42,8 @@ class DeserializationTest : Spek({
     var withoutUser: RedditClient by Delegates.notNull()
 
     beforeGroup {
-        withUser = OAuthHelper.script(CredentialsUtil.script, newOkHttpAdapter())
-        withoutUser = OAuthHelper.applicationOnly(CredentialsUtil.applicationOnly, newOkHttpAdapter())
+        withUser = TestConfig.reddit
+        withoutUser = TestConfig.redditUserless
     }
 
     // Dynamically create tests for every entry in our testCases map

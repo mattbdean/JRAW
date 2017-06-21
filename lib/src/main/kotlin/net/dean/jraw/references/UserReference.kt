@@ -2,11 +2,9 @@ package net.dean.jraw.references
 
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.fasterxml.jackson.module.kotlin.treeToValue
-import net.dean.jraw.Endpoint
-import net.dean.jraw.EndpointImplementation
-import net.dean.jraw.JrawUtils
-import net.dean.jraw.RedditClient
+import net.dean.jraw.*
 import net.dean.jraw.databind.ListingDeserializer
+import net.dean.jraw.http.NetworkException
 import net.dean.jraw.models.Account
 import net.dean.jraw.models.Trophy
 
@@ -37,6 +35,25 @@ class UserReference internal constructor(reddit: RedditClient, username: String)
 
         val trophies = JrawUtils.navigateJson(json, "data", "trophies")
         return trophies.map { JrawUtils.jackson.treeToValue<Trophy>(it) }
+    }
+
+    /**
+     * Gets a Map of preferences set at [https://www.reddit.com/prefs].
+     *
+     * Likely to throw an [ApiException] if authenticated via application-only credentials
+     */
+    @EndpointImplementation(arrayOf(Endpoint.GET_ME_PREFS))
+    @Throws(ApiException::class)
+    fun prefs(): Map<String, Any> {
+        try {
+            return reddit.request { it.endpoint(Endpoint.GET_ME_PREFS) }.deserialize()
+        } catch (e: NetworkException) {
+            if (e.res.code != 403) throw e
+
+            // Parse the ApiException data
+            val root = e.res.json
+            throw ApiException(root["reason"].asText(), root["explanation"].asText())
+        }
     }
 
     companion object {
