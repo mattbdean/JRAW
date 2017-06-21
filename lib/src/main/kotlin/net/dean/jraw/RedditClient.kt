@@ -7,6 +7,7 @@ import net.dean.jraw.ratelimit.LeakyBucketRateLimiter
 import net.dean.jraw.ratelimit.RateLimiter
 import net.dean.jraw.references.SubmissionReference
 import net.dean.jraw.references.SubredditReference
+import net.dean.jraw.references.UserReference
 import java.util.concurrent.TimeUnit
 
 /**
@@ -123,8 +124,11 @@ class RedditClient(
     @Throws(NetworkException::class)
     fun request(configure: (stub: HttpRequest.Builder) -> HttpRequest.Builder) = request(configure(requestStub()).build())
 
-    @EndpointImplementation(arrayOf(Endpoint.GET_ME))
-    fun me(): JsonNode = request { it.path("/api/v1/me") }.json
+    /** Gets a UserReference for the currently logged in user */
+    fun me() = UserReference(this, UserReference.NAME_SELF)
+
+    /** Gets a UserReference for any user */
+    fun user(name: String) = UserReference(this, name)
 
     /** Creates a [SubredditReference] */
     fun subreddit(name: String) = SubredditReference(this, name)

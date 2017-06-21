@@ -47,6 +47,7 @@ class RedditObjectDeserializer : StdDeserializer<RedditObject>(RedditObject::cla
 
     companion object {
         @JvmStatic private val registry: Map<String, Class<out RedditObject>> = mapOf(
+            ThingType.ACCOUNT.prefix to Account::class.java,
             ThingType.COMMENT.prefix to Comment::class.java,
             ThingType.SUBMISSION.prefix to Submission::class.java,
             ThingType.SUBREDDIT.prefix to Subreddit::class.java,
