@@ -38,11 +38,13 @@ class SubmissionPaginationTest : Spek({
 
             ref.pageNumber.should.equal(0)
             ref.current.should.equal(null)
+            ref.hasStarted().should.equal(false)
 
             val first10 = ref.next()
             first10.should.have.size.at.most(limit)
             ref.pageNumber.should.equal(1)
             ref.current.should.equal(first10)
+            ref.hasStarted().should.equal(true)
 
             val second10 = ref.next()
             second10[0].fullName.should.not.equal(first10[0].fullName)
@@ -86,6 +88,26 @@ class SubmissionPaginationTest : Spek({
                 expectDescendingScore(front.next())
             }
         }
+    }
+
+    describe("accumulate and accumulateMerged") {
+        val limit = 5
+        val maxPages = 5
+        val pag = reddit.subreddit("pics").posts()
+            .limit(limit)
+            .build()
+
+        it("should only fetch up to a specific amount of pages") {
+            val listings = pag.accumulate(maxPages)
+            listings.should.have.size.above(0)
+            listings.should.have.size.at.most(maxPages)
+            listings.forEach { it.should.have.size.at.most(limit) }
+
+            val posts = pag.accumulateMerged(maxPages)
+            posts.should.have.size.above(0)
+            posts.should.have.size.at.most(maxPages * limit)
+        }
+
     }
 
     describe("newBuilder()") {

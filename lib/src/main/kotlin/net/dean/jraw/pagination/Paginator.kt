@@ -62,9 +62,23 @@ abstract class Paginator<T : Thing, out B : Paginator.Builder<T>> protected cons
     }
 
     override fun iterator(): Iterator<Listing<T>> = object: Iterator<Listing<T>> {
-        override fun hasNext() = _current != null && _current!!.after != null
+        override fun hasNext() = !hasStarted() || (_current != null && _current!!.after != null)
         override fun next() = this@Paginator.next()
     }
+
+    override fun hasStarted(): Boolean = _current != null && _pageNumber > 0
+
+    override fun accumulate(maxPages: Int): List<Listing<T>> {
+        val lists = mutableListOf<Listing<T>>()
+
+        var i = 0
+        val it = iterator()
+        while (++i <= maxPages && it.hasNext())
+            lists.add(it.next())
+        return lists
+    }
+
+    override fun accumulateMerged(maxPages: Int): List<T> = accumulate(maxPages).flatten()
 
     /** Constructs a new [Builder] with the current pagination settings */
     abstract fun newBuilder(): B
