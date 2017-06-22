@@ -36,7 +36,7 @@ data class Account(
     /** The name chosen for this account by a real person */
     val name: String,
     val verified: Boolean
-) : Thing(ThingType.ACCOUNT), Created, Referenceable<UserReference> {
+) : RedditObject(KindConstants.ACCOUNT), Created, Referenceable<UserReference> {
     override fun toReference(reddit: RedditClient) = reddit.user(name)
 }
 

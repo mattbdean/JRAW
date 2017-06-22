@@ -8,11 +8,7 @@ data class MoreChildren(
     @JsonProperty("count") val actualSize: Int,
     @JsonProperty("parent_id") val parentFullName: String,
     @JsonProperty("children") val childrenIds: List<String>
-) : RedditObject(KIND) {
-
-    companion object {
-        @JvmField val KIND = "more"
-    }
+) : RedditObject(KindConstants.MORE_CHILDREN) {
 
     override fun toString(): String {
         return "MoreChildren(actualSize=$actualSize, parentFullName='$parentFullName')"

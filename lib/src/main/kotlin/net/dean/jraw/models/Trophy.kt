@@ -28,4 +28,4 @@ data class Trophy(
 
     /** A succinct description of how/when/why the user got this award */
     val description: String?
-) : Thing(ThingType.TROPHY)
+) : RedditObject(KindConstants.TROPHY)

@@ -134,6 +134,6 @@ data class Submission(
 //    val preview: Preview,
 //    val vote: VoteDirection // instead of `likes`
 //    val postHint: Hint
-) : PublicContribution<SubmissionReference>(ThingType.SUBMISSION) {
+) : PublicContribution<SubmissionReference>(KindConstants.SUBMISSION) {
     override fun toReference(reddit: RedditClient): SubmissionReference = SubmissionReference(reddit, id)
 }

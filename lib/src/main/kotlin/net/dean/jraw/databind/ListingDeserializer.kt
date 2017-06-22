@@ -6,12 +6,12 @@ import com.fasterxml.jackson.databind.deser.ContextualDeserializer
 import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.databind.node.ArrayNode
 import net.dean.jraw.models.Listing
-import net.dean.jraw.models.Thing
+import net.dean.jraw.models.RedditObject
 
 /**
  * Enables the deserialization of Listings
  */
-class ListingDeserializer private constructor() : JsonDeserializer<Listing<Thing>>(), ContextualDeserializer {
+class ListingDeserializer private constructor() : JsonDeserializer<Listing<RedditObject>>(), ContextualDeserializer {
     private lateinit var type: JavaType
     override fun createContextual(ctxt: DeserializationContext, property: BeanProperty?): JsonDeserializer<*> {
         val deser = ListingDeserializer()
@@ -19,7 +19,7 @@ class ListingDeserializer private constructor() : JsonDeserializer<Listing<Thing
         return deser
     }
 
-    override fun deserialize(p: JsonParser, ctxt: DeserializationContext): Listing<Thing> {
+    override fun deserialize(p: JsonParser, ctxt: DeserializationContext): Listing<RedditObject> {
         val mapper = p.codec as ObjectMapper
         val rootNode = mapper.readTree<JsonNode>(p)
 
@@ -35,10 +35,10 @@ class ListingDeserializer private constructor() : JsonDeserializer<Listing<Thing
             throw IllegalArgumentException("Expecting 'children' to be an array node, was $childrenNode")
 
         childrenNode as ArrayNode
-        val children: MutableList<Thing> = ArrayList(childrenNode.size())
+        val children: MutableList<RedditObject> = ArrayList(childrenNode.size())
 
         // Map each child node to a Thing
-        (0..childrenNode.size() - 1).mapTo(children) { mapper.treeToValue(childrenNode[it], Thing::class.java) }
+        (0..childrenNode.size() - 1).mapTo(children) { mapper.treeToValue(childrenNode[it], RedditObject::class.java) }
 
         return Listing(
             before = dataNode["before"]?.textValue(),

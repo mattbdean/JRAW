@@ -85,7 +85,7 @@ data class Subreddit(
 
     /** If this subreddit's wiki is enabled */
     val wikiEnabled: Boolean
-) : Thing(ThingType.SUBREDDIT), Created, Referenceable<SubredditReference> {
+) : RedditObject(KindConstants.SUBREDDIT), Created, Referenceable<SubredditReference> {
     override fun toReference(reddit: RedditClient): SubredditReference = reddit.subreddit(name)
 
     enum class Type {

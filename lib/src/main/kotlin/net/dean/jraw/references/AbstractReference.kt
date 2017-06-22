@@ -9,7 +9,7 @@ import net.dean.jraw.RedditClient
  */
 abstract class AbstractReference<out T> internal constructor(
     protected val reddit: RedditClient,
-    override val subject: T
+    final override val subject: T
 ) : Reference<T> {
     override fun toString(): String {
         // "SubredditReference(name=pics)"

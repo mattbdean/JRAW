@@ -7,8 +7,8 @@ import net.dean.jraw.references.Referenceable
  * Represents any model that can be created for multiple other reddit users to see. In practice, this is the superclass
  * for [Comment] and [Submission].
  */
-abstract class PublicContribution<out T : PublicContributionReference>(type: ThingType) :
-    Thing(type), Created, Distinguishable, Gildable, Votable, Referenceable<T> {
+abstract class PublicContribution<out T : PublicContributionReference>(kind: String) :
+    RedditObject(kind), Created, Distinguishable, Gildable, Votable, Referenceable<T> {
 
     /** Username of the user that created this model */
     abstract val author: String

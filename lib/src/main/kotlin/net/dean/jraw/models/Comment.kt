@@ -75,6 +75,6 @@ data class Comment(
 
     /** The restrictions for accessing this subreddit */
     val subredditType: Subreddit.Type
-) : PublicContribution<CommentReference>(ThingType.COMMENT) {
+) : PublicContribution<CommentReference>(KindConstants.COMMENT) {
     override fun toReference(reddit: RedditClient) = CommentReference(reddit, id)
 }

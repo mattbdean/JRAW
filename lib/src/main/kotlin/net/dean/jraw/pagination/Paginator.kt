@@ -4,11 +4,11 @@ import net.dean.jraw.ApiException
 import net.dean.jraw.RedditClient
 import net.dean.jraw.http.NetworkException
 import net.dean.jraw.models.Listing
+import net.dean.jraw.models.RedditObject
 import net.dean.jraw.models.Sorting
-import net.dean.jraw.models.Thing
 import net.dean.jraw.models.TimePeriod
 
-abstract class Paginator<T : Thing, out B : Paginator.Builder<T>> protected constructor(
+abstract class Paginator<T : RedditObject, out B : Paginator.Builder<T>> protected constructor(
     val reddit: RedditClient,
     val baseUrl: String,
     val sortingAsPathParam: Boolean,
@@ -86,7 +86,7 @@ abstract class Paginator<T : Thing, out B : Paginator.Builder<T>> protected cons
     /**
      * Base class for all Paginator.Builder subclasses
      */
-    abstract class Builder<T : Thing>(
+    abstract class Builder<T : RedditObject>(
         val reddit: RedditClient,
         val baseUrl: String,
 

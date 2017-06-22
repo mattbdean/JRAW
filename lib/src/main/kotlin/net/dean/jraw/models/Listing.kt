@@ -8,7 +8,7 @@ package net.dean.jraw.models
  * `listing.indexOf(foo)` is the same as `listing.children.indexOf(foo)`. Note that Kotlin lists are immutable by
  * default.
  */
-data class Listing<T : Thing>(
+data class Listing<T : RedditObject>(
     val after: String?,
     val before: String?,
     val children: List<T>

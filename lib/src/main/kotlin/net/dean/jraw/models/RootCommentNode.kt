@@ -29,9 +29,9 @@ class RootCommentNode internal constructor(rootArrayNode: JsonNode) : CommentNod
         // Filter out non-Comment nodes while also discovering a MoreChildren object, if it exists
         val childrenNodes: List<JsonNode> = baseCommentNode.filter {
             val kind = it["kind"].textValue()
-            if (kind == MoreChildren.KIND) moreChildrenNode = it
+            if (kind == KindConstants.MORE_CHILDREN) moreChildrenNode = it
 
-            it["kind"].textValue() == ThingType.COMMENT.prefix
+            it["kind"].textValue() == KindConstants.COMMENT
         }
 
         replies = childrenNodes.map {

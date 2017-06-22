@@ -4,7 +4,6 @@ import com.fasterxml.jackson.module.kotlin.treeToValue
 import net.dean.jraw.*
 import net.dean.jraw.JrawUtils.jackson
 import net.dean.jraw.models.Comment
-import net.dean.jraw.models.ThingType
 import net.dean.jraw.models.VoteDirection
 
 /**
@@ -13,10 +12,10 @@ import net.dean.jraw.models.VoteDirection
  * Provides methods for [upvoting][upvote], [downvoting][downvote], and [removing the current vote][unvote], and also
  * one method for [manually setting the vote direction by enum value][setVote].
  */
-abstract class PublicContributionReference internal constructor(reddit: RedditClient, id: String, val type: ThingType) :
+abstract class PublicContributionReference internal constructor(reddit: RedditClient, id: String, val kindPrefix: String) :
     AbstractReference<String>(reddit, id) {
 
-    val fullName = "${type.prefix}_$subject"
+    val fullName = "${kindPrefix}_$subject"
 
     /** Equivalent to `setVote(VoteDirection.UP)` */
     fun upvote() { setVote(VoteDirection.UP) }
@@ -65,7 +64,7 @@ abstract class PublicContributionReference internal constructor(reddit: RedditCl
     fun setSaved(saved: Boolean) {
         val endpoint = if (saved) Endpoint.POST_SAVE else Endpoint.POST_UNSAVE
         // Returns '{}' on success
-        reddit.request { it.endpoint(endpoint).post(mapOf("id" to "${type.prefix}_$subject")) }
+        reddit.request { it.endpoint(endpoint).post(mapOf("id" to "${kindPrefix}_$subject")) }
     }
 
     /**
@@ -94,10 +93,9 @@ abstract class PublicContributionReference internal constructor(reddit: RedditCl
 
     @EndpointImplementation(Endpoint.POST_DEL)
     fun delete() {
-        val json = reddit.request {
+        reddit.request {
             it.endpoint(Endpoint.POST_DEL)
                 .post(mapOf("id" to fullName))
-        }.json
-        println(json)
+        }
     }
 }

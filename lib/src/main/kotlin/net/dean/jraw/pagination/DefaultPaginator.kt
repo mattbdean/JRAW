@@ -1,11 +1,11 @@
 package net.dean.jraw.pagination
 
 import net.dean.jraw.RedditClient
+import net.dean.jraw.models.RedditObject
 import net.dean.jraw.models.Sorting
-import net.dean.jraw.models.Thing
 import net.dean.jraw.models.TimePeriod
 
-open class DefaultPaginator<T : Thing> private constructor(
+open class DefaultPaginator<T : RedditObject> private constructor(
     reddit: RedditClient,
     baseUrl: String,
     sortingAsPathParameter: Boolean,
@@ -19,7 +19,7 @@ open class DefaultPaginator<T : Thing> private constructor(
         .timePeriod(timePeriod)
         .limit(limit)
 
-    class Builder<T : Thing>(reddit: RedditClient, baseUrl: String, sortingAsPathParameter: Boolean = false) :
+    class Builder<T : RedditObject>(reddit: RedditClient, baseUrl: String, sortingAsPathParameter: Boolean = false) :
         Paginator.Builder<T>(reddit, baseUrl, sortingAsPathParameter) {
 
         override fun build(): Paginator<T, Paginator.Builder<T>> =

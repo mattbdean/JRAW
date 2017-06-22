@@ -1,8 +1,8 @@
 package net.dean.jraw.test
 
 import com.winterbe.expekt.should
+import net.dean.jraw.models.KindConstants
 import net.dean.jraw.models.SubmissionKind
-import net.dean.jraw.models.ThingType
 import net.dean.jraw.models.VoteDirection
 import net.dean.jraw.references.SubmissionReference
 import net.dean.jraw.test.util.TestConfig.reddit
@@ -54,7 +54,7 @@ class SubmissionReferenceTest : Spek({
             val text = "Comment made at ${Date()}"
             val comment = reddit.submission(submissionId).reply(text)
             comment.body.should.equal(text)
-            comment.submissionFullName.should.equal(ThingType.SUBMISSION.prefix + "_$submissionId")
+            comment.submissionFullName.should.equal(KindConstants.SUBMISSION + "_$submissionId")
         }
     }
 

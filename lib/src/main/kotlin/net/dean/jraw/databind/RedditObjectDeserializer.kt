@@ -27,7 +27,7 @@ import kotlin.reflect.full.isSubclassOf
  * known kinds to their corresponding classes, so when this deserializer encounters JSON with a `kind` of "t5", it
  * returns a [Subreddit].
  *
- * @see ThingType
+ * @see KindConstants
  */
 class RedditObjectDeserializer : StdDeserializer<RedditObject>(RedditObject::class.java) {
     // Keep a reference to an ObjectMapper with the default configuration. This is a little bit of a hack, if someone
@@ -47,13 +47,13 @@ class RedditObjectDeserializer : StdDeserializer<RedditObject>(RedditObject::cla
 
     companion object {
         @JvmStatic private val registry: Map<String, Class<out RedditObject>> = mapOf(
-            ThingType.ACCOUNT.prefix to Account::class.java,
-            ThingType.TROPHY.prefix to Trophy::class.java,
-            ThingType.COMMENT.prefix to Comment::class.java,
-            ThingType.SUBMISSION.prefix to Submission::class.java,
-            ThingType.SUBREDDIT.prefix to Subreddit::class.java,
+            KindConstants.ACCOUNT to Account::class.java,
+            KindConstants.TROPHY to Trophy::class.java,
+            KindConstants.COMMENT to Comment::class.java,
+            KindConstants.SUBMISSION to Submission::class.java,
+            KindConstants.SUBREDDIT to Subreddit::class.java,
 
-            MoreChildren.KIND to MoreChildren::class.java
+            KindConstants.MORE_CHILDREN to MoreChildren::class.java
         )
 
         /**
