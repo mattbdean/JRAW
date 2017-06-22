@@ -1,14 +1,11 @@
 package net.dean.jraw.test
 
 import net.dean.jraw.RedditClient
-import net.dean.jraw.http.oauth.OAuthHelper
 import net.dean.jraw.models.Sorting
 import net.dean.jraw.models.Submission
 import net.dean.jraw.models.Subreddit
 import net.dean.jraw.models.Thing
-import net.dean.jraw.test.util.CredentialsUtil
 import net.dean.jraw.test.util.TestConfig
-import net.dean.jraw.test.util.newOkHttpAdapter
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.it
 import kotlin.properties.Delegates
