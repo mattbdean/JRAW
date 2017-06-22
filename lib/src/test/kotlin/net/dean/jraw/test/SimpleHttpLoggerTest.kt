@@ -29,7 +29,7 @@ class SimpleHttpLoggerTest : Spek({
 
     beforeEachTest {
         baos = ByteArrayOutputStream()
-        reddit.logger = SimpleHttpLogger(PrintStream(baos))
+        reddit.logger = SimpleHttpLogger(PrintStream(baos), maxLineLength = 120)
         reddit.rateLimiter = NoopRateLimiter()
     }
 
@@ -42,8 +42,8 @@ class SimpleHttpLoggerTest : Spek({
         output.size.should.equal(2)
         output[0].should.equal("[1 ->] GET $url")
         output[1].should.startWith("[<- 1] 200 application/json: '")
-        // The request response should be more than LINE_LENGTH, so SimpleHttpLogger should truncate it
-        output[1].should.have.length(SimpleHttpLogger.LINE_LENGTH)
+        // The request response should be more than maxLineLength, so SimpleHttpLogger should truncate it
+        output[1].should.have.length.at.most((reddit.logger as SimpleHttpLogger).maxLineLength)
     }
 
     it("should keep a record of all requests sent during its time logging") {

@@ -1,7 +1,7 @@
 package net.dean.jraw.http
 
 import net.dean.jraw.JrawUtils
-import net.dean.jraw.http.SimpleHttpLogger.Companion.LINE_LENGTH
+import net.dean.jraw.http.SimpleHttpLogger.Companion.DEFAULT_LINE_LENGTH
 import okhttp3.MediaType
 import okhttp3.RequestBody
 import okio.Buffer
@@ -13,7 +13,8 @@ import java.util.concurrent.atomic.AtomicInteger
  * Bare-bones implementation of HttpLogger
  *
  * This logger will print the request's method ("GET", "POST", etc.) and URL, as well as the response's base media type
- * (e.g. "application/json") and body. The response line will be truncated to 100 lines (the value of [LINE_LENGTH]).
+ * (e.g. "application/json") and body. The response line will be truncated to 100 characters (the default value for
+ * [maxLineLength])
  *
  * Here's an example of the 12th request logged by a [SimpleHttpLogger]
  *
@@ -24,9 +25,14 @@ import java.util.concurrent.atomic.AtomicInteger
  * [12 <-] 200 application/json: '{"foo":"bar"}'
  * ```
  *
- * @see LINE_LENGTH
+ * @see DEFAULT_LINE_LENGTH
  */
-class SimpleHttpLogger(val out: PrintStream = System.out) : HttpLogger {
+class SimpleHttpLogger(
+    /** Where to print messages to */
+    val out: PrintStream = System.out,
+    /** The maximum amount of characters */
+    val maxLineLength: Int = DEFAULT_LINE_LENGTH
+) : HttpLogger {
     private val counter: AtomicInteger = AtomicInteger(1)
     private val lock = Any()
 
@@ -58,7 +64,7 @@ class SimpleHttpLogger(val out: PrintStream = System.out) : HttpLogger {
         val formattedTag = "[<- ${tag.requestId}]"
 
         synchronized(lock) {
-            out.println(truncate("$formattedTag ${res.code} $formattedType: '$body'", LINE_LENGTH))
+            out.println(truncate("$formattedTag ${res.code} $formattedType: '$body'", maxLineLength))
         }
     }
 
@@ -95,6 +101,6 @@ class SimpleHttpLogger(val out: PrintStream = System.out) : HttpLogger {
 
     companion object {
         private val ELLIPSIS = "(...)"
-        const val LINE_LENGTH = 100
+        const val DEFAULT_LINE_LENGTH = 100
     }
 }
