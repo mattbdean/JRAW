@@ -75,17 +75,9 @@ class SubmissionPaginationTest : Spek({
                 .limit(limit)
                 .build()
 
-            val front = reddit.frontPage()
-                .sorting(Sorting.TOP)
-                // Prefer ALL but that doesn't always return posts in descending order of score
-                .timePeriod(TimePeriod.WEEK)
-                .limit(limit)
-                .build()
-
             // Test the first 3 pages
             for (i in 0..2) {
                 expectDescendingScore(sub.next())
-                expectDescendingScore(front.next())
             }
         }
     }
