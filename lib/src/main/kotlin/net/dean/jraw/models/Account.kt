@@ -1,10 +1,12 @@
 package net.dean.jraw.models
 
-import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
+import net.dean.jraw.RedditClient
 import net.dean.jraw.databind.UnixTimeDeserializer
+import net.dean.jraw.references.Referenceable
+import net.dean.jraw.references.UserReference
 import java.util.*
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -34,5 +36,7 @@ data class Account(
     /** The name chosen for this account by a real person */
     val name: String,
     val verified: Boolean
-) : Thing(ThingType.ACCOUNT), Created
+) : Thing(ThingType.ACCOUNT), Created, Referenceable<UserReference> {
+    override fun toReference(reddit: RedditClient) = reddit.user(name)
+}
 

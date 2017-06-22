@@ -2,7 +2,10 @@ package net.dean.jraw.models
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
+import net.dean.jraw.RedditClient
 import net.dean.jraw.databind.UnixTimeDeserializer
+import net.dean.jraw.references.Referenceable
+import net.dean.jraw.references.SubredditReference
 import java.util.*
 
 data class Subreddit(
@@ -82,7 +85,8 @@ data class Subreddit(
 
     /** If this subreddit's wiki is enabled */
     val wikiEnabled: Boolean
-) : Thing(ThingType.SUBREDDIT), Created {
+) : Thing(ThingType.SUBREDDIT), Created, Referenceable<SubredditReference> {
+    override fun toReference(reddit: RedditClient): SubredditReference = reddit.subreddit(name)
 
     enum class Type {
         /** Open to all users */

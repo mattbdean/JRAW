@@ -2,8 +2,10 @@ package net.dean.jraw.models
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
+import net.dean.jraw.RedditClient
 import net.dean.jraw.databind.DistinguishedStatusDeserializer
 import net.dean.jraw.databind.UnixTimeDeserializer
+import net.dean.jraw.references.SubmissionReference
 import java.util.*
 
 data class Submission(
@@ -132,4 +134,6 @@ data class Submission(
 //    val preview: Preview,
 //    val vote: VoteDirection // instead of `likes`
 //    val postHint: Hint
-) : PublicContribution(ThingType.SUBMISSION)
+) : PublicContribution<SubmissionReference>(ThingType.SUBMISSION) {
+    override fun toReference(reddit: RedditClient): SubmissionReference = SubmissionReference(reddit, id)
+}
