@@ -7,6 +7,8 @@ import net.dean.jraw.databind.ListingDeserializer
 import net.dean.jraw.http.NetworkException
 import net.dean.jraw.models.Account
 import net.dean.jraw.models.Trophy
+import okhttp3.MediaType
+import okhttp3.RequestBody
 
 class UserReference internal constructor(reddit: RedditClient, username: String) :
     AbstractReference<String>(reddit, username) {
@@ -49,10 +51,27 @@ class UserReference internal constructor(reddit: RedditClient, username: String)
             return reddit.request { it.endpoint(Endpoint.GET_ME_PREFS) }.deserialize()
         } catch (e: NetworkException) {
             if (e.res.code != 403) throw e
+            handleUnauthorized(e)
+        }
+    }
 
-            // Parse the ApiException data
-            val root = e.res.json
-            throw ApiException(root["reason"].asText(), root["explanation"].asText())
+    /**
+     * Patches over certain user preferences and returns all preferences.
+     *
+     * Although technically you can send any value as a preference value, generally only strings and booleans are used.
+     * See [here](https://www.reddit.com/dev/api/oauth#GET_api_v1_me_prefs) for a list of all available preferences.
+     *
+     * Likely to throw an [ApiException] if authenticated via application-only credentials
+     */
+    @EndpointImplementation(Endpoint.PATCH_ME_PREFS)
+    @Throws(ApiException::class)
+    fun patchPrefs(newPrefs: Map<String, Any>): Map<String, Any> {
+        val body = RequestBody.create(MediaType.parse("application/json"), JrawUtils.jackson.writeValueAsString(newPrefs))
+        try {
+            return reddit.request { it.endpoint(Endpoint.PATCH_ME_PREFS).patch(body) }.deserialize()
+        } catch (e: NetworkException) {
+            if (e.res.code != 403) throw e
+            handleUnauthorized(e)
         }
     }
 
@@ -61,5 +80,15 @@ class UserReference internal constructor(reddit: RedditClient, username: String)
 
         private val jackson = JrawUtils.defaultObjectMapper()
             .registerModule(ListingDeserializer.Module)
+
+        @Throws(ApiException::class)
+        private fun handleUnauthorized(e: NetworkException): Nothing {
+            // Parse the ApiException data
+            val root = e.res.json
+            if (!root.has("reason") || !root.has("explanation")) {
+                throw IllegalArgumentException("Expected standard 403 Unauthorized response", e)
+            }
+            throw ApiException(root["reason"].asText(), root["explanation"].asText())
+        }
     }
 }
