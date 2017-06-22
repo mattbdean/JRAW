@@ -35,7 +35,7 @@ abstract class PublicContributionReference internal constructor(reddit: RedditCl
      * > Note: votes must be cast by humans. That is, API clients proxying a human's action one-for-one are OK, but bots
      *   deciding how to vote on content or amplifying a human's vote are not.
      */
-    @EndpointImplementation(arrayOf(Endpoint.POST_VOTE))
+    @EndpointImplementation(Endpoint.POST_VOTE)
     fun setVote(dir: VoteDirection) {
         val value = when (dir) {
             VoteDirection.UP -> 1
@@ -56,7 +56,7 @@ abstract class PublicContributionReference internal constructor(reddit: RedditCl
      * @throws ApiException Most commonly for ratelimiting.
      */
     @Throws(ApiException::class)
-    @EndpointImplementation(arrayOf(Endpoint.POST_COMMENT))
+    @EndpointImplementation(Endpoint.POST_COMMENT)
     fun reply(text: String): Comment {
         val json = reddit.request {
             it.endpoint(Endpoint.POST_COMMENT)
@@ -74,7 +74,7 @@ abstract class PublicContributionReference internal constructor(reddit: RedditCl
         return jackson.treeToValue(JrawUtils.navigateJson(json, "json", "data", "things", 0))
     }
 
-    @EndpointImplementation(arrayOf(Endpoint.POST_DEL))
+    @EndpointImplementation(Endpoint.POST_DEL)
     fun delete() {
         val json = reddit.request {
             it.endpoint(Endpoint.POST_DEL)

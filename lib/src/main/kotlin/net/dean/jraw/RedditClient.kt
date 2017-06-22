@@ -143,7 +143,7 @@ class RedditClient(
      *
      * @see SubredditReference.randomSubmission
      */
-    @EndpointImplementation(arrayOf(Endpoint.GET_RANDOM))
+    @EndpointImplementation(Endpoint.GET_RANDOM)
     fun randomSubreddit() = subreddit("random")
 
     /**

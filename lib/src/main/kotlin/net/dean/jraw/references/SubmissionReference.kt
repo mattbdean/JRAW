@@ -13,7 +13,7 @@ import net.dean.jraw.models.ThingType
 class SubmissionReference internal constructor(reddit: RedditClient, id: String) :
     PublicContributionReference(reddit, id, ThingType.SUBMISSION) {
 
-    @EndpointImplementation(arrayOf(Endpoint.GET_COMMENTS_ARTICLE))
+    @EndpointImplementation(Endpoint.GET_COMMENTS_ARTICLE)
     fun comments(): RootCommentNode = RootCommentNode(reddit.request { it.path("/comments/$subject") }.json)
 
     /**

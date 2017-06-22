@@ -13,7 +13,7 @@ class UserReference internal constructor(reddit: RedditClient, username: String)
 
     val isSelf = username == NAME_SELF
 
-    @EndpointImplementation(arrayOf(Endpoint.GET_ME, Endpoint.GET_USER_USERNAME_ABOUT))
+    @EndpointImplementation(Endpoint.GET_ME, Endpoint.GET_USER_USERNAME_ABOUT)
     fun about(): Account {
         val body = reddit.request {
             it.path(if (isSelf) "/api/v1/me" else "/user/$subject/about")
@@ -24,7 +24,7 @@ class UserReference internal constructor(reddit: RedditClient, username: String)
         return (if (isSelf) jackson else JrawUtils.jackson).readValue(body)
     }
 
-    @EndpointImplementation(arrayOf(Endpoint.GET_ME_TROPHIES, Endpoint.GET_USER_USERNAME_TROPHIES))
+    @EndpointImplementation(Endpoint.GET_ME_TROPHIES, Endpoint.GET_USER_USERNAME_TROPHIES)
     fun trophies(): List<Trophy> {
         val json = reddit.request {
             if (isSelf)
@@ -42,7 +42,7 @@ class UserReference internal constructor(reddit: RedditClient, username: String)
      *
      * Likely to throw an [ApiException] if authenticated via application-only credentials
      */
-    @EndpointImplementation(arrayOf(Endpoint.GET_ME_PREFS))
+    @EndpointImplementation(Endpoint.GET_ME_PREFS)
     @Throws(ApiException::class)
     fun prefs(): Map<String, Any> {
         try {

@@ -6,4 +6,4 @@ package net.dean.jraw
  */
 @MustBeDocumented
 @Target(AnnotationTarget.FUNCTION)
-annotation class EndpointImplementation(val endpoints: Array<Endpoint>)
+annotation class EndpointImplementation(vararg val endpoints: Endpoint)

@@ -20,13 +20,13 @@ class SubredditReference internal constructor(reddit: RedditClient, subreddit: S
     /**
      * Returns a [Subreddit] instance for this reference
      */
-    @EndpointImplementation(arrayOf(Endpoint.GET_SUBREDDIT_ABOUT))
+    @EndpointImplementation(Endpoint.GET_SUBREDDIT_ABOUT)
     fun about(): Subreddit = reddit.request { it.path("/r/$subject/about") }.deserialize()
 
     /**
      * Creates a new [Paginator.Builder] to iterate over this subreddit's posts.
      */
-    @EndpointImplementation(arrayOf(Endpoint.GET_HOT, Endpoint.GET_NEW, Endpoint.GET_RISING, Endpoint.GET_SORT))
+    @EndpointImplementation(Endpoint.GET_HOT, Endpoint.GET_NEW, Endpoint.GET_RISING, Endpoint.GET_SORT)
     fun posts() = Paginator.Builder<Submission>(reddit, "/r/$subject")
 
     /**
@@ -44,7 +44,7 @@ class SubredditReference internal constructor(reddit: RedditClient, subreddit: S
      * @param content If `kind` is [SubmissionKind.SELF], the Markdown-formatted body, else a URL.
      * @param sendReplies If direct replies to the submission should be sent to the user's inbox
      */
-    @EndpointImplementation(arrayOf(Endpoint.POST_SUBMIT))
+    @EndpointImplementation(Endpoint.POST_SUBMIT)
     fun submit(kind: SubmissionKind, title: String, content: String, sendReplies: Boolean): String {
         val args = mutableMapOf(
             "api_type" to "json",
