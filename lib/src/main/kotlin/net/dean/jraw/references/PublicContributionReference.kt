@@ -50,6 +50,24 @@ abstract class PublicContributionReference internal constructor(reddit: RedditCl
         }
     }
 
+    /** Equivalent to `setSaved(true)` */
+    fun save() = setSaved(true)
+
+    /** Equivalent to `setSaved(false)` */
+    fun unsave() = setSaved(false)
+
+    /**
+     * Saves or unsaves this model
+     *
+     * @see net.dean.jraw.models.PublicContribution.saved
+     */
+    @EndpointImplementation(Endpoint.POST_SAVE, Endpoint.POST_UNSAVE)
+    fun setSaved(saved: Boolean) {
+        val endpoint = if (saved) Endpoint.POST_SAVE else Endpoint.POST_UNSAVE
+        // Returns '{}' on success
+        reddit.request { it.endpoint(endpoint).post(mapOf("id" to "${type.prefix}_$subject")) }
+    }
+
     /**
      * Creates a comment in response to this submission of comment
      *

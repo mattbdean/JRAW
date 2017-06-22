@@ -32,6 +32,20 @@ class SubmissionReferenceTest : Spek({
         }
     }
 
+    describe("save/unsave") {
+        it("should have an effect on the model") {
+            fun expectSaved(saved: Boolean) {
+                ref.inspect().saved.should.equal(saved)
+            }
+
+            ref.save()
+            expectSaved(true)
+
+            ref.unsave()
+            expectSaved(false)
+        }
+    }
+
     // TODO create the submission first since reddit does not ratelimit comments to submissions made by the user that
     //      created the thread
     describe("reply") {

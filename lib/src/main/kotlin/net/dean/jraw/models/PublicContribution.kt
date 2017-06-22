@@ -17,6 +17,9 @@ abstract class PublicContribution(type: ThingType) : Thing(type), Created, Disti
      */
     abstract val fullName: String
 
+    /** If the user has saved this model */
+    abstract val saved: Boolean
+
     /** The name of the subreddit (e.g. "pics") */
     abstract val subreddit: String
 

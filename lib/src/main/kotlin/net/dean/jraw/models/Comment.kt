@@ -52,10 +52,7 @@ data class Comment(
     override val gilded: Short,
     override val id: String,
     override val likes: Boolean?,
-
-    /** If the user has saved this comment or not */
-    val saved: Boolean,
-
+    override val saved: Boolean,
     override val score: Int,
 
     /** If reddit is masking the score of a new comment */

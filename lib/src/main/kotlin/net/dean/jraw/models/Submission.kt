@@ -86,8 +86,7 @@ data class Submission(
     @JsonProperty("num_reports")
     val reports: Int,
 
-    /** If the user has saved this to their profile for later */
-    val saved: Boolean,
+    override val saved: Boolean,
 
     override val score: Int,
 
