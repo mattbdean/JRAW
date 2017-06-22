@@ -5,13 +5,11 @@ import net.dean.jraw.models.SubmissionKind
 import net.dean.jraw.models.ThingType
 import net.dean.jraw.models.VoteDirection
 import net.dean.jraw.references.SubmissionReference
-import net.dean.jraw.test.util.TestConfig
 import net.dean.jraw.test.util.TestConfig.reddit
 import net.dean.jraw.test.util.ignoreRateLimit
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
-import org.junit.Assume.assumeTrue
 import java.util.*
 
 class SubmissionReferenceTest : Spek({
@@ -39,11 +37,9 @@ class SubmissionReferenceTest : Spek({
     describe("reply") {
         it("should return the newly created Comment") {
             val submissionId = "6ib8fx"
-            val now = Date()
-            val text = "Comment made at $now"
+            val text = "Comment made at ${Date()}"
             val comment = reddit.submission(submissionId).reply(text)
             comment.body.should.equal(text)
-            comment.created.should.be.above(now)
             comment.submissionFullName.should.equal(ThingType.SUBMISSION.prefix + "_$submissionId")
         }
     }
