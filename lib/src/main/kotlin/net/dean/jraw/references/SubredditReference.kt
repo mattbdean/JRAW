@@ -8,7 +8,7 @@ import net.dean.jraw.models.RootCommentNode
 import net.dean.jraw.models.Submission
 import net.dean.jraw.models.SubmissionKind
 import net.dean.jraw.models.Subreddit
-import net.dean.jraw.pagination.Paginator
+import net.dean.jraw.pagination.DefaultPaginator
 
 /**
  * Allows the user to perform API actions against a subreddit
@@ -24,10 +24,10 @@ class SubredditReference internal constructor(reddit: RedditClient, subreddit: S
     fun about(): Subreddit = reddit.request { it.path("/r/$subject/about") }.deserialize()
 
     /**
-     * Creates a new [Paginator.Builder] to iterate over this subreddit's posts.
+     * Creates a new [DefaultPaginator.Builder] to iterate over this subreddit's posts.
      */
     @EndpointImplementation(Endpoint.GET_HOT, Endpoint.GET_NEW, Endpoint.GET_RISING, Endpoint.GET_SORT)
-    fun posts() = Paginator.Builder<Submission>(reddit, "/r/$subject")
+    fun posts() = DefaultPaginator.Builder<Submission>(reddit, "/r/$subject")
 
     /**
      * Gets a random submission from this subreddit. Although it is not marked with [EndpointImplementation], this

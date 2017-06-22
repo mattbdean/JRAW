@@ -5,28 +5,25 @@ import net.dean.jraw.models.Listing
 import net.dean.jraw.models.Sorting
 import net.dean.jraw.models.Thing
 import net.dean.jraw.models.TimePeriod
-import net.dean.jraw.references.AbstractReference
 
-class Paginator<T : Thing> private constructor(
-    reddit: RedditClient,
-    baseUrl: String,
+abstract class Paginator<T : Thing, out B : Paginator.Builder<T>> protected constructor(
+    val reddit: RedditClient,
+    val baseUrl: String,
     val timePeriod: TimePeriod,
     val sorting: Sorting,
     val limit: Int
-) : AbstractReference<String>(reddit, baseUrl), Iterable<Listing<T>> {
-
+) : RedditIterable<T> {
+    // Internal, modifiable properties
     private var _current: Listing<T>? = null
     private var _pageNumber = 0
 
-    /** The most recently fetched Listing, or null if no work has been done yet. */
-    val current: Listing<T>?
+    // Publicly available property is simply an unmodifiable alias to the private properties
+    override val current: Listing<T>?
         get() = _current
-
-    /** The current page number. 0 = not started, 1 = first page, etc. */
-    val pageNumber: Int
+    override val pageNumber: Int
         get() = _pageNumber
 
-    fun next(): Listing<T> {
+    override fun next(): Listing<T> {
         val args: MutableMap<String, String> = mutableMapOf(
             "limit" to limit.toString(radix = 10)
         )
@@ -39,7 +36,7 @@ class Paginator<T : Thing> private constructor(
 
 
         val response = reddit.request {
-            it.path("$subject/${sorting.name.toLowerCase()}")
+            it.path("$baseUrl/${sorting.name.toLowerCase()}")
                 .query(args)
         }
 
@@ -49,35 +46,32 @@ class Paginator<T : Thing> private constructor(
         return _current!!
     }
 
-    /** Resets [current] and [pageNumber] so iteration can start at the first page again */
-    fun restart() {
+    override fun restart() {
         this._current = null
         this._pageNumber = 0
     }
-
-    /**
-     * Constructs a new [Builder] with the current pagination settings
-     */
-    fun newBuilder() = Builder<T>(reddit, subject)
-        .sorting(sorting)
-        .timePeriod(timePeriod)
-        .limit(limit)
 
     override fun iterator(): Iterator<Listing<T>> = object: Iterator<Listing<T>> {
         override fun hasNext() = _current != null && _current!!.after != null
         override fun next() = this@Paginator.next()
     }
 
-    class Builder<T : Thing> internal constructor(val reddit: RedditClient, val baseUrl: String) {
-        private var timePeriod: TimePeriod = DEFAULT_TIME_PERIOD
-        private var sorting = DEFAULT_SORTING
-        private var limit = DEFAULT_LIMIT // reddit returns 25 items when no limit parameter is passed
+    /** Constructs a new [Builder] with the current pagination settings */
+    abstract fun newBuilder(): B
+
+    /**
+     * Base class for all Paginator.Builder subclasses
+     */
+    abstract class Builder<T : Thing>(val reddit: RedditClient, val baseUrl: String) {
+        protected var timePeriod: TimePeriod = Paginator.DEFAULT_TIME_PERIOD
+        protected var sorting = Paginator.DEFAULT_SORTING
+        protected var limit = Paginator.DEFAULT_LIMIT // reddit returns 25 items when no limit parameter is passed
 
         fun sorting(sorting: Sorting): Builder<T> { this.sorting = sorting; return this }
         fun timePeriod(timePeriod: TimePeriod): Builder<T> { this.timePeriod = timePeriod; return this }
         fun limit(limit: Int): Builder<T> { this.limit = limit; return this }
 
-        fun build() = Paginator<T>(reddit, baseUrl, timePeriod, sorting, limit)
+        abstract fun build(): Paginator<T, Builder<T>>
     }
 
     companion object {
