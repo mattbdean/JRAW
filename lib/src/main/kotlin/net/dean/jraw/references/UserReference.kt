@@ -99,7 +99,7 @@ class UserReference internal constructor(reddit: RedditClient, username: String)
      * Only `overview`, `submitted`, and `comments` are sortable.
      */
     @EndpointImplementation(Endpoint.GET_USER_USERNAME_WHERE)
-    fun history(where: String): Paginator.Builder<PublicContribution> {
+    fun history(where: String): Paginator.Builder<PublicContribution<*>> {
         val username = if (subject == NAME_SELF) {
             reddit.username ?: throw IllegalStateException("Expected the RedditClient to have a non-null username")
         } else {

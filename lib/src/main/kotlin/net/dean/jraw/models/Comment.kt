@@ -2,8 +2,10 @@ package net.dean.jraw.models
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
+import net.dean.jraw.RedditClient
 import net.dean.jraw.databind.DistinguishedStatusDeserializer
 import net.dean.jraw.databind.UnixTimeDeserializer
+import net.dean.jraw.references.CommentReference
 import java.util.*
 
 /**
@@ -73,4 +75,6 @@ data class Comment(
 
     /** The restrictions for accessing this subreddit */
     val subredditType: Subreddit.Type
-) : PublicContribution(ThingType.COMMENT)
+) : PublicContribution<CommentReference>(ThingType.COMMENT) {
+    override fun toReference(reddit: RedditClient) = CommentReference(reddit, id)
+}
