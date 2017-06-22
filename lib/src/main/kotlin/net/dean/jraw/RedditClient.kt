@@ -3,6 +3,9 @@ package net.dean.jraw
 import net.dean.jraw.http.*
 import net.dean.jraw.http.oauth.Credentials
 import net.dean.jraw.http.oauth.OAuthData
+import net.dean.jraw.models.Submission
+import net.dean.jraw.pagination.DefaultPaginator
+import net.dean.jraw.pagination.Paginator
 import net.dean.jraw.ratelimit.LeakyBucketRateLimiter
 import net.dean.jraw.ratelimit.RateLimiter
 import net.dean.jraw.references.SubmissionReference
@@ -133,6 +136,9 @@ class RedditClient(
 
     /** Gets a UserReference for any user */
     fun user(name: String) = UserReference(this, name)
+
+    /** Gets a [Paginator.Builder] to iterate posts on the front page */
+    fun frontPage() = DefaultPaginator.Builder<Submission>(this, baseUrl = "", sortingAsPathParameter = true)
 
     /** Creates a [SubredditReference] */
     fun subreddit(name: String) = SubredditReference(this, name)

@@ -11,7 +11,7 @@ import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
 
-class SubredditPaginationTest : Spek({
+class SubmissionPaginationTest : Spek({
     describe("Builder.build()") {
         it("should keep the settings from the builder") {
             // Just make sure deserialization it doesn't fail for now
@@ -62,20 +62,29 @@ class SubredditPaginationTest : Spek({
                 var score = posts[0].score
 
                 for (i in 1..limit - 1) {
-                    posts[i].score.should.be.below(score)
+                    posts[i].score.should.be.at.most(score)
                     score = posts[i].score
                 }
             }
 
-            val ref = reddit.subreddit("pics").posts()
+            val sub = reddit.subreddit("pics").posts()
                 .sorting(Sorting.TOP)
                 .timePeriod(TimePeriod.ALL)
                 .limit(limit)
                 .build()
 
+            val front = reddit.frontPage()
+                .sorting(Sorting.TOP)
+                // Prefer ALL but that doesn't always return posts in descending order of score
+                .timePeriod(TimePeriod.WEEK)
+                .limit(limit)
+                .build()
+
             // Test the first 3 pages
-            for (i in 0..2)
-                expectDescendingScore(ref.next())
+            for (i in 0..2) {
+                expectDescendingScore(sub.next())
+                expectDescendingScore(front.next())
+            }
         }
     }
 
