@@ -6,9 +6,13 @@ import net.dean.jraw.*
 import net.dean.jraw.databind.ListingDeserializer
 import net.dean.jraw.http.NetworkException
 import net.dean.jraw.models.Account
+import net.dean.jraw.models.PublicContribution
 import net.dean.jraw.models.Trophy
+import net.dean.jraw.pagination.DefaultPaginator
+import net.dean.jraw.pagination.Paginator
 import okhttp3.MediaType
 import okhttp3.RequestBody
+import java.net.URLEncoder
 
 class UserReference internal constructor(reddit: RedditClient, username: String) :
     AbstractReference<String>(reddit, username) {
@@ -74,6 +78,38 @@ class UserReference internal constructor(reddit: RedditClient, username: String)
             handleUnauthorized(e)
         }
     }
+
+    /**
+     * Creates a new [Paginator.Builder] which can iterate over a user's public history.
+     *
+     * Possible `where` values:
+     *
+     * - `overview` — submissions and comments
+     * - `submitted` — only submissions
+     * - `comments` — only comments
+     * - `gilded` — submissions and comments which have received reddit Gold
+     *
+     * If this user reference is for the currently logged-in user, these `where` values can be used:
+     *
+     * - `upvoted`
+     * - `downvoted`
+     * - `hidden`
+     * - `saved`
+     *
+     * Only `overview`, `submitted`, and `comments` are sortable.
+     */
+    @EndpointImplementation(Endpoint.GET_USER_USERNAME_WHERE)
+    fun history(where: String): Paginator.Builder<PublicContribution> {
+        val username = if (subject == NAME_SELF) {
+            reddit.username ?: throw IllegalStateException("Expected the RedditClient to have a non-null username")
+        } else {
+            subject
+        }
+        // Encode URLs to prevent accidental malformed URLs
+        val encodedWhere = URLEncoder.encode(where, "UTF-8")
+        return DefaultPaginator.Builder(reddit, "/user/$username/$encodedWhere", sortingAsPathParameter = false)
+    }
+
 
     companion object {
         const val NAME_SELF = "me"

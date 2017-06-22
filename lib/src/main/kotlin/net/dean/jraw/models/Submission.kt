@@ -7,8 +7,7 @@ import net.dean.jraw.databind.UnixTimeDeserializer
 import java.util.*
 
 data class Submission(
-    /** Username of the author (e.g. "Unidan") */
-    @JsonProperty("author") val authorName: String,
+    override val author: String,
 
     /** Flair text to be displayed next to the author's name, if any */
     @JsonProperty("author_flair_text")
@@ -46,12 +45,8 @@ data class Submission(
     @JsonDeserialize(using = UnixTimeDeserializer::class)
     val edited: Date?,
 
-    /**
-     * The full name of the submission, equivalent to `"t3_" + id`
-     */
     @JsonProperty("name")
-    val fullName: String,
-
+    override val fullName: String,
     override val gilded: Short,
 
     /** Is this post hidden from the current user? */
@@ -60,14 +55,12 @@ data class Submission(
     /** If reddit is masking this Submission's score */
     val hideScore: Boolean,
 
-    /** The unique ID given to this Submission by reddit */
-    val id: String,
+    override val id: String,
 
     /** If this Submission is a self (text-only) post */
     @JsonProperty("is_self")
     val isSelfPost: Boolean,
 
-    /** Logged-in-user vote status. True for upvote, false for downvote, null for no vote. */
     override val likes: Boolean?,
 
     /** Flair to display next to the Submission, if any */
@@ -110,16 +103,10 @@ data class Submission(
     /** Stickied submissions appear as the first submissions when browsing a subreddit by 'hot' */
     val stickied: Boolean,
 
-    /** Name of the subreddit this Submission is hosted in */
-    val subreddit: String,
+    override val subreddit: String,
 
-    /**
-     * Full name of [subreddit]
-     *
-     * @see Subreddit.fullName
-     */
     @JsonProperty("subreddit_id")
-    val subredditFullName: String,
+    override val subredditFullName: String,
 
     /** The suggested default comment sort */
     val suggestedSort: CommentSort?,
@@ -146,4 +133,4 @@ data class Submission(
 //    val preview: Preview,
 //    val vote: VoteDirection // instead of `likes`
 //    val postHint: Hint
-) : Thing(ThingType.SUBMISSION), Created, Distinguishable, Gildable, Votable
+) : PublicContribution(ThingType.SUBMISSION)

@@ -19,8 +19,7 @@ data class Comment(
     /** If this comment belongs to a Submission which has been marked as unmodifiable */
     val archived: Boolean,
 
-    /** Username of the user that created this comment */
-    val author: String,
+    override val author: String,
 
     /** Flair to appear next to the creator of this comment's name, if any */
     val authorFlairText: String?,
@@ -28,8 +27,7 @@ data class Comment(
     /** The Markdown-formatted body of this comment */
     val body: String,
 
-    /** If the currently logged-in-user can give reddit Gold to this comment */
-    val canGild: Boolean,
+    override val canGild: Boolean,
 
     /**
      * Get this comments controversiality level. A comment is considered controversial if it has a large number of both
@@ -49,16 +47,10 @@ data class Comment(
     @JsonDeserialize(using = UnixTimeDeserializer::class)
     val edited: Date?,
 
-    /** The full name of the comment (`t1_` + [id]) */
     @JsonProperty("name")
-    val fullName: String,
-
-    /** How many times this comment was given reddit Gold */
-    val gilded: Short,
-
-    /** The unique base 36 identifier given to this comment by reddit */
-    val id: String,
-
+    override val fullName: String,
+    override val gilded: Short,
+    override val id: String,
     override val likes: Boolean?,
 
     /** If the user has saved this comment or not */
@@ -76,14 +68,12 @@ data class Comment(
     @JsonProperty("link_id")
     val submissionFullName: String,
 
-    /** The name of the subreddit (e.g. "pics") */
     @JsonProperty("subreddit")
-    val subredditName: String,
+    override val subreddit: String,
 
-    /** The subreddit's full name */
     @JsonProperty("subreddit_id")
-    val subredditFullName: String,
+    override val subredditFullName: String,
 
     /** The restrictions for accessing this subreddit */
     val subredditType: Subreddit.Type
-) : Thing(ThingType.COMMENT), Created, Distinguishable, Votable
+) : PublicContribution(ThingType.COMMENT)

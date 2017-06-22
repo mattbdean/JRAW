@@ -1,7 +1,7 @@
 package net.dean.jraw
 
-import com.fasterxml.jackson.databind.JsonNode
 import net.dean.jraw.http.*
+import net.dean.jraw.http.oauth.Credentials
 import net.dean.jraw.http.oauth.OAuthData
 import net.dean.jraw.ratelimit.LeakyBucketRateLimiter
 import net.dean.jraw.ratelimit.RateLimiter
@@ -32,7 +32,8 @@ import java.util.concurrent.TimeUnit
  */
 class RedditClient(
     val http: HttpAdapter,
-    val oauthData: OAuthData
+    val oauthData: OAuthData,
+    creds: Credentials
 ) {
     var logger: HttpLogger = SimpleHttpLogger()
     var logHttp = true
@@ -40,6 +41,9 @@ class RedditClient(
     var retryLimit: Int = 5 // arbitrary number
 
     var rateLimiter: RateLimiter = LeakyBucketRateLimiter(BURST_LIMIT, RATE_LIMIT, TimeUnit.SECONDS)
+
+    /** The logged-in user, or null if this RedditClient is authenticated using application-only credentials */
+    val username: String? = creds.username
 
     /**
      * Creates a [HttpRequest.Builder], setting `secure(true)`, `host("oauth.reddit.com")`, and the Authorization header

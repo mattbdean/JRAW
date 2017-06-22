@@ -50,7 +50,7 @@ class SubmissionReferenceTest : Spek({
                 val id = reddit.subreddit("jraw_testing2").submit(SubmissionKind.SELF, "temp", "temp", false)
                 val linkRef = reddit.submission(id)
                 linkRef.delete()
-                linkRef.inspect().authorName.should.equal("[deleted]")
+                linkRef.inspect().author.should.equal("[deleted]")
             }
         }
     }

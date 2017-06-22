@@ -69,7 +69,8 @@ class StatefulAuthHelper internal constructor(private val http: HttpAdapter, pri
             this._authStatus = Status.AUTHORIZED
             return RedditClient(
                 http = http,
-                oauthData = response
+                oauthData = response,
+                creds = creds
             )
         } catch (ex: NetworkException) {
             if (ex.res.code == 401)

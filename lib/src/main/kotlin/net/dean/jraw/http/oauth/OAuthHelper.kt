@@ -23,7 +23,7 @@ object OAuthHelper {
                 .basicAuth(creds.clientId to creds.clientSecret)
                 .build()).deserialize()
 
-            return RedditClient(http, data)
+            return RedditClient(http, data, creds)
         } catch (e: NetworkException) {
             if (e.res.code == 401)
                 throw IllegalArgumentException("Invalid credentials", e)
@@ -57,6 +57,6 @@ object OAuthHelper {
             .basicAuth(creds.clientId to creds.clientSecret)
             .build()).deserialize()
 
-        return RedditClient(http, data)
+        return RedditClient(http, data, creds)
     }
 }

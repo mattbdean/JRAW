@@ -1,6 +1,8 @@
 package net.dean.jraw.pagination
 
+import net.dean.jraw.ApiException
 import net.dean.jraw.RedditClient
+import net.dean.jraw.http.NetworkException
 import net.dean.jraw.models.Listing
 import net.dean.jraw.models.Sorting
 import net.dean.jraw.models.Thing
@@ -9,6 +11,7 @@ import net.dean.jraw.models.TimePeriod
 abstract class Paginator<T : Thing, out B : Paginator.Builder<T>> protected constructor(
     val reddit: RedditClient,
     val baseUrl: String,
+    val sortingAsPathParam: Boolean,
     val timePeriod: TimePeriod,
     val sorting: Sorting,
     val limit: Int
@@ -24,8 +27,10 @@ abstract class Paginator<T : Thing, out B : Paginator.Builder<T>> protected cons
         get() = _pageNumber
 
     override fun next(): Listing<T> {
+        val sortingString = sorting.name.toLowerCase()
         val args: MutableMap<String, String> = mutableMapOf(
-            "limit" to limit.toString(radix = 10)
+            "limit" to limit.toString(radix = 10),
+            "sort" to sortingString
         )
 
         if (sorting.requiresTimePeriod)
@@ -34,14 +39,19 @@ abstract class Paginator<T : Thing, out B : Paginator.Builder<T>> protected cons
         if (_current != null && _current!!.after != null)
             args.put("after", _current!!.after!!)
 
+        val path = if (sortingAsPathParam) "$baseUrl/$sortingString" else baseUrl
 
-        val response = reddit.request {
-            it.path("$baseUrl/${sorting.name.toLowerCase()}")
-                .query(args)
+        try {
+            _current = reddit.request {
+                it.path(path).query(args)
+            }.deserialize()
+            _pageNumber++
+        } catch (e: NetworkException) {
+            if (e.res.code != 403) throw e
+            val json = e.res.json
+            if (!json.has("message") || !json.has("error")) throw e
+            throw ApiException(json["error"].asText(), json["message"].asText())
         }
-
-        _current = response.deserialize()
-        _pageNumber++
 
         return _current!!
     }
@@ -62,7 +72,18 @@ abstract class Paginator<T : Thing, out B : Paginator.Builder<T>> protected cons
     /**
      * Base class for all Paginator.Builder subclasses
      */
-    abstract class Builder<T : Thing>(val reddit: RedditClient, val baseUrl: String) {
+    abstract class Builder<T : Thing>(
+        val reddit: RedditClient,
+        val baseUrl: String,
+
+        /**
+         * If true, the sorting will be included as a query parameter instead of a path parameter. Most endpoints
+         * support (and require) specifying the sorting as a path parameter like this: `/r/pics/top?sort=top`. However,
+         * other endpoints 404 when given a path like this, in which case the sorting will need to be specified via
+         * query parameter only
+         */
+        val sortingAsPathParam: Boolean
+    ) {
         protected var timePeriod: TimePeriod = Paginator.DEFAULT_TIME_PERIOD
         protected var sorting = Paginator.DEFAULT_SORTING
         protected var limit = Paginator.DEFAULT_LIMIT // reddit returns 25 items when no limit parameter is passed

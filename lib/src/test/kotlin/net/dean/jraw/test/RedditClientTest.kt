@@ -58,7 +58,7 @@ class RedditClientTest : Spek({
                 httpAdapter.enqueue(MockHttpResponse(code = 500 + i))
             }
 
-            val reddit = RedditClient(httpAdapter, createMockOAuthData())
+            val reddit = RedditClient(httpAdapter, createMockOAuthData(), CredentialsUtil.script)
             reddit.retryLimit = retryLimit
 
             expectException(NetworkException::class) {
