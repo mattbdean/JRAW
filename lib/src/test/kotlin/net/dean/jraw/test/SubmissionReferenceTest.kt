@@ -58,16 +58,17 @@ class SubmissionReferenceTest : Spek({
         }
     }
 
+    describe("edit") {
+        assume({ SharedObjects.submittedSelfPost != null }, description = "should update the self-post text") {
+            SharedObjects.submittedSelfPost!!.edit("Updated at ${Date()}")
+        }
+    }
+
+    // This test must go last, since deleting the post will make it uneditable
     describe("delete") {
         assume({ SharedObjects.submittedSelfPost != null}, "should delete the submission") {
             SharedObjects.submittedSelfPost!!.delete()
             SharedObjects.submittedSelfPost!!.inspect().author.should.equal("[deleted]")
-        }
-    }
-
-    describe("edit") {
-        assume({ SharedObjects.submittedSelfPost != null }, description = "should update the self-post text") {
-            SharedObjects.submittedSelfPost!!.edit("Updated at ${Date()}")
         }
     }
 })
