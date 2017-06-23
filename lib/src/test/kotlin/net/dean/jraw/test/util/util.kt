@@ -47,8 +47,8 @@ fun ensureAuthenticated(reddit: RedditClient) {
 }
 
 val rand = SecureRandom()
-fun randomName(length: Int = 15) {
-    "jraw_test_" + BigInteger(130, rand).toString(32).substring(0..length - 1)
+fun randomName(length: Int = 15): String {
+    return "jraw_test_" + BigInteger(130, rand).toString(32).substring(0..length - 1)
 }
 
 fun newOkHttpAdapter() = OkHttpAdapter(userAgent)
