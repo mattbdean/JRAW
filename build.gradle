@@ -1,3 +1,5 @@
+import java.util.stream.Collectors
+
 buildscript {
     ext.kotlinVersion = '1.1.2-5'
     ext.spekVersion = '1.1.2'
@@ -14,6 +16,15 @@ buildscript {
         classpath "org.jetbrains.dokka:dokka-gradle-plugin:${dokkaVersion}"
         classpath "com.github.jengelman.gradle.plugins:shadow:2.0.0"
     }
+}
+
+plugins {
+    id 'com.github.kt3k.coveralls' version '2.8.1'
+}
+apply plugin: 'jacoco'
+
+repositories {
+    jcenter()
 }
 
 task wrapper(type: Wrapper) {
@@ -56,19 +67,11 @@ subprojects {
         }
     }
 
-    junitPlatform {
-        filters {
-            engines {
-                include 'spek'
-            }
-        }
-    }
-
     project.afterEvaluate {
         def junitPlatformTestTask = project.tasks.getByName('junitPlatformTest')
 
         jacoco {
-            toolVersion = "+"
+            toolVersion = "0.7.9"
             reportsDir = file("$buildDir/reports/jacoco")
             applyTo junitPlatformTestTask
         }
@@ -79,9 +82,42 @@ subprojects {
             reports {
                 xml.enabled = true
                 html.enabled = true
+                xml.destination "${buildDir}/reports/jacoco/test/jacocoTestReport.xml"
+                html.destination file("$buildDir/reports/jacoco/test/jacocoTestReport.html")
             }
             executionData junitPlatformTestTask
         })
     }
+
+    junitPlatform {
+        filters {
+            engines {
+                include 'spek'
+            }
+        }
+    }
+
+    coveralls {
+        sourceDirs += ['src/main/kotlin']
+    }
 }
 
+// Only do code coverage for :lib
+def reportedProjects = subprojects.findAll { it.name == "lib" }
+def subprojectsExecFiles = files(reportedProjects.stream().map { "${it.name}/build/jacoco/junitPlatformTest.exec" }.collect(Collectors.toList()) )
+
+task jacocoRootReport(type: JacocoReport) {
+    additionalSourceDirs = files(reportedProjects.sourceSets.main.allSource.srcDirs)
+    sourceDirectories = files(reportedProjects.sourceSets.main.allSource.srcDirs)
+    classDirectories = files(reportedProjects.sourceSets.main.output)
+    executionData = subprojectsExecFiles
+    reports {
+        html.enabled = true
+        xml.enabled = true
+        csv.enabled = false
+    }
+
+    onlyIf = {
+        true
+    }
+}
