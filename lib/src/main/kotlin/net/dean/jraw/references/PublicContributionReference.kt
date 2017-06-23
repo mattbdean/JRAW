@@ -98,4 +98,16 @@ abstract class PublicContributionReference internal constructor(reddit: RedditCl
                 .post(mapOf("id" to fullName))
         }
     }
+
+    @EndpointImplementation(Endpoint.POST_EDITUSERTEXT)
+    fun edit(text: String) {
+        val json = reddit.request {
+            it.endpoint(Endpoint.POST_EDITUSERTEXT)
+                .post(mapOf(
+                    "api_type" to "json",
+                    "text" to text,
+                    "thing_id" to "${kindPrefix}_$subject"
+                ))
+        }
+    }
 }

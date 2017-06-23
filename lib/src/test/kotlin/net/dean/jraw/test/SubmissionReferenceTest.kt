@@ -2,11 +2,11 @@ package net.dean.jraw.test
 
 import com.winterbe.expekt.should
 import net.dean.jraw.models.KindConstants
-import net.dean.jraw.models.SubmissionKind
 import net.dean.jraw.models.VoteDirection
 import net.dean.jraw.references.SubmissionReference
+import net.dean.jraw.test.util.SharedObjects
 import net.dean.jraw.test.util.TestConfig.reddit
-import net.dean.jraw.test.util.ignoreRateLimit
+import net.dean.jraw.test.util.assume
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
@@ -59,13 +59,15 @@ class SubmissionReferenceTest : Spek({
     }
 
     describe("delete") {
-        it("should delete the submission") {
-            ignoreRateLimit {
-                val id = reddit.subreddit("jraw_testing2").submit(SubmissionKind.SELF, "temp", "temp", false)
-                val linkRef = reddit.submission(id)
-                linkRef.delete()
-                linkRef.inspect().author.should.equal("[deleted]")
-            }
+        assume({ SharedObjects.submittedSelfPost != null}, "should delete the submission") {
+            SharedObjects.submittedSelfPost!!.delete()
+            SharedObjects.submittedSelfPost!!.inspect().author.should.equal("[deleted]")
+        }
+    }
+
+    describe("edit") {
+        assume({ SharedObjects.submittedSelfPost != null }, description = "should update the self-post text") {
+            SharedObjects.submittedSelfPost!!.edit("Updated at ${Date()}")
         }
     }
 })

@@ -1,12 +1,14 @@
 package net.dean.jraw.test.util
 
-import net.dean.jraw.ApiException
 import net.dean.jraw.RateLimitException
 import net.dean.jraw.RedditClient
 import net.dean.jraw.http.*
 import net.dean.jraw.http.oauth.OAuthData
 import net.dean.jraw.test.util.TestConfig.userAgent
-import org.junit.Assume.assumeTrue
+import org.jetbrains.spek.api.dsl.SpecBody
+import org.jetbrains.spek.api.dsl.TestBody
+import org.jetbrains.spek.api.dsl.it
+import org.jetbrains.spek.api.dsl.xit
 import java.util.*
 import kotlin.reflect.KClass
 
@@ -41,6 +43,13 @@ fun ensureAuthenticated(reddit: RedditClient) {
 }
 
 fun newOkHttpAdapter() = OkHttpAdapter(userAgent)
+
+fun SpecBody.assume(check: () -> Boolean, description: String, body: TestBody.() -> Unit) {
+    if (check())
+        it(description, body)
+    else
+        xit(description, reason = "assumption failed", body = body)
+}
 
 fun ignoreRateLimit(block: () -> Unit) {
     try {
