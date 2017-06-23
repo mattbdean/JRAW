@@ -4,6 +4,8 @@ import net.dean.jraw.RateLimitException
 import net.dean.jraw.RedditClient
 import net.dean.jraw.http.*
 import net.dean.jraw.http.oauth.OAuthData
+import net.dean.jraw.models.Listing
+import net.dean.jraw.models.Submission
 import net.dean.jraw.test.util.TestConfig.userAgent
 import org.jetbrains.spek.api.dsl.SpecBody
 import org.jetbrains.spek.api.dsl.TestBody
@@ -43,6 +45,20 @@ fun ensureAuthenticated(reddit: RedditClient) {
 }
 
 fun newOkHttpAdapter() = OkHttpAdapter(userAgent)
+
+fun expectDescendingScore(posts: Listing<Submission>, allowedMistakes: Int = 0) {
+    var prevScore = posts[0].score
+    var mistakes = 0
+
+    for (i in 1..posts.size - 1) {
+        if (posts[i].score > prevScore)
+            if (++mistakes > allowedMistakes) {
+                val scores = posts.map { it.score }
+                throw IllegalArgumentException("Was not descending score (allowed $allowedMistakes mistakes): $scores")
+            }
+        prevScore = posts[i].score
+    }
+}
 
 fun SpecBody.assume(check: () -> Boolean, description: String, body: TestBody.() -> Unit) {
     if (check())

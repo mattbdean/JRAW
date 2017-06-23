@@ -162,6 +162,8 @@ class RedditClient(
      */
     fun submission(id: String) = SubmissionReference(this, id)
 
+    fun requireAuthenticatedUser(): String = username ?: throw IllegalStateException("Expected an authenticated user")
+
     companion object {
         /** Amount of requests per second reddit allows for OAuth2 apps */
         const val RATE_LIMIT = 1L

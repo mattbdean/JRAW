@@ -10,7 +10,7 @@ import net.dean.jraw.models.TimePeriod
 
 abstract class Paginator<T : RedditObject, out B : Paginator.Builder<T>> protected constructor(
     val reddit: RedditClient,
-    val baseUrl: String,
+    baseUrl: String,
     val sortingAsPathParam: Boolean,
     val timePeriod: TimePeriod,
     val sorting: Sorting,
@@ -19,6 +19,9 @@ abstract class Paginator<T : RedditObject, out B : Paginator.Builder<T>> protect
     // Internal, modifiable properties
     private var _current: Listing<T>? = null
     private var _pageNumber = 0
+
+    // Make sure we don't have a trailing slash
+    val baseUrl = if (baseUrl.trim().endsWith("/")) baseUrl.trim().substring(0, baseUrl.trim().length - 2) else baseUrl
 
     // Publicly available property is simply an unmodifiable alias to the private properties
     override val current: Listing<T>?

@@ -2,8 +2,11 @@ package net.dean.jraw.models
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
+import net.dean.jraw.RedditClient
 import net.dean.jraw.databind.ExpandedSubredditsDeserializer
 import net.dean.jraw.databind.UnixTimeDeserializer
+import net.dean.jraw.references.MultiredditReference
+import net.dean.jraw.references.Referenceable
 import java.util.*
 
 data class Multireddit(
@@ -51,4 +54,15 @@ data class Multireddit(
 
     /** Either 'classic' or 'fresh' */
     val weightingScheme: String
-) : RedditObject(KindConstants.MULTIREDDIT), Created
+) : RedditObject(KindConstants.MULTIREDDIT), Created, Referenceable<MultiredditReference> {
+    override fun toReference(reddit: RedditClient): MultiredditReference {
+        val (user, multiredditName) = parsePath()
+        return MultiredditReference(reddit, user, multiredditName)
+    }
+
+    private fun parsePath(): Pair<String, String> {
+        val parts = path.split("/")
+        // "/user/{username}/m/{name}".split("/") => ["", "user", "{username}", "m", "{name}", ""]
+        return parts[2] to parts[4]
+    }
+}

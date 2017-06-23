@@ -73,6 +73,7 @@ class MultiredditPatch private constructor(b: Builder) {
 
         /** A list of subreddits to include in this multireddit. Do not include the `/r/` prefix. */
         fun subreddits(subreddits: List<String>): Builder { this.subreddits = subreddits; return this }
+        fun subreddits(vararg subreddits: String): Builder { this.subreddits = listOf(*subreddits); return this }
 
         /** One of `public`, `private`, or `hidden` */
         fun visibility(visibility: String): Builder { this.visibility = visibility; return this }

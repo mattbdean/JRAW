@@ -1,12 +1,11 @@
 package net.dean.jraw.test
 
 import com.winterbe.expekt.should
-import net.dean.jraw.models.Listing
 import net.dean.jraw.models.Sorting
-import net.dean.jraw.models.Submission
 import net.dean.jraw.models.TimePeriod
 import net.dean.jraw.pagination.Paginator
 import net.dean.jraw.test.util.TestConfig.reddit
+import net.dean.jraw.test.util.expectDescendingScore
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
@@ -59,15 +58,6 @@ class SubmissionPaginationTest : Spek({
 
         it("should request that submissions be returned in a certain order") {
             val limit = 10
-
-            fun expectDescendingScore(posts: Listing<Submission>) {
-                var score = posts[0].score
-
-                for (i in 1..limit - 1) {
-                    posts[i].score.should.be.at.most(score)
-                    score = posts[i].score
-                }
-            }
 
             val sub = reddit.subreddit("pics").posts()
                 .sorting(Sorting.TOP)

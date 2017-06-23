@@ -20,7 +20,7 @@ class UserReference internal constructor(reddit: RedditClient, username: String)
     val isSelf = username == NAME_SELF
     val username: String by lazy {
         if (subject == NAME_SELF) {
-            reddit.username ?: throw IllegalStateException("Expected the RedditClient to have a non-null username")
+            reddit.requireAuthenticatedUser()
         } else {
             subject
         }
@@ -115,7 +115,7 @@ class UserReference internal constructor(reddit: RedditClient, username: String)
     /**
      * Creates a [MultiredditReference] for a multireddit that belongs to this user.
      */
-    fun multi(name: String) = MultiredditReference(reddit, username, name)
+    fun multi(name: String) = MultiredditReference(reddit, subject, name)
 
     companion object {
         const val NAME_SELF = "me"
