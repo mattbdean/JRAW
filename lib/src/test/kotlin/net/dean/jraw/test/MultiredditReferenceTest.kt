@@ -9,17 +9,13 @@ import net.dean.jraw.references.MultiredditReference
 import net.dean.jraw.test.util.TestConfig.reddit
 import net.dean.jraw.test.util.expectDescendingScore
 import net.dean.jraw.test.util.expectException
+import net.dean.jraw.test.util.randomName
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
-import java.math.BigInteger
-import java.security.SecureRandom
 import java.util.*
 
 class MultiredditReferenceTest : Spek({
-    val rand = SecureRandom()
-    fun randomName() = BigInteger(130, rand).toString(32).substring(0..20)
-
     val undeletedRefs = mutableListOf<MultiredditReference>()
 
     val me = reddit.me()

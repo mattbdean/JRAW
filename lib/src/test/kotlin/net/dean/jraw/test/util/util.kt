@@ -11,6 +11,8 @@ import org.jetbrains.spek.api.dsl.SpecBody
 import org.jetbrains.spek.api.dsl.TestBody
 import org.jetbrains.spek.api.dsl.it
 import org.jetbrains.spek.api.dsl.xit
+import java.math.BigInteger
+import java.security.SecureRandom
 import java.util.*
 import kotlin.reflect.KClass
 
@@ -43,6 +45,9 @@ fun ensureAuthenticated(reddit: RedditClient) {
         throw e
     }
 }
+
+val rand = SecureRandom()
+fun randomName(length: Int = 20) = BigInteger(130, rand).toString(32).substring(0..length - 1)
 
 fun newOkHttpAdapter() = OkHttpAdapter(userAgent)
 

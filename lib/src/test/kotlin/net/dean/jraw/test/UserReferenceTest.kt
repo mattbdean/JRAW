@@ -2,6 +2,7 @@ package net.dean.jraw.test
 
 import com.winterbe.expekt.should
 import net.dean.jraw.ApiException
+import net.dean.jraw.models.MultiredditPatch
 import net.dean.jraw.models.Sorting
 import net.dean.jraw.models.TimePeriod
 import net.dean.jraw.references.UserReference
@@ -9,6 +10,7 @@ import net.dean.jraw.test.util.CredentialsUtil
 import net.dean.jraw.test.util.TestConfig.reddit
 import net.dean.jraw.test.util.TestConfig.redditUserless
 import net.dean.jraw.test.util.expectException
+import net.dean.jraw.test.util.randomName
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
@@ -120,6 +122,27 @@ class UserReferenceTest : Spek({
                     testFirst(redditUserless.me(), where)
                 }
             }
+        }
+    }
+
+    describe("listMultis") {
+        it("should list the logged-in user's multireddits") {
+            val me = reddit.me()
+            // Create the multireddit and get a reference to it
+            val multi = me.multi(randomName()).createOrUpdate(MultiredditPatch.Builder().build())
+            val ref = multi.toReference(reddit)
+
+            try {
+                me.listMultis().map { it.displayName }.should.contain(multi.displayName)
+            } finally {
+                // Delete the multireddit
+                ref.delete()
+            }
+        }
+
+        it("should list another users's public multis") {
+            // /u/reddit has some official multireddits
+            reddit.user("reddit").listMultis().should.have.size.above(0)
         }
     }
 })

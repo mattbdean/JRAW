@@ -7,6 +7,7 @@ import net.dean.jraw.JrawUtils.urlEncode
 import net.dean.jraw.databind.ListingDeserializer
 import net.dean.jraw.http.NetworkException
 import net.dean.jraw.models.Account
+import net.dean.jraw.models.Multireddit
 import net.dean.jraw.models.PublicContribution
 import net.dean.jraw.models.Trophy
 import net.dean.jraw.pagination.DefaultPaginator
@@ -116,6 +117,23 @@ class UserReference internal constructor(reddit: RedditClient, username: String)
      * Creates a [MultiredditReference] for a multireddit that belongs to this user.
      */
     fun multi(name: String) = MultiredditReference(reddit, subject, name)
+
+    /**
+     * Lists the multireddits this client is able to view.
+     *
+     * If this UserReference is for the logged-in user, all multireddits will be returned. Otherwise, only public
+     * multireddits will be returned.
+     */
+    @EndpointImplementation(Endpoint.GET_MULTI_MINE, Endpoint.GET_MULTI_USER_USERNAME)
+    fun listMultis(): List<Multireddit> {
+        return reddit.request {
+            if (isSelf) {
+                it.endpoint(Endpoint.GET_MULTI_MINE)
+            } else {
+                it.endpoint(Endpoint.GET_MULTI_USER_USERNAME, subject)
+            }
+        }.deserialize()
+    }
 
     companion object {
         const val NAME_SELF = "me"
