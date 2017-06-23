@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import net.dean.jraw.databind.ListingDeserializer
 import net.dean.jraw.databind.RedditObjectDeserializer
+import java.net.URLEncoder
 
 object JrawUtils {
     @JvmStatic internal fun defaultObjectMapper(): ObjectMapper = ObjectMapper()
@@ -35,6 +36,9 @@ object JrawUtils {
         if (json.has("errors") && json["errors"].isArray && json["errors"].has(0))
             throw ApiException.from(json["errors"][0])
     }
+
+    @JvmStatic
+    fun urlEncode(str: String): String = URLEncoder.encode(str, "UTF-8")
 
     fun navigateJson(json: JsonNode, vararg paths: Any): JsonNode {
         var node = json

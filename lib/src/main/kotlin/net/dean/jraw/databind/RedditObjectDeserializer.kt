@@ -53,7 +53,8 @@ class RedditObjectDeserializer : StdDeserializer<RedditObject>(RedditObject::cla
             KindConstants.SUBMISSION to Submission::class.java,
             KindConstants.SUBREDDIT to Subreddit::class.java,
 
-            KindConstants.MORE_CHILDREN to MoreChildren::class.java
+            KindConstants.MORE_CHILDREN to MoreChildren::class.java,
+            KindConstants.MULTIREDDIT to Multireddit::class.java
         )
 
         /**

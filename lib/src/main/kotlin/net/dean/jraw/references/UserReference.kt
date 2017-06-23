@@ -3,6 +3,7 @@ package net.dean.jraw.references
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.fasterxml.jackson.module.kotlin.treeToValue
 import net.dean.jraw.*
+import net.dean.jraw.JrawUtils.urlEncode
 import net.dean.jraw.databind.ListingDeserializer
 import net.dean.jraw.http.NetworkException
 import net.dean.jraw.models.Account
@@ -12,17 +13,23 @@ import net.dean.jraw.pagination.DefaultPaginator
 import net.dean.jraw.pagination.Paginator
 import okhttp3.MediaType
 import okhttp3.RequestBody
-import java.net.URLEncoder
 
 class UserReference internal constructor(reddit: RedditClient, username: String) :
     AbstractReference<String>(reddit, username) {
 
     val isSelf = username == NAME_SELF
+    val username: String by lazy {
+        if (subject == NAME_SELF) {
+            reddit.username ?: throw IllegalStateException("Expected the RedditClient to have a non-null username")
+        } else {
+            subject
+        }
+    }
 
     @EndpointImplementation(Endpoint.GET_ME, Endpoint.GET_USER_USERNAME_ABOUT)
     fun about(): Account {
         val body = reddit.request {
-            it.path(if (isSelf) "/api/v1/me" else "/user/$subject/about")
+            it.path(if (isSelf) "/api/v1/me" else "/user/$username/about")
         }.body
 
         // /api/v1/me doesn't encapsulate the data with a "kind" and "data" node, use our custom ObjectMapper instance
@@ -36,7 +43,7 @@ class UserReference internal constructor(reddit: RedditClient, username: String)
             if (isSelf)
                 it.endpoint(Endpoint.GET_ME_TROPHIES)
             else
-                it.endpoint(Endpoint.GET_USER_USERNAME_TROPHIES, subject)
+                it.endpoint(Endpoint.GET_USER_USERNAME_TROPHIES, username)
         }.json
 
         val trophies = JrawUtils.navigateJson(json, "data", "trophies")
@@ -100,16 +107,15 @@ class UserReference internal constructor(reddit: RedditClient, username: String)
      */
     @EndpointImplementation(Endpoint.GET_USER_USERNAME_WHERE)
     fun history(where: String): Paginator.Builder<PublicContribution<*>> {
-        val username = if (subject == NAME_SELF) {
-            reddit.username ?: throw IllegalStateException("Expected the RedditClient to have a non-null username")
-        } else {
-            subject
-        }
         // Encode URLs to prevent accidental malformed URLs
-        val encodedWhere = URLEncoder.encode(where, "UTF-8")
-        return DefaultPaginator.Builder(reddit, "/user/$username/$encodedWhere", sortingAsPathParameter = false)
+        return DefaultPaginator.Builder(reddit, "/user/${urlEncode(username)}/${urlEncode(where)}",
+            sortingAsPathParameter = false)
     }
 
+    /**
+     * Creates a [MultiredditReference] for a multireddit that belongs to this user.
+     */
+    fun multi(name: String) = MultiredditReference(reddit, username, name)
 
     companion object {
         const val NAME_SELF = "me"

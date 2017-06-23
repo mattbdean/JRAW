@@ -11,4 +11,5 @@ object KindConstants {
 
     const val MORE_CHILDREN = "more"
     const val LISTING = "Listing"
+    const val MULTIREDDIT = "LabeledMulti"
 }
