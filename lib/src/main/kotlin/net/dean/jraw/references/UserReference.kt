@@ -6,10 +6,7 @@ import net.dean.jraw.*
 import net.dean.jraw.JrawUtils.urlEncode
 import net.dean.jraw.databind.ListingDeserializer
 import net.dean.jraw.http.NetworkException
-import net.dean.jraw.models.Account
-import net.dean.jraw.models.Multireddit
-import net.dean.jraw.models.PublicContribution
-import net.dean.jraw.models.Trophy
+import net.dean.jraw.models.*
 import net.dean.jraw.pagination.DefaultPaginator
 import net.dean.jraw.pagination.Paginator
 import okhttp3.MediaType
@@ -117,6 +114,19 @@ class UserReference internal constructor(reddit: RedditClient, username: String)
      * Creates a [MultiredditReference] for a multireddit that belongs to this user.
      */
     fun multi(name: String) = MultiredditReference(reddit, subject, name)
+
+    /**
+     * Creates a Multireddit (or updates it if it already exists).
+     *
+     * This method is equivalent to
+     *
+     * ```kotlin
+     * userReference.multi(name).createOrUpdate(patch)
+     * ```
+     *
+     * and provided for semantics.
+     */
+    fun createMulti(name: String, patch: MultiredditPatch) = multi(name).createOrUpdate(patch)
 
     /**
      * Lists the multireddits this client is able to view.

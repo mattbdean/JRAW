@@ -129,7 +129,7 @@ class UserReferenceTest : Spek({
         it("should list the logged-in user's multireddits") {
             val me = reddit.me()
             // Create the multireddit and get a reference to it
-            val multi = me.multi(randomName()).createOrUpdate(MultiredditPatch.Builder().build())
+            val multi = me.createMulti(randomName(), MultiredditPatch.Builder().build())
             val ref = multi.toReference(reddit)
 
             try {
