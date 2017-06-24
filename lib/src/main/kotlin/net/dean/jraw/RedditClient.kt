@@ -140,7 +140,18 @@ class RedditClient(
     /** Gets a [Paginator.Builder] to iterate posts on the front page */
     fun frontPage() = DefaultPaginator.Builder<Submission>(this, baseUrl = "", sortingAsPathParameter = true)
 
-    /** Creates a [SubredditReference] */
+    /**
+     * Creates a [SubredditReference]
+     *
+     * Reddit has some special subreddits:
+     *
+     * - /r/all - posts from every subreddit
+     * - /r/popular - includes posts from subreddits that have opted out of /r/all. Guaranteed to not have NSFW content.
+     * - /r/mod - submissions from subreddits the logged-in user moderates
+     *
+     * Trying to use [SubredditReference.about], [SubredditReference.submit], or the like for these subreddits will
+     * likely result in an API-side error.
+     */
     fun subreddit(name: String) = SubredditReference(this, name)
 
     /**
