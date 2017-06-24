@@ -34,24 +34,21 @@ class SimpleHttpLogger(
     val maxLineLength: Int = DEFAULT_LINE_LENGTH
 ) : HttpLogger {
     private val counter: AtomicInteger = AtomicInteger(1)
-    private val lock = Any()
 
     override fun request(r: HttpRequest, sent: Date): HttpLogger.Tag {
         val id = counter.getAndIncrement()
 
-        synchronized(lock) {
-            val tag = "[$id ->]"
+        val tag = "[$id ->]"
 
-            out.println("$tag ${r.method} ${r.url}")
+        out.println("$tag ${r.method} ${r.url}")
 
-            val form = parseForm(r)
-            if (!form.isEmpty()) {
-                logMap(
-                    baseIndentLength = tag.length,
-                    header = "form:",
-                    pairs = form
-                )
-            }
+        val form = parseForm(r)
+        if (!form.isEmpty()) {
+            logMap(
+                baseIndentLength = tag.length,
+                header = "form:",
+                pairs = form
+            )
         }
 
         return HttpLogger.Tag(id, sent)
@@ -63,15 +60,8 @@ class SimpleHttpLogger(
         val body = res.body.replace("\n", "")
         val formattedTag = "[<- ${tag.requestId}]"
 
-        synchronized(lock) {
-            out.println(truncate("$formattedTag ${res.code} $formattedType: '$body'", maxLineLength))
-        }
+        out.println(truncate("$formattedTag ${res.code} $formattedType: '$body'", maxLineLength))
     }
-
-    private fun truncate(str: String, limit: Int) = if (str.length > limit)
-        str.substring(0, limit - ELLIPSIS.length) + ELLIPSIS
-    else
-        str
 
     private fun parseForm(r: HttpRequest): Map<String, String> {
         if (r.body == null) return mapOf()
@@ -102,5 +92,11 @@ class SimpleHttpLogger(
     companion object {
         private val ELLIPSIS = "(...)"
         const val DEFAULT_LINE_LENGTH = 100
+
+        @JvmStatic
+        private fun truncate(str: String, limit: Int) = if (str.length > limit)
+            str.substring(0, limit - ELLIPSIS.length) + ELLIPSIS
+        else
+            str
     }
 }
