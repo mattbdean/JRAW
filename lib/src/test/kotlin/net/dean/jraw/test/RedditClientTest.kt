@@ -6,6 +6,8 @@ import net.dean.jraw.http.HttpRequest
 import net.dean.jraw.http.NetworkException
 import net.dean.jraw.http.SimpleHttpLogger
 import net.dean.jraw.http.oauth.OAuthHelper
+import net.dean.jraw.models.Sorting
+import net.dean.jraw.models.TimePeriod
 import net.dean.jraw.test.util.*
 import net.dean.jraw.test.util.TestConfig.reddit
 import org.jetbrains.spek.api.Spek
@@ -80,6 +82,18 @@ class RedditClientTest : Spek({
                 .distinct() // Leave only unique values
                 .sorted() // Sort the subreddits in ABC order
                 .should.equal(listOf("funny", "pics", "videos"))
+        }
+    }
+
+    describe("frontPage") {
+        it("should iterate the front page") {
+            expectDescendingScore(
+                posts = reddit.frontPage()
+                    .sorting(Sorting.TOP)
+                    .timePeriod(TimePeriod.ALL)
+                    .limit(10)
+                    .build().next(),
+                allowedMistakes = 3)
         }
     }
 })
