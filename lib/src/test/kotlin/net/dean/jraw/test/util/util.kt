@@ -47,7 +47,7 @@ fun ensureAuthenticated(reddit: RedditClient) {
 }
 
 val rand = SecureRandom()
-fun randomName(length: Int = 15): String {
+fun randomName(length: Int = 10): String {
     return "jraw_test_" + BigInteger(130, rand).toString(32).substring(0..length - 1)
 }
 
