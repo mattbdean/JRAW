@@ -79,7 +79,7 @@ subprojects {
             reports {
                 xml.enabled = true
                 html.enabled = true
-                xml.destination "${buildDir}/reports/jacoco/test/jacocoTestReport.xml"
+                xml.destination file("$buildDir/reports/jacoco/test/jacocoTestReport.xml")
                 html.destination file("$buildDir/reports/jacoco/test/jacocoTestReport.html")
             }
             executionData junitPlatformTestTask
