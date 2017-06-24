@@ -48,6 +48,14 @@ class RedditClient(
     /** The logged-in user, or null if this RedditClient is authenticated using application-only credentials */
     val username: String? = creds.username
 
+    private val authenticatedUsername: String by lazy {
+        try {
+            me().about().name
+        } catch (e: NetworkException) {
+            throw IllegalStateException("Expected an authenticated user", e)
+        }
+    }
+
     /**
      * Creates a [HttpRequest.Builder], setting `secure(true)`, `host("oauth.reddit.com")`, and the Authorization header
      */
@@ -189,7 +197,13 @@ class RedditClient(
      */
     fun submission(id: String) = SubmissionReference(this, id)
 
-    fun requireAuthenticatedUser(): String = username ?: throw IllegalStateException("Expected an authenticated user")
+    /**
+     * Returns the name of the logged-in user, or throws an IllegalStateException if there is none. If this client was
+     * authenticated with a non-script OAuth2 app, the first time this method is called, it will send a network request.
+     */
+    fun requireAuthenticatedUser(): String =
+        // Use `username`, if that's null (non-script app), fall back to `authenticatedUsername`
+        username ?: authenticatedUsername
 
     companion object {
         /** Amount of requests per second reddit allows for OAuth2 apps */
