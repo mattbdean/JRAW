@@ -87,7 +87,7 @@ class MultiredditReferenceTest : Spek({
                 .next()
 
             // Expect a generally descending score
-            expectDescendingScore(posts, allowedMistakes = 2)
+            expectDescendingScore(posts, allowedMistakes = 3)
         }
     }
 
