@@ -18,9 +18,6 @@ buildscript {
     }
 }
 
-plugins {
-    id 'com.github.kt3k.coveralls' version '2.8.1'
-}
 apply plugin: 'jacoco'
 
 repositories {
@@ -95,10 +92,6 @@ subprojects {
                 include 'spek'
             }
         }
-    }
-
-    coveralls {
-        sourceDirs += ['src/main/kotlin']
     }
 }
 
