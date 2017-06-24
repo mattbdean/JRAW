@@ -73,4 +73,13 @@ class RedditClientTest : Spek({
         }
     }
 
+    describe("subreddits") {
+        it("should create a Paginator.Builder that iterates multiple subreddits") {
+            reddit.subreddits("pics", "funny", "videos").limit(100).build().next()
+                .map { it.subreddit } // Transform each post to its subreddit
+                .distinct() // Leave only unique values
+                .sorted() // Sort the subreddits in ABC order
+                .should.equal(listOf("funny", "pics", "videos"))
+        }
+    }
 })

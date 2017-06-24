@@ -144,6 +144,22 @@ class RedditClient(
     fun subreddit(name: String) = SubredditReference(this, name)
 
     /**
+     * Creates a [Paginator.Builder] for more than one subreddit.
+     *
+     * For example, to fetch 50 posts from /r/pics and /r/funny:
+     *
+     * ```kotlin
+     * val paginator = redditClient.subreddits("pics", "funny").limit(50).build()
+     * val posts = paginator.next()
+     * ```
+     *
+     * This works by using a useful little-known trick. You can view multiple subreddits at one time by joining them
+     * together with a `+`, like "/r/redditdev+programming+kotlin"
+     */
+    fun subreddits(first: String, second: String, vararg others: String) =
+        SubredditReference(this, arrayOf(first, second, *others).joinToString("+")).posts()
+
+    /**
      * Gets a random subreddit. Although this method is decorated with [EndpointImplementation], it does not execute a
      * HTTP request and is not a blocking call. This method is equivalent to
      *
