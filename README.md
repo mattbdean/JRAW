@@ -8,37 +8,51 @@
 
 This branch is a rewrite of the library in [Kotlin](https://kotlinlang.org/). Please note that this branch is not even close to being production ready! There are still tons of missing features from JRAW v0.9.0.
 
-```kotlin
+```java
 // Assuming we have a 'script' reddit app
-val oauthCreds = Credentials.script(username, password, clientId, clientSecret)
+Credentials oauthCreds = Credentials.script(username, password, clientId, clientSecret);
 
 // Create a unique User-Agent for our bot
-val userAgent = UserAgent("desktop", "my.cool.bot", "1.0.0", "myRedditUsername")
+UserAgent userAgent = new UserAgent("desktop", "my.cool.bot", "1.0.0", "myRedditUsername");
 
 // Create our RedditClient
-val reddit = OAuthHelper.script(oauthCreds, OkHttpAdapter(userAgent))
-
-// GET https://oauth.reddit.com/some/endpoint
-val foo = reddit.request { it.path("/some/endpoint") }.deserialize<Foo>()
+RedditClient reddit = OAuthHelper.script(oauthCreds, OkHttpAdapter(userAgent));
 
 // Iterate through posts
-val pics: Paginator<Submission> = reddit.subreddit("pics").posts()
+Paginator<Submission> pics = reddit.subreddit("pics").posts()
     .sorting(Sorting.TOP)
     .timePeriod(TimePeriod.ALL)
     .limit(100)
-    .build()
+    .build();
     
-pics.next().forEach(::println)
+for (Submission s : pics.next())
+    System.out.println(s);
+
+// Get user preferences
+Map<String, Object> prefs = reddit.me().prefs();
+boolean showNsfw = (Boolean) prefs.get("over_18")
+
+// Update preferences
+Map<String, Object> newPrefs = new HashMap<>();
+newPrefs.put("over_18", true);
+reddit.me().patchPrefs(newPrefs);
+
+// Get a user's info
+Account user = reddit.user("_vargas_").about();
+System.out.println(user.linkKarma);
+
+// Submit a post
+reddit.subreddit("pics").submit(SubmissionKind.LINK, "check out this cool website i found",
+        "https://www.google.com", false);
 ```
 
 ## Proposed APIs
 
 This section is a draft and is very likely to change as development continues
 
-```kotlin
+```java
 // Users
-val davinci = reddit.user("Shitty_Watercolour")
-val about = davinci.info()
+UserReference davinci = reddit.user("Shitty_Watercolour")
 davinci.message(...) // send a PM
 
 // Submitting/commenting
