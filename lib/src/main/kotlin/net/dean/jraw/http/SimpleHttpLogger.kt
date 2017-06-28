@@ -2,8 +2,8 @@ package net.dean.jraw.http
 
 import net.dean.jraw.JrawUtils
 import net.dean.jraw.http.SimpleHttpLogger.Companion.DEFAULT_LINE_LENGTH
-import okhttp3.MediaType
 import okhttp3.RequestBody
+import okhttp3.Response
 import okio.Buffer
 import java.io.PrintStream
 import java.util.*
@@ -55,12 +55,16 @@ class SimpleHttpLogger(
     }
 
     override fun response(tag: HttpLogger.Tag, res: HttpResponse) {
-        val contentType = MediaType.parse(res.contentType)!!
-        val formattedType = "${contentType.type()}/${contentType.subtype()}"
+        val contentType = formatContentType(res.raw)
         val body = res.body.replace("\n", "")
         val formattedTag = "[<- ${tag.requestId}]"
 
-        out.println(truncate("$formattedTag ${res.code} $formattedType: '$body'", maxLineLength))
+        out.println(truncate("$formattedTag ${res.code} $contentType: '$body'", maxLineLength))
+    }
+
+    private fun formatContentType(res: Response): String {
+        val type = res.body()?.contentType() ?: return NO_CONTENT_TYPE
+        return type.type() + '/' + type.subtype()
     }
 
     private fun parseForm(r: HttpRequest): Map<String, String> {
@@ -91,6 +95,7 @@ class SimpleHttpLogger(
 
     companion object {
         private val ELLIPSIS = "(...)"
+        private val NO_CONTENT_TYPE = "<no content type>"
         const val DEFAULT_LINE_LENGTH = 100
 
         @JvmStatic

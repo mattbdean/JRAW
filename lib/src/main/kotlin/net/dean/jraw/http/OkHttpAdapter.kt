@@ -11,14 +11,7 @@ class OkHttpAdapter(override var userAgent: UserAgent) : HttpAdapter {
     private val http: OkHttpClient = OkHttpClient()
 
     override fun execute(r: HttpRequest): HttpResponse {
-        val res = createCall(r).execute()
-        return HttpResponse(
-            code = res.code(),
-            readBody = { res.body()!!.string() },
-            requestMethod = res.request().method(),
-            requestUrl = res.request().url().toString(),
-            contentType = res.body()!!.contentType().toString()
-        )
+        return HttpResponse(createCall(r).execute())
     }
 
     private fun createCall(r: HttpRequest): Call =

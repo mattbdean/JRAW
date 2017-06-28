@@ -15,6 +15,7 @@ import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
 import java.io.ByteArrayOutputStream
 import java.io.PrintStream
+import kotlin.properties.Delegates
 
 class RedditClientTest : Spek({
     describe("requestStub") {
@@ -49,12 +50,18 @@ class RedditClientTest : Spek({
     }
 
     describe("retryLimit") {
+        var httpAdapter: MockHttpAdapter by Delegates.notNull()
+
+        beforeEachTest {
+            httpAdapter = MockHttpAdapter()
+            httpAdapter.mockServer.start()
+        }
+
         it("should affect how many times a request is retried when it encounters a 5XX error") {
             val retryLimit = 3
-            val httpAdapter = MockHttpAdapter()
 
-            // Enqueue (retryLimit + 1) responses. The client should execute the request and then retry [retryLimit] more
-            // times.
+            // Enqueue `retryLimit + 1` responses. The client should execute the request and then retry [retryLimit]
+            // more times.
             for (i in 0..retryLimit) {
                 // Use a dynamic code to make sure it's including all 5XX codes
                 httpAdapter.enqueue(MockHttpResponse(code = 500 + i))
@@ -67,11 +74,15 @@ class RedditClientTest : Spek({
                 // Doesn't matter what request is sent, responses are controlled by us. The client should receive these
                 // HTTP 500 Internal Server Error responses we enqueued earlier and retry up to [retryLimit] times,
                 // eventually giving up and throwing a NetworkException
-                reddit.request { it.path("foo") }
+                reddit.request { it.url(httpAdapter.mockServer.url("/").toString()) }
             }
 
-            // We enqueued (retryLimit + 1) responses
-            httpAdapter.remaining().should.equal(0)
+            // Should have executed [retryLimit] requests after the first failed request
+            httpAdapter.mockServer.requestCount.should.equal(retryLimit + 1)
+        }
+
+        afterEachTest {
+            httpAdapter.mockServer.shutdown()
         }
     }
 

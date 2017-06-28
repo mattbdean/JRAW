@@ -1,9 +1,10 @@
 apply plugin: 'org.jetbrains.dokka'
 
 dependencies {
-    compile 'com.squareup.okhttp3:okhttp:3.8.0'
-    compile "com.fasterxml.jackson.module:jackson-module-kotlin:${jacksonVersion}"
-    compile "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
+    compile "com.squareup.okhttp3:okhttp:$okhttpVersion"
+    compile "com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion"
+    compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+    testCompile "com.squareup.okhttp3:mockwebserver:$okhttpVersion"
     testCompile 'net.sourceforge.htmlunit:htmlunit:2.27'
 }
 

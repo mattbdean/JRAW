@@ -7,6 +7,10 @@ import net.dean.jraw.http.oauth.OAuthData
 import net.dean.jraw.models.Listing
 import net.dean.jraw.models.Submission
 import net.dean.jraw.test.util.TestConfig.userAgent
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.mockwebserver.MockResponse
+import okhttp3.mockwebserver.MockWebServer
 import org.jetbrains.spek.api.dsl.SpecBody
 import org.jetbrains.spek.api.dsl.TestBody
 import org.jetbrains.spek.api.dsl.it
@@ -94,31 +98,34 @@ fun ignoreRateLimit(block: () -> Unit) {
  */
 class MockHttpAdapter : HttpAdapter {
     override var userAgent: UserAgent = UserAgent("doesn't matter, no requests are going to be sent")
-    private val responses: Queue<MockHttpResponse> = LinkedList()
+    val http = OkHttpClient()
+    val mockServer = MockWebServer()
+
+    private val responseCodeQueue: Queue<Int> = LinkedList()
 
     override fun execute(r: HttpRequest): HttpResponse {
-        if (responses.isEmpty()) throw IllegalStateException("response queue is empty")
-        val res = responses.remove()
-
-        return HttpResponse(
-            code = res.code,
-            readBody = { res.body },
-            contentType = res.contentType,
-            requestMethod = res.requestMethod,
-            requestUrl = r.url
-        )
+        val res = http.newCall(Request.Builder()
+            .headers(r.headers.build())
+            .method(r.method, r.body)
+            .url(r.url)
+            .build()).execute()
+        return HttpResponse(res)
     }
 
-    fun enqueue(r: MockHttpResponse) { responses.add(r) }
-    fun remaining() = responses.size
+    fun enqueue(r: MockHttpResponse) {
+        mockServer.enqueue(MockResponse()
+            .setResponseCode(r.code)
+            .setBody(r.body)
+            .setHeader("Content-Type", r.contentType))
+        responseCodeQueue.add(r.code)
+    }
 }
 
 /**
  * Used exclusively with [MockHttpAdapter]
  */
 data class MockHttpResponse(
-    val requestMethod: String = "GET",
-    val body: String = "{'mock':'response'}".replace('\'', '"'),
+    val body: String = """{"mock":"response"}""",
     val code: Int = 200,
     val contentType: String = "application/json"
 )
