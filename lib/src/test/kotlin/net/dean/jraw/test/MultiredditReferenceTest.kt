@@ -7,6 +7,7 @@ import net.dean.jraw.models.Sorting
 import net.dean.jraw.models.TimePeriod
 import net.dean.jraw.references.MultiredditReference
 import net.dean.jraw.test.util.TestConfig.reddit
+import net.dean.jraw.test.util.TestConfig.redditUserless
 import net.dean.jraw.test.util.expectDescendingScore
 import net.dean.jraw.test.util.expectException
 import net.dean.jraw.test.util.randomName
@@ -91,13 +92,54 @@ class MultiredditReferenceTest : Spek({
         }
     }
 
+    describe("copyTo/rename") {
+        it("should return a new MultiredditReference") {
+            val original = me.createMulti(randomName(), MultiredditPatch.Builder().build()).toReference(reddit)
+            undeletedRefs.add(original)
+
+            val copied = original.copyTo(randomName()).toReference(reddit)
+            undeletedRefs.add(copied)
+            // Make sure we can still reference the original multireddit
+            original.about()
+
+            val renamed = copied.rename(randomName()).toReference(reddit)
+            undeletedRefs.remove(copied)
+            undeletedRefs.add(renamed)
+        }
+
+        it("should fail when using application-only creds") {
+            // This test doesn't really make sense because even if the request was sent it would fail at the server
+            // level because we're creating it using an authenticated client but converting it to a Reference using
+            // a userless RedditClient. I don't know why anyone would do this but I guess it's nice to have everything
+            // covered
+            val original = reddit.me().createMulti(randomName(), MultiredditPatch.Builder().build())
+                .toReference(redditUserless)
+
+            undeletedRefs.add(original)
+            expectException(IllegalStateException::class) {
+                undeletedRefs.add(original.copyTo(randomName()).toReference(reddit))
+            }
+
+            expectException(IllegalStateException::class) {
+                undeletedRefs.add(original.rename(randomName()).toReference(reddit))
+            }
+        }
+
+        it("should fail to rename a multireddit not owned by the authenticated user") {
+            expectException(ApiException::class) {
+                reddit.user("reddit").multi("redditpets").rename(randomName())
+            }
+        }
+    }
+
     afterGroup {
         // Clean up undeleted multireddits
         for (ref in undeletedRefs) {
             try {
                 ref.delete()
             } catch (e: Exception) {
-                throw IllegalStateException("Unable to delete multireddit ${ref.multiPath}", e)
+                System.err.println("Warning: Unable to delete multireddit with path '${ref.multiPath}'")
+                // ignore
             }
         }
     }

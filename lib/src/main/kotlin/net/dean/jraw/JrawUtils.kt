@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import net.dean.jraw.databind.ListingDeserializer
 import net.dean.jraw.databind.RedditObjectDeserializer
+import java.io.PrintStream
 import java.net.URLEncoder
 
 object JrawUtils {
@@ -18,12 +19,21 @@ object JrawUtils {
         .registerModule(RedditObjectDeserializer.Module)
         .registerModule(ListingDeserializer.Module)
 
+    private val printer = jackson.writerWithDefaultPrettyPrinter()
+
     @JvmStatic fun parseJson(json: String): JsonNode = jackson.readTree(json)!!
 
     @JvmStatic fun parseUrlEncoded(str: String): Map<String, String> =
         // Neat little one-liner. This function splits the query string by '&', then maps each value to a Pair of
         // Strings, converts it to a typed array, and uses the spread operator ('*') to call mapOf()
         mapOf(*str.split("&").map { val parts = it.split("="); parts[0] to parts[1] }.toTypedArray())
+
+    @JvmOverloads
+    @JvmStatic
+    @Suppress("unused")
+    fun prettyPrint(node: JsonNode, where: PrintStream = System.out) {
+        where.println(printer.writeValueAsString(node))
+    }
 
     @JvmStatic
     @Throws(ApiException::class, RateLimitException::class)

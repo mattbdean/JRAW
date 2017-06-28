@@ -79,6 +79,44 @@ class MultiredditReference internal constructor(reddit: RedditClient, val userna
         }
     }
 
+    /**
+     * Saves a copy of this multireddit to the user's collection. Requires a logged-in user. Returns a the new
+     * Multireddit reference.
+     */
+    @EndpointImplementation(Endpoint.POST_MULTI_COPY)
+    fun copyTo(name: String): Multireddit {
+        return copyOrRename(name, Endpoint.POST_MULTI_COPY)
+    }
+
+    /**
+     * Gives this multireddit a new name. Returns the updated Multireddit reference.
+     */
+    @EndpointImplementation(Endpoint.POST_MULTI_RENAME)
+    fun rename(newName: String): Multireddit {
+        return copyOrRename(newName, Endpoint.POST_MULTI_RENAME)
+    }
+
+    /**
+     * Both `POST /api/multi/copy` and `POST /api/multi/rename` have very similar request bodies, so to simplify things
+     * their implementing methods just call this one with the correct Endpoint
+     */
+    private fun copyOrRename(targetName: String, endpoint: Endpoint): Multireddit {
+        try {
+            val request = reddit.request {
+                it.endpoint(endpoint)
+                    .post(mapOf(
+                        "from" to multiPath,
+                        "to" to multiPath(reddit.requireAuthenticatedUser(), targetName)
+                    ))
+            }
+            return request.deserialize()
+        } catch (e: NetworkException) {
+            val json = e.res.json
+            if (!json.has("explanation") || !json.has("reason")) throw e
+            throw ApiException(json["reason"].asText(), json["explanation"].asText())
+        }
+    }
+
     fun posts(): Paginator.Builder<Submission> =
         DefaultPaginator.Builder<Submission>(reddit, multiPath, sortingAsPathParameter = true)
 
