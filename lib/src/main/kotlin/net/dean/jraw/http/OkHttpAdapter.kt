@@ -22,7 +22,7 @@ class OkHttpAdapter(override var userAgent: UserAgent) : HttpAdapter {
 
     private fun compileRequest(r: HttpRequest): Request =
         Request.Builder()
-            .headers(r.headers.set("User-Agent", userAgent.value).build())
+            .headers(r.headers.newBuilder().set("User-Agent", userAgent.value).build())
             .url(r.url)
             .method(r.method, r.body)
             .build()

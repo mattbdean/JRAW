@@ -26,14 +26,14 @@ import java.util.regex.Pattern
  */
 class HttpRequest private constructor(
     val url: String,
-    val headers: Headers.Builder,
+    val headers: Headers,
     val method: String,
     val body: RequestBody?,
     internal val basicAuth: BasicAuthData?
 ) {
     private constructor(b: Builder) : this(
         url = buildUrl(b),
-        headers = b.headers,
+        headers = b.headers.build(),
         method = b.method,
         body = b.body,
         basicAuth = b.basicAuth

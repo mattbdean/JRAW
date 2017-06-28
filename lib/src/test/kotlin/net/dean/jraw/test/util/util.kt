@@ -101,7 +101,7 @@ class MockHttpAdapter : HttpAdapter {
 
     override fun execute(r: HttpRequest): HttpResponse {
         val res = http.newCall(Request.Builder()
-            .headers(r.headers.build())
+            .headers(r.headers)
             .method(r.method, r.body)
             .url(r.url)
             .build()).execute()
