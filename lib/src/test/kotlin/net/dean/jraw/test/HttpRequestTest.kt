@@ -42,7 +42,7 @@ class HttpRequestTest: Spek({
             .build().url.should.equal("https://google.com/search")
     }
 
-    it("should handle path parameters") {
+    it("should handle path relevantParameters") {
         HttpRequest.Builder()
             .host("github.com")
             .path("/{user}/{repo}", "JetBrains", "kotlin")

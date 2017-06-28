@@ -1,8 +1,6 @@
 package net.dean.jraw.pagination
 
-import net.dean.jraw.ApiException
 import net.dean.jraw.RedditClient
-import net.dean.jraw.http.NetworkException
 import net.dean.jraw.models.Listing
 import net.dean.jraw.models.RedditObject
 import net.dean.jraw.models.Sorting
@@ -44,17 +42,10 @@ abstract class Paginator<T : RedditObject, out B : Paginator.Builder<T>> protect
 
         val path = if (sortingAsPathParam) "$baseUrl/$sortingString" else baseUrl
 
-        try {
-            _current = reddit.request {
-                it.path(path).query(args)
-            }.deserialize()
-            _pageNumber++
-        } catch (e: NetworkException) {
-            if (e.res.code != 403) throw e
-            val json = e.res.json
-            if (!json.has("message") || !json.has("error")) throw e
-            throw ApiException(json["error"].asText(), json["message"].asText())
-        }
+        _current = reddit.request {
+            it.path(path).query(args)
+        }.deserialize()
+        _pageNumber++
 
         return _current!!
     }

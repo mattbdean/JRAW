@@ -84,9 +84,6 @@ abstract class PublicContributionReference internal constructor(reddit: RedditCl
                 ))
         }.json
 
-        // Check for errors
-        JrawUtils.handleApiErrors(json)
-
         // Deserialize specific JSON node to a Comment
         return jackson.treeToValue(JrawUtils.navigateJson(json, "json", "data", "things", 0))
     }

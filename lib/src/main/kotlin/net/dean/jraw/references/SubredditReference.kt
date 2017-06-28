@@ -1,9 +1,8 @@
 package net.dean.jraw.references
 
-import net.dean.jraw.Endpoint
-import net.dean.jraw.EndpointImplementation
-import net.dean.jraw.JrawUtils
-import net.dean.jraw.RedditClient
+import net.dean.jraw.*
+import net.dean.jraw.JrawUtils.jackson
+import net.dean.jraw.http.NetworkException
 import net.dean.jraw.models.RootCommentNode
 import net.dean.jraw.models.Submission
 import net.dean.jraw.models.SubmissionKind
@@ -58,13 +57,17 @@ class SubredditReference internal constructor(reddit: RedditClient, subreddit: S
 
         args[if (kind == SubmissionKind.SELF) "text" else "url"] = content
 
-        val json = reddit.request {
+        val res = reddit.request {
             it.endpoint(Endpoint.POST_SUBMIT)
                 .post(args)
-        }.json
+        }
 
-        JrawUtils.handleApiErrors(json)
+        // For whatever reason reddit returns a 200 OK response when we're being ratelimited. Since RedditClient only
+        // checks for errors for non-successful status codes, we have to manually check for errors here
+        val errorStub = jackson.treeToValue(res.json, RedditExceptionStub::class.java)
+        if (errorStub != null)
+            throw errorStub.create(NetworkException(res))
 
-        return JrawUtils.navigateJson(json, "json", "data", "id").asText()
+        return JrawUtils.navigateJson(res.json, "json", "data", "id").asText()
     }
 }

@@ -1,6 +1,8 @@
 package net.dean.jraw
 
+import net.dean.jraw.JrawUtils.jackson
 import net.dean.jraw.http.*
+import net.dean.jraw.http.oauth.AuthenticationMethod
 import net.dean.jraw.http.oauth.Credentials
 import net.dean.jraw.http.oauth.OAuthData
 import net.dean.jraw.models.Submission
@@ -48,6 +50,8 @@ class RedditClient(
     /** The logged-in user, or null if this RedditClient is authenticated using application-only credentials */
     val username: String? = creds.username
 
+    val authMethod: AuthenticationMethod = creds.authenticationMethod
+
     private val authenticatedUsername: String by lazy {
         try {
             me().about().name
@@ -83,8 +87,10 @@ class RedditClient(
             return request(r, retryCount + 1)
         }
 
-        if (!res.successful)
-            throw NetworkException(res)
+        if (!res.successful) {
+            val stub = jackson.treeToValue(res.json, RedditExceptionStub::class.java) ?: throw NetworkException(res)
+            throw stub.create(NetworkException(res))
+        }
 
         return res
     }
@@ -92,7 +98,10 @@ class RedditClient(
     /**
      * Uses the [HttpAdapter] to execute a synchronous HTTP request and returns its JSON value.
      *
-     * Throws a [NetworkException] if the response is out of the range of 200..299
+     * Throws a [NetworkException] if the response is out of the range of 200..299.
+     *
+     * Throws a [RedditException] if an API error if the response comes back unsuccessful and a typical error structure
+     * is detected in the response.
      *
      * ```
      * val response = reddit.request(reddit.requestStub()
@@ -100,7 +109,7 @@ class RedditClient(
      *     .build())
      * ```
      */
-    @Throws(NetworkException::class)
+    @Throws(NetworkException::class, RedditException::class)
     fun request(r: HttpRequest): HttpResponse = request(r, retryCount = 0)
 
     /**
@@ -201,9 +210,13 @@ class RedditClient(
      * Returns the name of the logged-in user, or throws an IllegalStateException if there is none. If this client was
      * authenticated with a non-script OAuth2 app, the first time this method is called, it will send a network request.
      */
-    fun requireAuthenticatedUser(): String =
-        // Use `username`, if that's null (non-script app), fall back to `authenticatedUsername`
-        username ?: authenticatedUsername
+    fun requireAuthenticatedUser(): String {
+        if (authMethod.isUserless)
+            throw IllegalStateException("Expected the RedditClient to have an active user, was authenticated with " +
+                authMethod)
+        // Use `username`. If that's null (authenticated using a non-script app), fall back to `authenticatedUsername`
+        return username ?: authenticatedUsername
+    }
 
     companion object {
         /** Amount of requests per second reddit allows for OAuth2 apps */

@@ -1,9 +1,11 @@
 package net.dean.jraw.references
 
-import net.dean.jraw.*
+import net.dean.jraw.Endpoint
+import net.dean.jraw.EndpointImplementation
+import net.dean.jraw.JrawUtils
 import net.dean.jraw.JrawUtils.jackson
 import net.dean.jraw.JrawUtils.urlEncode
-import net.dean.jraw.http.NetworkException
+import net.dean.jraw.RedditClient
 import net.dean.jraw.models.Multireddit
 import net.dean.jraw.models.MultiredditPatch
 import net.dean.jraw.models.Submission
@@ -31,16 +33,12 @@ class MultiredditReference internal constructor(reddit: RedditClient, val userna
      */
     @EndpointImplementation(Endpoint.PUT_MULTI_MULTIPATH, Endpoint.POST_MULTI_MULTIPATH)
     fun createOrUpdate(patch: MultiredditPatch): Multireddit {
-        try {
-            return reddit.request {
-                it.endpoint(Endpoint.PUT_MULTI_MULTIPATH, authenticatedMultiPath)
-                    .put(mapOf(
-                        "model" to JrawUtils.jackson.writeValueAsString(patch)
-                    ))
-            }.deserialize()
-        } catch (e: NetworkException) {
-            tryHandleNetworkException(e)
-        }
+        return reddit.request {
+            it.endpoint(Endpoint.PUT_MULTI_MULTIPATH, authenticatedMultiPath)
+                .put(mapOf(
+                    "model" to JrawUtils.jackson.writeValueAsString(patch)
+                ))
+        }.deserialize()
     }
 
     /** Gets a [Multireddit] instance that reflects this reference */
@@ -103,18 +101,14 @@ class MultiredditReference internal constructor(reddit: RedditClient, val userna
      * their implementing methods just call this one with the correct Endpoint
      */
     private fun copyOrRename(targetName: String, endpoint: Endpoint): Multireddit {
-        try {
-            val request = reddit.request {
-                it.endpoint(endpoint)
-                    .post(mapOf(
-                        "from" to multiPath,
-                        "to" to multiPath(reddit.requireAuthenticatedUser(), targetName)
-                    ))
-            }
-            return request.deserialize()
-        } catch (e: NetworkException) {
-            tryHandleNetworkException(e)
+        val request = reddit.request {
+            it.endpoint(endpoint)
+                .post(mapOf(
+                    "from" to multiPath,
+                    "to" to multiPath(reddit.requireAuthenticatedUser(), targetName)
+                ))
         }
+        return request.deserialize()
     }
 
     /**
@@ -132,41 +126,27 @@ class MultiredditReference internal constructor(reddit: RedditClient, val userna
     /** Adds a subreddit to this multireddit. */
     @EndpointImplementation(Endpoint.PUT_MULTI_MULTIPATH_R_SRNAME)
     fun addSubreddit(sr: String) {
-        try {
-            // API returns the SubredditElement we send it, so returning that model would just be a waste of resources
-            reddit.request {
-                it.endpoint(Endpoint.PUT_MULTI_MULTIPATH_R_SRNAME, multiPath, sr)
-                    .put(mapOf(
-                        "model" to jackson.writeValueAsString(MultiredditPatch.SubredditElement(sr))
-                    ))
-            }
-        } catch (e: NetworkException) {
-            tryHandleNetworkException(e)
+        // API returns the SubredditElement we send it, so returning that model would just be a waste of resources
+        reddit.request {
+            it.endpoint(Endpoint.PUT_MULTI_MULTIPATH_R_SRNAME, multiPath, sr)
+                .put(mapOf(
+                    "model" to jackson.writeValueAsString(MultiredditPatch.SubredditElement(sr))
+                ))
         }
     }
 
     /** Removes a subreddit from this multireddit */
     @EndpointImplementation(Endpoint.DELETE_MULTI_MULTIPATH_R_SRNAME)
     fun removeSubreddit(sr: String) {
-        try {
-            // No useful response
-            reddit.request {
-                it.endpoint(Endpoint.DELETE_MULTI_MULTIPATH_R_SRNAME, multiPath, sr)
-                    .delete()
-            }
-        } catch (e: NetworkException) {
-            tryHandleNetworkException(e)
+        // No useful response
+        reddit.request {
+            it.endpoint(Endpoint.DELETE_MULTI_MULTIPATH_R_SRNAME, multiPath, sr)
+                .delete()
         }
     }
 
     fun posts(): Paginator.Builder<Submission> =
         DefaultPaginator.Builder<Submission>(reddit, multiPath, sortingAsPathParameter = true)
-
-    private fun tryHandleNetworkException(e: NetworkException): Nothing {
-        val json = e.res.json
-        if (!json.has("explanation") || !json.has("reason")) throw e
-        throw ApiException(json["reason"].asText(), json["explanation"].asText())
-    }
 
     companion object {
         @JvmStatic private fun multiPath(username: String, multiName: String) =

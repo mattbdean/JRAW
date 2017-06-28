@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import net.dean.jraw.databind.ListingDeserializer
+import net.dean.jraw.databind.RedditExceptionStubDeserializer
 import net.dean.jraw.databind.RedditObjectDeserializer
 import java.io.PrintStream
 import java.net.URLEncoder
@@ -18,6 +19,7 @@ object JrawUtils {
     @JvmStatic val jackson: ObjectMapper = defaultObjectMapper()
         .registerModule(RedditObjectDeserializer.Module)
         .registerModule(ListingDeserializer.Module)
+        .registerModule(RedditExceptionStubDeserializer.Module)
 
     private val printer = jackson.writerWithDefaultPrettyPrinter()
 
@@ -35,18 +37,6 @@ object JrawUtils {
     @Suppress("unused")
     fun prettyPrint(node: JsonNode, where: PrintStream = System.out) {
         where.println(printer.writeValueAsString(node))
-    }
-
-    @JvmStatic
-    @Throws(ApiException::class, RateLimitException::class)
-    fun handleApiErrors(root: JsonNode) {
-        if (!root.has("json")) return
-        val json = root["json"]
-
-        if (json.has("ratelimit"))
-            throw RateLimitException(JrawUtils.navigateJson(root, "json", "ratelimit").asDouble(-1.0))
-        if (json.has("errors") && json["errors"].isArray && json["errors"].has(0))
-            throw ApiException.from(json["errors"][0])
     }
 
     @JvmStatic

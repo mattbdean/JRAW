@@ -81,12 +81,8 @@ fun SpecBody.assume(check: () -> Boolean, description: String, body: TestBody.()
 fun ignoreRateLimit(block: () -> Unit) {
     try {
         block()
-    } catch (e: Exception) {
-        if (e is RateLimitException) {
-            System.err.println("Skipping test due to rate limit (${e.message})")
-            return
-        }
-        throw e
+    } catch (e: RateLimitException) {
+        System.err.println("Skipping test due to rate limit (${e.message})")
     }
 }
 

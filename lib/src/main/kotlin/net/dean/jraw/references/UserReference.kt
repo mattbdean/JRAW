@@ -5,7 +5,6 @@ import com.fasterxml.jackson.module.kotlin.treeToValue
 import net.dean.jraw.*
 import net.dean.jraw.JrawUtils.urlEncode
 import net.dean.jraw.databind.ListingDeserializer
-import net.dean.jraw.http.NetworkException
 import net.dean.jraw.models.*
 import net.dean.jraw.pagination.DefaultPaginator
 import net.dean.jraw.pagination.Paginator
@@ -56,12 +55,7 @@ class UserReference internal constructor(reddit: RedditClient, username: String)
     @EndpointImplementation(Endpoint.GET_ME_PREFS)
     @Throws(ApiException::class)
     fun prefs(): Map<String, Any> {
-        try {
-            return reddit.request { it.endpoint(Endpoint.GET_ME_PREFS) }.deserialize()
-        } catch (e: NetworkException) {
-            if (e.res.code != 403) throw e
-            handleUnauthorized(e)
-        }
+        return reddit.request { it.endpoint(Endpoint.GET_ME_PREFS) }.deserialize()
     }
 
     /**
@@ -76,12 +70,7 @@ class UserReference internal constructor(reddit: RedditClient, username: String)
     @Throws(ApiException::class)
     fun patchPrefs(newPrefs: Map<String, Any>): Map<String, Any> {
         val body = RequestBody.create(MediaType.parse("application/json"), JrawUtils.jackson.writeValueAsString(newPrefs))
-        try {
-            return reddit.request { it.endpoint(Endpoint.PATCH_ME_PREFS).patch(body) }.deserialize()
-        } catch (e: NetworkException) {
-            if (e.res.code != 403) throw e
-            handleUnauthorized(e)
-        }
+        return reddit.request { it.endpoint(Endpoint.PATCH_ME_PREFS).patch(body) }.deserialize()
     }
 
     /**
@@ -150,15 +139,5 @@ class UserReference internal constructor(reddit: RedditClient, username: String)
 
         private val jackson = JrawUtils.defaultObjectMapper()
             .registerModule(ListingDeserializer.Module)
-
-        @Throws(ApiException::class)
-        private fun handleUnauthorized(e: NetworkException): Nothing {
-            // Parse the ApiException data
-            val root = e.res.json
-            if (!root.has("reason") || !root.has("explanation")) {
-                throw IllegalArgumentException("Expected standard 403 Unauthorized response", e)
-            }
-            throw ApiException(root["reason"].asText(), root["explanation"].asText())
-        }
     }
 }
