@@ -23,6 +23,9 @@ class MultiredditReference internal constructor(reddit: RedditClient, val userna
             multiPath
     }
 
+    /** Alias to [createOrUpdate] for the sake of semantics */
+    fun update(patch: MultiredditPatch) = createOrUpdate(patch)
+
     /**
      * Updates this multireddit or creates it if it doesn't exist yet
      */
