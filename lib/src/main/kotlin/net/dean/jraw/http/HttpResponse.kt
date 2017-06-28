@@ -23,7 +23,7 @@ data class HttpResponse(val raw: Response) {
     val body: String by lazy { raw.body()?.string() ?: "" }
 
     /** Lazily initialized response body as a Jackson JsonNode */
-    val json: JsonNode by lazy { JrawUtils.parseJson(body) }
+    val json: JsonNode by lazy { JrawUtils.jackson.readTree(body) }
 
     /**
      * Uses Jackson to deserialize the body of this response to a given type
