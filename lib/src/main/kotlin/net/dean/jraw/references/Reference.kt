@@ -13,8 +13,8 @@ package net.dean.jraw.references
  * val pics: Subreddit = redditClient.subreddit("pics").about()
  * ```
  *
- * All References **must** have internal constructors and be instantiated by [net.dean.jraw.RedditClient] or other
- * References.
+ * All References **must** have internal constructors and be instantiated by [net.dean.jraw.RedditClient], other
+ * References, or models that inherit [Referenceable].
  */
 interface Reference<out T> {
     /**
