@@ -1,6 +1,7 @@
 package net.dean.jraw.references
 
 import net.dean.jraw.*
+import net.dean.jraw.JrawUtils.jackson
 import net.dean.jraw.JrawUtils.urlEncode
 import net.dean.jraw.http.NetworkException
 import net.dean.jraw.models.Multireddit
@@ -35,9 +36,7 @@ class MultiredditReference internal constructor(reddit: RedditClient, val userna
                     ))
             }.deserialize()
         } catch (e: NetworkException) {
-            val json = e.res.json
-            if (!json.has("explanation") || !json.has("reason")) throw e
-            throw ApiException(json["reason"].asText(), json["explanation"].asText())
+            tryHandleNetworkException(e)
         }
     }
 
@@ -111,14 +110,60 @@ class MultiredditReference internal constructor(reddit: RedditClient, val userna
             }
             return request.deserialize()
         } catch (e: NetworkException) {
-            val json = e.res.json
-            if (!json.has("explanation") || !json.has("reason")) throw e
-            throw ApiException(json["reason"].asText(), json["explanation"].asText())
+            tryHandleNetworkException(e)
+        }
+    }
+
+    /**
+     * Returns a [MultiredditPatch.SubredditElement] for the given subreddit belonging to this multireddit. Honestly
+     * this is a pretty useless method since right now it just returns what you already know.
+     */
+    @EndpointImplementation(Endpoint.GET_MULTI_MULTIPATH_R_SRNAME)
+    fun subredditInfo(sr: String): MultiredditPatch.SubredditElement {
+        return reddit.request {
+            it.endpoint(Endpoint.GET_MULTI_MULTIPATH_R_SRNAME, multiPath, sr)
+                .query(mapOf("expand_srs" to "true"))
+        }.deserialize()
+    }
+
+    /** Adds a subreddit to this multireddit. */
+    @EndpointImplementation(Endpoint.PUT_MULTI_MULTIPATH_R_SRNAME)
+    fun addSubreddit(sr: String) {
+        try {
+            // API returns the SubredditElement we send it, so returning that model would just be a waste of resources
+            reddit.request {
+                it.endpoint(Endpoint.PUT_MULTI_MULTIPATH_R_SRNAME, multiPath, sr)
+                    .put(mapOf(
+                        "model" to jackson.writeValueAsString(MultiredditPatch.SubredditElement(sr))
+                    ))
+            }
+        } catch (e: NetworkException) {
+            tryHandleNetworkException(e)
+        }
+    }
+
+    /** Removes a subreddit from this multireddit */
+    @EndpointImplementation(Endpoint.DELETE_MULTI_MULTIPATH_R_SRNAME)
+    fun removeSubreddit(sr: String) {
+        try {
+            // No useful response
+            reddit.request {
+                it.endpoint(Endpoint.DELETE_MULTI_MULTIPATH_R_SRNAME, multiPath, sr)
+                    .delete()
+            }
+        } catch (e: NetworkException) {
+            tryHandleNetworkException(e)
         }
     }
 
     fun posts(): Paginator.Builder<Submission> =
         DefaultPaginator.Builder<Submission>(reddit, multiPath, sortingAsPathParameter = true)
+
+    private fun tryHandleNetworkException(e: NetworkException): Nothing {
+        val json = e.res.json
+        if (!json.has("explanation") || !json.has("reason")) throw e
+        throw ApiException(json["reason"].asText(), json["explanation"].asText())
+    }
 
     companion object {
         @JvmStatic private fun multiPath(username: String, multiName: String) =

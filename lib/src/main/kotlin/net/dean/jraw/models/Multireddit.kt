@@ -45,9 +45,9 @@ data class Multireddit(
     /** The full multireddit path in the format of `/user/{username}/m/{multiname}` */
     val path: String,
 
-    /** A list of Subreddits that this multireddit draws from */
+    /** A list of subreddit names that this multireddit draws from */
     @JsonDeserialize(using = ExpandedSubredditsDeserializer::class)
-    val subreddits: List<Subreddit>,
+    val subreddits: List<String>,
 
     /** One of `public`, `private`, or `hidden` */
     val visibility: String,

@@ -132,6 +132,30 @@ class MultiredditReferenceTest : Spek({
         }
     }
 
+    describe("subredditInfo/addSubreddit/removeSubreddit") {
+        it("should add/remove subreddits from a multireddit") {
+            val multi = reddit.me().createMulti(randomName(), MultiredditPatch.Builder().build()).toReference(reddit)
+            undeletedRefs.add(multi)
+
+            multi.addSubreddit("pics")
+            multi.about().subreddits.should.contain("pics")
+            multi.subredditInfo("pics")
+            multi.removeSubreddit("pics")
+            multi.about().subreddits.should.not.contain("pics")
+        }
+
+        it("should fail if the user doesn't own the multireddit") {
+            val ref = reddit.user("reddit").multi("redditpets")
+            expectException(ApiException::class) {
+                ref.removeSubreddit("AliceAndTheDubber")
+            }
+
+            expectException(ApiException::class) {
+                ref.addSubreddit("pics")
+            }
+        }
+    }
+
     afterGroup {
         // Clean up undeleted multireddits
         for (ref in undeletedRefs) {
