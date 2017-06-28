@@ -1,4 +1,4 @@
-package net.dean.jraw.test
+package net.dean.jraw.test.integration
 
 import com.winterbe.expekt.should
 import net.dean.jraw.RedditClient
@@ -6,8 +6,8 @@ import net.dean.jraw.http.HttpRequest
 import net.dean.jraw.http.SimpleHttpLogger
 import net.dean.jraw.http.oauth.OAuthHelper
 import net.dean.jraw.ratelimit.NoopRateLimiter
-import net.dean.jraw.test.util.CredentialsUtil
-import net.dean.jraw.test.util.newOkHttpAdapter
+import net.dean.jraw.test.CredentialsUtil
+import net.dean.jraw.test.newOkHttpAdapter
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.it
 import java.io.ByteArrayOutputStream

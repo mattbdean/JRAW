@@ -1,9 +1,9 @@
-package net.dean.jraw.test
+package net.dean.jraw.test.integration
 
 import com.winterbe.expekt.should
 import net.dean.jraw.models.ReplyCommentNode
 import net.dean.jraw.models.RootCommentNode
-import net.dean.jraw.test.util.TestConfig
+import net.dean.jraw.test.TestConfig
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.it
 import kotlin.properties.Delegates

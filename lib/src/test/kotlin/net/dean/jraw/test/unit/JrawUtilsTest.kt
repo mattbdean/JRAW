@@ -1,8 +1,8 @@
-package net.dean.jraw.test
+package net.dean.jraw.test.unit
 
 import com.winterbe.expekt.should
 import net.dean.jraw.JrawUtils
-import net.dean.jraw.test.util.expectException
+import net.dean.jraw.test.expectException
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it

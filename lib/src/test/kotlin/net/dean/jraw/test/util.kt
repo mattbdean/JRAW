@@ -1,4 +1,4 @@
-package net.dean.jraw.test.util
+package net.dean.jraw.test
 
 import net.dean.jraw.RateLimitException
 import net.dean.jraw.RedditClient
@@ -6,7 +6,7 @@ import net.dean.jraw.http.*
 import net.dean.jraw.http.oauth.OAuthData
 import net.dean.jraw.models.Listing
 import net.dean.jraw.models.Submission
-import net.dean.jraw.test.util.TestConfig.userAgent
+import net.dean.jraw.test.TestConfig.userAgent
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.mockwebserver.MockResponse

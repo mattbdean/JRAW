@@ -1,4 +1,4 @@
-package net.dean.jraw.test
+package net.dean.jraw.test.unit
 
 import com.winterbe.expekt.should
 import net.dean.jraw.http.UserAgent

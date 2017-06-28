@@ -1,3 +1,3 @@
-package net.dean.jraw.test.util
+package net.dean.jraw.test
 
 class SetupRequiredException(message: String) : Exception(message)

@@ -1,4 +1,4 @@
-package net.dean.jraw.test.util
+package net.dean.jraw.test
 
 import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper

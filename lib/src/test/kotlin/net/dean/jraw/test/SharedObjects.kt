@@ -1,9 +1,9 @@
-package net.dean.jraw.test.util
+package net.dean.jraw.test
 
 import net.dean.jraw.RateLimitException
 import net.dean.jraw.models.SubmissionKind
 import net.dean.jraw.references.SubmissionReference
-import net.dean.jraw.test.util.TestConfig.reddit
+import net.dean.jraw.test.TestConfig.reddit
 import java.util.*
 
 /**

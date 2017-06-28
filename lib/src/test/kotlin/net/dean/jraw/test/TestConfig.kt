@@ -1,4 +1,4 @@
-package net.dean.jraw.test.util
+package net.dean.jraw.test
 
 import net.dean.jraw.RedditClient
 import net.dean.jraw.Version

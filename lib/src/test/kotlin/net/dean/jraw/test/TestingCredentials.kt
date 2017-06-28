@@ -1,4 +1,4 @@
-package net.dean.jraw.test.util
+package net.dean.jraw.test
 
 data class TestingCredentials(
     val script: ScriptStub,

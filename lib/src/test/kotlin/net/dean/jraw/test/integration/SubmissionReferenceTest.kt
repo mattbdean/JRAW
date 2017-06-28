@@ -1,12 +1,12 @@
-package net.dean.jraw.test
+package net.dean.jraw.test.integration
 
 import com.winterbe.expekt.should
 import net.dean.jraw.models.KindConstants
 import net.dean.jraw.models.VoteDirection
 import net.dean.jraw.references.SubmissionReference
-import net.dean.jraw.test.util.SharedObjects
-import net.dean.jraw.test.util.TestConfig.reddit
-import net.dean.jraw.test.util.assume
+import net.dean.jraw.test.SharedObjects
+import net.dean.jraw.test.TestConfig.reddit
+import net.dean.jraw.test.assume
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it

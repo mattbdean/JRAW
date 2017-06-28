@@ -1,4 +1,4 @@
-package net.dean.jraw.test
+package net.dean.jraw.test.integration
 
 import com.winterbe.expekt.should
 import net.dean.jraw.RedditClient
@@ -8,8 +8,8 @@ import net.dean.jraw.http.SimpleHttpLogger
 import net.dean.jraw.http.oauth.OAuthHelper
 import net.dean.jraw.models.Sorting
 import net.dean.jraw.models.TimePeriod
-import net.dean.jraw.test.util.*
-import net.dean.jraw.test.util.TestConfig.reddit
+import net.dean.jraw.test.*
+import net.dean.jraw.test.TestConfig.reddit
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it

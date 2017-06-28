@@ -1,4 +1,4 @@
-package net.dean.jraw.test
+package net.dean.jraw.test.integration
 
 import com.winterbe.expekt.should
 import net.dean.jraw.ApiException
@@ -6,11 +6,11 @@ import net.dean.jraw.models.MultiredditPatch
 import net.dean.jraw.models.Sorting
 import net.dean.jraw.models.TimePeriod
 import net.dean.jraw.references.MultiredditReference
-import net.dean.jraw.test.util.TestConfig.reddit
-import net.dean.jraw.test.util.TestConfig.redditUserless
-import net.dean.jraw.test.util.expectDescendingScore
-import net.dean.jraw.test.util.expectException
-import net.dean.jraw.test.util.randomName
+import net.dean.jraw.test.TestConfig.reddit
+import net.dean.jraw.test.TestConfig.redditUserless
+import net.dean.jraw.test.expectDescendingScore
+import net.dean.jraw.test.expectException
+import net.dean.jraw.test.randomName
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it

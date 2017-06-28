@@ -1,10 +1,13 @@
-package net.dean.jraw.test
+package net.dean.jraw.test.integration
 
 import com.winterbe.expekt.should
 import net.dean.jraw.http.oauth.Credentials
 import net.dean.jraw.http.oauth.OAuthHelper
 import net.dean.jraw.http.oauth.StatefulAuthHelper
-import net.dean.jraw.test.util.*
+import net.dean.jraw.test.CredentialsUtil
+import net.dean.jraw.test.ensureAuthenticated
+import net.dean.jraw.test.expectException
+import net.dean.jraw.test.newOkHttpAdapter
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it

@@ -1,4 +1,4 @@
-package net.dean.jraw.test
+package net.dean.jraw.test.integration
 
 import com.gargoylesoftware.htmlunit.WebClient
 import com.gargoylesoftware.htmlunit.html.HtmlButton
@@ -10,9 +10,9 @@ import net.dean.jraw.RedditClient
 import net.dean.jraw.http.oauth.OAuthException
 import net.dean.jraw.http.oauth.OAuthHelper
 import net.dean.jraw.http.oauth.StatefulAuthHelper
-import net.dean.jraw.test.util.CredentialsUtil
-import net.dean.jraw.test.util.expectException
-import net.dean.jraw.test.util.newOkHttpAdapter
+import net.dean.jraw.test.CredentialsUtil
+import net.dean.jraw.test.expectException
+import net.dean.jraw.test.newOkHttpAdapter
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.it
 

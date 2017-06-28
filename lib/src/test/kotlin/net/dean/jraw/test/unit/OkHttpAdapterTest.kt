@@ -1,10 +1,10 @@
-package net.dean.jraw.test
+package net.dean.jraw.test.unit
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.winterbe.expekt.should
 import net.dean.jraw.http.HttpRequest
 import net.dean.jraw.http.OkHttpAdapter
-import net.dean.jraw.test.util.TestConfig.userAgent
+import net.dean.jraw.test.TestConfig.userAgent
 import okhttp3.internal.http.HttpMethod
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
