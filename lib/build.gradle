@@ -17,3 +17,16 @@ sourceSets {
         }
     }
 }
+
+dokka {
+    moduleName = 'jraw'
+    jdkVersion = 7
+    impliedPlatforms = ['JVM']
+    reportNotDocumented = true
+
+    linkMapping {
+        dir = file('src/main/kotlin')
+        url = 'https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin'
+        suffix = '#L'
+    }
+}
