@@ -32,6 +32,18 @@ object JrawUtils {
         return mapOf(*str.split("&").map { val parts = it.split("="); parts[0] to parts[1] }.toTypedArray())
     }
 
+    @JvmStatic fun mapOf(vararg keysAndValues: String): Map<String, String> {
+        if (keysAndValues.isEmpty()) return emptyMap()
+        if (keysAndValues.size % 2 == 1) throw IllegalArgumentException("Expecting an even amount of keys and values")
+
+        val map: MutableMap<String, String> = HashMap()
+        for (i in keysAndValues.indices step 2) {
+            map[keysAndValues[i]] = keysAndValues[i + 1]
+        }
+
+        return map
+    }
+
     @JvmOverloads
     @JvmStatic
     @Suppress("unused")
