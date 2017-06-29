@@ -1,5 +1,6 @@
 package net.dean.jraw.test
 
+import com.winterbe.expekt.should
 import net.dean.jraw.RateLimitException
 import net.dean.jraw.RedditClient
 import net.dean.jraw.http.*
@@ -7,6 +8,7 @@ import net.dean.jraw.http.oauth.OAuthData
 import net.dean.jraw.models.Listing
 import net.dean.jraw.models.Submission
 import net.dean.jraw.test.TestConfig.userAgent
+import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.mockwebserver.MockResponse
@@ -18,6 +20,7 @@ import org.jetbrains.spek.api.dsl.xit
 import java.math.BigInteger
 import java.security.SecureRandom
 import java.util.*
+import java.util.concurrent.TimeUnit
 import kotlin.reflect.KClass
 
 fun <T : Exception> expectException(clazz: KClass<T>, doWork: () -> Unit) {
@@ -35,10 +38,14 @@ fun <T : Exception> expectException(clazz: KClass<T>, doWork: () -> Unit) {
 }
 
 fun ensureAuthenticated(reddit: RedditClient) {
+    reddit.authManager.current.should.not.be.`null`
     try {
-        // Make sure the request doesn't fail
-        reddit.request {
-            it.path("/hot")
+        // Try to guess the best endpoint to hit based on the current OAuth scopes
+        val scopes = reddit.authManager.current!!.scopes
+        if (scopes.contains("*") || scopes.contains("read")) {
+            reddit.frontPage().build().next()
+        } else if (!reddit.authManager.authMethod.isUserless && scopes.contains("identity")) {
+            reddit.me().about()
         }
     } catch (e: NetworkException) {
         // Wrap the error to make sure the tester knows why the test failed
@@ -95,18 +102,29 @@ fun ignoreRateLimit(block: () -> Unit) {
 class MockHttpAdapter : HttpAdapter {
     override var userAgent: UserAgent = UserAgent("doesn't matter, no requests are going to be sent")
     val http = OkHttpClient()
-    val mockServer = MockWebServer()
+    var mockServer: MockWebServer
+
+    init {
+        mockServer = MockWebServer()
+    }
 
     private val responseCodeQueue: Queue<Int> = LinkedList()
 
     override fun execute(r: HttpRequest): HttpResponse {
+        val path = HttpUrl.parse(r.url)!!.encodedPath()
+
         val res = http.newCall(Request.Builder()
             .headers(r.headers)
             .method(r.method, r.body)
-            .url(r.url)
+            .url(mockServer.url("")
+                .newBuilder()
+                .encodedPath(path)
+                .build())
             .build()).execute()
         return HttpResponse(res)
     }
+
+    fun enqueue(json: String) = enqueue(MockHttpResponse(json))
 
     fun enqueue(r: MockHttpResponse) {
         mockServer.enqueue(MockResponse()
@@ -114,6 +132,15 @@ class MockHttpAdapter : HttpAdapter {
             .setBody(r.body)
             .setHeader("Content-Type", r.contentType))
         responseCodeQueue.add(r.code)
+    }
+
+    fun start() {
+        mockServer.start()
+    }
+
+    fun reset() {
+        mockServer.shutdown()
+        mockServer = MockWebServer()
     }
 }
 
@@ -127,9 +154,10 @@ data class MockHttpResponse(
 )
 
 /** Creates a totally BS OAuthData object */
-fun createMockOAuthData() = OAuthData(
+fun createMockOAuthData(includeRefreshToken: Boolean = false) = OAuthData(
     accessToken = "<access_token>",
     tokenType = "bearer", // normal OAuthData has this as well, might as well keep it
     scopes = listOf("*"), // '*' means all scopes
-    shelfLife = -1
+    shelfLife = TimeUnit.SECONDS.toMillis(3600).toInt(),
+    refreshToken = if (includeRefreshToken) "<refresh_token>" else null
 )

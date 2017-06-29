@@ -1,5 +1,6 @@
 package net.dean.jraw.http.oauth
 
+import net.dean.jraw.JrawUtils
 import net.dean.jraw.RedditClient
 import net.dean.jraw.http.HttpAdapter
 import net.dean.jraw.http.HttpRequest
@@ -41,7 +42,7 @@ class StatefulAuthHelper internal constructor(private val http: HttpAdapter, pri
         if (authStatus != Status.WAITING_FOR_CHALLENGE)
             throw IllegalStateException("Expecting auth status ${Status.WAITING_FOR_CHALLENGE}, got $authStatus")
 
-        val query = parseQuery(URL(finalUrl).query)
+        val query = JrawUtils.parseUrlEncoded(URL(finalUrl).query)
         if ("error" in query)
             throw OAuthException("Reddit responded with error: ${query["error"]}")
         if ("state" !in query)
@@ -69,7 +70,7 @@ class StatefulAuthHelper internal constructor(private val http: HttpAdapter, pri
             this._authStatus = Status.AUTHORIZED
             return RedditClient(
                 http = http,
-                oauthData = response,
+                initialOAuthData = response,
                 creds = creds
             )
         } catch (ex: NetworkException) {
@@ -78,11 +79,6 @@ class StatefulAuthHelper internal constructor(private val http: HttpAdapter, pri
             throw ex
         }
     }
-
-    private fun parseQuery(query: String): Map<String, String> =
-        // Neat little one-liner. This function splits the query string by '&', then maps each value to a Pair of
-        // Strings, converts it to a typed array, and uses the spread operator ('*') to call mapOf()
-        mapOf(*query.split("&").map { val parts = it.split("="); parts[0] to parts[1] }.toTypedArray())
 
     companion object {
         private val rand: SecureRandom = SecureRandom()

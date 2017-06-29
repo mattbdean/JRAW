@@ -9,26 +9,11 @@ object OAuthHelper {
     const val HOST_WWW = "www.reddit.com"
 
     @JvmStatic fun script(creds: Credentials, http: HttpAdapter): RedditClient {
-        if (creds.authenticationMethod != AuthenticationMethod.SCRIPT)
-            throw IllegalArgumentException("This function is for script apps only")
+        return RedditClient(http, scriptOAuthData(creds, http), creds)
+    }
 
-        try {
-            val data: OAuthData = http.execute(HttpRequest.Builder()
-                .post(mapOf(
-                    "grant_type" to "password",
-                    "username" to creds.username!!,
-                    "password" to creds.password!!
-                ))
-                .url("https://www.reddit.com/api/v1/access_token")
-                .basicAuth(creds.clientId to creds.clientSecret)
-                .build()).deserialize()
-
-            return RedditClient(http, data, creds)
-        } catch (e: NetworkException) {
-            if (e.res.code == 401)
-                throw IllegalArgumentException("Invalid credentials", e)
-            throw e
-        }
+    @JvmStatic fun applicationOnly(creds: Credentials, http: HttpAdapter): RedditClient {
+        return RedditClient(http, applicationOnlyOAuthData(creds, http), creds)
     }
 
     @JvmStatic fun installedApp(creds: Credentials, http: HttpAdapter): StatefulAuthHelper {
@@ -37,7 +22,28 @@ object OAuthHelper {
         return StatefulAuthHelper(http, creds)
     }
 
-    @JvmStatic fun applicationOnly(creds: Credentials, http: HttpAdapter): RedditClient {
+    @JvmStatic internal fun scriptOAuthData(creds: Credentials, http: HttpAdapter): OAuthData {
+        if (creds.authenticationMethod != AuthenticationMethod.SCRIPT)
+            throw IllegalArgumentException("This function is for script apps only")
+
+        try {
+            return http.execute(HttpRequest.Builder()
+                .post(mapOf(
+                    "grant_type" to "password",
+                    "username" to creds.username!!,
+                    "password" to creds.password!!
+                ))
+                .url("https://www.reddit.com/api/v1/access_token")
+                .basicAuth(creds.clientId to creds.clientSecret)
+                .build()).deserialize()
+        } catch (e: NetworkException) {
+            if (e.res.code == 401)
+                throw IllegalArgumentException("Invalid credentials", e)
+            throw e
+        }
+    }
+
+    @JvmStatic internal fun applicationOnlyOAuthData(creds: Credentials, http: HttpAdapter): OAuthData {
         if (!creds.authenticationMethod.isUserless)
             throw IllegalArgumentException("${creds.authenticationMethod} is not a userless authentication method")
 
@@ -50,13 +56,11 @@ object OAuthHelper {
         if (creds.authenticationMethod == AuthenticationMethod.USERLESS_APP)
             postBody.put("device_id", creds.deviceId.toString())
 
-        val data: OAuthData = http.execute(HttpRequest.Builder()
+        return http.execute(HttpRequest.Builder()
             .host(HOST_WWW)
             .path("/api/v1/access_token")
             .post(postBody)
             .basicAuth(creds.clientId to creds.clientSecret)
             .build()).deserialize()
-
-        return RedditClient(http, data, creds)
     }
 }

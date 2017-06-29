@@ -2,6 +2,7 @@ package net.dean.jraw
 
 import net.dean.jraw.JrawUtils.jackson
 import net.dean.jraw.http.*
+import net.dean.jraw.http.oauth.AuthenticationManager
 import net.dean.jraw.http.oauth.AuthenticationMethod
 import net.dean.jraw.http.oauth.Credentials
 import net.dean.jraw.http.oauth.OAuthData
@@ -37,7 +38,7 @@ import java.util.concurrent.TimeUnit
  */
 class RedditClient(
     val http: HttpAdapter,
-    val oauthData: OAuthData,
+    initialOAuthData: OAuthData,
     creds: Credentials
 ) {
     var logger: HttpLogger = SimpleHttpLogger()
@@ -47,10 +48,17 @@ class RedditClient(
 
     var rateLimiter: RateLimiter = LeakyBucketRateLimiter(BURST_LIMIT, RATE_LIMIT, TimeUnit.SECONDS)
 
+    var autoRenew = true
+    var authManager = AuthenticationManager(http, creds)
+
     /** The logged-in user, or null if this RedditClient is authenticated using application-only credentials */
     val username: String? = creds.username
 
     val authMethod: AuthenticationMethod = creds.authenticationMethod
+
+    init {
+        authManager._current = initialOAuthData
+    }
 
     private val authenticatedUsername: String by lazy {
         try {
@@ -63,13 +71,19 @@ class RedditClient(
     /**
      * Creates a [HttpRequest.Builder], setting `secure(true)`, `host("oauth.reddit.com")`, and the Authorization header
      */
-    fun requestStub() = HttpRequest.Builder()
-        .secure(true)
-        .host("oauth.reddit.com")
-        .header("Authorization", "bearer ${oauthData.accessToken}")
+    fun requestStub(): HttpRequest.Builder {
+        return HttpRequest.Builder()
+            .secure(true)
+            .host("oauth.reddit.com")
+            .header("Authorization", "bearer ${authManager.accessToken}")
+    }
+
 
     @Throws(NetworkException::class)
     private fun request(r: HttpRequest, retryCount: Int = 0): HttpResponse {
+        if (autoRenew && authManager.needsRenewing() && authManager.canRenew())
+            authManager.renew()
+
         // Try to prevent API errors
         rateLimiter.acquire()
 

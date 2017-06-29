@@ -13,5 +13,7 @@ data class OAuthData(
     val shelfLife: Int,
 
     /** A list in scopes the access token has permission for */
-    val scopes: List<String>
+    val scopes: List<String>,
+
+    val refreshToken: String?
 )

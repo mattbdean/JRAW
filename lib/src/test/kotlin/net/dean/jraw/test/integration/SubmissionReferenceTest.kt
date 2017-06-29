@@ -7,6 +7,7 @@ import net.dean.jraw.references.SubmissionReference
 import net.dean.jraw.test.SharedObjects
 import net.dean.jraw.test.TestConfig.reddit
 import net.dean.jraw.test.assume
+import net.dean.jraw.test.ignoreRateLimit
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
@@ -52,9 +53,11 @@ class SubmissionReferenceTest : Spek({
         it("should return the newly created Comment") {
             val submissionId = "6ib8fx"
             val text = "Comment made at ${Date()}"
-            val comment = reddit.submission(submissionId).reply(text)
-            comment.body.should.equal(text)
-            comment.submissionFullName.should.equal(KindConstants.SUBMISSION + "_$submissionId")
+            ignoreRateLimit {
+                val comment = reddit.submission(submissionId).reply(text)
+                comment.body.should.equal(text)
+                comment.submissionFullName.should.equal(KindConstants.SUBMISSION + "_$submissionId")
+            }
         }
     }
 

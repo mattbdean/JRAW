@@ -67,7 +67,7 @@ class SubmissionPaginationTest : Spek({
 
             // Test the first 3 pages
             for (i in 0..2) {
-                expectDescendingScore(sub.next())
+                expectDescendingScore(sub.next(), allowedMistakes = 1)
             }
         }
     }
