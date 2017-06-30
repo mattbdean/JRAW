@@ -60,12 +60,15 @@ class RedditClient(
         authManager._current = initialOAuthData
     }
 
-    private val authenticatedUsername: String by lazy {
-        try {
-            me().about().name
-        } catch (e: NetworkException) {
-            throw IllegalStateException("Expected an authenticated user", e)
-        }
+    // username will be non-null for script apps, otherwise we have to manually poll /api/v1/me for the username
+    private val authenticatedUsername: String? = username ?: try {
+        me().about().name
+    } catch (e: ApiException) {
+        // Delay throwing an exception until `requireAuthenticatedUser()` is called
+        if (e.code == "USER_REQUIRED")
+            null
+        else
+            throw e
     }
 
     /**
@@ -221,15 +224,13 @@ class RedditClient(
     fun submission(id: String) = SubmissionReference(this, id)
 
     /**
-     * Returns the name of the logged-in user, or throws an IllegalStateException if there is none. If this client was
-     * authenticated with a non-script OAuth2 app, the first time this method is called, it will send a network request.
+     * Returns the name of the logged-in user, or throws an IllegalStateException if there is none.
      */
     fun requireAuthenticatedUser(): String {
         if (authMethod.isUserless)
             throw IllegalStateException("Expected the RedditClient to have an active user, was authenticated with " +
                 authMethod)
-        // Use `username`. If that's null (authenticated using a non-script app), fall back to `authenticatedUsername`
-        return username ?: authenticatedUsername
+        return authenticatedUsername ?: throw IllegalStateException("Expected an authenticated user")
     }
 
     companion object {
