@@ -2,26 +2,21 @@ package net.dean.jraw.references
 
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.fasterxml.jackson.module.kotlin.treeToValue
-import net.dean.jraw.*
+import net.dean.jraw.Endpoint
+import net.dean.jraw.EndpointImplementation
+import net.dean.jraw.JrawUtils
 import net.dean.jraw.JrawUtils.urlEncode
+import net.dean.jraw.RedditClient
 import net.dean.jraw.databind.ListingDeserializer
-import net.dean.jraw.models.*
+import net.dean.jraw.models.Account
+import net.dean.jraw.models.Multireddit
+import net.dean.jraw.models.PublicContribution
+import net.dean.jraw.models.Trophy
 import net.dean.jraw.pagination.DefaultPaginator
 import net.dean.jraw.pagination.Paginator
-import okhttp3.MediaType
-import okhttp3.RequestBody
 
-class UserReference internal constructor(reddit: RedditClient, username: String) :
-    AbstractReference<String>(reddit, username) {
-
-    val isSelf = username == NAME_SELF
-    val username: String by lazy {
-        if (subject == NAME_SELF) {
-            reddit.requireAuthenticatedUser()
-        } else {
-            subject
-        }
-    }
+abstract class UserReference(reddit: RedditClient, val username: String) : AbstractReference<String>(reddit, username) {
+    abstract val isSelf: Boolean
 
     @EndpointImplementation(Endpoint.GET_ME, Endpoint.GET_USER_USERNAME_ABOUT)
     fun about(): Account {
@@ -45,32 +40,6 @@ class UserReference internal constructor(reddit: RedditClient, username: String)
 
         val trophies = JrawUtils.navigateJson(json, "data", "trophies")
         return trophies.map { JrawUtils.jackson.treeToValue<Trophy>(it) }
-    }
-
-    /**
-     * Gets a Map of preferences set at [https://www.reddit.com/prefs].
-     *
-     * Likely to throw an [ApiException] if authenticated via application-only credentials
-     */
-    @EndpointImplementation(Endpoint.GET_ME_PREFS)
-    @Throws(ApiException::class)
-    fun prefs(): Map<String, Any> {
-        return reddit.request { it.endpoint(Endpoint.GET_ME_PREFS) }.deserialize()
-    }
-
-    /**
-     * Patches over certain user preferences and returns all preferences.
-     *
-     * Although technically you can send any value as a preference value, generally only strings and booleans are used.
-     * See [here](https://www.reddit.com/dev/api/oauth#GET_api_v1_me_prefs) for a list of all available preferences.
-     *
-     * Likely to throw an [ApiException] if authenticated via application-only credentials
-     */
-    @EndpointImplementation(Endpoint.PATCH_ME_PREFS)
-    @Throws(ApiException::class)
-    fun patchPrefs(newPrefs: Map<String, Any>): Map<String, Any> {
-        val body = RequestBody.create(MediaType.parse("application/json"), JrawUtils.jackson.writeValueAsString(newPrefs))
-        return reddit.request { it.endpoint(Endpoint.PATCH_ME_PREFS).patch(body) }.deserialize()
     }
 
     /**
@@ -105,19 +74,6 @@ class UserReference internal constructor(reddit: RedditClient, username: String)
     fun multi(name: String) = MultiredditReference(reddit, subject, name)
 
     /**
-     * Creates a Multireddit (or updates it if it already exists).
-     *
-     * This method is equivalent to
-     *
-     * ```kotlin
-     * userReference.multi(name).createOrUpdate(patch)
-     * ```
-     *
-     * and provided for semantics.
-     */
-    fun createMulti(name: String, patch: MultiredditPatch) = multi(name).createOrUpdate(patch)
-
-    /**
      * Lists the multireddits this client is able to view.
      *
      * If this UserReference is for the logged-in user, all multireddits will be returned. Otherwise, only public
@@ -135,8 +91,6 @@ class UserReference internal constructor(reddit: RedditClient, username: String)
     }
 
     companion object {
-        const val NAME_SELF = "me"
-
         private val jackson = JrawUtils.defaultObjectMapper()
             .registerModule(ListingDeserializer.Module)
     }

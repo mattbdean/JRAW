@@ -34,38 +34,6 @@ class UserReferenceTest : Spek({
         }
     }
 
-    describe("prefs and patchPrefs") {
-        it("should return a Map<String, Any>") {
-            val prefs = reddit.me().prefs()
-            prefs.should.have.size.above(0)
-            // This one has been here since forever, if this one isn't here either reddit has undergone a major API
-            // change or we're making the request wrong.
-            prefs["over_18"].should.not.be.`null`
-        }
-
-        it("should update the preferences") {
-            val me = reddit.me()
-
-            // Go with something that's 1) pretty much guaranteed to be there and 2) a boolean so we can sipmly toggle
-            // the value
-            val key = "over_18"
-            val newVal = !(me.prefs()[key] as Boolean)
-            val newPrefsPatch = mapOf(key to newVal)
-            me.patchPrefs(newPrefsPatch)[key].should.equal(newVal)
-        }
-
-        it("should throw an ApiException when the user isn't 'me'") {
-            expectException(ApiException::class) {
-                redditUserless.me().prefs()
-            }
-
-            val oldPrefs = reddit.me().prefs()
-            expectException(ApiException::class) {
-                redditUserless.me().patchPrefs(oldPrefs)
-            }
-        }
-    }
-
     describe("history") {
         val me = reddit.me()
         val other = reddit.user("_vargas_")

@@ -18,13 +18,6 @@ class MultiredditReference internal constructor(reddit: RedditClient, val userna
     /** Alias to [subject] */
     val multiPath = subject
 
-    val authenticatedMultiPath: String by lazy {
-        if (username == UserReference.NAME_SELF)
-            multiPath(reddit.requireAuthenticatedUser(), multiredditName)
-        else
-            multiPath
-    }
-
     /** Alias to [createOrUpdate] for the sake of semantics */
     fun update(patch: MultiredditPatch) = createOrUpdate(patch)
 
@@ -34,7 +27,7 @@ class MultiredditReference internal constructor(reddit: RedditClient, val userna
     @EndpointImplementation(Endpoint.PUT_MULTI_MULTIPATH, Endpoint.POST_MULTI_MULTIPATH)
     fun createOrUpdate(patch: MultiredditPatch): Multireddit {
         return reddit.request {
-            it.endpoint(Endpoint.PUT_MULTI_MULTIPATH, authenticatedMultiPath)
+            it.endpoint(Endpoint.PUT_MULTI_MULTIPATH, multiPath)
                 .put(mapOf(
                     "model" to JrawUtils.jackson.writeValueAsString(patch)
                 ))
@@ -45,7 +38,7 @@ class MultiredditReference internal constructor(reddit: RedditClient, val userna
     @EndpointImplementation(Endpoint.GET_MULTI_MULTIPATH)
     fun about(): Multireddit {
         return reddit.request {
-            it.endpoint(Endpoint.GET_MULTI_MULTIPATH, authenticatedMultiPath)
+            it.endpoint(Endpoint.GET_MULTI_MULTIPATH, multiPath)
         }.deserialize()
     }
 
@@ -53,7 +46,7 @@ class MultiredditReference internal constructor(reddit: RedditClient, val userna
     @EndpointImplementation(Endpoint.GET_MULTI_MULTIPATH_DESCRIPTION)
     fun description(): String {
         return JrawUtils.navigateJson(reddit.request {
-            it.endpoint(Endpoint.GET_MULTI_MULTIPATH_DESCRIPTION, authenticatedMultiPath)
+            it.endpoint(Endpoint.GET_MULTI_MULTIPATH_DESCRIPTION, multiPath)
         }.json, "data", "body_md").asText()
     }
 
@@ -62,7 +55,7 @@ class MultiredditReference internal constructor(reddit: RedditClient, val userna
     fun updateDescription(newDescription: String) {
         // Endpoint returns the new description, but we already have that, so don't return anything
         reddit.request {
-            it.endpoint(Endpoint.PUT_MULTI_MULTIPATH_DESCRIPTION, authenticatedMultiPath)
+            it.endpoint(Endpoint.PUT_MULTI_MULTIPATH_DESCRIPTION, multiPath)
                 .put(mapOf(
                     "model" to JrawUtils.jackson.writeValueAsString(mapOf("body_md" to newDescription))
                 ))
@@ -75,7 +68,7 @@ class MultiredditReference internal constructor(reddit: RedditClient, val userna
         // Response type is application/json, but it's just an empty string
         reddit.request {
             it.delete()
-                .endpoint(Endpoint.DELETE_MULTI_MULTIPATH, authenticatedMultiPath)
+                .endpoint(Endpoint.DELETE_MULTI_MULTIPATH, multiPath)
         }
     }
 

@@ -11,9 +11,10 @@ import net.dean.jraw.pagination.DefaultPaginator
 import net.dean.jraw.pagination.Paginator
 import net.dean.jraw.ratelimit.LeakyBucketRateLimiter
 import net.dean.jraw.ratelimit.RateLimiter
+import net.dean.jraw.references.OtherUserReference
+import net.dean.jraw.references.SelfUserReference
 import net.dean.jraw.references.SubmissionReference
 import net.dean.jraw.references.SubredditReference
-import net.dean.jraw.references.UserReference
 import java.util.concurrent.TimeUnit
 
 /**
@@ -56,19 +57,26 @@ class RedditClient(
 
     val authMethod: AuthMethod = creds.authMethod
 
+    private val authenticatedUsername: String?
+
     init {
         authManager._current = initialOAuthData
-    }
 
-    // username will be non-null for script apps, otherwise we have to manually poll /api/v1/me for the username
-    private val authenticatedUsername: String? = username ?: try {
-        me().about().name
-    } catch (e: ApiException) {
-        // Delay throwing an exception until `requireAuthenticatedUser()` is called
-        if (e.code == "USER_REQUIRED")
+        // username will be non-null for script apps, otherwise we have to manually poll /api/v1/me for the username.
+        // We can't simply use me().about().name because creating a SelfUserReference requires a call to
+        // requireAuthenticatedUser() which in turn requires this variable.
+        authenticatedUsername = username ?: try {
+            val json = request {
+                it.path("/api/v1/me")
+            }.json
+
+            if (!json.has("name"))
+                throw IllegalArgumentException("Cannot get name from response")
+            json.get("name").asText()
+        } catch (e: ApiException) {
+            // Delay throwing an exception until `requireAuthenticatedUser()` is called
             null
-        else
-            throw e
+        }
     }
 
     /**
@@ -166,10 +174,10 @@ class RedditClient(
     fun request(configure: (stub: HttpRequest.Builder) -> HttpRequest.Builder) = request(configure(requestStub()).build())
 
     /** Gets a UserReference for the currently logged in user */
-    fun me() = UserReference(this, UserReference.NAME_SELF)
+    fun me() = SelfUserReference(this)
 
     /** Gets a UserReference for any user */
-    fun user(name: String) = UserReference(this, name)
+    fun user(name: String) = OtherUserReference(this, name)
 
     /** Gets a [Paginator.Builder] to iterate posts on the front page */
     fun frontPage() = DefaultPaginator.Builder<Submission>(this, baseUrl = "", sortingAsPathParameter = true)
