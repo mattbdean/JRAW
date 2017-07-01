@@ -2,7 +2,7 @@ package net.dean.jraw.test.unit
 
 import com.winterbe.expekt.should
 import net.dean.jraw.JrawUtils
-import net.dean.jraw.http.oauth.AuthenticationManager
+import net.dean.jraw.http.oauth.AuthManager
 import net.dean.jraw.test.CredentialsUtil
 import net.dean.jraw.test.MockHttpAdapter
 import net.dean.jraw.test.createMockOAuthData
@@ -30,7 +30,7 @@ class AuthenticationManagerIsolatedTest : Spek({
         }
 
         it("should return a new OAuthData when called for script apps") {
-            val authManager = AuthenticationManager(mockAdapter, CredentialsUtil.script)
+            val authManager = AuthManager(mockAdapter, CredentialsUtil.script)
             authManager._current = createMockOAuthData()
 
             // Make some baseline assertions
@@ -58,7 +58,7 @@ class AuthenticationManagerIsolatedTest : Spek({
         }
 
         it("should use the refresh token for installed/web apps") {
-            val authManager = AuthenticationManager(mockAdapter, CredentialsUtil.app)
+            val authManager = AuthManager(mockAdapter, CredentialsUtil.app)
             val oauthData = createMockOAuthData(includeRefreshToken = true)
             // Ensure refreshToken gets updated once _current is set
             authManager.refreshToken.should.be.`null`
@@ -82,7 +82,7 @@ class AuthenticationManagerIsolatedTest : Spek({
         }
 
          it("should fail when a non-script app does not have a refresh token") {
-             val authManager = AuthenticationManager(mockAdapter, CredentialsUtil.app)
+             val authManager = AuthManager(mockAdapter, CredentialsUtil.app)
              authManager._current = createMockOAuthData(includeRefreshToken = false)
 
              authManager.canRenew().should.be.`false`
@@ -98,11 +98,11 @@ class AuthenticationManagerIsolatedTest : Spek({
 
     describe("needsRefresh()") {
         it("should return true when it has no OAuthData") {
-            AuthenticationManager(mockAdapter, CredentialsUtil.script).needsRenewing().should.be.`true`
+            AuthManager(mockAdapter, CredentialsUtil.script).needsRenewing().should.be.`true`
         }
 
         it("should return true when the tokenExpiration is in the past") {
-            val auth = AuthenticationManager(mockAdapter, CredentialsUtil.script)
+            val auth = AuthManager(mockAdapter, CredentialsUtil.script)
             auth.tokenExpiration = Date(Date().time - 1)
             auth.needsRenewing().should.be.`true`
         }

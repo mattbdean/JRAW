@@ -2,8 +2,8 @@ package net.dean.jraw
 
 import net.dean.jraw.JrawUtils.jackson
 import net.dean.jraw.http.*
-import net.dean.jraw.http.oauth.AuthenticationManager
-import net.dean.jraw.http.oauth.AuthenticationMethod
+import net.dean.jraw.http.oauth.AuthManager
+import net.dean.jraw.http.oauth.AuthMethod
 import net.dean.jraw.http.oauth.Credentials
 import net.dean.jraw.http.oauth.OAuthData
 import net.dean.jraw.models.Submission
@@ -49,12 +49,12 @@ class RedditClient(
     var rateLimiter: RateLimiter = LeakyBucketRateLimiter(BURST_LIMIT, RATE_LIMIT, TimeUnit.SECONDS)
 
     var autoRenew = true
-    var authManager = AuthenticationManager(http, creds)
+    var authManager = AuthManager(http, creds)
 
     /** The logged-in user, or null if this RedditClient is authenticated using application-only credentials */
     val username: String? = creds.username
 
-    val authMethod: AuthenticationMethod = creds.authenticationMethod
+    val authMethod: AuthMethod = creds.authMethod
 
     init {
         authManager._current = initialOAuthData

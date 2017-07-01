@@ -3,8 +3,8 @@ package net.dean.jraw.http.oauth
 /**
  * A list of ways a client can authenticate themselves using Reddit's API
  */
-enum class AuthenticationMethod constructor(
-    /** Returns true if this AuthenticationMethod does not require a user */
+enum class AuthMethod constructor(
+    /** Returns true if this AuthMethod does not require a user */
     val isUserless: Boolean = false
 ) {
     /** Runs as a part of a web service on a server you control. Can keep a secret */

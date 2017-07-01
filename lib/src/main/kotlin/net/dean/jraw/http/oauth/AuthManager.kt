@@ -17,7 +17,7 @@ import java.util.*
  * [StatefulAuthHelper.getAuthorizationUrl]. Script apps and apps using application-only (userless) authentication do
  * not receive a refresh token since refreshing may be done non-interactively.
  */
-class AuthenticationManager(private val http: HttpAdapter, private val credentials: Credentials) {
+class AuthManager(private val http: HttpAdapter, private val credentials: Credentials) {
     /** When the token expires. Set to `internal` visibility instead of `private` for testing purposes. */
     internal var tokenExpiration: Date? = null
 
@@ -44,8 +44,8 @@ class AuthenticationManager(private val http: HttpAdapter, private val credentia
     val accessToken: String
         get() = (current ?: throw IllegalStateException("No current OAuthData")).accessToken
 
-    /** Alias to [credentials].authenticationMethod */
-    internal val authMethod = credentials.authenticationMethod
+    /** Alias to [credentials].authMethod */
+    internal val authMethod = credentials.authMethod
 
     /** The most up-to-date OAuthData for this OAuth2 app, as understood by this manager. */
     val current: OAuthData? get() = _current
@@ -58,7 +58,7 @@ class AuthenticationManager(private val http: HttpAdapter, private val credentia
      * to pass `permanent = true` to [StatefulAuthHelper.getAuthorizationUrl] to get a refresh token.
      */
     fun renew() {
-        val newData: OAuthData = if (authMethod == AuthenticationMethod.SCRIPT) {
+        val newData: OAuthData = if (authMethod == AuthMethod.SCRIPT) {
             OAuthHelper.scriptOAuthData(credentials, http)
         } else if (authMethod.isUserless) {
             OAuthHelper.applicationOnlyOAuthData(credentials, http)
@@ -103,8 +103,8 @@ class AuthenticationManager(private val http: HttpAdapter, private val credentia
     fun canRenew(): Boolean {
         // Script apps and userless apps can simply request a new token since the user doesn't have to authorize it.
         // Otherwise, we need a refresh token.
-        return if (credentials.authenticationMethod == AuthenticationMethod.SCRIPT ||
-            credentials.authenticationMethod.isUserless) {
+        return if (credentials.authMethod == AuthMethod.SCRIPT ||
+            credentials.authMethod.isUserless) {
             true
         } else {
             refreshToken != null

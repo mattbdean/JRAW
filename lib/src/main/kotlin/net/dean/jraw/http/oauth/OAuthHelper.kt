@@ -17,13 +17,13 @@ object OAuthHelper {
     }
 
     @JvmStatic fun installedApp(creds: Credentials, http: HttpAdapter): StatefulAuthHelper {
-        if (creds.authenticationMethod != AuthenticationMethod.APP)
+        if (creds.authMethod != AuthMethod.APP)
             throw IllegalArgumentException("This function is for installed apps only")
         return StatefulAuthHelper(http, creds)
     }
 
     @JvmStatic internal fun scriptOAuthData(creds: Credentials, http: HttpAdapter): OAuthData {
-        if (creds.authenticationMethod != AuthenticationMethod.SCRIPT)
+        if (creds.authMethod != AuthMethod.SCRIPT)
             throw IllegalArgumentException("This function is for script apps only")
 
         try {
@@ -44,16 +44,16 @@ object OAuthHelper {
     }
 
     @JvmStatic internal fun applicationOnlyOAuthData(creds: Credentials, http: HttpAdapter): OAuthData {
-        if (!creds.authenticationMethod.isUserless)
-            throw IllegalArgumentException("${creds.authenticationMethod} is not a userless authentication method")
+        if (!creds.authMethod.isUserless)
+            throw IllegalArgumentException("${creds.authMethod} is not a userless authentication method")
 
-        val grantType = if (creds.authenticationMethod == AuthenticationMethod.USERLESS_APP)
+        val grantType = if (creds.authMethod == AuthMethod.USERLESS_APP)
             "https://oauth.reddit.com/grants/installed_client"
         else
             "client_credentials"
 
         val postBody = mutableMapOf("grant_type" to grantType)
-        if (creds.authenticationMethod == AuthenticationMethod.USERLESS_APP)
+        if (creds.authMethod == AuthMethod.USERLESS_APP)
             postBody.put("device_id", creds.deviceId.toString())
 
         return http.execute(HttpRequest.Builder()

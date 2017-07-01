@@ -4,7 +4,7 @@ import java.util.*
 
 class Credentials private constructor(
     /** How these credential were meant to be used */
-    val authenticationMethod: AuthenticationMethod,
+    val authMethod: AuthMethod,
 
     /** Reddit username. Only non-null for script Credentials */
     val username: String? = null,
@@ -29,32 +29,32 @@ class Credentials private constructor(
 ) {
     companion object {
         @JvmStatic fun script(username: String, password: String, clientId: String, clientSecret: String) =
-            Credentials(AuthenticationMethod.SCRIPT,
+            Credentials(AuthMethod.SCRIPT,
                 username = username,
                 password = password,
                 clientId = clientId,
                 clientSecret = clientSecret)
 
         @JvmStatic fun installedApp(clientId: String, redirectUrl: String) =
-            Credentials(AuthenticationMethod.APP,
+            Credentials(AuthMethod.APP,
                 clientId = clientId,
                 clientSecret = "",
                 redirectUrl = redirectUrl)
 
         @JvmStatic fun webapp(clientId: String, clientSecret: String, redirectUrl: String) =
-            Credentials(AuthenticationMethod.WEBAPP,
+            Credentials(AuthMethod.WEBAPP,
                 clientId = clientId,
                 clientSecret = clientSecret,
                 redirectUrl = redirectUrl)
 
         @JvmStatic fun userless(clientId: String, clientSecret: String, deviceId: UUID) =
-            Credentials(AuthenticationMethod.USERLESS,
+            Credentials(AuthMethod.USERLESS,
                 clientId = clientId,
                 clientSecret = clientSecret,
                 deviceId = deviceId)
 
         @JvmStatic fun userlessApp(clientId: String, deviceId: UUID) =
-            Credentials(AuthenticationMethod.USERLESS_APP,
+            Credentials(AuthMethod.USERLESS_APP,
                 clientId = clientId,
                 clientSecret = "",
                 deviceId = deviceId)
