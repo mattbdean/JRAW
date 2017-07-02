@@ -1,18 +1,18 @@
-<!--- Generated 2017-06-28 at 04:03:15 EDT. Use `./gradlew :meta:update` to update. DO NOT MODIFY DIRECTLY -->
+<!--- Generated 2017-07-02 at 04:31:32 EDT. Use `./gradlew :meta:update` to update. DO NOT MODIFY DIRECTLY -->
 
 Endpoints
 =========
 
 This file contains a list of all the endpoints (regardless of if they have been implemented) that can be found at the [official reddit API docs](https://www.reddit.com/dev/api/oauth). To update this file, run `./gradlew :meta:update`
 
-So far, **34** endpoints (out of 169) have been implemented.
+So far, **35** endpoints (out of 169) have been implemented.
 
 (any scope)
 -----------
 
 | Method | Endpoint                                                                                     | Implementation                                                                                                                                                            |
 |:------:| -------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `POST` | [`/api/comment`](https://www.reddit.com/dev/api/oauth#POST_api_comment)                      | [`PublicContributionReference.reply()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/PublicContributionReference.kt#L78) |
+| `POST` | [`/api/comment`](https://www.reddit.com/dev/api/oauth#POST_api_comment)                      | [`PublicContributionReference.reply()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/PublicContributionReference.kt#L79) |
 | `POST` | [`/api/friend`](https://www.reddit.com/dev/api/oauth#POST_api_friend)                        | None                                                                                                                                                                      |
 | `GET`  | [`/api/needs_captcha`](https://www.reddit.com/dev/api/oauth#GET_api_needs_captcha)           | None                                                                                                                                                                      |
 | `POST` | [`/api/unfriend`](https://www.reddit.com/dev/api/oauth#POST_api_unfriend)                    | None                                                                                                                                                                      |
@@ -22,9 +22,9 @@ So far, **34** endpoints (out of 169) have been implemented.
 account
 -------
 
-| Method  | Endpoint                                                                         | Implementation                                                                                                                                     |
-|:-------:| -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `PATCH` | [`/api/v1/me/prefs`](https://www.reddit.com/dev/api/oauth#PATCH_api_v1_me_prefs) | [`UserReference.patchPrefs()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/UserReference.kt#L78) |
+| Method  | Endpoint                                                                         | Implementation                                                                                                                                             |
+|:-------:| -------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `PATCH` | [`/api/v1/me/prefs`](https://www.reddit.com/dev/api/oauth#PATCH_api_v1_me_prefs) | [`SelfUserReference.patchPrefs()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/SelfUserReference.kt#L46) |
 
 creddits
 --------
@@ -37,13 +37,13 @@ creddits
 edit
 ----
 
-| Method | Endpoint                                                                                                        | Implementation                                                                                                                                                             |
-|:------:| --------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `POST` | [`/api/del`](https://www.reddit.com/dev/api/oauth#POST_api_del)                                                 | [`PublicContributionReference.delete()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/PublicContributionReference.kt#L96) |
-| `POST` | [`/api/editusertext`](https://www.reddit.com/dev/api/oauth#POST_api_editusertext)                               | [`PublicContributionReference.edit()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/PublicContributionReference.kt#L104)  |
-| `POST` | [`/api/live/{thread}/delete_update`](https://www.reddit.com/dev/api/oauth#POST_api_live_{thread}_delete_update) | None                                                                                                                                                                       |
-| `POST` | [`/api/live/{thread}/strike_update`](https://www.reddit.com/dev/api/oauth#POST_api_live_{thread}_strike_update) | None                                                                                                                                                                       |
-| `POST` | [`/api/sendreplies`](https://www.reddit.com/dev/api/oauth#POST_api_sendreplies)                                 | None                                                                                                                                                                       |
+| Method | Endpoint                                                                                                        | Implementation                                                                                                                                                              |
+|:------:| --------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `POST` | [`/api/del`](https://www.reddit.com/dev/api/oauth#POST_api_del)                                                 | [`PublicContributionReference.delete()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/PublicContributionReference.kt#L100) |
+| `POST` | [`/api/editusertext`](https://www.reddit.com/dev/api/oauth#POST_api_editusertext)                               | [`PublicContributionReference.edit()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/PublicContributionReference.kt#L108)   |
+| `POST` | [`/api/live/{thread}/delete_update`](https://www.reddit.com/dev/api/oauth#POST_api_live_{thread}_delete_update) | None                                                                                                                                                                        |
+| `POST` | [`/api/live/{thread}/strike_update`](https://www.reddit.com/dev/api/oauth#POST_api_live_{thread}_strike_update) | None                                                                                                                                                                        |
+| `POST` | [`/api/sendreplies`](https://www.reddit.com/dev/api/oauth#POST_api_sendreplies)                                 | None                                                                                                                                                                        |
 
 flair
 -----
@@ -58,18 +58,18 @@ flair
 history
 -------
 
-| Method | Endpoint                                                                                       | Implementation                                                                                                                                   |
-|:------:| ---------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `GET`  | [`/user/{username}/{where}`](https://www.reddit.com/dev/api/oauth#GET_user_{username}_{where}) | [`UserReference.history()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/UserReference.kt#L109) |
+| Method | Endpoint                                                                                       | Implementation                                                                                                                                  |
+|:------:| ---------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| `GET`  | [`/user/{username}/{where}`](https://www.reddit.com/dev/api/oauth#GET_user_{username}_{where}) | [`UserReference.history()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/UserReference.kt#L67) |
 
 identity
 --------
 
-| Method | Endpoint                                                                             | Implementation                                                                                                                                   |
-|:------:| ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `GET`  | [`/api/v1/me`](https://www.reddit.com/dev/api/oauth#GET_api_v1_me)                   | [`UserReference.about()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/UserReference.kt#L29)    |
-| `GET`  | [`/api/v1/me/prefs`](https://www.reddit.com/dev/api/oauth#GET_api_v1_me_prefs)       | [`UserReference.prefs()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/UserReference.kt#L59)    |
-| `GET`  | [`/api/v1/me/trophies`](https://www.reddit.com/dev/api/oauth#GET_api_v1_me_trophies) | [`UserReference.trophies()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/UserReference.kt#L40) |
+| Method | Endpoint                                                                             | Implementation                                                                                                                                        |
+|:------:| ------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `GET`  | [`/api/v1/me`](https://www.reddit.com/dev/api/oauth#GET_api_v1_me)                   | [`UserReference.about()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/UserReference.kt#L23)         |
+| `GET`  | [`/api/v1/me/prefs`](https://www.reddit.com/dev/api/oauth#GET_api_v1_me_prefs)       | [`SelfUserReference.prefs()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/SelfUserReference.kt#L32) |
+| `GET`  | [`/api/v1/me/trophies`](https://www.reddit.com/dev/api/oauth#GET_api_v1_me_trophies) | [`UserReference.trophies()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/UserReference.kt#L34)      |
 
 livemanage
 ----------
@@ -226,21 +226,21 @@ read
 
 | Method | Endpoint                                                                                                           | Implementation                                                                                                                                                          |
 |:------:| ------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `GET`  | [`/api/multi/mine`](https://www.reddit.com/dev/api/oauth#GET_api_multi_mine)                                       | [`UserReference.listMultis()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/UserReference.kt#L139)                     |
-| `GET`  | [`/api/multi/user/{username}`](https://www.reddit.com/dev/api/oauth#GET_api_multi_user_{username})                 | [`UserReference.listMultis()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/UserReference.kt#L139)                     |
-| `GET`  | [`/api/multi/{multipath}`](https://www.reddit.com/dev/api/oauth#GET_api_multi_{multipath})                         | [`MultiredditReference.about()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/MultiredditReference.kt#L46)             |
-| `GET`  | [`/api/multi/{multipath}/description`](https://www.reddit.com/dev/api/oauth#GET_api_multi_{multipath}_description) | [`MultiredditReference.description()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/MultiredditReference.kt#L54)       |
-| `PUT`  | [`/api/multi/{multipath}/description`](https://www.reddit.com/dev/api/oauth#PUT_api_multi_{multipath}_description) | [`MultiredditReference.updateDescription()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/MultiredditReference.kt#L63) |
-| `GET`  | [`/api/multi/{multipath}/r/{srname}`](https://www.reddit.com/dev/api/oauth#GET_api_multi_{multipath}_r_{srname})   | [`MultiredditReference.subredditInfo()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/MultiredditReference.kt#L123)    |
-| `GET`  | [`/api/v1/user/{username}/trophies`](https://www.reddit.com/dev/api/oauth#GET_api_v1_user_{username}_trophies)     | [`UserReference.trophies()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/UserReference.kt#L40)                        |
+| `GET`  | [`/api/multi/mine`](https://www.reddit.com/dev/api/oauth#GET_api_multi_mine)                                       | [`UserReference.listMultis()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/UserReference.kt#L84)                      |
+| `GET`  | [`/api/multi/user/{username}`](https://www.reddit.com/dev/api/oauth#GET_api_multi_user_{username})                 | [`UserReference.listMultis()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/UserReference.kt#L84)                      |
+| `GET`  | [`/api/multi/{multipath}`](https://www.reddit.com/dev/api/oauth#GET_api_multi_{multipath})                         | [`MultiredditReference.about()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/MultiredditReference.kt#L40)             |
+| `GET`  | [`/api/multi/{multipath}/description`](https://www.reddit.com/dev/api/oauth#GET_api_multi_{multipath}_description) | [`MultiredditReference.description()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/MultiredditReference.kt#L48)       |
+| `PUT`  | [`/api/multi/{multipath}/description`](https://www.reddit.com/dev/api/oauth#PUT_api_multi_{multipath}_description) | [`MultiredditReference.updateDescription()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/MultiredditReference.kt#L57) |
+| `GET`  | [`/api/multi/{multipath}/r/{srname}`](https://www.reddit.com/dev/api/oauth#GET_api_multi_{multipath}_r_{srname})   | [`MultiredditReference.subredditInfo()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/MultiredditReference.kt#L113)    |
+| `GET`  | [`/api/v1/user/{username}/trophies`](https://www.reddit.com/dev/api/oauth#GET_api_v1_user_{username}_trophies)     | [`UserReference.trophies()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/UserReference.kt#L34)                        |
 | `GET`  | [`/comments/{article}`](https://www.reddit.com/dev/api/oauth#GET_comments_{article})                               | [`SubmissionReference.comments()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/SubmissionReference.kt#L17)            |
-| `GET`  | [`/hot`](https://www.reddit.com/dev/api/oauth#GET_hot)                                                             | [`SubredditReference.posts()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/SubredditReference.kt#L30)                 |
-| `GET`  | [`/new`](https://www.reddit.com/dev/api/oauth#GET_new)                                                             | [`SubredditReference.posts()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/SubredditReference.kt#L30)                 |
-| `GET`  | [`/r/{subreddit}/about`](https://www.reddit.com/dev/api/oauth#GET_r_{subreddit}_about)                             | [`SubredditReference.about()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/SubredditReference.kt#L24)                 |
-| `GET`  | [`/random`](https://www.reddit.com/dev/api/oauth#GET_random)                                                       | [`RedditClient.randomSubreddit()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/RedditClient.kt#L192)                             |
-| `GET`  | [`/rising`](https://www.reddit.com/dev/api/oauth#GET_rising)                                                       | [`SubredditReference.posts()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/SubredditReference.kt#L30)                 |
-| `GET`  | [`/user/{username}/about`](https://www.reddit.com/dev/api/oauth#GET_user_{username}_about)                         | [`UserReference.about()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/UserReference.kt#L29)                           |
-| `GET`  | [`/{sort}`](https://www.reddit.com/dev/api/oauth#GET_{sort})                                                       | [`SubredditReference.posts()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/SubredditReference.kt#L30)                 |
+| `GET`  | [`/hot`](https://www.reddit.com/dev/api/oauth#GET_hot)                                                             | [`SubredditReference.posts()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/SubredditReference.kt#L29)                 |
+| `GET`  | [`/new`](https://www.reddit.com/dev/api/oauth#GET_new)                                                             | [`SubredditReference.posts()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/SubredditReference.kt#L29)                 |
+| `GET`  | [`/r/{subreddit}/about`](https://www.reddit.com/dev/api/oauth#GET_r_{subreddit}_about)                             | [`SubredditReference.about()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/SubredditReference.kt#L23)                 |
+| `GET`  | [`/random`](https://www.reddit.com/dev/api/oauth#GET_random)                                                       | [`RedditClient.randomSubreddit()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/RedditClient.kt#L260)                             |
+| `GET`  | [`/rising`](https://www.reddit.com/dev/api/oauth#GET_rising)                                                       | [`SubredditReference.posts()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/SubredditReference.kt#L29)                 |
+| `GET`  | [`/user/{username}/about`](https://www.reddit.com/dev/api/oauth#GET_user_{username}_about)                         | [`UserReference.about()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/UserReference.kt#L23)                           |
+| `GET`  | [`/{sort}`](https://www.reddit.com/dev/api/oauth#GET_{sort})                                                       | [`SubredditReference.posts()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/SubredditReference.kt#L29)                 |
 | `GET`  | [`/about/{location}`](https://www.reddit.com/dev/api/oauth#GET_about_{location})                                   | None                                                                                                                                                                    |
 | `GET`  | [`/about/{where}`](https://www.reddit.com/dev/api/oauth#GET_about_{where})                                         | None                                                                                                                                                                    |
 | `GET`  | [`/api/info`](https://www.reddit.com/dev/api/oauth#GET_api_info)                                                   | None                                                                                                                                                                    |
@@ -282,8 +282,8 @@ save
 
 | Method | Endpoint                                                                                 | Implementation                                                                                                                                                               |
 |:------:| ---------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `POST` | [`/api/save`](https://www.reddit.com/dev/api/oauth#POST_api_save)                        | [`PublicContributionReference.setSaved()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/PublicContributionReference.kt#L65) |
-| `POST` | [`/api/unsave`](https://www.reddit.com/dev/api/oauth#POST_api_unsave)                    | [`PublicContributionReference.setSaved()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/PublicContributionReference.kt#L65) |
+| `POST` | [`/api/save`](https://www.reddit.com/dev/api/oauth#POST_api_save)                        | [`PublicContributionReference.setSaved()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/PublicContributionReference.kt#L66) |
+| `POST` | [`/api/unsave`](https://www.reddit.com/dev/api/oauth#POST_api_unsave)                    | [`PublicContributionReference.setSaved()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/PublicContributionReference.kt#L66) |
 | `GET`  | [`/api/saved_categories`](https://www.reddit.com/dev/api/oauth#GET_api_saved_categories) | None                                                                                                                                                                         |
 | `POST` | [`/api/store_visits`](https://www.reddit.com/dev/api/oauth#POST_api_store_visits)        | None                                                                                                                                                                         |
 
@@ -292,7 +292,7 @@ submit
 
 | Method | Endpoint                                                                                          | Implementation                                                                                                                                           |
 |:------:| ------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `POST` | [`/api/submit`](https://www.reddit.com/dev/api/oauth#POST_api_submit)                             | [`SubredditReference.submit()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/SubredditReference.kt#L49) |
+| `POST` | [`/api/submit`](https://www.reddit.com/dev/api/oauth#POST_api_submit)                             | [`SubredditReference.submit()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/SubredditReference.kt#L48) |
 | `POST` | [`/api/live/create`](https://www.reddit.com/dev/api/oauth#POST_api_live_create)                   | None                                                                                                                                                     |
 | `POST` | [`/api/live/{thread}/update`](https://www.reddit.com/dev/api/oauth#POST_api_live_{thread}_update) | None                                                                                                                                                     |
 | `GET`  | [`/api/submit_text`](https://www.reddit.com/dev/api/oauth#GET_api_submit_text)                    | None                                                                                                                                                     |
@@ -302,14 +302,14 @@ subscribe
 
 |  Method  | Endpoint                                                                                                            | Implementation                                                                                                                                                         |
 |:--------:| ------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-|  `POST`  | [`/api/multi/copy`](https://www.reddit.com/dev/api/oauth#POST_api_multi_copy)                                       | [`MultiredditReference.copyTo()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/MultiredditReference.kt#L87)           |
-|  `POST`  | [`/api/multi/rename`](https://www.reddit.com/dev/api/oauth#POST_api_multi_rename)                                   | [`MultiredditReference.rename()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/MultiredditReference.kt#L95)           |
-| `DELETE` | [`/api/multi/{multipath}`](https://www.reddit.com/dev/api/oauth#DELETE_api_multi_{multipath})                       | [`MultiredditReference.delete()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/MultiredditReference.kt#L75)           |
-|  `POST`  | [`/api/multi/{multipath}`](https://www.reddit.com/dev/api/oauth#POST_api_multi_{multipath})                         | [`MultiredditReference.createOrUpdate()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/MultiredditReference.kt#L31)   |
-|  `PUT`   | [`/api/multi/{multipath}`](https://www.reddit.com/dev/api/oauth#PUT_api_multi_{multipath})                          | [`MultiredditReference.createOrUpdate()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/MultiredditReference.kt#L31)   |
-| `DELETE` | [`/api/multi/{multipath}/r/{srname}`](https://www.reddit.com/dev/api/oauth#DELETE_api_multi_{multipath}_r_{srname}) | [`MultiredditReference.removeSubreddit()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/MultiredditReference.kt#L148) |
-|  `PUT`   | [`/api/multi/{multipath}/r/{srname}`](https://www.reddit.com/dev/api/oauth#PUT_api_multi_{multipath}_r_{srname})    | [`MultiredditReference.addSubreddit()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/MultiredditReference.kt#L132)    |
-|  `POST`  | [`/api/subscribe`](https://www.reddit.com/dev/api/oauth#POST_api_subscribe)                                         | None                                                                                                                                                                   |
+|  `POST`  | [`/api/multi/copy`](https://www.reddit.com/dev/api/oauth#POST_api_multi_copy)                                       | [`MultiredditReference.copyTo()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/MultiredditReference.kt#L81)           |
+|  `POST`  | [`/api/multi/rename`](https://www.reddit.com/dev/api/oauth#POST_api_multi_rename)                                   | [`MultiredditReference.rename()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/MultiredditReference.kt#L89)           |
+| `DELETE` | [`/api/multi/{multipath}`](https://www.reddit.com/dev/api/oauth#DELETE_api_multi_{multipath})                       | [`MultiredditReference.delete()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/MultiredditReference.kt#L69)           |
+|  `POST`  | [`/api/multi/{multipath}`](https://www.reddit.com/dev/api/oauth#POST_api_multi_{multipath})                         | [`MultiredditReference.createOrUpdate()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/MultiredditReference.kt#L29)   |
+|  `PUT`   | [`/api/multi/{multipath}`](https://www.reddit.com/dev/api/oauth#PUT_api_multi_{multipath})                          | [`MultiredditReference.createOrUpdate()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/MultiredditReference.kt#L29)   |
+| `DELETE` | [`/api/multi/{multipath}/r/{srname}`](https://www.reddit.com/dev/api/oauth#DELETE_api_multi_{multipath}_r_{srname}) | [`MultiredditReference.removeSubreddit()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/MultiredditReference.kt#L135) |
+|  `PUT`   | [`/api/multi/{multipath}/r/{srname}`](https://www.reddit.com/dev/api/oauth#PUT_api_multi_{multipath}_r_{srname})    | [`MultiredditReference.addSubreddit()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/MultiredditReference.kt#L123)    |
+|  `POST`  | [`/api/subscribe`](https://www.reddit.com/dev/api/oauth#POST_api_subscribe)                                         | [`SubredditReference.setSubscribed()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/SubredditReference.kt#L82)        |
 | `DELETE` | [`/api/v1/me/friends/{username}`](https://www.reddit.com/dev/api/oauth#DELETE_api_v1_me_friends_{username})         | None                                                                                                                                                                   |
 |  `PUT`   | [`/api/v1/me/friends/{username}`](https://www.reddit.com/dev/api/oauth#PUT_api_v1_me_friends_{username})            | None                                                                                                                                                                   |
 
@@ -318,7 +318,7 @@ vote
 
 | Method | Endpoint                                                          | Implementation                                                                                                                                                              |
 |:------:| ----------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `POST` | [`/api/vote`](https://www.reddit.com/dev/api/oauth#POST_api_vote) | [`PublicContributionReference.setVote()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/PublicContributionReference.kt#L39) |
+| `POST` | [`/api/vote`](https://www.reddit.com/dev/api/oauth#POST_api_vote) | [`PublicContributionReference.setVote()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/PublicContributionReference.kt#L40) |
 
 wikiedit
 --------

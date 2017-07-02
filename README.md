@@ -3,7 +3,7 @@
 [![travis-ci build status](https://img.shields.io/travis/thatJavaNerd/JRAW.svg)](https://travis-ci.org/thatJavaNerd/JRAW)
 [![Latest release](https://img.shields.io/github/release/thatJavaNerd/JRAW.svg)](https://bintray.com/thatjavanerd/maven/JRAW/_latestVersion)
 [![Kotlin 1.1.3](https://img.shields.io/badge/Kotlin-1.1.3-blue.svg)](http://kotlinlang.org)
-[![API coverage](https://img.shields.io/badge/API_coverage-20%25-9C27B0.svg)](https://github.com/thatJavaNerd/JRAW/blob/kotlin/ENDPOINTS.md)
+[![API coverage](https://img.shields.io/badge/API_coverage-21%25-9C27B0.svg)](https://github.com/thatJavaNerd/JRAW/blob/kotlin/ENDPOINTS.md)
 [![Codecov branch](https://img.shields.io/codecov/c/github/thatJavaNerd/JRAW/kotlin.svg)](https://codecov.io/gh/thatJavaNerd/JRAW/branch/kotlin)
 
 This branch is a rewrite of the library in [Kotlin](https://kotlinlang.org/). Please note that this branch is not even close to being production ready! There are still tons of missing features from JRAW v0.9.0.

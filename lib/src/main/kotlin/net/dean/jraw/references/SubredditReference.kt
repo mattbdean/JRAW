@@ -70,4 +70,28 @@ class SubredditReference internal constructor(reddit: RedditClient, subreddit: S
 
         return JrawUtils.navigateJson(res.json, "json", "data", "id").asText()
     }
+
+    /** Alias to `setSubscribed(true)` */
+    fun subscribe() = setSubscribed(true)
+
+    /** Alias to `setSubscribed(false)` */
+    fun unsubscribe() = setSubscribed(false)
+
+    @EndpointImplementation(Endpoint.POST_SUBSCRIBE)
+    fun setSubscribed(subscribe: Boolean) {
+        val body = mutableMapOf(
+            "sr_name" to subject,
+            "action" to if (subscribe) "sub" else "unsub"
+        )
+
+        if (subscribe)
+            // "prevent automatically subscribing the user to the current set of defaults when they take their first
+            // subscription action"
+            body["skip_initial_defaults"] = "true"
+
+        // Response is an empty JSON object
+        reddit.request {
+            it.endpoint(Endpoint.POST_SUBSCRIBE).post(body)
+        }
+    }
 }

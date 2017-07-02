@@ -27,4 +27,14 @@ class SubredditReferenceTest : Spek({
             }
         }
     }
+
+    describe("subscribe/unsubscribe") {
+        it("should subscribe the user to the specific subreddit") {
+            val pics = reddit.subreddit("pics")
+            pics.subscribe()
+            pics.about().isUserIsSubscriber.should.be.`true`
+            pics.unsubscribe()
+            pics.about().isUserIsSubscriber.should.be.`false`
+        }
+    }
 })
