@@ -14,37 +14,20 @@ import org.jetbrains.spek.api.dsl.it
 import java.util.*
 
 class OAuthHelperTest: Spek({
-    describe("script") {
-        it("should produce a RedditClient authenticated with a script app") {
-            ensureAuthenticated(OAuthHelper.script(CredentialsUtil.script, newOkHttpAdapter()))
+    describe("automatic") {
+        it("should produce a RedditClient authenticated for a script app") {
+            ensureAuthenticated(OAuthHelper.automatic(newOkHttpAdapter(), CredentialsUtil.script))
         }
 
-        it("should throw an exception when given a non-script Credentials") {
-            expectException(IllegalArgumentException::class) {
-                OAuthHelper.script(CredentialsUtil.app, newOkHttpAdapter())
-            }
-        }
-    }
-
-    describe("installedApp") {
-        it("should return a fresh StatefulAuthHelper") {
-            OAuthHelper.installedApp(CredentialsUtil.app, newOkHttpAdapter()).authStatus
-                .should.equal(StatefulAuthHelper.Status.INIT)
+        it("should produce a RedditClient authenticated for a userless Credentials") {
+            ensureAuthenticated(OAuthHelper.automatic(newOkHttpAdapter(), CredentialsUtil.script))
         }
 
-        it("should throw an Exception when given a non-installedApp Credentials") {
-            expectException(IllegalArgumentException::class) {
-                OAuthHelper.installedApp(CredentialsUtil.script, newOkHttpAdapter())
-            }
-        }
-    }
-
-    describe("applicationOnly") {
         it("should produce an authorized RedditClient for a userlessApp Credentials") {
             val credentials = Credentials.userlessApp(CredentialsUtil.app.clientId, UUID.randomUUID())
 
             // Create a RedditClient with application only and send a request to make sure it works properly
-            val reddit = OAuthHelper.applicationOnly(credentials, newOkHttpAdapter())
+            val reddit = OAuthHelper.automatic(newOkHttpAdapter(), credentials)
             ensureAuthenticated(reddit)
             reddit.authManager.renew()
             ensureAuthenticated(reddit)
@@ -52,16 +35,29 @@ class OAuthHelperTest: Spek({
         }
 
         it("should produce an authorized RedditClient for a userless Credentials") {
-            ensureAuthenticated(OAuthHelper.applicationOnly(CredentialsUtil.applicationOnly, newOkHttpAdapter()))
-            val reddit = OAuthHelper.applicationOnly(CredentialsUtil.applicationOnly, newOkHttpAdapter())
+            ensureAuthenticated(OAuthHelper.automatic(newOkHttpAdapter(), CredentialsUtil.applicationOnly))
+            val reddit = OAuthHelper.automatic(newOkHttpAdapter(), CredentialsUtil.applicationOnly)
             ensureAuthenticated(reddit)
             reddit.authManager.renew()
             ensureAuthenticated(reddit)
         }
 
-        it("should throw an Exception when given a non-userless Credentials") {
+        it("should throw an Exception when given Credentials for an app") {
             expectException(IllegalArgumentException::class) {
-                OAuthHelper.applicationOnly(CredentialsUtil.script, newOkHttpAdapter())
+                OAuthHelper.automatic(newOkHttpAdapter(), CredentialsUtil.app)
+            }
+        }
+    }
+
+    describe("interactive") {
+        it("should return a fresh StatefulAuthHelper") {
+            OAuthHelper.interactive(newOkHttpAdapter(), CredentialsUtil.app).authStatus
+                .should.equal(StatefulAuthHelper.Status.INIT)
+        }
+
+        it("should throw an Exception when given a non-installedApp Credentials") {
+            expectException(IllegalArgumentException::class) {
+                OAuthHelper.interactive(newOkHttpAdapter(), CredentialsUtil.script)
             }
         }
     }

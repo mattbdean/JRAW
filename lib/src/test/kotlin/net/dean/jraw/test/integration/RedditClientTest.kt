@@ -30,7 +30,7 @@ class RedditClientTest : Spek({
 
     it("shouldn't log HTTP requests when logHttp=false") {
         val baos = ByteArrayOutputStream()
-        val reddit = OAuthHelper.script(CredentialsUtil.script, newOkHttpAdapter())
+        val reddit = OAuthHelper.automatic(newOkHttpAdapter(), CredentialsUtil.script)
 
         // Give the RedditClient our logger
         reddit.logger = SimpleHttpLogger(out = PrintStream(baos))
@@ -90,7 +90,7 @@ class RedditClientTest : Spek({
 
     describe("autoRenew") {
         it("should request a new token when the old one has expired") {
-            val reddit = OAuthHelper.script(CredentialsUtil.script, newOkHttpAdapter())
+            val reddit = OAuthHelper.automatic(newOkHttpAdapter(),  CredentialsUtil.script)
             val initialAccessToken = reddit.authManager.accessToken
 
             fun doRequest() {

@@ -24,7 +24,7 @@ class SimpleHttpLoggerTest : Spek({
     fun loggerOutput() = String(baos.toByteArray(), StandardCharsets.UTF_8).split("\n").dropLast(1)
 
     beforeGroup {
-        reddit = OAuthHelper.script(CredentialsUtil.script, newOkHttpAdapter())
+        reddit = OAuthHelper.automatic(newOkHttpAdapter(), CredentialsUtil.script)
     }
 
     beforeEachTest {

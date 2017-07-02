@@ -13,12 +13,12 @@ object TestConfig {
     /** Lazy-initialized RedditClient authorized by a script app */
     private val logger = SimpleHttpLogger()
     val reddit: RedditClient by lazy {
-        val r = OAuthHelper.script(CredentialsUtil.script, newOkHttpAdapter())
+        val r = OAuthHelper.automatic(newOkHttpAdapter(), CredentialsUtil.script)
         r.logger = logger
         r
     }
     val redditUserless: RedditClient by lazy {
-        val r = OAuthHelper.applicationOnly(CredentialsUtil.applicationOnly, newOkHttpAdapter())
+        val r = OAuthHelper.automatic(newOkHttpAdapter(), CredentialsUtil.applicationOnly)
         r.logger = logger
         r
     }

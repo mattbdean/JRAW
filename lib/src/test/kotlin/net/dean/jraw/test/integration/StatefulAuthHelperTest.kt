@@ -60,7 +60,7 @@ private fun createWebClient(): WebClient {
 private fun getUrlFrom(page: HtmlPage): String = page.webResponse.webRequest.url.toExternalForm()
 
 private fun doBrowserLogin(vararg scopes: String = arrayOf("identity")): Pair<StatefulAuthHelper, HtmlPage> {
-    val helper = OAuthHelper.installedApp(CredentialsUtil.app, newOkHttpAdapter())
+    val helper = OAuthHelper.interactive(newOkHttpAdapter(), CredentialsUtil.app)
 
     // Test state change once we get the authorization URL
     helper.authStatus.should.equal(StatefulAuthHelper.Status.INIT)

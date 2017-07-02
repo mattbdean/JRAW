@@ -5,24 +5,35 @@ import net.dean.jraw.http.HttpAdapter
 import net.dean.jraw.http.HttpRequest
 import net.dean.jraw.http.NetworkException
 
+/**
+ * This class helps create authenticated RedditClient instances.
+ *
+ * There are two main types of authentication: automatic and interactive. Automatic authentication can be done without
+ * asking the user, while interactive authentication requires the user to log in to their account and authorize your
+ * reddit OAuth2 app to access their account.
+ *
+ * Script apps and those using application-only (userless) mode are the only apps that qualify for automatic
+ * authentication.
+ */
 object OAuthHelper {
-    const val HOST_WWW = "www.reddit.com"
-
-    @JvmStatic fun script(creds: Credentials, http: HttpAdapter): RedditClient {
-        return RedditClient(http, scriptOAuthData(creds, http), creds)
+    @JvmStatic fun automatic(http: HttpAdapter, creds: Credentials): RedditClient {
+        return if (creds.authMethod.isUserless)
+            RedditClient(http, applicationOnlyOAuthData(http, creds), creds)
+        else if (creds.authMethod == AuthMethod.SCRIPT)
+            RedditClient(http, scriptOAuthData(http, creds), creds)
+        else
+            throw IllegalArgumentException("AuthMethod ${creds.authMethod} is not eligible for automatic authentication")
     }
 
-    @JvmStatic fun applicationOnly(creds: Credentials, http: HttpAdapter): RedditClient {
-        return RedditClient(http, applicationOnlyOAuthData(creds, http), creds)
+    @JvmStatic fun interactive(http: HttpAdapter, creds: Credentials): StatefulAuthHelper {
+        return when (creds.authMethod) {
+            AuthMethod.APP -> StatefulAuthHelper(http, creds)
+            AuthMethod.WEBAPP -> TODO("Web apps aren't supported yet")
+            else -> throw IllegalArgumentException("AuthMethod ${creds.authMethod} should use automatic authentication")
+        }
     }
 
-    @JvmStatic fun installedApp(creds: Credentials, http: HttpAdapter): StatefulAuthHelper {
-        if (creds.authMethod != AuthMethod.APP)
-            throw IllegalArgumentException("This function is for installed apps only")
-        return StatefulAuthHelper(http, creds)
-    }
-
-    @JvmStatic internal fun scriptOAuthData(creds: Credentials, http: HttpAdapter): OAuthData {
+    @JvmStatic internal fun scriptOAuthData(http: HttpAdapter, creds: Credentials): OAuthData {
         if (creds.authMethod != AuthMethod.SCRIPT)
             throw IllegalArgumentException("This function is for script apps only")
 
@@ -43,7 +54,7 @@ object OAuthHelper {
         }
     }
 
-    @JvmStatic internal fun applicationOnlyOAuthData(creds: Credentials, http: HttpAdapter): OAuthData {
+    @JvmStatic internal fun applicationOnlyOAuthData(http: HttpAdapter, creds: Credentials): OAuthData {
         if (!creds.authMethod.isUserless)
             throw IllegalArgumentException("${creds.authMethod} is not a userless authentication method")
 
@@ -57,8 +68,7 @@ object OAuthHelper {
             postBody.put("device_id", creds.deviceId.toString())
 
         return http.execute(HttpRequest.Builder()
-            .host(HOST_WWW)
-            .path("/api/v1/access_token")
+            .url("https://www.reddit.com/api/v1/access_token")
             .post(postBody)
             .basicAuth(creds.clientId to creds.clientSecret)
             .build()).deserialize()

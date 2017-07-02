@@ -61,9 +61,9 @@ class AuthManager(private val http: HttpAdapter, private val credentials: Creden
      */
     fun renew() {
         val newData: OAuthData = if (authMethod == AuthMethod.SCRIPT) {
-            OAuthHelper.scriptOAuthData(credentials, http)
+            OAuthHelper.scriptOAuthData(http, credentials)
         } else if (authMethod.isUserless) {
-            OAuthHelper.applicationOnlyOAuthData(credentials, http)
+            OAuthHelper.applicationOnlyOAuthData(http, credentials)
         } else if (refreshToken != null) {
             sendRenewalRequest(refreshToken!!)
         } else {
