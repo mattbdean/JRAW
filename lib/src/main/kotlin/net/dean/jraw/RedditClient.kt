@@ -277,6 +277,10 @@ class RedditClient(
         return authenticatedUsername ?: throw IllegalStateException("Expected an authenticated user")
     }
 
+    override fun toString(): String {
+        return "RedditClient(authenticatedUsername=$authenticatedUsername)"
+    }
+
     companion object {
         /** Amount of requests per second reddit allows for OAuth2 apps (equal to 1) */
         const val RATE_LIMIT = 1L
