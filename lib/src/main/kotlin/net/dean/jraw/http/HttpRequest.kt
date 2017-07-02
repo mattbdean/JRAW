@@ -11,7 +11,7 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 /**
- * Models a HTTP request. Instanes are created using the [builder pattern][Builder]
+ * Models an HTTP request. Instances are created using the [builder pattern][Builder]
  *
  * ```
  * val request = HttpRequest.Builder()
@@ -41,7 +41,7 @@ class HttpRequest private constructor(
 
     companion object {
         /** This Pattern will match a URI parameter. For example, /api/{param1}/{param2}  */
-        private val PATH_PARAM_PATTERN = Pattern.compile("\\{(.*?)\\}")
+        private val PATH_PARAM_PATTERN = Pattern.compile("\\{(.*?)}")
 
         private fun buildUrl(b: Builder): String {
             if (b.url != null) return b.url!!

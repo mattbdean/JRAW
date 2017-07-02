@@ -6,9 +6,7 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer
 import net.dean.jraw.http.oauth.OAuthData
 
-class OAuthDataDeserializer(valueClass: Class<OAuthData>?) : StdDeserializer<OAuthData>(valueClass) {
-    constructor(): this(OAuthData::class.java)
-
+class OAuthDataDeserializer : StdDeserializer<OAuthData>(OAuthData::class.java) {
     override fun deserialize(p: JsonParser, ctxt: DeserializationContext?): OAuthData {
         val node: JsonNode = p.codec.readTree(p)
         return OAuthData(

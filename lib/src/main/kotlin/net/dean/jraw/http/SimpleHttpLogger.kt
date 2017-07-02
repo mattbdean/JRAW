@@ -27,11 +27,11 @@ import java.util.concurrent.atomic.AtomicInteger
  *
  * @see DEFAULT_LINE_LENGTH
  */
-class SimpleHttpLogger(
-    /** Where to print messages to */
-    val out: PrintStream = System.out,
+class SimpleHttpLogger @JvmOverloads constructor(
     /** The maximum amount of characters */
-    val maxLineLength: Int = DEFAULT_LINE_LENGTH
+    val maxLineLength: Int = DEFAULT_LINE_LENGTH,
+    /** Where to print messages to */
+    val out: PrintStream = System.out
 ) : HttpLogger {
     private val counter: AtomicInteger = AtomicInteger(1)
 

@@ -20,13 +20,16 @@ import java.util.concurrent.TimeUnit
 /**
  * Specialized class for sending requests to [oauth.reddit.com](https://www.reddit.com/dev/api/oauth).
  *
- * This class can also be used to send HTTP requests to other domains, but it is recommended to just use an
- * [HttpAdapter] to do that.
- *
  * RedditClients **must** be authenticated before they can be of any use. The
  * [OAuthHelper][net.dean.jraw.http.oauth.OAuthHelper] class can help you get authenticated.
  *
- * By default, HTTP requests and responses created through this class are logged with [logger]. You can provide your own
+ * **RedditClients authenticated with non-script OAuth2 apps are expensive to create** since it requires sending an
+ * additional HTTP request. **Creating an instance in an Android app should be done off the main thread**.
+ *
+ * This class can also be used to send HTTP requests to other domains, but it is recommended to just use an
+ * [HttpAdapter] to do that since all requests are rate limited.
+ *
+ * By default, all network activity that originates from this class are logged with [logger]. You can provide your own
  * [HttpLogger] implementation or turn it off entirely using [logHttp]
  *
  * Any requests sent by RedditClients are rate-limited on a per-instance basis. That means that it is possible to
@@ -38,23 +41,45 @@ import java.util.concurrent.TimeUnit
  * this by changing [retryLimit].
  */
 class RedditClient(
+    /** How this client will send HTTP requests */
     val http: HttpAdapter,
     initialOAuthData: OAuthData,
     creds: Credentials
 ) {
+    /** Every HTTP request/response will be logged with this, unless [logHttp] is false */
     var logger: HttpLogger = SimpleHttpLogger()
+
+    /** Whether or not to log HTTP requests */
     var logHttp = true
 
-    var retryLimit: Int = 5 // arbitrary number
+    /**
+     * How many times this client will retry requests that result in 5XX erorr codes. Defaults to 5. Set to a number
+     * less than 1 to disable this functionality.
+     */
+    var retryLimit: Int = DEFAULT_RETRY_LIMIT
 
+    /**
+     * How this client will determine when it can send a request.
+     *
+     * By default, this RateLimiter is a [LeakyBucketRateLimiter] with a capacity of 5 permits and refills them at a
+     * rate of 1 token per second.
+     */
     var rateLimiter: RateLimiter = LeakyBucketRateLimiter(BURST_LIMIT, RATE_LIMIT, TimeUnit.SECONDS)
 
+    /** If true, any time a request is made, the access token will be renewed if necessary. */
     var autoRenew = true
+
+    /** How this client manages (re)authentication */
     var authManager = AuthManager(http, creds)
 
-    /** The logged-in user, or null if this RedditClient is authenticated using application-only credentials */
+    /**
+     * The logged-in user, or null if this RedditClient is authorized using a non-script app
+     *
+     * @see requireAuthenticatedUser
+     */
     val username: String? = creds.username
 
+    /** The type of OAuth2 app used to authenticate this client */
     val authMethod: AuthMethod = creds.authMethod
 
     private val authenticatedUsername: String?
@@ -121,18 +146,17 @@ class RedditClient(
     }
 
     /**
-     * Uses the [HttpAdapter] to execute a synchronous HTTP request and returns its JSON value.
-     *
-     * Throws a [NetworkException] if the response is out of the range of 200..299.
-     *
-     * Throws a [RedditException] if an API error if the response comes back unsuccessful and a typical error structure
-     * is detected in the response.
+     * Uses the [HttpAdapter] to execute a synchronous HTTP request
      *
      * ```
      * val response = reddit.request(reddit.requestStub()
      *     .path("/api/v1/me")
      *     .build())
      * ```
+     *
+     * @throws NetworkException If the response's code is out of the range of 200..299.
+     * @throws RedditException if an API error if the response comes back unsuccessful and a typical error structure is
+     * detected in the response.
      */
     @Throws(NetworkException::class, RedditException::class)
     fun request(r: HttpRequest): HttpResponse = request(r, retryCount = 0)
@@ -154,8 +178,8 @@ class RedditClient(
      * }
      * ```
      *
-     * This will execute `POST https://oauth.reddit.com/api/v1/foo` with the header 'X-Foo: Bar' and a form body of
-     * `baz=qux`.
+     * This will execute `POST https://oauth.reddit.com/api/v1/foo` with the headers 'X-Foo: Bar' and
+     * 'Authorization: bearer $accessToken' and a form body of `baz=qux`.
      *
      * For reference, this same request can be executed like this:
      *
@@ -170,16 +194,25 @@ class RedditClient(
      *
      * @see requestStub
      */
-    @Throws(NetworkException::class)
+    @Throws(NetworkException::class, RedditException::class)
     fun request(configure: (stub: HttpRequest.Builder) -> HttpRequest.Builder) = request(configure(requestStub()).build())
 
-    /** Gets a UserReference for the currently logged in user */
+    /**
+     * Creates a UserReference for the currently logged in user.
+     *
+     * @throws IllegalStateException If there is no authenticated user
+     */
+    @Throws(IllegalStateException::class)
     fun me() = SelfUserReference(this)
 
-    /** Gets a UserReference for any user */
+    /**
+     * Creates a UserReference for any user
+     *
+     * @see me
+     */
     fun user(name: String) = OtherUserReference(this, name)
 
-    /** Gets a [Paginator.Builder] to iterate posts on the front page */
+    /** Creates a [Paginator.Builder] to iterate posts on the front page */
     fun frontPage() = DefaultPaginator.Builder<Submission>(this, baseUrl = "", sortingAsPathParameter = true)
 
     /**
@@ -213,8 +246,9 @@ class RedditClient(
         SubredditReference(this, arrayOf(first, second, *others).joinToString("+")).posts()
 
     /**
-     * Gets a random subreddit. Although this method is decorated with [EndpointImplementation], it does not execute a
-     * HTTP request and is not a blocking call. This method is equivalent to
+     * Creates a SubredditReference for a random subreddit. Although this method is decorated with
+     * [EndpointImplementation], it does not execute an HTTP request and is not a blocking call. This method is
+     * equivalent to
      *
      * ```kotlin
      * reddit.subreddit("random")
@@ -232,7 +266,9 @@ class RedditClient(
     fun submission(id: String) = SubmissionReference(this, id)
 
     /**
-     * Returns the name of the logged-in user, or throws an IllegalStateException if there is none.
+     * Returns the name of the logged-in user
+     *
+     * @throws IllegalStateException If there is no logged-in user
      */
     fun requireAuthenticatedUser(): String {
         if (authMethod.isUserless)
@@ -242,8 +278,9 @@ class RedditClient(
     }
 
     companion object {
-        /** Amount of requests per second reddit allows for OAuth2 apps */
+        /** Amount of requests per second reddit allows for OAuth2 apps (equal to 1) */
         const val RATE_LIMIT = 1L
-        const val BURST_LIMIT = 5L
+        private const val BURST_LIMIT = 5L
+        private const val DEFAULT_RETRY_LIMIT = 5
     }
 }

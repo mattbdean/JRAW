@@ -33,7 +33,7 @@ class RedditClientTest : Spek({
         val reddit = OAuthHelper.script(CredentialsUtil.script, newOkHttpAdapter())
 
         // Give the RedditClient our logger
-        reddit.logger = SimpleHttpLogger(PrintStream(baos))
+        reddit.logger = SimpleHttpLogger(out = PrintStream(baos))
         reddit.logHttp = false
 
         // Make a request, which would trigger writing to the BAOS if logHttp is being ignored

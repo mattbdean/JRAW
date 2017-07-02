@@ -29,7 +29,7 @@ class SimpleHttpLoggerTest : Spek({
 
     beforeEachTest {
         baos = ByteArrayOutputStream()
-        reddit.logger = SimpleHttpLogger(PrintStream(baos), maxLineLength = 120)
+        reddit.logger = SimpleHttpLogger(out = PrintStream(baos), maxLineLength = 120)
         reddit.rateLimiter = NoopRateLimiter()
     }
 

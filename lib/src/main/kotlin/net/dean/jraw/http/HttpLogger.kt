@@ -18,7 +18,7 @@ import java.util.*
 interface HttpLogger {
 
     /**
-     * Logs a HttpRequest and creates a tag that uniquely identifies this request. This can be done by randomly
+     * Logs an HttpRequest and creates a tag that uniquely identifies this request. This can be done by randomly
      * generating a ID string or using a simple counter. The tag will help the user know which request goes with which
      * response in the case that the each request/response pair do not immediately follow one another.
      *
@@ -34,7 +34,7 @@ interface HttpLogger {
      */
     fun request(r: HttpRequest, sent: Date = Date()): Tag
 
-    /** Logs a HttpResponse that corresponds to the request identified by the given tag */
+    /** Logs an HttpResponse that corresponds to the request identified by the given tag */
     fun response(tag: Tag, res: HttpResponse)
 
     /** @see HttpLogger.request */

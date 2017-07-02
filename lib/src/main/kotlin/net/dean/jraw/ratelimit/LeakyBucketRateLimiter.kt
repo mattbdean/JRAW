@@ -11,9 +11,8 @@ import java.util.concurrent.TimeUnit
  * name suggests) a fixed, configurable interval.
  *
  * This class allows for what is known as "bursting" via the [capacity] property. For example, consider an instance with
- * a capacity of 5 permits using a [FixedIntervalRefillStrategy] that adds one permit to the bucket
- * every second. If 5 seconds go by and no permits are acquired, it is possible to then spend all 5 permits in less than
- * one second.
+ * a capacity of 5 permits using a refill strategy that adds one permit to the bucket every second. If 5 seconds go by
+ * and no permits are acquired, it is possible to then spend all 5 permits in less than one second.
  */
 class LeakyBucketRateLimiter(
     /**
@@ -27,9 +26,7 @@ class LeakyBucketRateLimiter(
     val refillStrategy: RefillStrategy
 ) : RateLimiter {
 
-    /**
-     * Creates an instance using a [FixedIntervalRefillStrategy].
-     */
+    /** Creates an instance using a [FixedIntervalRefillStrategy]. */
     constructor(capacity: Long, permitsPerPeriod: Long, unit: TimeUnit) : this(
         capacity = capacity,
         refillStrategy = FixedIntervalRefillStrategy(permitsPerPeriod, unit)

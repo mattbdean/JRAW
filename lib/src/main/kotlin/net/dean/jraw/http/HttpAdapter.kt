@@ -1,4 +1,4 @@
-package net.dean.jraw.http;
+package net.dean.jraw.http
 
 /**
  * Standard interface for sending HTTP requests.
@@ -8,6 +8,6 @@ package net.dean.jraw.http;
 interface HttpAdapter {
     var userAgent: UserAgent
 
-    @Throws(NetworkException::class)
+    /** Executes the HTTP request represended by the given data */
     fun execute(r: HttpRequest): HttpResponse
 }

@@ -8,14 +8,11 @@ import java.util.*
 /**
  * This class is responsible for maintaining and refreshing access tokens for the reddit API.
  *
- * To successfully refresh an access token, one of two conditions must be true:
- *
- * 1. The OAuth2 app is a 'script' or using application-only (userless) authentication.
- * 2. The app is a 'web' or 'installed' app and requested a refresh token.
- *
  * Only installed and web apps may request refresh tokens. To do this, set `permanent = true` when calling
  * [StatefulAuthHelper.getAuthorizationUrl]. Script apps and apps using application-only (userless) authentication do
  * not receive a refresh token since refreshing may be done non-interactively.
+ *
+ * Script apps and those using application-only authentication do not need a refresh token.
  */
 class AuthManager(private val http: HttpAdapter, private val credentials: Credentials) {
     /** When the token expires. Set to `internal` visibility instead of `private` for testing purposes. */
@@ -41,21 +38,26 @@ class AuthManager(private val http: HttpAdapter, private val credentials: Creden
      */
     var refreshToken: String? = null
 
+    /**
+     * The token used to access the reddit API.
+     *
+     * @throws IllegalStateException If there is no current OAuthData
+     */
     val accessToken: String
         get() = (current ?: throw IllegalStateException("No current OAuthData")).accessToken
 
     /** Alias to [credentials].authMethod */
     internal val authMethod = credentials.authMethod
 
-    /** The most up-to-date OAuthData for this OAuth2 app, as understood by this manager. */
+    /** The most up-to-date auth data as understood by this manager. */
     val current: OAuthData? get() = _current
 
     /**
      * Tries to obtain more up-to-date authentication data.
      *
      * If using a script app or application-only authentication, renewal can be done automatically (by simply requesting
-     * a new token). For web and installed apps, a non-null [refreshToken] is required. When authenticating, make sure
-     * to pass `permanent = true` to [StatefulAuthHelper.getAuthorizationUrl] to get a refresh token.
+     * a new token). For web and installed apps, a non-null [refreshToken] is required. See the [StatefulAuthHelper]
+     * class documentation for more.
      */
     fun renew() {
         val newData: OAuthData = if (authMethod == AuthMethod.SCRIPT) {
@@ -69,26 +71,6 @@ class AuthManager(private val http: HttpAdapter, private val credentials: Creden
         }
 
         this._current = newData
-    }
-
-    private fun sendRenewalRequest(refreshToken: String): OAuthData {
-        val res = http.execute(HttpRequest.Builder()
-                .url("https://www.reddit.com/api/v1/access_token")
-                .post(mapOf(
-                    "grant_type" to "refresh_token",
-                    "refresh_token" to refreshToken
-                ))
-                .basicAuth(credentials.clientId to credentials.clientSecret)
-                .build())
-
-        if (!res.successful) {
-            val e = NetworkException(res)
-            if (res.code == 401)
-                throw OAuthException("Incorrect client ID and/or client secret", e)
-            throw e
-        }
-
-        return res.deserialize()
     }
 
     /** Returns true if there is no current OAuthData or it has already expired */
@@ -109,5 +91,25 @@ class AuthManager(private val http: HttpAdapter, private val credentials: Creden
         } else {
             refreshToken != null
         }
+    }
+
+    private fun sendRenewalRequest(refreshToken: String): OAuthData {
+        val res = http.execute(HttpRequest.Builder()
+            .url("https://www.reddit.com/api/v1/access_token")
+            .post(mapOf(
+                "grant_type" to "refresh_token",
+                "refresh_token" to refreshToken
+            ))
+            .basicAuth(credentials.clientId to credentials.clientSecret)
+            .build())
+
+        if (!res.successful) {
+            val e = NetworkException(res)
+            if (res.code == 401)
+                throw OAuthException("Incorrect client ID and/or client secret", e)
+            throw e
+        }
+
+        return res.deserialize()
     }
 }
