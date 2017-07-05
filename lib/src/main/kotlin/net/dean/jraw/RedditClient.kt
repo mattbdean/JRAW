@@ -2,11 +2,11 @@ package net.dean.jraw
 
 import net.dean.jraw.JrawUtils.jackson
 import net.dean.jraw.http.*
+import net.dean.jraw.models.Submission
 import net.dean.jraw.oauth.AuthManager
 import net.dean.jraw.oauth.AuthMethod
 import net.dean.jraw.oauth.Credentials
 import net.dean.jraw.oauth.OAuthData
-import net.dean.jraw.models.Submission
 import net.dean.jraw.pagination.DefaultPaginator
 import net.dean.jraw.pagination.Paginator
 import net.dean.jraw.ratelimit.LeakyBucketRateLimiter
@@ -120,8 +120,9 @@ class RedditClient(
         if (autoRenew && authManager.needsRenewing() && authManager.canRenew())
             authManager.renew()
 
-        // Try to prevent API errors
-        rateLimiter.acquire()
+        // Only ratelimit on the first try
+        if (retryCount == 0)
+            rateLimiter.acquire()
 
         val res = if (logHttp) {
             // Log the request and response, returning 'res'
