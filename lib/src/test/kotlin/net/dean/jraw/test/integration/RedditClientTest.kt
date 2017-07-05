@@ -5,7 +5,7 @@ import net.dean.jraw.RedditClient
 import net.dean.jraw.http.HttpRequest
 import net.dean.jraw.http.NetworkException
 import net.dean.jraw.http.SimpleHttpLogger
-import net.dean.jraw.http.oauth.OAuthHelper
+import net.dean.jraw.oauth.OAuthHelper
 import net.dean.jraw.models.Sorting
 import net.dean.jraw.models.TimePeriod
 import net.dean.jraw.pagination.Paginator

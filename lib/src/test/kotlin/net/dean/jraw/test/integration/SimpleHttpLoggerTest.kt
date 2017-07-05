@@ -4,7 +4,7 @@ import com.winterbe.expekt.should
 import net.dean.jraw.RedditClient
 import net.dean.jraw.http.HttpRequest
 import net.dean.jraw.http.SimpleHttpLogger
-import net.dean.jraw.http.oauth.OAuthHelper
+import net.dean.jraw.oauth.OAuthHelper
 import net.dean.jraw.ratelimit.NoopRateLimiter
 import net.dean.jraw.test.CredentialsUtil
 import net.dean.jraw.test.newOkHttpAdapter

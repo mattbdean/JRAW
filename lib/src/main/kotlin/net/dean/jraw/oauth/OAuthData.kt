@@ -1,4 +1,4 @@
-package net.dean.jraw.http.oauth
+package net.dean.jraw.oauth
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import net.dean.jraw.databind.OAuthDataDeserializer

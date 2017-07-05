@@ -2,7 +2,7 @@ package net.dean.jraw.test.unit
 
 import com.winterbe.expekt.should
 import net.dean.jraw.JrawUtils
-import net.dean.jraw.http.oauth.AuthManager
+import net.dean.jraw.oauth.AuthManager
 import net.dean.jraw.test.CredentialsUtil
 import net.dean.jraw.test.MockHttpAdapter
 import net.dean.jraw.test.createMockOAuthData

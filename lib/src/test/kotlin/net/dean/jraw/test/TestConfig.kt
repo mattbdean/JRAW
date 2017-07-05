@@ -4,7 +4,7 @@ import net.dean.jraw.RedditClient
 import net.dean.jraw.Version
 import net.dean.jraw.http.SimpleHttpLogger
 import net.dean.jraw.http.UserAgent
-import net.dean.jraw.http.oauth.OAuthHelper
+import net.dean.jraw.oauth.OAuthHelper
 
 object TestConfig {
     /** UserAgent used by all HttpAdapters used for testing */

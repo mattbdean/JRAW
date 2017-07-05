@@ -1,9 +1,9 @@
 package net.dean.jraw.test.integration
 
 import com.winterbe.expekt.should
-import net.dean.jraw.http.oauth.Credentials
-import net.dean.jraw.http.oauth.OAuthHelper
-import net.dean.jraw.http.oauth.StatefulAuthHelper
+import net.dean.jraw.oauth.Credentials
+import net.dean.jraw.oauth.OAuthHelper
+import net.dean.jraw.oauth.StatefulAuthHelper
 import net.dean.jraw.test.CredentialsUtil
 import net.dean.jraw.test.ensureAuthenticated
 import net.dean.jraw.test.expectException

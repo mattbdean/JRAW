@@ -3,7 +3,7 @@ package net.dean.jraw.test
 import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import net.dean.jraw.http.oauth.Credentials
+import net.dean.jraw.oauth.Credentials
 import java.util.*
 
 object CredentialsUtil {

@@ -1,3 +1,3 @@
-package net.dean.jraw.http.oauth
+package net.dean.jraw.oauth
 
 class OAuthException(message: String, cause: Exception? = null) : RuntimeException(message, cause)

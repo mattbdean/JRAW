@@ -7,9 +7,9 @@ import com.gargoylesoftware.htmlunit.html.HtmlInput
 import com.gargoylesoftware.htmlunit.html.HtmlPage
 import com.winterbe.expekt.should
 import net.dean.jraw.RedditClient
-import net.dean.jraw.http.oauth.OAuthException
-import net.dean.jraw.http.oauth.OAuthHelper
-import net.dean.jraw.http.oauth.StatefulAuthHelper
+import net.dean.jraw.oauth.OAuthException
+import net.dean.jraw.oauth.OAuthHelper
+import net.dean.jraw.oauth.StatefulAuthHelper
 import net.dean.jraw.test.CredentialsUtil
 import net.dean.jraw.test.ensureAuthenticated
 import net.dean.jraw.test.expectException

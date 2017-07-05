@@ -2,10 +2,10 @@ package net.dean.jraw
 
 import net.dean.jraw.JrawUtils.jackson
 import net.dean.jraw.http.*
-import net.dean.jraw.http.oauth.AuthManager
-import net.dean.jraw.http.oauth.AuthMethod
-import net.dean.jraw.http.oauth.Credentials
-import net.dean.jraw.http.oauth.OAuthData
+import net.dean.jraw.oauth.AuthManager
+import net.dean.jraw.oauth.AuthMethod
+import net.dean.jraw.oauth.Credentials
+import net.dean.jraw.oauth.OAuthData
 import net.dean.jraw.models.Submission
 import net.dean.jraw.pagination.DefaultPaginator
 import net.dean.jraw.pagination.Paginator

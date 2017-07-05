@@ -1,4 +1,4 @@
-package net.dean.jraw.http.oauth
+package net.dean.jraw.oauth
 
 import java.util.*
 

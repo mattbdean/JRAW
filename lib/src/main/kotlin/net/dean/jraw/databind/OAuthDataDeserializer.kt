@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.databind.DeserializationContext
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer
-import net.dean.jraw.http.oauth.OAuthData
+import net.dean.jraw.oauth.OAuthData
 
 class OAuthDataDeserializer : StdDeserializer<OAuthData>(OAuthData::class.java) {
     override fun deserialize(p: JsonParser, ctxt: DeserializationContext?): OAuthData {

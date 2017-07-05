@@ -4,7 +4,7 @@ import com.winterbe.expekt.should
 import net.dean.jraw.RateLimitException
 import net.dean.jraw.RedditClient
 import net.dean.jraw.http.*
-import net.dean.jraw.http.oauth.OAuthData
+import net.dean.jraw.oauth.OAuthData
 import net.dean.jraw.models.Listing
 import net.dean.jraw.models.Submission
 import net.dean.jraw.test.TestConfig.userAgent
