@@ -4,10 +4,8 @@ import com.winterbe.expekt.should
 import net.dean.jraw.RedditClient
 import net.dean.jraw.http.HttpRequest
 import net.dean.jraw.http.SimpleHttpLogger
-import net.dean.jraw.oauth.OAuthHelper
-import net.dean.jraw.ratelimit.NoopRateLimiter
-import net.dean.jraw.test.CredentialsUtil
-import net.dean.jraw.test.newOkHttpAdapter
+import net.dean.jraw.test.MockHttpAdapter
+import net.dean.jraw.test.newMockRedditClient
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.it
 import java.io.ByteArrayOutputStream
@@ -18,39 +16,43 @@ import kotlin.properties.Delegates
 class SimpleHttpLoggerTest : Spek({
     var baos = ByteArrayOutputStream()
     var reddit: RedditClient by Delegates.notNull()
+    val mockAdapter = MockHttpAdapter()
 
     // Get the string value of the byte array in UTF-8 and split by newlines, removing the last element because the
     // output string ends in a newline, thus creating an empty string at the end of the list
     fun loggerOutput() = String(baos.toByteArray(), StandardCharsets.UTF_8).split("\n").dropLast(1)
 
     beforeGroup {
-        reddit = OAuthHelper.automatic(newOkHttpAdapter(), CredentialsUtil.script)
+        reddit = newMockRedditClient(mockAdapter)
     }
 
     beforeEachTest {
+        mockAdapter.start()
         baos = ByteArrayOutputStream()
         reddit.logger = SimpleHttpLogger(out = PrintStream(baos), maxLineLength = 120)
-        reddit.rateLimiter = NoopRateLimiter()
     }
 
     it("should log both input and output") {
-        val url = "https://httpbin.org/get"
+        val url = "http://example.com/foo"
+        val res = """{"foo":"bar"}"""
+        mockAdapter.enqueue(res)
         reddit.request(HttpRequest.Builder()
             .url(url)
             .build())
         val output = loggerOutput()
-        output.size.should.equal(2)
-        output[0].should.equal("[1 ->] GET $url")
-        output[1].should.startWith("[<- 1] 200 application/json: '")
-        // The request response should be more than maxLineLength, so SimpleHttpLogger should truncate it
-        output[1].should.have.length.at.most((reddit.logger as SimpleHttpLogger).maxLineLength)
+        output.should.equal(listOf(
+            "[1 ->] GET $url",
+            "[<- 1] 200 application/json: '$res'"
+        ))
     }
 
     it("should keep a record of all requests sent during its time logging") {
         val times = 5
+        val res = """{"foo":"bar"}"""
         for (i in 0..times - 1) {
+            mockAdapter.enqueue(res)
             reddit.request(HttpRequest.Builder()
-                .url("https://httpbin.org/get")
+                .url("http://example.com/foo")
                 .build())
         }
 
@@ -62,10 +64,26 @@ class SimpleHttpLoggerTest : Spek({
         }
     }
 
+    it("should truncate all lines to maxLineLength if above 0") {
+        val maxLineLength = 50
+        reddit.logger = SimpleHttpLogger(out = PrintStream(baos), maxLineLength = maxLineLength)
+        mockAdapter.enqueue("""{"foo": ${"bar".repeat(100)}"}""")
+        reddit.request {
+            it.url("http://example.com/${"reallylongpath/".repeat(10)}")
+                .post(mapOf(
+                    "key" to "value".repeat(15)
+                ))
+        }
+
+        val output = loggerOutput()
+        output.forEach { it.should.have.length(maxLineLength) }
+    }
+
     it("should log the request body when it's form URL-encoded data") {
         val postData = mapOf("foo" to "bar", "baz" to "qux")
+        mockAdapter.enqueue("""{"foo":"bar"}""")
         reddit.request(HttpRequest.Builder()
-            .url("https://httpbin.org/post")
+            .url("http://example.com")
             .post(postData)
             .build())
 
@@ -89,6 +107,7 @@ class SimpleHttpLoggerTest : Spek({
 
     afterEachTest {
         baos.close()
+        mockAdapter.reset()
     }
 })
 

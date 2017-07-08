@@ -13,7 +13,7 @@ import java.util.concurrent.atomic.AtomicInteger
  * Bare-bones implementation of HttpLogger
  *
  * This logger will print the request's method ("GET", "POST", etc.) and URL, as well as the response's base media type
- * (e.g. "application/json") and body. The response line will be truncated to 100 characters (the default value for
+ * (e.g. "application/json") and body. Output will be truncated to 100 characters (the default value for
  * [maxLineLength])
  *
  * Here's an example of the 12th request logged by a [SimpleHttpLogger]
@@ -40,7 +40,7 @@ class SimpleHttpLogger @JvmOverloads constructor(
 
         val tag = "[$id ->]"
 
-        out.println("$tag ${r.method} ${r.url}")
+        out.println(truncate("$tag ${r.method} ${r.url}", maxLineLength))
 
         val form = parseForm(r)
         if (!form.isEmpty()) {
@@ -89,7 +89,7 @@ class SimpleHttpLogger @JvmOverloads constructor(
         for ((k, v) in pairs) {
             val prefix = if (needsHeader) header else " ".repeat(header.length)
             if (needsHeader) needsHeader = false
-            out.println("$baseIndent $prefix $k=$v")
+            out.println(truncate("$baseIndent $prefix $k=$v", maxLineLength))
         }
     }
 

@@ -1,13 +1,12 @@
 package net.dean.jraw.test.integration
 
 import com.winterbe.expekt.should
-import net.dean.jraw.RedditClient
 import net.dean.jraw.http.HttpRequest
 import net.dean.jraw.http.NetworkException
 import net.dean.jraw.http.SimpleHttpLogger
-import net.dean.jraw.oauth.OAuthHelper
 import net.dean.jraw.models.Sorting
 import net.dean.jraw.models.TimePeriod
+import net.dean.jraw.oauth.OAuthHelper
 import net.dean.jraw.pagination.Paginator
 import net.dean.jraw.test.*
 import net.dean.jraw.test.TestConfig.reddit
@@ -69,7 +68,7 @@ class RedditClientTest : Spek({
                 httpAdapter.enqueue(MockHttpResponse(code = 500 + i))
             }
 
-            val reddit = RedditClient(httpAdapter, createMockOAuthData(), CredentialsUtil.script)
+            val reddit = newMockRedditClient(httpAdapter)
             reddit.retryLimit = retryLimit
 
             expectException(NetworkException::class) {

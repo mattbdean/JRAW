@@ -4,9 +4,11 @@ import com.winterbe.expekt.should
 import net.dean.jraw.RateLimitException
 import net.dean.jraw.RedditClient
 import net.dean.jraw.http.*
-import net.dean.jraw.oauth.OAuthData
 import net.dean.jraw.models.Listing
 import net.dean.jraw.models.Submission
+import net.dean.jraw.oauth.Credentials
+import net.dean.jraw.oauth.OAuthData
+import net.dean.jraw.ratelimit.NoopRateLimiter
 import net.dean.jraw.test.TestConfig.userAgent
 import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
@@ -62,9 +64,16 @@ fun randomName(length: Int = 10): String {
     return "jraw_test_" + BigInteger(130, rand).toString(32).substring(0..length - 1)
 }
 
+val mockCredentials = Credentials.script("", "", "", "")
 fun newOkHttpAdapter() = OkHttpAdapter(userAgent)
+fun newMockRedditClient(adapter: MockHttpAdapter): RedditClient {
+    val r = RedditClient(adapter, createMockOAuthData(), mockCredentials)
+    r.rateLimiter = NoopRateLimiter()
+    return r
+}
 
 fun expectDescendingScore(posts: Listing<Submission>, allowedMistakes: Int = 0) {
+    if (posts.isEmpty()) throw IllegalArgumentException("posts was empty")
     var prevScore = posts[0].score
     var mistakes = 0
 
@@ -102,11 +111,7 @@ fun ignoreRateLimit(block: () -> Unit) {
 class MockHttpAdapter : HttpAdapter {
     override var userAgent: UserAgent = UserAgent("doesn't matter, no requests are going to be sent")
     val http = OkHttpClient()
-    var mockServer: MockWebServer
-
-    init {
-        mockServer = MockWebServer()
-    }
+    var mockServer = MockWebServer()
 
     private val responseCodeQueue: Queue<Int> = LinkedList()
 
