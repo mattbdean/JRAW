@@ -24,6 +24,9 @@ class RedditClientTest : Spek({
             val request = reddit.requestStub().build()
             request.url.should.equal("https://oauth.reddit.com/")
             request.headers.get("Authorization").should.match(Regex("^bearer [A-Za-z0-9_\\-]+"))
+            request.method.should.equal("GET")
+            request.basicAuth.should.be.`null`
+            request.body.should.be.`null`
         }
     }
 
