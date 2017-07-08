@@ -13,8 +13,7 @@ import java.util.concurrent.atomic.AtomicInteger
  * Bare-bones implementation of HttpLogger
  *
  * This logger will print the request's method ("GET", "POST", etc.) and URL, as well as the response's base media type
- * (e.g. "application/json") and body. Output will be truncated to 100 characters (the default value for
- * [maxLineLength])
+ * (e.g. "application/json") and body. All output is truncated unless [maxLineLength] is less than 0.
  *
  * Here's an example of the 12th request logged by a [SimpleHttpLogger]
  *
@@ -28,12 +27,17 @@ import java.util.concurrent.atomic.AtomicInteger
  * @see DEFAULT_LINE_LENGTH
  */
 class SimpleHttpLogger @JvmOverloads constructor(
-    /** The maximum amount of characters */
+    /** The maximum amount of characters per line */
     val maxLineLength: Int = DEFAULT_LINE_LENGTH,
     /** Where to print messages to */
     val out: PrintStream = System.out
 ) : HttpLogger {
     private val counter: AtomicInteger = AtomicInteger(1)
+
+    init {
+        if (maxLineLength >= 0 && maxLineLength <= ELLIPSIS.length)
+            throw IllegalArgumentException("maxLineLength must be less than 0 or greater than ${ELLIPSIS.length}")
+    }
 
     override fun request(r: HttpRequest, sent: Date): HttpLogger.Tag {
         val id = counter.getAndIncrement()
@@ -94,14 +98,19 @@ class SimpleHttpLogger @JvmOverloads constructor(
     }
 
     companion object {
-        private val ELLIPSIS = "(...)"
+        internal val ELLIPSIS = "(...)"
         private val NO_CONTENT_TYPE = "<no content type>"
-        const val DEFAULT_LINE_LENGTH = 100
+        /** 200 character limit per line. Enough to view the full request and get the gist of the response. */
+        const val DEFAULT_LINE_LENGTH = 200
 
         @JvmStatic
-        private fun truncate(str: String, limit: Int) = if (str.length > limit)
-            str.substring(0, limit - ELLIPSIS.length) + ELLIPSIS
-        else
-            str
+        private fun truncate(str: String, limit: Int): String {
+            return if (limit < 0)
+                return str
+            else if (str.length > limit)
+                str.substring(0, limit - ELLIPSIS.length) + ELLIPSIS
+            else
+                str
+        }
     }
 }

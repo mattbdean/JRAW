@@ -5,6 +5,7 @@ import net.dean.jraw.RedditClient
 import net.dean.jraw.http.HttpRequest
 import net.dean.jraw.http.SimpleHttpLogger
 import net.dean.jraw.test.MockHttpAdapter
+import net.dean.jraw.test.expectException
 import net.dean.jraw.test.newMockRedditClient
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.it
@@ -77,6 +78,32 @@ class SimpleHttpLoggerTest : Spek({
 
         val output = loggerOutput()
         output.forEach { it.should.have.length(maxLineLength) }
+    }
+
+    it("should not truncate for a maxLineLength < 0")  {
+        reddit.logger = SimpleHttpLogger(out = PrintStream(baos), maxLineLength = -1)
+        val res = """{"foo": ${"bar".repeat(100)}"}"""
+        mockAdapter.enqueue(res)
+        reddit.request {
+            it.url("http://example.com/${"reallylongpath/".repeat(10)}")
+                .post(mapOf(
+                    "key" to "value".repeat(30)
+                ))
+        }
+
+        val output = loggerOutput()
+        output.forEach { it.should.have.length.above(100) }
+    }
+
+    it("should throw an IllegalArgumentException if given a maxLineLength between 0 and ELLIPSIS.length") {
+        for (i in 0..SimpleHttpLogger.ELLIPSIS.length) {
+            expectException(IllegalArgumentException::class) {
+                SimpleHttpLogger(maxLineLength = i)
+            }
+        }
+
+        // Should not throw an exception
+        SimpleHttpLogger(maxLineLength = SimpleHttpLogger.ELLIPSIS.length + 1)
     }
 
     it("should log the request body when it's form URL-encoded data") {
