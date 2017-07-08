@@ -30,20 +30,22 @@ class RedditClientTest : Spek({
         }
     }
 
-    it("shouldn't log HTTP requests when logHttp=false") {
-        val baos = ByteArrayOutputStream()
-        val reddit = OAuthHelper.automatic(newOkHttpAdapter(), CredentialsUtil.script)
+    describe("logHttp") {
+        it("shouldn't log HTTP requests when false") {
+            val baos = ByteArrayOutputStream()
+            val reddit = OAuthHelper.automatic(newOkHttpAdapter(), CredentialsUtil.script)
 
-        // Give the RedditClient our logger
-        reddit.logger = SimpleHttpLogger(out = PrintStream(baos))
-        reddit.logHttp = false
+            // Give the RedditClient our logger
+            reddit.logger = SimpleHttpLogger(out = PrintStream(baos))
+            reddit.logHttp = false
 
-        // Make a request, which would trigger writing to the BAOS if logHttp is being ignored
-        reddit.request(HttpRequest.Builder()
-            .url("https://httpbin.org/get")
-            .build())
+            // Make a request, which would trigger writing to the BAOS if logHttp is being ignored
+            reddit.request(HttpRequest.Builder()
+                .url("https://httpbin.org/get")
+                .build())
 
-        baos.size().should.equal(0)
+            baos.size().should.equal(0)
+        }
     }
 
     describe("randomSubreddit") {
