@@ -3,14 +3,14 @@ package net.dean.jraw.test.unit
 import com.winterbe.expekt.should
 import net.dean.jraw.JrawUtils
 import net.dean.jraw.oauth.AuthManager
-import net.dean.jraw.test.CredentialsUtil
-import net.dean.jraw.test.MockHttpAdapter
-import net.dean.jraw.test.createMockOAuthData
-import net.dean.jraw.test.expectException
+import net.dean.jraw.oauth.Credentials
+import net.dean.jraw.oauth.TokenPersistenceStrategy
+import net.dean.jraw.test.*
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
 import java.util.*
+import kotlin.properties.Delegates
 
 class AuthenticationManagerIsolatedTest : Spek({
     val mockAdapter = MockHttpAdapter()
@@ -29,24 +29,24 @@ class AuthenticationManagerIsolatedTest : Spek({
             mockAdapter.start()
         }
 
-        it("should return a new OAuthData when called for script apps") {
-            val authManager = AuthManager(mockAdapter, CredentialsUtil.script)
-            authManager._current = createMockOAuthData()
+        it("should refresh the OAuthData for script apps") {
+            val authManager = AuthManager(mockAdapter, mockScriptCredentials)
+            authManager.update(createMockOAuthData())
 
             // Make some baseline assertions
             authManager.canRenew().should.be.`true`
             authManager.needsRenewing().should.be.`false`
-            authManager.tokenExpiration.should.not.be.`null`
+            authManager.current!!.expiration.should.not.be.`null`
 
             // Save the previous expiration date and enqueue the refresh response
-            val prevExpiration = authManager.tokenExpiration!!
+            val prevExpiration = authManager.current!!.expiration
 
             // Simulate refreshing the token
             mockAdapter.enqueue(mockOAuthDataResponse())
             authManager.renew()
 
             // Expect the manager's state to have updated
-            authManager.tokenExpiration.should.be.above(prevExpiration)
+            authManager.current!!.expiration.should.be.above(prevExpiration)
             authManager.canRenew().should.be.`true`
             authManager.needsRenewing().should.be.`false`
 
@@ -62,7 +62,7 @@ class AuthenticationManagerIsolatedTest : Spek({
             val oauthData = createMockOAuthData(includeRefreshToken = true)
             // Ensure refreshToken gets updated once _current is set
             authManager.refreshToken.should.be.`null`
-            authManager._current = oauthData
+            authManager.update(oauthData)
             authManager.refreshToken.should.equal(oauthData.refreshToken)
 
             // Simulate the token renewal. This response will NOT have a refresh token included in it (like the real
@@ -81,29 +81,109 @@ class AuthenticationManagerIsolatedTest : Spek({
             formBody.should.contain("refresh_token" to authManager.refreshToken!!)
         }
 
-         it("should fail when a non-script app does not have a refresh token") {
-             val authManager = AuthManager(mockAdapter, CredentialsUtil.app)
-             authManager._current = createMockOAuthData(includeRefreshToken = false)
+        it("should fail when a non-script app does not have a refresh token") {
+            val authManager = AuthManager(mockAdapter, CredentialsUtil.app)
+            authManager.update(createMockOAuthData(includeRefreshToken = false))
 
-             authManager.canRenew().should.be.`false`
-             expectException(IllegalStateException::class) {
-                 authManager.renew()
-             }
-         }
+            authManager.canRenew().should.be.`false`
+            expectException(IllegalStateException::class) {
+                authManager.renew()
+            }
+        }
 
         afterEachTest {
             mockAdapter.reset()
         }
     }
 
+    describe("tokenPersistenceStrategy") {
+        val username = "some_user"
+        var authManager: AuthManager by Delegates.notNull()
+        val mockStore = InMemoryTokenStore()
+
+        beforeEachTest {
+            authManager = AuthManager(NoopHttpAdapter, mockAppCredentials)
+            authManager.currentUsername = username
+            authManager.tokenStore = mockStore
+            mockStore.reset()
+        }
+
+        it("should only save the current OAuthData and refresh token (when available)") {
+            // Make sure we're testing the write strategy
+            authManager.tokenPersistenceStrategy = TokenPersistenceStrategy.ALL
+
+            // Make some baseline assertions
+            mockStore.fetchCurrent(username).should.be.`null`
+            mockStore.fetchRefreshToken(username).should.be.`null`
+
+            // This should trigger storing only the current OAuthData
+            var data = createMockOAuthData(includeRefreshToken = false)
+            authManager.update(data)
+
+            // Make sure it was saved
+            mockStore.fetchCurrent(username).should.equal(data)
+
+            mockStore.reset()
+            // Including a refresh token in the OAuthData should trigger saving both the OAuthData and the refresh token
+            data = createMockOAuthData(includeRefreshToken = true)
+            authManager.update(data)
+            mockStore.fetchCurrent(username).should.equal(data)
+            mockStore.fetchRefreshToken(username).should.equal(data.refreshToken)
+        }
+
+        it("should call the TokenStore for refresh tokens only for the REFRESH_ONLY strategy") {
+            authManager.tokenPersistenceStrategy = TokenPersistenceStrategy.REFRESH_ONLY
+
+            // Baseline
+            mockStore.fetchCurrent(username).should.be.`null`
+            mockStore.fetchRefreshToken(username).should.be.`null`
+
+            var data = createMockOAuthData(includeRefreshToken = false)
+            authManager.update(data)
+
+            // We're not saving OAuthData and there was no refresh token
+            mockStore.fetchCurrent(username).should.be.`null`
+            mockStore.fetchRefreshToken(username).should.be.`null`
+
+            data = createMockOAuthData(includeRefreshToken = true)
+            authManager.update(data)
+
+            // Should have saved only the refresh token
+            mockStore.fetchCurrent(username).should.be.`null`
+            mockStore.fetchRefreshToken(username).should.equal(data.refreshToken)
+        }
+    }
+
+    describe("currentUsername (both the property and the method)") {
+        it("should return the name of the authenticated user") {
+            val authManager = AuthManager(NoopHttpAdapter, mockScriptCredentials)
+            authManager.currentUsername = "some_username"
+            authManager.currentUsername().should.equal("some_username")
+        }
+
+        it("should return a special value when using userless credentials") {
+            val authManager = AuthManager(NoopHttpAdapter, Credentials.userlessApp("", UUID.randomUUID()))
+            authManager.currentUsername.should.be.`null`
+            authManager.currentUsername().should.equal(AuthManager.USERNAME_USERLESS)
+        }
+
+        it("should return a special value for non-userless credentials for unknown usernames") {
+            val authManager = AuthManager(NoopHttpAdapter, Credentials.installedApp("", ""))
+            authManager.currentUsername.should.be.`null`
+            authManager.currentUsername().should.equal(AuthManager.USERNAME_UNKOWN)
+        }
+    }
+
     describe("needsRefresh()") {
         it("should return true when it has no OAuthData") {
-            AuthManager(mockAdapter, CredentialsUtil.script).needsRenewing().should.be.`true`
+            AuthManager(NoopHttpAdapter, CredentialsUtil.script).needsRenewing().should.be.`true`
         }
 
         it("should return true when the tokenExpiration is in the past") {
-            val auth = AuthManager(mockAdapter, CredentialsUtil.script)
-            auth.tokenExpiration = Date(Date().time - 1)
+            val auth = AuthManager(NoopHttpAdapter, CredentialsUtil.script)
+            auth.update(createMockOAuthData().copy(
+                expiration = Date(Date().time - 1)
+            ))
             auth.needsRenewing().should.be.`true`
         }
     }

@@ -9,7 +9,11 @@ import java.math.BigInteger
 import java.net.URL
 import java.security.SecureRandom
 
-class StatefulAuthHelper internal constructor(private val http: HttpAdapter, private val creds: Credentials) {
+class StatefulAuthHelper internal constructor(
+    private val http: HttpAdapter,
+    private val creds: Credentials,
+    private val tokenStore: TokenStore
+) {
     private var state: String? = null
     private var _authStatus: Status = Status.INIT
     val authStatus: Status
@@ -71,7 +75,8 @@ class StatefulAuthHelper internal constructor(private val http: HttpAdapter, pri
             return RedditClient(
                 http = http,
                 initialOAuthData = response,
-                creds = creds
+                creds = creds,
+                tokenStore = tokenStore
             )
         } catch (ex: NetworkException) {
             if (ex.res.code == 401)

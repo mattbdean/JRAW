@@ -2,12 +2,10 @@ package net.dean.jraw.test.integration
 
 import com.winterbe.expekt.should
 import net.dean.jraw.oauth.Credentials
+import net.dean.jraw.oauth.OAuthData
 import net.dean.jraw.oauth.OAuthHelper
 import net.dean.jraw.oauth.StatefulAuthHelper
-import net.dean.jraw.test.CredentialsUtil
-import net.dean.jraw.test.ensureAuthenticated
-import net.dean.jraw.test.expectException
-import net.dean.jraw.test.newOkHttpAdapter
+import net.dean.jraw.test.*
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
@@ -35,7 +33,6 @@ class OAuthHelperTest: Spek({
         }
 
         it("should produce an authorized RedditClient for a userless Credentials") {
-            ensureAuthenticated(OAuthHelper.automatic(newOkHttpAdapter(), CredentialsUtil.applicationOnly))
             val reddit = OAuthHelper.automatic(newOkHttpAdapter(), CredentialsUtil.applicationOnly)
             ensureAuthenticated(reddit)
             reddit.authManager.renew()
@@ -59,6 +56,61 @@ class OAuthHelperTest: Spek({
             expectException(IllegalArgumentException::class) {
                 OAuthHelper.interactive(newOkHttpAdapter(), CredentialsUtil.script)
             }
+        }
+    }
+
+    describe("fromTokenStore") {
+        val tokenStore = InMemoryTokenStore()
+        val username = CredentialsUtil.script.username!!
+
+        beforeEachTest {
+            tokenStore.reset()
+        }
+
+        it("should throw an IllegalStateException when there is no data for a given username") {
+            expectException(IllegalStateException::class) {
+                OAuthHelper.fromTokenStore(NoopHttpAdapter, mockScriptCredentials, tokenStore, username)
+            }
+        }
+
+        it("should create an authenticated client from non-expired OAuthData") {
+            val r = OAuthHelper.automatic(newOkHttpAdapter(), CredentialsUtil.script, tokenStore)
+            ensureAuthenticated(r)
+            tokenStore.fetchCurrent(username).should.not.be.`null`
+
+            val fromCache = OAuthHelper.fromTokenStore(newOkHttpAdapter(), CredentialsUtil.script, tokenStore, CredentialsUtil.script.username!!)
+            fromCache.authManager.current.should.not.be.`null`
+            fromCache.authManager.current.should.equal(tokenStore.fetchCurrent(username))
+            fromCache.authManager.currentUsername.should.equal(username)
+            ensureAuthenticated(fromCache)
+        }
+
+        it("should throw an exception when there is only expired OAuthData available") {
+            tokenStore.storeCurrent(username, OAuthData(
+                accessToken = "",
+                tokenType = "",
+                shelfLife = -1,
+                scopes = listOf(),
+                refreshToken = null,
+                // Expired 1 ms in past
+                expiration = Date(Date().time - 1)
+            ))
+
+            expectException(IllegalStateException::class) {
+                OAuthHelper.fromTokenStore(NoopHttpAdapter, mockScriptCredentials, tokenStore, username)
+            }
+        }
+
+        it("should create an authenticated client with only the refresh token") {
+            val reddit = emulateBrowserAuth()
+            ensureAuthenticated(reddit)
+            val store = reddit.authManager.tokenStore as InMemoryTokenStore
+            store.resetDataOnly()
+
+            store.fetchRefreshToken(username).should.not.be.`null`
+            val reddit2 = OAuthHelper.fromTokenStore(newOkHttpAdapter(), CredentialsUtil.app, store, username)
+            reddit2.requireAuthenticatedUser()
+            ensureAuthenticated(reddit2)
         }
     }
 })

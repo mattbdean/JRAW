@@ -7,7 +7,9 @@ import net.dean.jraw.http.*
 import net.dean.jraw.models.Listing
 import net.dean.jraw.models.Submission
 import net.dean.jraw.oauth.Credentials
+import net.dean.jraw.oauth.NoopTokenStore
 import net.dean.jraw.oauth.OAuthData
+import net.dean.jraw.oauth.TokenStore
 import net.dean.jraw.ratelimit.NoopRateLimiter
 import net.dean.jraw.test.TestConfig.userAgent
 import okhttp3.HttpUrl
@@ -23,6 +25,7 @@ import java.math.BigInteger
 import java.security.SecureRandom
 import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.collections.HashMap
 import kotlin.reflect.KClass
 
 fun <T : Exception> expectException(clazz: KClass<T>, doWork: () -> Unit) {
@@ -64,10 +67,11 @@ fun randomName(length: Int = 10): String {
     return "jraw_test_" + BigInteger(130, rand).toString(32).substring(0..length - 1)
 }
 
-val mockCredentials = Credentials.script("", "", "", "")
+val mockScriptCredentials = Credentials.script("", "", "", "")
+val mockAppCredentials = Credentials.installedApp("", "")
 fun newOkHttpAdapter() = OkHttpAdapter(userAgent)
 fun newMockRedditClient(adapter: MockHttpAdapter): RedditClient {
-    val r = RedditClient(adapter, createMockOAuthData(), mockCredentials)
+    val r = RedditClient(adapter, createMockOAuthData(), mockScriptCredentials, NoopTokenStore(), overrideUsername = "<mock>")
     r.rateLimiter = NoopRateLimiter()
     return r
 }
@@ -149,6 +153,43 @@ class MockHttpAdapter : HttpAdapter {
     }
 }
 
+class InMemoryTokenStore : TokenStore {
+    private val dataMap: MutableMap<String, OAuthData?> = HashMap()
+    private val refreshMap: MutableMap<String, String?> = HashMap()
+    override fun storeCurrent(username: String, data: OAuthData) {
+        dataMap.put(username, data)
+    }
+
+    override fun storeRefreshToken(username: String, token: String) {
+        refreshMap.put(username, token)
+    }
+
+    override fun fetchCurrent(username: String): OAuthData? {
+        return dataMap[username]
+    }
+
+    override fun fetchRefreshToken(username: String): String? {
+        return refreshMap[username]
+    }
+
+    fun reset() {
+        dataMap.clear()
+        refreshMap.clear()
+    }
+
+    fun resetDataOnly() {
+        dataMap.clear()
+    }
+}
+
+object NoopHttpAdapter : HttpAdapter {
+    override var userAgent: UserAgent = UserAgent("")
+
+    override fun execute(r: HttpRequest): HttpResponse {
+        throw NotImplementedError("NoopHttpAdapter cannot execute requests")
+    }
+}
+
 /**
  * Used exclusively with [MockHttpAdapter]
  */
@@ -164,5 +205,6 @@ fun createMockOAuthData(includeRefreshToken: Boolean = false) = OAuthData(
     tokenType = "bearer", // normal OAuthData has this as well, might as well keep it
     scopes = listOf("*"), // '*' means all scopes
     shelfLife = TimeUnit.SECONDS.toMillis(3600).toInt(),
-    refreshToken = if (includeRefreshToken) "<refresh_token>" else null
+    refreshToken = if (includeRefreshToken) "<refresh_token>" else null,
+    expiration = Date(Date().time + TimeUnit.MILLISECONDS.convert(1, TimeUnit.HOURS))
 )

@@ -26,11 +26,11 @@ enum class AuthMethod constructor(
      * OAuth2 authentication without a logged-in user. Web or script apps should use this type, which requires a secret.
      * Installed apps (which cannot keep a secret) should use [USERLESS_APP].
      */
-    USERLESS(true),
+    USERLESS(isUserless = true),
 
     /**
      * OAuth2 authentication without the context of a user. Use this over [USERLESS] if this is being used on a
      * mobile app and thus cannot retain a secret.
      */
-    USERLESS_APP(true)
+    USERLESS_APP(isUserless = true)
 }

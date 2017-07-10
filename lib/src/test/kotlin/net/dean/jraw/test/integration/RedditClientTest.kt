@@ -106,7 +106,9 @@ class RedditClientTest : Spek({
             reddit.authManager.accessToken.should.equal(initialAccessToken)
 
             // Set the tokenExpiration to 1 ms in the past
-            reddit.authManager.tokenExpiration = Date(Date().time - 1)
+            reddit.authManager.update(
+                reddit.authManager.current!!.copy(expiration = Date(Date().time - 1))
+            )
 
             // Send a request that SHOULD trigger a renewal
             doRequest()

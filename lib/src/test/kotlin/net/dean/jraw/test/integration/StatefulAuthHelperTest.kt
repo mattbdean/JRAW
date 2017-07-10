@@ -10,10 +10,7 @@ import net.dean.jraw.RedditClient
 import net.dean.jraw.oauth.OAuthException
 import net.dean.jraw.oauth.OAuthHelper
 import net.dean.jraw.oauth.StatefulAuthHelper
-import net.dean.jraw.test.CredentialsUtil
-import net.dean.jraw.test.ensureAuthenticated
-import net.dean.jraw.test.expectException
-import net.dean.jraw.test.newOkHttpAdapter
+import net.dean.jraw.test.*
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.it
 
@@ -60,7 +57,7 @@ private fun createWebClient(): WebClient {
 private fun getUrlFrom(page: HtmlPage): String = page.webResponse.webRequest.url.toExternalForm()
 
 private fun doBrowserLogin(vararg scopes: String = arrayOf("identity")): Pair<StatefulAuthHelper, HtmlPage> {
-    val helper = OAuthHelper.interactive(newOkHttpAdapter(), CredentialsUtil.app)
+    val helper = OAuthHelper.interactive(newOkHttpAdapter(), CredentialsUtil.app, InMemoryTokenStore())
 
     // Test state change once we get the authorization URL
     helper.authStatus.should.equal(StatefulAuthHelper.Status.INIT)
@@ -80,7 +77,7 @@ private fun doBrowserLogin(vararg scopes: String = arrayOf("identity")): Pair<St
     return helper to authorizePage
 }
 
-private fun emulateBrowserAuth(vararg scopes: String = arrayOf("identity")): RedditClient {
+fun emulateBrowserAuth(vararg scopes: String = arrayOf("identity")): RedditClient {
     val (helper, authorizePage) = doBrowserLogin(*scopes)
     val redirectPage: HtmlPage = findChild<HtmlInput>(authorizePage.body, "input", "name" to "authorize").click()
 

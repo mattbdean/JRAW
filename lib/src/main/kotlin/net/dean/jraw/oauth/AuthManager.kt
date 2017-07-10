@@ -14,29 +14,28 @@ import java.util.*
  *
  * Script apps and those using application-only authentication do not need a refresh token.
  */
-class AuthManager(private val http: HttpAdapter, private val credentials: Credentials) {
-    /** When the token expires. Set to `internal` visibility instead of `private` for testing purposes. */
-    internal var tokenExpiration: Date? = null
-
+class AuthManager(
+    private val http: HttpAdapter,
+    private val credentials: Credentials
+) {
     /**
      * Current OAuthData. Set to `internal` visibility instead of `private` for testing purposes. Setting this property
      * also sets [tokenExpiration]. If [refreshToken] is null and the new OAuthData's refresh token isn't,
      * [refreshToken] gets updated as well.
      */
-    internal var _current: OAuthData? = null
-        set(value) {
-            tokenExpiration = if (value == null) null else Date(Date().time + value.shelfLife.toLong())
+    private var _current: OAuthData? = null
 
-            if (refreshToken == null && value != null && value.refreshToken != null)
-                refreshToken = value.refreshToken
+    internal var currentUsername: String? = null
 
-            field = value
-        }
+    var tokenStore: TokenStore = NoopTokenStore()
+    var tokenPersistenceStrategy = TokenPersistenceStrategy.ALL
 
     /**
      * The token provided by reddit to be used to request more access tokens. Only applies to installed and web apps.
      */
-    var refreshToken: String? = null
+    internal var _refreshToken: String? = null
+
+    val refreshToken: String? get() = _refreshToken
 
     /**
      * The token used to access the reddit API.
@@ -56,7 +55,7 @@ class AuthManager(private val http: HttpAdapter, private val credentials: Creden
      * Tries to obtain more up-to-date authentication data.
      *
      * If using a script app or application-only authentication, renewal can be done automatically (by simply requesting
-     * a new token). For web and installed apps, a non-null [refreshToken] is required. See the [StatefulAuthHelper]
+     * a new token). For web and installed apps, a non-null [_refreshToken] is required. See the [StatefulAuthHelper]
      * class documentation for more.
      */
     fun renew() {
@@ -64,18 +63,18 @@ class AuthManager(private val http: HttpAdapter, private val credentials: Creden
             OAuthHelper.scriptOAuthData(http, credentials)
         } else if (authMethod.isUserless) {
             OAuthHelper.applicationOnlyOAuthData(http, credentials)
-        } else if (refreshToken != null) {
-            sendRenewalRequest(refreshToken!!)
+        } else if (_refreshToken != null) {
+            sendRenewalRequest(_refreshToken!!)
         } else {
             throw IllegalStateException("Cannot refresh current OAuthData (no refresh token or not a script app)")
         }
 
-        this._current = newData
+        update(newData)
     }
 
     /** Returns true if there is no current OAuthData or it has already expired */
     fun needsRenewing(): Boolean {
-        return current == null || (tokenExpiration ?: return true).before(Date())
+        return (_current?.expiration ?: return true).before(Date())
     }
 
     /**
@@ -89,7 +88,25 @@ class AuthManager(private val http: HttpAdapter, private val credentials: Creden
             credentials.authMethod.isUserless) {
             true
         } else {
-            refreshToken != null
+            _refreshToken != null
+        }
+    }
+
+    internal fun update(newData: OAuthData?) {
+        if (newData != null) {
+            if (_refreshToken == null && newData.refreshToken != null) {
+                _refreshToken = newData.refreshToken
+                if (tokenPersistenceStrategy == TokenPersistenceStrategy.REFRESH_ONLY ||
+                    tokenPersistenceStrategy == TokenPersistenceStrategy.ALL) {
+                    tokenStore.storeRefreshToken(currentUsername(), _refreshToken!!)
+                }
+            }
+
+            if (tokenPersistenceStrategy == TokenPersistenceStrategy.ALL) {
+                tokenStore.storeCurrent(currentUsername(), newData)
+            }
+
+            this._current = newData
         }
     }
 
@@ -111,5 +128,17 @@ class AuthManager(private val http: HttpAdapter, private val credentials: Creden
         }
 
         return res.deserialize()
+    }
+
+    fun currentUsername(): String =
+        if (credentials.authMethod.isUserless) {
+            USERNAME_USERLESS
+        } else {
+            currentUsername ?: USERNAME_UNKOWN
+        }
+
+    companion object {
+        const val USERNAME_USERLESS = "<userless>"
+        const val USERNAME_UNKOWN = "<unknown>"
     }
 }

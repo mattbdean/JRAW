@@ -3,10 +3,7 @@ package net.dean.jraw
 import net.dean.jraw.JrawUtils.jackson
 import net.dean.jraw.http.*
 import net.dean.jraw.models.Submission
-import net.dean.jraw.oauth.AuthManager
-import net.dean.jraw.oauth.AuthMethod
-import net.dean.jraw.oauth.Credentials
-import net.dean.jraw.oauth.OAuthData
+import net.dean.jraw.oauth.*
 import net.dean.jraw.pagination.DefaultPaginator
 import net.dean.jraw.pagination.Paginator
 import net.dean.jraw.ratelimit.LeakyBucketRateLimiter
@@ -20,11 +17,8 @@ import java.util.concurrent.TimeUnit
 /**
  * Specialized class for sending requests to [oauth.reddit.com](https://www.reddit.com/dev/api/oauth).
  *
- * RedditClients **must** be authenticated before they can be of any use. The
- * [OAuthHelper][net.dean.jraw.http.oauth.OAuthHelper] class can help you get authenticated.
- *
- * **RedditClients authenticated with non-script OAuth2 apps are expensive to create** since it requires sending an
- * additional HTTP request. **Creating an instance in an Android app should be done off the main thread**.
+ * RedditClients cannot be instantiated directly through the public API. See the
+ * [OAuthHelper][net.dean.jraw.http.oauth.OAuthHelper] class.
  *
  * This class can also be used to send HTTP requests to other domains, but it is recommended to just use an
  * [HttpAdapter] to do that since all requests are rate limited.
@@ -40,11 +34,15 @@ import java.util.concurrent.TimeUnit
  * By default, any request that responds with a server error code (5XX) will be retried up to five times. You can change
  * this by changing [retryLimit].
  */
-class RedditClient(
+class RedditClient internal constructor(
     /** How this client will send HTTP requests */
     val http: HttpAdapter,
     initialOAuthData: OAuthData,
-    creds: Credentials
+    creds: Credentials,
+    /** The TokenStore to assign to [AuthManager.tokenStore] */
+    tokenStore: TokenStore = NoopTokenStore(),
+    /** A non-null value will prevent a request to /api/v1/me to figure out the authenticated username */
+    overrideUsername: String? = null
 ) {
     /** Every HTTP request/response will be logged with this, unless [logHttp] is false */
     var logger: HttpLogger = SimpleHttpLogger()
@@ -72,36 +70,34 @@ class RedditClient(
     /** How this client manages (re)authentication */
     var authManager = AuthManager(http, creds)
 
-    /**
-     * The logged-in user, or null if this RedditClient is authorized using a non-script app
-     *
-     * @see requireAuthenticatedUser
-     */
-    val username: String? = creds.username
-
     /** The type of OAuth2 app used to authenticate this client */
     val authMethod: AuthMethod = creds.authMethod
 
-    private val authenticatedUsername: String?
-
     init {
-        authManager._current = initialOAuthData
-
-        // username will be non-null for script apps, otherwise we have to manually poll /api/v1/me for the username.
-        // We can't simply use me().about().name because creating a SelfUserReference requires a call to
-        // requireAuthenticatedUser() which in turn requires this variable.
-        authenticatedUsername = username ?: try {
-            val json = request {
-                it.path("/api/v1/me")
-            }.json
-
-            if (!json.has("name"))
-                throw IllegalArgumentException("Cannot get name from response")
-            json.get("name").asText()
-        } catch (e: ApiException) {
-            // Delay throwing an exception until `requireAuthenticatedUser()` is called
+        authManager.currentUsername = if (overrideUsername == AuthManager.USERNAME_USERLESS)
+            // We know there's no authenticated user if we're given the special username for userless auth
             null
-        }
+        else
+            // Use overrideUsername if available, otherwise try to fetch the name from the API. We can't use
+            // me().about().name since that would require a valid access token (we have to call authManager.update after
+            // we have a valid username so TokenStores get the proper name once it gets updated). Instead we directly
+            // make the request and parse the response.
+            overrideUsername ?: try {
+                val json = request(HttpRequest.Builder()
+                    .url("https://oauth.reddit.com/api/v1/me")
+                    .header("Authorization", "bearer ${initialOAuthData.accessToken}")
+                    .build()).json
+
+                if (!json.has("name"))
+                    throw IllegalArgumentException("Cannot get name from response")
+                json.get("name").asText()
+            } catch (e: ApiException) {
+                // Delay throwing an exception until `requireAuthenticatedUser()` is called
+                null
+            }
+
+        authManager.tokenStore = tokenStore
+        authManager.update(initialOAuthData)
     }
 
     /**
@@ -113,7 +109,6 @@ class RedditClient(
             .host("oauth.reddit.com")
             .header("Authorization", "bearer ${authManager.accessToken}")
     }
-
 
     @Throws(NetworkException::class)
     private fun request(r: HttpRequest, retryCount: Int = 0): HttpResponse {
@@ -275,11 +270,11 @@ class RedditClient(
         if (authMethod.isUserless)
             throw IllegalStateException("Expected the RedditClient to have an active user, was authenticated with " +
                 authMethod)
-        return authenticatedUsername ?: throw IllegalStateException("Expected an authenticated user")
+        return authManager.currentUsername ?: throw IllegalStateException("Expected an authenticated user")
     }
 
     override fun toString(): String {
-        return "RedditClient(authenticatedUsername=$authenticatedUsername)"
+        return "RedditClient(username=${authManager.currentUsername()})"
     }
 
     companion object {

@@ -2,6 +2,7 @@ package net.dean.jraw.oauth
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import net.dean.jraw.databind.OAuthDataDeserializer
+import java.util.*
 
 @JsonDeserialize(using = OAuthDataDeserializer::class)
 data class OAuthData(
@@ -15,5 +16,7 @@ data class OAuthData(
     /** A list in scopes the access token has permission for */
     val scopes: List<String>,
 
-    val refreshToken: String?
+    val refreshToken: String?,
+
+    val expiration: Date
 )
