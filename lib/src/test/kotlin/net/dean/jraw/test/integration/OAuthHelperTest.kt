@@ -1,10 +1,7 @@
 package net.dean.jraw.test.integration
 
 import com.winterbe.expekt.should
-import net.dean.jraw.oauth.Credentials
-import net.dean.jraw.oauth.OAuthData
-import net.dean.jraw.oauth.OAuthHelper
-import net.dean.jraw.oauth.StatefulAuthHelper
+import net.dean.jraw.oauth.*
 import net.dean.jraw.test.*
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
@@ -69,7 +66,7 @@ class OAuthHelperTest: Spek({
 
         it("should throw an IllegalStateException when there is no data for a given username") {
             expectException(IllegalStateException::class) {
-                OAuthHelper.fromTokenStore(NoopHttpAdapter, mockScriptCredentials, tokenStore, username)
+                OAuthHelper.fromTokenStore(NoopHttpAdapter, createMockCredentials(AuthMethod.SCRIPT), tokenStore, username)
             }
         }
 
@@ -97,7 +94,7 @@ class OAuthHelperTest: Spek({
             ))
 
             expectException(IllegalStateException::class) {
-                OAuthHelper.fromTokenStore(NoopHttpAdapter, mockScriptCredentials, tokenStore, username)
+                OAuthHelper.fromTokenStore(NoopHttpAdapter, createMockCredentials(AuthMethod.SCRIPT), tokenStore, username)
             }
         }
 

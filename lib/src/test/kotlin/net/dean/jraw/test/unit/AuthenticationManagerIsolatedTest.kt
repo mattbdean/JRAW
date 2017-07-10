@@ -3,6 +3,7 @@ package net.dean.jraw.test.unit
 import com.winterbe.expekt.should
 import net.dean.jraw.JrawUtils
 import net.dean.jraw.oauth.AuthManager
+import net.dean.jraw.oauth.AuthMethod
 import net.dean.jraw.oauth.Credentials
 import net.dean.jraw.oauth.TokenPersistenceStrategy
 import net.dean.jraw.test.*
@@ -30,7 +31,7 @@ class AuthenticationManagerIsolatedTest : Spek({
         }
 
         it("should refresh the OAuthData for script apps") {
-            val authManager = AuthManager(mockAdapter, mockScriptCredentials)
+            val authManager = AuthManager(mockAdapter, createMockCredentials(AuthMethod.SCRIPT))
             authManager.update(createMockOAuthData())
 
             // Make some baseline assertions
@@ -102,7 +103,7 @@ class AuthenticationManagerIsolatedTest : Spek({
         val mockStore = InMemoryTokenStore()
 
         beforeEachTest {
-            authManager = AuthManager(NoopHttpAdapter, mockAppCredentials)
+            authManager = AuthManager(NoopHttpAdapter, createMockCredentials(AuthMethod.APP))
             authManager.currentUsername = username
             authManager.tokenStore = mockStore
             mockStore.reset()
@@ -156,7 +157,7 @@ class AuthenticationManagerIsolatedTest : Spek({
 
     describe("currentUsername (both the property and the method)") {
         it("should return the name of the authenticated user") {
-            val authManager = AuthManager(NoopHttpAdapter, mockScriptCredentials)
+            val authManager = AuthManager(NoopHttpAdapter, createMockCredentials(AuthMethod.SCRIPT))
             authManager.currentUsername = "some_username"
             authManager.currentUsername().should.equal("some_username")
         }
