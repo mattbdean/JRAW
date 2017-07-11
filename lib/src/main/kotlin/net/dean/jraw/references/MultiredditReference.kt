@@ -138,8 +138,8 @@ class MultiredditReference internal constructor(reddit: RedditClient, val userna
         }
     }
 
-    fun posts(): Paginator.Builder<Submission> =
-        DefaultPaginator.Builder<Submission>(reddit, multiPath, sortingAsPathParameter = true)
+    fun posts(): DefaultPaginator.Builder<Submission> =
+        DefaultPaginator.Builder<Submission>(reddit, multiPath, sortingAlsoInPath = true)
 
     companion object {
         @JvmStatic private fun multiPath(username: String, multiName: String) =

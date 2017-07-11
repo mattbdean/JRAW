@@ -26,7 +26,7 @@ class SubredditReference internal constructor(reddit: RedditClient, subreddit: S
      * Creates a new [DefaultPaginator.Builder] to iterate over this subreddit's posts.
      */
     @EndpointImplementation(Endpoint.GET_HOT, Endpoint.GET_NEW, Endpoint.GET_RISING, Endpoint.GET_SORT)
-    fun posts() = DefaultPaginator.Builder<Submission>(reddit, "/r/$subject", sortingAsPathParameter = true)
+    fun posts() = DefaultPaginator.Builder<Submission>(reddit, "/r/$subject", sortingAlsoInPath = true)
 
     /**
      * Gets a random submission from this subreddit. Although it is not marked with [EndpointImplementation], this

@@ -62,10 +62,10 @@ abstract class UserReference(reddit: RedditClient, val username: String) : Abstr
      * Only `overview`, `submitted`, and `comments` are sortable.
      */
     @EndpointImplementation(Endpoint.GET_USER_USERNAME_WHERE)
-    fun history(where: String): Paginator.Builder<PublicContribution<*>> {
+    fun history(where: String): DefaultPaginator.Builder<PublicContribution<*>> {
         // Encode URLs to prevent accidental malformed URLs
         return DefaultPaginator.Builder(reddit, "/user/${urlEncode(username)}/${urlEncode(where)}",
-            sortingAsPathParameter = false)
+            sortingAlsoInPath = false)
     }
 
     /**

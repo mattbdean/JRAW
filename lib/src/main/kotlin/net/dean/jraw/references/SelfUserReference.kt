@@ -8,6 +8,8 @@ import okhttp3.RequestBody
 class SelfUserReference(reddit: RedditClient) : UserReference(reddit, reddit.requireAuthenticatedUser()) {
     override val isSelf = true
 
+    fun inbox() = InboxReference(reddit)
+
     /**
      * Creates a Multireddit (or updates it if it already exists).
      *

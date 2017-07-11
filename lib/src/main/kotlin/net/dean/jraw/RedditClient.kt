@@ -209,7 +209,7 @@ class RedditClient internal constructor(
     fun user(name: String) = OtherUserReference(this, name)
 
     /** Creates a [Paginator.Builder] to iterate posts on the front page */
-    fun frontPage() = DefaultPaginator.Builder<Submission>(this, baseUrl = "", sortingAsPathParameter = true)
+    fun frontPage() = DefaultPaginator.Builder<Submission>(this, baseUrl = "", sortingAlsoInPath = true)
 
     /**
      * Creates a [SubredditReference]

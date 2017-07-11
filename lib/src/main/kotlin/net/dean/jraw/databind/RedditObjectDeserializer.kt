@@ -39,8 +39,13 @@ class RedditObjectDeserializer : StdDeserializer<RedditObject>(RedditObject::cla
         val node = mapper.readTree<JsonNode>(p)
 
         val (dataNode, kind) = verifyRootStructure(node)
-        val clazz = registry[kind] ?:
+        var clazz = registry[kind] ?:
             throw IllegalArgumentException("Unknown kind '$kind'")
+
+        // Intercept requests to parse Comments and username mentions if it's actually a Message. GET /message/inbox
+        // includes messages comments, and username mentions with the same shape, but comments will have a kind of "t1" instead of "t4".
+        if (clazz == Comment::class.java && dataNode.has("subject"))
+            clazz = registry[KindConstants.MESSAGE]!!
 
         return defaultMapper.treeToValue(dataNode, clazz)
     }
@@ -51,6 +56,7 @@ class RedditObjectDeserializer : StdDeserializer<RedditObject>(RedditObject::cla
             KindConstants.TROPHY to Trophy::class.java,
             KindConstants.COMMENT to Comment::class.java,
             KindConstants.SUBMISSION to Submission::class.java,
+            KindConstants.MESSAGE to Message::class.java,
             KindConstants.SUBREDDIT to Subreddit::class.java,
 
             KindConstants.MORE_CHILDREN to MoreChildren::class.java,
