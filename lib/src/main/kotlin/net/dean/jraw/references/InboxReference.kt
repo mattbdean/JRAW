@@ -24,4 +24,39 @@ class InboxReference internal constructor(reddit: RedditClient) : AbstractRefere
     fun iterate(where: String): BarebonesPaginator.Builder<Message> {
         return BarebonesPaginator.Builder(reddit, "/message/${JrawUtils.urlEncode(where)}")
     }
+
+    fun compose(dest: String, subject: String, body: String) = compose(null, dest, subject, body)
+
+    @EndpointImplementation(Endpoint.POST_COMPOSE)
+    fun compose(fromSubreddit: String?, dest: String, subject: String, body: String) {
+        val args = mutableMapOf(
+            "api_type" to "json",
+            "subject" to subject,
+            "text" to body,
+            "to" to dest
+        )
+        if (fromSubreddit != null)
+            args["from_sr"] = fromSubreddit
+
+        reddit.request {
+            it.endpoint(Endpoint.POST_COMPOSE)
+                .post(args)
+        }
+    }
+
+    @EndpointImplementation(Endpoint.POST_READ_MESSAGE, Endpoint.POST_UNREAD_MESSAGE)
+    fun markRead(read: Boolean, firstFullName: String, vararg otherFullNames: String) {
+        reddit.request {
+            it.endpoint(if (read) Endpoint.POST_READ_MESSAGE else Endpoint.POST_UNREAD_MESSAGE)
+                .post(mapOf("id" to listOf(firstFullName, *otherFullNames).joinToString(",")))
+        }
+    }
+
+    @EndpointImplementation(Endpoint.POST_READ_ALL_MESSAGES)
+    fun markAllRead() {
+        reddit.request {
+            it.endpoint(Endpoint.POST_READ_ALL_MESSAGES)
+                .post(mapOf())
+        }
+    }
 }
