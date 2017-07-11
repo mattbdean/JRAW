@@ -1,11 +1,11 @@
-<!--- Generated 2017-07-02 at 04:31:32 EDT. Use `./gradlew :meta:update` to update. DO NOT MODIFY DIRECTLY -->
+<!--- Generated 2017-07-11 at 05:19:49 EDT. Use `./gradlew :meta:update` to update. DO NOT MODIFY DIRECTLY -->
 
 Endpoints
 =========
 
 This file contains a list of all the endpoints (regardless of if they have been implemented) that can be found at the [official reddit API docs](https://www.reddit.com/dev/api/oauth). To update this file, run `./gradlew :meta:update`
 
-So far, **35** endpoints (out of 169) have been implemented.
+So far, **36** endpoints (out of 169) have been implemented.
 
 (any scope)
 -----------
@@ -24,7 +24,7 @@ account
 
 | Method  | Endpoint                                                                         | Implementation                                                                                                                                             |
 |:-------:| -------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `PATCH` | [`/api/v1/me/prefs`](https://www.reddit.com/dev/api/oauth#PATCH_api_v1_me_prefs) | [`SelfUserReference.patchPrefs()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/SelfUserReference.kt#L46) |
+| `PATCH` | [`/api/v1/me/prefs`](https://www.reddit.com/dev/api/oauth#PATCH_api_v1_me_prefs) | [`SelfUserReference.patchPrefs()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/SelfUserReference.kt#L48) |
 
 creddits
 --------
@@ -68,7 +68,7 @@ identity
 | Method | Endpoint                                                                             | Implementation                                                                                                                                        |
 |:------:| ------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `GET`  | [`/api/v1/me`](https://www.reddit.com/dev/api/oauth#GET_api_v1_me)                   | [`UserReference.about()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/UserReference.kt#L23)         |
-| `GET`  | [`/api/v1/me/prefs`](https://www.reddit.com/dev/api/oauth#GET_api_v1_me_prefs)       | [`SelfUserReference.prefs()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/SelfUserReference.kt#L32) |
+| `GET`  | [`/api/v1/me/prefs`](https://www.reddit.com/dev/api/oauth#GET_api_v1_me_prefs)       | [`SelfUserReference.prefs()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/SelfUserReference.kt#L34) |
 | `GET`  | [`/api/v1/me/trophies`](https://www.reddit.com/dev/api/oauth#GET_api_v1_me_trophies) | [`UserReference.trophies()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/UserReference.kt#L34)      |
 
 livemanage
@@ -210,16 +210,16 @@ mysubreddits
 privatemessages
 ---------------
 
-| Method | Endpoint                                                                                    | Implementation |
-|:------:| ------------------------------------------------------------------------------------------- | -------------- |
-| `POST` | [`/api/block`](https://www.reddit.com/dev/api/oauth#POST_api_block)                         | None           |
-| `POST` | [`/api/compose`](https://www.reddit.com/dev/api/oauth#POST_api_compose)                     | None           |
-| `POST` | [`/api/del_msg`](https://www.reddit.com/dev/api/oauth#POST_api_del_msg)                     | None           |
-| `POST` | [`/api/read_all_messages`](https://www.reddit.com/dev/api/oauth#POST_api_read_all_messages) | None           |
-| `POST` | [`/api/read_message`](https://www.reddit.com/dev/api/oauth#POST_api_read_message)           | None           |
-| `POST` | [`/api/unblock_subreddit`](https://www.reddit.com/dev/api/oauth#POST_api_unblock_subreddit) | None           |
-| `POST` | [`/api/unread_message`](https://www.reddit.com/dev/api/oauth#POST_api_unread_message)       | None           |
-| `GET`  | [`/message/{where}`](https://www.reddit.com/dev/api/oauth#GET_message_{where})              | None           |
+| Method | Endpoint                                                                                    | Implementation                                                                                                                                    |
+|:------:| ------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `GET`  | [`/message/{where}`](https://www.reddit.com/dev/api/oauth#GET_message_{where})              | [`InboxReference.iterate()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/InboxReference.kt#L25) |
+| `POST` | [`/api/block`](https://www.reddit.com/dev/api/oauth#POST_api_block)                         | None                                                                                                                                              |
+| `POST` | [`/api/compose`](https://www.reddit.com/dev/api/oauth#POST_api_compose)                     | None                                                                                                                                              |
+| `POST` | [`/api/del_msg`](https://www.reddit.com/dev/api/oauth#POST_api_del_msg)                     | None                                                                                                                                              |
+| `POST` | [`/api/read_all_messages`](https://www.reddit.com/dev/api/oauth#POST_api_read_all_messages) | None                                                                                                                                              |
+| `POST` | [`/api/read_message`](https://www.reddit.com/dev/api/oauth#POST_api_read_message)           | None                                                                                                                                              |
+| `POST` | [`/api/unblock_subreddit`](https://www.reddit.com/dev/api/oauth#POST_api_unblock_subreddit) | None                                                                                                                                              |
+| `POST` | [`/api/unread_message`](https://www.reddit.com/dev/api/oauth#POST_api_unread_message)       | None                                                                                                                                              |
 
 read
 ----
@@ -237,7 +237,7 @@ read
 | `GET`  | [`/hot`](https://www.reddit.com/dev/api/oauth#GET_hot)                                                             | [`SubredditReference.posts()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/SubredditReference.kt#L29)                 |
 | `GET`  | [`/new`](https://www.reddit.com/dev/api/oauth#GET_new)                                                             | [`SubredditReference.posts()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/SubredditReference.kt#L29)                 |
 | `GET`  | [`/r/{subreddit}/about`](https://www.reddit.com/dev/api/oauth#GET_r_{subreddit}_about)                             | [`SubredditReference.about()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/SubredditReference.kt#L23)                 |
-| `GET`  | [`/random`](https://www.reddit.com/dev/api/oauth#GET_random)                                                       | [`RedditClient.randomSubreddit()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/RedditClient.kt#L260)                             |
+| `GET`  | [`/random`](https://www.reddit.com/dev/api/oauth#GET_random)                                                       | [`RedditClient.randomSubreddit()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/RedditClient.kt#L256)                             |
 | `GET`  | [`/rising`](https://www.reddit.com/dev/api/oauth#GET_rising)                                                       | [`SubredditReference.posts()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/SubredditReference.kt#L29)                 |
 | `GET`  | [`/user/{username}/about`](https://www.reddit.com/dev/api/oauth#GET_user_{username}_about)                         | [`UserReference.about()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/UserReference.kt#L23)                           |
 | `GET`  | [`/{sort}`](https://www.reddit.com/dev/api/oauth#GET_{sort})                                                       | [`SubredditReference.posts()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/SubredditReference.kt#L29)                 |

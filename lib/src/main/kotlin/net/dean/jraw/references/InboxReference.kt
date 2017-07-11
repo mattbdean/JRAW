@@ -1,5 +1,7 @@
 package net.dean.jraw.references
 
+import net.dean.jraw.Endpoint
+import net.dean.jraw.EndpointImplementation
 import net.dean.jraw.JrawUtils
 import net.dean.jraw.RedditClient
 import net.dean.jraw.models.Message
@@ -18,6 +20,7 @@ class InboxReference internal constructor(reddit: RedditClient) : AbstractRefere
      * - `selfreply` — only top-level replies to posts submitted by the user
      * - `mentions` — only comments that mention this user
      */
+    @EndpointImplementation(Endpoint.GET_MESSAGE_WHERE)
     fun iterate(where: String): BarebonesPaginator.Builder<Message> {
         return BarebonesPaginator.Builder(reddit, "/message/${JrawUtils.urlEncode(where)}")
     }
