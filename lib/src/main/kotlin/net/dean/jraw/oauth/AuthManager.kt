@@ -18,16 +18,18 @@ class AuthManager(
     private val http: HttpAdapter,
     private val credentials: Credentials
 ) {
-    /**
-     * Current OAuthData. Set to `internal` visibility instead of `private` for testing purposes. Setting this property
-     * also sets [tokenExpiration]. If [refreshToken] is null and the new OAuthData's refresh token isn't,
-     * [refreshToken] gets updated as well.
-     */
+    /** The most current OAuthData for this app as understood by this client. */
     private var _current: OAuthData? = null
+
+    /** The most up-to-date auth data as understood by this manager. */
+    val current: OAuthData? get() = _current
 
     internal var currentUsername: String? = null
 
+    /** Called when new OAuthData or refresh tokens are received, depending on [tokenPersistenceStrategy] */
     var tokenStore: TokenStore = NoopTokenStore()
+
+    /** For what data the [tokenStore] will be invoked */
     var tokenPersistenceStrategy = TokenPersistenceStrategy.ALL
 
     /**
@@ -35,6 +37,10 @@ class AuthManager(
      */
     internal var _refreshToken: String? = null
 
+    /**
+     * A token that will allow the client to refresh the access token without having the user approve the app again.
+     * Only applicable for OAuth2 apps that require this functionality: [AuthMethod.APP] and [AuthMethod.WEBAPP].
+     */
     val refreshToken: String? get() = _refreshToken
 
     /**
@@ -48,14 +54,11 @@ class AuthManager(
     /** Alias to [credentials].authMethod */
     internal val authMethod = credentials.authMethod
 
-    /** The most up-to-date auth data as understood by this manager. */
-    val current: OAuthData? get() = _current
-
     /**
      * Tries to obtain more up-to-date authentication data.
      *
      * If using a script app or application-only authentication, renewal can be done automatically (by simply requesting
-     * a new token). For web and installed apps, a non-null [_refreshToken] is required. See the [StatefulAuthHelper]
+     * a new token). For web and installed apps, a non-null [refreshToken] is required. See the [StatefulAuthHelper]
      * class documentation for more.
      */
     fun renew() {
@@ -130,6 +133,11 @@ class AuthManager(
         return res.deserialize()
     }
 
+    /**
+     * Gets the current authenticated username, as understood by this client. If there is no active user, returns
+     * [USERNAME_USERLESS] when authenticated in application-only mode, [USERNAME_UNKOWN] when there is no current
+     * username.
+     */
     fun currentUsername(): String =
         if (credentials.authMethod.isUserless) {
             USERNAME_USERLESS
@@ -138,7 +146,9 @@ class AuthManager(
         }
 
     companion object {
+        /** Equal to "`<userless>`" */
         const val USERNAME_USERLESS = "<userless>"
+        /** Equal to "`<unknown>`" */
         const val USERNAME_UNKOWN = "<unknown>"
     }
 }
