@@ -26,4 +26,21 @@ class SubmissionReference internal constructor(reddit: RedditClient, id: String)
      * ```
      */
     fun inspect(): Submission = comments().submission
+
+    /** Equivalent to `setHidden(true)` */
+    fun hide() = setHidden(true)
+
+    /** Equivalent to `setHidden(false)` */
+    fun unhide() = setHidden(false)
+
+    /** Hides or unhides this submission */
+    @EndpointImplementation(Endpoint.POST_HIDE, Endpoint.POST_UNHIDE)
+    fun setHidden(hidden: Boolean) {
+        // Just make sure it doesn't throw an exception
+        reddit.request {
+            it.endpoint(if (hidden) Endpoint.POST_HIDE else Endpoint.POST_UNHIDE)
+                // 'id' requires a full name
+                .post(mapOf("id" to KindConstants.SUBMISSION + "_" + subject))
+        }
+    }
 }

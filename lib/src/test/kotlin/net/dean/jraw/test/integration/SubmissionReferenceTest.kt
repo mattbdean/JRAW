@@ -74,4 +74,11 @@ class SubmissionReferenceTest : Spek({
             SharedObjects.submittedSelfPost!!.inspect().author.should.equal("[deleted]")
         }
     }
+
+    describe("hide/unhide") {
+        ref.hide()
+        ref.inspect().hidden.should.be.`true`
+        ref.unhide()
+        ref.inspect().hidden.should.be.`false`
+    }
 })
