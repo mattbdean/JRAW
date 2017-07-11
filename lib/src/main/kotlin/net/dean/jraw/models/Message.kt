@@ -27,7 +27,7 @@ data class Message(
     val dest: String,
 
     @JsonDeserialize(using = DistinguishedStatusDeserializer::class)
-    override val distinguished: DistinguishedStatus,
+    override val distinguished: DistinguishedStatus?,
 
     /** The result of `"t5_" + id` */
     @JsonProperty("name")
