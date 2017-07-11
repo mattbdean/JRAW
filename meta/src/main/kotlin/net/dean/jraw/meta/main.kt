@@ -11,6 +11,7 @@ import java.io.File
 fun main(args: Array<String>) {
     val opts = parseArgsArray(args)
     val tasks = filterArguments(opts)
+    var failed = 0
 
     if (tasks.isNotEmpty()) {
         val endpoints = EndpointParser().fetch()
@@ -22,11 +23,14 @@ fun main(args: Array<String>) {
                 println("${it.name}: $message")
             } catch (e: Exception) {
                 System.err.println("${it.name}: ${e.message}")
+                failed++
             }
         }
     } else {
         println("Nothing to do")
     }
+
+    System.exit(failed)
 }
 
 val tasks: List<Task> = listOf(

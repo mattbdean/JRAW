@@ -65,6 +65,12 @@ val subcomment = comment.comment(...)
 
 To get started you'll need to create two [reddit OAuth2 apps](https://www.reddit.com/prefs/apps), one script and one installed.
 
+To have this done automatically for you, run this command:
+
+```sh
+$ ./gradlew :meta:credentials --no-daemon --console plain
+```
+
 `lib/src/test/resources/credentials.json`:
 
 ```json
