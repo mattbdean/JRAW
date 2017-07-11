@@ -13,7 +13,7 @@ import org.jetbrains.spek.api.dsl.it
 import java.util.*
 import kotlin.properties.Delegates
 
-class AuthenticationManagerIsolatedTest : Spek({
+class AuthManagerTest : Spek({
     val mockAdapter = MockHttpAdapter()
 
     fun mockOAuthDataResponse() = """
