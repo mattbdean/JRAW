@@ -2,6 +2,8 @@ package net.dean.jraw.references
 
 import net.dean.jraw.*
 import net.dean.jraw.models.MultiredditPatch
+import net.dean.jraw.models.Subreddit
+import net.dean.jraw.pagination.DefaultPaginator
 import okhttp3.MediaType
 import okhttp3.RequestBody
 
@@ -47,5 +49,19 @@ class SelfUserReference(reddit: RedditClient) : UserReference(reddit, reddit.req
     fun patchPrefs(newPrefs: Map<String, Any>): Map<String, Any> {
         val body = RequestBody.create(MediaType.parse("application/json"), JrawUtils.jackson.writeValueAsString(newPrefs))
         return reddit.request { it.endpoint(Endpoint.PATCH_ME_PREFS).patch(body) }.deserialize()
+    }
+
+    /**
+     * Returns a Paginator builder for subreddits the user is associated with
+     *
+     * Possible `where` values:
+     *
+     * - `contributor`
+     * - `moderator`
+     * - `subscriber`
+     */
+    @EndpointImplementation(Endpoint.GET_SUBREDDITS_MINE_WHERE)
+    fun subreddits(where: String): DefaultPaginator.Builder<Subreddit> {
+        return DefaultPaginator.Builder(reddit, "/subreddits/mine/${JrawUtils.urlEncode(where)}")
     }
 }

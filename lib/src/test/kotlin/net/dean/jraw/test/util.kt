@@ -5,7 +5,9 @@ import net.dean.jraw.RateLimitException
 import net.dean.jraw.RedditClient
 import net.dean.jraw.http.*
 import net.dean.jraw.models.Listing
+import net.dean.jraw.models.RedditObject
 import net.dean.jraw.models.Submission
+import net.dean.jraw.pagination.Paginator
 import net.dean.jraw.test.TestConfig.userAgent
 import org.jetbrains.spek.api.dsl.SpecBody
 import org.jetbrains.spek.api.dsl.TestBody
@@ -69,6 +71,21 @@ fun expectDescendingScore(posts: Listing<Submission>, allowedMistakes: Int = 0) 
             }
         prevScore = posts[i].score
     }
+}
+
+fun <T : RedditObject> testPaginator(p: Paginator.Builder<T>, mustHaveContent: Boolean = true): List<List<T>> {
+    // Primarily just make sure that requests don't fail
+    val lists = p.build().accumulate(maxPages = 2)
+
+    // If requested, assert that the result has data
+    if (mustHaveContent)
+        lists[0].should.have.size.above(0)
+
+    if (lists.size > 1)
+        // Make sure we're properly requesting the next page
+        lists[0][0].should.not.equal(lists[1][0])
+
+    return lists
 }
 
 fun SpecBody.assume(check: () -> Boolean, description: String, body: TestBody.() -> Unit) {

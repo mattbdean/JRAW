@@ -4,6 +4,7 @@ import com.winterbe.expekt.should
 import net.dean.jraw.test.TestConfig.reddit
 import net.dean.jraw.test.TestConfig.redditUserless
 import net.dean.jraw.test.expectException
+import net.dean.jraw.test.testPaginator
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
@@ -35,6 +36,17 @@ class SelfUserReferenceTest : Spek({
             val newVal = !(me.prefs()[key] as Boolean)
             val newPrefsPatch = mapOf(key to newVal)
             me.patchPrefs(newPrefsPatch)[key].should.equal(newVal)
+        }
+    }
+
+    describe("subreddits") {
+        val whereValues = listOf("contributor", "moderator", "subscriber")
+
+        for (where in whereValues) {
+            it("should be able to find subreddits where user is '$where'") {
+                val p = reddit.me().subreddits(where)
+                testPaginator(p, mustHaveContent = false)
+            }
         }
     }
 })
