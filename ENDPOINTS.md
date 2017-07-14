@@ -1,11 +1,11 @@
-<!--- Generated 2017-07-14 at 18:45:05 EDT. Use `./gradlew :meta:update` to update. DO NOT MODIFY DIRECTLY -->
+<!--- Generated 2017-07-14 at 19:16:15 EDT. Use `./gradlew :meta:update` to update. DO NOT MODIFY DIRECTLY -->
 
 Endpoints
 =========
 
 This file contains a list of all the endpoints (regardless of if they have been implemented) that can be found at the [official reddit API docs](https://www.reddit.com/dev/api/oauth). To update this file, run `./gradlew :meta:update`
 
-So far, **44** endpoints (out of 169) have been implemented.
+So far, **45** endpoints (out of 169) have been implemented.
 
 (any scope)
 -----------
@@ -213,12 +213,12 @@ privatemessages
 | Method | Endpoint                                                                                    | Implementation                                                                                                                                        |
 |:------:| ------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `POST` | [`/api/compose`](https://www.reddit.com/dev/api/oauth#POST_api_compose)                     | [`InboxReference.compose()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/InboxReference.kt#L28)     |
+| `POST` | [`/api/del_msg`](https://www.reddit.com/dev/api/oauth#POST_api_del_msg)                     | [`InboxReference.delete()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/InboxReference.kt#L73)      |
 | `POST` | [`/api/read_all_messages`](https://www.reddit.com/dev/api/oauth#POST_api_read_all_messages) | [`InboxReference.markAllRead()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/InboxReference.kt#L57) |
 | `POST` | [`/api/read_message`](https://www.reddit.com/dev/api/oauth#POST_api_read_message)           | [`InboxReference.markRead()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/InboxReference.kt#L49)    |
 | `POST` | [`/api/unread_message`](https://www.reddit.com/dev/api/oauth#POST_api_unread_message)       | [`InboxReference.markRead()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/InboxReference.kt#L49)    |
 | `GET`  | [`/message/{where}`](https://www.reddit.com/dev/api/oauth#GET_message_{where})              | [`InboxReference.iterate()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/InboxReference.kt#L25)     |
 | `POST` | [`/api/block`](https://www.reddit.com/dev/api/oauth#POST_api_block)                         | None                                                                                                                                                  |
-| `POST` | [`/api/del_msg`](https://www.reddit.com/dev/api/oauth#POST_api_del_msg)                     | None                                                                                                                                                  |
 | `POST` | [`/api/unblock_subreddit`](https://www.reddit.com/dev/api/oauth#POST_api_unblock_subreddit) | None                                                                                                                                                  |
 
 read

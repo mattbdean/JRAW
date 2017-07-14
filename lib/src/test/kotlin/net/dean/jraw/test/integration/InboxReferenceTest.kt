@@ -23,7 +23,7 @@ class InboxReferenceTest : Spek({
         }
     }
 
-    describe("compose/markRead") {
+    describe("compose/markRead/delete") {
         it("should be able to send a message") {
             val body = "random ID: ${randomName()}"
             inbox.compose(reddit.requireAuthenticatedUser(), "test PM", body)
@@ -36,6 +36,9 @@ class InboxReferenceTest : Spek({
 
             inbox.markRead(false, message!!.fullName)
             inbox.markRead(true, message.fullName)
+
+            // Jst make sure it doesn't fail
+            inbox.delete(message.fullName)
         }
     }
 

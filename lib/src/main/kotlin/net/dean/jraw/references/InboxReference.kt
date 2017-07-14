@@ -59,4 +59,20 @@ class InboxReference internal constructor(reddit: RedditClient) : AbstractRefere
                 .post(mapOf())
         }
     }
+
+    /**
+     * Removes a message from the user's inbox. Note that the message will remain in the inboxes of the other
+     * participants and on reddit servers. Deleted messages will not appear in the user's inbox.
+     *
+     * @param fullName The full name of a message, something like `t4_xxxxx`
+     *
+     * @see Message.fullName
+     */
+    @EndpointImplementation(Endpoint.POST_DEL_MSG)
+    fun delete(fullName: String) {
+        reddit.request {
+            it.endpoint(Endpoint.POST_DEL_MSG)
+                .post(mapOf("id" to fullName))
+        }
+    }
 }
