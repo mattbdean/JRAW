@@ -1,6 +1,6 @@
 package net.dean.jraw.references
 
-import com.fasterxml.jackson.module.kotlin.treeToValue
+import com.fasterxml.jackson.databind.type.TypeFactory
 import net.dean.jraw.*
 import net.dean.jraw.models.KarmaBySubreddit
 import net.dean.jraw.models.MultiredditPatch
@@ -72,8 +72,10 @@ class SelfUserReference(reddit: RedditClient) : UserReference(reddit, reddit.req
      */
     @EndpointImplementation(Endpoint.GET_ME_KARMA)
     fun karma(): List<KarmaBySubreddit> {
-        return JrawUtils.jackson.treeToValue(reddit.request {
+        val json = reddit.request {
             it.endpoint(Endpoint.GET_ME_KARMA)
-        }.json.get("data"))
+        }.json.get("data")
+        val type = TypeFactory.defaultInstance().constructCollectionType(List::class.java, KarmaBySubreddit::class.java)
+        return JrawUtils.jackson.readValue(json.toString(), type)
     }
 }
