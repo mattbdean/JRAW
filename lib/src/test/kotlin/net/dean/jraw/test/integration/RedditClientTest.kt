@@ -4,6 +4,7 @@ import com.winterbe.expekt.should
 import net.dean.jraw.http.HttpRequest
 import net.dean.jraw.http.NetworkException
 import net.dean.jraw.http.SimpleHttpLogger
+import net.dean.jraw.models.Listing
 import net.dean.jraw.models.Sorting
 import net.dean.jraw.models.TimePeriod
 import net.dean.jraw.oauth.OAuthHelper
@@ -135,6 +136,19 @@ class RedditClientTest : Spek({
                     .limit(10)
                     .build().next(),
                 allowedMistakes = 3)
+        }
+    }
+
+    describe("lookup") {
+        it("should not send a request when given no names") {
+            // NoopHttpAdapter throws an Exception when trying to send a request
+            val reddit = newMockRedditClient(NoopHttpAdapter)
+            reddit.lookup().should.equal(Listing())
+        }
+
+        it("should accept full names of submissions, comments, and subreddits") {
+            val res = reddit.lookup("t5_2qh0u", "t3_6afe8u", "t1_dhe4fl0")
+            res.map { it.kind }.should.equal(listOf("t5", "t3", "t1"))
         }
     }
 })

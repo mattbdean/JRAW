@@ -2,6 +2,8 @@ package net.dean.jraw
 
 import net.dean.jraw.JrawUtils.jackson
 import net.dean.jraw.http.*
+import net.dean.jraw.models.Listing
+import net.dean.jraw.models.RedditObject
 import net.dean.jraw.models.Submission
 import net.dean.jraw.oauth.*
 import net.dean.jraw.pagination.DefaultPaginator
@@ -272,6 +274,25 @@ class RedditClient internal constructor(
             throw IllegalStateException("Expected the RedditClient to have an active user, was authenticated with " +
                 authMethod)
         return authManager.currentUsername ?: throw IllegalStateException("Expected an authenticated user")
+    }
+
+    /**
+     * varargs version of `lookup` provided for convenience.
+     */
+    fun lookup(vararg fullNames: String) = lookup(listOf(*fullNames))
+
+    /**
+     * Attempts to find information for the given full names. Only the full names of submissions, comments, and
+     * subreddits are accepted.
+     */
+    @EndpointImplementation(Endpoint.GET_INFO)
+    fun lookup(fullNames: List<String>): Listing<RedditObject> {
+        if (fullNames.isEmpty()) return Listing()
+
+        return request {
+            it.endpoint(Endpoint.GET_INFO)
+                .query(mapOf("id" to fullNames.joinToString(",")))
+        }.deserialize()
     }
 
     override fun toString(): String {

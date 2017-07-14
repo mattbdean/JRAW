@@ -13,6 +13,10 @@ data class Listing<T : RedditObject>(
     val before: String?,
     val children: List<T>
 ) : List<T> {
+
+    /** Constructs an empty Listing */
+    constructor() : this(null, null, emptyList())
+
     // kotlin.collections.List inherited methods and properties
     override val size: Int = children.size
     override fun contains(element: T) = children.contains(element)

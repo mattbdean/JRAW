@@ -34,7 +34,7 @@ fun createMockCredentials(type: AuthMethod) = when (type) {
 }
 
 /** Creates a RedditClient with mocked OAuthData, Credentials, an InMemoryTokenStore, and a NoopRateLimiter */
-fun newMockRedditClient(adapter: MockHttpAdapter): RedditClient {
+fun newMockRedditClient(adapter: HttpAdapter): RedditClient {
     val r = RedditClient(adapter, createMockOAuthData(), createMockCredentials(AuthMethod.SCRIPT), InMemoryTokenStore(), overrideUsername = "<mock>")
     r.rateLimiter = NoopRateLimiter()
     return r
