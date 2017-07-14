@@ -1,6 +1,8 @@
 package net.dean.jraw.references
 
+import com.fasterxml.jackson.module.kotlin.treeToValue
 import net.dean.jraw.*
+import net.dean.jraw.models.KarmaBySubreddit
 import net.dean.jraw.models.MultiredditPatch
 import net.dean.jraw.models.Subreddit
 import net.dean.jraw.pagination.DefaultPaginator
@@ -63,5 +65,15 @@ class SelfUserReference(reddit: RedditClient) : UserReference(reddit, reddit.req
     @EndpointImplementation(Endpoint.GET_SUBREDDITS_MINE_WHERE)
     fun subreddits(where: String): DefaultPaginator.Builder<Subreddit> {
         return DefaultPaginator.Builder(reddit, "/subreddits/mine/${JrawUtils.urlEncode(where)}")
+    }
+
+    /**
+     * Fetches a breakdown of comment and link karma by subreddit for the user
+     */
+    @EndpointImplementation(Endpoint.GET_ME_KARMA)
+    fun karma(): List<KarmaBySubreddit> {
+        return JrawUtils.jackson.treeToValue(reddit.request {
+            it.endpoint(Endpoint.GET_ME_KARMA)
+        }.json.get("data"))
     }
 }

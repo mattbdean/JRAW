@@ -49,4 +49,10 @@ class SelfUserReferenceTest : Spek({
             }
         }
     }
+
+    describe("karma") {
+        it("should return a List<KarmaBySubreddit>") {
+            println(reddit.me().karma())
+        }
+    }
 })
