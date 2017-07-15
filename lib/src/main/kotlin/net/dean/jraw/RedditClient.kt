@@ -255,7 +255,7 @@ class RedditClient internal constructor(
      *
      * @see SubredditReference.randomSubmission
      */
-    @EndpointImplementation(Endpoint.GET_RANDOM)
+    @EndpointImplementation(Endpoint.GET_RANDOM, type = MethodType.NON_BLOCKING_CALL)
     fun randomSubreddit() = subreddit("random")
 
     /**

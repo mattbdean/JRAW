@@ -6,4 +6,8 @@ package net.dean.jraw
  */
 @MustBeDocumented
 @Target(AnnotationTarget.FUNCTION)
-annotation class EndpointImplementation(vararg val endpoints: Endpoint)
+annotation class EndpointImplementation(
+    /** A list of endpoints this method handles */
+    vararg val endpoints: Endpoint,
+    val type: MethodType = MethodType.BLOCKING_CALL
+)

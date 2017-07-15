@@ -62,7 +62,7 @@ class SelfUserReference(reddit: RedditClient) : UserReference(reddit, reddit.req
      * - `moderator`
      * - `subscriber`
      */
-    @EndpointImplementation(Endpoint.GET_SUBREDDITS_MINE_WHERE)
+    @EndpointImplementation(Endpoint.GET_SUBREDDITS_MINE_WHERE, type = MethodType.NON_BLOCKING_CALL)
     fun subreddits(where: String): DefaultPaginator.Builder<Subreddit> {
         return DefaultPaginator.Builder(reddit, "/subreddits/mine/${JrawUtils.urlEncode(where)}")
     }

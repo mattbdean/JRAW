@@ -2,11 +2,8 @@ package net.dean.jraw.references
 
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.fasterxml.jackson.module.kotlin.treeToValue
-import net.dean.jraw.Endpoint
-import net.dean.jraw.EndpointImplementation
-import net.dean.jraw.JrawUtils
+import net.dean.jraw.*
 import net.dean.jraw.JrawUtils.urlEncode
-import net.dean.jraw.RedditClient
 import net.dean.jraw.databind.ListingDeserializer
 import net.dean.jraw.models.Account
 import net.dean.jraw.models.Multireddit
@@ -61,7 +58,7 @@ abstract class UserReference(reddit: RedditClient, val username: String) : Abstr
      *
      * Only `overview`, `submitted`, and `comments` are sortable.
      */
-    @EndpointImplementation(Endpoint.GET_USER_USERNAME_WHERE)
+    @EndpointImplementation(Endpoint.GET_USER_USERNAME_WHERE, type = MethodType.NON_BLOCKING_CALL)
     fun history(where: String): DefaultPaginator.Builder<PublicContribution<*>> {
         // Encode URLs to prevent accidental malformed URLs
         return DefaultPaginator.Builder(reddit, "/user/${urlEncode(username)}/${urlEncode(where)}",

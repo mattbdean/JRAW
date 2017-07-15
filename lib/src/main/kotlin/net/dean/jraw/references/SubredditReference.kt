@@ -23,9 +23,12 @@ class SubredditReference internal constructor(reddit: RedditClient, subreddit: S
     fun about(): Subreddit = reddit.request { it.path("/r/$subject/about") }.deserialize()
 
     /**
-     * Creates a new [DefaultPaginator.Builder] to iterate over this subreddit's posts.
+     * Creates a new [DefaultPaginator.Builder] to iterate over this subreddit's posts. Not a blocking call.
      */
-    @EndpointImplementation(Endpoint.GET_HOT, Endpoint.GET_NEW, Endpoint.GET_RISING, Endpoint.GET_SORT)
+    @EndpointImplementation(
+        Endpoint.GET_HOT, Endpoint.GET_NEW, Endpoint.GET_RISING, Endpoint.GET_SORT,
+        type = MethodType.NON_BLOCKING_CALL
+    )
     fun posts() = DefaultPaginator.Builder<Submission>(reddit, "/r/$subject", sortingAlsoInPath = true)
 
     /**
