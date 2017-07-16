@@ -14,7 +14,6 @@ buildscript {
     dependencies {
         classpath "com.squareup.okhttp3:okhttp:$okhttpVersion"
         classpath "com.squareup.okhttp3:okhttp-urlconnection:$okhttpVersion"
-        classpath "com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion"
         classpath "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
         classpath "org.jsoup:jsoup:1.10.3"
     }

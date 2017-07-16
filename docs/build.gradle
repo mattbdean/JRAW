@@ -1,0 +1,23 @@
+apply plugin: 'kotlin'
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
+    compile 'com.github.javaparser:javaparser-core:3.2.11'
+    compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+    compile 'es.nitaur.markdown:txtmark:0.16'
+    compile "org.jtwig:jtwig-core:5.85.3.RELEASE"
+    compile project(':lib')
+    runtime "org.slf4j:slf4j-simple:1.7.25"
+}
+
+task buildSite(type: JavaExec, dependsOn: classes) {
+    main = 'net.dean.jraw.docs.MainKt'
+    classpath = sourceSets.main.runtimeClasspath
+
+    def samplesDir = sourceSets.main.java.srcDirs[0]
+    args = [
+        "--samples-dir", samplesDir,
+        "--output-dir", file("build/docs").absolutePath,
+        "--resources-dir", sourceSets.main.resources.srcDirs[0].absolutePath
+    ]
+}

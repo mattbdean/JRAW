@@ -1,4 +1,5 @@
 rootProject.name = 'JRAW'
 include 'lib'
 include 'meta'
+include 'docs'
 
