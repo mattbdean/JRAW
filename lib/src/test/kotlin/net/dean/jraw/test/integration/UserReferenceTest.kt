@@ -9,6 +9,7 @@ import net.dean.jraw.references.UserReference
 import net.dean.jraw.test.CredentialsUtil
 import net.dean.jraw.test.TestConfig.reddit
 import net.dean.jraw.test.TestConfig.redditUserless
+import net.dean.jraw.test.expectDescendingScore
 import net.dean.jraw.test.expectException
 import net.dean.jraw.test.randomName
 import org.jetbrains.spek.api.Spek
@@ -57,12 +58,8 @@ class UserReferenceTest : Spek({
 
             if (where !in sortable) return
             if (models.isEmpty()) return
-            var last: Int = models[0].score
 
-            for (i in 1..models.size - 1) {
-                models[i].score.should.be.at.most(last)
-                last = models[i].score
-            }
+            expectDescendingScore(models, allowedMistakes = 1)
         }
 
         // Dynamically create tests

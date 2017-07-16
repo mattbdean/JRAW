@@ -6,7 +6,7 @@ import net.dean.jraw.RedditClient
 import net.dean.jraw.http.*
 import net.dean.jraw.models.Listing
 import net.dean.jraw.models.RedditObject
-import net.dean.jraw.models.Submission
+import net.dean.jraw.models.Votable
 import net.dean.jraw.pagination.Paginator
 import net.dean.jraw.test.TestConfig.userAgent
 import org.jetbrains.spek.api.dsl.SpecBody
@@ -58,18 +58,19 @@ fun randomName(length: Int = 10): String {
     return "jraw_test_" + BigInteger(130, rand).toString(32).substring(0..length - 1)
 }
 
-fun expectDescendingScore(posts: Listing<Submission>, allowedMistakes: Int = 0) {
+fun <T : RedditObject> expectDescendingScore(posts: Listing<T>, allowedMistakes: Int = 0) {
+    val votables = posts.map { it as Votable }
     if (posts.isEmpty()) throw IllegalArgumentException("posts was empty")
-    var prevScore = posts[0].score
+    var prevScore = votables[0].score
     var mistakes = 0
 
-    for (i in 1..posts.size - 1) {
-        if (posts[i].score > prevScore)
+    for (i in 1..votables.size - 1) {
+        if (votables[i].score > prevScore)
             if (++mistakes > allowedMistakes) {
-                val scores = posts.map { it.score }
+                val scores = votables.map { it.score }
                 throw IllegalArgumentException("Was not descending score (allowed $allowedMistakes mistakes): $scores")
             }
-        prevScore = posts[i].score
+        prevScore = votables[i].score
     }
 }
 
