@@ -8,6 +8,6 @@ public class Quickstart {
 
     @CodeSample
     private static void userAgent() {
-        UserAgent myUserAgent = new UserAgent("desktop", "net.dean.awesomescript", "v0.1", "thatJavaNerd");
+        UserAgent userAgent = new UserAgent("desktop", "net.dean.awesomescript", "v0.1", "thatJavaNerd");
     }
 }

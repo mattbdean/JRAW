@@ -159,3 +159,15 @@ a:hover {
 a:active, a:hover {
     outline-width: 0;
 }
+
+a.doc-link {
+    /* Set in conjunction with hljs theme */
+    color: #333;
+    border-bottom: 1px dashed rgba(0, 0, 0, 0.54);
+}
+
+a.doc-link:hover {
+    text-decoration: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.54);
+}
+
