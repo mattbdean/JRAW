@@ -1,12 +1,10 @@
 package net.dean.jraw.docs
 
-import com.github.rjeschke.txtmark.BlockEmitter
 import com.github.rjeschke.txtmark.Configuration
 import com.github.rjeschke.txtmark.Processor
 import org.jtwig.JtwigModel
 import org.jtwig.JtwigTemplate
 import java.io.File
-import java.lang.StringBuilder
 
 private const val SAMPLES_DIR_ARG = "--samples-dir"
 private const val OUT_DIR_ARG = "--output-dir"
@@ -117,34 +115,3 @@ fun walkRecursive(base: File): List<File> {
     return files
 }
 
-private class CodeBlockEmitter(private val codeSamples: List<CodeSampleRef>) : BlockEmitter {
-    override fun emitBlock(out: StringBuilder, lines: MutableList<String>, meta: String) {
-        var codeSample: CodeSampleRef? = null
-
-        // Test to see if the code block is referencing a CodeSample
-        if (meta.trim().startsWith("@")) {
-            val name = meta.trim().substring(1)
-            codeSample = codeSamples.firstOrNull { it.name == name } ?:
-                failAndExit("No code sample with name '$name'")
-        }
-
-        // Use 'nohighlight' when no language is specified to prevent highlight.js from guessing
-        val lang = if (meta.isBlank()) "nohighlight" else if (codeSample != null) "java" else meta
-
-        // Use the code sample's lines if applicable
-        val actualLines = if (codeSample == null) lines else codeSample.content
-
-        with (out) {
-            // Write the code block
-            append("""<div class="code-container"><pre><code class="$lang">""")
-            for (line in actualLines) {
-                appendln(naiveHtmlEscape(line))
-            }
-            append("""</code></pre></div>""")
-        }
-    }
-
-    private fun naiveHtmlEscape(str: String) =
-        // It works I guess
-        str.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
-}
