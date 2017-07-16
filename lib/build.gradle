@@ -23,6 +23,7 @@ dokka {
     jdkVersion = 7
     impliedPlatforms = ['JVM']
     reportNotDocumented = true
+    outputFormat = 'javadoc'
 
     linkMapping {
         dir = file('src/main/kotlin')

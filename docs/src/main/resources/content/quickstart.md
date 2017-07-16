@@ -20,7 +20,7 @@ dependencies {
 
 Add jCenter (`https://jcenter.bintray.com`) to your repositories and then add the dependency to the `pom.xml`:
 
-```xml
+```xml|escapeHtml
 <dependency>
     <groupId>net.dean.jraw</groupId>
     <artifactId>JRAW</artifactId>
@@ -45,27 +45,27 @@ _
 
 ## Authentication
 
-Now we can create a [`RedditClient`](https://thatjavanerd.github.io/JRAW/docs/latest/net/dean/jraw/RedditClient.html):
+Now we can create a [[@RedditClient]]
 
 ```java
 RedditClient redditClient = new RedditClient(myUserAgent);
 ```
 
-Because reddit uses OAuth2, this RedditClient will need to be authenticated before it can do anything useful. Fortunately, `RedditClient` comes with a helper class: [`OAuthHelper`](https://thatjavanerd.github.io/JRAW/docs/latest/net/dean/jraw/http/oauth/OAuthHelper.html). This guide will assume you picked a script app, since those are the easiest to authenticate. If you need to use a web or installed app, see the [OAuth2 page](https://github.com/thatJavaNerd/JRAW/wiki/OAuth2).
+Because reddit uses OAuth2, this RedditClient will need to be authenticated before it can do anything useful. Fortunately, `RedditClient` comes with a helper class: [[@OAuthHelper]]. This guide will assume you picked a script app, since those are the easiest to authenticate. If you need to use a web or installed app, see the [OAuth2 page](https://github.com/thatJavaNerd/JRAW/wiki/OAuth2).
 
-The first thing we need to do is get our credentials in order. JRAW comes with a [`Credentials`](https://thatjavanerd.github.io/JRAW/docs/latest/net/dean/jraw/http/oauth/Credentials.html) class to help us organize everything.
+The first thing we need to do is get our credentials in order. JRAW comes with a [[@Credentials]] class to help us organize everything.
 
-```java
+```java|escapeHtml
 Credentials credentials = Credentials.script("<username>", "<password>", "<clientId>", "<clientSecret>");
 ```
 
-To use this data, we need to use the `RedditClient`'s `OAuthHelper`. Since the `Credentials` we created was for a script, we can make use of `OAuthHelper`'s [`easyAuth(Credentials)`](https://thatjavanerd.github.io/JRAW/docs/latest/net/dean/jraw/http/oauth/OAuthHelper.html#easyAuth(net.dean.jraw.http.oauth.Credentials)) method.
+To use this data, we need to use the RedditClient's OAuthHelper. Since the Credentials we created was for a script, we can make use of OAuthHelper's `eashAuth` method.
 
 ```java
 OAuthData authData = redditClient.getOAuthHelper().easyAuth(credentials);
 ```
 
-Finally, we can notify the `RedditClient` that we have been authorized.
+Finally, we can notify the RedditClient that we have been authorized.
 
 ```java
 redditClient.authenticate(authData);

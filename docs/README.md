@@ -50,6 +50,27 @@ System.out.println(x);
 
 If there is no content in the code block it won't be rendered. The standard here is to include a single underscore. Note that it won't show up in the final HTML.
 
+We can also include a link to a JRAW class using this syntax:
+
+```
+[[@RedditClient]]
+```
+
+This is essentially equivalent to writing
+
+```
+[RedditClient](http://host.com/path/to/javadoc/net/dean/jraw/RedditClient.html)
+```
+
+<pre lang="no-highlight"></code>
+```xml|escapeHtml
+&lt;this&gt;will render properly&lt;/this&gt;
+```
+</code></pre>
+
+If your code contains `<` or `>`, make sure to specify that you want those escaped. This only works when not referencing a code sample.
+
+
 ## Why not include code samples directly?
 
 As the documentation grows and the library evolves, it will be difficult to manually check for syntax errors. This method forces us to keep all of our code samples up-to-date and syntactically valid.

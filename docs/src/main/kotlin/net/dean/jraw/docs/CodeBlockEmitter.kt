@@ -4,12 +4,8 @@ import com.github.javaparser.JavaParser
 import com.github.javaparser.ast.expr.SimpleName
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter
 import com.github.rjeschke.txtmark.BlockEmitter
-import org.reflections.Reflections
-import org.reflections.scanners.SubTypesScanner
-import org.reflections.util.ClasspathHelper
-import org.reflections.util.ConfigurationBuilder
 
-class CodeBlockEmitter(private val codeSamples: List<CodeSampleRef>) : BlockEmitter {
+class CodeBlockEmitter(private val codeSamples: List<CodeSampleRef>, private val doc: DocLinkGenerator) : BlockEmitter {
     override fun emitBlock(out: StringBuilder, lines: MutableList<String>, meta: String) {
         var codeSample: CodeSampleRef? = null
         var actualLines = lines
@@ -27,20 +23,23 @@ class CodeBlockEmitter(private val codeSamples: List<CodeSampleRef>) : BlockEmit
             actualLines = codeSample.content.map {
                 var line = it
                 for (type in types)
-                    line = line.replace(type.simpleName, """<a href="$JAVADOC_BASE${type.name.replace('.', '/')}.html" class="doc-link" title="Documentation for ${type.name}">${type.simpleName}</a>""")
+                    line = line.replace(type.simpleName, doc.linkFor(type))
                 line
             }.toMutableList()
         }
 
         // Use 'nohighlight' when no language is specified to prevent highlight.js from guessing
-        val lang = if (meta.isBlank()) "nohighlight" else if (codeSample != null) "java" else meta
+        val arguments = if (meta.isBlank()) listOf("nohighlight") else meta.trim().split("|")
+
+        val lang = if (codeSample != null) "java" else arguments[0]
+        val escapeHtml = arguments.size > 1 && arguments[1] == "escapeHtml"
 
         with (out) {
             // Write the code block
             append("""<div class="code-container"><pre><code class="$lang">""")
             actualLines
                 // Only escape if the language is XML or HTML
-                .map { if (lang == "xml" || lang == "html") naiveHtmlEscape(it) else it }
+                .map { if (escapeHtml) naiveHtmlEscape(it) else it }
                 .forEach { appendln(it) }
             appendln("""</code></pre></div>""")
         }
@@ -55,26 +54,7 @@ class CodeBlockEmitter(private val codeSamples: List<CodeSampleRef>) : BlockEmit
         val ni = JavaTypeFinder()
         ni.visit(block, null)
 
-        return jrawTypes.filter { it.simpleName in ni.foundNames }
-    }
-
-    companion object {
-        private val jrawTypes by lazy { findJrawClasses() }
-
-        private val reflections = Reflections(ConfigurationBuilder()
-            .setScanners(SubTypesScanner(false))
-            .setUrls(ClasspathHelper.forPackage("net.dean.jraw"))
-        )
-
-        private val ignoredPackages = listOf(
-            "net.dean.jraw.docs",
-            "net.dean.jraw.docs.samples"
-        )
-
-        private fun findJrawClasses(): List<Class<*>> {
-            val list = reflections.getSubTypesOf(Object::class.java)
-            return list.filter { it.`package`.name !in ignoredPackages }.sortedBy { it.name }
-        }
+        return JrawTypeFinder.jrawTypes.filter { it.simpleName in ni.foundNames }
     }
 
     /**

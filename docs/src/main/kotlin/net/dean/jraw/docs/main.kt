@@ -39,9 +39,12 @@ fun main(args: Array<String>) {
     else
         System.err.println("Warning: no assets found or not a directory: ${assetsDir.absolutePath}")
 
+    val docProvider = JrawDocLinkGenerator()
+
     val conf = Configuration.builder()
         // Use our custom code block emitter
-        .setCodeBlockEmitter(CodeBlockEmitter(samples))
+        .setCodeBlockEmitter(CodeBlockEmitter(samples, docProvider))
+        .setSpecialLinkEmitter(TypeReferenceLinkEmitter(docProvider))
         // Force txtmark to recognize fenced code blocks
         .forceExtentedProfile()
         .build()
