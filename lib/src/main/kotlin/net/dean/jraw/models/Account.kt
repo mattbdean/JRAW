@@ -27,15 +27,18 @@ data class Account(
     /** If this user is a moderator */
     @JsonProperty("is_mod") val isModerator: Boolean,
 
-    /** If this */
+    /** If this property is true, the user has reddit Gold */
     @JsonProperty("is_gold") val hasGold: Boolean,
     val hasSubscribed: Boolean,
+
+    /** True if this user has verified ownership of the email address used to create their account */
     val hasVerifiedEmail: Boolean,
+
+    /** The amount of karma gained from submitting links */
     val linkKarma: Int,
 
     /** The name chosen for this account by a real person */
-    val name: String,
-    val verified: Boolean
+    val name: String
 ) : RedditObject(KindConstants.ACCOUNT), Created, Referenceable<UserReference> {
     override fun toReference(reddit: RedditClient) = reddit.user(name)
 }
