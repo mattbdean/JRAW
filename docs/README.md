@@ -11,7 +11,6 @@ Run `./gradlew :docs:buildSite` and then see the `build/docs` subdirectory.
 The [`net.dean.jraw.docs.samples`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/docs/src/main/java/net/dean/jraw/docs/samples) package contains classes with `@CodeSample` methods to be used in documentation. For example:
 
 ```java
-@CodeSampleGroup("example")
 public class Example {
     
     @CodeSample
@@ -21,7 +20,7 @@ public class Example {
     }
     
     @CodeSample
-    private static void showSomethingElse() {
+    private static void doSomething() {
         int y = 10;
         int x = 4;
         int z = x * y;
@@ -29,12 +28,12 @@ public class Example {
 }
 ```
 
-Each .java file in the package gets parsed into its abstract syntax tree at runtime so we can have access to the name and the content of each method. In the example above, we will have access to two code samples with the names `example.showSomething` and `example.showSomethingElse`
+Each .java file in the package gets parsed into its abstract syntax tree at runtime so we can have access to the name and the content of each method. In the example above, we will have access to two code samples with the names `Example.showSomething` and `Example.doSomething`
 
 Each markdown file in `src/main/resources/content` will be rendered to an HTML file. These markdown files have access to the code samples using a special syntax:
 
 <pre lang="no-highlight"></code>
-```@example.showSomething
+```@Example.showSomething
 _
 ```
 </code></pre>
@@ -62,13 +61,13 @@ This is essentially equivalent to writing
 [RedditClient](http://host.com/path/to/javadoc/net/dean/jraw/RedditClient.html)
 ```
 
+If your code contains `<` or `>`, make sure to specify that you want those escaped. This only works when not referencing a code sample.
+
 <pre lang="no-highlight"></code>
 ```xml|escapeHtml
 &lt;this&gt;will render properly&lt;/this&gt;
 ```
 </code></pre>
-
-If your code contains `<` or `>`, make sure to specify that you want those escaped. This only works when not referencing a code sample.
 
 
 ## Why not include code samples directly?
