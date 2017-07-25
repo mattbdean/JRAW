@@ -59,8 +59,8 @@ abstract class Paginator<T : RedditObject, out B : Paginator.Builder<T>> protect
     /** Constructs a new [Builder] with the current pagination settings */
     abstract fun newBuilder(): B
 
-    /** Creates */
-    abstract fun createNextRequest(): HttpRequest
+    /** Creates an HTTP request to fetch the next page of data, if any. */
+    abstract protected fun createNextRequest(): HttpRequest
 
     /**
      * Base for all Paginator.Builder subclasses

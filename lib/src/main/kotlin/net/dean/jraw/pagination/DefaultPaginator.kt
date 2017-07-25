@@ -50,7 +50,7 @@ open class DefaultPaginator<T : RedditObject> private constructor(
          * other endpoints 404 when given a path like this, in which case the sorting will need to be specified via
          * query parameter only
          */
-        val sortingAlsoInPath: Boolean = false
+        protected var sortingAlsoInPath: Boolean = false
     ) : Paginator.Builder<T>(reddit, baseUrl) {
         protected var limit: Int = Paginator.DEFAULT_LIMIT
         protected var timePeriod: TimePeriod = Paginator.DEFAULT_TIME_PERIOD
