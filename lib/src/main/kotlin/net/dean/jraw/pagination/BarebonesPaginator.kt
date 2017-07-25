@@ -34,7 +34,7 @@ open class BarebonesPaginator<T : RedditObject> private constructor(
         private var limit: Int = Paginator.DEFAULT_LIMIT
         fun limit(limit: Int): Builder<T> { this.limit = limit; return this }
 
-        override fun build(): Paginator<T, Paginator.Builder<T>> =
+        override fun build(): BarebonesPaginator<T> =
             BarebonesPaginator(reddit, baseUrl, limit)
     }
 }

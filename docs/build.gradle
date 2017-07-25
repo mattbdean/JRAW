@@ -5,6 +5,7 @@ dependencies {
     compile 'com.github.javaparser:javaparser-core:3.2.11'
     compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
     compile 'es.nitaur.markdown:txtmark:0.16'
+    compile 'com.thoughtworks.qdox:qdox:2.0-M6'
     compile 'org.reflections:reflections:0.9.10'
     compile "org.jtwig:jtwig-core:5.85.3.RELEASE"
     compile project(':lib')

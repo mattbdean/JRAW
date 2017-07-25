@@ -3,7 +3,10 @@ package net.dean.jraw.docs.samples;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.docs.CodeSample;
 import net.dean.jraw.models.*;
+import net.dean.jraw.pagination.BarebonesPaginator;
+import net.dean.jraw.pagination.DefaultPaginator;
 import net.dean.jraw.pagination.Paginator;
+import net.dean.jraw.references.InboxReference;
 import net.dean.jraw.references.MultiredditReference;
 
 import java.util.ArrayList;
@@ -16,7 +19,7 @@ public class Cookbook {
     @CodeSample
     private static void iterateFrontPage() {
         // frontPage() returns a Paginator.Builder
-        Paginator<Submission, ?> frontPage = redditClient.frontPage()
+        DefaultPaginator<Submission> frontPage = redditClient.frontPage()
             .sorting(Sorting.TOP)
             .timePeriod(TimePeriod.DAY)
             .limit(30)
@@ -31,7 +34,7 @@ public class Cookbook {
     @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
     @CodeSample
     private static void imagesFromMultipleSubreddits() {
-        Paginator<Submission, ?> earthPorn = redditClient.subreddits("EarthPorn", "spaceporn").build();
+        DefaultPaginator<Submission> earthPorn = redditClient.subreddits("EarthPorn", "spaceporn").build();
 
         List<String> images = new ArrayList<String>();
         for (Submission s : earthPorn.next()) {
@@ -47,7 +50,7 @@ public class Cookbook {
     @CodeSample
     private static void userSubscriptions() {
         // Make sure we have a logged-in user or this call will fail!
-        Paginator<Subreddit, ?> paginator = redditClient.me().subreddits("subscriber")
+        DefaultPaginator<Subreddit> paginator = redditClient.me().subreddits("subscriber")
             // Request as many items as possible
             .limit(Paginator.RECOMMENDED_MAX_LIMIT)
             .build();
@@ -103,7 +106,7 @@ public class Cookbook {
 
     @CodeSample
     private static void iterateInbox() {
-        Paginator<Message, ?> unread = redditClient.me().inbox().iterate("unread")
+        BarebonesPaginator<Message> unread = redditClient.me().inbox().iterate("unread")
             .build();
 
         Listing<Message> firstPage = unread.next();
@@ -127,7 +130,8 @@ public class Cookbook {
 
     @CodeSample
     private static void sendPrivateMessage() {
-        redditClient.me().inbox().compose("thatJavaNerd", "receiver username", "body");
+        InboxReference inbox = redditClient.me().inbox();
+        inbox.compose("thatJavaNerd", "receiver username", "body");
     }
 
     @CodeSample

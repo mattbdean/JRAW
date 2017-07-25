@@ -50,10 +50,11 @@ class CodeBlockEmitter(private val codeSamples: List<CodeSampleRef>, private val
         str.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
     private fun findJrawTypesIncludedIn(code: CodeSampleRef): List<Class<*>> {
-        val block = JavaParser.parseBlock("{" + code.content.joinToString("\n") + "}")
+        // Surround the code in braces so that we can parse it as a block of code. Make sure the closing brace is on a
+        // new line so that a comment on the last line doesn't accidentally comment it out
+        val block = JavaParser.parseBlock("{" + code.content.joinToString("\n") + "\n}")
         val ni = JavaTypeFinder()
         ni.visit(block, null)
-
         return JrawTypeFinder.jrawTypes.filter { it.simpleName in ni.foundNames }
     }
 

@@ -29,9 +29,9 @@ public class TestClass {
 }
 """
 
-    describe("find") {
+    describe("findOne") {
         it("should recognized both @CodeSample and @CodeSampleGroup annotations") {
-            CodeSampleFinder.find(testClass).should.equal(listOf(
+            CodeSampleFinder.findOne(testClass).should.equal(listOf(
                 CodeSampleRef("TestClass.first", listOf(
                     "// do a thing",
                     "String foo = 4;",
@@ -40,6 +40,7 @@ public class TestClass {
                 CodeSampleRef("TestClass.second", listOf(
                     "// In the real docs we would instantiate this properly",
                     "RedditClient reddit = null;",
+                    "",
                     "// Get info about logged-in user",
                     "reddit.me().about();")
                 )
