@@ -21,9 +21,7 @@ fun main(args: Array<String>) {
     if (!outDir.isDirectory && !outDir.mkdirs())
         failAndExit("Could not `mkdir -p` for ${outDir.absolutePath}")
 
-//    // Find all Java source files in all subdirectories of the given source root
-//    val sourceFiles = walkRecursive(samplesDir).filter { it.name.endsWith(".java") }
-
+    // Find all Java source files in all subdirectories of the given source root
     val samples = CodeSampleFinder.findAll(samplesDir)
 
     // Copy our assets wholesale to the build dir
