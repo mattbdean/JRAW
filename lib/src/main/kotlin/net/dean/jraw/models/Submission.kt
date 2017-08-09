@@ -18,6 +18,9 @@ data class Submission(
     /** Submissions are archived once they reach a certain age. At that point, they become unmodifiable */
     val archived: Boolean,
 
+    @JsonProperty("selftext")
+    override val body: String?,
+
     override val canGild: Boolean,
 
     @JsonProperty("created_utc")
@@ -91,9 +94,6 @@ data class Submission(
     override val saved: Boolean,
 
     override val score: Int,
-
-    /** Markdown-formatted content, non-null when [isSelfPost] is true */
-    val selftext: String?,
 
     /** If reddit thinks this Submission is spam */
     val spam: Boolean,

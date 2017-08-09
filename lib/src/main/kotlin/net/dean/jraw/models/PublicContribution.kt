@@ -13,6 +13,9 @@ abstract class PublicContribution<out T : PublicContributionReference>(kind: Str
     /** Username of the user that created this model */
     abstract val author: String
 
+    /** The body of the post or comment. Null if the submission is not a self post */
+    abstract val body: String?
+
     /** The unique base 36 identifier given to this comment by reddit */
     abstract val id: String
 

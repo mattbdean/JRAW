@@ -1,5 +1,9 @@
 package net.dean.jraw.models
 
+import net.dean.jraw.util.IterativeTreeTraverser
+import net.dean.jraw.util.TreeTraverser
+import java.io.PrintStream
+
 /**
  * This class represents one comment in a comment tree.
  *
@@ -9,7 +13,7 @@ package net.dean.jraw.models
  *
  * At the root of every comment tree there is a single root node, which represents the submission the comments belong
  * to. This node will have a depth of 0 and its children will be top-level replies to the submission. Although this node
- * is technically part of the tree, it will not be included when iterating the nodes with [walkTree].
+ * is technically part of the tree, it will not be included when iterating the nodes with [traverser].
  *
  * For example, take this tree structure:
  *
@@ -32,7 +36,7 @@ package net.dean.jraw.models
  *
  * @author Matthew Dean
  */
-interface CommentNode : Iterable<ReplyCommentNode> {
+interface CommentNode<out T : PublicContribution<*>> : Iterable<ReplyCommentNode> {
     /**
      * How many nodes have this node as a child (directly or indirectly). For example, A top level reply has a depth of
      * 1, and a reply to that has a depth of 2.
@@ -49,6 +53,9 @@ interface CommentNode : Iterable<ReplyCommentNode> {
      */
     val moreChildren: MoreChildren?
 
+    /** The PublicContribution this CommentNode was created for */
+    val subject: T
+
     /**
      * Tests if this CommentNode has more children. By default, this function returns if the [moreChildren] is not null.
      */
@@ -56,14 +63,31 @@ interface CommentNode : Iterable<ReplyCommentNode> {
 
     override fun iterator(): Iterator<ReplyCommentNode> = replies.iterator()
 
-//    fun walkTree(): Iterator<CommentNode>
-//    fun visualize() {
-//        val relativeRootDepth = depth
-//        for (node in walkTree()) {
-//            println("  ".repeat(node.depth - relativeRootDepth) + "")
-//        }
-//    }
-//    fun findChild()
-//    fun totalSize()
+    /**
+     * Organizes this comment tree into a List whose order is determined by the given [TreeTraverser.Order]. For example,
+     * reddit uses pre-order traversal to generate the website's comments section.
+     */
+    fun walkTree(order: TreeTraverser.Order = TreeTraverser.Order.PRE_ORDER): List<CommentNode<*>> =
+        IterativeTreeTraverser(this).traverse(order)
+
+    /**
+     * Prints out
+     */
+    fun visualize(out: PrintStream = System.out) {
+        val relativeRootDepth = depth
+        for (node in walkTree(TreeTraverser.Order.PRE_ORDER)) {
+            val subj = node.subject
+            out.println("  ".repeat(node.depth - relativeRootDepth) + "${subj.author} (${subj.score}↑): ${subj.body?.replace("\n", "")}")
+        }
+    }
+
+    /**
+     * Returns the amount of direct and indirect children this node has.
+     */
+    fun totalSize(): Int {
+        // walkTree() goes through this node and all child nodes, but we only care about child nodes
+        return walkTree().size - 1
+    }
+
 }
 

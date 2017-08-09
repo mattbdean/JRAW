@@ -11,18 +11,16 @@ import net.dean.jraw.JrawUtils
  * recursively creates a CommentNode for each Comment in the JSON structure. A RootCommentNode's depth is always 0 (see
  * [CommentNode] documentation for an explanation)
  */
-class RootCommentNode internal constructor(rootArrayNode: JsonNode) : CommentNode {
+class RootCommentNode internal constructor(rootArrayNode: JsonNode) : CommentNode<Submission> {
     override val depth: Int = 0
-    override val replies: List<ReplyCommentNode>
     override val moreChildren: MoreChildren?
-
-    /** The submission this RootCommentNode represents */
-    val submission: Submission
+    override val replies: List<ReplyCommentNode>
+    override val subject: Submission
 
     init {
         val (submissionNode, baseCommentNode) = validateRootNodeShape(rootArrayNode)
         // Parse the Submission as normal
-        submission = JrawUtils.jackson.treeToValue(submissionNode)
+        this.subject = JrawUtils.jackson.treeToValue(submissionNode)
 
         var moreChildrenNode: JsonNode? = null
 
@@ -47,7 +45,7 @@ class RootCommentNode internal constructor(rootArrayNode: JsonNode) : CommentNod
     }
 
     override fun toString(): String =
-        "RootCommentNode(depth=$depth, replies=List(size=${replies.size}), moreChildren=$moreChildren, submission=${submission.fullName})"
+        "RootCommentNode(depth=$depth, replies=List(size=${replies.size}), moreChildren=$moreChildren, submission=${subject.fullName})"
 
     companion object {
         /**

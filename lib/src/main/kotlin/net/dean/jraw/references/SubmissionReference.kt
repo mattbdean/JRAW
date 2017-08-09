@@ -25,7 +25,7 @@ class SubmissionReference internal constructor(reddit: RedditClient, id: String)
      * comments().submission
      * ```
      */
-    fun inspect(): Submission = comments().submission
+    fun inspect(): Submission = comments().subject
 
     /** Equivalent to `setHidden(true)` */
     fun hide() = setHidden(true)

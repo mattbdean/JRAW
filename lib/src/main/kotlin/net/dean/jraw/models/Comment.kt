@@ -26,8 +26,7 @@ data class Comment(
     /** Flair to appear next to the creator of this comment's name, if any */
     val authorFlairText: String?,
 
-    /** The Markdown-formatted body of this comment */
-    val body: String,
+    override val body: String,
 
     override val canGild: Boolean,
 

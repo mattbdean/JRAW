@@ -12,10 +12,10 @@ import net.dean.jraw.JrawUtils
  */
 class ReplyCommentNode internal constructor(
     /** The data this node represents */
-    val comment: Comment,
+    override val subject: Comment,
     override val depth: Int,
     replies: JsonNode
-) : CommentNode {
+) : CommentNode<Comment> {
     override val moreChildren: MoreChildren? = null
     override val replies: List<ReplyCommentNode>
 
@@ -39,6 +39,6 @@ class ReplyCommentNode internal constructor(
     }
 
     override fun toString(): String {
-        return "ReplyCommentNode(comment=$comment, depth=$depth, moreChildren=$moreChildren, replies=List(size=${replies.size}))"
+        return "ReplyCommentNode(subject=$subject, depth=$depth, moreChildren=$moreChildren, replies=$replies)"
     }
 }
