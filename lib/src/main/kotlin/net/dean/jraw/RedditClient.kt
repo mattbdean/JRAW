@@ -2,10 +2,12 @@ package net.dean.jraw
 
 import net.dean.jraw.JrawUtils.jackson
 import net.dean.jraw.http.*
+import net.dean.jraw.models.Comment
 import net.dean.jraw.models.Listing
 import net.dean.jraw.models.RedditObject
 import net.dean.jraw.models.Submission
 import net.dean.jraw.oauth.*
+import net.dean.jraw.pagination.BarebonesPaginator
 import net.dean.jraw.pagination.DefaultPaginator
 import net.dean.jraw.pagination.Paginator
 import net.dean.jraw.ratelimit.LeakyBucketRateLimiter
@@ -263,6 +265,12 @@ class RedditClient internal constructor(
      * (like `6afe8u`)
      */
     fun submission(id: String) = SubmissionReference(this, id)
+
+    /**
+     * Creates a BarebonesPaginator.Builder that will iterate over the latest comments from all subreddits when built.
+     * This Paginator will be especially useful when used with the [Paginator.restart] method.
+     */
+    fun comments() = BarebonesPaginator.Builder<Comment>(this, "/comments")
 
     /**
      * Returns the name of the logged-in user

@@ -151,4 +151,15 @@ class RedditClientTest : Spek({
             res.map { it.kind }.should.equal(listOf("t5", "t3", "t1"))
         }
     }
+
+    describe("comments") {
+        it("should iterate over the latest comments") {
+            val limit = 50
+            val comments = reddit.comments().limit(limit).build()
+            for (i in 0..1) {
+                // There should be more than enough content to fill the limit
+                comments.next().should.have.size(limit)
+            }
+        }
+    }
 })
