@@ -11,7 +11,7 @@ import net.dean.jraw.JrawUtils
  * recursively creates a CommentNode for each Comment in the JSON structure. A RootCommentNode's depth is always 0 (see
  * [CommentNode] documentation for an explanation)
  */
-class RootCommentNode internal constructor(rootArrayNode: JsonNode) : CommentNode<Submission> {
+class RootCommentNode internal constructor(rootArrayNode: JsonNode) : AbstractCommentNode<Submission>() {
     override val depth: Int = 0
     override val moreChildren: MoreChildren?
     override val replies: List<ReplyCommentNode>

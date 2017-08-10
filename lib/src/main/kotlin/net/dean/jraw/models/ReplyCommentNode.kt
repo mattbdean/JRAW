@@ -15,7 +15,7 @@ class ReplyCommentNode internal constructor(
     override val subject: Comment,
     override val depth: Int,
     replies: JsonNode
-) : CommentNode<Comment> {
+) : AbstractCommentNode<Comment>() {
     override val moreChildren: MoreChildren? = null
     override val replies: List<ReplyCommentNode>
 

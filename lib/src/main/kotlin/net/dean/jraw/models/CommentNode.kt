@@ -1,6 +1,5 @@
 package net.dean.jraw.models
 
-import net.dean.jraw.util.IterativeTreeTraverser
 import net.dean.jraw.util.TreeTraverser
 import java.io.PrintStream
 
@@ -56,37 +55,23 @@ interface CommentNode<out T : PublicContribution<*>> : Iterable<ReplyCommentNode
     /** The PublicContribution this CommentNode was created for */
     val subject: T
 
-    /**
-     * Tests if this CommentNode has more children. By default, this function returns if the [moreChildren] is not null.
-     */
-    fun hasMoreChildren(): Boolean = moreChildren != null
-
-    override fun iterator(): Iterator<ReplyCommentNode> = replies.iterator()
+    /** Tests if this CommentNode has more children available to load */
+    fun hasMoreChildren(): Boolean
 
     /**
      * Organizes this comment tree into a List whose order is determined by the given [TreeTraverser.Order]. For example,
      * reddit uses pre-order traversal to generate the website's comments section.
      */
-    fun walkTree(order: TreeTraverser.Order = TreeTraverser.Order.PRE_ORDER): List<CommentNode<*>> =
-        IterativeTreeTraverser(this).traverse(order)
+    fun walkTree(order: TreeTraverser.Order = TreeTraverser.Order.PRE_ORDER): List<CommentNode<*>>
 
     /**
      * Prints out a brief overview of this CommentNode and its children to the given PrintStream (defaults to stdout).
      */
-    fun visualize(out: PrintStream = System.out) {
-        val relativeRootDepth = depth
-        for (node in walkTree(TreeTraverser.Order.PRE_ORDER)) {
-            val subj = node.subject
-            out.println("  ".repeat(node.depth - relativeRootDepth) + "${subj.author} (${subj.score}↑): ${subj.body?.replace("\n", "")}")
-        }
-    }
+    fun visualize(out: PrintStream = System.out)
 
     /**
      * Returns the amount of direct and indirect children this node has.
      */
-    fun totalSize(): Int {
-        // walkTree() goes through this node and all child nodes, but we only care about child nodes
-        return walkTree().size - 1
-    }
+    fun totalSize(): Int
 }
 
