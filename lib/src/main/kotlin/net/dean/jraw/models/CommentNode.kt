@@ -71,7 +71,7 @@ interface CommentNode<out T : PublicContribution<*>> : Iterable<ReplyCommentNode
         IterativeTreeTraverser(this).traverse(order)
 
     /**
-     * Prints out
+     * Prints out a brief overview of this CommentNode and its children to the given PrintStream (defaults to stdout).
      */
     fun visualize(out: PrintStream = System.out) {
         val relativeRootDepth = depth
@@ -88,6 +88,5 @@ interface CommentNode<out T : PublicContribution<*>> : Iterable<ReplyCommentNode
         // walkTree() goes through this node and all child nodes, but we only care about child nodes
         return walkTree().size - 1
     }
-
 }
 
