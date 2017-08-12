@@ -13,8 +13,35 @@ import net.dean.jraw.models.Submission
 class SubmissionReference internal constructor(reddit: RedditClient, id: String) :
     PublicContributionReference(reddit, id, KindConstants.SUBMISSION) {
 
+    /**
+     * Makes a request to retrieve all comments from this submission with the default settings.
+     *
+     * This method is equivalent to
+     *
+     * ```kotlin
+     * comments(CommentsRequest())
+     * ```
+     */
+    fun comments(): RootCommentNode = comments(CommentsRequest())
+
+    /**
+     * Makes a request to retrieve comments from this submission with the given settings.
+     */
     @EndpointImplementation(Endpoint.GET_COMMENTS_ARTICLE)
-    fun comments(): RootCommentNode = RootCommentNode(reddit.request { it.path("/comments/$subject") }.json)
+    fun comments(spec: CommentsRequest): RootCommentNode {
+        val query = mapOf(
+            "comment" to spec.focus,
+            "context" to spec.context.toString(),
+            "depth" to spec.depth?.toString(),
+            "limit" to spec.limit?.toString(),
+            "sort" to spec.sort.name.toLowerCase(),
+            "sr_detail" to "false"
+        )
+            .filterValues { it != null }
+            .mapValues { it.value ?: throw IllegalStateException("should not have been thrown") }
+
+        return RootCommentNode(reddit.request { it.path("/comments/$subject").query(query) }.json)
+    }
 
     /**
      * Gets a [Submission] instance for this reference.

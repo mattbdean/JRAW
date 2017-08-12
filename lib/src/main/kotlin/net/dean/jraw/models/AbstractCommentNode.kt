@@ -18,7 +18,11 @@ abstract class AbstractCommentNode<out T : PublicContribution<*>> : CommentNode<
         val relativeRootDepth = depth
         for (node in walkTree(TreeTraverser.Order.PRE_ORDER)) {
             val subj = node.subject
-            out.println("  ".repeat(node.depth - relativeRootDepth) + "${subj.author} (${subj.score}↑): ${subj.body?.replace("\n", "")}")
+            val indent = "  ".repeat(node.depth - relativeRootDepth)
+
+            // Use the submission URL if it's not a self post, otherwise just use the comment/submission body
+            val body = if (subj is Submission && !subj.isSelfPost) subj.url else subj.body?.replace("\n", "\\n")
+            out.println(indent + "${subj.author} (${subj.score}↑): $body")
         }
     }
 

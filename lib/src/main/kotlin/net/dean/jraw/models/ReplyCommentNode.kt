@@ -16,8 +16,11 @@ class ReplyCommentNode internal constructor(
     override val depth: Int,
     replies: JsonNode
 ) : AbstractCommentNode<Comment>() {
-    override val moreChildren: MoreChildren? = null
+    override val moreChildren: MoreChildren?
+        get() = _moreChildren
     override val replies: List<ReplyCommentNode>
+
+    private var _moreChildren: MoreChildren? = null
 
     init {
         // For whatever reason some engineer at reddit thought it would be a good idea to make replies an empty string
@@ -30,8 +33,14 @@ class ReplyCommentNode internal constructor(
                 throw IllegalArgumentException("Unexpected JSON structure")
             // Make sure reddit is throwing us the right data
             if (!childrenNode.isArray) throw IllegalArgumentException("Expected children node to be an array")
+
+            val (comments, moreChildren) = childrenNode.partition { it["kind"].asText() == KindConstants.COMMENT }
+            if (moreChildren.size > 1)
+                throw IllegalStateException("Found more than one MoreChildren")
+            _moreChildren = if (moreChildren.isEmpty()) null else JrawUtils.jackson.treeToValue(moreChildren[0])
+
             // Map each JsonNode in the array to a CommentNode
-            childrenNode.map {
+            comments.map {
                 val comment: Comment = JrawUtils.jackson.treeToValue(it)
                 ReplyCommentNode(comment, depth + 1, it["data"]["replies"])
             }

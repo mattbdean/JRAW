@@ -4,7 +4,6 @@ import com.winterbe.expekt.should
 import net.dean.jraw.RateLimitException
 import net.dean.jraw.RedditClient
 import net.dean.jraw.http.*
-import net.dean.jraw.models.Listing
 import net.dean.jraw.models.RedditObject
 import net.dean.jraw.models.Votable
 import net.dean.jraw.pagination.Paginator
@@ -58,9 +57,9 @@ fun randomName(length: Int = 10): String {
     return "jraw_test_" + BigInteger(130, rand).toString(32).substring(0..length - 1)
 }
 
-fun <T : RedditObject> expectDescendingScore(posts: Listing<T>, allowedMistakes: Int = 0) {
-    val votables = posts.map { it as Votable }
-    if (posts.isEmpty()) throw IllegalArgumentException("posts was empty")
+fun <T : RedditObject> expectDescendingScore(objects: List<T>, allowedMistakes: Int = 0) {
+    val votables = objects.map { it as Votable }
+    if (votables.isEmpty()) throw IllegalArgumentException("posts was empty")
     var prevScore = votables[0].score
     var mistakes = 0
 

@@ -130,7 +130,7 @@ class RedditClientTest : Spek({
     describe("frontPage") {
         it("should iterate the front page") {
             expectDescendingScore(
-                posts = reddit.frontPage()
+                objects = reddit.frontPage()
                     .sorting(Sorting.TOP)
                     .timePeriod(TimePeriod.ALL)
                     .limit(10)
