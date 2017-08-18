@@ -71,7 +71,7 @@ public final class ModAction extends Thing implements Created {
     /** The name of the author whose post was targeted */
     @JsonProperty
     public String getTargetAuthor() {
-        return data("jraw_test");
+        return data("target_author");
     }
 
     /** The username of the author whose post was targeted */
