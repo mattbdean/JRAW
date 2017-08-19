@@ -14,37 +14,49 @@ class ReplyCommentNode internal constructor(
     /** The data this node represents */
     override val subject: Comment,
     override val depth: Int,
-    replies: JsonNode
+    override val settings: CommentTreeSettings,
+    override val parent: CommentNode<*>,
+    repliesNode: JsonNode? = null
 ) : AbstractCommentNode<Comment>() {
-    override val moreChildren: MoreChildren?
-        get() = _moreChildren
-    override val replies: List<ReplyCommentNode>
-
-    private var _moreChildren: MoreChildren? = null
+    override val replies: MutableList<ReplyCommentNode> = ArrayList()
 
     init {
-        // For whatever reason some engineer at reddit thought it would be a good idea to make replies an empty string
-        // if there are no replies instead of a zero-length array like a sane person.
-        this.replies = if (replies.isTextual && replies.textValue() == "") {
-            listOf()
-        } else {
-            // Find the Listing children
-            val childrenNode = replies.get("data").get("children") ?:
-                throw IllegalArgumentException("Unexpected JSON structure")
-            // Make sure reddit is throwing us the right data
-            if (!childrenNode.isArray) throw IllegalArgumentException("Expected children node to be an array")
+        if (repliesNode != null) {
+            // For whatever reason some engineer at reddit thought it would be a good idea to make replies an empty
+            // string if there are no replies instead of a zero-length array like a sane person.
+            this.replies.addAll(if (repliesNode.isTextual && repliesNode.textValue() == "") {
+                mutableListOf()
+            } else {
+                // Find the Listing children
+                val childrenNode = repliesNode.get("data").get("children") ?:
+                    throw IllegalArgumentException("Unexpected JSON structure")
+                // Make sure reddit is throwing us the right data
+                if (!childrenNode.isArray) throw IllegalArgumentException("Expected children node to be an array")
 
-            val (comments, moreChildren) = childrenNode.partition { it["kind"].asText() == KindConstants.COMMENT }
-            if (moreChildren.size > 1)
-                throw IllegalStateException("Found more than one MoreChildren")
-            _moreChildren = if (moreChildren.isEmpty()) null else JrawUtils.jackson.treeToValue(moreChildren[0])
+                val (comments, moreChildren) = parseReplies(childrenNode)
+                this._moreChildren = moreChildren
 
-            // Map each JsonNode in the array to a CommentNode
-            comments.map {
-                val comment: Comment = JrawUtils.jackson.treeToValue(it)
-                ReplyCommentNode(comment, depth + 1, it["data"]["replies"])
-            }
+                // Map each JsonNode in the array to a CommentNode. Avoid using map() since we'd have to use toMutableMap()
+                // which would involve copying the whole list
+                val list = mutableListOf<ReplyCommentNode>()
+                for (commentJson in comments) {
+                    val comment: Comment = JrawUtils.jackson.treeToValue(commentJson)
+                    list.add(ReplyCommentNode(comment, depth + 1, settings, this, commentJson["data"]["replies"]))
+                }
+
+                /*return*/ list
+            })
         }
+    }
+
+    private fun parseReplies(arrayNode: JsonNode): Pair<List<JsonNode>, MoreChildren?> {
+        val (comments, mores) = arrayNode.partition { it["kind"].asText() == KindConstants.COMMENT }
+        if (mores.size > 1)
+            throw IllegalStateException("Found more than one MoreChildren")
+
+        val moreChildren: MoreChildren? = if (mores.isEmpty()) null else JrawUtils.jackson.treeToValue(mores[0])
+
+        return comments to moreChildren
     }
 
     override fun toString(): String {

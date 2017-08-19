@@ -1,25 +1,24 @@
 package net.dean.jraw.test.integration
 
 import com.winterbe.expekt.should
-import net.dean.jraw.models.CommentNode
-import net.dean.jraw.models.ReplyCommentNode
-import net.dean.jraw.models.RootCommentNode
-import net.dean.jraw.test.TestConfig
+import net.dean.jraw.models.*
+import net.dean.jraw.test.TestConfig.reddit
+import net.dean.jraw.test.expectException
 import net.dean.jraw.util.TreeTraverser
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
-import kotlin.properties.Delegates
 
 class CommentNodeTest : Spek({
     val SUBMISSION_ID = "2zsyu4"
-    var root: RootCommentNode by Delegates.notNull()
-    var a: ReplyCommentNode by Delegates.notNull()
+    val root: RootCommentNode by lazy { reddit.submission(SUBMISSION_ID).comments() }
+    val a: ReplyCommentNode by lazy { root.replies[0] }
 
-    beforeGroup {
-        root = TestConfig.reddit.submission(SUBMISSION_ID).comments()
-        a = root.replies[0]
-    }
+    // reddit.com/comments/6t8ioo
+    val complexTree: RootCommentNode by lazy { reddit.submission("92dd8").comments() }
+
+    // reddit.com/comments/2onit4
+    val simpleTree: RootCommentNode by lazy { reddit.submission("2onit4").comments() }
 
     /*
     All tests are based on submission 2zsyu4 that has a comment structure like this:
@@ -115,6 +114,100 @@ class CommentNodeTest : Spek({
 
             // Node 'b' is a leaf
             a.replies[0].totalSize().should.equal(0)
+        }
+    }
+
+    describe("loadMore") {
+        it("should throw an Exception when MoreChildren is null") {
+            simpleTree.moreChildren.should.be.`null`
+
+            expectException(IllegalStateException::class) {
+                simpleTree.loadMore(reddit)
+            }
+        }
+
+        it("should return a new root instead of altering the tree") {
+            // Highly unusual to see a popular post without a root MoreChildren
+            complexTree.moreChildren.should.not.be.`null`
+
+            val originalMore = complexTree.moreChildren!!.copy()
+            var prevCount = complexTree.moreChildren!!.childrenIds.size
+            prevCount.should.be.above(0)
+
+            var fakeRoot: CommentNode<Submission> = complexTree
+
+            // Make sure that calling RootCommentNode.loadMore() works exactly the same as calling
+            // FakeRootCommentNode.loadMore()
+            for (i in 0..2) {
+                // This thread has 2000+ comments, we should be able to do a few rounds of this no problem
+                fakeRoot.hasMoreChildren().should.be.`true`
+
+                // go deeper...
+                fakeRoot = fakeRoot.loadMore(reddit)
+
+                // Make sure the original tree's MoreChildren wasn't altered
+                complexTree.moreChildren.should.equal(originalMore)
+
+                // The new root MoreChildren should contain fewer children IDs than it did previously
+                fakeRoot.moreChildren!!.childrenIds.should.have.size.below(prevCount)
+                // Make sure the new root MoreChildren has the same parent ID
+                fakeRoot.moreChildren!!.parentFullName.should.equal(originalMore.parentFullName)
+                // We should only be requesting a certain amount of children, and therefore be receiving up to a certain
+                // amount of children. The reason we don't assert an exact number is that reddit may only return 97
+                // objects if we request 100 for whatever reason
+                fakeRoot.replies.should.have.size.at.most(AbstractCommentNode.MORE_CHILDREN_LIMIT)
+
+                prevCount = fakeRoot.moreChildren!!.childrenIds.size
+            }
+        }
+
+        it("should handle thread continuations") {
+            val threadContinuation = simpleTree.walkTree().first { it.hasMoreChildren() && it.moreChildren!!.isThreadContinuation() }
+            val parentDepth = threadContinuation.depth
+            val fakeRoot = threadContinuation.loadMore(reddit)
+
+            val flatTree = fakeRoot.walkTree()
+
+            // The first element in the flat tree should represent the original comment
+            flatTree[0].subject.fullName.should.equal(threadContinuation.subject.fullName)
+            flatTree[0].depth.should.equal(threadContinuation.depth)
+
+            // All nodes after the first should be children (directly or indirectly)
+            for (node in flatTree.drop(1)) {
+                node.depth.should.be.above(parentDepth)
+            }
+        }
+    }
+
+    describe("replaceMore") {
+        it("should do nothing when MoreChildren is null") {
+            simpleTree.moreChildren.should.be.`null`
+
+            val original = simpleTree.walkTree()
+            simpleTree.replaceMore(reddit)
+            simpleTree.walkTree().should.equal(original)
+        }
+
+        it("should alter the tree when called") {
+            val tree = reddit.submission("92dd8").comments()
+            val prevFlatTree = tree.walkTree()
+            val prevMoreChildren = tree.moreChildren!!.copy()
+            val prevSize = tree.totalSize()
+
+            val newDirectChildren = tree.replaceMore(reddit)
+            tree.moreChildren!!.parentFullName.should.equal(prevMoreChildren.parentFullName)
+
+            // Make sure we've taken IDs out of the MoreChildren and added them to the tree
+            tree.moreChildren!!.childrenIds.should.have.size.below(prevMoreChildren.childrenIds.size)
+            tree.totalSize().should.be.above(prevSize)
+
+            for (directChild in newDirectChildren) {
+                // Make sure each reportedly new direct children are in fact:
+                // (1) direct children and
+                directChild.subject.parentFullName.should.equal(tree.subject.fullName)
+                // (2) new children
+                prevFlatTree.find { it.subject.fullName == directChild.subject.fullName }.should.be.`null`
+            }
         }
     }
 })

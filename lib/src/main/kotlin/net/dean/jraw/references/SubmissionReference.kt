@@ -3,6 +3,7 @@ package net.dean.jraw.references
 import net.dean.jraw.Endpoint
 import net.dean.jraw.EndpointImplementation
 import net.dean.jraw.RedditClient
+import net.dean.jraw.models.CommentTreeSettings
 import net.dean.jraw.models.KindConstants
 import net.dean.jraw.models.RootCommentNode
 import net.dean.jraw.models.Submission
@@ -31,7 +32,7 @@ class SubmissionReference internal constructor(reddit: RedditClient, id: String)
     fun comments(spec: CommentsRequest): RootCommentNode {
         val query = mapOf(
             "comment" to spec.focus,
-            "context" to spec.context.toString(),
+            "context" to spec.context?.toString(),
             "depth" to spec.depth?.toString(),
             "limit" to spec.limit?.toString(),
             "sort" to spec.sort.name.toLowerCase(),
@@ -40,7 +41,12 @@ class SubmissionReference internal constructor(reddit: RedditClient, id: String)
             .filterValues { it != null }
             .mapValues { it.value ?: throw IllegalStateException("should not have been thrown") }
 
-        return RootCommentNode(reddit.request { it.path("/comments/$subject").query(query) }.json)
+        val settings = CommentTreeSettings(
+            submissionId = subject,
+            sort = spec.sort
+        )
+
+        return RootCommentNode(reddit.request { it.path("/comments/$subject").query(query) }.json, settings)
     }
 
     /**

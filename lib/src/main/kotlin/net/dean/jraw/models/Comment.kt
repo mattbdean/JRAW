@@ -53,6 +53,10 @@ data class Comment(
     override val gilded: Short,
     override val id: String,
     override val likes: Boolean?,
+
+    @JsonProperty("parent_id")
+    override val parentFullName: String,
+
     override val saved: Boolean,
     override val score: Int,
 
@@ -74,6 +78,6 @@ data class Comment(
 
     /** The restrictions for accessing this subreddit */
     val subredditType: Subreddit.Type
-) : PublicContribution<CommentReference>(KindConstants.COMMENT) {
+) : PublicContribution<CommentReference>(KindConstants.COMMENT), NestedIdentifiable {
     override fun toReference(reddit: RedditClient) = CommentReference(reddit, id)
 }

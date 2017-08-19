@@ -1,5 +1,8 @@
 package net.dean.jraw.models
 
+import net.dean.jraw.Endpoint
+import net.dean.jraw.EndpointImplementation
+import net.dean.jraw.RedditClient
 import net.dean.jraw.util.TreeTraverser
 import java.io.PrintStream
 
@@ -43,7 +46,7 @@ interface CommentNode<out T : PublicContribution<*>> : Iterable<ReplyCommentNode
     val depth: Int
 
     /** This node's direct children */
-    val replies: List<ReplyCommentNode>
+    val replies: MutableList<ReplyCommentNode>
 
     /**
      * A nullable object representing comments that couldn't be included in the response because it was already too big.
@@ -54,6 +57,14 @@ interface CommentNode<out T : PublicContribution<*>> : Iterable<ReplyCommentNode
 
     /** The PublicContribution this CommentNode was created for */
     val subject: T
+
+    /**
+     * The settings that was used to create this node and the that will be used in all future requests for more children
+     */
+    val settings: CommentTreeSettings
+
+    /** The node directly above this one. Throws an IllegalStateException when trying to access the root node's parent. */
+    val parent: CommentNode<*>
 
     /** Tests if this CommentNode has more children available to load */
     fun hasMoreChildren(): Boolean
@@ -69,9 +80,20 @@ interface CommentNode<out T : PublicContribution<*>> : Iterable<ReplyCommentNode
      */
     fun visualize(out: PrintStream = System.out)
 
-    /**
-     * Returns the amount of direct and indirect children this node has.
-     */
+    /** Returns the amount of direct and indirect children this node has. */
     fun totalSize(): Int
+
+    /**
+     * If [moreChildren] is not null, fetches up to 100 more child comments. Does not modify the tree. To have these new
+     * nodes inserted into the tree, use [replaceMore] instead.
+     */
+    @EndpointImplementation(Endpoint.GET_MORECHILDREN)
+    fun loadMore(reddit: RedditClient): FakeRootCommentNode<T>
+
+    /**
+     * If [moreChildren] is not null, fetches up to 100 more child comments and inserts them into the current tree.
+     * Returns all new direct children.
+     */
+    fun replaceMore(reddit: RedditClient): List<ReplyCommentNode>
 }
 

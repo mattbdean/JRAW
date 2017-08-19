@@ -3,24 +3,36 @@ package net.dean.jraw.models
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.module.kotlin.treeToValue
 import net.dean.jraw.JrawUtils
+import net.dean.jraw.references.CommentsRequest
 
 /**
  * A RootCommentNode represents the Submission where comments are hosted.
  *
  * All CommentNodes in [replies] are instances of [ReplyCommentNode]. Creating one instance of a RootCommentNode
  * recursively creates a CommentNode for each Comment in the JSON structure. A RootCommentNode's depth is always 0 (see
- * [CommentNode] documentation for an explanation)
+ * [CommentNode] documentation for an explanation).
  */
-class RootCommentNode internal constructor(rootArrayNode: JsonNode) : AbstractCommentNode<Submission>() {
+class RootCommentNode internal constructor(
+    rootArrayNode: JsonNode,
+    settings: CommentTreeSettings? = null
+) : AbstractCommentNode<Submission>() {
     override val depth: Int = 0
-    override val moreChildren: MoreChildren?
-    override val replies: List<ReplyCommentNode>
+    override val replies: MutableList<ReplyCommentNode>
     override val subject: Submission
+    override val settings: CommentTreeSettings
+
+    override val parent: CommentNode<*>
+        get() = throw IllegalStateException("A RootCommentNode has no parent node")
 
     init {
         val (submissionNode, baseCommentNode) = validateRootNodeShape(rootArrayNode)
         // Parse the Submission as normal
         this.subject = JrawUtils.jackson.treeToValue(submissionNode)
+
+        // If no settings are passed, use the ID from the parsed Submission and the default CommentSort to create it.
+        // This only happens when we request a random Submission and consequently cannot know the ID until after the
+        // request is complete.
+        this.settings = settings ?: CommentTreeSettings(submissionId = subject.id, sort = CommentsRequest.DEFAULT_COMMENT_SORT)
 
         var moreChildrenNode: JsonNode? = null
 
@@ -34,11 +46,11 @@ class RootCommentNode internal constructor(rootArrayNode: JsonNode) : AbstractCo
 
         replies = childrenNodes.map {
             val comment = JrawUtils.jackson.treeToValue<Comment>(it)
-            ReplyCommentNode(comment, depth + 1, it["data"]["replies"])
-        }
+            ReplyCommentNode(comment, depth + 1, this.settings, this, it["data"]["replies"])
+        }.toMutableList()
 
         // Parse the MoreChildren if available
-        moreChildren = if (moreChildrenNode == null)
+        _moreChildren = if (moreChildrenNode == null)
             null
         else
             JrawUtils.jackson.treeToValue<MoreChildren>(moreChildrenNode!!)

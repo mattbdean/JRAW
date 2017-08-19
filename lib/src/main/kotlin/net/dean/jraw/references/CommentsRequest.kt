@@ -54,7 +54,7 @@ data class CommentsRequest(
     }
 
     companion object {
-        /** The default CommentSort value used for this  */
+        /** The default CommentSort used by both reddit and this class. Equal to [CommentSort.CONFIDENCE] */
         @JvmField val DEFAULT_COMMENT_SORT = CommentSort.CONFIDENCE
     }
 }

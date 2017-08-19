@@ -5,15 +5,14 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class MoreChildren(
-    @JsonProperty("count") val actualSize: Int,
-    @JsonProperty("parent_id") val parentFullName: String,
+    @JsonProperty("parent_id") override val parentFullName: String,
     @JsonProperty("children") val childrenIds: List<String>,
-    @JsonProperty("name") val fullName: String,
-    val id: String
-) : RedditObject(KindConstants.MORE_CHILDREN) {
+    @JsonProperty("name") override val fullName: String,
+    override val id: String
+) : RedditObject(KindConstants.MORE_CHILDREN), NestedIdentifiable {
 
     override fun toString(): String {
-        return "MoreChildren(actualSize=$actualSize, parentFullName='$parentFullName')"
+        return "MoreChildren(size=${childrenIds.size}, parentFullName='$parentFullName')"
     }
 
     /**
@@ -21,11 +20,11 @@ data class MoreChildren(
      * are illustrated with "continue this thread →". Thread continuations are only seen when the depth of a CommentNode
      * exceeds the depth that reddit is willing to render (defaults to 10).
      *
-     * A MoreChildren that is a thread continuation will have an [id] of "_" and an [actualSize] of 0.
+     * A MoreChildren that is a thread continuation will have an [id] of "_" and an empty [childrenIds] list.
      *
      * @see net.dean.jraw.references.CommentsRequest.depth
      */
     fun isThreadContinuation(): Boolean {
-        return actualSize == 0 && id == "_"
+        return childrenIds.isEmpty() && id == "_"
     }
 }

@@ -25,12 +25,10 @@ data class Subreddit(
     @JsonDeserialize(using = UnixTimeDeserializer::class)
     override val created: Date,
 
-    /** The result of "t5_" + [id] */
     @JsonProperty("name")
-    val fullName: String,
+    override val fullName: String,
 
-    /** A unique base-36 identifier for this Subreddit, e.g. "2qh0u" in the case of /r/pics */
-    val id: String,
+    override val id: String,
 
     /** A hex color used primarily to style the header of the mobile site */
     val keyColor: String,
@@ -85,7 +83,7 @@ data class Subreddit(
 
     /** If this subreddit's wiki is enabled */
     val wikiEnabled: Boolean
-) : RedditObject(KindConstants.SUBREDDIT), Created, Referenceable<SubredditReference> {
+) : RedditObject(KindConstants.SUBREDDIT), Created, Identifiable, Referenceable<SubredditReference> {
     override fun toReference(reddit: RedditClient): SubredditReference = reddit.subreddit(name)
 
     enum class Type {
