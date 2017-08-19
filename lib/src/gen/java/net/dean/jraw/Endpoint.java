@@ -30,6 +30,10 @@ public enum Endpoint {
     GET_SCOPES("GET /api/v1/scopes"),
 
     /**
+     * Represents the endpoint {@code POST /api/block_user}. Requires OAuth scope 'account'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_block_user">here</a> for more information */
+    POST_BLOCK_USER("POST /api/block_user"),
+
+    /**
      * Represents the endpoint {@code PATCH /api/v1/me/prefs}. Requires OAuth scope 'account'. See <a href="https://www.reddit.com/dev/api/oauth#PATCH_api_v1_me_prefs">here</a> for more information */
     PATCH_ME_PREFS("PATCH /api/v1/me/prefs"),
 
@@ -76,6 +80,10 @@ public enum Endpoint {
     /**
      * Represents the endpoint {@code POST /api/setflairenabled}. Requires OAuth scope 'flair'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_setflairenabled">here</a> for more information */
     POST_SETFLAIRENABLED("POST /api/setflairenabled"),
+
+    /**
+     * Represents the endpoint {@code GET /api/user_flair}. Requires OAuth scope 'flair'. See <a href="https://www.reddit.com/dev/api/oauth#GET_api_user_flair">here</a> for more information */
+    GET_USER_FLAIR("GET /api/user_flair"),
 
     /**
      * Represents the endpoint {@code GET /user/{username}/{where}}. Requires OAuth scope 'history'. See <a href="https://www.reddit.com/dev/api/oauth#GET_user_{username}_{where}">here</a> for more information */
@@ -156,6 +164,10 @@ public enum Endpoint {
     /**
      * Represents the endpoint {@code GET /r/{subreddit}/about/edit}. Requires OAuth scope 'modconfig'. See <a href="https://www.reddit.com/dev/api/oauth#GET_r_{subreddit}_about_edit">here</a> for more information */
     GET_SUBREDDIT_ABOUT_EDIT("GET /r/{subreddit}/about/edit"),
+
+    /**
+     * Represents the endpoint {@code GET /r/{subreddit}/about/traffic}. Requires OAuth scope 'modconfig'. See <a href="https://www.reddit.com/dev/api/oauth#GET_r_{subreddit}_about_traffic">here</a> for more information */
+    GET_SUBREDDIT_ABOUT_TRAFFIC("GET /r/{subreddit}/about/traffic"),
 
     /**
      * Represents the endpoint {@code GET /stylesheet}. Requires OAuth scope 'modconfig'. See <a href="https://www.reddit.com/dev/api/oauth#GET_stylesheet">here</a> for more information */
@@ -378,6 +390,10 @@ public enum Endpoint {
     POST_BLOCK("POST /api/block"),
 
     /**
+     * Represents the endpoint {@code POST /api/collapse_message}. Requires OAuth scope 'privatemessages'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_collapse_message">here</a> for more information */
+    POST_COLLAPSE_MESSAGE("POST /api/collapse_message"),
+
+    /**
      * Represents the endpoint {@code POST /api/compose}. Requires OAuth scope 'privatemessages'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_compose">here</a> for more information */
     POST_COMPOSE("POST /api/compose"),
 
@@ -398,8 +414,16 @@ public enum Endpoint {
     POST_UNBLOCK_SUBREDDIT("POST /api/unblock_subreddit"),
 
     /**
+     * Represents the endpoint {@code POST /api/uncollapse_message}. Requires OAuth scope 'privatemessages'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_uncollapse_message">here</a> for more information */
+    POST_UNCOLLAPSE_MESSAGE("POST /api/uncollapse_message"),
+
+    /**
      * Represents the endpoint {@code POST /api/unread_message}. Requires OAuth scope 'privatemessages'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_unread_message">here</a> for more information */
     POST_UNREAD_MESSAGE("POST /api/unread_message"),
+
+    /**
+     * Represents the endpoint {@code GET /api/user_data_by_account_ids}. Requires OAuth scope 'privatemessages'. See <a href="https://www.reddit.com/dev/api/oauth#GET_api_user_data_by_account_ids">here</a> for more information */
+    GET_USER_DATA_BY_ACCOUNT_IDS("GET /api/user_data_by_account_ids"),
 
     /**
      * Represents the endpoint {@code GET /message/{where}}. Requires OAuth scope 'privatemessages'. See <a href="https://www.reddit.com/dev/api/oauth#GET_message_{where}">here</a> for more information */
