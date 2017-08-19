@@ -47,7 +47,7 @@ class SubredditReference internal constructor(reddit: RedditClient, subreddit: S
      * @param sendReplies If direct replies to the submission should be sent to the user's inbox
      */
     @EndpointImplementation(Endpoint.POST_SUBMIT)
-    fun submit(kind: SubmissionKind, title: String, content: String, sendReplies: Boolean): String {
+    fun submit(kind: SubmissionKind, title: String, content: String, sendReplies: Boolean): SubmissionReference {
         val args = mutableMapOf(
             "api_type" to "json",
             "extension" to "json",
@@ -71,7 +71,8 @@ class SubredditReference internal constructor(reddit: RedditClient, subreddit: S
         if (errorStub != null)
             throw errorStub.create(NetworkException(res))
 
-        return JrawUtils.navigateJson(res.json, "json", "data", "id").asText()
+        val id = JrawUtils.navigateJson(res.json, "json", "data", "id").asText()
+        return SubmissionReference(reddit, id)
     }
 
     /** Alias to `setSubscribed(true)` */

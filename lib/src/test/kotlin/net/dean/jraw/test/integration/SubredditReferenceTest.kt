@@ -22,8 +22,8 @@ class SubredditReferenceTest : Spek({
 
         it("should be able to submit a link") {
             ignoreRateLimit {
-                val id = ref.submit(SubmissionKind.LINK, "test link post", "http://example.com/${now.time}", sendReplies = false)
-                reddit.submission(id).inspect().id.should.equal(id)
+                val postRef = ref.submit(SubmissionKind.LINK, "test link post", "http://example.com/${now.time}", sendReplies = false)
+                postRef.inspect().subreddit.should.equal(ref.subject)
             }
         }
     }

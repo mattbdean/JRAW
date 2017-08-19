@@ -20,10 +20,9 @@ import java.util.*
  */
 object SharedObjects {
     val submittedSelfPost: SubmissionReference? by lazyRateLimited {
-        val id = reddit
+        reddit
             .subreddit("jraw_testing2")
             .submit(SubmissionKind.SELF, "test self post", "submitted ${Date()}", sendReplies = false)
-        reddit.submission(id)
     }
 
     private fun <T> lazyRateLimited(create: () -> T): Lazy<T?> {
