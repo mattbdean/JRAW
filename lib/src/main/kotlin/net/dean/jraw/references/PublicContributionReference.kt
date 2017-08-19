@@ -13,7 +13,7 @@ import net.dean.jraw.models.VoteDirection
  * Provides methods for [upvoting][upvote], [downvoting][downvote], and [removing the current vote][unvote], and also
  * one method for [manually setting the vote direction by enum value][setVote].
  */
-abstract class PublicContributionReference internal constructor(reddit: RedditClient, id: String, val kindPrefix: String) :
+abstract class PublicContributionReference internal constructor(reddit: RedditClient, id: String, kindPrefix: String) :
     AbstractReference<String>(reddit, id) {
 
     val fullName = "${kindPrefix}_$subject"
@@ -65,7 +65,7 @@ abstract class PublicContributionReference internal constructor(reddit: RedditCl
     fun setSaved(saved: Boolean) {
         val endpoint = if (saved) Endpoint.POST_SAVE else Endpoint.POST_UNSAVE
         // Returns '{}' on success
-        reddit.request { it.endpoint(endpoint).post(mapOf("id" to "${kindPrefix}_$subject")) }
+        reddit.request { it.endpoint(endpoint).post(mapOf("id" to fullName)) }
     }
 
     /**
@@ -110,7 +110,18 @@ abstract class PublicContributionReference internal constructor(reddit: RedditCl
                 .post(mapOf(
                     "api_type" to "json",
                     "text" to text,
-                    "thing_id" to "${kindPrefix}_$subject"
+                    "thing_id" to fullName
+                ))
+        }
+    }
+
+    @EndpointImplementation(Endpoint.POST_SENDREPLIES)
+    fun sendReplies(sendReplies: Boolean) {
+        reddit.request {
+            it.endpoint(Endpoint.POST_SENDREPLIES)
+                .post(mapOf(
+                    "id" to fullName,
+                    "state" to sendReplies.toString()
                 ))
         }
     }

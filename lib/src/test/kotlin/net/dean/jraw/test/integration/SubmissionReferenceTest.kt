@@ -136,4 +136,10 @@ class SubmissionReferenceTest : Spek({
             comments.replies[0].replies[0].subject.id.should.equal(commentId)
         }
     }
+
+    describe("sendReplies") {
+        assume({ SharedObjects.submittedSelfPost != null }, description = "should complete successfully") {
+            SharedObjects.submittedSelfPost!!.sendReplies(true)
+        }
+    }
 })
