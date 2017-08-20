@@ -106,8 +106,8 @@ public enum Endpoint {
     POST_LIVE_THREAD_ACCEPT_CONTRIBUTOR_INVITE("POST /api/live/{thread}/accept_contributor_invite"),
 
     /**
-     * Represents the endpoint {@code POST /api/live/{thread}/close_{thread}}. Requires OAuth scope 'livemanage'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_live_{thread}_close_thread">here</a> for more information */
-    POST_LIVE_THREAD_CLOSE_THREAD("POST /api/live/{thread}/close_{thread}"),
+     * Represents the endpoint {@code POST /api/live/{thread}/close_thread}. Requires OAuth scope 'livemanage'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_live_{thread}_close_thread">here</a> for more information */
+    POST_LIVE_THREAD_CLOSE_THREAD("POST /api/live/{thread}/close_thread"),
 
     /**
      * Represents the endpoint {@code POST /api/live/{thread}/edit}. Requires OAuth scope 'livemanage'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_live_{thread}_edit">here</a> for more information */

@@ -3,6 +3,7 @@ package net.dean.jraw.references
 import net.dean.jraw.Endpoint
 import net.dean.jraw.EndpointImplementation
 import net.dean.jraw.RedditClient
+import net.dean.jraw.filterValuesNotNull
 import net.dean.jraw.models.CommentTreeSettings
 import net.dean.jraw.models.KindConstants
 import net.dean.jraw.models.RootCommentNode
@@ -38,8 +39,7 @@ class SubmissionReference internal constructor(reddit: RedditClient, id: String)
             "sort" to spec.sort.name.toLowerCase(),
             "sr_detail" to "false"
         )
-            .filterValues { it != null }
-            .mapValues { it.value ?: throw IllegalStateException("should not have been thrown") }
+            .filterValuesNotNull()
 
         val settings = CommentTreeSettings(
             submissionId = subject,

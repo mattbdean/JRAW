@@ -98,7 +98,7 @@ class EndpointParser {
         params.forEach {
             // groups[0].value is the parameter with braces, (e.g. "{foo}"), groups[1].value is the parameter without
             // braces (e.g. "foo")
-            newPath = newPath.replace(it.groups[1]!!.value, it.groups[0]!!.value)
+            newPath = newPath.replaceFirst(it.groups[1]!!.value, it.groups[0]!!.value)
         }
 
         return newPath

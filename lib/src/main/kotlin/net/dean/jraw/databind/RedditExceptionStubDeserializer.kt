@@ -60,7 +60,8 @@ internal class RedditExceptionStubDeserializer : StdDeserializer<RedditException
     companion object {
         private fun fromArray(node: JsonNode): RedditExceptionStub<*> {
             if (node.size() < 2) throw IllegalArgumentException("Expected at least 2 elements")
-            return ApiExceptionStub(node[0].asText(), node[1].asText(), listOf())
+            val params = if (node.size() > 2) listOf(node[2].asText()) else listOf()
+            return ApiExceptionStub(node[0].asText(), node[1].asText(), params)
         }
     }
 

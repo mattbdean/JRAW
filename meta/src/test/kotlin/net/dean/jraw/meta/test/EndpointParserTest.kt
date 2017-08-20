@@ -1,6 +1,7 @@
+
 import com.winterbe.expekt.should
-import net.dean.jraw.meta.ParsedEndpoint
 import net.dean.jraw.meta.EndpointParser
+import net.dean.jraw.meta.ParsedEndpoint
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
@@ -52,6 +53,11 @@ class EndpointParserTest : Spek({
         it("should preserve underscores") {
             ensureFound("/api/accept_moderator_invite")
             ensureFound("/api/read_all_messages")
+        }
+
+        it("should only replace the proper instance of the path parameter keyword") {
+            // Instead of /api/live/{thread}/close_{thread}
+            ensureFound("/api/live/{thread}/close_thread")
         }
     }
 })

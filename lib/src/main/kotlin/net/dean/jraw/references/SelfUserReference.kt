@@ -3,6 +3,7 @@ package net.dean.jraw.references
 import com.fasterxml.jackson.databind.type.TypeFactory
 import net.dean.jraw.*
 import net.dean.jraw.models.KarmaBySubreddit
+import net.dean.jraw.models.LiveThreadPatch
 import net.dean.jraw.models.MultiredditPatch
 import net.dean.jraw.models.Subreddit
 import net.dean.jraw.pagination.DefaultPaginator
@@ -26,6 +27,23 @@ class SelfUserReference(reddit: RedditClient) : UserReference(reddit, reddit.req
      * and provided for semantics.
      */
     fun createMulti(name: String, patch: MultiredditPatch) = multi(name).createOrUpdate(patch)
+
+    /**
+     * Creates a live thread. The property that's required to be non-null in the LiveThreadPatch is
+     * [title][LiveThreadPatch.title].
+     *
+     * @see LiveThreadReference.edit
+     */
+    @EndpointImplementation(Endpoint.POST_LIVE_CREATE)
+    fun createLiveThread(data: LiveThreadPatch): LiveThreadReference {
+        val res = reddit.request {
+            it.endpoint(Endpoint.POST_LIVE_CREATE)
+                .post(data.toRequestMap())
+        }
+
+        val id = JrawUtils.navigateJson(res.json, "json", "data", "id").asText()
+        return LiveThreadReference(reddit, id)
+    }
 
     /**
      * Gets a Map of preferences set at [https://www.reddit.com/prefs].

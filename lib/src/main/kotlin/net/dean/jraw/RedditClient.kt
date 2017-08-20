@@ -12,10 +12,7 @@ import net.dean.jraw.pagination.DefaultPaginator
 import net.dean.jraw.pagination.Paginator
 import net.dean.jraw.ratelimit.LeakyBucketRateLimiter
 import net.dean.jraw.ratelimit.RateLimiter
-import net.dean.jraw.references.OtherUserReference
-import net.dean.jraw.references.SelfUserReference
-import net.dean.jraw.references.SubmissionReference
-import net.dean.jraw.references.SubredditReference
+import net.dean.jraw.references.*
 import java.util.concurrent.TimeUnit
 
 /**
@@ -137,9 +134,17 @@ class RedditClient internal constructor(
             return request(r, retryCount + 1)
         }
 
+        // Try to find any API errors embedded in the document
+        val stub = jackson.treeToValue(res.json, RedditExceptionStub::class.java)
+
         if (!res.successful) {
-            val stub = jackson.treeToValue(res.json, RedditExceptionStub::class.java) ?: throw NetworkException(res)
+            // If there isn't any reddit API errors, throw the NetworkException instead
+            stub ?: throw NetworkException(res)
             throw stub.create(NetworkException(res))
+        } else {
+            // Reddit has some legacy endpoints that return 200 OK even though the JSON contains errors
+            if (stub != null)
+                throw stub.create(NetworkException(res))
         }
 
         return res
@@ -302,6 +307,8 @@ class RedditClient internal constructor(
                 .query(mapOf("id" to fullNames.joinToString(",")))
         }.deserialize()
     }
+
+    fun liveThread(id: String) = LiveThreadReference(this, id)
 
     override fun toString(): String {
         return "RedditClient(username=${authManager.currentUsername()})"
