@@ -13,6 +13,10 @@ import net.dean.jraw.pagination.Paginator
 import net.dean.jraw.ratelimit.LeakyBucketRateLimiter
 import net.dean.jraw.ratelimit.RateLimiter
 import net.dean.jraw.references.*
+import net.dean.jraw.websocket.OkHttpWebSocketAdapter
+import net.dean.jraw.websocket.WebSocketAdapter
+import okhttp3.WebSocket
+import okhttp3.WebSocketListener
 import java.util.concurrent.TimeUnit
 
 /**
@@ -73,6 +77,8 @@ class RedditClient internal constructor(
 
     /** The type of OAuth2 app used to authenticate this client */
     val authMethod: AuthMethod = creds.authMethod
+
+    val websocketAdapter: WebSocketAdapter = OkHttpWebSocketAdapter()
 
     init {
         authManager.currentUsername = if (overrideUsername == AuthManager.USERNAME_USERLESS)
@@ -148,6 +154,13 @@ class RedditClient internal constructor(
         }
 
         return res
+    }
+
+    /**
+     * Attempts to open a WebSocket connection at the given URL.
+     */
+    fun websocket(url: String, listener: WebSocketListener): WebSocket {
+        return websocketAdapter.open(url, listener)
     }
 
     /**

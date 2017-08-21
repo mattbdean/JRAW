@@ -8,6 +8,8 @@ import net.dean.jraw.models.LiveThread
 import net.dean.jraw.models.LiveThreadPatch
 import net.dean.jraw.models.LiveUpdate
 import net.dean.jraw.pagination.BarebonesPaginator
+import net.dean.jraw.websocket.ReadOnlyWebSocketHelper
+import okhttp3.WebSocketListener
 
 class LiveThreadReference internal constructor(reddit: RedditClient, id: String) : AbstractReference<String>(reddit, id) {
     @EndpointImplementation(Endpoint.GET_LIVE_THREAD_ABOUT)
@@ -24,7 +26,10 @@ class LiveThreadReference internal constructor(reddit: RedditClient, id: String)
     fun latestUpdates(): BarebonesPaginator.Builder<LiveUpdate> =
         BarebonesPaginator.Builder(reddit, "/live/${JrawUtils.urlEncode(subject)}")
 
-    // TODO: fun liveUpdates(): LiveThreadStream
+    fun liveUpdates(listener: WebSocketListener): ReadOnlyWebSocketHelper {
+        val url = about().websocketUrl ?: throw IllegalStateException("Live thread is not live")
+        return ReadOnlyWebSocketHelper(reddit.websocket(url, listener))
+    }
 
     /**
      * Edits this live thread's settings. Note that this endpoint does not work the same way as editing a multireddit.

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import net.dean.jraw.databind.ListingDeserializer
+import net.dean.jraw.databind.LiveWebSocketUpdateDeserializer
 import net.dean.jraw.databind.RedditExceptionStubDeserializer
 import net.dean.jraw.databind.RedditObjectDeserializer
 import java.net.URLDecoder
@@ -28,6 +29,7 @@ object JrawUtils {
         .registerModule(RedditObjectDeserializer.Module)
         .registerModule(ListingDeserializer.Module)
         .registerModule(RedditExceptionStubDeserializer.Module)
+        .registerModule(LiveWebSocketUpdateDeserializer.Module)
 
     /**
      * Parses a URL-encoded string into a map. Most commonly used when parsing a URL's query or a

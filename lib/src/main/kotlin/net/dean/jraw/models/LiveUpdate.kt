@@ -18,8 +18,7 @@ data class LiveUpdate(
      * A list of embedded media in the body of the text. For example, any links to Tweets, YouTube videos, etc. show up
      * here.
      */
-    @JsonProperty("mobile_embeds")
-    val media: List<Embed>,
+    val embeds: List<Embed>,
 
     /** The name of the user who created the update */
     val author: String,
