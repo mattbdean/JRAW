@@ -1,17 +1,29 @@
 package net.dean.jraw.http
 
-import okhttp3.Call
-import okhttp3.OkHttpClient
-import okhttp3.Request
+import okhttp3.*
 
 /**
- * [HttpAdapter] implementation backed by Square's fantastic [OkHttp](https://square.github.io/okhttp/)
+ * [NetworkAdapter] implementation backed by Square's fantastic [OkHttp](https://square.github.io/okhttp/)
  */
-class OkHttpAdapter(override var userAgent: UserAgent) : HttpAdapter {
+class OkNetworkAdapter(override var userAgent: UserAgent) : NetworkAdapter {
     private val http: OkHttpClient = OkHttpClient()
 
     override fun execute(r: HttpRequest): HttpResponse {
         return HttpResponse(createCall(r).execute())
+    }
+
+    override fun connect(url: String, listener: WebSocketListener): WebSocket {
+        val client = OkHttpClient()
+
+        val ws = client.newWebSocket(Request.Builder()
+            .get()
+            .url(url)
+            .build(), listener)
+
+        // Shutdown the ExecutorService so this program can terminate normally
+        client.dispatcher().executorService().shutdown()
+
+        return ws
     }
 
     private fun createCall(r: HttpRequest): Call =

@@ -38,7 +38,7 @@ class ProjectTypeFinderTest : Spek({
     describe("isProjectType") {
         it("should return true for JRAW classes") {
             ProjectTypeFinder.isProjectType("RedditClient").should.be.`true`
-            ProjectTypeFinder.isProjectType("HttpAdapter").should.be.`true`
+            ProjectTypeFinder.isProjectType("NetworkAdapter").should.be.`true`
             ProjectTypeFinder.isProjectType("String").should.be.`false`
         }
     }

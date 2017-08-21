@@ -1,6 +1,6 @@
 package net.dean.jraw.oauth
 
-import net.dean.jraw.http.HttpAdapter
+import net.dean.jraw.http.NetworkAdapter
 import net.dean.jraw.http.HttpRequest
 import net.dean.jraw.http.NetworkException
 import java.util.*
@@ -15,7 +15,7 @@ import java.util.*
  * Script apps and those using application-only authentication do not need a refresh token.
  */
 class AuthManager(
-    private val http: HttpAdapter,
+    private val http: NetworkAdapter,
     private val credentials: Credentials
 ) {
     /** The most current OAuthData for this app as understood by this client. */

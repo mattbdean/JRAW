@@ -13,8 +13,6 @@ import net.dean.jraw.pagination.Paginator
 import net.dean.jraw.ratelimit.LeakyBucketRateLimiter
 import net.dean.jraw.ratelimit.RateLimiter
 import net.dean.jraw.references.*
-import net.dean.jraw.websocket.OkHttpWebSocketAdapter
-import net.dean.jraw.websocket.WebSocketAdapter
 import okhttp3.WebSocket
 import okhttp3.WebSocketListener
 import java.util.concurrent.TimeUnit
@@ -26,7 +24,7 @@ import java.util.concurrent.TimeUnit
  * [OAuthHelper][net.dean.jraw.oauth.OAuthHelper] class.
  *
  * This class can also be used to send HTTP requests to other domains, but it is recommended to just use an
- * [HttpAdapter] to do that since all requests made using this class are rate limited using [rateLimiter].
+ * [NetworkAdapter] to do that since all requests made using this class are rate limited using [rateLimiter].
  *
  * By default, all network activity that originates from this class are logged with [logger]. You can provide your own
  * [HttpLogger] implementation or turn it off entirely by setting [logHttp] to `false`.
@@ -41,7 +39,7 @@ import java.util.concurrent.TimeUnit
  */
 class RedditClient internal constructor(
     /** How this client will send HTTP requests */
-    val http: HttpAdapter,
+    val http: NetworkAdapter,
     initialOAuthData: OAuthData,
     creds: Credentials,
     /** The TokenStore to assign to [AuthManager.tokenStore] */
@@ -77,9 +75,6 @@ class RedditClient internal constructor(
 
     /** The type of OAuth2 app used to authenticate this client */
     val authMethod: AuthMethod = creds.authMethod
-
-    /** How the client will open WebSocket connections when asked */
-    var websocketAdapter: WebSocketAdapter = OkHttpWebSocketAdapter()
 
     init {
         authManager.currentUsername = if (overrideUsername == AuthManager.USERNAME_USERLESS)
@@ -161,11 +156,11 @@ class RedditClient internal constructor(
      * Attempts to open a WebSocket connection at the given URL.
      */
     fun websocket(url: String, listener: WebSocketListener): WebSocket {
-        return websocketAdapter.open(url, listener)
+        return http.connect(url, listener)
     }
 
     /**
-     * Uses the [HttpAdapter] to execute a synchronous HTTP request
+     * Uses the [NetworkAdapter] to execute a synchronous HTTP request
      *
      * ```
      * val response = reddit.request(reddit.requestStub()

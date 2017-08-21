@@ -4,7 +4,7 @@ import com.winterbe.expekt.should
 import net.dean.jraw.RedditClient
 import net.dean.jraw.http.HttpRequest
 import net.dean.jraw.http.SimpleHttpLogger
-import net.dean.jraw.test.MockHttpAdapter
+import net.dean.jraw.test.MockNetworkAdapter
 import net.dean.jraw.test.expectException
 import net.dean.jraw.test.newMockRedditClient
 import org.jetbrains.spek.api.Spek
@@ -17,7 +17,7 @@ import kotlin.properties.Delegates
 class SimpleHttpLoggerTest : Spek({
     var baos = ByteArrayOutputStream()
     var reddit: RedditClient by Delegates.notNull()
-    val mockAdapter = MockHttpAdapter()
+    val mockAdapter = MockNetworkAdapter()
 
     // Get the string value of the byte array in UTF-8 and split by newlines, removing the last element because the
     // output string ends in a newline, thus creating an empty string at the end of the list

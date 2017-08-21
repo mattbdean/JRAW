@@ -1,7 +1,7 @@
 package net.dean.jraw.oauth
 
 import net.dean.jraw.RedditClient
-import net.dean.jraw.http.HttpAdapter
+import net.dean.jraw.http.NetworkAdapter
 import net.dean.jraw.http.HttpRequest
 import net.dean.jraw.http.NetworkException
 import java.util.*
@@ -17,7 +17,7 @@ import java.util.*
  * authentication.
  */
 object OAuthHelper {
-    @JvmStatic @JvmOverloads fun automatic(http: HttpAdapter, creds: Credentials, tokenStore: TokenStore = NoopTokenStore()): RedditClient {
+    @JvmStatic @JvmOverloads fun automatic(http: NetworkAdapter, creds: Credentials, tokenStore: TokenStore = NoopTokenStore()): RedditClient {
         return when {
             creds.authMethod.isUserless ->
                 RedditClient(http, applicationOnlyOAuthData(http, creds), creds, tokenStore, overrideUsername = AuthManager.USERNAME_USERLESS)
@@ -27,7 +27,7 @@ object OAuthHelper {
         }
     }
 
-    @JvmStatic @JvmOverloads fun interactive(http: HttpAdapter, creds: Credentials, tokenStore: TokenStore = NoopTokenStore()): StatefulAuthHelper {
+    @JvmStatic @JvmOverloads fun interactive(http: NetworkAdapter, creds: Credentials, tokenStore: TokenStore = NoopTokenStore()): StatefulAuthHelper {
         return when (creds.authMethod) {
             AuthMethod.APP -> StatefulAuthHelper(http, creds, tokenStore)
             AuthMethod.WEBAPP -> TODO("Web apps aren't supported yet")
@@ -36,7 +36,7 @@ object OAuthHelper {
     }
 
     @Throws(IllegalStateException::class)
-    @JvmStatic fun fromTokenStore(http: HttpAdapter, creds: Credentials, tokenStore: TokenStore, username: String): RedditClient {
+    @JvmStatic fun fromTokenStore(http: NetworkAdapter, creds: Credentials, tokenStore: TokenStore, username: String): RedditClient {
         var reddit: RedditClient? = null
         val current = tokenStore.fetchCurrent(username)
         if (current != null && current.expiration.after(Date()))
@@ -53,7 +53,7 @@ object OAuthHelper {
         return reddit
     }
 
-    @JvmStatic internal fun scriptOAuthData(http: HttpAdapter, creds: Credentials): OAuthData {
+    @JvmStatic internal fun scriptOAuthData(http: NetworkAdapter, creds: Credentials): OAuthData {
         if (creds.authMethod != AuthMethod.SCRIPT)
             throw IllegalArgumentException("This function is for script apps only")
 
@@ -74,7 +74,7 @@ object OAuthHelper {
         }
     }
 
-    @JvmStatic internal fun applicationOnlyOAuthData(http: HttpAdapter, creds: Credentials): OAuthData {
+    @JvmStatic internal fun applicationOnlyOAuthData(http: NetworkAdapter, creds: Credentials): OAuthData {
         if (!creds.authMethod.isUserless)
             throw IllegalArgumentException("${creds.authMethod} is not a userless authentication method")
 

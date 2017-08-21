@@ -8,6 +8,8 @@ import net.dean.jraw.models.RedditObject
 import net.dean.jraw.models.Votable
 import net.dean.jraw.pagination.Paginator
 import net.dean.jraw.test.TestConfig.userAgent
+import okhttp3.WebSocket
+import okhttp3.WebSocketListener
 import org.jetbrains.spek.api.dsl.SpecBody
 import org.jetbrains.spek.api.dsl.TestBody
 import org.jetbrains.spek.api.dsl.it
@@ -30,7 +32,7 @@ fun <T : Exception> expectException(clazz: KClass<T>, doWork: () -> Unit) {
     }
 }
 
-fun newOkHttpAdapter() = OkHttpAdapter(userAgent)
+fun newOkHttpAdapter() = OkNetworkAdapter(userAgent)
 
 fun ensureAuthenticated(reddit: RedditClient) {
     reddit.authManager.current.should.not.be.`null`
@@ -103,10 +105,14 @@ fun ignoreRateLimit(block: () -> Unit) {
     }
 }
 
-object NoopHttpAdapter : HttpAdapter {
+object NoopNetworkAdapter : NetworkAdapter {
     override var userAgent: UserAgent = UserAgent("")
 
     override fun execute(r: HttpRequest): HttpResponse {
-        throw NotImplementedError("NoopHttpAdapter cannot execute requests")
+        throw NotImplementedError("NoopNetworkAdapter cannot execute requests")
+    }
+
+    override fun connect(url: String, listener: WebSocketListener): WebSocket {
+        throw NotImplementedError("NoopNetworkAdapter cannot open WebSocket connections")
     }
 }

@@ -2,7 +2,7 @@ package net.dean.jraw.oauth
 
 import net.dean.jraw.JrawUtils
 import net.dean.jraw.RedditClient
-import net.dean.jraw.http.HttpAdapter
+import net.dean.jraw.http.NetworkAdapter
 import net.dean.jraw.http.HttpRequest
 import net.dean.jraw.http.NetworkException
 import java.math.BigInteger
@@ -10,7 +10,7 @@ import java.net.URL
 import java.security.SecureRandom
 
 class StatefulAuthHelper internal constructor(
-    private val http: HttpAdapter,
+    private val http: NetworkAdapter,
     private val creds: Credentials,
     private val tokenStore: TokenStore
 ) {

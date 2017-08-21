@@ -1,16 +1,16 @@
 package net.dean.jraw.test
 
 import net.dean.jraw.RedditClient
-import net.dean.jraw.http.*
+import net.dean.jraw.http.HttpRequest
+import net.dean.jraw.http.HttpResponse
+import net.dean.jraw.http.NetworkAdapter
+import net.dean.jraw.http.UserAgent
 import net.dean.jraw.oauth.AuthMethod
 import net.dean.jraw.oauth.Credentials
 import net.dean.jraw.oauth.OAuthData
 import net.dean.jraw.oauth.TokenStore
 import net.dean.jraw.ratelimit.NoopRateLimiter
-import net.dean.jraw.test.TestConfig.userAgent
-import okhttp3.HttpUrl
-import okhttp3.OkHttpClient
-import okhttp3.Request
+import okhttp3.*
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import java.util.*
@@ -34,24 +34,28 @@ fun createMockCredentials(type: AuthMethod) = when (type) {
 }
 
 /** Creates a RedditClient with mocked OAuthData, Credentials, an InMemoryTokenStore, and a NoopRateLimiter */
-fun newMockRedditClient(adapter: HttpAdapter): RedditClient {
+fun newMockRedditClient(adapter: NetworkAdapter): RedditClient {
     val r = RedditClient(adapter, createMockOAuthData(), createMockCredentials(AuthMethod.SCRIPT), InMemoryTokenStore(), overrideUsername = "<mock>")
     r.rateLimiter = NoopRateLimiter()
     return r
 }
 
 /**
- * An HttpAdapter that we can pre-configure responses for.
+ * An NetworkAdapter that we can pre-configure responses for.
  *
  * Use [enqueue] to add a response to the queue. Executing a request will send the response at the head of the queue and
  * remove it.
  */
-class MockHttpAdapter : HttpAdapter {
+class MockNetworkAdapter : NetworkAdapter {
     override var userAgent: UserAgent = UserAgent("doesn't matter, no requests are going to be sent")
     val http = OkHttpClient()
     var mockServer = MockWebServer()
 
     private val responseCodeQueue: Queue<Int> = LinkedList()
+
+    override fun connect(url: String, listener: WebSocketListener): WebSocket {
+        throw NotImplementedError()
+    }
 
     override fun execute(r: HttpRequest): HttpResponse {
         val path = HttpUrl.parse(r.url)!!.encodedPath()
@@ -88,7 +92,7 @@ class MockHttpAdapter : HttpAdapter {
 }
 
 /**
- * Used exclusively with [MockHttpAdapter]
+ * Used exclusively with [MockNetworkAdapter]
  */
 data class MockHttpResponse(
     val body: String = """{"mock":"response"}""",

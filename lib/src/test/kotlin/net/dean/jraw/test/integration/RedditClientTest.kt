@@ -57,10 +57,10 @@ class RedditClientTest : Spek({
     }
 
     describe("retryLimit") {
-        var httpAdapter: MockHttpAdapter by Delegates.notNull()
+        var httpAdapter: MockNetworkAdapter by Delegates.notNull()
 
         beforeEachTest {
-            httpAdapter = MockHttpAdapter()
+            httpAdapter = MockNetworkAdapter()
             httpAdapter.start()
         }
 
@@ -141,8 +141,8 @@ class RedditClientTest : Spek({
 
     describe("lookup") {
         it("should not send a request when given no names") {
-            // NoopHttpAdapter throws an Exception when trying to send a request
-            val reddit = newMockRedditClient(NoopHttpAdapter)
+            // NoopNetworkAdapter throws an Exception when trying to send a request
+            val reddit = newMockRedditClient(NoopNetworkAdapter)
             reddit.lookup().should.equal(Listing())
         }
 

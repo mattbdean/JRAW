@@ -66,7 +66,7 @@ class OAuthHelperTest: Spek({
 
         it("should throw an IllegalStateException when there is no data for a given username") {
             expectException(IllegalStateException::class) {
-                OAuthHelper.fromTokenStore(NoopHttpAdapter, createMockCredentials(AuthMethod.SCRIPT), tokenStore, username)
+                OAuthHelper.fromTokenStore(NoopNetworkAdapter, createMockCredentials(AuthMethod.SCRIPT), tokenStore, username)
             }
         }
 
@@ -94,7 +94,7 @@ class OAuthHelperTest: Spek({
             ))
 
             expectException(IllegalStateException::class) {
-                OAuthHelper.fromTokenStore(NoopHttpAdapter, createMockCredentials(AuthMethod.SCRIPT), tokenStore, username)
+                OAuthHelper.fromTokenStore(NoopNetworkAdapter, createMockCredentials(AuthMethod.SCRIPT), tokenStore, username)
             }
         }
 

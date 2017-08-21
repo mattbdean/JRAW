@@ -14,7 +14,7 @@ import java.util.*
 import kotlin.properties.Delegates
 
 class AuthManagerTest : Spek({
-    val mockAdapter = MockHttpAdapter()
+    val mockAdapter = MockNetworkAdapter()
 
     fun mockOAuthDataResponse() = """
 {
@@ -103,7 +103,7 @@ class AuthManagerTest : Spek({
         val mockStore = InMemoryTokenStore()
 
         beforeEachTest {
-            authManager = AuthManager(NoopHttpAdapter, createMockCredentials(AuthMethod.APP))
+            authManager = AuthManager(NoopNetworkAdapter, createMockCredentials(AuthMethod.APP))
             authManager.currentUsername = username
             authManager.tokenStore = mockStore
             mockStore.reset()
@@ -157,19 +157,19 @@ class AuthManagerTest : Spek({
 
     describe("currentUsername (both the property and the method)") {
         it("should return the name of the authenticated user") {
-            val authManager = AuthManager(NoopHttpAdapter, createMockCredentials(AuthMethod.SCRIPT))
+            val authManager = AuthManager(NoopNetworkAdapter, createMockCredentials(AuthMethod.SCRIPT))
             authManager.currentUsername = "some_username"
             authManager.currentUsername().should.equal("some_username")
         }
 
         it("should return a special value when using userless credentials") {
-            val authManager = AuthManager(NoopHttpAdapter, Credentials.userlessApp("", UUID.randomUUID()))
+            val authManager = AuthManager(NoopNetworkAdapter, Credentials.userlessApp("", UUID.randomUUID()))
             authManager.currentUsername.should.be.`null`
             authManager.currentUsername().should.equal(AuthManager.USERNAME_USERLESS)
         }
 
         it("should return a special value for non-userless credentials for unknown usernames") {
-            val authManager = AuthManager(NoopHttpAdapter, Credentials.installedApp("", ""))
+            val authManager = AuthManager(NoopNetworkAdapter, Credentials.installedApp("", ""))
             authManager.currentUsername.should.be.`null`
             authManager.currentUsername().should.equal(AuthManager.USERNAME_UNKOWN)
         }
@@ -177,11 +177,11 @@ class AuthManagerTest : Spek({
 
     describe("needsRefresh()") {
         it("should return true when it has no OAuthData") {
-            AuthManager(NoopHttpAdapter, CredentialsUtil.script).needsRenewing().should.be.`true`
+            AuthManager(NoopNetworkAdapter, CredentialsUtil.script).needsRenewing().should.be.`true`
         }
 
         it("should return true when the tokenExpiration is in the past") {
-            val auth = AuthManager(NoopHttpAdapter, CredentialsUtil.script)
+            val auth = AuthManager(NoopNetworkAdapter, CredentialsUtil.script)
             auth.update(createMockOAuthData().copy(
                 expiration = Date(Date().time - 1)
             ))

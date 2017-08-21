@@ -3,7 +3,7 @@ package net.dean.jraw.test.unit
 import com.fasterxml.jackson.databind.JsonNode
 import com.winterbe.expekt.should
 import net.dean.jraw.http.HttpRequest
-import net.dean.jraw.http.OkHttpAdapter
+import net.dean.jraw.http.OkNetworkAdapter
 import net.dean.jraw.test.TestConfig.userAgent
 import okhttp3.internal.http.HttpMethod
 import org.jetbrains.spek.api.Spek
@@ -15,9 +15,9 @@ private val otherHeader = "X-Foo" to "Bar"
 private val formBody = mapOf("foo" to "bar", "baz" to "qux")
 
 class OkHttpAdapterTest : Spek({
-    var http: OkHttpAdapter = OkHttpAdapter(userAgent)
+    var http: OkNetworkAdapter = OkNetworkAdapter(userAgent)
     beforeEachTest {
-        http = OkHttpAdapter(userAgent)
+        http = OkNetworkAdapter(userAgent)
     }
 
     describe("execute") {
