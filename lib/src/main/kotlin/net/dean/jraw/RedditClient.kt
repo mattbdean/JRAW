@@ -23,13 +23,13 @@ import java.util.concurrent.TimeUnit
  * Specialized class for sending requests to [oauth.reddit.com](https://www.reddit.com/dev/api/oauth).
  *
  * RedditClients cannot be instantiated directly through the public API. See the
- * [OAuthHelper][net.dean.jraw.http.oauth.OAuthHelper] class.
+ * [OAuthHelper][net.dean.jraw.oauth.OAuthHelper] class.
  *
  * This class can also be used to send HTTP requests to other domains, but it is recommended to just use an
- * [HttpAdapter] to do that since all requests are rate limited.
+ * [HttpAdapter] to do that since all requests made using this class are rate limited using [rateLimiter].
  *
  * By default, all network activity that originates from this class are logged with [logger]. You can provide your own
- * [HttpLogger] implementation or turn it off entirely using [logHttp]
+ * [HttpLogger] implementation or turn it off entirely by setting [logHttp] to `false`.
  *
  * Any requests sent by RedditClients are rate-limited on a per-instance basis. That means that it is possible to
  * consume your app's quota of 60 requests per second using more than one RedditClient authenticated under the same
@@ -78,7 +78,8 @@ class RedditClient internal constructor(
     /** The type of OAuth2 app used to authenticate this client */
     val authMethod: AuthMethod = creds.authMethod
 
-    val websocketAdapter: WebSocketAdapter = OkHttpWebSocketAdapter()
+    /** How the client will open WebSocket connections when asked */
+    var websocketAdapter: WebSocketAdapter = OkHttpWebSocketAdapter()
 
     init {
         authManager.currentUsername = if (overrideUsername == AuthManager.USERNAME_USERLESS)

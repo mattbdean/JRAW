@@ -18,12 +18,13 @@ import java.util.*
  */
 object OAuthHelper {
     @JvmStatic @JvmOverloads fun automatic(http: HttpAdapter, creds: Credentials, tokenStore: TokenStore = NoopTokenStore()): RedditClient {
-        return if (creds.authMethod.isUserless)
-            RedditClient(http, applicationOnlyOAuthData(http, creds), creds, tokenStore, overrideUsername = AuthManager.USERNAME_USERLESS)
-        else if (creds.authMethod == AuthMethod.SCRIPT)
-            RedditClient(http, scriptOAuthData(http, creds), creds, tokenStore, overrideUsername = creds.username)
-        else
-            throw IllegalArgumentException("AuthMethod ${creds.authMethod} is not eligible for automatic authentication")
+        return when {
+            creds.authMethod.isUserless ->
+                RedditClient(http, applicationOnlyOAuthData(http, creds), creds, tokenStore, overrideUsername = AuthManager.USERNAME_USERLESS)
+            creds.authMethod == AuthMethod.SCRIPT ->
+                RedditClient(http, scriptOAuthData(http, creds), creds, tokenStore, overrideUsername = creds.username)
+            else -> throw IllegalArgumentException("AuthMethod ${creds.authMethod} is not eligible for automatic authentication")
+        }
     }
 
     @JvmStatic @JvmOverloads fun interactive(http: HttpAdapter, creds: Credentials, tokenStore: TokenStore = NoopTokenStore()): StatefulAuthHelper {
