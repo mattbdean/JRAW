@@ -1,6 +1,7 @@
 package net.dean.jraw.http
 
 import net.dean.jraw.Endpoint
+import net.dean.jraw.JrawUtils
 import net.dean.jraw.http.HttpRequest.Builder
 import okhttp3.FormBody
 import okhttp3.Headers
@@ -82,7 +83,7 @@ class HttpRequest private constructor(
 
             var updatedUri = path
             var m: Matcher? = null
-            for (arg in positionalArgs) {
+            for (arg in positionalArgs.map { JrawUtils.urlEncode(it) }) {
                 if (m == null) {
                     // Create on first use
                     m = PATH_PARAM_PATTERN.matcher(updatedUri)
@@ -172,12 +173,12 @@ class HttpRequest private constructor(
         }
 
         /**
-         * Sets the URL's path. For example, "/thatJavaNerd/JRAW." Positional path parameters are supported, so if
+         * Sets the URL's path. For example, "/mattbdean/JRAW." Positional path parameters are supported, so if
          * {@code path} was "/api/{resource}" and {@code params} was a one-element array consisting of "foo", then the
          * resulting path would be "/api/foo."
          *
          * @param path The path. If null, "/" will be used.
-         * @param pathParams Optional positional path parameters
+         * @param pathParams Optional positional path parameters. These will be automatically URL-encoded.
          * @return This Builder
          */
         fun path(path: String, vararg pathParams: String): Builder {

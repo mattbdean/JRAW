@@ -42,7 +42,7 @@ class LiveThreadReference internal constructor(reddit: RedditClient, id: String)
     @EndpointImplementation(Endpoint.POST_LIVE_THREAD_EDIT)
     fun edit(data: LiveThreadPatch) {
         reddit.request {
-            it.endpoint(Endpoint.POST_LIVE_THREAD_EDIT, JrawUtils.urlEncode(subject))
+            it.endpoint(Endpoint.POST_LIVE_THREAD_EDIT, subject)
                 .post(data.toRequestMap())
         }
     }
@@ -86,7 +86,7 @@ class LiveThreadReference internal constructor(reddit: RedditClient, id: String)
     @EndpointImplementation(Endpoint.POST_LIVE_THREAD_CLOSE_THREAD)
     fun close() {
         reddit.request {
-            it.endpoint(Endpoint.POST_LIVE_THREAD_CLOSE_THREAD, JrawUtils.urlEncode(subject))
+            it.endpoint(Endpoint.POST_LIVE_THREAD_CLOSE_THREAD, subject)
                 .post(mapOf("api_type" to "json"))
         }
     }

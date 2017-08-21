@@ -42,6 +42,14 @@ class HttpRequestTest: Spek({
             .build().url.should.equal("https://google.com/search")
     }
 
+    it("should automatically URL-encode path params") {
+        HttpRequest.Builder()
+            .secure(true)
+            .host("google.com")
+            .path("/{foo}/{bar}", "<", ">")
+            .build().url.should.equal("https://google.com/%3C/%3E")
+    }
+
     it("should handle path relevantParameters") {
         HttpRequest.Builder()
             .host("github.com")
