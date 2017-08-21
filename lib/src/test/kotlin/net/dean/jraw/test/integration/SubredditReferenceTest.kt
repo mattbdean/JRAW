@@ -37,4 +37,10 @@ class SubredditReferenceTest : Spek({
             pics.about().isUserIsSubscriber.should.be.`false`
         }
     }
+
+    describe("submitText") {
+        it("should return a string") {
+            reddit.subreddit("pics").submitText().should.have.length.above(0)
+        }
+    }
 })

@@ -75,6 +75,16 @@ class SubredditReference internal constructor(reddit: RedditClient, subreddit: S
         return SubmissionReference(reddit, id)
     }
 
+    /**
+     * Gets the text meant to be displayed on the submission form.
+     */
+    @EndpointImplementation(Endpoint.GET_SUBMIT_TEXT)
+    fun submitText(): String {
+        return reddit.request {
+            it.path("/r/{subreddit}/api/submit_text", subject)
+        }.json["submit_text"].asText()
+    }
+
     /** Alias to `setSubscribed(true)` */
     fun subscribe() = setSubscribed(true)
 
