@@ -68,7 +68,7 @@ class SimpleHttpLoggerTest : Spek({
     it("should truncate all lines to maxLineLength if above 0") {
         val maxLineLength = 50
         reddit.logger = SimpleHttpLogger(out = PrintStream(baos), maxLineLength = maxLineLength)
-        mockAdapter.enqueue("""{"foo": ${"bar".repeat(100)}"}""")
+        mockAdapter.enqueue("""{"foo": "${"bar".repeat(100)}"}""")
         reddit.request {
             it.url("http://example.com/${"reallylongpath/".repeat(10)}")
                 .post(mapOf(
@@ -82,7 +82,7 @@ class SimpleHttpLoggerTest : Spek({
 
     it("should not truncate for a maxLineLength < 0")  {
         reddit.logger = SimpleHttpLogger(out = PrintStream(baos), maxLineLength = -1)
-        val res = """{"foo": ${"bar".repeat(100)}"}"""
+        val res = """{"foo": "${"bar".repeat(100)}"}"""
         mockAdapter.enqueue(res)
         reddit.request {
             it.url("http://example.com/${"reallylongpath/".repeat(10)}")

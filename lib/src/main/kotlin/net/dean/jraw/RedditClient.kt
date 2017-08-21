@@ -135,7 +135,7 @@ class RedditClient internal constructor(
         }
 
         // Try to find any API errors embedded in the document
-        val stub = jackson.treeToValue(res.json, RedditExceptionStub::class.java)
+        val stub = if (res.body == "") null else jackson.treeToValue(res.json, RedditExceptionStub::class.java)
 
         if (!res.successful) {
             // If there isn't any reddit API errors, throw the NetworkException instead

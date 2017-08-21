@@ -19,7 +19,10 @@ internal class RedditExceptionStubDeserializer : StdDeserializer<RedditException
 
         if (root.isArray) {
             // Array-based ApiException format. Used only by the oldest of endpoints
-            if (root.size() < 2) throw IllegalArgumentException("Expected at least 2 elements")
+            if (root.size() < 2)
+                return null
+            if (!root[0].isTextual || !root[1].isTextual)
+                return null
             return ApiExceptionStub(root[0].asText(), root[1].asText(), listOf())
         } else if (root.isObject) {
             if (root.has("json")) {
