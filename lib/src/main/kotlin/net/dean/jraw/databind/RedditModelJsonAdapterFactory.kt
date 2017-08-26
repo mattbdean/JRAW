@@ -37,7 +37,7 @@ class RedditModelJsonAdapterFactory : JsonAdapter.Factory {
 
     private class RedditModelJsonAdapter(private val delegate: JsonAdapter<RedditModelEnvelope<*>>, private val expectedKind: String) : JsonAdapter<Any>() {
         override fun toJson(writer: JsonWriter?, value: Any?) {
-            throw NotImplementedError("serialization is not yet supported")
+            delegate.toJson(writer, RedditModelEnvelope(kind = expectedKind, data = value))
         }
 
         override fun fromJson(reader: JsonReader?): Any? {

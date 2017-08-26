@@ -36,5 +36,11 @@ open class BarebonesPaginator<T> private constructor(
 
         override fun build(): BarebonesPaginator<T> =
             BarebonesPaginator(reddit, baseUrl, limit, clazz)
+
+        companion object {
+            inline fun <reified T> create(reddit: RedditClient, baseUrl: String): Builder<T> {
+                return Builder(reddit, baseUrl, T::class.java)
+            }
+        }
     }
 }

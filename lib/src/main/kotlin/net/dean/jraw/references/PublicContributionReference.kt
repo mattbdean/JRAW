@@ -57,7 +57,7 @@ abstract class PublicContributionReference internal constructor(reddit: RedditCl
     /**
      * Saves or unsaves this model
      *
-     * @see net.dean.jraw.models.PublicContribution.saved
+     * @see net.dean.jraw.models.PublicContribution.isSaved
      */
     @EndpointImplementation(Endpoint.POST_SAVE, Endpoint.POST_UNSAVE)
     fun setSaved(saved: Boolean) {

@@ -1,10 +1,12 @@
 package net.dean.jraw
 
 import net.dean.jraw.http.*
+import net.dean.jraw.models.Comment
 import net.dean.jraw.models.Listing
 import net.dean.jraw.models.OAuthData
 import net.dean.jraw.models.Submission
 import net.dean.jraw.oauth.*
+import net.dean.jraw.pagination.BarebonesPaginator
 import net.dean.jraw.pagination.DefaultPaginator
 import net.dean.jraw.ratelimit.LeakyBucketRateLimiter
 import net.dean.jraw.ratelimit.RateLimiter
@@ -280,12 +282,11 @@ class RedditClient internal constructor(
      */
     fun submission(id: String) = SubmissionReference(this, id)
 
-    // TODO
-//    /**
-//     * Creates a BarebonesPaginator.Builder that will iterate over the latest comments from all subreddits when built.
-//     * This Paginator will be especially useful when used with the [Paginator.restart] method.
-//     */
-//    fun comments() = BarebonesPaginator.Builder<Comment>(this, "/comments")
+    /**
+     * Creates a BarebonesPaginator.Builder that will iterate over the latest comments from all subreddits when built.
+     * This Paginator will be especially useful when used with the [Paginator.restart] method.
+     */
+    fun comments() = BarebonesPaginator.Builder.create<Comment>(this, "/comments")
 
     /**
      * Returns the name of the logged-in user
@@ -312,6 +313,7 @@ class RedditClient internal constructor(
     fun lookup(fullNames: List<String>): Listing<Any> {
         if (fullNames.isEmpty()) return Listing.empty()
 
+        // TODO: Polymorphic JsonAdapter
         return request {
             it.endpoint(Endpoint.GET_INFO)
                 .query(mapOf("id" to fullNames.joinToString(",")))
