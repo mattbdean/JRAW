@@ -1,10 +1,8 @@
 package net.dean.jraw.references
 
-import com.fasterxml.jackson.module.kotlin.treeToValue
-import net.dean.jraw.*
-import net.dean.jraw.JrawUtils.jackson
-import net.dean.jraw.http.NetworkException
-import net.dean.jraw.models.Comment
+import net.dean.jraw.Endpoint
+import net.dean.jraw.EndpointImplementation
+import net.dean.jraw.RedditClient
 import net.dean.jraw.models.VoteDirection
 
 /**
@@ -68,32 +66,33 @@ abstract class PublicContributionReference internal constructor(reddit: RedditCl
         reddit.request { it.endpoint(endpoint).post(mapOf("id" to fullName)) }
     }
 
-    /**
-     * Creates a comment in response to this submission of comment
-     *
-     * @throws ApiException Most commonly for ratelimiting.
-     */
-    @Throws(ApiException::class)
-    @EndpointImplementation(Endpoint.POST_COMMENT)
-    fun reply(text: String): Comment {
-        val res = reddit.request {
-            it.endpoint(Endpoint.POST_COMMENT)
-                .post(mapOf(
-                    "api_type" to "json",
-                    "text" to text,
-                    "thing_id" to fullName
-                ))
-        }
-
-        // For whatever reason reddit returns a 200 OK response when we're being ratelimited. Since RedditClient only
-        // checks for errors for non-successful status codes, we have to manually check for errors here
-        val errorStub = jackson.treeToValue(res.json, RedditExceptionStub::class.java)
-        if (errorStub != null)
-            throw errorStub.create(NetworkException(res))
-
-        // Deserialize specific JSON node to a Comment
-        return jackson.treeToValue(JrawUtils.navigateJson(res.json, "json", "data", "things", 0))
-    }
+    // TODO
+//    /**
+//     * Creates a comment in response to this submission of comment
+//     *
+//     * @throws ApiException Most commonly for ratelimiting.
+//     */
+//    @Throws(ApiException::class)
+//    @EndpointImplementation(Endpoint.POST_COMMENT)
+//    fun reply(text: String): Comment {
+//        val res = reddit.request {
+//            it.endpoint(Endpoint.POST_COMMENT)
+//                .post(mapOf(
+//                    "api_type" to "json",
+//                    "text" to text,
+//                    "thing_id" to fullName
+//                ))
+//        }
+//
+//        // For whatever reason reddit returns a 200 OK response when we're being ratelimited. Since RedditClient only
+//        // checks for errors for non-successful status codes, we have to manually check for errors here
+//        val errorStub = jackson.treeToValue(res.json, RedditExceptionStub::class.java)
+//        if (errorStub != null)
+//            throw errorStub.create(NetworkException(res))
+//
+//        // Deserialize specific JSON node to a Comment
+//        return jackson.treeToValue(JrawUtils.navigateJson(res.json, "json", "data", "things", 0))
+//    }
 
     @EndpointImplementation(Endpoint.POST_DEL)
     fun delete() {

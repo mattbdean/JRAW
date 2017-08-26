@@ -1,35 +1,31 @@
 package net.dean.jraw
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.PropertyNamingStrategy
-import com.fasterxml.jackson.module.kotlin.registerKotlinModule
-import net.dean.jraw.databind.ListingDeserializer
-import net.dean.jraw.databind.LiveWebSocketUpdateDeserializer
-import net.dean.jraw.databind.RedditExceptionStubDeserializer
-import net.dean.jraw.databind.RedditObjectDeserializer
+import com.squareup.moshi.JsonAdapter
+import com.squareup.moshi.Moshi
+import net.dean.jraw.databind.*
+import net.dean.jraw.models.DistinguishedStatus
+import net.dean.jraw.models.VoteDirection
 import java.net.URLDecoder
 import java.net.URLEncoder
+import java.util.*
 
 /**
  * A set of utility methods and properties used throughout the project
  */
 object JrawUtils {
-    /**
-     * Creates a Jackson ObjectMapper with the Kotlin module registered and the property naming strategy sent to
-     * snake_case.
-     */
-    @JvmStatic internal fun defaultObjectMapper(): ObjectMapper = ObjectMapper()
-        .registerKotlinModule()
-        // Use snake case by default because that's what reddit uses
-        .setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE)
+    @JvmField val moshi: Moshi = Moshi.Builder()
+        .add(Date::class.java, UnixDateAdapter())
+        .add(EnvelopedListAdapterFactory())
+        .add(RedditModelJsonAdapterFactory())
+        .add(ModelAdapterFactory.create())
+        .add(OAuthDataJsonAdapter())
+        .add(DistinguishedStatus::class.java, DistinguishedStatusAdapter())
+        .add(VoteDirection::class.java, VoteDirectionAdapter())
+        .build()
 
-    /** The default ObjectMapper instance with all the modules in the `databind` package registered */
-    @JvmStatic val jackson: ObjectMapper = defaultObjectMapper()
-        .registerModule(RedditObjectDeserializer.Module)
-        .registerModule(ListingDeserializer.Module)
-        .registerModule(RedditExceptionStubDeserializer.Module)
-        .registerModule(LiveWebSocketUpdateDeserializer.Module)
+    @JvmStatic inline fun <reified T> adapter(): JsonAdapter<T> {
+        return moshi.adapter(T::class.java)
+    }
 
     /**
      * Parses a URL-encoded string into a map. Most commonly used when parsing a URL's query or a
@@ -100,43 +96,43 @@ object JrawUtils {
      */
     @JvmStatic fun urlDecode(str: String): String = URLDecoder.decode(str, "UTF-8")
 
-    /**
-     * Attempts to navigate a JSON structure with the given paths. Only Strings and Ints are accepted as path elements
-     * for object properties and array elements respectively. Take this example:
-     *
-     * ```json
-     * {
-     *   "foo": {
-     *     "bar": [
-     *       {
-     *         "baz": "qux"
-     *       }
-     *     ]
-     *   }
-     * }
-     * ```
-     *
-     * ```kotlin
-     * navigateJson(node, "foo", "bar", 0, "baz").asText() // -> "qux"
-     * ```
-     *
-     * @throws IllegalArgumentException If the entire path can't be resolved
-     */
-    @Throws(IllegalArgumentException::class)
-    @JvmStatic fun navigateJson(json: JsonNode, vararg paths: Any): JsonNode {
-        var node = json
-        for (i in paths.indices) {
-            if (paths[i] !is Int && paths[i] !is String)
-                throw IllegalArgumentException("paths may be composed of either Strings or Ints, found '${paths[i]}'")
-
-            if (paths[i] is Int && node.has(paths[i] as Int))
-                node = node[paths[i] as Int]
-            else if (paths[i] is String && node.has(paths[i] as String))
-                node = node[paths[i] as String]
-            else
-                throw IllegalArgumentException("Unexpected JSON structure: cannot find '${paths.slice(0..i).joinToString(" > ")}'")
-        }
-
-        return node
-    }
+//    /**
+//     * Attempts to navigate a JSON structure with the given paths. Only Strings and Ints are accepted as path elements
+//     * for object properties and array elements respectively. Take this example:
+//     *
+//     * ```json
+//     * {
+//     *   "foo": {
+//     *     "bar": [
+//     *       {
+//     *         "baz": "qux"
+//     *       }
+//     *     ]
+//     *   }
+//     * }
+//     * ```
+//     *
+//     * ```kotlin
+//     * navigateJson(node, "foo", "bar", 0, "baz").asText() // -> "qux"
+//     * ```
+//     *
+//     * @throws IllegalArgumentException If the entire path can't be resolved
+//     */
+//    @Throws(IllegalArgumentException::class)
+//    @JvmStatic fun navigateJson(json: JsonNode, vararg paths: Any): JsonNode {
+//        var node = json
+//        for (i in paths.indices) {
+//            if (paths[i] !is Int && paths[i] !is String)
+//                throw IllegalArgumentException("paths may be composed of either Strings or Ints, found '${paths[i]}'")
+//
+//            if (paths[i] is Int && node.has(paths[i] as Int))
+//                node = node[paths[i] as Int]
+//            else if (paths[i] is String && node.has(paths[i] as String))
+//                node = node[paths[i] as String]
+//            else
+//                throw IllegalArgumentException("Unexpected JSON structure: cannot find '${paths.slice(0..i).joinToString(" > ")}'")
+//        }
+//
+//        return node
+//    }
 }

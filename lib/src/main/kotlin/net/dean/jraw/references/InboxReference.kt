@@ -1,26 +1,27 @@
 package net.dean.jraw.references
 
-import net.dean.jraw.*
-import net.dean.jraw.models.Message
-import net.dean.jraw.pagination.BarebonesPaginator
+import net.dean.jraw.Endpoint
+import net.dean.jraw.EndpointImplementation
+import net.dean.jraw.RedditClient
 
 class InboxReference internal constructor(reddit: RedditClient) : AbstractReference<Nothing?>(reddit, null) {
-    /**
-     * Creates a [BarebonesPaginator.Builder] to view messages.
-     *
-     * Possible `where` values:
-     *
-     * - `inbox` — all non-deleted messages
-     * - `unread` — all unread messages
-     * - `messages` — only private messages
-     * - `comments` — only replies to comments the user created
-     * - `selfreply` — only top-level replies to posts submitted by the user
-     * - `mentions` — only comments that mention this user
-     */
-    @EndpointImplementation(Endpoint.GET_MESSAGE_WHERE, type = MethodType.NON_BLOCKING_CALL)
-    fun iterate(where: String): BarebonesPaginator.Builder<Message> {
-        return BarebonesPaginator.Builder(reddit, "/message/${JrawUtils.urlEncode(where)}")
-    }
+    // TODO
+//    /**
+//     * Creates a [BarebonesPaginator.Builder] to view messages.
+//     *
+//     * Possible `where` values:
+//     *
+//     * - `inbox` — all non-deleted messages
+//     * - `unread` — all unread messages
+//     * - `messages` — only private messages
+//     * - `comments` — only replies to comments the user created
+//     * - `selfreply` — only top-level replies to posts submitted by the user
+//     * - `mentions` — only comments that mention this user
+//     */
+//    @EndpointImplementation(Endpoint.GET_MESSAGE_WHERE, type = MethodType.NON_BLOCKING_CALL)
+//    fun iterate(where: String): BarebonesPaginator.Builder<Message> {
+//        return BarebonesPaginator.Builder(reddit, "/message/${JrawUtils.urlEncode(where)}")
+//    }
 
     fun compose(dest: String, subject: String, body: String) = compose(null, dest, subject, body)
 

@@ -1,11 +1,10 @@
 package net.dean.jraw.references
 
-import net.dean.jraw.*
-import net.dean.jraw.JrawUtils.jackson
-import net.dean.jraw.http.NetworkException
-import net.dean.jraw.models.RootCommentNode
+import net.dean.jraw.Endpoint
+import net.dean.jraw.EndpointImplementation
+import net.dean.jraw.MethodType
+import net.dean.jraw.RedditClient
 import net.dean.jraw.models.Submission
-import net.dean.jraw.models.SubmissionKind
 import net.dean.jraw.models.Subreddit
 import net.dean.jraw.pagination.DefaultPaginator
 
@@ -20,7 +19,7 @@ class SubredditReference internal constructor(reddit: RedditClient, subreddit: S
      * Returns a [Subreddit] instance for this reference
      */
     @EndpointImplementation(Endpoint.GET_SUBREDDIT_ABOUT)
-    fun about(): Subreddit = reddit.request { it.path("/r/$subject/about") }.deserialize()
+    fun about(): Subreddit = reddit.request { it.path("/r/$subject/about") }.deserializeEnveloped()
 
     /**
      * Creates a new [DefaultPaginator.Builder] to iterate over this subreddit's posts. Not a blocking call.
@@ -29,7 +28,7 @@ class SubredditReference internal constructor(reddit: RedditClient, subreddit: S
         Endpoint.GET_HOT, Endpoint.GET_NEW, Endpoint.GET_RISING, Endpoint.GET_SORT,
         type = MethodType.NON_BLOCKING_CALL
     )
-    fun posts() = DefaultPaginator.Builder<Submission>(reddit, "/r/$subject", sortingAlsoInPath = true)
+    fun posts() = DefaultPaginator.Builder.create<Submission>(reddit, "/r/$subject", sortingAlsoInPath = true)
 
     /**
      * Gets a random submission from this subreddit. Although it is not marked with [EndpointImplementation], this
@@ -37,7 +36,7 @@ class SubredditReference internal constructor(reddit: RedditClient, subreddit: S
      *
      * @see RedditClient.randomSubreddit
      */
-    fun randomSubmission() = RootCommentNode(reddit.request { it.path("/r/$subject/random") }.json)
+//    fun randomSubmission() = RootCommentNode(reddit.request { it.path("/r/$subject/random") }.json)
 
     /**
      * Submits content to this subreddit
@@ -46,44 +45,44 @@ class SubredditReference internal constructor(reddit: RedditClient, subreddit: S
      * @param content If `kind` is [SubmissionKind.SELF], the Markdown-formatted body, else a URL.
      * @param sendReplies If direct replies to the submission should be sent to the user's inbox
      */
-    @EndpointImplementation(Endpoint.POST_SUBMIT)
-    fun submit(kind: SubmissionKind, title: String, content: String, sendReplies: Boolean): SubmissionReference {
-        val args = mutableMapOf(
-            "api_type" to "json",
-            "extension" to "json",
-            "kind" to kind.name.toLowerCase(),
-            "resubmit" to "false",
-            "sendreplies" to sendReplies.toString(),
-            "sr" to subject,
-            "title" to title
-        )
-
-        args[if (kind == SubmissionKind.SELF) "text" else "url"] = content
-
-        val res = reddit.request {
-            it.endpoint(Endpoint.POST_SUBMIT)
-                .post(args)
-        }
-
-        // For whatever reason reddit returns a 200 OK response when we're being ratelimited. Since RedditClient only
-        // checks for errors for non-successful status codes, we have to manually check for errors here
-        val errorStub = jackson.treeToValue(res.json, RedditExceptionStub::class.java)
-        if (errorStub != null)
-            throw errorStub.create(NetworkException(res))
-
-        val id = JrawUtils.navigateJson(res.json, "json", "data", "id").asText()
-        return SubmissionReference(reddit, id)
-    }
+//    @EndpointImplementation(Endpoint.POST_SUBMIT)
+//    fun submit(kind: SubmissionKind, title: String, content: String, sendReplies: Boolean): SubmissionReference {
+//        val args = mutableMapOf(
+//            "api_type" to "json",
+//            "extension" to "json",
+//            "kind" to kind.name.toLowerCase(),
+//            "resubmit" to "false",
+//            "sendreplies" to sendReplies.toString(),
+//            "sr" to subject,
+//            "title" to title
+//        )
+//
+//        args[if (kind == SubmissionKind.SELF) "text" else "url"] = content
+//
+//        val res = reddit.request {
+//            it.endpoint(Endpoint.POST_SUBMIT)
+//                .post(args)
+//        }
+//
+//        // For whatever reason reddit returns a 200 OK response when we're being ratelimited. Since RedditClient only
+//        // checks for errors for non-successful status codes, we have to manually check for errors here
+//        val errorStub = jackson.treeToValue(res.json, RedditExceptionStub::class.java)
+//        if (errorStub != null)
+//            throw errorStub.create(NetworkException(res))
+//
+//        val id = JrawUtils.navigateJson(res.json, "json", "data", "id").asText()
+//        return SubmissionReference(reddit, id)
+//    }
 
     /**
      * Gets the text meant to be displayed on the submission form.
      */
-    @EndpointImplementation(Endpoint.GET_SUBMIT_TEXT)
-    fun submitText(): String {
-        return reddit.request {
-            it.path("/r/{subreddit}/api/submit_text", subject)
-        }.json["submit_text"].asText()
-    }
+//    @EndpointImplementation(Endpoint.GET_SUBMIT_TEXT)
+//    fun submitText(): String {
+//        return reddit.request {
+//            it.path("/r/{subreddit}/api/submit_text", subject)
+//        }.json["submit_text"].asText()
+//    }
 
     /** Alias to `setSubscribed(true)` */
     fun subscribe() = setSubscribed(true)

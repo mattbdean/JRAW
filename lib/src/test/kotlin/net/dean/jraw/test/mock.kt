@@ -5,9 +5,9 @@ import net.dean.jraw.http.HttpRequest
 import net.dean.jraw.http.HttpResponse
 import net.dean.jraw.http.NetworkAdapter
 import net.dean.jraw.http.UserAgent
+import net.dean.jraw.models.OAuthData
 import net.dean.jraw.oauth.AuthMethod
 import net.dean.jraw.oauth.Credentials
-import net.dean.jraw.oauth.OAuthData
 import net.dean.jraw.oauth.TokenStore
 import net.dean.jraw.ratelimit.NoopRateLimiter
 import okhttp3.*
@@ -19,9 +19,7 @@ import java.util.concurrent.TimeUnit
 /** Creates a totally BS OAuthData object */
 fun createMockOAuthData(includeRefreshToken: Boolean = false) = OAuthData(
     accessToken = "<access_token>",
-    tokenType = "bearer", // normal OAuthData has this as well, might as well keep it
     scopes = listOf("*"), // '*' means all scopes
-    shelfLife = TimeUnit.SECONDS.toMillis(3600).toInt(),
     refreshToken = if (includeRefreshToken) "<refresh_token>" else null,
     expiration = Date(Date().time + TimeUnit.MILLISECONDS.convert(1, TimeUnit.HOURS))
 )

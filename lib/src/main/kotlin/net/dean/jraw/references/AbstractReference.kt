@@ -13,7 +13,7 @@ abstract class AbstractReference<out T> internal constructor(
 ) : Reference<T> {
     override fun toString(): String {
         // "SubredditReference(name=pics)"
-        return "${this::class.simpleName}(subject=$subject)"
+        return "${this::class.java.simpleName}(subject=$subject)"
     }
 
     override fun equals(other: Any?): Boolean {

@@ -1,15 +1,11 @@
 package net.dean.jraw
 
-import net.dean.jraw.JrawUtils.jackson
 import net.dean.jraw.http.*
-import net.dean.jraw.models.Comment
 import net.dean.jraw.models.Listing
-import net.dean.jraw.models.RedditObject
+import net.dean.jraw.models.OAuthData
 import net.dean.jraw.models.Submission
 import net.dean.jraw.oauth.*
-import net.dean.jraw.pagination.BarebonesPaginator
 import net.dean.jraw.pagination.DefaultPaginator
-import net.dean.jraw.pagination.Paginator
 import net.dean.jraw.ratelimit.LeakyBucketRateLimiter
 import net.dean.jraw.ratelimit.RateLimiter
 import net.dean.jraw.references.*
@@ -85,19 +81,21 @@ class RedditClient internal constructor(
             // me().about().name since that would require a valid access token (we have to call authManager.update after
             // we have a valid username so TokenStores get the proper name once it gets updated). Instead we directly
             // make the request and parse the response.
-            overrideUsername ?: try {
-                val json = request(HttpRequest.Builder()
-                    .url("https://oauth.reddit.com/api/v1/me")
-                    .header("Authorization", "bearer ${initialOAuthData.accessToken}")
-                    .build()).json
-
-                if (!json.has("name"))
-                    throw IllegalArgumentException("Cannot get name from response")
-                json.get("name").asText()
-            } catch (e: ApiException) {
-                // Delay throwing an exception until `requireAuthenticatedUser()` is called
-                null
-            }
+            // TODO username fetching handling
+            overrideUsername ?: AuthManager.USERNAME_UNKOWN
+//            overrideUsername ?: try {
+//                val json = request(HttpRequest.Builder()
+//                    .url("https://oauth.reddit.com/api/v1/me")
+//                    .header("Authorization", "bearer ${initialOAuthData.accessToken}")
+//                    .build()).json
+//
+//                if (!json.has("name"))
+//                    throw IllegalArgumentException("Cannot get name from response")
+//                json.get("name").asText()
+//            } catch (e: ApiException) {
+//                // Delay throwing an exception until `requireAuthenticatedUser()` is called
+//                null
+//            }
 
         authManager.tokenStore = tokenStore
         authManager.update(initialOAuthData)
@@ -137,17 +135,19 @@ class RedditClient internal constructor(
         }
 
         // Try to find any API errors embedded in the document
-        val stub = if (res.body == "") null else jackson.treeToValue(res.json, RedditExceptionStub::class.java)
-
-        if (!res.successful) {
-            // If there isn't any reddit API errors, throw the NetworkException instead
-            stub ?: throw NetworkException(res)
-            throw stub.create(NetworkException(res))
-        } else {
-            // Reddit has some legacy endpoints that return 200 OK even though the JSON contains errors
-            if (stub != null)
-                throw stub.create(NetworkException(res))
-        }
+        // TODO Error handling, this next line is a stand in
+        if (!res.successful) throw NetworkException(res)
+//        val stub = if (res.body == "") null else jackson.treeToValue(res.json, RedditExceptionStub::class.java)
+//
+//        if (!res.successful) {
+//            // If there isn't any reddit API errors, throw the NetworkException instead
+//            stub ?: throw NetworkException(res)
+//            throw stub.create(NetworkException(res))
+//        } else {
+//            // Reddit has some legacy endpoints that return 200 OK even though the JSON contains errors
+//            if (stub != null)
+//                throw stub.create(NetworkException(res))
+//        }
 
         return res
     }
@@ -226,8 +226,8 @@ class RedditClient internal constructor(
      */
     fun user(name: String) = OtherUserReference(this, name)
 
-    /** Creates a [Paginator.Builder] to iterate posts on the front page */
-    fun frontPage() = DefaultPaginator.Builder<Submission>(this, baseUrl = "", sortingAlsoInPath = true)
+    /** Creates a [DefaultPaginator.Builder] to iterate posts on the front page */
+    fun frontPage() = DefaultPaginator.Builder.create<Submission>(this, baseUrl = "", sortingAlsoInPath = true)
 
     /**
      * Creates a [SubredditReference]
@@ -280,11 +280,12 @@ class RedditClient internal constructor(
      */
     fun submission(id: String) = SubmissionReference(this, id)
 
-    /**
-     * Creates a BarebonesPaginator.Builder that will iterate over the latest comments from all subreddits when built.
-     * This Paginator will be especially useful when used with the [Paginator.restart] method.
-     */
-    fun comments() = BarebonesPaginator.Builder<Comment>(this, "/comments")
+    // TODO
+//    /**
+//     * Creates a BarebonesPaginator.Builder that will iterate over the latest comments from all subreddits when built.
+//     * This Paginator will be especially useful when used with the [Paginator.restart] method.
+//     */
+//    fun comments() = BarebonesPaginator.Builder<Comment>(this, "/comments")
 
     /**
      * Returns the name of the logged-in user
@@ -308,8 +309,8 @@ class RedditClient internal constructor(
      * subreddits are accepted.
      */
     @EndpointImplementation(Endpoint.GET_INFO)
-    fun lookup(fullNames: List<String>): Listing<RedditObject> {
-        if (fullNames.isEmpty()) return Listing()
+    fun lookup(fullNames: List<String>): Listing<Any> {
+        if (fullNames.isEmpty()) return Listing.empty()
 
         return request {
             it.endpoint(Endpoint.GET_INFO)

@@ -4,7 +4,7 @@ import com.github.javaparser.Position
 import com.github.javaparser.Range
 import com.winterbe.expekt.should
 import net.dean.jraw.RedditClient
-import net.dean.jraw.models.RedditObject
+import net.dean.jraw.models.Submission
 import net.dean.jraw.oauth.OAuthHelper
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
@@ -26,11 +26,11 @@ class ProjectTypeFinderTest : Spek({
 
         it("should not include non-JRAW types in its findings") {
             val code = CodeSampleRef("test", listOf(
-                "List<RedditObject> list = myRedditClient.doSomething();"
+                "List<Submission> list = mySubmissions.fetch();"
             ))
 
             ProjectTypeFinder.find(code).should.equal(mapOf(
-                Range(Position(1, 6), Position(1, 17)) to RedditObject::class.java
+                Range(Position(1, 6), Position(1, 6 + Submission::class.java.simpleName.length - 1)) to Submission::class.java
             ))
         }
     }
@@ -45,7 +45,7 @@ class ProjectTypeFinderTest : Spek({
 
     describe("fromSimpleName") {
         it("should return the class associated with a JRAW class") {
-            ProjectTypeFinder.fromSimpleName("RedditObject").should.equal(RedditObject::class.java)
+            ProjectTypeFinder.fromSimpleName("RedditClient").should.equal(RedditClient::class.java)
         }
 
         it("should return null if there is no JRAW class with the given simple name") {

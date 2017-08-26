@@ -2,18 +2,18 @@ package net.dean.jraw.pagination
 
 import net.dean.jraw.RedditClient
 import net.dean.jraw.http.HttpRequest
-import net.dean.jraw.models.RedditObject
 import net.dean.jraw.models.Sorting
 import net.dean.jraw.models.TimePeriod
 
-open class DefaultPaginator<T : RedditObject> private constructor(
+open class DefaultPaginator<T> private constructor(
     reddit: RedditClient,
     baseUrl: String,
     val sortingAlsoInPath: Boolean,
     val timePeriod: TimePeriod,
     val sorting: Sorting,
-    limit: Int
-) : Paginator<T, Paginator.Builder<T>>(reddit, baseUrl, limit) {
+    limit: Int,
+    clazz: Class<T>
+) : Paginator<T, Paginator.Builder<T>>(reddit, baseUrl, limit, clazz) {
 
     override fun createNextRequest(): HttpRequest {
         val sortingString = sorting.name.toLowerCase()
@@ -25,8 +25,8 @@ open class DefaultPaginator<T : RedditObject> private constructor(
         if (sorting.requiresTimePeriod)
             args.put("t", timePeriod.name.toLowerCase())
 
-        if (current?.after != null)
-            args.put("after", current!!.after!!)
+        if (current?.nextName != null)
+            args.put("after", current!!.nextName!!)
 
         val path = if (sortingAlsoInPath) "$baseUrl/$sortingString" else baseUrl
 
@@ -36,12 +36,12 @@ open class DefaultPaginator<T : RedditObject> private constructor(
             .build()
     }
 
-    override fun newBuilder() = Builder<T>(reddit, baseUrl)
+    override fun newBuilder() = Builder(reddit, baseUrl, sortingAlsoInPath, clazz)
         .sorting(sorting)
         .timePeriod(timePeriod)
         .limit(limit)
 
-    open class Builder<T : RedditObject>(
+    open class Builder<T>(
         reddit: RedditClient, baseUrl: String,
 
         /**
@@ -50,8 +50,9 @@ open class DefaultPaginator<T : RedditObject> private constructor(
          * other endpoints 404 when given a path like this, in which case the sorting will need to be specified via
          * query parameter only
          */
-        protected var sortingAlsoInPath: Boolean = false
-    ) : Paginator.Builder<T>(reddit, baseUrl) {
+        protected var sortingAlsoInPath: Boolean = false,
+        clazz: Class<T>
+    ) : Paginator.Builder<T>(reddit, baseUrl, clazz) {
         protected var limit: Int = Paginator.DEFAULT_LIMIT
         protected var timePeriod: TimePeriod = Paginator.DEFAULT_TIME_PERIOD
         protected var sorting = Paginator.DEFAULT_SORTING
@@ -61,6 +62,12 @@ open class DefaultPaginator<T : RedditObject> private constructor(
         fun timePeriod(timePeriod: TimePeriod): Builder<T> { this.timePeriod = timePeriod; return this }
 
         override fun build(): DefaultPaginator<T> =
-            DefaultPaginator(reddit, baseUrl, sortingAlsoInPath, timePeriod, sorting, limit)
+            DefaultPaginator(reddit, baseUrl, sortingAlsoInPath, timePeriod, sorting, limit, clazz)
+
+        companion object {
+            inline fun <reified T> create(reddit: RedditClient, baseUrl: String, sortingAlsoInPath: Boolean = false): Builder<T> {
+                return Builder(reddit, baseUrl, sortingAlsoInPath, T::class.java)
+            }
+        }
     }
 }

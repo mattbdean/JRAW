@@ -3,7 +3,6 @@ package net.dean.jraw.test.unit
 import com.winterbe.expekt.should
 import net.dean.jraw.JrawUtils
 import net.dean.jraw.test.expectException
-import org.intellij.lang.annotations.Language
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
@@ -50,40 +49,6 @@ class JrawUtilsTest : Spek({
                 "foo" to "bar",
                 "baz" to "qux"
             ))
-        }
-    }
-
-    describe("navigateJson") {
-        @Language("JSON")
-        val json = JrawUtils.jackson.readTree("""
-{
-  "foo": {
-    "bar": [
-      {
-        "baz": "qux"
-      }
-    ]
-  }
-}
-""")
-        it("should return a JsonNode for for the described path") {
-            JrawUtils.navigateJson(json, "foo", "bar", 0, "baz").asText().should.equal("qux")
-        }
-
-        it("should return the original node when given no path parameters") {
-            JrawUtils.navigateJson(json).should.equal(json)
-        }
-
-        it("should fail when given an invalid path argument") {
-            expectException(IllegalArgumentException::class) {
-                JrawUtils.navigateJson(json, "other")
-            }
-        }
-
-        it("should fail when given a non-String or int for a path") {
-            expectException(IllegalArgumentException::class) {
-                JrawUtils.navigateJson(json, 45.9)
-            }
         }
     }
 })

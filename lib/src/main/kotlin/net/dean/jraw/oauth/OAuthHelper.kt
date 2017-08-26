@@ -1,9 +1,10 @@
 package net.dean.jraw.oauth
 
 import net.dean.jraw.RedditClient
-import net.dean.jraw.http.NetworkAdapter
 import net.dean.jraw.http.HttpRequest
+import net.dean.jraw.http.NetworkAdapter
 import net.dean.jraw.http.NetworkException
+import net.dean.jraw.models.OAuthData
 import java.util.*
 
 /**
@@ -44,7 +45,11 @@ object OAuthHelper {
 
         val refreshToken = tokenStore.fetchRefreshToken(username)
         if (refreshToken != null) {
-            val emptyData = OAuthData("", "", -1, listOf(), refreshToken, Date(0L))
+            val emptyData = OAuthData(
+                accessToken = "",
+                scopes = listOf(),
+                refreshToken = refreshToken,
+                expiration = Date(0L))
             reddit = RedditClient(http, emptyData, creds, tokenStore, username)
         }
 
@@ -58,7 +63,7 @@ object OAuthHelper {
             throw IllegalArgumentException("This function is for script apps only")
 
         try {
-            return http.execute(HttpRequest.Builder()
+             return http.execute(HttpRequest.Builder()
                 .post(mapOf(
                     "grant_type" to "password",
                     "username" to creds.username!!,

@@ -3,6 +3,7 @@ package net.dean.jraw.oauth
 import net.dean.jraw.http.NetworkAdapter
 import net.dean.jraw.http.HttpRequest
 import net.dean.jraw.http.NetworkException
+import net.dean.jraw.models.OAuthData
 import java.util.*
 
 /**

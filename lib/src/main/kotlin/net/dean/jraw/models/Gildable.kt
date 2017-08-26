@@ -5,7 +5,7 @@ package net.dean.jraw.models
  */
 interface Gildable {
     /** If the currently-logged-in-user can give reddit Gold to this model */
-    val canGild: Boolean
+    val isGildable: Boolean
 
     /** How many times this model has received reddit Gold */
     val gilded: Short

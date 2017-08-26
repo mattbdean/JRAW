@@ -2,50 +2,44 @@ package net.dean.jraw.references
 
 import net.dean.jraw.Endpoint
 import net.dean.jraw.EndpointImplementation
-import net.dean.jraw.JrawUtils
 import net.dean.jraw.RedditClient
-import net.dean.jraw.models.LiveThread
-import net.dean.jraw.models.LiveThreadPatch
-import net.dean.jraw.models.LiveUpdate
-import net.dean.jraw.pagination.BarebonesPaginator
-import net.dean.jraw.websocket.ReadOnlyWebSocketHelper
-import okhttp3.WebSocketListener
 
 class LiveThreadReference internal constructor(reddit: RedditClient, id: String) : AbstractReference<String>(reddit, id) {
-    @EndpointImplementation(Endpoint.GET_LIVE_THREAD_ABOUT)
-    fun about(): LiveThread {
-        return reddit.request {
-            it.endpoint(Endpoint.GET_LIVE_THREAD_ABOUT, JrawUtils.urlEncode(subject))
-        }.deserialize()
-    }
-
-    /**
-     * Creates a Paginator.Builder that will iterate the latest updates from the live thread.
-     */
-    @EndpointImplementation(Endpoint.GET_LIVE_THREAD)
-    fun latestUpdates(): BarebonesPaginator.Builder<LiveUpdate> =
-        BarebonesPaginator.Builder(reddit, "/live/${JrawUtils.urlEncode(subject)}")
-
-    fun liveUpdates(listener: WebSocketListener): ReadOnlyWebSocketHelper {
-        val url = about().websocketUrl ?: throw IllegalStateException("Live thread is not live")
-        return ReadOnlyWebSocketHelper(reddit.websocket(url, listener))
-    }
-
-    /**
-     * Edits this live thread's settings. Note that this endpoint does not work the same way as editing a multireddit.
-     * Any values NOT specified in the LiveThreadPatch will be reset to their default values. For example, in order
-     * to change only the thread's description, the thread's current resources, title, NSFW status, etc. must be sent
-     * as well.
-     *
-     * The API will throw a tantrum if [LiveThreadPatch.title] is null.
-     */
-    @EndpointImplementation(Endpoint.POST_LIVE_THREAD_EDIT)
-    fun edit(data: LiveThreadPatch) {
-        reddit.request {
-            it.endpoint(Endpoint.POST_LIVE_THREAD_EDIT, subject)
-                .post(data.toRequestMap())
-        }
-    }
+    // TODO
+//    @EndpointImplementation(Endpoint.GET_LIVE_THREAD_ABOUT)
+//    fun about(): LiveThread {
+//        return reddit.request {
+//            it.endpoint(Endpoint.GET_LIVE_THREAD_ABOUT, JrawUtils.urlEncode(subject))
+//        }.deserialize()
+//    }
+//
+//    /**
+//     * Creates a Paginator.Builder that will iterate the latest updates from the live thread.
+//     */
+//    @EndpointImplementation(Endpoint.GET_LIVE_THREAD)
+//    fun latestUpdates(): BarebonesPaginator.Builder<LiveUpdate> =
+//        BarebonesPaginator.Builder(reddit, "/live/${JrawUtils.urlEncode(subject)}")
+//
+//    fun liveUpdates(listener: WebSocketListener): ReadOnlyWebSocketHelper {
+//        val url = about().websocketUrl ?: throw IllegalStateException("Live thread is not live")
+//        return ReadOnlyWebSocketHelper(reddit.websocket(url, listener))
+//    }
+//
+//    /**
+//     * Edits this live thread's settings. Note that this endpoint does not work the same way as editing a multireddit.
+//     * Any values NOT specified in the LiveThreadPatch will be reset to their default values. For example, in order
+//     * to change only the thread's description, the thread's current resources, title, NSFW status, etc. must be sent
+//     * as well.
+//     *
+//     * The API will throw a tantrum if [LiveThreadPatch.title] is null.
+//     */
+//    @EndpointImplementation(Endpoint.POST_LIVE_THREAD_EDIT)
+//    fun edit(data: LiveThreadPatch) {
+//        reddit.request {
+//            it.endpoint(Endpoint.POST_LIVE_THREAD_EDIT, subject)
+//                .post(data.toRequestMap())
+//        }
+//    }
 
     /** Adds a new update to the live thread */
     @EndpointImplementation(Endpoint.POST_LIVE_THREAD_UPDATE)

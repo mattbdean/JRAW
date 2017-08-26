@@ -1,8 +1,5 @@
 package net.dean.jraw.test
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties
-
-@JsonIgnoreProperties(ignoreUnknown = true)
 data class TestingCredentials(
     val script: ScriptStub,
     val app: AppStub
