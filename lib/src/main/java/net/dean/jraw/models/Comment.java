@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Date;
 
 @AutoValue
-@RedditModel(kind = KindConstants.COMMENT)
+@RedditModel
 public abstract class Comment implements PublicContribution, NestedIdentifiable {
     public abstract boolean isArchived();
 

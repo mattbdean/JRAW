@@ -4,9 +4,7 @@ import com.winterbe.expekt.should
 import net.dean.jraw.http.HttpRequest
 import net.dean.jraw.http.NetworkException
 import net.dean.jraw.http.SimpleHttpLogger
-import net.dean.jraw.models.Listing
-import net.dean.jraw.models.Sorting
-import net.dean.jraw.models.TimePeriod
+import net.dean.jraw.models.*
 import net.dean.jraw.oauth.OAuthHelper
 import net.dean.jraw.pagination.Paginator
 import net.dean.jraw.test.*
@@ -146,11 +144,18 @@ class RedditClientTest : Spek({
             reddit.lookup().should.equal(Listing.empty())
         }
 
-        // TODO
-//        it("should accept full names of submissions, comments, and subreddits") {
-//            val res = reddit.lookup("t5_2qh0u", "t3_6afe8u", "t1_dhe4fl0")
-//            res.map { it::class }.should.equal(listOf(Subreddit::class, Submission::class, Comment::class))
-//        }
+        it("should accept full names of submissions, comments, and subreddits") {
+            val res = reddit.lookup("t5_2qh0u", "t3_6afe8u", "t1_dhe4fl0")
+
+            val supertypes = listOf(Subreddit::class, Submission::class, Comment::class)
+
+            // We specified 3 full names, should get 3 models back
+            res.should.have.size(3)
+
+            for (i in supertypes.indices) {
+                res[i].should.be.an.instanceof(supertypes[i].java)
+            }
+        }
     }
 
     describe("comments") {

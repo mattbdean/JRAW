@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Date;
 
 @AutoValue
-@RedditModel(kind = KindConstants.SUBMISSION)
+@RedditModel
 public abstract class Submission implements PublicContribution<SubmissionReference> {
     @Override
     @Json(name = "author") public abstract String getAuthor();

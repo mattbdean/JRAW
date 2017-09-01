@@ -3,8 +3,7 @@ package net.dean.jraw
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import net.dean.jraw.databind.*
-import net.dean.jraw.models.DistinguishedStatus
-import net.dean.jraw.models.VoteDirection
+import net.dean.jraw.models.*
 import java.net.URLDecoder
 import java.net.URLEncoder
 import java.util.*
@@ -16,7 +15,11 @@ object JrawUtils {
     @JvmField val moshi: Moshi = Moshi.Builder()
         .add(Date::class.java, UnixDateAdapter())
         .add(EnvelopedListAdapterFactory())
-        .add(RedditModelJsonAdapterFactory())
+        .add(RedditModelAdapterFactory(mapOf(
+            KindConstants.COMMENT to Comment::class.java,
+            KindConstants.SUBMISSION to Submission::class.java,
+            KindConstants.SUBREDDIT to Subreddit::class.java
+        )))
         .add(ModelAdapterFactory.create())
         .add(OAuthDataJsonAdapter())
         .add(DistinguishedStatus::class.java, DistinguishedStatusAdapter())
