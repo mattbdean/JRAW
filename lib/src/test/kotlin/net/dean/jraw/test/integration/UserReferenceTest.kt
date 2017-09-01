@@ -25,15 +25,14 @@ class UserReferenceTest : Spek({
         }
     }
 
-    // TODO
-//    describe("trophies") {
-//        it("should return a List of Trophies") {
-//            // Just make sure it deserializes
-//            reddit.me().trophies()
-//            reddit.user("Shitty_Watercolour").trophies()
-//        }
-//    }
-//
+    describe("trophies") {
+        it("should return a List of Trophies") {
+            // Just make sure it deserializes
+            reddit.me().trophies()
+            reddit.user("Shitty_Watercolour").trophies().should.have.size.above(0)
+        }
+    }
+
     describe("history") {
         val me = reddit.me()
         val other = reddit.user("_vargas_")

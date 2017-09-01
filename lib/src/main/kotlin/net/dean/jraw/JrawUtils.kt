@@ -4,6 +4,7 @@ import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import net.dean.jraw.databind.*
 import net.dean.jraw.models.*
+import net.dean.jraw.models.internal.TrophyList
 import java.net.URLDecoder
 import java.net.URLEncoder
 import java.util.*
@@ -18,7 +19,9 @@ object JrawUtils {
         .add(RedditModelAdapterFactory(mapOf(
             KindConstants.COMMENT to Comment::class.java,
             KindConstants.SUBMISSION to Submission::class.java,
-            KindConstants.SUBREDDIT to Subreddit::class.java
+            KindConstants.SUBREDDIT to Subreddit::class.java,
+            KindConstants.TROPHY to Trophy::class.java,
+            KindConstants.TROPHY_LIST to TrophyList::class.java
         )))
         .add(ModelAdapterFactory.create())
         .add(OAuthDataJsonAdapter())

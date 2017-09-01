@@ -5,6 +5,8 @@ import net.dean.jraw.JrawUtils.urlEncode
 import net.dean.jraw.databind.Enveloped
 import net.dean.jraw.models.Account
 import net.dean.jraw.models.PublicContribution
+import net.dean.jraw.models.Trophy
+import net.dean.jraw.models.internal.TrophyList
 import net.dean.jraw.pagination.DefaultPaginator
 
 abstract class UserReference(reddit: RedditClient, val username: String) : AbstractReference<String>(reddit, username) {
@@ -22,19 +24,15 @@ abstract class UserReference(reddit: RedditClient, val username: String) : Abstr
         return JrawUtils.adapter<Account>(Enveloped::class.java).fromJson(body)!!
     }
 
-    // TODO
-//    @EndpointImplementation(Endpoint.GET_ME_TROPHIES, Endpoint.GET_USER_USERNAME_TROPHIES)
-//    fun trophies(): List<Trophy> {
-//        val json = reddit.request {
-//            if (isSelf)
-//                it.endpoint(Endpoint.GET_ME_TROPHIES)
-//            else
-//                it.endpoint(Endpoint.GET_USER_USERNAME_TROPHIES, username)
-//        }.json
-//
-//        val trophies = JrawUtils.navigateJson(json, "data", "trophies")
-//        return trophies.map { JrawUtils.jackson.treeToValue<Trophy>(it) }
-//    }
+    @EndpointImplementation(Endpoint.GET_ME_TROPHIES, Endpoint.GET_USER_USERNAME_TROPHIES)
+    fun trophies(): List<Trophy> {
+        return reddit.request {
+            if (isSelf)
+                it.endpoint(Endpoint.GET_ME_TROPHIES)
+            else
+                it.endpoint(Endpoint.GET_USER_USERNAME_TROPHIES, username)
+        }.deserializeEnveloped<TrophyList>().trophies
+    }
 
     /**
      * Creates a new [Paginator.Builder] which can iterate over a user's public history.
