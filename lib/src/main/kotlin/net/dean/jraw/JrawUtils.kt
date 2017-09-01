@@ -24,11 +24,13 @@ object JrawUtils {
         .add(OAuthDataJsonAdapter())
         .add(DistinguishedStatus::class.java, DistinguishedStatusAdapter())
         .add(VoteDirection::class.java, VoteDirectionAdapter())
+        .add(RedditExceptionStub::class.java, RedditExceptionStubAdapter())
         .build()
 
-    @JvmStatic inline fun <reified T> adapter(): JsonAdapter<T> {
-        return moshi.adapter(T::class.java)
-    }
+    @JvmStatic inline fun <reified T> adapter(): JsonAdapter<T> = moshi.adapter(T::class.java)
+
+    @JvmStatic inline fun <reified T> adapter(annotationType: Class<out Annotation>?): JsonAdapter<T> =
+        moshi.adapter(T::class.java, annotationType)
 
     /**
      * Parses a URL-encoded string into a map. Most commonly used when parsing a URL's query or a

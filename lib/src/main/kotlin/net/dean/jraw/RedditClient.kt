@@ -139,19 +139,17 @@ class RedditClient internal constructor(
         }
 
         // Try to find any API errors embedded in the document
-        // TODO Error handling, this next line is a stand in
-        if (!res.successful) throw NetworkException(res)
-//        val stub = if (res.body == "") null else jackson.treeToValue(res.json, RedditExceptionStub::class.java)
-//
-//        if (!res.successful) {
-//            // If there isn't any reddit API errors, throw the NetworkException instead
-//            stub ?: throw NetworkException(res)
-//            throw stub.create(NetworkException(res))
-//        } else {
-//            // Reddit has some legacy endpoints that return 200 OK even though the JSON contains errors
-//            if (stub != null)
-//                throw stub.create(NetworkException(res))
-//        }
+        val stub = if (res.body == "") null else JrawUtils.adapter<RedditExceptionStub<*>>().fromJson(res.body)
+
+        if (!res.successful) {
+            // If there isn't any reddit API errors, throw the NetworkException instead
+            stub ?: throw NetworkException(res)
+            throw stub.create(NetworkException(res))
+        } else {
+            // Reddit has some legacy endpoints that return 200 OK even though the JSON contains errors
+            if (stub != null)
+                throw stub.create(NetworkException(res))
+        }
 
         return res
     }
