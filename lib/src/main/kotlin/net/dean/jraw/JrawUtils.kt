@@ -4,6 +4,7 @@ import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import net.dean.jraw.databind.*
 import net.dean.jraw.models.*
+import net.dean.jraw.models.internal.LabeledMultiDescription
 import net.dean.jraw.models.internal.TrophyList
 import java.net.URLDecoder
 import java.net.URLEncoder
@@ -21,13 +22,14 @@ object JrawUtils {
             KindConstants.SUBMISSION to Submission::class.java,
             KindConstants.SUBREDDIT to Subreddit::class.java,
             KindConstants.TROPHY to Trophy::class.java,
-            KindConstants.TROPHY_LIST to TrophyList::class.java
+            KindConstants.TROPHY_LIST to TrophyList::class.java,
+            KindConstants.LABELED_MULTI_DESC to LabeledMultiDescription::class.java
         )))
         .add(ModelAdapterFactory.create())
         .add(OAuthDataJsonAdapter())
         .add(DistinguishedStatus::class.java, DistinguishedStatusAdapter())
         .add(VoteDirection::class.java, VoteDirectionAdapter())
-        .add(RedditExceptionStub::class.java, RedditExceptionStubAdapter())
+        .add(RedditExceptionStubAdapterFactory())
         .build()
 
     @JvmStatic inline fun <reified T> adapter(): JsonAdapter<T> = moshi.adapter(T::class.java)

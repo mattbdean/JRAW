@@ -16,4 +16,5 @@ object KindConstants {
     const val LIVE_THREAD = "LiveUpdateEvent"
 
     const val TROPHY_LIST = "TrophyList"
+    const val LABELED_MULTI_DESC = "LabeledMultiDescription"
 }

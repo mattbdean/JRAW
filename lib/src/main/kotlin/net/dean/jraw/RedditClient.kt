@@ -7,6 +7,7 @@ import net.dean.jraw.models.Comment
 import net.dean.jraw.models.Listing
 import net.dean.jraw.models.OAuthData
 import net.dean.jraw.models.Submission
+import net.dean.jraw.models.internal.RedditExceptionStub
 import net.dean.jraw.oauth.*
 import net.dean.jraw.pagination.BarebonesPaginator
 import net.dean.jraw.pagination.DefaultPaginator
@@ -141,15 +142,15 @@ class RedditClient internal constructor(
         // Try to find any API errors embedded in the document
         val stub = if (res.body == "") null else JrawUtils.adapter<RedditExceptionStub<*>>().fromJson(res.body)
 
-        if (!res.successful) {
-            // If there isn't any reddit API errors, throw the NetworkException instead
-            stub ?: throw NetworkException(res)
-            throw stub.create(NetworkException(res))
-        } else {
-            // Reddit has some legacy endpoints that return 200 OK even though the JSON contains errors
-            if (stub != null)
-                throw stub.create(NetworkException(res))
+        // Reddit has some legacy endpoints that return 200 OK even though the JSON contains errors
+        if (stub != null) {
+            val ex = stub.create(NetworkException(res))
+            if (ex != null) throw ex
         }
+
+        // Make sure we're still failing on non-success status codes if we couldn't find an API error in the JSON
+        if (!res.successful)
+            throw NetworkException(res)
 
         return res
     }

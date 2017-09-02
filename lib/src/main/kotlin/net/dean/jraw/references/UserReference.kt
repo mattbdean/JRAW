@@ -1,9 +1,11 @@
 package net.dean.jraw.references
 
+import com.squareup.moshi.Types
 import net.dean.jraw.*
 import net.dean.jraw.JrawUtils.urlEncode
 import net.dean.jraw.databind.Enveloped
 import net.dean.jraw.models.Account
+import net.dean.jraw.models.Multireddit
 import net.dean.jraw.models.PublicContribution
 import net.dean.jraw.models.Trophy
 import net.dean.jraw.models.internal.TrophyList
@@ -65,21 +67,25 @@ abstract class UserReference(reddit: RedditClient, val username: String) : Abstr
      */
     fun multi(name: String) = MultiredditReference(reddit, subject, name)
 
-    // TODO
-//    /**
-//     * Lists the multireddits this client is able to view.
-//     *
-//     * If this UserReference is for the logged-in user, all multireddits will be returned. Otherwise, only public
-//     * multireddits will be returned.
-//     */
-//    @EndpointImplementation(Endpoint.GET_MULTI_MINE, Endpoint.GET_MULTI_USER_USERNAME)
-//    fun listMultis(): List<Multireddit> {
-//        return reddit.request {
-//            if (isSelf) {
-//                it.endpoint(Endpoint.GET_MULTI_MINE)
-//            } else {
-//                it.endpoint(Endpoint.GET_MULTI_USER_USERNAME, subject)
-//            }
-//        }.deserialize()
-//    }
+    /**
+     * Lists the multireddits this client is able to view.
+     *
+     * If this UserReference is for the logged-in user, all multireddits will be returned. Otherwise, only public
+     * multireddits will be returned.
+     */
+    @EndpointImplementation(Endpoint.GET_MULTI_MINE, Endpoint.GET_MULTI_USER_USERNAME)
+    fun listMultis(): List<Multireddit> {
+        val res = reddit.request {
+            if (isSelf) {
+                it.endpoint(Endpoint.GET_MULTI_MINE)
+            } else {
+                it.endpoint(Endpoint.GET_MULTI_USER_USERNAME, subject)
+            }
+        }
+
+        val type = Types.newParameterizedType(List::class.java, Multireddit::class.java)
+        val adapter = JrawUtils.moshi.adapter<List<Multireddit>>(type, Enveloped::class.java)
+
+        return res.deserializeWith(adapter)
+    }
 }

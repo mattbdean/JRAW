@@ -3,6 +3,7 @@ package net.dean.jraw.references
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Types
 import net.dean.jraw.*
+import net.dean.jraw.models.MultiredditPatch
 import net.dean.jraw.models.Subreddit
 import net.dean.jraw.pagination.DefaultPaginator
 import okhttp3.MediaType
@@ -19,18 +20,18 @@ class SelfUserReference(reddit: RedditClient) : UserReference(reddit, reddit.req
     fun inbox() = InboxReference(reddit)
 
         // TODO
-//    /**
-//     * Creates a Multireddit (or updates it if it already exists).
-//     *
-//     * This method is equivalent to
-//     *
-//     * ```kotlin
-//     * userReference.multi(name).createOrUpdate(patch)
-//     * ```
-//     *
-//     * and provided for semantics.
-//     */
-//    fun createMulti(name: String, patch: MultiredditPatch) = multi(name).createOrUpdate(patch)
+    /**
+     * Creates a Multireddit (or updates it if it already exists).
+     *
+     * This method is equivalent to
+     *
+     * ```kotlin
+     * userReference.multi(name).createOrUpdate(patch)
+     * ```
+     *
+     * and provided for semantics.
+     */
+    fun createMulti(name: String, patch: MultiredditPatch) = multi(name).createOrUpdate(patch)
 //
 //    /**
 //     * Creates a live thread. The property that's required to be non-null in the LiveThreadPatch is
