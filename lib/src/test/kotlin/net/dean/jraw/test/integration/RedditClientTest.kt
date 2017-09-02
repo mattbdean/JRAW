@@ -14,6 +14,7 @@ import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
 import java.io.ByteArrayOutputStream
 import java.io.PrintStream
+import java.util.*
 import kotlin.properties.Delegates
 
 class RedditClientTest : Spek({
@@ -90,30 +91,29 @@ class RedditClientTest : Spek({
         }
     }
 
-    // TODO
-//    describe("autoRenew") {
-//        it("should request a new token when the old one has expired") {
-//            val reddit = OAuthHelper.automatic(newOkHttpAdapter(),  CredentialsUtil.script)
-//            val initialAccessToken = reddit.authManager.accessToken
-//
-//            fun doRequest() {
-//                reddit.me().about()
-//            }
-//
-//            // Send a request that should NOT trigger a renewal
-//            doRequest()
-//            reddit.authManager.accessToken.should.equal(initialAccessToken)
-//
-//            // Set the tokenExpiration to 1 ms in the past
-//            reddit.authManager.update(
-//                reddit.authManager.current!!.copy(expiration = Date(Date().time - 1))
-//            )
-//
-//            // Send a request that SHOULD trigger a renewal
-//            doRequest()
-//            reddit.authManager.accessToken.should.not.equal(initialAccessToken)
-//        }
-//    }
+    describe("autoRenew") {
+        it("should request a new token when the old one has expired") {
+            val reddit = OAuthHelper.automatic(newOkHttpAdapter(),  CredentialsUtil.script)
+            val initialAccessToken = reddit.authManager.accessToken
+
+            fun doRequest() {
+                reddit.me().about()
+            }
+
+            // Send a request that should NOT trigger a renewal
+            doRequest()
+            reddit.authManager.accessToken.should.equal(initialAccessToken)
+
+            // Set the tokenExpiration to 1 ms in the past
+            reddit.authManager.update(
+                reddit.authManager.current!!.copy(expiration = Date(Date().time - 1))
+            )
+
+            // Send a request that SHOULD trigger a renewal
+            doRequest()
+            reddit.authManager.accessToken.should.not.equal(initialAccessToken)
+        }
+    }
 
     describe("subreddits") {
         it("should create a Paginator.Builder that iterates multiple subreddits") {
