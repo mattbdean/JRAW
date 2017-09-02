@@ -3,10 +3,7 @@ package net.dean.jraw
 import com.squareup.moshi.Types
 import net.dean.jraw.databind.DynamicEnveloped
 import net.dean.jraw.http.*
-import net.dean.jraw.models.Comment
-import net.dean.jraw.models.Listing
-import net.dean.jraw.models.OAuthData
-import net.dean.jraw.models.Submission
+import net.dean.jraw.models.*
 import net.dean.jraw.models.internal.RedditExceptionStub
 import net.dean.jraw.oauth.*
 import net.dean.jraw.pagination.BarebonesPaginator
@@ -86,21 +83,17 @@ class RedditClient internal constructor(
             // me().about().name since that would require a valid access token (we have to call authManager.update after
             // we have a valid username so TokenStores get the proper name once it gets updated). Instead we directly
             // make the request and parse the response.
-            // TODO username fetching handling
-            overrideUsername ?: AuthManager.USERNAME_UNKOWN
-//            overrideUsername ?: try {
-//                val json = request(HttpRequest.Builder()
-//                    .url("https://oauth.reddit.com/api/v1/me")
-//                    .header("Authorization", "bearer ${initialOAuthData.accessToken}")
-//                    .build()).json
-//
-//                if (!json.has("name"))
-//                    throw IllegalArgumentException("Cannot get name from response")
-//                json.get("name").asText()
-//            } catch (e: ApiException) {
-//                // Delay throwing an exception until `requireAuthenticatedUser()` is called
-//                null
-//            }
+            overrideUsername ?: try {
+                val me = request(HttpRequest.Builder()
+                    .url("https://oauth.reddit.com/api/v1/me")
+                    .header("Authorization", "bearer ${initialOAuthData.accessToken}")
+                    .build()).deserialize<Account>()
+
+                me.name
+            } catch (e: ApiException) {
+                // Delay throwing an exception until `requireAuthenticatedUser()` is called
+                null
+            }
 
         authManager.tokenStore = tokenStore
         authManager.update(initialOAuthData)

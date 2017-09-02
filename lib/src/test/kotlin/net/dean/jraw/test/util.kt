@@ -2,6 +2,7 @@ package net.dean.jraw.test
 
 import com.winterbe.expekt.should
 import net.dean.jraw.RateLimitException
+import net.dean.jraw.RedditClient
 import net.dean.jraw.http.*
 import net.dean.jraw.models.Votable
 import net.dean.jraw.pagination.Paginator
@@ -32,25 +33,25 @@ fun <T : Exception> expectException(clazz: KClass<T>, doWork: () -> Unit) {
 
 fun newOkHttpAdapter() = OkNetworkAdapter(userAgent)
 
-//fun ensureAuthenticated(reddit: RedditClient) {
-//    reddit.authManager.current.should.not.be.`null`
-//    try {
-//        // Try to guess the best endpoint to hit based on the current OAuth scopes
-//        val scopes = reddit.authManager.current!!.scopes
-//        if (scopes.contains("*") || scopes.contains("read")) {
-//            reddit.frontPage().build().next()
-//        } else if (!reddit.authManager.authMethod.isUserless && scopes.contains("identity")) {
-//            reddit.me().about()
-//        }
-//    } catch (e: NetworkException) {
-//        // Wrap the error to make sure the tester knows why the test failed
-//        if (e.res.code == 401)
-//            throw IllegalStateException("Not authenticated, API responded with 401", e)
-//
-//        // Something else went wrong
-//        throw e
-//    }
-//}
+fun ensureAuthenticated(reddit: RedditClient) {
+    reddit.authManager.current.should.not.be.`null`
+    try {
+        // Try to guess the best endpoint to hit based on the current OAuth scopes
+        val scopes = reddit.authManager.current!!.scopes
+        if (scopes.contains("*") || scopes.contains("read")) {
+            reddit.frontPage().build().next()
+        } else if (!reddit.authManager.authMethod.isUserless && scopes.contains("identity")) {
+            reddit.me().about()
+        }
+    } catch (e: NetworkException) {
+        // Wrap the error to make sure the tester knows why the test failed
+        if (e.res.code == 401)
+            throw IllegalStateException("Not authenticated, API responded with 401", e)
+
+        // Something else went wrong
+        throw e
+    }
+}
 
 val rand = SecureRandom()
 fun randomName(length: Int = 10): String {
