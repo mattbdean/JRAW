@@ -2,10 +2,7 @@ package net.dean.jraw
 
 import net.dean.jraw.JrawUtils.jackson
 import net.dean.jraw.http.*
-import net.dean.jraw.models.Comment
-import net.dean.jraw.models.Listing
-import net.dean.jraw.models.RedditObject
-import net.dean.jraw.models.Submission
+import net.dean.jraw.models.*
 import net.dean.jraw.oauth.*
 import net.dean.jraw.pagination.BarebonesPaginator
 import net.dean.jraw.pagination.DefaultPaginator
@@ -318,6 +315,18 @@ class RedditClient internal constructor(
     }
 
     fun liveThread(id: String) = LiveThreadReference(this, id)
+
+    @EndpointImplementation(Endpoint.GET_LIVE_HAPPENING_NOW)
+    fun happeningNow(): LiveThread? {
+        val res = request {
+            it.endpoint(Endpoint.GET_LIVE_HAPPENING_NOW)
+        }
+
+        // A 204 response means there's nothing happening right now
+        if (res.code == 204) return null
+
+        return res.deserialize()
+    }
 
     override fun toString(): String {
         return "RedditClient(username=${authManager.currentUsername()})"

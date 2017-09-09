@@ -162,4 +162,11 @@ class RedditClientTest : Spek({
             }
         }
     }
+
+    describe("happeningNow") {
+        it("should return a LiveThread or null when nothing big is happening") {
+            val thread = reddit.happeningNow()
+            thread?.state?.should?.equal("live")
+        }
+    }
 })

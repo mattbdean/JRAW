@@ -1,11 +1,11 @@
-<!--- Generated 2017-08-21 at 17:34:47 EDT. Use `./gradlew :meta:update` to update. DO NOT MODIFY DIRECTLY -->
+<!--- Generated 2017-09-08 at 23:09:41 EDT. Use `./gradlew :meta:update` to update. DO NOT MODIFY DIRECTLY -->
 
 Endpoints
 =========
 
 This file contains a list of all the endpoints (regardless of if they have been implemented) that can be found at the [official reddit API docs](https://www.reddit.com/dev/api/oauth). To update this file, run `./gradlew :meta:update`
 
-So far, **57** endpoints (out of 175) have been implemented.
+So far, **58** endpoints (out of 175) have been implemented.
 
 (any scope)
 -----------
@@ -232,7 +232,8 @@ read
 
 | Method | Endpoint                                                                                                           | Implementation                                                                                                                                                          |
 |:------:| ------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `GET`  | [`/api/info`](https://www.reddit.com/dev/api/oauth#GET_api_info)                                                   | [`RedditClient.lookup()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/RedditClient.kt#L308)                                      |
+| `GET`  | [`/api/info`](https://www.reddit.com/dev/api/oauth#GET_api_info)                                                   | [`RedditClient.lookup()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/RedditClient.kt#L301)                                      |
+| `GET`  | [`/api/live/happening_now`](https://www.reddit.com/dev/api/oauth#GET_api_live_happening_now)                       | [`RedditClient.happeningNow()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/RedditClient.kt#L321)                                |
 | `GET`  | [`/api/morechildren`](https://www.reddit.com/dev/api/oauth#GET_api_morechildren)                                   | [`CommentNode.loadMore()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/models/CommentNode.kt#L-1)                                |
 | `GET`  | [`/api/multi/mine`](https://www.reddit.com/dev/api/oauth#GET_api_multi_mine)                                       | [`UserReference.listMultis()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/UserReference.kt#L81)                      |
 | `GET`  | [`/api/multi/user/{username}`](https://www.reddit.com/dev/api/oauth#GET_api_multi_user_{username})                 | [`UserReference.listMultis()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/UserReference.kt#L81)                      |
@@ -247,14 +248,13 @@ read
 | `GET`  | [`/live/{thread}/about`](https://www.reddit.com/dev/api/oauth#GET_live_{thread}_about)                             | [`LiveThreadReference.about()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/LiveThreadReference.kt#L17)               |
 | `GET`  | [`/new`](https://www.reddit.com/dev/api/oauth#GET_new)                                                             | [`SubredditReference.posts()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/SubredditReference.kt#L32)                 |
 | `GET`  | [`/r/{subreddit}/about`](https://www.reddit.com/dev/api/oauth#GET_r_{subreddit}_about)                             | [`SubredditReference.about()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/SubredditReference.kt#L23)                 |
-| `GET`  | [`/random`](https://www.reddit.com/dev/api/oauth#GET_random)                                                       | [`RedditClient.randomSubreddit()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/RedditClient.kt#L279)                             |
+| `GET`  | [`/random`](https://www.reddit.com/dev/api/oauth#GET_random)                                                       | [`RedditClient.randomSubreddit()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/RedditClient.kt#L272)                             |
 | `GET`  | [`/rising`](https://www.reddit.com/dev/api/oauth#GET_rising)                                                       | [`SubredditReference.posts()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/SubredditReference.kt#L32)                 |
 | `GET`  | [`/user/{username}/about`](https://www.reddit.com/dev/api/oauth#GET_user_{username}_about)                         | [`UserReference.about()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/UserReference.kt#L20)                           |
 | `GET`  | [`/{sort}`](https://www.reddit.com/dev/api/oauth#GET_{sort})                                                       | [`SubredditReference.posts()`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin/net/dean/jraw/references/SubredditReference.kt#L32)                 |
 | `GET`  | [`/about/{location}`](https://www.reddit.com/dev/api/oauth#GET_about_{location})                                   | None                                                                                                                                                                    |
 | `GET`  | [`/about/{where}`](https://www.reddit.com/dev/api/oauth#GET_about_{where})                                         | None                                                                                                                                                                    |
 | `GET`  | [`/api/live/by_id/{names}`](https://www.reddit.com/dev/api/oauth#GET_api_live_by_id_{names})                       | None                                                                                                                                                                    |
-| `GET`  | [`/api/live/happening_now`](https://www.reddit.com/dev/api/oauth#GET_api_live_happening_now)                       | None                                                                                                                                                                    |
 | `GET`  | [`/api/recommend/sr/{srnames}`](https://www.reddit.com/dev/api/oauth#GET_api_recommend_sr_{srnames})               | None                                                                                                                                                                    |
 | `POST` | [`/api/search_reddit_names`](https://www.reddit.com/dev/api/oauth#POST_api_search_reddit_names)                    | None                                                                                                                                                                    |
 | `POST` | [`/api/search_subreddits`](https://www.reddit.com/dev/api/oauth#POST_api_search_subreddits)                        | None                                                                                                                                                                    |
