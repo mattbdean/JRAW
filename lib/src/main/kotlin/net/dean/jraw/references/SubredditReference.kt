@@ -76,12 +76,14 @@ class SubredditReference internal constructor(reddit: RedditClient, subreddit: S
     /**
      * Gets the text meant to be displayed on the submission form.
      */
-//    @EndpointImplementation(Endpoint.GET_SUBMIT_TEXT)
-//    fun submitText(): String {
-//        return reddit.request {
-//            it.path("/r/{subreddit}/api/submit_text", subject)
-//        }.json["submit_text"].asText()
-//    }
+    @EndpointImplementation(Endpoint.GET_SUBMIT_TEXT)
+    fun submitText(): String {
+        return reddit.request {
+            it.path("/r/{subreddit}/api/submit_text", subject)
+        }.deserialize<Map<String, String>>().getOrElse("submit_text") {
+            throw IllegalArgumentException("Unexpected response: no `submit_text` key")
+        }
+    }
 
     /** Alias to `setSubscribed(true)` */
     fun subscribe() = setSubscribed(true)

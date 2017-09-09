@@ -47,7 +47,7 @@ public abstract class GenericJsonResponse implements RedditExceptionStub<RedditE
 
     @Override
     public boolean containsError() {
-        return getJson() != null && getJson().ratelimit != null || !getJson().errors.isEmpty();
+        return getJson() != null && (getJson().ratelimit != null || !getJson().errors.isEmpty());
     }
 
     @Override

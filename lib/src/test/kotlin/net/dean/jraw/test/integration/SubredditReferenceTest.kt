@@ -1,5 +1,6 @@
 package net.dean.jraw.test.integration
 
+import com.winterbe.expekt.should
 import net.dean.jraw.models.SubmissionKind
 import net.dean.jraw.test.SharedObjects
 import net.dean.jraw.test.TestConfig.reddit
@@ -29,20 +30,19 @@ class SubredditReferenceTest : Spek({
         }
     }
 
-    // TODO
-//    describe("subscribe/unsubscribe") {
-//        it("should subscribe the user to the specific subreddit") {
-//            val pics = reddit.subreddit("pics")
-//            pics.subscribe()
-//            pics.about().isUserIsSubscriber.should.be.`true`
-//            pics.unsubscribe()
-//            pics.about().isUserIsSubscriber.should.be.`false`
-//        }
-//    }
-//
-//    describe("submitText") {
-//        it("should return a string") {
-//            reddit.subreddit("pics").submitText().should.have.length.above(0)
-//        }
-//    }
+    describe("subscribe/unsubscribe") {
+        it("should subscribe the user to the specific subreddit") {
+            val pics = reddit.subreddit("pics")
+            pics.subscribe()
+            pics.about().isUserSubscriber.should.be.`true`
+            pics.unsubscribe()
+            pics.about().isUserSubscriber.should.be.`false`
+        }
+    }
+
+    describe("submitText") {
+        it("should return a string") {
+            reddit.subreddit("pics").submitText().should.have.length.above(0)
+        }
+    }
 })
