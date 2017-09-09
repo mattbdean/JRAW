@@ -3,6 +3,7 @@ package net.dean.jraw.docs.samples;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.docs.CodeSample;
 import net.dean.jraw.models.*;
+import net.dean.jraw.pagination.BarebonesPaginator;
 import net.dean.jraw.pagination.DefaultPaginator;
 import net.dean.jraw.pagination.Paginator;
 import net.dean.jraw.references.InboxReference;
@@ -68,24 +69,23 @@ public class Cookbook {
     @SuppressWarnings("UnusedAssignment")
     @CodeSample
     private static void createAndUpdateMultireddit() {
-        // TODO
-//        Multireddit multi = redditClient.me().createMulti("my_multireddit", new MultiredditPatch.Builder()
-//            .description("Here's a cool multireddit!")
-//            .subreddits("redditdev", "kotlin", "java")
-//            .visibility("private")
-//            .build());
-//
-//        // Turn the model class into a Reference, which we can use to interact with the API
-//        MultiredditReference ref = multi.toReference(redditClient);
-//
-//        // Add or remove subreddits one at a time
-//        ref.addSubreddit("programming");
-//        ref.removeSubreddit("java");
-//
-//        // Or we can change things in bulk
-//        multi = ref.update(new MultiredditPatch.Builder()
-//            .subreddits("redditdev")
-//            .build());
+        Multireddit multi = redditClient.me().createMulti("my_multireddit", new MultiredditPatch.Builder()
+            .description("Here's a cool multireddit!")
+            .subreddits("redditdev", "kotlin", "java")
+            .visibility("private")
+            .build());
+
+        // Turn the model class into a Reference, which we can use to interact with the API
+        MultiredditReference ref = multi.toReference(redditClient);
+
+        // Add or remove subreddits one at a time
+        ref.addSubreddit("programming");
+        ref.removeSubreddit("java");
+
+        // Or we can change things in bulk
+        multi = ref.update(new MultiredditPatch.Builder()
+            .subreddits("redditdev")
+            .build());
     }
 
     @CodeSample
@@ -100,34 +100,31 @@ public class Cookbook {
 
     @CodeSample
     private static void listMultireddits() {
-        // TODO
-//        List<Multireddit> mine = redditClient.me().listMultis();
-//        List<Multireddit> someoneElses = redditClient.user("reddit").listMultis();
+        List<Multireddit> mine = redditClient.me().listMultis();
+        List<Multireddit> someoneElses = redditClient.user("reddit").listMultis();
     }
 
     @CodeSample
     private static void iterateInbox() {
-        // TODO
-//        BarebonesPaginator<Message> unread = redditClient.me().inbox().iterate("unread")
-//            .build();
-//
-//        Listing<Message> firstPage = unread.next();
+        BarebonesPaginator<Message> unread = redditClient.me().inbox().iterate("unread")
+            .build();
+
+        Listing<Message> firstPage = unread.next();
     }
 
     @CodeSample
     private static void markReadUnread() {
-        // TODO
-//        // Get the first unread message in the inbox
-//        Listing<Message> unread = redditClient.me().inbox().iterate("unread")
-//            .limit(1)
-//            .build().next();
-//
-//        if (!unread.isEmpty()) {
-//            Message first = unread.get(0);
-//
-//            // The first message
-//            redditClient.me().inbox().markRead(true, first.getFullName());
-//        }
+        // Get the first unread message in the inbox
+        Listing<Message> unread = redditClient.me().inbox().iterate("unread")
+            .limit(1)
+            .build().next();
+
+        if (!unread.isEmpty()) {
+            Message first = unread.get(0);
+
+            // The first message
+            redditClient.me().inbox().markRead(true, first.getFullName());
+        }
     }
 
     @CodeSample

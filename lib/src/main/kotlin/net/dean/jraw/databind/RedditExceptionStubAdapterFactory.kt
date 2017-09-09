@@ -28,8 +28,6 @@ internal class RedditExceptionStubAdapterFactory : JsonAdapter.Factory {
 
     private class StubAdapter(private val delegates: List<JsonAdapter<out RedditExceptionStub<*>>>) : JsonAdapter<RedditExceptionStub<*>>() {
         override fun fromJson(reader: JsonReader): RedditExceptionStub<*>? {
-            // TODO This isn't finished, still have to handle ratelimit and other error formats
-
             if (reader.peek() == JsonReader.Token.BEGIN_OBJECT) {
                 val jsonValue = reader.readJsonValue()
 
