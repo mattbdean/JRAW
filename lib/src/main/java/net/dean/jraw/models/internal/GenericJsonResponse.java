@@ -3,11 +3,13 @@ package net.dean.jraw.models.internal;
 import com.google.auto.value.AutoValue;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
+import net.dean.jraw.ApiException;
 import net.dean.jraw.RateLimitException;
 import net.dean.jraw.RedditException;
 import net.dean.jraw.http.NetworkException;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -39,7 +41,13 @@ public abstract class GenericJsonResponse implements RedditExceptionStub<RedditE
             return new RateLimitException(getJson().ratelimit, cause);
 
         if (getJson().errors != null && !getJson().errors.isEmpty()) {
-            throw new RuntimeException(getJson().errors.get(0).toString());
+            // We only really care about the first error and since there's rarely a time where there are more than one
+            // errors being returned, it doesn't matter anyway
+            List<String> error = getJson().errors.get(0);
+            // TODO
+            if (error.size() > 2)
+                throw new IllegalArgumentException(error.toString());
+            return new ApiException(error.get(0), error.get(1), new ArrayList<String>(), cause);
         }
 
         return null;
@@ -58,7 +66,11 @@ public abstract class GenericJsonResponse implements RedditExceptionStub<RedditE
     }
 
     public static final class Inner {
-        public List<Object> errors;
+        /**
+         * A two-dimensional list of Strings. Each child of this list is its own error. Each error (usually) has two
+         * properties: an error code and a human-readable message.
+         */
+        public List<List<String>> errors;
         public Map<String, Object> data;
 
         @Nullable

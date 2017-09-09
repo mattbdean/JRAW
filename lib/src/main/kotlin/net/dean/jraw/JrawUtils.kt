@@ -23,13 +23,16 @@ object JrawUtils {
             KindConstants.SUBREDDIT to Subreddit::class.java,
             KindConstants.TROPHY to Trophy::class.java,
             KindConstants.TROPHY_LIST to TrophyList::class.java,
-            KindConstants.LABELED_MULTI_DESC to LabeledMultiDescription::class.java
+            KindConstants.LABELED_MULTI_DESC to LabeledMultiDescription::class.java,
+            KindConstants.LIVE_THREAD to LiveThread::class.java,
+            KindConstants.LIVE_UPDATE to LiveUpdate::class.java
         )))
         .add(ModelAdapterFactory.create())
         .add(OAuthDataJsonAdapter())
         .add(DistinguishedStatus::class.java, DistinguishedStatusAdapter())
         .add(VoteDirection::class.java, VoteDirectionAdapter())
         .add(RedditExceptionStubAdapterFactory())
+        .add(LiveWebSocketUpdateAdapterFactory())
         .build()
 
     @JvmStatic inline fun <reified T> adapter(): JsonAdapter<T> = moshi.adapter(T::class.java)
@@ -105,44 +108,4 @@ object JrawUtils {
      * ```
      */
     @JvmStatic fun urlDecode(str: String): String = URLDecoder.decode(str, "UTF-8")
-
-//    /**
-//     * Attempts to navigate a JSON structure with the given paths. Only Strings and Ints are accepted as path elements
-//     * for object properties and array elements respectively. Take this example:
-//     *
-//     * ```json
-//     * {
-//     *   "foo": {
-//     *     "bar": [
-//     *       {
-//     *         "baz": "qux"
-//     *       }
-//     *     ]
-//     *   }
-//     * }
-//     * ```
-//     *
-//     * ```kotlin
-//     * navigateJson(node, "foo", "bar", 0, "baz").asText() // -> "qux"
-//     * ```
-//     *
-//     * @throws IllegalArgumentException If the entire path can't be resolved
-//     */
-//    @Throws(IllegalArgumentException::class)
-//    @JvmStatic fun navigateJson(json: JsonNode, vararg paths: Any): JsonNode {
-//        var node = json
-//        for (i in paths.indices) {
-//            if (paths[i] !is Int && paths[i] !is String)
-//                throw IllegalArgumentException("paths may be composed of either Strings or Ints, found '${paths[i]}'")
-//
-//            if (paths[i] is Int && node.has(paths[i] as Int))
-//                node = node[paths[i] as Int]
-//            else if (paths[i] is String && node.has(paths[i] as String))
-//                node = node[paths[i] as String]
-//            else
-//                throw IllegalArgumentException("Unexpected JSON structure: cannot find '${paths.slice(0..i).joinToString(" > ")}'")
-//        }
-//
-//        return node
-//    }
 }

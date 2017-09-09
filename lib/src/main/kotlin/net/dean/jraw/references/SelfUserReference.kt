@@ -3,8 +3,10 @@ package net.dean.jraw.references
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Types
 import net.dean.jraw.*
+import net.dean.jraw.models.LiveThreadPatch
 import net.dean.jraw.models.MultiredditPatch
 import net.dean.jraw.models.Subreddit
+import net.dean.jraw.models.internal.GenericJsonResponse
 import net.dean.jraw.pagination.DefaultPaginator
 import okhttp3.MediaType
 import okhttp3.RequestBody
@@ -19,7 +21,6 @@ class SelfUserReference(reddit: RedditClient) : UserReference(reddit, reddit.req
 
     fun inbox() = InboxReference(reddit)
 
-        // TODO
     /**
      * Creates a Multireddit (or updates it if it already exists).
      *
@@ -32,23 +33,25 @@ class SelfUserReference(reddit: RedditClient) : UserReference(reddit, reddit.req
      * and provided for semantics.
      */
     fun createMulti(name: String, patch: MultiredditPatch) = multi(name).createOrUpdate(patch)
-//
-//    /**
-//     * Creates a live thread. The property that's required to be non-null in the LiveThreadPatch is
-//     * [title][LiveThreadPatch.title].
-//     *
-//     * @see LiveThreadReference.edit
-//     */
-//    @EndpointImplementation(Endpoint.POST_LIVE_CREATE)
-//    fun createLiveThread(data: LiveThreadPatch): LiveThreadReference {
-//        val res = reddit.request {
-//            it.endpoint(Endpoint.POST_LIVE_CREATE)
-//                .post(data.toRequestMap())
-//        }
-//
-//        val id = JrawUtils.navigateJson(res.json, "json", "data", "id").asText()
-//        return LiveThreadReference(reddit, id)
-//    }
+
+    /**
+     * Creates a live thread. The only property that's required to be non-null in the LiveThreadPatch is
+     * [title][LiveThreadPatch.title].
+     *
+     * @see LiveThreadReference.edit
+     */
+    @EndpointImplementation(Endpoint.POST_LIVE_CREATE)
+    fun createLiveThread(data: LiveThreadPatch): LiveThreadReference {
+        val res = reddit.request {
+            it.endpoint(Endpoint.POST_LIVE_CREATE)
+                .post(data.toRequestMap())
+        }.deserialize<GenericJsonResponse>()
+
+        val id = res.json?.data?.get("id") as? String ?:
+            throw IllegalArgumentException("Could not find ID")
+
+        return LiveThreadReference(reddit, id)
+    }
 
     /**
      * Gets a Map of preferences set at [https://www.reddit.com/prefs].
