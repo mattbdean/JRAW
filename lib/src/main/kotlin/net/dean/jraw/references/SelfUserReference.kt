@@ -3,6 +3,8 @@ package net.dean.jraw.references
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Types
 import net.dean.jraw.*
+import net.dean.jraw.databind.RedditModelEnvelope
+import net.dean.jraw.models.KarmaBySubreddit
 import net.dean.jraw.models.LiveThreadPatch
 import net.dean.jraw.models.MultiredditPatch
 import net.dean.jraw.models.Subreddit
@@ -93,15 +95,23 @@ class SelfUserReference(reddit: RedditClient) : UserReference(reddit, reddit.req
         return DefaultPaginator.Builder.create(reddit, "/subreddits/mine/${JrawUtils.urlEncode(where)}")
     }
 
-//    /**
-//     * Fetches a breakdown of comment and link karma by subreddit for the user
-//     */
-//    @EndpointImplementation(Endpoint.GET_ME_KARMA)
-//    fun karma(): List<KarmaBySubreddit> {
-//        val json = reddit.request {
-//            it.endpoint(Endpoint.GET_ME_KARMA)
-//        }.json.get("data")
-//        val type = TypeFactory.defaultInstance().constructCollectionType(List::class.java, KarmaBySubreddit::class.java)
-//        return JrawUtils.jackson.readValue(json.toString(), type)
-//    }
+    /**
+     * Fetches a breakdown of comment and link karma by subreddit for the user
+     */
+    @EndpointImplementation(Endpoint.GET_ME_KARMA)
+    fun karma(): List<KarmaBySubreddit> {
+        val json = reddit.request {
+            it.endpoint(Endpoint.GET_ME_KARMA)
+        }
+
+        // Our data is represented by RedditModelEnvelope<List<KarmaBySubreddit>> so we need to create a Type instance
+        // that reflects that
+        val listType = Types.newParameterizedType(List::class.java, KarmaBySubreddit::class.java)
+        val type = Types.newParameterizedType(RedditModelEnvelope::class.java, listType)
+
+        // Parse the envelope and return its data
+        val adapter = JrawUtils.moshi.adapter<RedditModelEnvelope<List<KarmaBySubreddit>>>(type)
+        val parsed = adapter.fromJson(json.body)!!
+        return parsed.data
+    }
 }
