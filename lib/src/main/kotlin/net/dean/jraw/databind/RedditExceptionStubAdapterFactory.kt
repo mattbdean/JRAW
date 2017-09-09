@@ -1,6 +1,7 @@
 package net.dean.jraw.databind
 
 import com.squareup.moshi.*
+import net.dean.jraw.models.internal.GenericJsonResponse
 import net.dean.jraw.models.internal.ObjectBasedApiExceptionStub
 import net.dean.jraw.models.internal.RedditExceptionStub
 import java.lang.reflect.Type
@@ -20,7 +21,8 @@ internal class RedditExceptionStubAdapterFactory : JsonAdapter.Factory {
 
     companion object {
         private val types: List<Class<out RedditExceptionStub<*>>> = listOf(
-            ObjectBasedApiExceptionStub::class.java
+            ObjectBasedApiExceptionStub::class.java,
+            GenericJsonResponse::class.java
         )
     }
 
@@ -34,8 +36,8 @@ internal class RedditExceptionStubAdapterFactory : JsonAdapter.Factory {
                 // The suggested implementation is simpler to read but much slower
                 @Suppress("LoopToCallChain")
                 for (adapter in delegates) {
-                    val stub = adapter.fromJsonValue(jsonValue)
-                    if (stub != null)
+                    val stub = adapter.fromJsonValue(jsonValue)!!
+                    if (stub.containsError())
                         return stub
                 }
 

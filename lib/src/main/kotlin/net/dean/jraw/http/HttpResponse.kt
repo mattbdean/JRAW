@@ -31,7 +31,7 @@ data class HttpResponse(val raw: Response) {
      * val foo: Foo = response.deserialize()
      * ```
      */
-    inline fun <reified  T> deserialize(): T {
+    inline fun <reified T> deserialize(): T {
         return deserializeWith(JrawUtils.adapter())
     }
 

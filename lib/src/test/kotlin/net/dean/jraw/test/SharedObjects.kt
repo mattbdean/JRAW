@@ -1,6 +1,10 @@
 package net.dean.jraw.test
 
 import net.dean.jraw.RateLimitException
+import net.dean.jraw.models.SubmissionKind
+import net.dean.jraw.references.SubmissionReference
+import net.dean.jraw.test.TestConfig.reddit
+import java.util.*
 
 /**
  * A collection of immutable objects which are shared throughout the tests that are created via heavily rate-limited API
@@ -15,11 +19,11 @@ import net.dean.jraw.RateLimitException
  * what this class is for. It contains lazily-initiated objects that are created by heavily-rate limited API endpoints.
  */
 object SharedObjects {
-//    val submittedSelfPost: SubmissionReference? by lazyRateLimited {
-//        reddit
-//            .subreddit("jraw_testing2")
-//            .submit(SubmissionKind.SELF, "test self post", "submitted ${Date()}", sendReplies = false)
-//    }
+    val submittedSelfPost: SubmissionReference? by lazyRateLimited {
+        reddit
+            .subreddit("jraw_testing2")
+            .submit(SubmissionKind.SELF, "test self post", "submitted ${Date()}", sendReplies = false)
+    }
 
     private fun <T> lazyRateLimited(create: () -> T): Lazy<T?> {
         return lazy {

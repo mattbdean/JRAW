@@ -59,6 +59,12 @@ public abstract class ObjectBasedApiExceptionStub implements RedditExceptionStub
         return null;
     }
 
+    @Override
+    public boolean containsError() {
+        // Not exactly always true but close enough
+        return getMessage() != null;
+    }
+
     public static JsonAdapter<ObjectBasedApiExceptionStub> jsonAdapter(Moshi moshi) {
         return new AutoValue_ObjectBasedApiExceptionStub.MoshiJsonAdapter(moshi);
     }

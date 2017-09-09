@@ -6,6 +6,7 @@ import com.winterbe.expekt.should
 import net.dean.jraw.databind.*
 import net.dean.jraw.models.Created
 import net.dean.jraw.models.Listing
+import net.dean.jraw.models.internal.GenericJsonResponse
 import net.dean.jraw.test.expectException
 import net.dean.jraw.test.models.GenericParentType
 import net.dean.jraw.test.models.Subclass1
