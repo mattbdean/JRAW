@@ -2,7 +2,7 @@ package net.dean.jraw.test.unit
 
 import com.winterbe.expekt.should
 import net.dean.jraw.http.HttpRequest
-import net.dean.jraw.http.OkNetworkAdapter
+import net.dean.jraw.http.OkHttpNetworkAdapter
 import net.dean.jraw.test.TestConfig.userAgent
 import okhttp3.internal.http.HttpMethod
 import org.jetbrains.spek.api.Spek
@@ -40,9 +40,9 @@ class OkHttpAdapterTest : Spek({
         return b
     }
 
-    var http: OkNetworkAdapter by Delegates.notNull()
+    var http: OkHttpNetworkAdapter by Delegates.notNull()
     beforeEachTest {
-        http = OkNetworkAdapter(userAgent)
+        http = OkHttpNetworkAdapter(userAgent)
     }
 
     describe("execute") {

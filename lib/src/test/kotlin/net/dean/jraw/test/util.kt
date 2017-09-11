@@ -31,7 +31,7 @@ fun <T : Exception> expectException(clazz: KClass<T>, doWork: () -> Unit) {
     }
 }
 
-fun newOkHttpAdapter() = OkNetworkAdapter(userAgent)
+fun newOkHttpAdapter() = OkHttpNetworkAdapter(userAgent)
 
 fun ensureAuthenticated(reddit: RedditClient) {
     reddit.authManager.current.should.not.be.`null`

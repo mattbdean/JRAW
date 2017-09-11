@@ -5,7 +5,7 @@ import okhttp3.*
 /**
  * [NetworkAdapter] implementation backed by Square's fantastic [OkHttp](https://square.github.io/okhttp/)
  */
-class OkNetworkAdapter(override var userAgent: UserAgent) : NetworkAdapter {
+class OkHttpNetworkAdapter(override var userAgent: UserAgent) : NetworkAdapter {
     private val http: OkHttpClient = OkHttpClient()
 
     override fun execute(r: HttpRequest): HttpResponse {
