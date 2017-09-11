@@ -5,8 +5,10 @@ import okhttp3.*
 /**
  * [NetworkAdapter] implementation backed by Square's fantastic [OkHttp](https://square.github.io/okhttp/)
  */
-class OkHttpNetworkAdapter(override var userAgent: UserAgent) : NetworkAdapter {
+class OkHttpNetworkAdapter @JvmOverloads constructor(
+    override var userAgent: UserAgent,
     private val http: OkHttpClient = OkHttpClient()
+) : NetworkAdapter {
 
     override fun execute(r: HttpRequest): HttpResponse {
         return HttpResponse(createCall(r).execute())
