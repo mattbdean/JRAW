@@ -19,4 +19,8 @@ data class OAuthData(
     val refreshToken: String?,
 
     val expiration: Date
-)
+) {
+    fun isExpired(): Boolean {
+        return expiration.before(Date())
+    }
+}

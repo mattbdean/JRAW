@@ -2,8 +2,8 @@ package net.dean.jraw.oauth
 
 import net.dean.jraw.JrawUtils
 import net.dean.jraw.RedditClient
-import net.dean.jraw.http.NetworkAdapter
 import net.dean.jraw.http.HttpRequest
+import net.dean.jraw.http.NetworkAdapter
 import net.dean.jraw.http.NetworkException
 import java.math.BigInteger
 import java.net.URL
@@ -12,7 +12,8 @@ import java.security.SecureRandom
 class StatefulAuthHelper internal constructor(
     private val http: NetworkAdapter,
     private val creds: Credentials,
-    private val tokenStore: TokenStore
+    private val tokenStore: TokenStore,
+    private val onAuthenticated: (reddit: RedditClient) -> Unit
 ) {
     private var state: String? = null
     private var _authStatus: Status = Status.INIT
@@ -72,12 +73,14 @@ class StatefulAuthHelper internal constructor(
                 .build()).deserialize()
 
             this._authStatus = Status.AUTHORIZED
-            return RedditClient(
+            val r = RedditClient(
                 http = http,
                 initialOAuthData = response,
                 creds = creds,
                 tokenStore = tokenStore
             )
+            onAuthenticated(r)
+            return r
         } catch (ex: NetworkException) {
             if (ex.res.code == 401)
                 throw OAuthException("Invalid client ID/secret", ex)

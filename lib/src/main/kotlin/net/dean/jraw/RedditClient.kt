@@ -67,11 +67,15 @@ class RedditClient internal constructor(
     /** If true, any time a request is made, the access token will be renewed if necessary. */
     var autoRenew = true
 
+    internal var forceRenew = false
+
     /** How this client manages (re)authentication */
     var authManager = AuthManager(http, creds)
 
     /** The type of OAuth2 app used to authenticate this client */
     val authMethod: AuthMethod = creds.authMethod
+
+    internal var loggedOut: Boolean = false
 
     init {
         authManager.currentUsername = if (overrideUsername == AuthManager.USERNAME_USERLESS)
@@ -112,8 +116,16 @@ class RedditClient internal constructor(
 
     @Throws(NetworkException::class)
     private fun request(r: HttpRequest, retryCount: Int = 0): HttpResponse {
-        if (autoRenew && authManager.needsRenewing() && authManager.canRenew())
+        if (loggedOut)
+            throw IllegalStateException("This client is logged out and should not be used anymore")
+
+        if (forceRenew || (autoRenew && authManager.needsRenewing() && authManager.canRenew())) {
             authManager.renew()
+
+            // forceRenew is a one-time thing, usually used when given an OAuthData that only contains valid refresh
+            // token and a made-up access token, expiration, etc.
+            forceRenew = false
+        }
 
         // Only ratelimit on the first try
         if (retryCount == 0)

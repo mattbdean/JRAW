@@ -30,6 +30,9 @@ fun createMockOAuthData(includeRefreshToken: Boolean = false) = OAuthData(
 fun createMockCredentials(type: AuthMethod) = when (type) {
     AuthMethod.SCRIPT -> Credentials.script("", "", "", "")
     AuthMethod.APP -> Credentials.installedApp("", "")
+    AuthMethod.WEBAPP -> Credentials.webapp("", "", "")
+    AuthMethod.USERLESS -> Credentials.userless("", "", UUID.randomUUID())
+    AuthMethod.USERLESS_APP -> Credentials.userlessApp("", UUID.randomUUID())
     else -> throw IllegalArgumentException("Not implemented for $type")
 }
 

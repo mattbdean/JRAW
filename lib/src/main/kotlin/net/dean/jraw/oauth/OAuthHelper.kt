@@ -1,10 +1,9 @@
 package net.dean.jraw.oauth
 
 import net.dean.jraw.RedditClient
-import net.dean.jraw.http.NetworkAdapter
 import net.dean.jraw.http.HttpRequest
+import net.dean.jraw.http.NetworkAdapter
 import net.dean.jraw.http.NetworkException
-import java.util.*
 
 /**
  * This class helps create authenticated RedditClient instances.
@@ -27,30 +26,17 @@ object OAuthHelper {
         }
     }
 
-    @JvmStatic @JvmOverloads fun interactive(http: NetworkAdapter, creds: Credentials, tokenStore: TokenStore = NoopTokenStore()): StatefulAuthHelper {
+    @JvmStatic @JvmOverloads fun interactive(http: NetworkAdapter, creds: Credentials, tokenStore: TokenStore = NoopTokenStore()) =
+        interactive(http, creds, tokenStore, onAuthenticated = {})
+
+    @JvmStatic internal fun interactive(http: NetworkAdapter, creds: Credentials,
+                                             tokenStore: TokenStore = NoopTokenStore(),
+                                             onAuthenticated: (r: RedditClient) -> Unit = {}): StatefulAuthHelper {
         return when (creds.authMethod) {
-            AuthMethod.APP -> StatefulAuthHelper(http, creds, tokenStore)
+            AuthMethod.APP -> StatefulAuthHelper(http, creds, tokenStore, onAuthenticated)
             AuthMethod.WEBAPP -> TODO("Web apps aren't supported yet")
             else -> throw IllegalArgumentException("AuthMethod ${creds.authMethod} should use automatic authentication")
         }
-    }
-
-    @Throws(IllegalStateException::class)
-    @JvmStatic fun fromTokenStore(http: NetworkAdapter, creds: Credentials, tokenStore: TokenStore, username: String): RedditClient {
-        var reddit: RedditClient? = null
-        val current = tokenStore.fetchCurrent(username)
-        if (current != null && current.expiration.after(Date()))
-            reddit = RedditClient(http, current, creds, tokenStore, username)
-
-        val refreshToken = tokenStore.fetchRefreshToken(username)
-        if (refreshToken != null) {
-            val emptyData = OAuthData("", "", -1, listOf(), refreshToken, Date(0L))
-            reddit = RedditClient(http, emptyData, creds, tokenStore, username)
-        }
-
-        if (reddit == null)
-            throw IllegalStateException("No unexpired OAuthData or refresh token for user '$username'")
-        return reddit
     }
 
     @JvmStatic internal fun scriptOAuthData(http: NetworkAdapter, creds: Credentials): OAuthData {

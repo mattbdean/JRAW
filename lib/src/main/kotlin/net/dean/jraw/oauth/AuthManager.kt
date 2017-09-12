@@ -1,7 +1,7 @@
 package net.dean.jraw.oauth
 
-import net.dean.jraw.http.NetworkAdapter
 import net.dean.jraw.http.HttpRequest
+import net.dean.jraw.http.NetworkAdapter
 import net.dean.jraw.http.NetworkException
 import java.util.*
 
@@ -148,7 +148,7 @@ class AuthManager(
     companion object {
         /** Equal to "`<userless>`" */
         const val USERNAME_USERLESS = "<userless>"
-        /** Equal to "`<unknown>`" */
+        /** Equal to "`<unknown>`". If you see this somewhere, there's likely an issue. */
         const val USERNAME_UNKOWN = "<unknown>"
     }
 }
