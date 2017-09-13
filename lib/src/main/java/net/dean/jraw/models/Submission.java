@@ -6,6 +6,7 @@ import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.databind.RedditModel;
+import net.dean.jraw.databind.UnixTime;
 import net.dean.jraw.references.SubmissionReference;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -30,7 +31,7 @@ public abstract class Submission implements PublicContribution<SubmissionReferen
 
     @Override
     @NotNull
-    @Json(name = "created_utc") public abstract Date getCreated();
+    @Json(name = "created_utc") @UnixTime public abstract Date getCreated();
 
     @Json(name = "contest_mode") public abstract boolean isContestMode();
 
@@ -48,7 +49,7 @@ public abstract class Submission implements PublicContribution<SubmissionReferen
 
     @Override
     @Nullable
-    public abstract Date getEdited();
+    @UnixTime public abstract Date getEdited();
 
     @NotNull
     @Override

@@ -6,6 +6,7 @@ import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.databind.RedditModel;
+import net.dean.jraw.databind.UnixTime;
 import net.dean.jraw.references.Referenceable;
 import net.dean.jraw.references.SubredditReference;
 import org.jetbrains.annotations.NotNull;
@@ -31,7 +32,7 @@ public abstract class Subreddit implements Created, Identifiable, Referenceable<
 
     @NotNull
     @Override
-    @Json(name = "created_utc") public abstract Date getCreated();
+    @Json(name = "created_utc") @UnixTime public abstract Date getCreated();
 
     @NotNull
     @Override
@@ -120,7 +121,7 @@ public abstract class Subreddit implements Created, Identifiable, Referenceable<
         @Json(name = "none") NONE
     }
 
-    public enum Type {
+    public enum Access {
         /** Open to all users */
         @Json(name = "public") PUBLIC,
         /** Only approved members can view and submit */

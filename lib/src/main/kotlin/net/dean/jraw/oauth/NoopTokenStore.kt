@@ -7,4 +7,6 @@ class NoopTokenStore : TokenStore {
     override fun storeRefreshToken(username: String, token: String) {}
     override fun fetchCurrent(username: String) = null
     override fun fetchRefreshToken(username: String) = null
+    override fun deleteCurrent(username: String) {}
+    override fun deleteRefreshToken(username: String) {}
 }

@@ -4,7 +4,12 @@ import com.google.auto.value.AutoValue;
 import com.squareup.moshi.Json;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
+import net.dean.jraw.models.OAuthData;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Arrays;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 @AutoValue
 public abstract class OAuthDataJson {
@@ -19,6 +24,15 @@ public abstract class OAuthDataJson {
 
     /** A refresh token, if one was requested */
     @Nullable @Json(name = "refresh_token") public abstract String getRefreshToken();
+
+    public final OAuthData toOAuthData() {
+        return OAuthData.create(
+            /*accessToken = */ getAccessToken(),
+            /*scopes = */ Arrays.asList(getScopeList().split(",")),
+            /*refreshToken = */ getRefreshToken(),
+            /*expiration = */ new Date(new Date().getTime() + TimeUnit.MILLISECONDS.convert(getExpiresIn(), TimeUnit.SECONDS))
+        );
+    }
 
     public static JsonAdapter<OAuthDataJson> jsonAdapter(Moshi moshi) {
         return new AutoValue_OAuthDataJson.MoshiJsonAdapter(moshi);

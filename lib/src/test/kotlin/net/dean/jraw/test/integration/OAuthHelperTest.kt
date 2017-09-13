@@ -87,12 +87,12 @@ class OAuthHelperTest: Spek({
         }
 
         it("should throw an exception when there is only expired OAuthData available") {
-            tokenStore.storeCurrent(username, OAuthData(
-                accessToken = "",
-                scopes = listOf(),
-                refreshToken = null,
+            tokenStore.storeCurrent(username, OAuthData.create(
+                /* accessToken  = */ "",
+                /* scopes  = */ listOf(),
+                /* refreshToken  = */ null,
                 // Expired 1 ms in past
-                expiration = Date(Date().time - 1)
+                /* expiration  = */ Date(Date().time - 1)
             ))
 
             expectException(IllegalStateException::class) {

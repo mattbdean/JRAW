@@ -5,6 +5,7 @@ import com.squareup.moshi.Json;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import net.dean.jraw.databind.RedditModel;
+import net.dean.jraw.databind.UnixTime;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Date;
@@ -18,7 +19,7 @@ public abstract class LiveUpdate implements Created, Identifiable {
 
     @NotNull
     @Override
-    @Json(name = "created_utc") public abstract Date getCreated();
+    @Json(name = "created_utc") @UnixTime public abstract Date getCreated();
 
     @NotNull
     @Json(name = "name") public abstract String getFullName();

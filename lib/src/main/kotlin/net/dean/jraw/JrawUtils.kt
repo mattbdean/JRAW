@@ -15,7 +15,7 @@ import java.util.*
  */
 object JrawUtils {
     @JvmField val moshi: Moshi = Moshi.Builder()
-        .add(Date::class.java, UnixDateAdapter())
+        .add(UnixDateAdapterFactory())
         .add(EnvelopedListAdapterFactory())
         .add(RedditModelAdapterFactory(mapOf(
             KindConstants.COMMENT to Comment::class.java,
@@ -28,7 +28,6 @@ object JrawUtils {
             KindConstants.LIVE_UPDATE to LiveUpdate::class.java
         )))
         .add(ModelAdapterFactory.create())
-        .add(OAuthDataJsonAdapter())
         .add(DistinguishedStatus::class.java, DistinguishedStatusAdapter())
         .add(VoteDirection::class.java, VoteDirectionAdapter())
         .add(RedditExceptionStubAdapterFactory())

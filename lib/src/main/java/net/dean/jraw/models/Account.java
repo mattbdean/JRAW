@@ -6,6 +6,7 @@ import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.databind.RedditModel;
+import net.dean.jraw.databind.UnixTime;
 import net.dean.jraw.references.Referenceable;
 import net.dean.jraw.references.UserReference;
 import org.jetbrains.annotations.NotNull;
@@ -21,7 +22,7 @@ public abstract class Account implements Created, Referenceable<UserReference> {
 
     @NotNull
     @Override
-    @Json(name = "created_utc") public abstract Date getCreated();
+    @Json(name = "created_utc") @UnixTime public abstract Date getCreated();
 
     /** If the currently logged in user is friends with this account */
     @Json(name = "is_friend") public abstract boolean isFriend();

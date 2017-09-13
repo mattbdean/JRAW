@@ -8,4 +8,7 @@ interface TokenStore {
 
     fun fetchCurrent(username: String): OAuthData?
     fun fetchRefreshToken(username: String): String?
+
+    fun deleteCurrent(username: String)
+    fun deleteRefreshToken(username: String)
 }

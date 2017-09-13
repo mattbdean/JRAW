@@ -6,6 +6,7 @@ import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.databind.RedditModel;
+import net.dean.jraw.databind.UnixTime;
 import net.dean.jraw.references.CommentReference;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -35,11 +36,15 @@ public abstract class Comment implements PublicContribution, NestedIdentifiable 
 
     @NotNull
     @Override
-    @Json(name = "created_utc") public abstract Date getCreated();
+    @Json(name = "created_utc") @UnixTime public abstract Date getCreated();
 
     @Override
     @NotNull
     public abstract DistinguishedStatus getDistinguished();
+
+    @Nullable
+    @Override
+    @UnixTime public abstract Date getEdited();
 
     @NotNull
     @Override
@@ -53,7 +58,7 @@ public abstract class Comment implements PublicContribution, NestedIdentifiable 
     @Override
     @Json(name = "link_id") public abstract String getSubredditFullName();
 
-    @Json(name = "subreddit_type") public abstract Subreddit.Type getSubredditType();
+    @Json(name = "subreddit_type") public abstract Subreddit.Access getSubredditType();
 
     @Override
     @Json(name = "score_hidden") public abstract boolean isScoreHidden();

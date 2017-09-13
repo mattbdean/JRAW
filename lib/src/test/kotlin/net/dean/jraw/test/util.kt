@@ -4,6 +4,7 @@ import com.winterbe.expekt.should
 import net.dean.jraw.RateLimitException
 import net.dean.jraw.RedditClient
 import net.dean.jraw.http.*
+import net.dean.jraw.models.OAuthData
 import net.dean.jraw.models.Votable
 import net.dean.jraw.pagination.Paginator
 import net.dean.jraw.test.TestConfig.userAgent
@@ -15,6 +16,7 @@ import org.jetbrains.spek.api.dsl.it
 import org.jetbrains.spek.api.dsl.xit
 import java.math.BigInteger
 import java.security.SecureRandom
+import java.util.*
 import kotlin.reflect.KClass
 
 fun <T : Exception> expectException(clazz: KClass<T>, doWork: () -> Unit) {
@@ -52,6 +54,8 @@ fun ensureAuthenticated(reddit: RedditClient) {
         throw e
     }
 }
+
+fun OAuthData.withExpiration(d: Date) = OAuthData.create(accessToken, scopes, refreshToken, d)!!
 
 val rand = SecureRandom()
 fun randomName(length: Int = 10): String {

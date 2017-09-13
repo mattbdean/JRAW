@@ -5,6 +5,7 @@ import net.dean.jraw.http.HttpRequest
 import net.dean.jraw.http.NetworkAdapter
 import net.dean.jraw.http.NetworkException
 import net.dean.jraw.models.OAuthData
+import net.dean.jraw.models.internal.OAuthDataJson
 import java.util.*
 
 /**
@@ -45,11 +46,11 @@ object OAuthHelper {
 
         val refreshToken = tokenStore.fetchRefreshToken(username)
         if (refreshToken != null) {
-            val emptyData = OAuthData(
-                accessToken = "",
-                scopes = listOf(),
-                refreshToken = refreshToken,
-                expiration = Date(0L))
+            val emptyData = OAuthData.create(
+                /* accessToken  = */ "",
+                /* scopes  = */ listOf(),
+                /* refreshToken  = */ refreshToken,
+                /* expiration  = */ Date(0L))
             reddit = RedditClient(http, emptyData, creds, tokenStore, username)
         }
 
@@ -71,7 +72,7 @@ object OAuthHelper {
                 ))
                 .url("https://www.reddit.com/api/v1/access_token")
                 .basicAuth(creds.clientId to creds.clientSecret)
-                .build()).deserialize()
+                .build()).deserialize<OAuthDataJson>().toOAuthData()
         } catch (e: NetworkException) {
             if (e.res.code == 401)
                 throw IllegalArgumentException("Invalid credentials", e)
@@ -96,6 +97,6 @@ object OAuthHelper {
             .url("https://www.reddit.com/api/v1/access_token")
             .post(postBody)
             .basicAuth(creds.clientId to creds.clientSecret)
-            .build()).deserialize()
+            .build()).deserialize<OAuthDataJson>().toOAuthData()
     }
 }

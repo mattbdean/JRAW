@@ -2,10 +2,11 @@ package net.dean.jraw.oauth
 
 import net.dean.jraw.JrawUtils
 import net.dean.jraw.RedditClient
-import net.dean.jraw.http.NetworkAdapter
 import net.dean.jraw.http.HttpRequest
+import net.dean.jraw.http.NetworkAdapter
 import net.dean.jraw.http.NetworkException
 import net.dean.jraw.models.OAuthData
+import net.dean.jraw.models.internal.OAuthDataJson
 import java.math.BigInteger
 import java.net.URL
 import java.security.SecureRandom
@@ -70,7 +71,7 @@ class StatefulAuthHelper internal constructor(
                     "redirect_uri" to creds.redirectUrl!!
                 ))
                 .basicAuth(creds.clientId to creds.clientSecret)
-                .build()).deserialize()
+                .build()).deserialize<OAuthDataJson>().toOAuthData()
 
             this._authStatus = Status.AUTHORIZED
             return RedditClient(
