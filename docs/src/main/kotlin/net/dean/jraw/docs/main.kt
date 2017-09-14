@@ -1,9 +1,5 @@
 package net.dean.jraw.docs
 
-import com.github.rjeschke.txtmark.Configuration
-import com.github.rjeschke.txtmark.Processor
-import org.jtwig.JtwigModel
-import org.jtwig.JtwigTemplate
 import java.io.File
 
 private const val SAMPLES_DIR_ARG = "--samples-dir"
@@ -18,53 +14,14 @@ fun main(args: Array<String>) {
     val outDir = File(cliArgs[OUT_DIR_ARG])
     val resourcesDir = File(cliArgs[RESOURCES_DIR_ARG])
 
+    outDir.deleteRecursively()
+
     if (!outDir.isDirectory && !outDir.mkdirs())
         failAndExit("Could not `mkdir -p` for ${outDir.absolutePath}")
 
-    // Find all Java source files in all subdirectories of the given source root
-    val samples = CodeSampleFinder.findAll(samplesDir)
-
-    // Copy our assets wholesale to the build dir
-    val assetsDir = File(resourcesDir, "assets")
-    if (assetsDir.isDirectory)
-        assetsDir.copyRecursively(outDir, overwrite = true, onError = {
-            f, e -> failAndExit("Failed to copy asset $f: ${e.message}")
-        })
-    else
-        System.err.println("Warning: no assets found or not a directory: ${assetsDir.absolutePath}")
-
-    val docProvider = JrawDocLinkGenerator()
-
-    val conf = Configuration.builder()
-        // Use our custom code block emitter
-        .setCodeBlockEmitter(CodeBlockEmitter(samples, docProvider))
-        .setSpecialLinkEmitter(TypeReferenceLinkEmitter(docProvider))
-        // Force txtmark to recognize fenced code blocks
-        .forceExtentedProfile()
-        .build()
-
-    // Load our Jtwig template
-    val template = JtwigTemplate.fileTemplate(File(resourcesDir, "template.twig"))
-
     val contentDir = File(resourcesDir, "content")
 
-    // Attempt to render each markdown file into memory to catch any errors before persisting to disk
-    val outputMapping = contentDir.listFiles { _, name -> name.endsWith(".md") }.map {
-        // Render the markdown file into a String
-        val html = Processor.process(it, conf)
-
-        val model = JtwigModel.newModel()
-            .with("content", html)
-
-        // Return a Pair mapping the Jtwig model to the final output destination
-        model to File(outDir, it.nameWithoutExtension + ".html")
-    }
-
-    // Write the files to disk
-    for ((model, outFile) in outputMapping) {
-        template.render(model, outFile.outputStream())
-        println("Wrote file $outFile")
-    }
+    BookBuilder(samplesDir, contentDir).build(outDir)
 }
 
 private fun parseArgs(args: Array<String>): Map<String, String> {
@@ -99,7 +56,7 @@ private fun failAndExit(msg: String, code: Int = 1): Nothing {
 /**
  * Simple function to recursively fina all files starting from a given access point
  */
-fun walkRecursive(base: File): List<File> {
+private fun walkRecursive(base: File): List<File> {
     val files = mutableListOf<File>()
     if (base.isDirectory) {
         base.listFiles()?.forEach {
@@ -111,4 +68,3 @@ fun walkRecursive(base: File): List<File> {
 
     return files
 }
-

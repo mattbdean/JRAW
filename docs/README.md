@@ -1,10 +1,15 @@
 # JRAW Documentation
 
-This is a meta-project dedicated to generating the static site hosted on the [GitHub pages](https://thatjavanerd.github.io/JRAW). This site will be available with the release of JRAW [v1.0.0](https://github.com/thatJavaNerd/JRAW/milestone/3).
+This is a meta-project dedicated to generating Markdown files to be hosted on [GitBook](https://mattbdean.gitbooks.io/jraw), which will be available with the release of JRAW [v1.0.0](https://github.com/thatJavaNerd/JRAW/milestone/3).
+
+The integration tests require [gitbook-cli](https://github.com/GitbookIO/gitbook-cli) to be installed globally.
 
 ## TL;DR
 
-Run `./gradlew :docs:buildSite` and then see the `build/docs` subdirectory.
+```
+$ ./gradlew :docs:buildSite
+$ cd docs/build/docs && gitbook serve
+```
 
 ## How it works
 
@@ -25,20 +30,22 @@ public class Example {
         int x = 4;
         int z = x * y;
     }
+    
+    private static void ignored() {
+        // This doesn't have the @CodeSample annotation so it gets ignored
+    }
 }
 ```
 
 Each .java file in the package gets parsed into its abstract syntax tree at runtime so we can have access to the name and the content of each method. In the example above, we will have access to two code samples with the names `Example.showSomething` and `Example.doSomething`
 
-Each markdown file in `src/main/resources/content` will be rendered to an HTML file. These markdown files have access to the code samples using a special syntax:
+Each markdown file in `src/main/resources/content` is considered to "pre-compiled" files that have access to a special syntax for referencing JRAW classes and code samples.
 
-<pre lang="no-highlight"></code>
-```@Example.showSomething
-_
-```
-</code></pre>
+Include a code sample like this:
 
-This is equivalent to writing
+    {{ @Example.showSomething }}
+
+This gets compiled to
 
 <pre lang="no-highlight"></code>
 ```java
@@ -47,28 +54,57 @@ System.out.println(x);
 ```
 </code></pre>
 
-If there is no content in the code block it won't be rendered. The standard here is to include a single underscore. Note that it won't show up in the final HTML.
-
-We can also include a link to a JRAW class using this syntax:
+We can also include a link to a JRAW class like this:
 
 ```
-[[@RedditClient]]
+Lorem ipsum dolor [[@RedditClient]] sit amet
 ```
 
-This is essentially equivalent to writing
+This gets compiled to
 
 ```
-[RedditClient](http://host.com/path/to/javadoc/net/dean/jraw/RedditClient.html)
+Lorem ipsum dolor [RedditClient](https://host.com/path/to/javadoc/net/dean/jraw/RedditClient.html) sit amet
 ```
 
-If your code contains `<` or `>`, make sure to specify that you want those escaped. This only works when not referencing a code sample.
+Note that when specified, a code sample is the only thing allowed on its line. There may be several documentation links per line. For example, this is fine:
 
-<pre lang="no-highlight"></code>
-```xml|escapeHtml
-&lt;this&gt;will render properly&lt;/this&gt;
 ```
-</code></pre>
+{{ @Example.showSomething }}
+{{ @Example.doSomething }}
 
+Lorem ipsum [[@RedditClient]] dolor [[@Paginator]] sit amet.
+```
+
+but this is not:
+
+```
+{{ @Exmaple.showSomething }} {{ @Example.doSomething }}
+```
+
+## Adding a new page
+
+All pages are arranged in [`toc.json`](https://github.com/mattbdean/JRAW/blob/kotlin/docs/src/main/resources/content/toc.json). This file specifies the table of contents for our book in JSON format. This is essentially an array of [`Page`](https://github.com/mattbdean/JRAW/blob/kotlin/docs/src/main/java/net/dean/jraw/docs/Page.java)s.
+
+Say our `toc.json` looks like this:
+
+```json
+[
+  { "file": "foo" },
+  { "file": "bar", "title": "Something else" }
+]
+```
+
+- `file` is the basename of the markdown file relative to the content directory (which is [here](https://github.com/mattbdean/JRAW/tree/kotlin/docs/src/main/resources/content)).
+- `title` is the text displayed to the user in the sidebar. If it isn't specified, the capitalized version of `file` is used.
+
+To build the book, we compile `foo.md` and `bar.md` and copy them to the output destination. We also create a `SUMMARY.md` file that GitBooks uses to generate the sidebar. For this specific configuration, the built summary file looks like this:
+
+<pre>
+# Summary
+
+* [Foo](foo.md)
+* [Something else](bar.md)
+</pre>
 
 ## Why not include code samples directly?
 

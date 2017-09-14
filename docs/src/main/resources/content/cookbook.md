@@ -6,21 +6,15 @@ This page shows some examples of what the library can do
 
 ### Iterate the front page
 
-```@Cookbook.iterateFrontPage
-_
-```
+{{ Cookbook.iterateFrontPage }}
 
 ### Get images from /r/EarthPorn and /r/spaceporn
 
-```@Cookbook.imagesFromMultipleSubreddits
-_
-```
+{{ Cookbook.imagesFromMultipleSubreddits }}
 
 ### Find the subreddits the user is subscribed to
 
-```@Cookbook.userSubscriptions
-_
-```
+{{ Cookbook.userSubscriptions }}
 
 ## Account
 
@@ -50,27 +44,19 @@ Inbox functionality requires a logged-in user
 
 ### Iterate inbox
 
-```@Cookbook.iterateInbox
-_
-```
+{{ Cookbook.iterateInbox }}
 
 ### Mark messages as read/unread
 
-```@Cookbook.markReadUnread
-_
-```
+{{ Cookbook.markReadUnread }}
 
 ### Send a private message
 
-```@Cookbook.sendPrivateMessage
-_
-```
+{{ Cookbook.sendPrivateMessage }}
 
 ### Send a private message as a subreddit moderator
 
-```@Cookbook.sendPrivateMessageAsModerator
-_
-```
+{{ Cookbook.sendPrivateMessageAsModerator }}
 
 ## Misc
 
@@ -84,21 +70,15 @@ TODO
 
 ### Create/update a multireddit
 
-```@Cookbook.createAndUpdateMultireddit
-_
-```
+{{ Cookbook.createAndUpdateMultireddit }}
 
 ### List multireddits
 
-```@Cookbook.listMultireddits
-_
-```
+{{ Cookbook.listMultireddits }}
 
 ### Iterate a specific multireddit
 
-```@Cookbook.iterateSpecificMultireddit
-_
-```
+{{ Cookbook.iterateSpecificMultireddit }}
 
 ## Search
 

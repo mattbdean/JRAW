@@ -20,14 +20,13 @@ dependencies {
 
 Add jCenter (`https://jcenter.bintray.com`) to your repositories and then add the dependency to the `pom.xml`:
 
-```xml|escapeHtml
+```xml
 <dependency>
     <groupId>net.dean.jraw</groupId>
     <artifactId>JRAW</artifactId>
     <version>${jraw.version}</version>
 </dependency>
 ```
-
 
 ## Choosing a User-Agent
 The first step in using the Reddit API effectively is making sure you're sending a descriptive User-Agent header. This allows Reddit to block buggy versions of your app while not affecting others. An effective User-Agent consists of four parts:
@@ -39,9 +38,7 @@ The first step in using the Reddit API effectively is making sure you're sending
 
 A `UserAgent` for a script named "Awesome Script" could look like this:
 
-```@Quickstart.userAgent
-_
-```
+{{ Quickstart.userAgent }}
 
 ## Authentication
 

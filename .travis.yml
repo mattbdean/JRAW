@@ -2,6 +2,8 @@ sudo: false
 language: java
 jdk:
 - oraclejdk8
+before_install:
+- npm install -g gitbook-cli # Necessary for :docs integration test
 script:
 - "./gradlew check jacocoRootReport"
 after_success:
