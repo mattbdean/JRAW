@@ -12,6 +12,9 @@ class BookBuilder(samplesDir: File, private val contentDir: File) {
 
     private val compiler = PageCompiler(DocLinkGenerator(), samples)
 
+    val unusedSamples: List<CodeSampleRef>
+        get() = compiler.unusedSamples
+
     private fun compile(pages: List<Page>): Map<String, List<String>> {
         val actualPages: MutableList<Page> = ArrayList(pages)
         actualPages.add(Page("README", null))

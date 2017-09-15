@@ -3,6 +3,11 @@ package net.dean.jraw.docs
 import java.io.File
 
 class PageCompiler(private val linkGenerator: DocLinkGenerator, private val codeSamples: List<CodeSampleRef>) {
+    private val _unusedSamples: MutableList<CodeSampleRef> = ArrayList(codeSamples)
+
+    val unusedSamples: List<CodeSampleRef>
+        get() = _unusedSamples
+
     fun compile(file: File): List<String> = compile(file.readLines())
 
     fun compile(text: List<String>): List<String> {
@@ -16,6 +21,8 @@ class PageCompiler(private val linkGenerator: DocLinkGenerator, private val code
 
                     val sample = codeSamples.firstOrNull { it.name == sampleName } ?:
                         throw IllegalArgumentException("No code sample named '$sampleName'")
+
+                    _unusedSamples.remove(sample)
 
                     val lines: MutableList<String> = ArrayList(sample.content)
                     // Use GitHub flavored Markdown for code

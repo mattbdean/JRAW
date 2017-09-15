@@ -24,7 +24,8 @@ class BookBuilderTest : Spek({
 
     it("should compile the docs in a GitBook-ready format") {
         // Build the book
-        BookBuilder(samplesDir, contentDir).build(outDir)
+        val builder = BookBuilder(samplesDir, contentDir)
+        builder.build(outDir)
 
         // Run gitbook to make sure there are no build errors
         val exitCode = ProcessBuilder("gitbook", "build")
@@ -34,6 +35,9 @@ class BookBuilderTest : Spek({
             .waitFor()
 
         exitCode.should.equal(0)
+
+        // Make sure we use all the code samples we wrote
+        builder.unusedSamples.should.be.empty
 
         // If a Markdown file is referenced in the table of contents, it doesn't get turned into a .html file but
         // instead gets copied wholesale with the rest of the HTML files. Make sure we don't have any stragglers
