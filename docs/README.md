@@ -119,3 +119,9 @@ gitbookUsername=<gitbook username>
 gitbookPassword=<gitbook access token>
 ```
 
+Then run
+
+```
+$ ./gradlew :docs:pushSite
+```
+
