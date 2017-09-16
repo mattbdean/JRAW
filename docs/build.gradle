@@ -1,4 +1,8 @@
+import net.dean.jraw.gradle.GitbookPush
+
 apply plugin: 'kotlin'
+
+ext.bookOutDir = file("build/docs").absoluteFile
 
 dependencies {
     compile 'com.thoughtworks.qdox:qdox:2.0-M6'
@@ -15,7 +19,19 @@ task buildSite(type: JavaExec, dependsOn: classes) {
     def samplesDir = sourceSets.main.java.srcDirs[0]
     args = [
         "--samples-dir", samplesDir,
-        "--output-dir", file("build/docs").absolutePath,
+        "--output-dir", bookOutDir.absolutePath,
         "--resources-dir", sourceSets.main.resources.srcDirs[0].absolutePath
     ]
+}
+
+task pushSite(type: GitbookPush, dependsOn: buildSite) {
+    // Allow credentials to be read from environmental variables. Mostly used by Travis
+    def gbUsername = System.getenv("GITBOOK_USERNAME") ?: gitbookUsername
+    def gbPassword = System.getenv("GITBOOK_PASSWORD") ?: gitbookPassword
+    onlyIf { gbUsername != null && gbPassword != null }
+
+    username gbUsername
+    password gbPassword
+    repository "https://git.gitbook.com/mattbdean/jraw.git"
+    compiledBookDir bookOutDir
 }

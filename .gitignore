@@ -9,6 +9,7 @@ local.properties
 .gradle/
 build/
 out/
+gradle.properties
 
 # Testing account credentials
 lib/src/test/resources/credentials.json

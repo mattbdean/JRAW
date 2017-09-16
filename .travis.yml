@@ -8,6 +8,7 @@ script:
 - "./gradlew check jacocoRootReport"
 after_success:
 - bash <(curl -s https://codecov.io/bash) -f build/reports/jacoco/jacocoRootReport/jacocoRootReport.xml
+- ./gradlew pushSite
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
   - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
@@ -24,3 +25,6 @@ env:
   - secure: hNYHnZJR/GElL7lgRUS3TPfFEuw1xboXL4VXVknDjfuWK8DU54DcERxq8b5x7JNq2N4nnrqcORbWrcyvciOQo5Sidq5x+JiTIyBJh8sPWy8ijkinE7C/wOHoVF2uMtxXzFeGev+ZL5vMbu53WUEQAUDV/2jVtRd8CZ66zDQpWaE=
   - secure: siKHQ1lS8cbtY+lfFpX2mZf2KLrIwjGuGsmEfsJZILsyOD61hq7KyLnCs42nbiVND7vZxyyBTcFOS85I78+RoxaiIXP03VOY6IPanCGL0t4imL7nALl4wejQqiYdeanvI0enmaODiaff5Sbm0r5Iwk7sz3lu52haIj1aWuTp9Zo=
   - secure: WmSk6+kXllsteujcIpY0Yo045kMjdrA/lB1HPr7E0f8yBPwox6YtJVas/8Fi31iLeX0kleh0VvySZB0mDbeKVIf5SZ6aoYlFKjmmBvsK/oH4HWk1+IVHmiUFRJEAiq0ve0+i7J5hF9OX0pdLuKd/sL4UYvyu+ThurNxez/SIfdc=
+  # GitBook credentials
+  - secure: B4emhl8PSnfhM+Aon6PDHqU9TBMF1BaJQlESWiP9cwC8iS1XQ0DE1IBs5rCkKw391q8K2WO14C3sf7YHOAHN9NriCXraTZeZZfAKbCR/euWke7IMEFLZdSNw9ONxknQWVzIDbzQYeHNrQCc0x1SabdorxRMO/H/dVcI9Lvi0APE=
+  - secure: H71PeGYRpoP+JB9x+QaHSgkwiJrUquRjzz5hvJpjEWA/Jxj0FycjJUUv4THNrWf7L8W8rTOzezuJ7MUI/eqwwnQKc8sgnL4AagEy7eY0Qsr+kQrfXeEjmrycerfWopVPJC1gLCqcjJGWPWe2ri4YlFAMwtMUoyhMaomzpRIsfIA=

@@ -109,3 +109,13 @@ To build the book, we compile `foo.md` and `bar.md` and copy them to the output 
 ## Why not include code samples directly?
 
 As the documentation grows and the library evolves, it will be difficult to manually check for syntax errors. This method forces us to keep all of our code samples up-to-date and syntactically valid.
+
+## Pushing to GitBook
+
+Create `gradle.properties` in the project root:
+
+```properties
+gitbookUsername=<gitbook username>
+gitbookPassword=<gitbook access token>
+```
+
