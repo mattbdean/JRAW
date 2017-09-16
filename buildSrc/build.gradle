@@ -9,4 +9,9 @@ dependencies {
     compile localGroovy()
 
     compile 'org.eclipse.jgit:org.eclipse.jgit:4.8.0.201706111038-r'
+
+    compile "com.squareup.okhttp3:okhttp:3.8.1"
+    compile "com.squareup.okhttp3:okhttp-urlconnection:3.8.1"
+    compile "com.fasterxml.jackson.core:jackson-databind:2.9.0.pr3"
+    compile "org.jsoup:jsoup:1.10.3"
 }
