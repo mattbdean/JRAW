@@ -16,13 +16,10 @@ class BookBuilder(samplesDir: File, private val contentDir: File) {
         get() = compiler.unusedSamples
 
     private fun compile(pages: List<Page>): Map<String, List<String>> {
-        val actualPages: MutableList<Page> = ArrayList(pages)
-        actualPages.add(Page("README", null))
-
         val data: HashMap<String, List<String>> = HashMap()
         data.put("SUMMARY.md", createSummaryPage(pages))
 
-        actualPages
+        pages
             .map { it.file + ".md" }
             .forEach { data.put(it, compiler.compile(File(contentDir, it))) }
 
