@@ -81,9 +81,9 @@ but this is not:
 {{ @Exmaple.showSomething }} {{ @Example.doSomething }}
 ```
 
-## Adding a new page
+## Adding a new chapter
 
-All pages are arranged in [`toc.json`](https://github.com/mattbdean/JRAW/blob/kotlin/docs/src/main/resources/content/toc.json). This file specifies the table of contents for our book in JSON format. This is essentially an array of [`Page`](https://github.com/mattbdean/JRAW/blob/kotlin/docs/src/main/java/net/dean/jraw/docs/Page.java)s.
+All chapters are arranged in [`toc.json`](https://github.com/mattbdean/JRAW/blob/kotlin/docs/src/main/resources/content/toc.json). This file specifies the table of contents for our book in JSON format. This is essentially an array of [`Chapter`](https://github.com/mattbdean/JRAW/blob/kotlin/docs/src/main/java/net/dean/jraw/docs/Chapter.java)s.
 
 Say our `toc.json` looks like this:
 

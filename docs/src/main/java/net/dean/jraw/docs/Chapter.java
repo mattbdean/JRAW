@@ -2,11 +2,11 @@ package net.dean.jraw.docs;
 
 import org.jetbrains.annotations.Nullable;
 
-public final class Page {
+public final class Chapter {
     private String file;
     private String title;
 
-    public Page(String file, @Nullable String title) {
+    public Chapter(String file, @Nullable String title) {
         this.file = file;
         this.title = title;
     }

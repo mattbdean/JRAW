@@ -15,9 +15,9 @@ class BookBuilder(samplesDir: File, private val contentDir: File) {
     val unusedSamples: List<CodeSampleRef>
         get() = compiler.unusedSamples
 
-    private fun compile(pages: List<Page>): Map<String, List<String>> {
+    private fun compile(pages: List<Chapter>): Map<String, List<String>> {
         val data: HashMap<String, List<String>> = HashMap()
-        data.put("SUMMARY.md", createSummaryPage(pages))
+        data.put("SUMMARY.md", createSummaryFileContents(pages))
 
         pages
             .map { it.file + ".md" }
@@ -26,12 +26,12 @@ class BookBuilder(samplesDir: File, private val contentDir: File) {
         return data
     }
 
-    private fun createSummaryPage(pages: List<Page>): List<String> {
+    private fun createSummaryFileContents(chapters: List<Chapter>): List<String> {
         val sb = StringBuilder()
         sb.appendln("# Summary\n")
 
-        for (page in pages) {
-            sb.appendln("* [${page.title}](${page.file}.md)")
+        for (chapter in chapters) {
+            sb.appendln("* [${chapter.title}](${chapter.file}.md)")
         }
 
         return sb.split("\n")
@@ -43,11 +43,11 @@ class BookBuilder(samplesDir: File, private val contentDir: File) {
         if (!tocFile.isFile)
             throw IOException("Does not exist or not a file: ${tocFile.absolutePath}")
 
-        val pageAdapter = moshi.adapter<List<Page>>(Types.newParameterizedType(List::class.java, Page::class.java))
+        val chapterAdapter = moshi.adapter<List<Chapter>>(Types.newParameterizedType(List::class.java, Chapter::class.java))
             .failOnUnknown()
             .nullSafe()
 
-        val pages = pageAdapter.fromJson(Okio.buffer(Okio.source(tocFile)))!!
+        val pages = chapterAdapter.fromJson(Okio.buffer(Okio.source(tocFile)))!!
         val compiled = compile(pages)
 
         if (!outputDir.isDirectory && !outputDir.mkdirs())
