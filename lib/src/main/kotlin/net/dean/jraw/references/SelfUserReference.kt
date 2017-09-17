@@ -3,12 +3,12 @@ package net.dean.jraw.references
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Types
 import net.dean.jraw.*
-import net.dean.jraw.databind.RedditModelEnvelope
 import net.dean.jraw.models.KarmaBySubreddit
 import net.dean.jraw.models.LiveThreadPatch
 import net.dean.jraw.models.MultiredditPatch
 import net.dean.jraw.models.Subreddit
 import net.dean.jraw.models.internal.GenericJsonResponse
+import net.dean.jraw.models.internal.RedditModelEnvelope
 import net.dean.jraw.pagination.DefaultPaginator
 import okhttp3.MediaType
 import okhttp3.RequestBody

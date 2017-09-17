@@ -4,6 +4,7 @@ import com.squareup.moshi.*
 import net.dean.jraw.models.KindConstants
 import net.dean.jraw.models.Listing
 import net.dean.jraw.models.Message
+import net.dean.jraw.models.internal.RedditModelEnvelope
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 
@@ -119,7 +120,7 @@ class RedditModelAdapterFactory(
                     actualKind = kind
             if (actualKind == null)
                 throw IllegalArgumentException("No registered kind for Class '${value.javaClass}'")
-            delegate.toJson(writer, RedditModelEnvelope(data = value, kind = actualKind))
+            delegate.toJson(writer, RedditModelEnvelope.create(actualKind, value))
         }
 
         override fun fromJson(reader: JsonReader?): Any? {
