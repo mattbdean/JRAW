@@ -3,16 +3,24 @@ apply plugin: 'net.ltgt.apt-idea'
 
 dependencies {
     compile "com.squareup.okhttp3:okhttp:$okhttpVersion"
-    compile "com.squareup.moshi:moshi:$moshiVersion"
+
+    // TODO: Use jitpack for Moshi until square/moshi#349 and #350 are merged to handle deeply nested objects
+//    compile "com.squareup.moshi:moshi:$moshiVersion"
+    def moshi = "com.github.mattbdean.moshi:moshi:349-deeply-nested-value-reader-SNAPSHOT"
+    compile(moshi) {
+        exclude group: 'com.squareup.moshi'
+    }
 
     apt('com.github.rharter:auto-value-moshi:77d1d54285') {
         exclude group: 'com.squareup.moshi'
     }
-    apt "com.squareup.moshi:moshi:$moshiVersion"
+    apt moshi
     apt "com.google.auto.value:auto-value:$autoValueVersion"
 
     compileOnly "com.google.auto.value:auto-value:$autoValueVersion"
-    compileOnly 'com.ryanharter.auto.value:auto-value-moshi-annotations:0.4.3'
+    compileOnly('com.ryanharter.auto.value:auto-value-moshi-annotations:0.4.3') {
+        exclude group: 'com.squareup.moshi'
+    }
 
     testCompile "com.squareup.okhttp3:mockwebserver:$okhttpVersion"
     testCompile 'net.sourceforge.htmlunit:htmlunit:2.27'

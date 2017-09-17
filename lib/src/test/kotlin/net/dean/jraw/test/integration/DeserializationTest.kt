@@ -12,12 +12,12 @@ import kotlin.reflect.KClass
 typealias DeserializeTest = (RedditClient) -> List<Any>
 
 /**
- * We're testing to see if we have our models and Jackson ObjectMapper instance set up correctly. We test deserializing
- * both with and without a user because some properties are null without a logged-in user.
+ * We're testing to see if we have our models and Moshi instance set up correctly. We test deserializing both with and
+ * without a user because some properties only exist in a specific state.
  */
 class DeserializationTest : Spek({
     fun subredditPosts(reddit: RedditClient, sr: String) = reddit.subreddit(sr).posts().sorting(Sorting.HOT).build().next()
-    // Map a an array of functions that uses Jackson to deserialize JSON into an instance of that Thing
+    // Map a an array of functions that uses Moshi to deserialize JSON into an instance of that class
     val testCases = mapOf<KClass<*>, Array<DeserializeTest>>(
         Subreddit::class to arrayOf<DeserializeTest>(
             // Test both /r/pics and /r/redditdev, two very different subreddits (both content-wise and settings-wise)

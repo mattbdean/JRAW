@@ -1,14 +1,13 @@
 package net.dean.jraw.references
 
-import net.dean.jraw.Endpoint
-import net.dean.jraw.EndpointImplementation
-import net.dean.jraw.MethodType
-import net.dean.jraw.RedditClient
+import net.dean.jraw.*
 import net.dean.jraw.models.Submission
 import net.dean.jraw.models.SubmissionKind
 import net.dean.jraw.models.Subreddit
 import net.dean.jraw.models.internal.GenericJsonResponse
+import net.dean.jraw.models.internal.SubmissionData
 import net.dean.jraw.pagination.DefaultPaginator
+import net.dean.jraw.tree.RootCommentNode
 
 /**
  * Allows the user to perform API actions against a subreddit
@@ -38,8 +37,10 @@ class SubredditReference internal constructor(reddit: RedditClient, subreddit: S
      *
      * @see RedditClient.randomSubreddit
      */
-    // TODO
-//    fun randomSubmission() = RootCommentNode(reddit.request { it.path("/r/$subject/random") }.json)
+    fun randomSubmission(): RootCommentNode {
+        val data: SubmissionData = reddit.request { it.path("/r/${JrawUtils.urlEncode(subject)}/random") }.deserialize()
+        return RootCommentNode(data.submissions[0], data.comments, settings = null)
+    }
 
     /**
      * Submits content to this subreddit

@@ -3,6 +3,7 @@ package net.dean.jraw.databind
 import com.squareup.moshi.*
 import net.dean.jraw.models.KindConstants
 import net.dean.jraw.models.Listing
+import net.dean.jraw.models.Message
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 
@@ -50,6 +51,8 @@ import java.lang.reflect.Type
  *  4. Transform the intermediate JSON (the Map) into an instance of that class
  *
  * Note that dynamic deserialization is a bit hacky and is probably slower than static deserialization.
+ *
+ * Note that Messages MUST be deserialized dynamically to work properly.
  */
 class RedditModelAdapterFactory(
     /**
@@ -72,6 +75,10 @@ class RedditModelAdapterFactory(
                 val upperBound = Types.getRawType((type as ParameterizedType).actualTypeArguments.first())
                 return DynamicListingAdapter(registry, moshi, upperBound)
             }
+
+            // Messages are handled a bit differently in the JSON
+            if (rawType == Message::class.java)
+                return MessageAdapter(moshi)
 
             // Assume an easily-deserialized model
             return DynamicNonGenericModelAdapter(registry, moshi, rawType)
@@ -159,6 +166,25 @@ class RedditModelAdapterFactory(
     }
 
     /**
+     * This class exists because the reddit API lies to us when we query for messages. For every other model the value
+     * of the "kind" node dictates the exact shape the "data" node has. Messages are a bit different: messages can
+     * either be a "t4" (message) OR a "t1" (comment). To make matters worse, a message with a kind of "t1" does not
+     * have the same shape as a normal comment — **it has the shape of a `t4`**.
+     *
+     * This class attempts to parse any JSON value into a Message, regardless of kind.
+     */
+    private class MessageAdapter(moshi: Moshi) : DynamicAdapter<Message>(mapOf(), moshi, Message::class.java) {
+        override fun fromJson(reader: JsonReader): Message? {
+            val json = expectType<Map<String, Any>>(reader.readJsonValue(), "<root>")
+
+            val envelopeType = Types.newParameterizedType(RedditModelEnvelope::class.java, Message::class.java)
+            val adapter = moshi.adapter<RedditModelEnvelope<*>>(envelopeType)
+            val result = adapter.fromJsonValue(json)!!
+            return ensureInBounds(result.data) as Message
+        }
+    }
+
+    /**
      * Dynamically reads a Listing structure and ensures that all children are the same class or a subclass of
      * [upperBound].
      */
@@ -166,7 +192,11 @@ class RedditModelAdapterFactory(
         DynamicAdapter<Listing<Any>>(registry, moshi, upperBound) {
 
         override fun fromJson(reader: JsonReader): Listing<Any>? {
-            val json = reader.readJsonValue() as? Map<*, *> ?:
+            val root = reader.readJsonValue()
+            if (root is String)
+                // See RepliesAdapterFactory for an explanation
+                return Listing.empty()
+            val json = root as? Map<*, *> ?:
                 throw IllegalArgumentException("Expected an object at ${reader.path}")
 
             val rootKind = expectType<String>(json["kind"], "kind")

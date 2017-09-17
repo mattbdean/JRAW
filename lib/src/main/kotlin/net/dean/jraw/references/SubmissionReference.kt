@@ -3,7 +3,12 @@ package net.dean.jraw.references
 import net.dean.jraw.Endpoint
 import net.dean.jraw.EndpointImplementation
 import net.dean.jraw.RedditClient
+import net.dean.jraw.filterValuesNotNull
 import net.dean.jraw.models.KindConstants
+import net.dean.jraw.models.Submission
+import net.dean.jraw.models.internal.SubmissionData
+import net.dean.jraw.tree.CommentTreeSettings
+import net.dean.jraw.tree.RootCommentNode
 
 /**
  * A Reference to a link or text submitted to a subreddit, like [this one](https://www.reddit.com/comments/6afe8u).
@@ -11,51 +16,51 @@ import net.dean.jraw.models.KindConstants
 class SubmissionReference internal constructor(reddit: RedditClient, id: String) :
     PublicContributionReference(reddit, id, KindConstants.SUBMISSION) {
 
-    // TODO
-//    /**
-//     * Makes a request to retrieve all comments from this submission with the default settings.
-//     *
-//     * This method is equivalent to
-//     *
-//     * ```kotlin
-//     * comments(CommentsRequest())
-//     * ```
-//     */
-//    fun comments(): RootCommentNode = comments(CommentsRequest())
+    /**
+     * Makes a request to retrieve all comments from this submission with the default settings.
+     *
+     * This method is equivalent to
+     *
+     * ```kotlin
+     * comments(CommentsRequest())
+     * ```
+     */
+    fun comments(): RootCommentNode = comments(CommentsRequest())
 
-//    /**
-//     * Makes a request to retrieve comments from this submission with the given settings.
-//     */
-//    @EndpointImplementation(Endpoint.GET_COMMENTS_ARTICLE)
-//    fun comments(spec: CommentsRequest): RootCommentNode {
-//        val query = mapOf(
-//            "comment" to spec.focus,
-//            "context" to spec.context?.toString(),
-//            "depth" to spec.depth?.toString(),
-//            "limit" to spec.limit?.toString(),
-//            "sort" to spec.sort.name.toLowerCase(),
-//            "sr_detail" to "false"
-//        )
-//            .filterValuesNotNull()
-//
-//        val settings = CommentTreeSettings(
-//            submissionId = subject,
-//            sort = spec.sort
-//        )
-//
-//        return RootCommentNode(reddit.request { it.path("/comments/$subject").query(query) }.json, settings)
-//    }
-//
-//    /**
-//     * Gets a [Submission] instance for this reference.
-//     *
-//     * Equivalent to
-//     *
-//     * ```kotlin
-//     * comments().submission
-//     * ```
-//     */
-//    fun inspect(): Submission = comments().subject
+    /**
+     * Makes a request to retrieve comments from this submission with the given settings.
+     */
+    @EndpointImplementation(Endpoint.GET_COMMENTS_ARTICLE)
+    fun comments(spec: CommentsRequest): RootCommentNode {
+        val query = mapOf(
+            "comment" to spec.focus,
+            "context" to spec.context?.toString(),
+            "depth" to spec.depth?.toString(),
+            "limit" to spec.limit?.toString(),
+            "sort" to spec.sort.name.toLowerCase(),
+            "sr_detail" to "false"
+        )
+            .filterValuesNotNull()
+
+        val settings = CommentTreeSettings(
+            submissionId = subject,
+            sort = spec.sort
+        )
+
+        val data: SubmissionData = reddit.request { it.path("/comments/$subject").query(query) }.deserialize()
+        return RootCommentNode(data.submissions[0], data.comments, settings)
+    }
+
+    /**
+     * Gets a [Submission] instance for this reference.
+     *
+     * Equivalent to
+     *
+     * ```kotlin
+     * comments().submission
+     * ```
+     */
+    fun inspect(): Submission = comments().subject
 
     /** Equivalent to `setHidden(true)` */
     fun hide() = setHidden(true)

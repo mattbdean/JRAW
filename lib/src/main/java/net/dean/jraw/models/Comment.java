@@ -5,6 +5,7 @@ import com.squareup.moshi.Json;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import net.dean.jraw.RedditClient;
+import net.dean.jraw.databind.DynamicEnveloped;
 import net.dean.jraw.databind.RedditModel;
 import net.dean.jraw.databind.UnixTime;
 import net.dean.jraw.references.CommentReference;
@@ -49,6 +50,9 @@ public abstract class Comment implements PublicContribution, NestedIdentifiable 
     @NotNull
     @Override
     @Json(name = "name") public abstract String getFullName();
+
+    @DynamicEnveloped
+    public abstract Listing<NestedIdentifiable> getReplies();
 
     @NotNull
     @Override

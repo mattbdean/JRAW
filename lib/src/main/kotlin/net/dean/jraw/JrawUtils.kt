@@ -16,6 +16,8 @@ import java.util.*
 object JrawUtils {
     @JvmField val moshi: Moshi = Moshi.Builder()
         .add(UnixDateAdapterFactory())
+        .add(RepliesAdapterFactory())
+        .add(SubmissionDataAdapterFactory())
         .add(EnvelopedListAdapterFactory())
         .add(RedditModelAdapterFactory(mapOf(
             KindConstants.COMMENT to Comment::class.java,
@@ -25,7 +27,9 @@ object JrawUtils {
             KindConstants.TROPHY_LIST to TrophyList::class.java,
             KindConstants.LABELED_MULTI_DESC to LabeledMultiDescription::class.java,
             KindConstants.LIVE_THREAD to LiveThread::class.java,
-            KindConstants.LIVE_UPDATE to LiveUpdate::class.java
+            KindConstants.LIVE_UPDATE to LiveUpdate::class.java,
+            KindConstants.MORE_CHILDREN to MoreChildren::class.java,
+            KindConstants.MESSAGE to Message::class.java
         )))
         .add(ModelAdapterFactory.create())
         .add(DistinguishedStatus::class.java, DistinguishedStatusAdapter())

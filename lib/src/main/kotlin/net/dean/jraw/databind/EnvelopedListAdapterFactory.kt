@@ -16,10 +16,14 @@ class EnvelopedListAdapterFactory : JsonAdapter.Factory {
 
         val subtype = type.actualTypeArguments[0]
 
-        // Ensure we have the @Enveloped annotation
-        Types.nextAnnotations(annotations, Enveloped::class.java) ?: return null
-        val delegate = moshi.adapter<Any>(subtype, Enveloped::class.java)
+        // Ensure we have either the @Enveloped or @DynamicEnveloped annotation
+        var delegate: JsonAdapter<Any>? = null
+        if (Types.nextAnnotations(annotations, Enveloped::class.java) != null)
+            delegate = moshi.adapter<Any>(subtype, Enveloped::class.java)
+        else if (Types.nextAnnotations(annotations, DynamicEnveloped::class.java) != null)
+            delegate = moshi.adapter<Any>(subtype, DynamicEnveloped::class.java)
 
+        if (delegate == null) return null
         return EnvelopedListAdapter(delegate)
     }
 
