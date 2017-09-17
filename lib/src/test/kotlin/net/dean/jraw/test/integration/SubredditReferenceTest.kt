@@ -20,7 +20,6 @@ class SubredditReferenceTest : Spek({
         // have to do is access it.
         assume({ SharedObjects.submittedSelfPost != null }, description = "should be able to submit a self post") {}
 
-        // TODO
         it("should be able to submit a link") {
             ignoreRateLimit {
                 val postRef = ref.submit(SubmissionKind.LINK, "test link post", "http://example.com/${now.time}", sendReplies = false)

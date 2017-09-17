@@ -59,8 +59,11 @@ public abstract class Comment implements PublicContribution, NestedIdentifiable 
     @Json(name = "parent_id") public abstract String getParentFullName();
 
     @NotNull
+    @Json(name = "link_id") public abstract String getSubmissionFullName();
+
+    @NotNull
     @Override
-    @Json(name = "link_id") public abstract String getSubredditFullName();
+    @Json(name = "subreddit_id") public abstract String getSubredditFullName();
 
     @Json(name = "subreddit_type") public abstract Subreddit.Access getSubredditType();
 
