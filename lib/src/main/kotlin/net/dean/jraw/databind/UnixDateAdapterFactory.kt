@@ -14,8 +14,13 @@ class UnixDateAdapterFactory : JsonAdapter.Factory {
 
     private class Adapter(val precision: TimeUnit) : JsonAdapter<Date>() {
         override fun fromJson(reader: JsonReader): Date? {
+            // Normally the value of a comment's "edited" field is either the boolean value "false" or the unix time
+            // in seconds in which it was edited. Very old (7+ years) comments use the boolean value "true" if the
+            // comment is edited. Since we can't tell exactly when it was edited and the percentage of comments this
+            // affects is likely very small, return null like it was never edited.
             if (reader.peek() == JsonReader.Token.BOOLEAN) {
-                return if (!reader.nextBoolean()) null else throw IllegalArgumentException("Only 'false' boolean values are allowed")
+                reader.readJsonValue()
+                return null
             }
 
             if (reader.peek() == JsonReader.Token.NUMBER)
