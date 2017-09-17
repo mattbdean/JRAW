@@ -1,8 +1,8 @@
 package net.dean.jraw.http
 
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.module.kotlin.readValue
+import com.squareup.moshi.JsonAdapter
 import net.dean.jraw.JrawUtils
+import net.dean.jraw.databind.Enveloped
 import okhttp3.Request
 import okhttp3.Response
 
@@ -22,9 +22,6 @@ data class HttpResponse(val raw: Response) {
     /** Lazily initialized response body, or an empty string if there was none */
     val body: String by lazy { raw.body()?.string() ?: "" }
 
-    /** Lazily initialized response body as a Jackson JsonNode */
-    val json: JsonNode by lazy { JrawUtils.jackson.readTree(body) }
-
     /**
      * Uses Jackson to deserialize the body of this response to a given type
      *
@@ -34,8 +31,15 @@ data class HttpResponse(val raw: Response) {
      * val foo: Foo = response.deserialize()
      * ```
      */
-    inline fun <reified  T : Any> deserialize(): T {
-        if (body.isEmpty()) throw IllegalStateException("Cannot deserialize a response with an empty body")
-        return JrawUtils.jackson.readValue<T>(body)
+    inline fun <reified T> deserialize(): T {
+        return deserializeWith(JrawUtils.adapter())
+    }
+
+    inline fun <reified T> deserializeEnveloped(): T {
+        return deserializeWith(JrawUtils.moshi.adapter<T>(T::class.java, Enveloped::class.java))
+    }
+
+    fun <T> deserializeWith(adapter: JsonAdapter<T>): T {
+        return adapter.fromJson(body)!!
     }
 }

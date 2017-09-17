@@ -4,9 +4,7 @@ import com.winterbe.expekt.should
 import net.dean.jraw.http.HttpRequest
 import net.dean.jraw.http.NetworkException
 import net.dean.jraw.http.SimpleHttpLogger
-import net.dean.jraw.models.Listing
-import net.dean.jraw.models.Sorting
-import net.dean.jraw.models.TimePeriod
+import net.dean.jraw.models.*
 import net.dean.jraw.oauth.OAuthHelper
 import net.dean.jraw.pagination.Paginator
 import net.dean.jraw.test.*
@@ -108,7 +106,7 @@ class RedditClientTest : Spek({
 
             // Set the tokenExpiration to 1 ms in the past
             reddit.authManager.update(
-                reddit.authManager.current!!.copy(expiration = Date(Date().time - 1))
+                reddit.authManager.current!!.withExpiration(Date(Date().time - 1))
             )
 
             // Send a request that SHOULD trigger a renewal
@@ -143,12 +141,20 @@ class RedditClientTest : Spek({
         it("should not send a request when given no names") {
             // NoopNetworkAdapter throws an Exception when trying to send a request
             val reddit = newMockRedditClient(NoopNetworkAdapter)
-            reddit.lookup().should.equal(Listing())
+            reddit.lookup().should.equal(Listing.empty())
         }
 
         it("should accept full names of submissions, comments, and subreddits") {
             val res = reddit.lookup("t5_2qh0u", "t3_6afe8u", "t1_dhe4fl0")
-            res.map { it.kind }.should.equal(listOf("t5", "t3", "t1"))
+
+            val supertypes = listOf(Subreddit::class, Submission::class, Comment::class)
+
+            // We specified 3 full names, should get 3 models back
+            res.should.have.size(3)
+
+            for (i in supertypes.indices) {
+                res[i].should.be.an.instanceof(supertypes[i].java)
+            }
         }
     }
 

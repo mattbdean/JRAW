@@ -1,12 +1,13 @@
 package net.dean.jraw
 
-import net.dean.jraw.JrawUtils.jackson
+import com.squareup.moshi.Types
+import net.dean.jraw.databind.DynamicEnveloped
 import net.dean.jraw.http.*
 import net.dean.jraw.models.*
+import net.dean.jraw.models.internal.RedditExceptionStub
 import net.dean.jraw.oauth.*
 import net.dean.jraw.pagination.BarebonesPaginator
 import net.dean.jraw.pagination.DefaultPaginator
-import net.dean.jraw.pagination.Paginator
 import net.dean.jraw.ratelimit.LeakyBucketRateLimiter
 import net.dean.jraw.ratelimit.RateLimiter
 import net.dean.jraw.references.*
@@ -87,14 +88,14 @@ class RedditClient internal constructor(
             // we have a valid username so TokenStores get the proper name once it gets updated). Instead we directly
             // make the request and parse the response.
             overrideUsername ?: try {
-                val json = request(HttpRequest.Builder()
+                val me = request(HttpRequest.Builder()
                     .url("https://oauth.reddit.com/api/v1/me")
                     .header("Authorization", "bearer ${initialOAuthData.accessToken}")
-                    .build()).json
+                    .build()).deserialize<Map<*, *>>()
 
-                if (!json.has("name"))
-                    throw IllegalArgumentException("Cannot get name from response")
-                json.get("name").asText()
+                // Avoid deserializing an Account because it's harder to mock an response to Account while testing
+                me["name"] as? String ?:
+                    throw IllegalArgumentException("Expected a name")
             } catch (e: ApiException) {
                 // Delay throwing an exception until `requireAuthenticatedUser()` is called
                 null
@@ -146,17 +147,17 @@ class RedditClient internal constructor(
         }
 
         // Try to find any API errors embedded in the document
-        val stub = if (res.body == "") null else jackson.treeToValue(res.json, RedditExceptionStub::class.java)
+        val stub = if (res.body == "") null else JrawUtils.adapter<RedditExceptionStub<*>>().fromJson(res.body)
 
-        if (!res.successful) {
-            // If there isn't any reddit API errors, throw the NetworkException instead
-            stub ?: throw NetworkException(res)
-            throw stub.create(NetworkException(res))
-        } else {
-            // Reddit has some legacy endpoints that return 200 OK even though the JSON contains errors
-            if (stub != null)
-                throw stub.create(NetworkException(res))
+        // Reddit has some legacy endpoints that return 200 OK even though the JSON contains errors
+        if (stub != null) {
+            val ex = stub.create(NetworkException(res))
+            if (ex != null) throw ex
         }
+
+        // Make sure we're still failing on non-success status codes if we couldn't find an API error in the JSON
+        if (!res.successful)
+            throw NetworkException(res)
 
         return res
     }
@@ -235,8 +236,8 @@ class RedditClient internal constructor(
      */
     fun user(name: String) = OtherUserReference(this, name)
 
-    /** Creates a [Paginator.Builder] to iterate posts on the front page */
-    fun frontPage() = DefaultPaginator.Builder<Submission>(this, baseUrl = "", sortingAlsoInPath = true)
+    /** Creates a [DefaultPaginator.Builder] to iterate posts on the front page */
+    fun frontPage() = DefaultPaginator.Builder.create<Submission>(this, baseUrl = "", sortingAlsoInPath = true)
 
     /**
      * Creates a [SubredditReference]
@@ -293,7 +294,7 @@ class RedditClient internal constructor(
      * Creates a BarebonesPaginator.Builder that will iterate over the latest comments from all subreddits when built.
      * This Paginator will be especially useful when used with the [Paginator.restart] method.
      */
-    fun comments() = BarebonesPaginator.Builder<Comment>(this, "/comments")
+    fun comments() = BarebonesPaginator.Builder.create<Comment>(this, "/comments")
 
     /**
      * Returns the name of the logged-in user
@@ -317,13 +318,17 @@ class RedditClient internal constructor(
      * subreddits are accepted.
      */
     @EndpointImplementation(Endpoint.GET_INFO)
-    fun lookup(fullNames: List<String>): Listing<RedditObject> {
-        if (fullNames.isEmpty()) return Listing()
+    fun lookup(fullNames: List<String>): Listing<Any> {
+        if (fullNames.isEmpty()) return Listing.empty()
 
-        return request {
+        val type = Types.newParameterizedType(Listing::class.java, Any::class.java)
+        val adapter = JrawUtils.moshi.adapter<Listing<Any>>(type, DynamicEnveloped::class.java)
+        val json = request {
             it.endpoint(Endpoint.GET_INFO)
                 .query(mapOf("id" to fullNames.joinToString(",")))
-        }.deserialize()
+        }.body
+
+        return adapter.fromJson(json)!!
     }
 
     fun liveThread(id: String) = LiveThreadReference(this, id)

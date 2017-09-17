@@ -23,8 +23,7 @@ class SubmissionReferenceTest : Spek({
     describe("upvote/downvote/unvote") {
         it("should have an effect on a model") {
             fun expectVote(dir: VoteDirection) {
-                val value = if (dir == VoteDirection.UP) true else if (dir == VoteDirection.DOWN) false else null
-                ref.inspect().likes.should.equal(value)
+                ref.inspect().vote.should.equal(dir)
             }
             ref.upvote()
             expectVote(VoteDirection.UP)
@@ -40,7 +39,7 @@ class SubmissionReferenceTest : Spek({
     describe("save/unsave") {
         it("should have an effect on the model") {
             fun expectSaved(saved: Boolean) {
-                ref.inspect().saved.should.equal(saved)
+                ref.inspect().isSaved.should.equal(saved)
             }
 
             ref.save()
@@ -82,9 +81,9 @@ class SubmissionReferenceTest : Spek({
     describe("hide/unhide") {
         it("should hide/unhide the submission") {
             ref.hide()
-            ref.inspect().hidden.should.be.`true`
+            ref.inspect().isHidden.should.be.`true`
             ref.unhide()
-            ref.inspect().hidden.should.be.`false`
+            ref.inspect().isHidden.should.be.`false`
         }
     }
 

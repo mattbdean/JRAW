@@ -1,12 +1,11 @@
 package net.dean.jraw.pagination
 
 import net.dean.jraw.models.Listing
-import net.dean.jraw.models.RedditObject
 
 /**
  * A standard interface for interacting with paginated data provided by the reddit API.
  */
-interface RedditIterable<T : RedditObject> : Iterable<Listing<T>> {
+interface RedditIterable<T> : Iterable<Listing<T>> {
     /** The most recently fetched Listing, or null if no work has been done yet. */
     val current: Listing<T>?
 

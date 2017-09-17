@@ -38,12 +38,10 @@ class MultiredditReferenceTest : Spek({
                 .visibility("private")
                 .weightingScheme("fresh")
                 .build())
+            undeletedRefs.add(ref)
 
             // Make sure we can fetch the data from about()
             ref.about().should.equal(multi)
-
-            // Clean up (and test the delete() method)
-            ref.delete()
         }
 
         it("should throw an ApiException when trying to create a multireddit for another user") {

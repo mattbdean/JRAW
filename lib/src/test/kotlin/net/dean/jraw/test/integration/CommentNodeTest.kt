@@ -1,10 +1,17 @@
 package net.dean.jraw.test.integration
 
 import com.winterbe.expekt.should
-import net.dean.jraw.models.*
+import net.dean.jraw.models.Comment
+import net.dean.jraw.models.MoreChildren
+import net.dean.jraw.models.Submission
+import net.dean.jraw.test.NoopNetworkAdapter
 import net.dean.jraw.test.TestConfig.reddit
 import net.dean.jraw.test.expectException
-import net.dean.jraw.util.TreeTraverser
+import net.dean.jraw.test.newMockRedditClient
+import net.dean.jraw.tree.AbstractCommentNode
+import net.dean.jraw.tree.CommentNode
+import net.dean.jraw.tree.RootCommentNode
+import net.dean.jraw.tree.TreeTraverser
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
@@ -12,7 +19,7 @@ import org.jetbrains.spek.api.dsl.it
 class CommentNodeTest : Spek({
     val SUBMISSION_ID = "2zsyu4"
     val root: RootCommentNode by lazy { reddit.submission(SUBMISSION_ID).comments() }
-    val a: ReplyCommentNode by lazy { root.replies[0] }
+    val a: CommentNode<Comment> by lazy { root.replies[0] }
 
     // reddit.com/comments/6t8ioo
     val complexTree: RootCommentNode by lazy { reddit.submission("92dd8").comments() }
@@ -66,9 +73,13 @@ class CommentNodeTest : Spek({
         return values
     }
 
-     fun <T : CommentNode<*>> List<T>.mapToBody(): List<String?> {
-         return map { it.subject.body }
-     }
+    fun <T : CommentNode<*>> List<T>.mapToBody(): List<String?> {
+        return map { it.subject.body }
+    }
+
+    fun MoreChildren.copy(): MoreChildren {
+        return MoreChildren.create(fullName, id, parentFullName, childrenIds)
+    }
 
     it("should provide an Iterator that iterates over direct children") {
         a.iterator()
@@ -122,7 +133,9 @@ class CommentNodeTest : Spek({
             simpleTree.moreChildren.should.be.`null`
 
             expectException(IllegalStateException::class) {
-                simpleTree.loadMore(reddit)
+                // Make sure we aren't executing any network requests
+                val mockReddit = newMockRedditClient(NoopNetworkAdapter)
+                simpleTree.loadMore(mockReddit)
             }
         }
 
@@ -162,7 +175,7 @@ class CommentNodeTest : Spek({
         }
 
         it("should handle thread continuations") {
-            val threadContinuation = simpleTree.walkTree().first { it.hasMoreChildren() && it.moreChildren!!.isThreadContinuation() }
+            val threadContinuation = simpleTree.walkTree().first { it.hasMoreChildren() && it.moreChildren!!.isThreadContinuation }
             val parentDepth = threadContinuation.depth
             val fakeRoot = threadContinuation.loadMore(reddit)
 
@@ -184,13 +197,17 @@ class CommentNodeTest : Spek({
             simpleTree.moreChildren.should.be.`null`
 
             val original = simpleTree.walkTree()
-            simpleTree.replaceMore(reddit)
+
+            // Use a mock RedditClient so we can assert no network requests are sent
+            val fakeReddit = newMockRedditClient(NoopNetworkAdapter)
+            simpleTree.replaceMore(fakeReddit)
             simpleTree.walkTree().should.equal(original)
         }
 
         it("should alter the tree when called") {
             val tree = reddit.submission("92dd8").comments()
             val prevFlatTree = tree.walkTree()
+            // Create a copy of the data
             val prevMoreChildren = tree.moreChildren!!.copy()
             val prevSize = tree.totalSize()
 

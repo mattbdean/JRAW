@@ -6,9 +6,11 @@ package net.dean.jraw.models
  * @see DistinguishedStatus
  */
 interface Distinguishable {
-    // Because of how the way the Kotlin Jackson module works, this property has to be marked as nullable even though
-    // its deserializer always returns a non-null value. Jackson sees that the "distinguished" property is null and
-    // immediately throws an Exception
-    /** The status of the person who created this Submission. Always non-null */
-    val distinguished: DistinguishedStatus?
+    /**
+     * The status of the person who created this Submission. Note that subreddit moderators, reddit admins, or other
+     * "distinguished" users still post comments or submissions that look like any everybody else's. These users have to
+     * explicitly mark their comments or submissions as "distinguished" in order for them to appear that way one the
+     * website and API.
+     */
+    val distinguished: DistinguishedStatus
 }

@@ -182,9 +182,7 @@ class AuthManagerTest : Spek({
 
         it("should return true when the tokenExpiration is in the past") {
             val auth = AuthManager(NoopNetworkAdapter, CredentialsUtil.script)
-            auth.update(createMockOAuthData().copy(
-                expiration = Date(Date().time - 1)
-            ))
+            auth.update(createMockOAuthData().withExpiration(Date(Date().time - 1)))
             auth.needsRenewing().should.be.`true`
         }
     }

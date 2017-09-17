@@ -1,7 +1,7 @@
 package net.dean.jraw.test.integration
 
 import com.winterbe.expekt.should
-import net.dean.jraw.RateLimitException
+import net.dean.jraw.RedditException
 import net.dean.jraw.models.LiveThreadPatch
 import net.dean.jraw.models.LiveWebSocketUpdate
 import net.dean.jraw.pagination.Paginator
@@ -41,7 +41,7 @@ class LiveThreadReferenceTest : Spek({
                 .resources(res)
                 .nsfw(nsfw)
                 .build())
-        } catch (e: RateLimitException) {
+        } catch (e: RedditException) {
             initialized = false
             e.printStackTrace()
         }
@@ -51,7 +51,7 @@ class LiveThreadReferenceTest : Spek({
             thread.title.should.equal(title)
             thread.description.should.equal(desc)
             thread.resources.should.equal(res)
-            thread.nsfw.should.equal(nsfw)
+            thread.isNsfw.should.equal(nsfw)
             thread.state.should.equal("live")
 
             ws = ref.liveUpdates(object: LiveThreadListener() {
@@ -80,7 +80,7 @@ class LiveThreadReferenceTest : Spek({
 
             val thread = ref.about()
             // The endpoint should have changed the things we specified
-            thread.nsfw.should.equal(false)
+            thread.isNsfw.should.equal(false)
             thread.title.should.equal("new title")
 
             // ... and reset those we didn't
@@ -101,15 +101,15 @@ class LiveThreadReferenceTest : Spek({
             val updates = latestUpdates()
             updates.should.have.size.above(0)
 
-            // We already posted one update, the original size is 1 minus the current size
+            // We already posted one update, the original size is 1 less than the current size
             val originalSize = updates.size - 1
 
             val update = latestUpdates()[0]
             update.body.should.equal(body)
-            update.stricken.should.be.`false`
+            update.isStricken.should.be.`false`
 
             ref.strikeUpdate(update.fullName)
-            latestUpdates()[0].stricken.should.be.`true`
+            latestUpdates()[0].isStricken.should.be.`true`
             expectedEventTypes.add("strike")
 
             ref.deleteUpdate(update.fullName)

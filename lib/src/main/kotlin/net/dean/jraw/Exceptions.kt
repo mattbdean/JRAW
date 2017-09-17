@@ -19,18 +19,3 @@ class ApiException(val code: String, val explanation: String, val relevantParame
  */
 class RateLimitException(val cooldown: Double, cause: NetworkException) :
     RedditException("reddit is ratelimiting this action, try again in ~${cooldown.toInt()} seconds", cause)
-
-/** Contains the data to create a RedditException */
-internal sealed class RedditExceptionStub<out T : RedditException> {
-    abstract fun create(cause: NetworkException): T
-}
-
-internal data class ApiExceptionStub(val code: String, val explanation: String, val parameters: List<String>)
-    : RedditExceptionStub<ApiException>() {
-
-    override fun create(cause: NetworkException) = ApiException(code, explanation, parameters, cause)
-}
-
-internal data class RateLimitExceptionStub(val cooldown: Double) : RedditExceptionStub<RateLimitException>() {
-    override fun create(cause: NetworkException) = RateLimitException(cooldown, cause)
-}

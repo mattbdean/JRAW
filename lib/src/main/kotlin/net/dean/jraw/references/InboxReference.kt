@@ -19,7 +19,7 @@ class InboxReference internal constructor(reddit: RedditClient) : AbstractRefere
      */
     @EndpointImplementation(Endpoint.GET_MESSAGE_WHERE, type = MethodType.NON_BLOCKING_CALL)
     fun iterate(where: String): BarebonesPaginator.Builder<Message> {
-        return BarebonesPaginator.Builder(reddit, "/message/${JrawUtils.urlEncode(where)}")
+        return BarebonesPaginator.Builder.create(reddit, "/message/${JrawUtils.urlEncode(where)}")
     }
 
     fun compose(dest: String, subject: String, body: String) = compose(null, dest, subject, body)

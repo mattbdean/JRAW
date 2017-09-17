@@ -1,14 +1,14 @@
 package net.dean.jraw.models
 
-import com.fasterxml.jackson.annotation.JsonProperty
+import com.squareup.moshi.Json
 
 enum class CommentSort {
-    @JsonProperty("confidence") CONFIDENCE,
-    @JsonProperty("top") TOP,
-    @JsonProperty("new") NEW,
-    @JsonProperty("controversial") CONTROVERSIAL,
-    @JsonProperty("old") OLD,
-    @JsonProperty("random") RANDOM,
-    @JsonProperty("qa") QA,
-    @JsonProperty("live") LIVE
+    @Json(name = "confidence") CONFIDENCE,
+    @Json(name = "top") TOP,
+    @Json(name = "new") NEW,
+    @Json(name = "controversial") CONTROVERSIAL,
+    @Json(name = "old") OLD,
+    @Json(name = "random") RANDOM,
+    @Json(name = "qa") QA,
+    @Json(name = "live") LIVE
 }

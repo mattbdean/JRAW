@@ -4,7 +4,7 @@ import com.winterbe.expekt.should
 import net.dean.jraw.RateLimitException
 import net.dean.jraw.RedditClient
 import net.dean.jraw.http.*
-import net.dean.jraw.models.RedditObject
+import net.dean.jraw.models.OAuthData
 import net.dean.jraw.models.Votable
 import net.dean.jraw.pagination.Paginator
 import net.dean.jraw.test.TestConfig.userAgent
@@ -16,6 +16,7 @@ import org.jetbrains.spek.api.dsl.it
 import org.jetbrains.spek.api.dsl.xit
 import java.math.BigInteger
 import java.security.SecureRandom
+import java.util.*
 import kotlin.reflect.KClass
 
 fun <T : Exception> expectException(clazz: KClass<T>, doWork: () -> Unit) {
@@ -32,7 +33,7 @@ fun <T : Exception> expectException(clazz: KClass<T>, doWork: () -> Unit) {
     }
 }
 
-fun newOkHttpAdapter() = OkNetworkAdapter(userAgent)
+fun newOkHttpAdapter() = OkHttpNetworkAdapter(userAgent)
 
 fun ensureAuthenticated(reddit: RedditClient) {
     reddit.authManager.current.should.not.be.`null`
@@ -54,18 +55,20 @@ fun ensureAuthenticated(reddit: RedditClient) {
     }
 }
 
+fun OAuthData.withExpiration(d: Date) = OAuthData.create(accessToken, scopes, refreshToken, d)!!
+
 val rand = SecureRandom()
 fun randomName(length: Int = 10): String {
     return "jraw_test_" + BigInteger(130, rand).toString(32).substring(0..length - 1)
 }
 
-fun <T : RedditObject> expectDescendingScore(objects: List<T>, allowedMistakes: Int = 0) {
+fun <T> expectDescendingScore(objects: List<T>, allowedMistakes: Int = 0) {
     val votables = objects.map { it as Votable }
     if (votables.isEmpty()) throw IllegalArgumentException("posts was empty")
     var prevScore = votables[0].score
     var mistakes = 0
 
-    for (i in 1..votables.size - 1) {
+    for (i in 1 until votables.size) {
         if (votables[i].score > prevScore)
             if (++mistakes > allowedMistakes) {
                 val scores = votables.map { it.score }
@@ -75,7 +78,7 @@ fun <T : RedditObject> expectDescendingScore(objects: List<T>, allowedMistakes: 
     }
 }
 
-fun <T : RedditObject> testPaginator(p: Paginator.Builder<T>, mustHaveContent: Boolean = true): List<List<T>> {
+fun <T> testPaginator(p: Paginator.Builder<T>, mustHaveContent: Boolean = true): List<List<T>> {
     // Primarily just make sure that requests don't fail
     val lists = p.build().accumulate(maxPages = 2)
 

@@ -8,6 +8,7 @@ dependencies {
     compile 'com.thoughtworks.qdox:qdox:2.0-M6'
     compile 'org.reflections:reflections:0.9.10'
     compile 'com.squareup.moshi:moshi:1.5.0'
+    compile "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
     compile project(':lib')
     runtime "org.slf4j:slf4j-simple:1.7.25"
 }
@@ -26,8 +27,8 @@ task buildSite(type: JavaExec, dependsOn: classes) {
 
 task pushSite(type: GitbookPush, dependsOn: buildSite) {
     // Allow credentials to be read from environmental variables. Mostly used by Travis
-    def gbUsername = System.getenv("GITBOOK_USERNAME") ?: gitbookUsername
-    def gbPassword = System.getenv("GITBOOK_PASSWORD") ?: gitbookPassword
+    def gbUsername = System.getenv("GITBOOK_USERNAME") ?: hasProperty("gitbookUsername") ? gitbookUsername : null
+    def gbPassword = System.getenv("GITBOOK_PASSWORD") ?: hasProperty("gitbookPassword") ? gitbookPassword : null
     onlyIf { gbUsername != null && gbPassword != null }
 
     username gbUsername

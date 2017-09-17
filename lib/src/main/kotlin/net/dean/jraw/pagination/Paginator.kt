@@ -1,20 +1,27 @@
 package net.dean.jraw.pagination
 
+import com.squareup.moshi.Types
+import net.dean.jraw.JrawUtils
 import net.dean.jraw.RedditClient
+import net.dean.jraw.databind.DynamicEnveloped
+import net.dean.jraw.databind.Enveloped
+import net.dean.jraw.databind.RedditModel
 import net.dean.jraw.http.HttpRequest
 import net.dean.jraw.models.Listing
-import net.dean.jraw.models.RedditObject
 import net.dean.jraw.models.Sorting
 import net.dean.jraw.models.TimePeriod
 
-abstract class Paginator<T : RedditObject, out B : Paginator.Builder<T>> protected constructor(
+abstract class Paginator<T, out B : Paginator.Builder<T>> protected constructor(
     val reddit: RedditClient,
     baseUrl: String,
-    val limit: Int
+    val limit: Int,
+    protected val clazz: Class<T>
 ) : RedditIterable<T> {
     // Internal, modifiable properties
     private var _current: Listing<T>? = null
     private var _pageNumber = 0
+
+    private val requiresDynamicDeserialization: Boolean = !clazz.isAnnotationPresent(RedditModel::class.java)
 
     // Make sure we don't have a trailing slash
     val baseUrl = if (baseUrl.trim().endsWith("/")) baseUrl.trim().substring(0, baseUrl.trim().length - 2) else baseUrl
@@ -26,7 +33,9 @@ abstract class Paginator<T : RedditObject, out B : Paginator.Builder<T>> protect
         get() = _pageNumber
 
     override fun next(): Listing<T> {
-        _current = reddit.request(createNextRequest()).deserialize()
+        val envelopeType = if (requiresDynamicDeserialization) DynamicEnveloped::class.java else Enveloped::class.java
+        val adapter = JrawUtils.moshi.adapter<Listing<T>>(Types.newParameterizedType(Listing::class.java, clazz), envelopeType)
+        _current = reddit.request(createNextRequest()).deserializeWith(adapter)
         _pageNumber++
 
         return _current!!
@@ -38,7 +47,7 @@ abstract class Paginator<T : RedditObject, out B : Paginator.Builder<T>> protect
     }
 
     override fun iterator(): Iterator<Listing<T>> = object: Iterator<Listing<T>> {
-        override fun hasNext() = !hasStarted() || (_current != null && _current!!.after != null)
+        override fun hasNext() = !hasStarted() || (_current != null && _current!!.nextName != null)
         override fun next() = this@Paginator.next()
     }
 
@@ -65,9 +74,10 @@ abstract class Paginator<T : RedditObject, out B : Paginator.Builder<T>> protect
     /**
      * Base for all Paginator.Builder subclasses
      */
-    abstract class Builder<T : RedditObject>(
+    abstract class Builder<T>(
         val reddit: RedditClient,
-        val baseUrl: String
+        val baseUrl: String,
+        protected val clazz: Class<T>
     ) {
         abstract fun build(): Paginator<T, Builder<T>>
     }

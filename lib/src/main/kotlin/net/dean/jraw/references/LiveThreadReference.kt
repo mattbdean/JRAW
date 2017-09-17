@@ -16,7 +16,7 @@ class LiveThreadReference internal constructor(reddit: RedditClient, id: String)
     fun about(): LiveThread {
         return reddit.request {
             it.endpoint(Endpoint.GET_LIVE_THREAD_ABOUT, JrawUtils.urlEncode(subject))
-        }.deserialize()
+        }.deserializeEnveloped()
     }
 
     /**
@@ -24,7 +24,7 @@ class LiveThreadReference internal constructor(reddit: RedditClient, id: String)
      */
     @EndpointImplementation(Endpoint.GET_LIVE_THREAD)
     fun latestUpdates(): BarebonesPaginator.Builder<LiveUpdate> =
-        BarebonesPaginator.Builder(reddit, "/live/${JrawUtils.urlEncode(subject)}")
+        BarebonesPaginator.Builder.create(reddit, "/live/${JrawUtils.urlEncode(subject)}")
 
     fun liveUpdates(listener: WebSocketListener): ReadOnlyWebSocketHelper {
         val url = about().websocketUrl ?: throw IllegalStateException("Live thread is not live")

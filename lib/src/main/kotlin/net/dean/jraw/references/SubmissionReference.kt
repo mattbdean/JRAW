@@ -4,10 +4,11 @@ import net.dean.jraw.Endpoint
 import net.dean.jraw.EndpointImplementation
 import net.dean.jraw.RedditClient
 import net.dean.jraw.filterValuesNotNull
-import net.dean.jraw.models.CommentTreeSettings
 import net.dean.jraw.models.KindConstants
-import net.dean.jraw.models.RootCommentNode
 import net.dean.jraw.models.Submission
+import net.dean.jraw.models.internal.SubmissionData
+import net.dean.jraw.tree.CommentTreeSettings
+import net.dean.jraw.tree.RootCommentNode
 
 /**
  * A Reference to a link or text submitted to a subreddit, like [this one](https://www.reddit.com/comments/6afe8u).
@@ -46,7 +47,8 @@ class SubmissionReference internal constructor(reddit: RedditClient, id: String)
             sort = spec.sort
         )
 
-        return RootCommentNode(reddit.request { it.path("/comments/$subject").query(query) }.json, settings)
+        val data: SubmissionData = reddit.request { it.path("/comments/$subject").query(query) }.deserialize()
+        return RootCommentNode(data.submissions[0], data.comments, settings)
     }
 
     /**

@@ -2,6 +2,7 @@ package net.dean.jraw.oauth
 
 import net.dean.jraw.RedditClient
 import net.dean.jraw.http.NetworkAdapter
+import net.dean.jraw.models.OAuthData
 import java.util.*
 
 /**
@@ -78,13 +79,13 @@ class AccountHelper(
      */
     fun trySwitchToUser(username: String): RedditClient? {
         val current = tokenStore.fetchCurrent(username)
-        if (current != null && !current.isExpired())
+        if (current != null && !current.isExpired)
             return switch(RedditClient(http, current, creds, tokenStore, username))
 
         val refresh = tokenStore.fetchRefreshToken(username)
         if (refresh != null) {
             // Pass mock data to the RedditClient so it'll refresh the access token on the first request
-            val emptyData = OAuthData("", "", -1, listOf(), refresh, Date(0L))
+            val emptyData = OAuthData.create("", listOf(), refresh, Date(0L))
             return switch(RedditClient(http, emptyData, creds, tokenStore, username), forceRenew = true)
         }
 

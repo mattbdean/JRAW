@@ -16,10 +16,7 @@ class InboxReferenceTest : Spek({
             it("should be able to iterate '$where'") {
                 val p = inbox.iterate(where).build()
                 val messages = p.accumulate(maxPages = 2)
-                // If this assertion is failing when where == "messages", make sure that there is at least one PM from
-                // an account other than the testing account. For some reason reddit doesn't display any messages if
-                // they're all sent from the testing user to the testing user.
-                if (messages.size > 1)
+                if (messages.size > 1 && messages[0].isNotEmpty() && messages[1].isNotEmpty())
                     // Make sure BarebonesPaginator is working correctly as far as dealing with multiple pages
                     messages[0][0].fullName.should.not.equal(messages[1][0].fullName)
             }

@@ -22,7 +22,7 @@ import java.util.regex.Pattern
  *     .build()
  *
  * val response = httpClient.execute(request)
- * println(response.json)
+ * println(response.body)
  * ```
  */
 class HttpRequest private constructor(

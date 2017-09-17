@@ -18,7 +18,7 @@ class SubredditReferenceTest : Spek({
 
         // submittedSelfPost is a lazily-initiated object that is created by attempting to submit a self post. All we
         // have to do is access it.
-        assume({ SharedObjects.submittedSelfPost != null }, description = "should be able to submit a self post", body = {})
+        assume({ SharedObjects.submittedSelfPost != null }, description = "should be able to submit a self post") {}
 
         it("should be able to submit a link") {
             ignoreRateLimit {
@@ -32,9 +32,9 @@ class SubredditReferenceTest : Spek({
         it("should subscribe the user to the specific subreddit") {
             val pics = reddit.subreddit("pics")
             pics.subscribe()
-            pics.about().isUserIsSubscriber.should.be.`true`
+            pics.about().isUserSubscriber.should.be.`true`
             pics.unsubscribe()
-            pics.about().isUserIsSubscriber.should.be.`false`
+            pics.about().isUserSubscriber.should.be.`false`
         }
     }
 

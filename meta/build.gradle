@@ -13,6 +13,8 @@ dependencies {
     compile 'org.reflections:reflections:0.9.10'
     compile 'net.steppschuh.markdowngenerator:markdowngenerator:1.3.0.0'
     compile project(':lib')
+
+    testCompile "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
 }
 
 task update(type: JavaExec, dependsOn: classes) {

@@ -31,7 +31,7 @@ class UserReferenceTest : Spek({
         it("should return a List of Trophies") {
             // Just make sure it deserializes
             reddit.me().trophies()
-            reddit.user("Shitty_Watercolour").trophies()
+            reddit.user("Shitty_Watercolour").trophies().should.have.size.above(0)
         }
     }
 

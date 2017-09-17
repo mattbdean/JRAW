@@ -1,30 +1,55 @@
 package net.dean.jraw.test.unit
 
-import com.fasterxml.jackson.databind.JsonNode
 import com.winterbe.expekt.should
 import net.dean.jraw.http.HttpRequest
-import net.dean.jraw.http.OkNetworkAdapter
+import net.dean.jraw.http.OkHttpNetworkAdapter
 import net.dean.jraw.test.TestConfig.userAgent
 import okhttp3.internal.http.HttpMethod
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
 import java.net.URL
-
-private val otherHeader = "X-Foo" to "Bar"
-private val formBody = mapOf("foo" to "bar", "baz" to "qux")
+import kotlin.properties.Delegates
 
 class OkHttpAdapterTest : Spek({
-    var http: OkNetworkAdapter = OkNetworkAdapter(userAgent)
+    val otherHeader = "X-Foo" to "Bar"
+    val formBody = mapOf("foo" to "bar", "baz" to "qux")
+
+    fun validateResponse(body: HttpBinResponse) {
+        // Make sure the headers we're sending are being echoed back
+        body.headers["User-Agent"].should.equal(userAgent.value)
+        body.headers[otherHeader.first].should.equal(otherHeader.second)
+
+        // Extract "get" from "https://httbin.org/get?foo=bar"
+        val method = URL(body.url).path.substring(1).toUpperCase()
+        if (HttpMethod.requiresRequestBody(method)) {
+            body.form.should.equal(formBody)
+        }
+    }
+
+    fun createTestRequestBuilder(method: String): HttpRequest.Builder {
+        val b = HttpRequest.Builder()
+            .url("https://httpbin.org/${method.toLowerCase()}")
+            .header(otherHeader.first, otherHeader.second)
+
+        if (HttpMethod.requiresRequestBody(method.toUpperCase()))
+            b.method(method, formBody)
+        else
+            b.method(method)
+
+        return b
+    }
+
+    var http: OkHttpNetworkAdapter by Delegates.notNull()
     beforeEachTest {
-        http = OkNetworkAdapter(userAgent)
+        http = OkHttpNetworkAdapter(userAgent)
     }
 
     describe("execute") {
         it("should support sending request bodies") {
             // Pick these two because they don't need a response body
             for (method in listOf("GET", "POST", "PUT", "PATCH", "DELETE")) {
-                validateResponse(http.execute(createTestRequestBuilder(method).build()).json)
+                validateResponse(http.execute(createTestRequestBuilder(method).build()).deserialize())
             }
         }
 
@@ -45,30 +70,9 @@ class OkHttpAdapterTest : Spek({
     }
 })
 
-fun validateResponse(body: JsonNode) {
-    body.get("headers").get("User-Agent").textValue().should.equal(userAgent.value)
-    body.get("headers").get(otherHeader.first).textValue().should.equal(otherHeader.second)
-
-    val method = URL(body.get("url").asText()).path.substring(1).toUpperCase()
-    if (HttpMethod.requiresRequestBody(method)) {
-        val formNode = body.get("form")
-        formNode.size().should.equal(formBody.size)
-        for ((k, v) in formBody) {
-            formNode.has(k).should.be.`true`
-            formNode.get(k).textValue().should.equal(v)
-        }
-    }
-}
-
-fun createTestRequestBuilder(method: String): HttpRequest.Builder {
-    val b = HttpRequest.Builder()
-        .url("https://httpbin.org/${method.toLowerCase()}")
-        .header(otherHeader.first, otherHeader.second)
-
-    if (HttpMethod.requiresRequestBody(method.toUpperCase()))
-        b.method(method, formBody)
-    else
-        b.method(method)
-
-    return b
-}
+data class HttpBinResponse(
+    val headers: Map<String, String>,
+    val args: Map<String, String>,
+    val url: String,
+    val form: Map<String, String>
+)

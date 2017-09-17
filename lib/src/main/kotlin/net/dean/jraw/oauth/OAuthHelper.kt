@@ -4,6 +4,9 @@ import net.dean.jraw.RedditClient
 import net.dean.jraw.http.HttpRequest
 import net.dean.jraw.http.NetworkAdapter
 import net.dean.jraw.http.NetworkException
+import net.dean.jraw.models.OAuthData
+import net.dean.jraw.models.internal.OAuthDataJson
+import java.util.*
 
 /**
  * This class helps create authenticated RedditClient instances.
@@ -44,7 +47,7 @@ object OAuthHelper {
             throw IllegalArgumentException("This function is for script apps only")
 
         try {
-            return http.execute(HttpRequest.Builder()
+             return http.execute(HttpRequest.Builder()
                 .post(mapOf(
                     "grant_type" to "password",
                     "username" to creds.username!!,
@@ -52,7 +55,7 @@ object OAuthHelper {
                 ))
                 .url("https://www.reddit.com/api/v1/access_token")
                 .basicAuth(creds.clientId to creds.clientSecret)
-                .build()).deserialize()
+                .build()).deserialize<OAuthDataJson>().toOAuthData()
         } catch (e: NetworkException) {
             if (e.res.code == 401)
                 throw IllegalArgumentException("Invalid credentials", e)
@@ -77,6 +80,6 @@ object OAuthHelper {
             .url("https://www.reddit.com/api/v1/access_token")
             .post(postBody)
             .basicAuth(creds.clientId to creds.clientSecret)
-            .build()).deserialize()
+            .build()).deserialize<OAuthDataJson>().toOAuthData()
     }
 }

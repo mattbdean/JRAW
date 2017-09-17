@@ -1,11 +1,10 @@
 package net.dean.jraw.references
 
-import com.fasterxml.jackson.module.kotlin.treeToValue
 import net.dean.jraw.*
-import net.dean.jraw.JrawUtils.jackson
-import net.dean.jraw.http.NetworkException
+import net.dean.jraw.databind.Enveloped
 import net.dean.jraw.models.Comment
 import net.dean.jraw.models.VoteDirection
+import net.dean.jraw.models.internal.GenericJsonResponse
 
 /**
  * Base class for References that can be publicly voted upon and saved (in essence, Submissions and Comments).
@@ -59,7 +58,7 @@ abstract class PublicContributionReference internal constructor(reddit: RedditCl
     /**
      * Saves or unsaves this model
      *
-     * @see net.dean.jraw.models.PublicContribution.saved
+     * @see net.dean.jraw.models.PublicContribution.isSaved
      */
     @EndpointImplementation(Endpoint.POST_SAVE, Endpoint.POST_UNSAVE)
     fun setSaved(saved: Boolean) {
@@ -71,7 +70,7 @@ abstract class PublicContributionReference internal constructor(reddit: RedditCl
     /**
      * Creates a comment in response to this submission of comment
      *
-     * @throws ApiException Most commonly for ratelimiting.
+     * @throws net.dean.jraw.ApiException Most commonly for ratelimiting.
      */
     @Throws(ApiException::class)
     @EndpointImplementation(Endpoint.POST_COMMENT)
@@ -83,16 +82,12 @@ abstract class PublicContributionReference internal constructor(reddit: RedditCl
                     "text" to text,
                     "thing_id" to fullName
                 ))
-        }
+        }.deserialize<GenericJsonResponse>()
 
-        // For whatever reason reddit returns a 200 OK response when we're being ratelimited. Since RedditClient only
-        // checks for errors for non-successful status codes, we have to manually check for errors here
-        val errorStub = jackson.treeToValue(res.json, RedditExceptionStub::class.java)
-        if (errorStub != null)
-            throw errorStub.create(NetworkException(res))
+        val comment = (res.json?.data?.get("things") as? List<*>)?.get(0) ?:
+            throw IllegalArgumentException("Unexpected JSON structure")
 
-        // Deserialize specific JSON node to a Comment
-        return jackson.treeToValue(JrawUtils.navigateJson(res.json, "json", "data", "things", 0))
+        return JrawUtils.adapter<Comment>(Enveloped::class.java).fromJsonValue(comment)!!
     }
 
     @EndpointImplementation(Endpoint.POST_DEL)

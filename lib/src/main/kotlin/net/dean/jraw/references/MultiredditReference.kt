@@ -3,14 +3,14 @@ package net.dean.jraw.references
 import net.dean.jraw.Endpoint
 import net.dean.jraw.EndpointImplementation
 import net.dean.jraw.JrawUtils
-import net.dean.jraw.JrawUtils.jackson
 import net.dean.jraw.JrawUtils.urlEncode
 import net.dean.jraw.RedditClient
 import net.dean.jraw.models.Multireddit
 import net.dean.jraw.models.MultiredditPatch
 import net.dean.jraw.models.Submission
+import net.dean.jraw.models.internal.LabeledMultiDescription
+import net.dean.jraw.models.internal.SubredditElement
 import net.dean.jraw.pagination.DefaultPaginator
-import net.dean.jraw.pagination.Paginator
 
 class MultiredditReference internal constructor(reddit: RedditClient, val username: String, val multiredditName: String) :
     AbstractReference<String>(reddit, multiPath(username, multiredditName)) {
@@ -29,9 +29,9 @@ class MultiredditReference internal constructor(reddit: RedditClient, val userna
         return reddit.request {
             it.endpoint(Endpoint.PUT_MULTI_MULTIPATH, multiPath)
                 .put(mapOf(
-                    "model" to JrawUtils.jackson.writeValueAsString(patch)
+                    "model" to JrawUtils.adapter<MultiredditPatch>().toJson(patch)
                 ))
-        }.deserialize()
+        }.deserializeEnveloped()
     }
 
     /** Gets a [Multireddit] instance that reflects this reference */
@@ -39,15 +39,15 @@ class MultiredditReference internal constructor(reddit: RedditClient, val userna
     fun about(): Multireddit {
         return reddit.request {
             it.endpoint(Endpoint.GET_MULTI_MULTIPATH, multiPath)
-        }.deserialize()
+        }.deserializeEnveloped()
     }
 
     /** Gets the multireddit description */
     @EndpointImplementation(Endpoint.GET_MULTI_MULTIPATH_DESCRIPTION)
     fun description(): String {
-        return JrawUtils.navigateJson(reddit.request {
+        return reddit.request {
             it.endpoint(Endpoint.GET_MULTI_MULTIPATH_DESCRIPTION, multiPath)
-        }.json, "data", "body_md").asText()
+        }.deserializeEnveloped<LabeledMultiDescription>().body
     }
 
     /** Updates the multireddit description */
@@ -57,7 +57,7 @@ class MultiredditReference internal constructor(reddit: RedditClient, val userna
         reddit.request {
             it.endpoint(Endpoint.PUT_MULTI_MULTIPATH_DESCRIPTION, multiPath)
                 .put(mapOf(
-                    "model" to JrawUtils.jackson.writeValueAsString(mapOf("body_md" to newDescription))
+                    "model" to JrawUtils.adapter<Map<String, String>>().toJson(mapOf("body_md" to newDescription))
                 ))
         }
     }
@@ -101,7 +101,7 @@ class MultiredditReference internal constructor(reddit: RedditClient, val userna
                     "to" to multiPath(reddit.requireAuthenticatedUser(), targetName)
                 ))
         }
-        return request.deserialize()
+        return request.deserializeEnveloped()
     }
 
     /**
@@ -109,7 +109,7 @@ class MultiredditReference internal constructor(reddit: RedditClient, val userna
      * this is a pretty useless method since right now it just returns what you already know.
      */
     @EndpointImplementation(Endpoint.GET_MULTI_MULTIPATH_R_SRNAME)
-    fun subredditInfo(sr: String): MultiredditPatch.SubredditElement {
+    fun subredditInfo(sr: String): SubredditElement {
         return reddit.request {
             it.endpoint(Endpoint.GET_MULTI_MULTIPATH_R_SRNAME, multiPath, sr)
                 .query(mapOf("expand_srs" to "true"))
@@ -123,7 +123,7 @@ class MultiredditReference internal constructor(reddit: RedditClient, val userna
         reddit.request {
             it.endpoint(Endpoint.PUT_MULTI_MULTIPATH_R_SRNAME, multiPath, sr)
                 .put(mapOf(
-                    "model" to jackson.writeValueAsString(MultiredditPatch.SubredditElement(sr))
+                    "model" to JrawUtils.adapter<SubredditElement>().toJson(SubredditElement.create(sr))
                 ))
         }
     }
@@ -139,7 +139,7 @@ class MultiredditReference internal constructor(reddit: RedditClient, val userna
     }
 
     fun posts(): DefaultPaginator.Builder<Submission> =
-        DefaultPaginator.Builder<Submission>(reddit, multiPath, sortingAlsoInPath = true)
+        DefaultPaginator.Builder.create<Submission>(reddit, multiPath, sortingAlsoInPath = true)
 
     companion object {
         @JvmStatic private fun multiPath(username: String, multiName: String) =

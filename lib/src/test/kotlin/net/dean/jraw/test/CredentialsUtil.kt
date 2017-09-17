@@ -1,9 +1,8 @@
 package net.dean.jraw.test
 
-import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.fasterxml.jackson.module.kotlin.readValue
+import net.dean.jraw.JrawUtils
 import net.dean.jraw.oauth.Credentials
+import okio.Okio
 import java.util.*
 
 object CredentialsUtil {
@@ -43,15 +42,16 @@ object CredentialsUtil {
 
     private fun getLocalCredentials(): TestingCredentials {
         try {
-            return jacksonObjectMapper().readValue<TestingCredentials>(getLocalCredentialStream())
+            val source = Okio.buffer(Okio.source(getLocalCredentialStream()))
+            return JrawUtils.moshi.adapter<TestingCredentials>(TestingCredentials::class.java).fromJson(source)!!
         } catch (e: Exception) {
-            // If there's an error in CredentialsUtil's init block, a NoClassDefFoundError will be thrown instead of the
-            // real cause, this error right here. Make sure the user knows about it.
-            if (e is MissingKotlinParameterException) {
-                System.err.println("credentials.json: missing property '${e.parameter.name}'")
-            } else {
-                System.err.println("${e.javaClass.name}: ${e.message}")
-            }
+//            // If there's an error in CredentialsUtil's init block, a NoClassDefFoundError will be thrown instead of the
+//            // real cause, this error right here. Make sure the user knows about it.
+//            if (e is MissingKotlinParameterException) {
+//                System.err.println("credentials.json: missing property '${e.parameter.name}'")
+//            } else {
+//            }
+            System.err.println("${e.javaClass.name}: ${e.message}")
             throw e
         }
     }

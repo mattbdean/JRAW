@@ -1,16 +1,15 @@
 package net.dean.jraw.references
 
-import com.fasterxml.jackson.module.kotlin.readValue
-import com.fasterxml.jackson.module.kotlin.treeToValue
+import com.squareup.moshi.Types
 import net.dean.jraw.*
 import net.dean.jraw.JrawUtils.urlEncode
-import net.dean.jraw.databind.ListingDeserializer
+import net.dean.jraw.databind.Enveloped
 import net.dean.jraw.models.Account
 import net.dean.jraw.models.Multireddit
 import net.dean.jraw.models.PublicContribution
 import net.dean.jraw.models.Trophy
+import net.dean.jraw.models.internal.TrophyList
 import net.dean.jraw.pagination.DefaultPaginator
-import net.dean.jraw.pagination.Paginator
 
 abstract class UserReference(reddit: RedditClient, val username: String) : AbstractReference<String>(reddit, username) {
     abstract val isSelf: Boolean
@@ -21,22 +20,20 @@ abstract class UserReference(reddit: RedditClient, val username: String) : Abstr
             it.path(if (isSelf) "/api/v1/me" else "/user/$username/about")
         }.body
 
-        // /api/v1/me doesn't encapsulate the data with a "kind" and "data" node, use our custom ObjectMapper instance
-        // when calling that endpoint
-        return (if (isSelf) jackson else JrawUtils.jackson).readValue(body)
+        // /api/v1/me returns an Account that isn't wrapped with the data/kind nodes
+        if (isSelf)
+            return JrawUtils.adapter<Account>().fromJson(body)!!
+        return JrawUtils.adapter<Account>(Enveloped::class.java).fromJson(body)!!
     }
 
     @EndpointImplementation(Endpoint.GET_ME_TROPHIES, Endpoint.GET_USER_USERNAME_TROPHIES)
     fun trophies(): List<Trophy> {
-        val json = reddit.request {
+        return reddit.request {
             if (isSelf)
                 it.endpoint(Endpoint.GET_ME_TROPHIES)
             else
                 it.endpoint(Endpoint.GET_USER_USERNAME_TROPHIES, username)
-        }.json
-
-        val trophies = JrawUtils.navigateJson(json, "data", "trophies")
-        return trophies.map { JrawUtils.jackson.treeToValue<Trophy>(it) }
+        }.deserializeEnveloped<TrophyList>().trophies
     }
 
     /**
@@ -61,7 +58,7 @@ abstract class UserReference(reddit: RedditClient, val username: String) : Abstr
     @EndpointImplementation(Endpoint.GET_USER_USERNAME_WHERE, type = MethodType.NON_BLOCKING_CALL)
     fun history(where: String): DefaultPaginator.Builder<PublicContribution<*>> {
         // Encode URLs to prevent accidental malformed URLs
-        return DefaultPaginator.Builder(reddit, "/user/${urlEncode(username)}/${urlEncode(where)}",
+        return DefaultPaginator.Builder.create(reddit, "/user/${urlEncode(username)}/${urlEncode(where)}",
             sortingAlsoInPath = false)
     }
 
@@ -78,17 +75,17 @@ abstract class UserReference(reddit: RedditClient, val username: String) : Abstr
      */
     @EndpointImplementation(Endpoint.GET_MULTI_MINE, Endpoint.GET_MULTI_USER_USERNAME)
     fun listMultis(): List<Multireddit> {
-        return reddit.request {
+        val res = reddit.request {
             if (isSelf) {
                 it.endpoint(Endpoint.GET_MULTI_MINE)
             } else {
                 it.endpoint(Endpoint.GET_MULTI_USER_USERNAME, subject)
             }
-        }.deserialize()
-    }
+        }
 
-    companion object {
-        private val jackson = JrawUtils.defaultObjectMapper()
-            .registerModule(ListingDeserializer.Module)
+        val type = Types.newParameterizedType(List::class.java, Multireddit::class.java)
+        val adapter = JrawUtils.moshi.adapter<List<Multireddit>>(type, Enveloped::class.java)
+
+        return res.deserializeWith(adapter)
     }
 }

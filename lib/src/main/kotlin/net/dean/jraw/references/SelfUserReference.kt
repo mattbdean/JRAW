@@ -1,17 +1,25 @@
 package net.dean.jraw.references
 
-import com.fasterxml.jackson.databind.type.TypeFactory
+import com.squareup.moshi.JsonAdapter
+import com.squareup.moshi.Types
 import net.dean.jraw.*
+import net.dean.jraw.databind.RedditModelEnvelope
 import net.dean.jraw.models.KarmaBySubreddit
 import net.dean.jraw.models.LiveThreadPatch
 import net.dean.jraw.models.MultiredditPatch
 import net.dean.jraw.models.Subreddit
+import net.dean.jraw.models.internal.GenericJsonResponse
 import net.dean.jraw.pagination.DefaultPaginator
 import okhttp3.MediaType
 import okhttp3.RequestBody
 
 class SelfUserReference(reddit: RedditClient) : UserReference(reddit, reddit.requireAuthenticatedUser()) {
     override val isSelf = true
+
+    private val prefsAdapter: JsonAdapter<Map<String, Any>> by lazy {
+        val type = Types.newParameterizedType(Map::class.java, String::class.java, Object::class.java)
+        JrawUtils.moshi.adapter<Map<String, Any>>(type)
+    }
 
     fun inbox() = InboxReference(reddit)
 
@@ -29,7 +37,7 @@ class SelfUserReference(reddit: RedditClient) : UserReference(reddit, reddit.req
     fun createMulti(name: String, patch: MultiredditPatch) = multi(name).createOrUpdate(patch)
 
     /**
-     * Creates a live thread. The property that's required to be non-null in the LiveThreadPatch is
+     * Creates a live thread. The only property that's required to be non-null in the LiveThreadPatch is
      * [title][LiveThreadPatch.title].
      *
      * @see LiveThreadReference.edit
@@ -39,9 +47,11 @@ class SelfUserReference(reddit: RedditClient) : UserReference(reddit, reddit.req
         val res = reddit.request {
             it.endpoint(Endpoint.POST_LIVE_CREATE)
                 .post(data.toRequestMap())
-        }
+        }.deserialize<GenericJsonResponse>()
 
-        val id = JrawUtils.navigateJson(res.json, "json", "data", "id").asText()
+        val id = res.json?.data?.get("id") as? String ?:
+            throw IllegalArgumentException("Could not find ID")
+
         return LiveThreadReference(reddit, id)
     }
 
@@ -53,7 +63,7 @@ class SelfUserReference(reddit: RedditClient) : UserReference(reddit, reddit.req
     @EndpointImplementation(Endpoint.GET_ME_PREFS)
     @Throws(ApiException::class)
     fun prefs(): Map<String, Any> {
-        return reddit.request { it.endpoint(Endpoint.GET_ME_PREFS) }.deserialize()
+        return reddit.request { it.endpoint(Endpoint.GET_ME_PREFS) }.deserializeWith(prefsAdapter)
     }
 
     /**
@@ -67,7 +77,7 @@ class SelfUserReference(reddit: RedditClient) : UserReference(reddit, reddit.req
     @EndpointImplementation(Endpoint.PATCH_ME_PREFS)
     @Throws(ApiException::class)
     fun patchPrefs(newPrefs: Map<String, Any>): Map<String, Any> {
-        val body = RequestBody.create(MediaType.parse("application/json"), JrawUtils.jackson.writeValueAsString(newPrefs))
+        val body = RequestBody.create(MediaType.parse("application/json"), prefsAdapter.toJson(newPrefs))
         return reddit.request { it.endpoint(Endpoint.PATCH_ME_PREFS).patch(body) }.deserialize()
     }
 
@@ -82,7 +92,7 @@ class SelfUserReference(reddit: RedditClient) : UserReference(reddit, reddit.req
      */
     @EndpointImplementation(Endpoint.GET_SUBREDDITS_MINE_WHERE, type = MethodType.NON_BLOCKING_CALL)
     fun subreddits(where: String): DefaultPaginator.Builder<Subreddit> {
-        return DefaultPaginator.Builder(reddit, "/subreddits/mine/${JrawUtils.urlEncode(where)}")
+        return DefaultPaginator.Builder.create(reddit, "/subreddits/mine/${JrawUtils.urlEncode(where)}")
     }
 
     /**
@@ -92,8 +102,16 @@ class SelfUserReference(reddit: RedditClient) : UserReference(reddit, reddit.req
     fun karma(): List<KarmaBySubreddit> {
         val json = reddit.request {
             it.endpoint(Endpoint.GET_ME_KARMA)
-        }.json.get("data")
-        val type = TypeFactory.defaultInstance().constructCollectionType(List::class.java, KarmaBySubreddit::class.java)
-        return JrawUtils.jackson.readValue(json.toString(), type)
+        }
+
+        // Our data is represented by RedditModelEnvelope<List<KarmaBySubreddit>> so we need to create a Type instance
+        // that reflects that
+        val listType = Types.newParameterizedType(List::class.java, KarmaBySubreddit::class.java)
+        val type = Types.newParameterizedType(RedditModelEnvelope::class.java, listType)
+
+        // Parse the envelope and return its data
+        val adapter = JrawUtils.moshi.adapter<RedditModelEnvelope<List<KarmaBySubreddit>>>(type)
+        val parsed = adapter.fromJson(json.body)!!
+        return parsed.data
     }
 }

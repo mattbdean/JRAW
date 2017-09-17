@@ -124,7 +124,6 @@ public class Cookbook {
 
             // The first message
             redditClient.me().inbox().markRead(true, first.getFullName());
-
         }
     }
 
