@@ -46,7 +46,7 @@ class UserReferenceTest : Spek({
         // Only these 'where' values are sortable
         val sortable = arrayOf("overview", "submitted", "comments")
 
-        fun testFirst(ref: UserReference, where: String) {
+        fun testFirst(ref: UserReference<*>, where: String) {
             var builder = ref.history(where)
                 .limit(5)
 
@@ -108,6 +108,14 @@ class UserReferenceTest : Spek({
         it("should list another users's public multis") {
             // /u/reddit has some official multireddits
             reddit.user("reddit").listMultis().should.have.size.above(0)
+        }
+    }
+
+    describe("flairOn") {
+        it("should equivalent to SubredditReference.otherUserFlair") {
+            val sr = "pics"
+            reddit.me().flairOn(sr).should.equal(reddit.subreddit(sr).selfUserFlair())
+            reddit.user("foo").flairOn(sr).should.equal(reddit.subreddit(sr).otherUserFlair("foo"))
         }
     }
 })

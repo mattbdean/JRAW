@@ -19,9 +19,10 @@ import java.util.*
  * what this class is for. It contains lazily-initiated objects that are created by heavily-rate limited API endpoints.
  */
 object SharedObjects {
+    val submittedSelfPostSubreddit = "jraw_testing2"
     val submittedSelfPost: SubmissionReference? by lazyRateLimited {
         reddit
-            .subreddit("jraw_testing2")
+            .subreddit(submittedSelfPostSubreddit)
             .submit(SubmissionKind.SELF, "test self post", "submitted ${Date()}", sendReplies = false)
     }
 

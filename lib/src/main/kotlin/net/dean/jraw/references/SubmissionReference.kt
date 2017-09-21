@@ -13,7 +13,7 @@ import net.dean.jraw.tree.RootCommentNode
 /**
  * A Reference to a link or text submitted to a subreddit, like [this one](https://www.reddit.com/comments/6afe8u).
  */
-class SubmissionReference internal constructor(reddit: RedditClient, id: String) :
+class SubmissionReference internal constructor(reddit: RedditClient, val id: String) :
     PublicContributionReference(reddit, id, KindConstants.SUBMISSION) {
 
     /**
@@ -78,4 +78,10 @@ class SubmissionReference internal constructor(reddit: RedditClient, id: String)
                 .post(mapOf("id" to KindConstants.SUBMISSION + "_" + subject))
         }
     }
+
+    /**
+     * Constructs a FlairReference for the submission. `subreddit` must be the subreddit where the submission was posted
+     * to.
+     */
+    fun flair(subreddit: String) = reddit.subreddit(subreddit).submissionFlair(id)
 }

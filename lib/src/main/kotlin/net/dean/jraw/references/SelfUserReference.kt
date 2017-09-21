@@ -13,7 +13,7 @@ import net.dean.jraw.pagination.DefaultPaginator
 import okhttp3.MediaType
 import okhttp3.RequestBody
 
-class SelfUserReference(reddit: RedditClient) : UserReference(reddit, reddit.requireAuthenticatedUser()) {
+class SelfUserReference(reddit: RedditClient) : UserReference<SelfUserFlairReference>(reddit, reddit.requireAuthenticatedUser()) {
     override val isSelf = true
 
     private val prefsAdapter: JsonAdapter<Map<String, Any>> by lazy {
@@ -114,4 +114,6 @@ class SelfUserReference(reddit: RedditClient) : UserReference(reddit, reddit.req
         val parsed = adapter.fromJson(json.body)!!
         return parsed.data
     }
+
+    override fun flairOn(subreddit: String): SelfUserFlairReference = SelfUserFlairReference(reddit, subreddit)
 }

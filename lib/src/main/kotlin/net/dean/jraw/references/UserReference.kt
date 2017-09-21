@@ -11,7 +11,7 @@ import net.dean.jraw.models.Trophy
 import net.dean.jraw.models.internal.TrophyList
 import net.dean.jraw.pagination.DefaultPaginator
 
-abstract class UserReference(reddit: RedditClient, val username: String) : AbstractReference<String>(reddit, username) {
+abstract class UserReference<T : UserFlairReference>(reddit: RedditClient, val username: String) : AbstractReference<String>(reddit, username) {
     abstract val isSelf: Boolean
 
     @EndpointImplementation(Endpoint.GET_ME, Endpoint.GET_USER_USERNAME_ABOUT)
@@ -88,4 +88,10 @@ abstract class UserReference(reddit: RedditClient, val username: String) : Abstr
 
         return res.deserializeWith(adapter)
     }
+
+    /**
+     * Returns a [UserFlairReference] for this user for the given subreddit. If this user is not the authenticated user,
+     * the authenticated must be a moderator of the given subreddit to access anything specific to this user.
+     */
+    abstract fun flairOn(subreddit: String): T
 }

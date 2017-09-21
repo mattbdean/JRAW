@@ -92,7 +92,28 @@ public abstract class Subreddit implements Created, Identifiable, Referenceable<
     @Nullable
     @Json(name = "user_is_subscriber") abstract Boolean getUserIsSubscriber();
 
-    // See https://github.com/google/auto/issues/275 on why we need thi
+    /**
+     * The text to be displayed by the user's name in all comments/submissions in this subreddit, or null if there is no
+     * authenticated user or selected flair.
+     */
+    @Nullable
+    @Json(name = "user_flair_text") public abstract String getUserFlairText();
+
+    /**
+     * Returns true if user flair for all users is enabled on this subreddit. Note that this value will always be false
+     * when there is no authenticated user.
+     */
+    @Json(name = "user_flair_enabled_in_sr") public abstract boolean isUserFlairGenerallyEnabled();
+
+    /** If the flair for this particular user is enabled */
+    @Nullable
+    @Json(name = "user_sr_flair_enabled") abstract Boolean getUserFlairEnabled();
+
+    public final boolean isFlairEnabledForUser() {
+        return getUserFlairEnabled() != null && getUserFlairEnabled();
+    }
+
+    // See https://github.com/google/auto/issues/275 on why we need this
     public final boolean isUserMuted() { return getUserIsMuted() != null && getUserIsMuted(); }
     public final boolean isUserBanned() { return getUserIsBanned() != null && getUserIsBanned(); }
     public final boolean isUserContributor() { return getUserIsContributor() != null && getUserIsContributor(); }

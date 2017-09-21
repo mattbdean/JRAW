@@ -116,7 +116,7 @@ class SubmissionReferenceTest : Spek({
             // should be a thread continuation instead of a normal MoreChildren.
             for (reply in comments.replies) {
                 reply.moreChildren.should.not.be.`null`
-                reply.moreChildren!!.isThreadContinuation().should.be.`true`
+                reply.moreChildren!!.isThreadContinuation.should.be.`true`
             }
         }
 

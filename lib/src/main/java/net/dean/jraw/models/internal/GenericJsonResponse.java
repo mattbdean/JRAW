@@ -9,7 +9,7 @@ import net.dean.jraw.RedditException;
 import net.dean.jraw.http.NetworkException;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -44,10 +44,8 @@ public abstract class GenericJsonResponse implements RedditExceptionStub<RedditE
             // We only really care about the first error and since there's rarely a time where there are more than one
             // errors being returned, it doesn't matter anyway
             List<String> error = getJson().errors.get(0);
-            // TODO
-            if (error.size() > 2)
-                throw new IllegalArgumentException(error.toString());
-            return new ApiException(error.get(0), error.get(1), new ArrayList<String>(), cause);
+            String relevantParameter = error.size() > 2 ? error.get(2) : null;
+            return new ApiException(error.get(0), error.get(1), Collections.singletonList(relevantParameter), cause);
         }
 
         return null;

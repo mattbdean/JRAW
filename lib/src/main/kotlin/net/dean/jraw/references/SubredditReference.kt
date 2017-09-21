@@ -1,6 +1,8 @@
 package net.dean.jraw.references
 
+import com.squareup.moshi.Types
 import net.dean.jraw.*
+import net.dean.jraw.models.Flair
 import net.dean.jraw.models.Submission
 import net.dean.jraw.models.SubmissionKind
 import net.dean.jraw.models.Subreddit
@@ -108,5 +110,52 @@ class SubredditReference internal constructor(reddit: RedditClient, subreddit: S
         reddit.request {
             it.endpoint(Endpoint.POST_SUBSCRIBE).post(body)
         }
+    }
+
+    /**
+     * Lists all possible flairs for users. Requires an authenticated user. Will return nothing if flair is disabled on
+     * the subreddit, the user cannot set their own flair, or they are not a moderator that can set flair.
+     *
+     * @see FlairReference.updateTo
+     */
+    @EndpointImplementation(Endpoint.GET_USER_FLAIR)
+    fun userFlairOptions(): List<Flair> = requestFlair("user")
+
+    /**
+     * Lists all possible flairs for submissions to this subreddit. Requires an authenticated user. Will return nothing
+     * if the user cannot set their own link flair and they are not a moderator that can set flair.
+     *
+     * @see FlairReference.updateTo
+     */
+    @EndpointImplementation(Endpoint.GET_LINK_FLAIR)
+    fun linkFlairOptions(): List<Flair> = requestFlair("link")
+
+    private fun requestFlair(type: String): List<Flair> {
+        return reddit.request {
+            it.path("/r/${JrawUtils.urlEncode(subject)}/api/${type}_flair")
+        }.deserializeWith(JrawUtils.moshi.adapter(listOfFlairsType))
+    }
+
+    /**
+     * Returns a UserFlairReference for a user.
+     *
+     * Equivalent to `redditClient.user(name).flairOn(subject)`.
+     */
+    fun otherUserFlair(name: String) = reddit.user(name).flairOn(subject)
+
+    /**
+     * Returns a UserFlairReference for the authenticated user.
+     *
+     * Equivalent to `redditClient.me().flairOn(subject)`.
+     */
+    fun selfUserFlair() = reddit.me().flairOn(subject)
+
+    /**
+     * Returns a SubmissionFlairReference for the given submission full name.
+     */
+    fun submissionFlair(fullName: String) = SubmissionFlairReference(reddit, subject, fullName)
+
+    companion object {
+        private val listOfFlairsType = Types.newParameterizedType(List::class.java, Flair::class.java)
     }
 }
