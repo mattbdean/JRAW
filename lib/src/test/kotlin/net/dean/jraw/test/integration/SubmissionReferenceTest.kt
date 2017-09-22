@@ -90,7 +90,7 @@ class SubmissionReferenceTest : Spek({
     describe("comments") {
         it("should request comments for the given submission") {
             val root = refWithComments.comments()
-            root.subject.id.should.equal(refWithComments.subject)
+            root.subject.id.should.equal(refWithComments.id)
             root.replies.should.have.size.above(0)
         }
 

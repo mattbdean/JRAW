@@ -13,7 +13,7 @@ import net.dean.jraw.tree.RootCommentNode
 /**
  * A Reference to a link or text submitted to a subreddit, like [this one](https://www.reddit.com/comments/6afe8u).
  */
-class SubmissionReference internal constructor(reddit: RedditClient, val id: String) :
+class SubmissionReference internal constructor(reddit: RedditClient, id: String) :
     PublicContributionReference(reddit, id, KindConstants.SUBMISSION) {
 
     /**
@@ -43,11 +43,11 @@ class SubmissionReference internal constructor(reddit: RedditClient, val id: Str
             .filterValuesNotNull()
 
         val settings = CommentTreeSettings(
-            submissionId = subject,
+            submissionId = id,
             sort = spec.sort
         )
 
-        val data: SubmissionData = reddit.request { it.path("/comments/$subject").query(query) }.deserialize()
+        val data: SubmissionData = reddit.request { it.path("/comments/$id").query(query) }.deserialize()
         return RootCommentNode(data.submissions[0], data.comments, settings)
     }
 
@@ -75,7 +75,7 @@ class SubmissionReference internal constructor(reddit: RedditClient, val id: Str
         reddit.request {
             it.endpoint(if (hidden) Endpoint.POST_HIDE else Endpoint.POST_UNHIDE)
                 // 'id' requires a full name
-                .post(mapOf("id" to KindConstants.SUBMISSION + "_" + subject))
+                .post(mapOf("id" to KindConstants.SUBMISSION + "_" + id))
         }
     }
 

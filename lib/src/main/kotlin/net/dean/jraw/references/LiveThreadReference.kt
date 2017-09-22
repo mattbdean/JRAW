@@ -11,11 +11,11 @@ import net.dean.jraw.pagination.BarebonesPaginator
 import net.dean.jraw.websocket.ReadOnlyWebSocketHelper
 import okhttp3.WebSocketListener
 
-class LiveThreadReference internal constructor(reddit: RedditClient, id: String) : AbstractReference<String>(reddit, id) {
+class LiveThreadReference internal constructor(reddit: RedditClient, val id: String) : AbstractReference(reddit) {
     @EndpointImplementation(Endpoint.GET_LIVE_THREAD_ABOUT)
     fun about(): LiveThread {
         return reddit.request {
-            it.endpoint(Endpoint.GET_LIVE_THREAD_ABOUT, JrawUtils.urlEncode(subject))
+            it.endpoint(Endpoint.GET_LIVE_THREAD_ABOUT, JrawUtils.urlEncode(id))
         }.deserializeEnveloped()
     }
 
@@ -24,7 +24,7 @@ class LiveThreadReference internal constructor(reddit: RedditClient, id: String)
      */
     @EndpointImplementation(Endpoint.GET_LIVE_THREAD)
     fun latestUpdates(): BarebonesPaginator.Builder<LiveUpdate> =
-        BarebonesPaginator.Builder.create(reddit, "/live/${JrawUtils.urlEncode(subject)}")
+        BarebonesPaginator.Builder.create(reddit, "/live/${JrawUtils.urlEncode(id)}")
 
     fun liveUpdates(listener: WebSocketListener): ReadOnlyWebSocketHelper {
         val url = about().websocketUrl ?: throw IllegalStateException("Live thread is not live")
@@ -42,7 +42,7 @@ class LiveThreadReference internal constructor(reddit: RedditClient, id: String)
     @EndpointImplementation(Endpoint.POST_LIVE_THREAD_EDIT)
     fun edit(data: LiveThreadPatch) {
         reddit.request {
-            it.endpoint(Endpoint.POST_LIVE_THREAD_EDIT, subject)
+            it.endpoint(Endpoint.POST_LIVE_THREAD_EDIT, id)
                 .post(data.toRequestMap())
         }
     }
@@ -51,7 +51,7 @@ class LiveThreadReference internal constructor(reddit: RedditClient, id: String)
     @EndpointImplementation(Endpoint.POST_LIVE_THREAD_UPDATE)
     fun postUpdate(text: String) {
         reddit.request {
-            it.endpoint(Endpoint.POST_LIVE_THREAD_UPDATE, subject)
+            it.endpoint(Endpoint.POST_LIVE_THREAD_UPDATE, id)
                 .post(mapOf(
                     "api_type" to "json",
                     "body" to text
@@ -71,7 +71,7 @@ class LiveThreadReference internal constructor(reddit: RedditClient, id: String)
     private fun strikeOrDeleteUpdate(fullName: String, delete: Boolean) {
         val endpoint = if (delete) Endpoint.POST_LIVE_THREAD_DELETE_UPDATE else Endpoint.POST_LIVE_THREAD_STRIKE_UPDATE
         reddit.request {
-            it.endpoint(endpoint, subject)
+            it.endpoint(endpoint, id)
                 .post(mapOf(
                     "api_type" to "json",
                     "id" to fullName
@@ -86,7 +86,7 @@ class LiveThreadReference internal constructor(reddit: RedditClient, id: String)
     @EndpointImplementation(Endpoint.POST_LIVE_THREAD_CLOSE_THREAD)
     fun close() {
         reddit.request {
-            it.endpoint(Endpoint.POST_LIVE_THREAD_CLOSE_THREAD, subject)
+            it.endpoint(Endpoint.POST_LIVE_THREAD_CLOSE_THREAD, id)
                 .post(mapOf("api_type" to "json"))
         }
     }

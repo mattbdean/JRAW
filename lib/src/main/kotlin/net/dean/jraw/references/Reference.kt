@@ -16,10 +16,4 @@ package net.dean.jraw.references
  * All References **must** have internal constructors and be instantiated by [net.dean.jraw.RedditClient], other
  * References, or models that inherit [Referenceable].
  */
-interface Reference<out T> {
-    /**
-     * What this Reference is all about. Should be unique among other references of the same type. For example, two
-     * [SubredditReference]s with the subject "pics" should be functionally equivalent to another.
-     */
-    val subject: T
-}
+interface Reference

@@ -13,7 +13,7 @@ import net.dean.jraw.pagination.DefaultPaginator
 import okhttp3.MediaType
 import okhttp3.RequestBody
 
-sealed class UserReference<out T : UserFlairReference>(reddit: RedditClient, val username: String) : AbstractReference<String>(reddit, username) {
+sealed class UserReference<out T : UserFlairReference>(reddit: RedditClient, val username: String) : AbstractReference(reddit) {
     abstract val isSelf: Boolean
 
     @EndpointImplementation(Endpoint.GET_ME, Endpoint.GET_USER_USERNAME_ABOUT)
@@ -67,7 +67,7 @@ sealed class UserReference<out T : UserFlairReference>(reddit: RedditClient, val
     /**
      * Creates a [MultiredditReference] for a multireddit that belongs to this user.
      */
-    fun multi(name: String) = MultiredditReference(reddit, subject, name)
+    fun multi(name: String) = MultiredditReference(reddit, username, name)
 
     /**
      * Lists the multireddits this client is able to view.
@@ -81,7 +81,7 @@ sealed class UserReference<out T : UserFlairReference>(reddit: RedditClient, val
             if (isSelf) {
                 it.endpoint(Endpoint.GET_MULTI_MINE)
             } else {
-                it.endpoint(Endpoint.GET_MULTI_USER_USERNAME, subject)
+                it.endpoint(Endpoint.GET_MULTI_USER_USERNAME, username)
             }
         }
 

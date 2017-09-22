@@ -13,10 +13,10 @@ import net.dean.jraw.models.internal.SubredditElement
 import net.dean.jraw.pagination.DefaultPaginator
 
 class MultiredditReference internal constructor(reddit: RedditClient, val username: String, val multiredditName: String) :
-    AbstractReference<String>(reddit, multiPath(username, multiredditName)) {
+    AbstractReference(reddit) {
 
-    /** Alias to [subject] */
-    val multiPath = subject
+    /** The path relative to `reddit.com/` that this multireddit can be accessed with. No leading slash. */
+    val multiPath = multiPath(username, multiredditName)
 
     /** Alias to [createOrUpdate] for the sake of semantics */
     fun update(patch: MultiredditPatch) = createOrUpdate(patch)
@@ -139,7 +139,7 @@ class MultiredditReference internal constructor(reddit: RedditClient, val userna
     }
 
     fun posts(): DefaultPaginator.Builder<Submission> =
-        DefaultPaginator.Builder.create<Submission>(reddit, multiPath, sortingAlsoInPath = true)
+        DefaultPaginator.Builder.create(reddit, multiPath, sortingAlsoInPath = true)
 
     companion object {
         @JvmStatic private fun multiPath(username: String, multiName: String) =

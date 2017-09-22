@@ -12,10 +12,10 @@ import net.dean.jraw.models.internal.GenericJsonResponse
  * Provides methods for [upvoting][upvote], [downvoting][downvote], and [removing the current vote][unvote], and also
  * one method for [manually setting the vote direction by enum value][setVote].
  */
-abstract class PublicContributionReference internal constructor(reddit: RedditClient, id: String, kindPrefix: String) :
-    AbstractReference<String>(reddit, id) {
+abstract class PublicContributionReference internal constructor(reddit: RedditClient, val id: String, kindPrefix: String) :
+    AbstractReference(reddit) {
 
-    val fullName = "${kindPrefix}_$subject"
+    val fullName = "${kindPrefix}_$id"
 
     /** Equivalent to `setVote(VoteDirection.UP)` */
     fun upvote() { setVote(VoteDirection.UP) }

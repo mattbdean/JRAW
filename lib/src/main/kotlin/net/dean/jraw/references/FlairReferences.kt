@@ -11,7 +11,12 @@ import net.dean.jraw.models.internal.FlairSelector
 /**
  * A FlairReference is a reference to the flair for a user or submission on a particular subreddit.
  */
-sealed class FlairReference constructor(reddit: RedditClient, val subreddit: String, subject: String) : AbstractReference<String>(reddit, subject) {
+sealed class FlairReference(
+    reddit: RedditClient,
+    val subreddit: String,
+    /** The name of a user or the full name of a submission */
+    val subject: String
+) : AbstractReference(reddit) {
     /** Returns a reference to the subreddit where this flair is being observed/modified */
     fun subreddit(): SubredditReference = reddit.subreddit(subreddit)
 
@@ -56,7 +61,6 @@ sealed class FlairReference constructor(reddit: RedditClient, val subreddit: Str
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is FlairReference) return false
-        if (!super.equals(other)) return false
 
         return subreddit == other.subreddit && subject == other.subject
     }

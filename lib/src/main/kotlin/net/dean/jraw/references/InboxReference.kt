@@ -4,7 +4,7 @@ import net.dean.jraw.*
 import net.dean.jraw.models.Message
 import net.dean.jraw.pagination.BarebonesPaginator
 
-class InboxReference internal constructor(reddit: RedditClient) : AbstractReference<Nothing?>(reddit, null) {
+class InboxReference internal constructor(reddit: RedditClient) : AbstractReference(reddit) {
     /**
      * Creates a [BarebonesPaginator.Builder] to view messages.
      *

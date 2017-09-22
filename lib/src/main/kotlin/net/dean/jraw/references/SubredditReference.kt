@@ -16,13 +16,13 @@ import net.dean.jraw.tree.RootCommentNode
  *
  * @constructor Creates a new SubredditReference for the given subreddit. Do not include the "/r/" prefix (e.g. "pics")
  */
-class SubredditReference internal constructor(reddit: RedditClient, subreddit: String) : AbstractReference<String>(reddit, subreddit) {
+class SubredditReference internal constructor(reddit: RedditClient, val subreddit: String) : AbstractReference(reddit) {
 
     /**
      * Returns a [Subreddit] instance for this reference
      */
     @EndpointImplementation(Endpoint.GET_SUBREDDIT_ABOUT)
-    fun about(): Subreddit = reddit.request { it.path("/r/$subject/about") }.deserializeEnveloped()
+    fun about(): Subreddit = reddit.request { it.path("/r/$subreddit/about") }.deserializeEnveloped()
 
     /**
      * Creates a new [DefaultPaginator.Builder] to iterate over this subreddit's posts. Not a blocking call.
@@ -31,7 +31,7 @@ class SubredditReference internal constructor(reddit: RedditClient, subreddit: S
         Endpoint.GET_HOT, Endpoint.GET_NEW, Endpoint.GET_RISING, Endpoint.GET_SORT,
         type = MethodType.NON_BLOCKING_CALL
     )
-    fun posts() = DefaultPaginator.Builder.create<Submission>(reddit, "/r/$subject", sortingAlsoInPath = true)
+    fun posts() = DefaultPaginator.Builder.create<Submission>(reddit, "/r/$subreddit", sortingAlsoInPath = true)
 
     /**
      * Gets a random submission from this subreddit. Although it is not marked with [EndpointImplementation], this
@@ -40,7 +40,7 @@ class SubredditReference internal constructor(reddit: RedditClient, subreddit: S
      * @see RedditClient.randomSubreddit
      */
     fun randomSubmission(): RootCommentNode {
-        val data: SubmissionData = reddit.request { it.path("/r/${JrawUtils.urlEncode(subject)}/random") }.deserialize()
+        val data: SubmissionData = reddit.request { it.path("/r/${JrawUtils.urlEncode(subreddit)}/random") }.deserialize()
         return RootCommentNode(data.submissions[0], data.comments, settings = null)
     }
 
@@ -59,7 +59,7 @@ class SubredditReference internal constructor(reddit: RedditClient, subreddit: S
             "kind" to kind.name.toLowerCase(),
             "resubmit" to "false",
             "sendreplies" to sendReplies.toString(),
-            "sr" to subject,
+            "sr" to subreddit,
             "title" to title
         )
 
@@ -82,7 +82,7 @@ class SubredditReference internal constructor(reddit: RedditClient, subreddit: S
     @EndpointImplementation(Endpoint.GET_SUBMIT_TEXT)
     fun submitText(): String {
         return reddit.request {
-            it.path("/r/{subreddit}/api/submit_text", subject)
+            it.path("/r/{subreddit}/api/submit_text", subreddit)
         }.deserialize<Map<String, String>>().getOrElse("submit_text") {
             throw IllegalArgumentException("Unexpected response: no `submit_text` key")
         }
@@ -97,7 +97,7 @@ class SubredditReference internal constructor(reddit: RedditClient, subreddit: S
     @EndpointImplementation(Endpoint.POST_SUBSCRIBE)
     fun setSubscribed(subscribe: Boolean) {
         val body = mutableMapOf(
-            "sr_name" to subject,
+            "sr_name" to subreddit,
             "action" to if (subscribe) "sub" else "unsub"
         )
 
@@ -132,28 +132,28 @@ class SubredditReference internal constructor(reddit: RedditClient, subreddit: S
 
     private fun requestFlair(type: String): List<Flair> {
         return reddit.request {
-            it.path("/r/${JrawUtils.urlEncode(subject)}/api/${type}_flair")
+            it.path("/r/${JrawUtils.urlEncode(subreddit)}/api/${type}_flair")
         }.deserializeWith(JrawUtils.moshi.adapter(listOfFlairsType))
     }
 
     /**
      * Returns a UserFlairReference for a user.
      *
-     * Equivalent to `redditClient.user(name).flairOn(subject)`.
+     * Equivalent to `redditClient.user(name).flairOn(subreddit)`.
      */
-    fun otherUserFlair(name: String) = reddit.user(name).flairOn(subject)
+    fun otherUserFlair(name: String) = reddit.user(name).flairOn(subreddit)
 
     /**
      * Returns a UserFlairReference for the authenticated user.
      *
-     * Equivalent to `redditClient.me().flairOn(subject)`.
+     * Equivalent to `redditClient.me().flairOn(subreddit)`.
      */
-    fun selfUserFlair() = reddit.me().flairOn(subject)
+    fun selfUserFlair() = reddit.me().flairOn(subreddit)
 
     /**
      * Returns a SubmissionFlairReference for the given submission full name.
      */
-    fun submissionFlair(fullName: String) = SubmissionFlairReference(reddit, subject, fullName)
+    fun submissionFlair(fullName: String) = SubmissionFlairReference(reddit, subreddit, fullName)
 
     companion object {
         private val listOfFlairsType = Types.newParameterizedType(List::class.java, Flair::class.java)
