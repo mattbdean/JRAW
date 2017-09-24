@@ -2,10 +2,7 @@ package net.dean.jraw.references
 
 import com.squareup.moshi.Types
 import net.dean.jraw.*
-import net.dean.jraw.models.Flair
-import net.dean.jraw.models.Submission
-import net.dean.jraw.models.SubmissionKind
-import net.dean.jraw.models.Subreddit
+import net.dean.jraw.models.*
 import net.dean.jraw.models.internal.GenericJsonResponse
 import net.dean.jraw.models.internal.SubmissionData
 import net.dean.jraw.pagination.DefaultPaginator
@@ -154,6 +151,17 @@ class SubredditReference internal constructor(reddit: RedditClient, val subreddi
      * Returns a SubmissionFlairReference for the given submission full name.
      */
     fun submissionFlair(fullName: String) = SubmissionFlairReference(reddit, subreddit, fullName)
+
+    /**
+     * Returns the moderator-created rules for the subreddit. Users can report things in this subreddit using the String
+     * specified in [SubredditRule.getViolationReason]
+     */
+    @EndpointImplementation(Endpoint.GET_SUBREDDIT_ABOUT_RULES)
+    fun rules(): Ruleset {
+        return reddit.request {
+            it.path("/r/$subreddit/about/rules")
+        }.deserialize()
+    }
 
     fun wiki() = WikiReference(reddit, subreddit)
 

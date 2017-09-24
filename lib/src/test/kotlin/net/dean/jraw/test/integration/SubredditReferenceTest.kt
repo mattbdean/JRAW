@@ -65,4 +65,12 @@ class SubredditReferenceTest : Spek({
             reddit.subreddit(srName).userFlairOptions().should.have.size.above(0)
         }
     }
+
+    describe("rules") {
+        it("should return a Ruleset") {
+            val rules = reddit.subreddit("jraw_testing2").rules()
+            rules.subredditRules.should.have.size.above(0)
+            rules.siteRules.should.have.size.above(0)
+        }
+    }
 })
