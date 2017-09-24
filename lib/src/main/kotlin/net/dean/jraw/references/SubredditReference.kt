@@ -155,6 +155,8 @@ class SubredditReference internal constructor(reddit: RedditClient, val subreddi
      */
     fun submissionFlair(fullName: String) = SubmissionFlairReference(reddit, subreddit, fullName)
 
+    fun wiki() = WikiReference(reddit, subreddit)
+
     companion object {
         private val listOfFlairsType = Types.newParameterizedType(List::class.java, Flair::class.java)
     }

@@ -4,12 +4,12 @@ import com.squareup.moshi.Types
 import net.dean.jraw.JrawUtils
 import net.dean.jraw.RedditClient
 import net.dean.jraw.databind.DynamicEnveloped
-import net.dean.jraw.databind.Enveloped
 import net.dean.jraw.databind.RedditModel
 import net.dean.jraw.http.HttpRequest
 import net.dean.jraw.models.Listing
 import net.dean.jraw.models.Sorting
 import net.dean.jraw.models.TimePeriod
+import net.dean.jraw.models.WikiRevision
 
 abstract class Paginator<T, out B : Paginator.Builder<T>> protected constructor(
     val reddit: RedditClient,
@@ -33,8 +33,8 @@ abstract class Paginator<T, out B : Paginator.Builder<T>> protected constructor(
         get() = _pageNumber
 
     override fun next(): Listing<T> {
-        val envelopeType = if (requiresDynamicDeserialization) DynamicEnveloped::class.java else Enveloped::class.java
-        val adapter = JrawUtils.moshi.adapter<Listing<T>>(Types.newParameterizedType(Listing::class.java, clazz), envelopeType)
+        val adapter = JrawUtils.moshi.adapter<Listing<T>>(Types.newParameterizedType(Listing::class.java, clazz),
+            DynamicEnveloped::class.java)
         _current = reddit.request(createNextRequest()).deserializeWith(adapter)
         _pageNumber++
 
@@ -94,5 +94,10 @@ abstract class Paginator<T, out B : Paginator.Builder<T>> protected constructor(
 
         @JvmField val DEFAULT_SORTING = Sorting.NEW
         @JvmField val DEFAULT_TIME_PERIOD = TimePeriod.DAY
+
+        /** A List of classes that do not have the [RedditModel] attribute but should be deserialized statically */
+        private val dynamicDeserializationExemptions: List<Class<*>> = listOf(
+            WikiRevision::class.java
+        )
     }
 }

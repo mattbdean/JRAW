@@ -74,7 +74,9 @@ class RedditModelAdapterFactory(
             if (rawType == Listing::class.java) {
                 // If we have Listing<T>, then T is the upper bound for all children
                 val upperBound = Types.getRawType((type as ParameterizedType).actualTypeArguments.first())
-                return DynamicListingAdapter(registry, moshi, upperBound)
+                return DynamicListingAdapter(registry, moshi, upperBound,
+                    childrenAreEnveloped = upperBound.isAnnotationPresent(RedditModel::class.java) &&
+                        upperBound.getAnnotation(RedditModel::class.java).enveloped)
             }
 
             // Messages are handled a bit differently in the JSON
@@ -96,7 +98,7 @@ class RedditModelAdapterFactory(
         val envelope = Types.newParameterizedType(RedditModelEnvelope::class.java, type)
         val delegate = moshi.adapter<RedditModelEnvelope<*>>(envelope, delegateAnnotations)
 
-        return StaticAdapter(registry, delegate)
+        return StaticAdapter(registry, delegate).nullSafe()
     }
 
     /**
@@ -189,8 +191,12 @@ class RedditModelAdapterFactory(
      * Dynamically reads a Listing structure and ensures that all children are the same class or a subclass of
      * [upperBound].
      */
-    private class DynamicListingAdapter(registry: Map<String, Class<*>>, moshi: Moshi, upperBound: Class<*>) :
-        DynamicAdapter<Listing<Any>>(registry, moshi, upperBound) {
+    private class DynamicListingAdapter(
+        registry: Map<String, Class<*>>,
+        moshi: Moshi,
+        upperBound: Class<*>,
+        val childrenAreEnveloped: Boolean
+    ) : DynamicAdapter<Listing<Any>>(registry, moshi, upperBound) {
 
         override fun fromJson(reader: JsonReader): Listing<Any>? {
             val root = reader.readJsonValue()
@@ -208,21 +214,27 @@ class RedditModelAdapterFactory(
             val after = data["after"] as String?
             val children = expectType<List<Any>>(data["children"], "children")
 
-            val mapped = children.map {
-                val childRoot = expectType<Map<String, Any>>(it, "it")
-                val childKind = expectType<String>(childRoot["kind"], "childKind")
-                val clazz = registry[childKind] ?:
-                    throw IllegalArgumentException("No registered class for kind '$childKind'")
+            val mapped = children.mapIndexed { index, it ->
+                val childRoot = expectType<Map<String, Any>>(it, "children[$index]")
 
-                val envelopeType = Types.newParameterizedType(RedditModelEnvelope::class.java, clazz)
-                val adapter = moshi.adapter<RedditModelEnvelope<*>>(envelopeType)
+                if (childrenAreEnveloped) {
+                    val childKind = expectType<String>(childRoot["kind"], "childKind")
+                    val clazz = registry[childKind] ?:
+                        throw IllegalArgumentException("No registered class for kind '$childKind'")
 
-                ensureInBounds(adapter.fromJsonValue(childRoot)?.data)
+                    val envelopeType = Types.newParameterizedType(RedditModelEnvelope::class.java, clazz)
+                    val adapter = moshi.adapter<RedditModelEnvelope<*>>(envelopeType)
+
+                    ensureInBounds(adapter.fromJsonValue(childRoot)?.data)
+                } else {
+                    // No type information included in the JSON, we have to assume the type is upperBound
+                    val adapter = moshi.adapter<Any>(upperBound)
+                    ensureInBounds(adapter.fromJsonValue(childRoot))
+                }
             }
 
             return Listing.create(after, mapped)
         }
-
     }
 
     companion object {

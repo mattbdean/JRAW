@@ -17,4 +17,5 @@ object KindConstants {
 
     const val TROPHY_LIST = "TrophyList"
     const val LABELED_MULTI_DESC = "LabeledMultiDescription"
+    const val WIKI_PAGE = "wikipage"
 }
