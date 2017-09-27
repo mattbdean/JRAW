@@ -11,7 +11,7 @@ import org.jetbrains.spek.api.dsl.it
 import java.net.URL
 import kotlin.properties.Delegates
 
-class OkHttpAdapterTest : Spek({
+class OkHttpNetworkAdapterTest : Spek({
     val otherHeader = "X-Foo" to "Bar"
     val formBody = mapOf("foo" to "bar", "baz" to "qux")
 
