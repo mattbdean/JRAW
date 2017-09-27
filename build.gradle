@@ -1,12 +1,12 @@
 import java.util.stream.Collectors
 
 buildscript {
-    ext.kotlinVersion = '1.1.3-2'
-    ext.spekVersion = '1.1.2'
+    ext.kotlinVersion = '1.1.50'
+    ext.spekVersion = '1.1.5'
     ext.moshiVersion = '1.5.0'
     ext.autoValueVersion = '1.5'
     ext.dokkaVersion = '0.9.15'
-    ext.okhttpVersion = '3.8.1'
+    ext.okhttpVersion = '3.9.0'
 
     repositories {
         jcenter()
@@ -15,7 +15,7 @@ buildscript {
 
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
-        classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.0-M4'
+        classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.0'
         classpath "org.jetbrains.dokka:dokka-gradle-plugin:${dokkaVersion}"
         classpath 'net.ltgt.gradle:gradle-apt-plugin:0.11'
     }
@@ -55,7 +55,6 @@ subprojects {
         testCompile ("org.jetbrains.spek:spek-api:$spekVersion") {
             exclude group: 'org.jetbrains.kotlin'
         }
-        testCompile 'org.junit.platform:junit-platform-runner:1.0.0-M4'
         testRuntime ("org.jetbrains.spek:spek-junit-platform-engine:$spekVersion") {
             exclude group: 'org.junit.platform'
             exclude group: 'org.jetbrains.kotlin'
