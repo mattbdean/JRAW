@@ -3,6 +3,7 @@ package net.dean.jraw.databind
 import com.squareup.moshi.*
 import net.dean.jraw.models.Comment
 import net.dean.jraw.models.Listing
+import net.dean.jraw.models.NestedIdentifiable
 import java.lang.reflect.Type
 
 /**
@@ -42,7 +43,7 @@ class RepliesAdapterFactory : JsonAdapter.Factory {
     }
 
     private class RepliesAdapter(private val delegate: JsonAdapter<Listing<Comment>>) : JsonAdapter<Listing<Comment>>() {
-        override fun toJson(writer: JsonWriter?, value: Listing<Comment>?) {
+        override fun toJson(writer: JsonWriter, value: Listing<Comment>?) {
             delegate.toJson(writer, value)
         }
 
@@ -58,6 +59,6 @@ class RepliesAdapterFactory : JsonAdapter.Factory {
     }
 
     companion object {
-        @JvmStatic private val TYPE = Types.newParameterizedType(Listing::class.java, Comment::class.java)
+        @JvmStatic private val TYPE = Types.newParameterizedType(Listing::class.java, NestedIdentifiable::class.java)
     }
 }

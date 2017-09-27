@@ -1,15 +1,14 @@
 package net.dean.jraw.pagination
 
+import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Types
 import net.dean.jraw.JrawUtils
 import net.dean.jraw.RedditClient
-import net.dean.jraw.databind.DynamicEnveloped
-import net.dean.jraw.databind.RedditModel
+import net.dean.jraw.databind.Enveloped
 import net.dean.jraw.http.HttpRequest
 import net.dean.jraw.models.Listing
 import net.dean.jraw.models.Sorting
 import net.dean.jraw.models.TimePeriod
-import net.dean.jraw.models.WikiRevision
 
 abstract class Paginator<T, out B : Paginator.Builder<T>> protected constructor(
     val reddit: RedditClient,
@@ -20,8 +19,12 @@ abstract class Paginator<T, out B : Paginator.Builder<T>> protected constructor(
     // Internal, modifiable properties
     private var _current: Listing<T>? = null
     private var _pageNumber = 0
+    private val adapter: JsonAdapter<Listing<T>>
 
-    private val requiresDynamicDeserialization: Boolean = !clazz.isAnnotationPresent(RedditModel::class.java)
+    init {
+        val type = Types.newParameterizedType(Listing::class.java, clazz)
+        adapter = JrawUtils.moshi.adapter(type, Enveloped::class.java)
+    }
 
     // Make sure we don't have a trailing slash
     val baseUrl = if (baseUrl.trim().endsWith("/")) baseUrl.trim().substring(0, baseUrl.trim().length - 2) else baseUrl
@@ -33,8 +36,6 @@ abstract class Paginator<T, out B : Paginator.Builder<T>> protected constructor(
         get() = _pageNumber
 
     override fun next(): Listing<T> {
-        val adapter = JrawUtils.moshi.adapter<Listing<T>>(Types.newParameterizedType(Listing::class.java, clazz),
-            DynamicEnveloped::class.java)
         _current = reddit.request(createNextRequest()).deserializeWith(adapter)
         _pageNumber++
 
@@ -94,10 +95,5 @@ abstract class Paginator<T, out B : Paginator.Builder<T>> protected constructor(
 
         @JvmField val DEFAULT_SORTING = Sorting.NEW
         @JvmField val DEFAULT_TIME_PERIOD = TimePeriod.DAY
-
-        /** A List of classes that do not have the [RedditModel] attribute but should be deserialized statically */
-        private val dynamicDeserializationExemptions: List<Class<*>> = listOf(
-            WikiRevision::class.java
-        )
     }
 }

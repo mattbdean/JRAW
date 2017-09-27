@@ -3,7 +3,7 @@ package net.dean.jraw.tree
 import net.dean.jraw.Endpoint
 import net.dean.jraw.JrawUtils
 import net.dean.jraw.RedditClient
-import net.dean.jraw.databind.DynamicEnveloped
+import net.dean.jraw.databind.Enveloped
 import net.dean.jraw.models.*
 import net.dean.jraw.models.internal.GenericJsonResponse
 import net.dean.jraw.references.CommentsRequest
@@ -111,7 +111,7 @@ abstract class AbstractCommentNode<out T : PublicContribution<*>> protected cons
                 throw IllegalArgumentException("Unexpected JSON response")
 
             // Transform every element to either a Comment or a MoreChildren
-            val adapter = JrawUtils.adapter<NestedIdentifiable>(DynamicEnveloped::class.java)
+            val adapter = JrawUtils.adapter<NestedIdentifiable>(Enveloped::class.java)
             val redditObjects = things.map { adapter.fromJsonValue(it)!! } as MutableList<NestedIdentifiable>
 
             // Sometimes the reddit API will send us another MoreChildren object for the same root node. Since we can't

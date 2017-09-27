@@ -1,7 +1,7 @@
 package net.dean.jraw
 
 import com.squareup.moshi.Types
-import net.dean.jraw.databind.DynamicEnveloped
+import net.dean.jraw.databind.Enveloped
 import net.dean.jraw.http.*
 import net.dean.jraw.models.*
 import net.dean.jraw.models.internal.RedditExceptionStub
@@ -322,13 +322,11 @@ class RedditClient internal constructor(
         if (fullNames.isEmpty()) return Listing.empty()
 
         val type = Types.newParameterizedType(Listing::class.java, Any::class.java)
-        val adapter = JrawUtils.moshi.adapter<Listing<Any>>(type, DynamicEnveloped::class.java)
-        val json = request {
+        val adapter = JrawUtils.moshi.adapter<Listing<Any>>(type, Enveloped::class.java)
+        return request {
             it.endpoint(Endpoint.GET_INFO)
                 .query(mapOf("id" to fullNames.joinToString(",")))
-        }.body
-
-        return adapter.fromJson(json)!!
+        }.deserializeWith(adapter)
     }
 
     fun liveThread(id: String) = LiveThreadReference(this, id)

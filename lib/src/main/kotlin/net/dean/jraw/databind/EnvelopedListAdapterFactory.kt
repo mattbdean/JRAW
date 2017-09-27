@@ -9,21 +9,17 @@ import java.lang.reflect.Type
  */
 class EnvelopedListAdapterFactory : JsonAdapter.Factory {
     override fun create(type: Type, annotations: MutableSet<out Annotation>, moshi: Moshi): JsonAdapter<*>? {
+        // Make sure we have the @Enveloped annotation
+        Types.nextAnnotations(annotations, Enveloped::class.java) ?: return null
+
         val rawType = Types.getRawType(type)
         if (rawType.name != NAME || type !is ParameterizedType) {
             return null
         }
 
+        // Get a
         val subtype = type.actualTypeArguments[0]
-
-        // Ensure we have either the @Enveloped or @DynamicEnveloped annotation
-        var delegate: JsonAdapter<Any>? = null
-        if (Types.nextAnnotations(annotations, Enveloped::class.java) != null)
-            delegate = moshi.adapter<Any>(subtype, Enveloped::class.java)
-        else if (Types.nextAnnotations(annotations, DynamicEnveloped::class.java) != null)
-            delegate = moshi.adapter<Any>(subtype, DynamicEnveloped::class.java)
-
-        if (delegate == null) return null
+        val delegate: JsonAdapter<Any> = moshi.adapter(subtype, Enveloped::class.java)
         return EnvelopedListAdapter(delegate)
     }
 
@@ -33,8 +29,16 @@ class EnvelopedListAdapterFactory : JsonAdapter.Factory {
     }
 
     private class EnvelopedListAdapter(private val delegate: JsonAdapter<Any>) : JsonAdapter<List<*>>() {
-        override fun toJson(writer: JsonWriter?, value: List<*>?) {
-            TODO("not implemented")
+        override fun toJson(writer: JsonWriter, value: List<*>?) {
+            if (value == null) {
+                writer.nullValue()
+                return
+            }
+
+            writer.beginArray()
+            for (v in value)
+                delegate.toJson(v)
+            writer.endArray()
         }
 
         override fun fromJson(reader: JsonReader): List<*>? {

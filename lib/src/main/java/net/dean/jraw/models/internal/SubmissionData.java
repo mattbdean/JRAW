@@ -1,7 +1,6 @@
 package net.dean.jraw.models.internal;
 
 import com.google.auto.value.AutoValue;
-import net.dean.jraw.databind.DynamicEnveloped;
 import net.dean.jraw.databind.Enveloped;
 import net.dean.jraw.models.Listing;
 import net.dean.jraw.models.NestedIdentifiable;
@@ -15,7 +14,7 @@ public abstract class SubmissionData {
     @Enveloped
     public abstract Listing<Submission> getSubmissions();
 
-    @DynamicEnveloped
+    @Enveloped
     public abstract Listing<NestedIdentifiable> getComments();
 
     public static SubmissionData create(Listing<Submission> submissions, Listing<NestedIdentifiable> comments) {

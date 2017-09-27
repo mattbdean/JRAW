@@ -8,7 +8,7 @@ import net.dean.jraw.models.internal.SubmissionData
 import java.lang.reflect.Type
 
 class SubmissionDataAdapterFactory : JsonAdapter.Factory {
-    override fun create(type: Type?, annotations: MutableSet<out Annotation>?, moshi: Moshi): JsonAdapter<*>? {
+    override fun create(type: Type, annotations: MutableSet<out Annotation>?, moshi: Moshi): JsonAdapter<*>? {
         val rawType = Types.getRawType(type)
         if (rawType != SubmissionData::class.java)
             return null
@@ -16,7 +16,7 @@ class SubmissionDataAdapterFactory : JsonAdapter.Factory {
         val submissionsAdapter = moshi.adapter<Listing<Submission>>(
             Types.newParameterizedType(Listing::class.java, Submission::class.java), Enveloped::class.java)
         val commentsAdapter = moshi.adapter<Listing<NestedIdentifiable>>(
-            Types.newParameterizedType(Listing::class.java, NestedIdentifiable::class.java), DynamicEnveloped::class.java)
+            Types.newParameterizedType(Listing::class.java, NestedIdentifiable::class.java), Enveloped::class.java)
 
         return SubmissionDataAdapter(submissionsAdapter, commentsAdapter)
     }

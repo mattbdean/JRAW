@@ -4,7 +4,7 @@ import com.google.auto.value.AutoValue;
 import com.squareup.moshi.Json;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
-import net.dean.jraw.databind.DynamicEnveloped;
+import net.dean.jraw.databind.Enveloped;
 import net.dean.jraw.databind.RedditModel;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,7 +31,7 @@ public abstract class Listing<T> extends DelegatedList<T> {
     // to the backing field it creates. Attaching it to a Java field or method (like we do here) DOES work.
 
     /** Gets the objects contained on this page */
-    @DynamicEnveloped
+    @Enveloped
     public abstract List<T> getChildren();
 
     @Override
