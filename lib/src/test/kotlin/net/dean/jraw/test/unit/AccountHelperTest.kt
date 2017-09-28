@@ -48,7 +48,8 @@ class AccountHelperTest : Spek({
             val h = AccountHelper(NoopNetworkAdapter, creds, tokenStore, uuid)
             // Should not require an HTTP request
             val reddit = h.switchToUserless()
-            (reddit === h.reddit).should.be.`true`
+            reddit.authManager.currentUsername().should.equal(AuthManager.USERNAME_USERLESS)
+            reddit.should.be.of.identity(h.reddit)
         }
 
         it("should fetch new OAuthData when there is no unexpired data in the store") {

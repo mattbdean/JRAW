@@ -79,15 +79,11 @@ class RedditClient internal constructor(
     internal var loggedOut: Boolean = false
 
     init {
-        authManager.currentUsername = if (overrideUsername == AuthManager.USERNAME_USERLESS)
-            // We know there's no authenticated user if we're given the special username for userless auth
-            null
-        else
-            // Use overrideUsername if available, otherwise try to fetch the name from the API. We can't use
-            // me().about().name since that would require a valid access token (we have to call authManager.update after
-            // we have a valid username so TokenStores get the proper name once it gets updated). Instead we directly
-            // make the request and parse the response.
-            overrideUsername ?: try {
+        // Use overrideUsername if available, otherwise try to fetch the name from the API. We can't use
+        // me().about().name since that would require a valid access token (we have to call authManager.update after
+        // we have a valid username so TokenStores get the proper name once it gets updated). Instead we directly
+        // make the request and parse the response.
+        authManager.currentUsername = overrideUsername ?: try {
                 val me = request(HttpRequest.Builder()
                     .url("https://oauth.reddit.com/api/v1/me")
                     .header("Authorization", "bearer ${initialOAuthData.accessToken}")
