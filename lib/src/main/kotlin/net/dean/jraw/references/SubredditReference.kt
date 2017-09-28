@@ -165,6 +165,15 @@ class SubredditReference internal constructor(reddit: RedditClient, val subreddi
 
     fun wiki() = WikiReference(reddit, subreddit)
 
+    /** Fetches the stylesheet of a subreddit. Returned value is CSS. */
+    @EndpointImplementation(Endpoint.GET_STYLESHEET)
+    fun stylesheet(): String {
+        return reddit.request {
+            it.endpoint(Endpoint.GET_STYLESHEET)
+                .query(mapOf("r" to subreddit))
+        }.body
+    }
+
     companion object {
         private val listOfFlairsType = Types.newParameterizedType(List::class.java, Flair::class.java)
     }

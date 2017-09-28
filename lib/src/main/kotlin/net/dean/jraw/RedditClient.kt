@@ -146,13 +146,17 @@ class RedditClient internal constructor(
             return request(r, retryCount + 1)
         }
 
-        // Try to find any API errors embedded in the document
-        val stub = if (res.body == "") null else JrawUtils.adapter<RedditExceptionStub<*>>().fromJson(res.body)
+        val type = res.raw.body()?.contentType()
 
-        // Reddit has some legacy endpoints that return 200 OK even though the JSON contains errors
-        if (stub != null) {
-            val ex = stub.create(NetworkException(res))
-            if (ex != null) throw ex
+        // Try to find any API errors embedded in the JSON document
+        if (type != null && type.type() == "application" && type.subtype() == "json") {
+            val stub = if (res.body == "") null else JrawUtils.adapter<RedditExceptionStub<*>>().fromJson(res.body)
+
+            // Reddit has some legacy endpoints that return 200 OK even though the JSON contains errors
+            if (stub != null) {
+                val ex = stub.create(NetworkException(res))
+                if (ex != null) throw ex
+            }
         }
 
         // Make sure we're still failing on non-success status codes if we couldn't find an API error in the JSON

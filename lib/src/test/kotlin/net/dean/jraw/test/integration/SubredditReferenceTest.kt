@@ -73,4 +73,10 @@ class SubredditReferenceTest : Spek({
             rules.siteRules.should.have.size.above(0)
         }
     }
+
+    describe("stylesheet") {
+        it("should return text") {
+            reddit.subreddit("RocketLeague").stylesheet().should.have.length.above(0)
+        }
+    }
 })
