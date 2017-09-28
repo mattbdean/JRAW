@@ -2,7 +2,7 @@
 
 [![travis-ci build status](https://img.shields.io/travis/mattbdean/JRAW.svg)](https://travis-ci.org/mattbdean/JRAW)
 [![Latest release](https://img.shields.io/github/release/mattbdean/JRAW.svg)](https://bintray.com/thatjavanerd/maven/JRAW/_latestVersion)
-[![Kotlin 1.1.3-2](https://img.shields.io/badge/Kotlin-1.1.3--2-blue.svg)](http://kotlinlang.org)
+[![Kotlin 1.1.50](https://img.shields.io/badge/Kotlin-1.1.50--2-blue.svg)](http://kotlinlang.org)
 [![API coverage](https://img.shields.io/badge/API_coverage-39%25-9C27B0.svg)](https://github.com/thatJavaNerd/JRAW/blob/kotlin/ENDPOINTS.md)
 [![Codecov branch](https://img.shields.io/codecov/c/github/mattbdean/JRAW/kotlin.svg)](https://codecov.io/gh/mattbdean/JRAW/branch/kotlin)
 
