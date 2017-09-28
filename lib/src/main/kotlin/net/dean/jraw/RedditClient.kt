@@ -294,7 +294,7 @@ class RedditClient internal constructor(
      * Creates a BarebonesPaginator.Builder that will iterate over the latest comments from all subreddits when built.
      * This Paginator will be especially useful when used with the [Paginator.restart] method.
      */
-    fun comments() = BarebonesPaginator.Builder.create<Comment>(this, "/comments")
+    fun latestComments() = BarebonesPaginator.Builder.create<Comment>(this, "/comments")
 
     /**
      * Returns the name of the logged-in user
