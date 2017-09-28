@@ -1,16 +1,13 @@
 package net.dean.jraw.test.integration
 
 import com.winterbe.expekt.should
+import net.dean.jraw.oauth.Credentials
+import net.dean.jraw.oauth.OAuthHelper
+import net.dean.jraw.oauth.StatefulAuthHelper
 import net.dean.jraw.test.CredentialsUtil
 import net.dean.jraw.test.ensureAuthenticated
 import net.dean.jraw.test.expectException
 import net.dean.jraw.test.newOkHttpAdapter
-import net.dean.jraw.models.OAuthData
-import net.dean.jraw.oauth.AuthMethod
-import net.dean.jraw.oauth.Credentials
-import net.dean.jraw.oauth.OAuthHelper
-import net.dean.jraw.oauth.StatefulAuthHelper
-import net.dean.jraw.test.*
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
@@ -42,6 +39,10 @@ class OAuthHelperTest: Spek({
             ensureAuthenticated(reddit)
             reddit.authManager.renew()
             ensureAuthenticated(reddit)
+
+            // Test token revoking while we're here
+            reddit.authManager.revokeAccessToken()
+            reddit.authManager.revokeRefreshToken()
         }
 
         it("should throw an Exception when given Credentials for an app") {

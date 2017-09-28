@@ -6,6 +6,7 @@ import net.dean.jraw.http.HttpResponse
 import net.dean.jraw.http.NetworkAdapter
 import net.dean.jraw.http.UserAgent
 import net.dean.jraw.models.OAuthData
+import net.dean.jraw.oauth.AuthManager
 import net.dean.jraw.oauth.AuthMethod
 import net.dean.jraw.oauth.Credentials
 import net.dean.jraw.oauth.TokenStore
@@ -105,10 +106,14 @@ class InMemoryTokenStore : TokenStore {
     private val dataMap: MutableMap<String, OAuthData?> = HashMap()
     private val refreshMap: MutableMap<String, String?> = HashMap()
     override fun storeCurrent(username: String, data: OAuthData) {
+        if (username == AuthManager.USERNAME_UNKOWN)
+            throw IllegalArgumentException("Username was ${AuthManager.USERNAME_UNKOWN}")
         dataMap.put(username, data)
     }
 
     override fun storeRefreshToken(username: String, token: String) {
+        if (username == AuthManager.USERNAME_UNKOWN)
+            throw IllegalArgumentException("Username was ${AuthManager.USERNAME_UNKOWN}")
         refreshMap.put(username, token)
     }
 

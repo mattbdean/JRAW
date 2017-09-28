@@ -186,4 +186,46 @@ class AuthManagerTest : Spek({
             auth.needsRenewing().should.be.`true`
         }
     }
+
+    describe("revokeAccessToken/revokeRefreshToken") {
+        beforeEachTest {
+            mockAdapter.start()
+        }
+
+        it("should deuathenticated the RedditClient and remove the relevant data from the TokenStore") {
+            val username = "foo"
+            val auth = AuthManager(mockAdapter, CredentialsUtil.script)
+            auth.tokenStore = InMemoryTokenStore()
+
+            // Put initial OAuthData and refresh token into TokenStore
+            auth.currentUsername = username
+            auth.update(createMockOAuthData(includeRefreshToken = true))
+
+            // Not actual response
+            mockAdapter.enqueue("{}")
+            auth.revokeAccessToken()
+            auth.current.should.be.`null`
+            auth.tokenStore.fetchCurrent(username).should.be.`null`
+
+            // Again, not actual response
+            mockAdapter.enqueue("{}")
+            auth.revokeRefreshToken()
+            auth.refreshToken.should.be.`null`
+            auth.tokenStore.fetchRefreshToken(username).should.be.`null`
+        }
+
+        it("should do nothing if there isn't any data") {
+            val auth = AuthManager(NoopNetworkAdapter, createMockCredentials(AuthMethod.SCRIPT))
+            auth.current.should.be.`null`
+            auth.refreshToken.should.be.`null`
+
+            // Normally these would sent HTTP requests, but they shouldn't considering they have nothing to revoke
+            auth.revokeAccessToken()
+            auth.revokeRefreshToken()
+        }
+
+        afterEachTest {
+            mockAdapter.reset()
+        }
+    }
 })

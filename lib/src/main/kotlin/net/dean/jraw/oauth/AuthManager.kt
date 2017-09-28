@@ -1,6 +1,7 @@
 package net.dean.jraw.oauth
 
 import net.dean.jraw.http.HttpRequest
+import net.dean.jraw.http.HttpResponse
 import net.dean.jraw.http.NetworkAdapter
 import net.dean.jraw.http.NetworkException
 import net.dean.jraw.models.OAuthData
@@ -37,7 +38,7 @@ class AuthManager(
     /**
      * The token provided by reddit to be used to request more access tokens. Only applies to installed and web apps.
      */
-    internal var _refreshToken: String? = null
+    private var _refreshToken: String? = null
 
     /**
      * A token that will allow the client to refresh the access token without having the user approve the app again.
@@ -124,15 +125,46 @@ class AuthManager(
             ))
             .basicAuth(credentials.clientId to credentials.clientSecret)
             .build())
+        handleUnsuccessfulOAuthRequests(res)
 
+        return res.deserialize<OAuthDataJson>().toOAuthData()
+    }
+
+    /**
+     * Requests that reddit revoke the API privileges granted by the current access token. Also removes the token from
+     * the TokenStore and sets [current] to null.
+     */
+    fun revokeAccessToken() {
+        revokeToken("access_token", current?.accessToken)
+        this._current = null
+        tokenStore.deleteCurrent(currentUsername())
+    }
+
+    /** Same as [revokeAccessToken], but for the refresh token. */
+    fun revokeRefreshToken() {
+        revokeToken("refresh_token", refreshToken)
+        this._refreshToken = null
+        tokenStore.deleteRefreshToken(currentUsername())
+    }
+
+    private fun revokeToken(typeHint: String, token: String?) {
+        token ?: return
+
+        val res = http.execute(HttpRequest.Builder()
+            .url("https://www.reddit.com/api/v1/revoke_token")
+            .post(mapOf("token" to token, "token_type_hint" to typeHint))
+            .basicAuth(credentials.clientId to credentials.clientSecret)
+            .build())
+        handleUnsuccessfulOAuthRequests(res)
+    }
+
+    private fun handleUnsuccessfulOAuthRequests(res: HttpResponse) {
         if (!res.successful) {
             val e = NetworkException(res)
             if (res.code == 401)
                 throw OAuthException("Incorrect client ID and/or client secret", e)
             throw e
         }
-
-        return res.deserialize<OAuthDataJson>().toOAuthData()
     }
 
     /**
