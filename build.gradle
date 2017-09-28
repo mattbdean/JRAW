@@ -55,10 +55,8 @@ subprojects {
         testCompile ("org.jetbrains.spek:spek-api:$spekVersion") {
             exclude group: 'org.jetbrains.kotlin'
         }
-        testRuntime ("org.jetbrains.spek:spek-junit-platform-engine:$spekVersion") {
-            exclude group: 'org.junit.platform'
-            exclude group: 'org.jetbrains.kotlin'
-        }
+        testRuntime 'org.junit.platform:junit-platform-engine:1.0.0'
+        testRuntime "org.jetbrains.spek:spek-junit-platform-engine:$spekVersion"
     }
 
     compileKotlin {
@@ -91,6 +89,7 @@ subprojects {
     }
 
     junitPlatform {
+        platformVersion '1.0.0'
         filters {
             engines {
                 include 'spek'
