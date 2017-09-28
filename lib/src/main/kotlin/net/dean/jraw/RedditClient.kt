@@ -240,6 +240,18 @@ class RedditClient internal constructor(
      */
     fun user(name: String) = OtherUserReference(this, name)
 
+    /**
+     * Returns a Paginator builder that will iterate user subreddits. See [here](https://www.reddit.com/comments/6bqemt)
+     * for more info.
+     *
+     * Possible `where` values:
+     *
+     *  - `new`
+     *  - `popular`
+     */
+    @EndpointImplementation(Endpoint.GET_USERS_WHERE, type = MethodType.NON_BLOCKING_CALL)
+    fun userSubreddits(where: String) = BarebonesPaginator.Builder.create<Subreddit>(this, "/users/${JrawUtils.urlEncode(where)}")
+
     /** Creates a [DefaultPaginator.Builder] to iterate posts on the front page */
     fun frontPage() = DefaultPaginator.Builder.create<Submission>(this, baseUrl = "", sortingAlsoInPath = true)
 

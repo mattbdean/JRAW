@@ -175,4 +175,16 @@ class RedditClientTest : Spek({
             thread?.state?.should?.equal("live")
         }
     }
+
+    describe("userSubreddits") {
+        val whereValues = listOf("new", "popular")
+        for (where in whereValues) {
+            it("should iterate $where") {
+                val limit = 25
+                val pages = 2
+                val paginator = reddit.userSubreddits(where).limit(limit).build()
+                paginator.accumulateMerged(pages).should.have.size(limit * pages)
+            }
+        }
+    }
 })
