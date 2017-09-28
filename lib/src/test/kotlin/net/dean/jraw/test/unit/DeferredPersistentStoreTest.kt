@@ -3,8 +3,10 @@ package net.dean.jraw.test.unit
 import com.winterbe.expekt.should
 import net.dean.jraw.filterValuesNotNull
 import net.dean.jraw.models.PersistedAuthData
+import net.dean.jraw.oauth.AuthManager
 import net.dean.jraw.oauth.DeferredPersistentTokenStore
 import net.dean.jraw.test.createMockOAuthData
+import net.dean.jraw.test.expectException
 import net.dean.jraw.test.withExpiration
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
@@ -110,6 +112,18 @@ class DeferredPersistentStoreTest : Spek({
 
             store.deleteRefreshToken(username)
             store.usernames.should.be.empty
+        }
+    }
+
+    describe("storeCurrent/storeRefreshToken") {
+        it("should not accept data for a username of USERNAME_USERLESS") {
+            val store = newStore()
+            expectException(IllegalArgumentException::class) {
+                store.storeRefreshToken(AuthManager.USERNAME_UNKOWN, "")
+            }
+            expectException(IllegalArgumentException::class) {
+                store.storeCurrent(AuthManager.USERNAME_UNKOWN, createMockOAuthData())
+            }
         }
     }
 })

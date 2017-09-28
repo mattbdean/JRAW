@@ -68,6 +68,8 @@ abstract class DeferredPersistentTokenStore<T : DeferredPersistentTokenStore<T>>
     internal fun data(): Map<String, PersistedAuthData> = HashMap(this.memoryData)
 
     override final fun storeCurrent(username: String, data: OAuthData) {
+        if (username == AuthManager.USERNAME_UNKOWN)
+            throw IllegalArgumentException("Refusing to store data for unknown username")
         val stored = this.memoryData[username]
         val new = PersistedAuthData.create(data, stored?.refreshToken)
         this.memoryData[username] = new
@@ -77,6 +79,8 @@ abstract class DeferredPersistentTokenStore<T : DeferredPersistentTokenStore<T>>
     }
 
     override final fun storeRefreshToken(username: String, token: String) {
+        if (username == AuthManager.USERNAME_UNKOWN)
+            throw IllegalArgumentException("Refusing to store data for unknown username")
         val stored = this.memoryData[username]
         val new = PersistedAuthData.create(stored?.current, token)
         this.memoryData[username] = new
