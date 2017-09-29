@@ -490,6 +490,10 @@ public enum Endpoint {
     POST_SEARCH_SUBREDDITS("POST /api/search_subreddits"),
 
     /**
+     * Represents the endpoint {@code GET /api/subreddit_autocomplete}. Requires OAuth scope 'read'. See <a href="https://www.reddit.com/dev/api/oauth#GET_api_subreddit_autocomplete">here</a> for more information */
+    GET_SUBREDDIT_AUTOCOMPLETE("GET /api/subreddit_autocomplete"),
+
+    /**
      * Represents the endpoint {@code GET /api/subreddits_by_topic}. Requires OAuth scope 'read'. See <a href="https://www.reddit.com/dev/api/oauth#GET_api_subreddits_by_topic">here</a> for more information */
     GET_SUBREDDITS_BY_TOPIC("GET /api/subreddits_by_topic"),
 

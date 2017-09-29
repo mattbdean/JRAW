@@ -1,57 +1,61 @@
-<img src="https://i.imgur.com/fOC6ehB.png" alt="The Java Reddit API Wrapper" />
+<img src="https://raw.githubusercontent.com/mattbdean/JRAW/master/art/header.png" alt="The Java Reddit API Wrapper" />
 
-[![travis-ci build status](https://img.shields.io/travis/thatJavaNerd/JRAW.svg)](https://travis-ci.org/thatJavaNerd/JRAW) [![Coverage Status](https://img.shields.io/coveralls/thatJavaNerd/JRAW.svg)](https://coveralls.io/r/thatJavaNerd/JRAW) [![reddit API coverage](https://img.shields.io/badge/api--coverage-57%-blue.svg)](https://github.com/thatJavaNerd/JRAW/blob/master/ENDPOINTS.md) [![Latest release](https://img.shields.io/github/release/thatJavaNerd/JRAW.svg)](https://bintray.com/thatjavanerd/maven/JRAW/_latestVersion)
+[![travis-ci build status](https://img.shields.io/travis/mattbdean/JRAW.svg)](https://travis-ci.org/mattbdean/JRAW)
+[![Latest release](https://img.shields.io/github/release/mattbdean/JRAW.svg)](https://bintray.com/thatjavanerd/maven/JRAW/_latestVersion)
+[![Kotlin 1.1.50](https://img.shields.io/badge/Kotlin-1.1.50-blue.svg)](http://kotlinlang.org)
+[![API coverage](https://img.shields.io/badge/API_coverage-40%25-9C27B0.svg)](https://github.com/thatJavaNerd/JRAW/blob/kotlin/ENDPOINTS.md)
+[![Codecov branch](https://img.shields.io/codecov/c/github/mattbdean/JRAW.svg)](https://codecov.io/gh/mattbdean/JRAW)
 
->JRAW is currently in an experimental stage, and therefore subject to breaking API changes that could occur at any time.
+> JRAW is currently being rewritten in Kotlin [Kotlin](https://kotlinlang.org/) for v1.0.0 (see [#187](https://github.com/mattbdean/JRAW/issues/187)). If you'd like to try it out before the official release, please use [Jitpack](https://jitpack.io/#mattbdean/JRAW/master-SNAPSHOT).
 
-## Heads up!
+```java
+// Assuming we have a 'script' reddit app
+Credentials oauthCreds = Credentials.script(username, password, clientId, clientSecret);
 
-JRAW is being rewritten in [Kotlin](https://kotlinlang.org/) for v1.0.0 (see [#187](https://github.com/thatJavaNerd/JRAW/issues/187)). All new development is happening on the [kotlin](https://github.com/thatJavaNerd/JRAW/tree/kotlin) branch.
+// Create a unique User-Agent for our bot
+UserAgent userAgent = new UserAgent("desktop", "my.cool.bot", "1.0.0", "myRedditUsername");
 
-## Notable Features
- - OAuth2 support
- - Full multireddit support
- - All common actions (login, vote, submit, comment, messages, etc.)
- - Java 7 compatible
- - Simple HTTP framework capable of wrapping most any HTTP library
- - Dynamic ratelimit adjustment
+// Authenticate our client
+RedditClient reddit = OAuthHelper.automatic(oauthCreds, new OkHttpNetworkAdapter(userAgent));
 
-See [Quickstart](https://github.com/thatJavaNerd/JRAW/wiki/Quickstart) to get you up and running. Javadoc can be found [here](https://thatjavanerd.github.io/JRAW#javadoc)
-
-## Building
-
-JRAW uses Gradle as its build system. If you come from a Maven background, see Gradle's [user guide](https://gradle.org/docs/current/userguide/tutorial_using_tasks.html) to get you started.
-
-`gradle release` will generate four Jar files in `build/releases`: a normal jar with just the library, a "fat" jar with all of JRAW's runtime dependencies, a Javadoc jar, and a sources jar. See [here](https://github.com/thatJavaNerd/JRAW/releases/tag/v0.2.0) for an example.
-
-`gradle test` will run the unit tests
+// Get user about the user
+Account me = reddit.me().about();
+```
 
 ## Contributing
 
-Before contributing, it is recommended that you have a decent knowledge of how the reddit API works.
+To get started you'll need to create two [reddit OAuth2 apps](https://www.reddit.com/prefs/apps), one script and one installed.
 
-Some references:
- - [reddit/reddit's 'API' wiki page](https://github.com/reddit/reddit/wiki/API): Quick overview of the API and its rules
- - [reddit/reddit's 'JSON' wiki page](https://github.com/reddit/reddit/wiki/JSON): Shows the data structure of the objects returned by the API
- - And of course, don't forget the [official reddit API documentation](https://www.reddit.com/dev/api/oauth)
+To have this done automatically for you, run this command:
 
-#### Want to contribute? Follow these steps:
+```sh
+$ ./gradlew :meta:credentials --no-daemon --console plain
+```
 
-1. Fork the repository
-2. Put your testing user's credentials in `src/test/resources/credentials.json`. It should be in [this format](https://gist.github.com/thatJavaNerd/e393a7af4c3a8c564833). If you don't have a testing user, see below.
-3. Add your code. Implement an endpoint, make the code prettier, or even just fix up some whitespace or documentation.
-4. Write TestNG tests covering your changes
-5. Test your code by executing `gradle test`
-6. Update `ENDPOINTS.md` and `Endpoints.java` by running `gradle endpoints:update` (see [the wiki](https://github.com/thatJavaNerd/JRAW/wiki/Endpoints))
-7. Send the pull request
+`lib/src/test/resources/credentials.json`:
 
-#### Creating a user for unit testing
+```json
+{
+    "script": {
+        "username": "...",
+        "password": "...",
+        "clientId": "...",
+        "clientSecret": "..."
+    },
+    "app": {
+        "clientId": "...",
+        "redirectUrl": "..."
+    }
+}
+```
 
-Here's how to create a testing user:
+Then you can go ahead and run the tests
 
-1. Register a new user
-2. [Create an OAuth2 app](https://www.reddit.com/prefs/apps)
-3. Record the username, password, client ID, and client secret in `src/test/resources/credentials.json`
-4. [Create a subreddit](https://www.reddit.com/subreddits/create)
-5. [Create a multireddit](http://www.redditblog.com/2013/06/browse-future-of-reddit-re-introducing.html)
-6. [Submit a self post to /r/jraw_testing2](https://www.reddit.com/r/jraw_testing2/submit?selftext=true)
+```sh
+$ ./gradlew test
+```
+
+Tests are written with [Spek](http://spekframework.org/) and assertions are done with [Expekt](https://github.com/winterbe/expekt).
+
+
+
