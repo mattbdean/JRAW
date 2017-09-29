@@ -1,0 +1,5 @@
+[
+    { "file": "README", "title": "Introduction" },
+    { "file": "quickstart" },
+    { "file": "cookbook" }
+]

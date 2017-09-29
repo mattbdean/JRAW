@@ -9,9 +9,10 @@ local.properties
 .gradle/
 build/
 out/
+gradle.properties
 
 # Testing account credentials
-src/test/resources/credentials.json
+lib/src/test/resources/credentials.json
 
 # Local todo list
 todo.txt

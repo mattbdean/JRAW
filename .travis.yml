@@ -1,26 +1,30 @@
+sudo: false
 language: java
 jdk:
-- oraclejdk7
+- oraclejdk8
+before_install:
+- npm install -g gitbook-cli # Necessary for :docs integration test
+script:
+- "./gradlew check jacocoRootReport"
+after_success:
+- bash <(curl -s https://codecov.io/bash) -f build/reports/jacoco/jacocoRootReport/jacocoRootReport.xml
+- ./gradlew pushSite
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
 env:
   global:
-  # USERNAME
-  - secure: Lyr51sid6i2IR22Jwkvs0itzd/E7B9K++G/zOB7fnWjEaCrc/8lT+OVoZGqzShtthWPUzPWvF0LC5OmhniUpjDerdgTcV+loCd56o+53sba0Ca9DzowTOoVKp0+rQIjLFoUwEKC4KxGsPwzcF3Plhts7gdze+fq5D2K+jUgeJAo=
-  # PASSWORD
-  - secure: qdaN//0RVPeU9dwf+VWg8k25ybRuO9xMWA+yZklzinL8nNV8xKO8k/+cjtG9SclvCc2IiwF7309V5TfQi7K86Vnm8gumizL6IDspxSXossOXeWHHjtWxdm7FbJq84h5hHKmHRC+Es7eaoX7f5WROJ8xHVsVLVsCNkeKQFt8Py0w=
-  # SCRIPT_CLIENT_ID
-  - secure: kp2GfLRcEmCGlRwFtZ9a7UpSjz2AFVfTvk1rdM5y7/X6DN3m4Hny0Bhui8ESPcCfJucfuGllyRlYYYArGeAUK7K8trZ2L7hIsE3NlOMRqhZSC5xWiAKxlMI+AFh+RCoRfskvUVc+cdMdLjiy4IAfgeWLRam+I2MzfUbhwCgdP8Q=
-  # SCRIPT_CLIENT_SECRET
-  - secure: LhY7CylOzgLBZ+Ivbsw+OpxCoezduNaaNWrvGzlDbqSUmtstWjS6+KXMAm3cO5sWx52tvMTPuwf246OgrB6kmieAKauf/qVWYmIbFzyeD+6gB56CuR7C5kWcunQRUw9vDi8yoOckbNUYHTuBjZk/2jA9DR/RTyZDNwl8R8UeST0=
-  # INSTALLED_CLIENT_ID
-  - secure: n8sxNsPzp+5BA3qcBvX8r0b8NNUQxF+lVrUVjPNOUXgtFz6eClslh+Bx7xhyl6Mt5Z+Wlmk/FO8QVXzqbgeqK/brHGS7AeWvgB8+S7UG3tx7BqyRXuBSoHtGXNMwzSl+ULHLJfNQv35KoimHkmWTMYxBz/K6z3KnW69Y9PA2yHI=
-  # INSTALLED_REDIRECT_URI
-  - secure: DU1yOURjDTkXgxtt/DG/Uym1CYryqt20fsLGGwcU1O544/WlWHJz0Y/ZvfeyChLtrsvJNyhjI/46xRbr/yeHJTI6OHnlTxTcAtT/DqUd0D7R+U3CN+/ju/qAmwyTR0i5f9PUFu4Gdv6CBhr/4hZjRHMnXAPS7ns7h73UBvUJ8ts=
-  # GIT_NAME and GIT_EMAIL
-  - secure: Jn+ssE7+DEnpqxH3BiY5u6b37Uf6op7nrhS30bZ4FsxGSeh4yNBCd4oj8vQn4eG/GDHSL5HmDCpeHMw0Wo6cDYAv/n1ft9IcghO5WGTSYoa2LBrtF4t0468RR447adBOT367PPBD8H/kOFZyyiRaYniA3Bax9K69uVe4B/aUyKI=
-  # GIT_USER and GIT_PASS
-  - secure: KtdoQLj2zDTkysWyXVj+H5xY65dDo58+070SQM68Tg6EYiB2tx9EV1IOJ1UallaDWGCyPfZvM2eTXs0selM5+S9GzskWePsY1uhFv+tnbGMUMcwiioq+yIxpK3zq8LLodIuiI5wv/4QigC/hsXSlUzV7hDUXWkdHieYig44p2Vs=
-script: "./gradlew --console plain --stacktrace test"
-after_success: "./gradlew jacocoTestReport coveralls; ./upload_docs.sh"
-sudo: false
-SCRIPT_CLIENT_ID=vgMHmurocRkiPg:
-  secure: mw/hyeCHaf9QvyM1wp0q1k2aT+r4XPGCUqa7pzDcIuwQRrlBRrCGY3h+hMCv1DYP7HGxyn5zPoTvoMANoA2id2bfaUvTlW/A/L87NBzSf5LXqw5e2OSrM04EqEa5a0zoZKkMLxTceNq1FcbQ77JYiTnXXDmFgawH2TqmhfelfUs=
+  # Environmental variables required by CredentialsUtil for CI testing in Travis
+  - secure: q4y8mksZHqu4hOK+5bBXneI/hbg/lmpXD4FWJQ/AONI8bI1YO57LwmZqA3peGYFz78+ExYchdIFZHul6Bi8DLYUXujKpKHl3CCvM5IAS6qLddGv2GyNFPmaaJWQz6WX2rQKq+LOK+HUHtFuwgkyAcHy4S+IlmbLXKnVVdgDv4aY=
+  - secure: Vj2pDbLBpHf46j1EkK9zXmf2C5O0IGiaD8eAeb387Q6T26Q3epGf1j0DaoqKimw5lJAmPV9GIdimWCPrcDvBdJIDNgEbOIhX/jMQFgaDrl+Z9NeFPtATAdKS156Ki+O3Iem/u12Zz2h9pv81p4V5S262+fXUA0CLrCSGQubKyYY=
+  - secure: YoywqU9GWnW55U3ucM0kg/mztWaAKtRIQy90ItYXlzQI8vK++TjivOFEaOaKCI6HIsULb14y5M5v4aN+9vJ0hCd+A5XB+E3i+lZRG1ypPdVBHcFOZ+RD+7gAEzcaylTX3Fd2slJ2fdxqNeLmQXtOC6J0kTvdyHcvX1nx9BqMNCo=
+  - secure: hNYHnZJR/GElL7lgRUS3TPfFEuw1xboXL4VXVknDjfuWK8DU54DcERxq8b5x7JNq2N4nnrqcORbWrcyvciOQo5Sidq5x+JiTIyBJh8sPWy8ijkinE7C/wOHoVF2uMtxXzFeGev+ZL5vMbu53WUEQAUDV/2jVtRd8CZ66zDQpWaE=
+  - secure: siKHQ1lS8cbtY+lfFpX2mZf2KLrIwjGuGsmEfsJZILsyOD61hq7KyLnCs42nbiVND7vZxyyBTcFOS85I78+RoxaiIXP03VOY6IPanCGL0t4imL7nALl4wejQqiYdeanvI0enmaODiaff5Sbm0r5Iwk7sz3lu52haIj1aWuTp9Zo=
+  - secure: WmSk6+kXllsteujcIpY0Yo045kMjdrA/lB1HPr7E0f8yBPwox6YtJVas/8Fi31iLeX0kleh0VvySZB0mDbeKVIf5SZ6aoYlFKjmmBvsK/oH4HWk1+IVHmiUFRJEAiq0ve0+i7J5hF9OX0pdLuKd/sL4UYvyu+ThurNxez/SIfdc=
+  # GitBook credentials
+  - secure: B4emhl8PSnfhM+Aon6PDHqU9TBMF1BaJQlESWiP9cwC8iS1XQ0DE1IBs5rCkKw391q8K2WO14C3sf7YHOAHN9NriCXraTZeZZfAKbCR/euWke7IMEFLZdSNw9ONxknQWVzIDbzQYeHNrQCc0x1SabdorxRMO/H/dVcI9Lvi0APE=
+  - secure: H71PeGYRpoP+JB9x+QaHSgkwiJrUquRjzz5hvJpjEWA/Jxj0FycjJUUv4THNrWf7L8W8rTOzezuJ7MUI/eqwwnQKc8sgnL4AagEy7eY0Qsr+kQrfXeEjmrycerfWopVPJC1gLCqcjJGWPWe2ri4YlFAMwtMUoyhMaomzpRIsfIA=
