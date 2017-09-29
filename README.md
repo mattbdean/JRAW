@@ -6,7 +6,7 @@
 [![API coverage](https://img.shields.io/badge/API_coverage-40%25-9C27B0.svg)](https://github.com/thatJavaNerd/JRAW/blob/kotlin/ENDPOINTS.md)
 [![Codecov branch](https://img.shields.io/codecov/c/github/mattbdean/JRAW.svg)](https://codecov.io/gh/mattbdean/JRAW)
 
-> JRAW is currently being rewritten in Kotlin [Kotlin](https://kotlinlang.org/) for v1.0.0 (see [#187](https://github.com/mattbdean/JRAW/issues/187)). If you'd like to try it out before the official release, please use [Jitpack](https://jitpack.io/#mattbdean/JRAW/master-SNAPSHOT).
+> JRAW is currently being rewritten in [Kotlin](https://kotlinlang.org/) for v1.0.0 (see [#187](https://github.com/mattbdean/JRAW/issues/187)). If you'd like to try it out before the official release, please use [Jitpack](https://jitpack.io/#mattbdean/JRAW/master-SNAPSHOT).
 
 ```java
 // Assuming we have a 'script' reddit app
