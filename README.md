@@ -18,7 +18,7 @@ UserAgent userAgent = new UserAgent("desktop", "my.cool.bot", "1.0.0", "myReddit
 // Authenticate our client
 RedditClient reddit = OAuthHelper.automatic(oauthCreds, new OkHttpNetworkAdapter(userAgent));
 
-// Get user about the user
+// Get info about the user
 Account me = reddit.me().about();
 ```
 
