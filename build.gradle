@@ -1,7 +1,7 @@
 import java.util.stream.Collectors
 
 buildscript {
-    ext.kotlinVersion = '1.1.50'
+    ext.kotlinVersion = '1.1.51'
     ext.spekVersion = '1.1.5'
     ext.moshiVersion = '1.5.0'
     ext.autoValueVersion = '1.5'
