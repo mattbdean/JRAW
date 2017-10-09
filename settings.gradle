@@ -3,4 +3,5 @@ include 'lib'
 include 'meta'
 include 'docs'
 include 'buildSrc'
+include 'exampleScript'
 
