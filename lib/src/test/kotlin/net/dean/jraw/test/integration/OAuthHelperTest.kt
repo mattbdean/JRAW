@@ -1,6 +1,7 @@
 package net.dean.jraw.test.integration
 
 import com.winterbe.expekt.should
+import net.dean.jraw.Endpoint
 import net.dean.jraw.oauth.Credentials
 import net.dean.jraw.oauth.OAuthHelper
 import net.dean.jraw.oauth.StatefulAuthHelper
@@ -16,7 +17,12 @@ import java.util.*
 class OAuthHelperTest: Spek({
     describe("automatic") {
         it("should produce a RedditClient authenticated for a script app") {
-            ensureAuthenticated(OAuthHelper.automatic(newOkHttpAdapter(), CredentialsUtil.script))
+            val reddit = OAuthHelper.automatic(newOkHttpAdapter(), CredentialsUtil.script)
+            ensureAuthenticated(reddit)
+
+            // We should be able to access all Endpoints when using a script app
+            for (endpoint in Endpoint.values())
+                reddit.canAccess(endpoint).should.be.`true`
         }
 
         it("should produce a RedditClient authenticated for a userless Credentials") {

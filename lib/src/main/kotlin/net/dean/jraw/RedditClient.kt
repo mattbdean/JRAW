@@ -283,6 +283,17 @@ class RedditClient internal constructor(
         SubredditReference(this, arrayOf(first, second, *others).joinToString("+")).posts()
 
     /**
+     * Tests if the client has the ability to access the given API endpoint. This method always returns true for script
+     * apps.
+     */
+    fun canAccess(e: Endpoint): Boolean {
+        val scopes = authManager.current?.scopes ?: return false
+        // A '*' means all scopes, only used for scripts
+        if (scopes.contains("*")) return true
+        return scopes.contains(e.scope)
+    }
+
+    /**
      * Creates a SubredditReference for a random subreddit. Although this method is decorated with
      * [EndpointImplementation], it does not execute an HTTP request and is not a blocking call. This method is
      * equivalent to
