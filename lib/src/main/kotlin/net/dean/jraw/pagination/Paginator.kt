@@ -57,9 +57,12 @@ abstract class Paginator<T, out B : Paginator.Builder<T>> protected constructor(
     override fun accumulate(maxPages: Int): List<Listing<T>> {
         val lists = mutableListOf<Listing<T>>()
 
+        if (maxPages < -1)
+            throw IllegalArgumentException("Expecting maxPages to be -1 or greater")
+
         var i = 0
         val it = iterator()
-        while (++i <= maxPages && it.hasNext())
+        while ((maxPages == -1 || ++i <= maxPages) && it.hasNext())
             lists.add(it.next())
         return lists
     }

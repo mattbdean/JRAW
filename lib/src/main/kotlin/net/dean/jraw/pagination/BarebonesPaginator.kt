@@ -25,7 +25,7 @@ open class BarebonesPaginator<T> private constructor(
             .build()
     }
 
-    override fun newBuilder() = Builder<T>(reddit, baseUrl, clazz)
+    override fun newBuilder() = Builder(reddit, baseUrl, clazz)
         .limit(limit)
 
     class Builder<T>(reddit: RedditClient, baseUrl: String, clazz: Class<T>) :

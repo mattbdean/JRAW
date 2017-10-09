@@ -46,7 +46,7 @@ dokka {
 
     linkMapping {
         dir = file('src/main/kotlin')
-        url = 'https://github.com/thatJavaNerd/JRAW/tree/kotlin/lib/src/main/kotlin'
+        url = 'https://github.com/thatJavaNerd/JRAW/tree/master/lib/src/main/kotlin'
         suffix = '#L'
     }
 }

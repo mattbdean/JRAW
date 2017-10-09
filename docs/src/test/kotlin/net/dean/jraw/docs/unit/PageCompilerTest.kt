@@ -20,17 +20,24 @@ class PageCompilerTest : Spek({
     }
 
     describe("compile") {
-        it("should replace [[foo]] links") {
+        it("should replace [[@foo]] links") {
             compiler.compile(listOf("[[@RedditClient]]"))
                 .should.equal(listOf("[RedditClient](${linkGen.generate("RedditClient")})"))
         }
 
-        it("should replace multiple [[foo]] links on one line") {
+        it("should replace multiple [[@foo]] links on one line") {
             val before = "[[@RedditClient]]"
             val after = "[RedditClient](${linkGen.generate("RedditClient")})"
 
             val amount = 3
             compiler.compile(listOf(before.repeat(amount))).should.equal(listOf(after.repeat(3)))
+        }
+
+        it("should replace class references that use fully qualified names") {
+            val before = "[[@net.dean.jraw.RedditClient]]"
+            val after = "[RedditClient](${linkGen.generate("RedditClient")})"
+
+            compiler.compile(listOf(before)).should.equal(listOf(after))
         }
 
         it("should replace code sample placeholders with their actual contents") {

@@ -35,9 +35,12 @@ class PageCompiler(private val linkGenerator: DocLinkGenerator, private val code
                 linkRegex.containsMatchIn(it) -> {
                     val replaced = linkRegex.replace(it) { match ->
                         // groupValues[0] is the input string
-                        val simpleName = match.groupValues[1]
-                        val link = linkGenerator.generate(simpleName)
-                        "[$simpleName]($link)"
+                        val name = match.groupValues[1]
+                        val clazz = ProjectTypeFinder.from(name)
+                            ?: throw IllegalArgumentException("No JRAW type with (simple) name $name")
+
+                        val link = linkGenerator.generate(clazz)
+                        "[${clazz.simpleName}]($link)"
                     }
                     listOf(replaced)
                 }
@@ -50,7 +53,7 @@ class PageCompiler(private val linkGenerator: DocLinkGenerator, private val code
         // https://regexr.com/3goec
         private val sampleRegex = Regex("\\{\\{ ?(\\w+\\.\\w+) ?}}")
 
-        // https://regexr.com/3goef
-        private val linkRegex = Regex("\\[\\[@(\\w+)]]")
+        // https://regexr.com/3gto2
+        private val linkRegex = Regex("\\[\\[@((?:\\w+\\.)*\\w+)]]")
     }
 }

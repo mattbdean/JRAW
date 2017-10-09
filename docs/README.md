@@ -16,22 +16,22 @@ $ cd docs/build/docs && gitbook serve
 The [`net.dean.jraw.docs.samples`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/docs/src/main/java/net/dean/jraw/docs/samples) package contains classes with `@CodeSample` methods to be used in documentation. For example:
 
 ```java
-public class Example {
+final class Example {
     
     @CodeSample
-    private static void showSomething() {
+    void showSomething() {
         String x = "foo";
         System.out.println(x);
     }
     
     @CodeSample
-    private static void doSomething() {
+    void doSomething() {
         int y = 10;
         int x = 4;
         int z = x * y;
     }
     
-    private static void ignored() {
+    void ignored() {
         // This doesn't have the @CodeSample annotation so it gets ignored
     }
 }
@@ -81,6 +81,10 @@ but this is not:
 {{ @Exmaple.showSomething }} {{ @Example.doSomething }}
 ```
 
+> Quick note: when referencing classes with the `[[@Foo]]` syntax, enums have to be referenced by their fully qualified class names, e.g. `[[@com.example.Foo]]`. This is due to a [quirk in the Reflections library](https://stackoverflow.com/a/35588452).
+
+> Another quick note: when writing code samples, keep lines less than 100 characters so readers don't have to scroll horizontally through code blocks.
+
 ## Adding a new chapter
 
 All chapters are arranged in [`toc.json`](https://github.com/mattbdean/JRAW/blob/kotlin/docs/src/main/resources/content/toc.json). This file specifies the table of contents for our book in JSON format. This is essentially an array of [`Chapter`](https://github.com/mattbdean/JRAW/blob/kotlin/docs/src/main/java/net/dean/jraw/docs/Chapter.java)s.
@@ -125,3 +129,26 @@ Then run
 $ ./gradlew :docs:pushSite
 ```
 
+## Developer tips
+
+Continuous Gradle builds, using the watch flag when running GitBook, and a LiveReload plugin for your browser can make development a breeze.
+
+In the first terminal:
+
+```sh
+$ ./gradlew -t :docs:buildSite
+```
+
+And in the second:
+
+```sh
+$ cd docs/build/docs && gitbook install && gitbook serve --watch
+```
+
+Anytime you make a change to a relevant file, the website will be reloaded in your browser.
+
+If you happen to have [concurrently](https://www.npmjs.com/package/concurrently) installed globally, you can use this command to use a single terminal instead:
+
+```sh
+$ concurrently -r -k "./gradlew -t :docs:buildSite" "cd docs/build/docs && gitbook install && gitbook serve --watch"
+```

@@ -7,6 +7,7 @@ import net.dean.jraw.http.NetworkAdapter
 import net.dean.jraw.http.NetworkException
 import net.dean.jraw.models.OAuthData
 import net.dean.jraw.models.internal.OAuthDataJson
+import okhttp3.HttpUrl
 import java.math.BigInteger
 import java.net.URL
 import java.security.SecureRandom
@@ -22,7 +23,7 @@ class StatefulAuthHelper internal constructor(
     val authStatus: Status
         get() = _authStatus
 
-    fun getAuthorizationUrl(permanent: Boolean = true, useMobileSite: Boolean = false, vararg scopes: String): String {
+    fun getAuthorizationUrl(requestRefreshToken: Boolean = true, useMobileSite: Boolean = false, vararg scopes: String): String {
         // Generate a random alpha-numeric string
         // http://stackoverflow.com/a/41156
         state = BigInteger(130, rand).toString(32)
@@ -39,9 +40,20 @@ class StatefulAuthHelper internal constructor(
                 "response_type" to "code",
                 "state" to state!!,
                 "redirect_uri" to creds.redirectUrl!!,
-                "duration" to if (permanent) "permanent" else "temporary",
+                "duration" to if (requestRefreshToken) "permanent" else "temporary",
                 "scope" to scopes.joinToString(separator = " ")
             )).build().url
+    }
+
+    /**
+     * Checks if the given URL is the URL that reddit redirects to when the user allows or denies access to the OAuth2
+     * app.
+     */
+    fun isFinalRedirectUrl(url: String): Boolean {
+        val httpUrl = HttpUrl.parse(url) ?: throw IllegalArgumentException("Malformed URL: $url")
+        creds.redirectUrl ?: throw IllegalStateException("Given credentials have no redirect URL")
+
+        return httpUrl.toString().startsWith(creds.redirectUrl) && httpUrl.queryParameter("state") != null
     }
 
     @Throws(NetworkException::class, OAuthException::class, IllegalStateException::class)

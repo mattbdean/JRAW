@@ -8,6 +8,24 @@ import okio.Okio
 import java.io.File
 import java.io.IOException
 
+/**
+ * This class stores its data in a file encoded as JSON. It uses Moshi to persist and load data from that file.
+ *
+ * ```kt
+ * val tokenStore = JsonFileTokenStore(someFile)
+ *
+ * // Read the already stored data from the file
+ * tokenStore.load()
+ *
+ * // Make some changes (this is probably done by AuthManager)
+ * tokenStore.storeRefreshToken("username", "foobar")
+ *
+ * // Save changes to disk
+ * tokenStore.persist()
+ * ```
+ *
+ * @see DeferredPersistentTokenStore
+ */
 class JsonFileTokenStore @JvmOverloads constructor(
     private val saveLocation: File,
     initialData: Map<String, PersistedAuthData> = mapOf()
@@ -17,8 +35,14 @@ class JsonFileTokenStore @JvmOverloads constructor(
 
     private var adapter = baseAdapter.indent("") // no indent (compact) by default
 
+    /**
+     * Sets the character(s) to indent with. By default, there is no indent; JSON is written in a compact form.
+     *
+     * @return This TokenStore for chaining.
+     */
     fun indent(with: String?): JsonFileTokenStore {
-        this.adapter = baseAdapter.indent(with ?: "")
+        val indent = with ?: ""
+        this.adapter = baseAdapter.indent(indent)
         return this
     }
 

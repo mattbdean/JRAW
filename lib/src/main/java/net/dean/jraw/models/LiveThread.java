@@ -4,8 +4,11 @@ import com.google.auto.value.AutoValue;
 import com.squareup.moshi.Json;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
+import net.dean.jraw.RedditClient;
 import net.dean.jraw.databind.RedditModel;
 import net.dean.jraw.databind.UnixTime;
+import net.dean.jraw.references.LiveThreadReference;
+import net.dean.jraw.references.Referenceable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -13,7 +16,7 @@ import java.util.Date;
 
 @AutoValue
 @RedditModel
-public abstract class LiveThread implements Created, Identifiable {
+public abstract class LiveThread implements Created, Identifiable, Referenceable<LiveThreadReference> {
     @NotNull
     @Override
     @Json(name = "created_utc") @UnixTime public abstract Date getCreated();
@@ -45,6 +48,12 @@ public abstract class LiveThread implements Created, Identifiable {
 
     /** Any additional resources provided by the moderators of the thread */
     public abstract String getResources();
+
+    @NotNull
+    @Override
+    public LiveThreadReference toReference(@NotNull RedditClient reddit) {
+        return reddit.liveThread(getId());
+    }
 
     public static JsonAdapter<LiveThread> jsonAdapter(Moshi moshi) {
         return new AutoValue_LiveThread.MoshiJsonAdapter(moshi);

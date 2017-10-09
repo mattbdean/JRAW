@@ -27,6 +27,15 @@ class BookBuilderTest : Spek({
         val builder = BookBuilder(samplesDir, contentDir)
         builder.build(outDir)
 
+        // Install all necessary plugin dependencies
+        val installExitCode = ProcessBuilder("gitbook", "install")
+            .directory(outDir)
+            .inheritIO()
+            .start()
+            .waitFor()
+
+        installExitCode.should.equal(0)
+
         // Run gitbook to make sure there are no build errors
         val exitCode = ProcessBuilder("gitbook", "build")
             .directory(outDir)

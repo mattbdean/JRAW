@@ -4,6 +4,8 @@
 
 JRAW is hosted on Bintray's [jCenter](http://jcenter.bintray.com/net/dean/jraw/JRAW/).
 
+[![Latest release](https://img.shields.io/github/release/mattbdean/JRAW.svg)](https://bintray.com/thatjavanerd/maven/JRAW/_latestVersion)
+
 **Gradle**:
 
 ```groovy
@@ -28,46 +30,33 @@ Add jCenter (`https://jcenter.bintray.com`) to your repositories and then add th
 </dependency>
 ```
 
-## Choosing a User-Agent
-The first step in using the Reddit API effectively is making sure you're sending a descriptive User-Agent header. This allows Reddit to block buggy versions of your app while not affecting others. An effective User-Agent consists of four parts:
+## Choose a User-Agent
+
+The first step in using the reddit API effectively is making sure you're sending a descriptive User-Agent header. This allows reddit to block buggy versions of your app while not affecting others. An effective User-Agent consists of four parts:
 
 1. The target platform
 2. A unique ID (usually your package)
 3. A version
 4. A reddit username.
 
-A `UserAgent` for a script named "Awesome Script" could look like this:
+A [[@UserAgent]] for a super useful bot could look like this:
 
 {{ Quickstart.userAgent }}
 
-## Authentication
+## Create a reddit OAuth2 app
 
-Now we can create a [[@RedditClient]]
+reddit uses OAuth2 to authenticate 3rd party apps. The first thing you'll need to do is to register your app [here](https://www.reddit.com/prefs/apps). For the sake of simplicity, let's create a script app.
 
-```java
-RedditClient redditClient = new RedditClient(myUserAgent);
-```
+![client ID and client secret](https://i.imgur.com/ILMeklr.png)
 
-Because reddit uses OAuth2, this RedditClient will need to be authenticated before it can do anything useful. Fortunately, `RedditClient` comes with a helper class: [[@OAuthHelper]]. This guide will assume you picked a script app, since those are the easiest to authenticate. If you need to use a web or installed app, see the [OAuth2 page](https://github.com/thatJavaNerd/JRAW/wiki/OAuth2).
+You'll need the client ID and client secret later.
 
-The first thing we need to do is get our credentials in order. JRAW comes with a [[@Credentials]] class to help us organize everything.
+## Authenticate
 
-```java|escapeHtml
-Credentials credentials = Credentials.script("<username>", "<password>", "<clientId>", "<clientSecret>");
-```
+Let's tell JRAW to authenticate our client:
 
-To use this data, we need to use the RedditClient's OAuthHelper. Since the Credentials we created was for a script, we can make use of OAuthHelper's `eashAuth` method.
+{{ Quickstart.authenticate }}
 
-```java
-OAuthData authData = redditClient.getOAuthHelper().easyAuth(credentials);
-```
+Here `<username>` and `<password>` must be for the account that created the script.
 
-Finally, we can notify the RedditClient that we have been authorized.
-
-```java
-redditClient.authenticate(authData);
-```
-
-Now we are fully authorized and are able to make requests to the API successfully! To test it out, try `redditClient.me()`.
-
-Note that you will need to renew your access token after one hour. To do this, see the [OAuth2 page](https://github.com/thatJavaNerd/JRAW/wiki/OAuth2).
+See the [OAuth2 page](oauth2.md) page for more.

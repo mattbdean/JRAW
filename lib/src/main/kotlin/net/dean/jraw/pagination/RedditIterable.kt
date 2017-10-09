@@ -16,7 +16,7 @@ interface RedditIterable<T> : Iterable<Listing<T>> {
     fun next(): Listing<T>
 
     /** Resets [current] and [pageNumber] so iteration can start at the first page again */
-    fun restart(): Unit
+    fun restart()
 
     /** Returns true if iteration has not been started */
     fun hasStarted(): Boolean
@@ -27,7 +27,7 @@ interface RedditIterable<T> : Iterable<Listing<T>> {
      * The amount of time this method takes to return will grow linearly based on the maximum number of pages, as there
      * will be one request for each new page.
      *
-     * @param maxPages The maximum amount of pages to retrieve
+     * @param maxPages The maximum amount of pages to retrieve. If -1, will fetch all pages.
      */
     fun accumulate(maxPages: Int): List<Listing<T>>
 

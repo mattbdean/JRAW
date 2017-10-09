@@ -30,13 +30,25 @@ object ProjectTypeFinder {
      * was a project class `net.dean.jraw.Foo`, `isProjectType("Foo")` would return true, but
      * `isProjectType("net.dean.jraw.Foo")` would return false.
      */
-    fun isProjectType(simpleName: String) = fromSimpleName(simpleName) != null
+    fun isProjectType(simpleName: String) = from(simpleName) != null
 
     /**
      * Gets a Class that represents the given project simple name, or null if there is no project class with that
      * simple name.
      */
-    fun fromSimpleName(simpleName: String): Class<*>? {
-        return jrawTypes.firstOrNull { it.simpleName == simpleName }
+    fun from(name: String): Class<*>? {
+        if (name.contains(".")) {
+            if (!name.startsWith("net.dean.jraw."))
+                throw IllegalArgumentException("Not a JRAW type: $name")
+            // Fully qualified name
+            return try {
+                Class.forName(name)
+            } catch (e: ClassNotFoundException) {
+                null
+            }
+        }
+
+        // Simple name
+        return jrawTypes.firstOrNull { it.simpleName == name }
     }
 }

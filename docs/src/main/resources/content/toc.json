@@ -1,5 +1,11 @@
 [
     { "file": "README", "title": "Introduction" },
     { "file": "quickstart" },
-    { "file": "cookbook" }
+    { "file": "basics", "title": "The Basics" },
+    { "file": "oauth2", "title": "OAuth2" },
+    { "file": "pagination" },
+    { "file": "live_threads", "title": "Live Threads" },
+    { "file": "ratelimiting" },
+    { "file": "cookbook" },
+    { "file": "internals" }
 ]

@@ -55,5 +55,10 @@ class BookBuilder(samplesDir: File, private val contentDir: File) {
 
         for ((fileName, contents) in compiled)
             File(outputDir, fileName).writeText(contents.joinToString("\n"))
+
+        // Copy book.json (GitBook config) if present
+        val bookJson = File(contentDir, "book.json")
+        if (bookJson.isFile)
+            bookJson.copyTo(File(outputDir, "book.json"), overwrite = true)
     }
 }

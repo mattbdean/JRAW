@@ -1,0 +1,18 @@
+{
+    "gitbook": "3.2.3",
+    "title": "JRAW",
+    "description": "The Java Reddit API Wrapper",
+    "author": "mattbdean",
+    "language": "en",
+    "plugins": [
+        "edit-link",
+        "heading-anchors",
+        "versions"
+    ],
+    "pluginsConfig": {
+        "edit-link": {
+            "base": "https://github.com/mattbdean/JRAW/tree/master/docs/src/main/resources/content",
+            "label": "Edit This Page"
+        }
+    }
+}

@@ -4,25 +4,33 @@ This page shows some examples of what the library can do
 
 ## The basics
 
-### Iterate the front page
+### View the front page
 
 {{ Cookbook.iterateFrontPage }}
 
-### Get images from /r/EarthPorn and /r/spaceporn
+### Find imgur links from several subreddits
 
 {{ Cookbook.imagesFromMultipleSubreddits }}
 
-### Find the subreddits the user is subscribed to
+### Get user subscriptions
 
 {{ Cookbook.userSubscriptions }}
 
 ## Account
 
+See also [[@UserReference]], [[@SelfUserReference]], [[@OtherUserReference]]
+
+### Get basic information
+
+{{ Cookbook.basicInfo }}
+
+### Get trophies
+
+{{ Cookbook.trophies}}
+
 ## Flair
 
-TODO
-
-## reddit gold
+See also [[@FlairReference]], [[@SubmissionFlairReference]], [[@UserFlairReference]], [[@SelfUserFlairReference]], and [[@OtherUserFlairReference]]
 
 TODO
 
@@ -79,10 +87,6 @@ TODO
 ### Iterate a specific multireddit
 
 {{ Cookbook.iterateSpecificMultireddit }}
-
-## Search
-
-TODO
 
 ## Subreddits
 

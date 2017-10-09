@@ -13,11 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("unused")
-public class Cookbook {
-    private static RedditClient redditClient;
+final class Cookbook {
+    RedditClient redditClient;
 
     @CodeSample
-    private static void iterateFrontPage() {
+    void iterateFrontPage() {
         // frontPage() returns a Paginator.Builder
         DefaultPaginator<Submission> frontPage = redditClient.frontPage()
             .sorting(Sorting.TOP)
@@ -33,7 +33,7 @@ public class Cookbook {
 
     @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
     @CodeSample
-    private static void imagesFromMultipleSubreddits() {
+    void imagesFromMultipleSubreddits() {
         DefaultPaginator<Submission> earthPorn = redditClient.subreddits("EarthPorn", "spaceporn").build();
 
         List<String> images = new ArrayList<String>();
@@ -48,7 +48,7 @@ public class Cookbook {
 
     @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
     @CodeSample
-    private static void userSubscriptions() {
+    void userSubscriptions() {
         // Make sure we have a logged-in user or this call will fail!
         DefaultPaginator<Subreddit> paginator = redditClient.me().subreddits("subscriber")
             // Request as many items as possible
@@ -68,12 +68,13 @@ public class Cookbook {
 
     @SuppressWarnings("UnusedAssignment")
     @CodeSample
-    private static void createAndUpdateMultireddit() {
-        Multireddit multi = redditClient.me().createMulti("my_multireddit", new MultiredditPatch.Builder()
+    void createAndUpdateMultireddit() {
+        MultiredditPatch multiSpec = new MultiredditPatch.Builder()
             .description("Here's a cool multireddit!")
             .subreddits("redditdev", "kotlin", "java")
             .visibility("private")
-            .build());
+            .build();
+        Multireddit multi = redditClient.me().createMulti("my_multireddit", multiSpec);
 
         // Turn the model class into a Reference, which we can use to interact with the API
         MultiredditReference ref = multi.toReference(redditClient);
@@ -89,9 +90,9 @@ public class Cookbook {
     }
 
     @CodeSample
-    private static void iterateSpecificMultireddit() {
-        // reddit staff members have subreddits for their pets, the multireddit at "/user/reddit/m/redditpets" contains
-        // them all
+    void iterateSpecificMultireddit() {
+        // reddit staff members have subreddits for their pets, the multireddit at
+        // "/user/reddit/m/redditpets" contains them all
         MultiredditReference ref = redditClient.user("reddit").multi("redditpets");
 
         // Get the first page
@@ -99,13 +100,13 @@ public class Cookbook {
     }
 
     @CodeSample
-    private static void listMultireddits() {
+    void listMultireddits() {
         List<Multireddit> mine = redditClient.me().listMultis();
         List<Multireddit> someoneElses = redditClient.user("reddit").listMultis();
     }
 
     @CodeSample
-    private static void iterateInbox() {
+    void iterateInbox() {
         BarebonesPaginator<Message> unread = redditClient.me().inbox().iterate("unread")
             .build();
 
@@ -113,7 +114,7 @@ public class Cookbook {
     }
 
     @CodeSample
-    private static void markReadUnread() {
+    void markReadUnread() {
         // Get the first unread message in the inbox
         Listing<Message> unread = redditClient.me().inbox().iterate("unread")
             .limit(1)
@@ -128,14 +129,27 @@ public class Cookbook {
     }
 
     @CodeSample
-    private static void sendPrivateMessage() {
+    void sendPrivateMessage() {
         InboxReference inbox = redditClient.me().inbox();
         inbox.compose("thatJavaNerd", "receiver username", "body");
     }
 
     @CodeSample
-    private static void sendPrivateMessageAsModerator() {
+    void sendPrivateMessageAsModerator() {
         // Make sure to exclude the "/r/" prefix
-        redditClient.me().inbox().compose("some_subreddit_i_moderate", "receiver username", "subject", "body");
+        redditClient.me().inbox().compose("some_subreddit_i_moderate", "receiver username",
+            "subject", "body");
+    }
+
+    @CodeSample
+    void basicInfo() {
+        Account me = redditClient.me().about();
+        Account someoneElse = redditClient.user("Shitty_Watercolour").about();
+    }
+
+    @CodeSample
+    void trophies() {
+        List<Trophy> mine = redditClient.me().trophies();
+        List<Trophy> someoneElses = redditClient.user("Shitty_Watercolour").trophies();
     }
 }

@@ -28,15 +28,12 @@ fun createWebClient(): WebClient {
     return client
 }
 
-
-fun getUrlFrom(page: HtmlPage): String = page.webResponse.webRequest.url.toExternalForm()
-
 fun doBrowserLogin(vararg scopes: String = arrayOf("identity")): Pair<StatefulAuthHelper, HtmlPage> {
     val helper = OAuthHelper.interactive(newOkHttpAdapter(), CredentialsUtil.app, InMemoryTokenStore())
 
     // Test state change once we get the authorization URL
     helper.authStatus.should.equal(StatefulAuthHelper.Status.INIT)
-    val url = helper.getAuthorizationUrl(permanent = true, useMobileSite = false, scopes = *scopes)
+    val url = helper.getAuthorizationUrl(requestRefreshToken = true, useMobileSite = false, scopes = *scopes)
     helper.authStatus.should.equal(StatefulAuthHelper.Status.WAITING_FOR_CHALLENGE)
 
     val client = createWebClient()
@@ -56,7 +53,9 @@ fun emulateBrowserAuth(vararg scopes: String = arrayOf("identity")): RedditClien
     val (helper, authorizePage) = doBrowserLogin(*scopes)
     val redirectPage: HtmlPage = findChild<HtmlInput>(authorizePage.body, "input", "name" to "authorize").click()
 
-    val reddit = helper.onUserChallenge(getUrlFrom(redirectPage))
+    val url = redirectPage.url.toExternalForm()
+    helper.isFinalRedirectUrl(url).should.be.`true`
+    val reddit = helper.onUserChallenge(url)
     helper.authStatus.should.equal(StatefulAuthHelper.Status.AUTHORIZED)
     return reddit
 }

@@ -14,8 +14,6 @@ fun main(args: Array<String>) {
     val outDir = File(cliArgs[OUT_DIR_ARG])
     val resourcesDir = File(cliArgs[RESOURCES_DIR_ARG])
 
-    outDir.deleteRecursively()
-
     if (!outDir.isDirectory && !outDir.mkdirs())
         failAndExit("Could not `mkdir -p` for ${outDir.absolutePath}")
 

@@ -28,8 +28,12 @@ class StatefulAuthHelperTest : Spek({
         val (helper, authorizePage) = doBrowserLogin()
         val redirectPage: HtmlPage = findChild<HtmlInput>(authorizePage.body, "input", "value" to "Decline").click()
 
+        // test isFinalRedirectUrl
+        val url = redirectPage.url.toExternalForm()
+        helper.isFinalRedirectUrl(url).should.be.`true`
+
         expectException(OAuthException::class) {
-            helper.onUserChallenge(getUrlFrom(redirectPage))
+            helper.onUserChallenge(url)
         }
     }
 })
