@@ -17,8 +17,7 @@ import net.dean.jraw.pagination.Paginator;
 public final class ScriptExample {
     public static void main(String[] args) {
         // You'll want to change this for your specific OAuth2 app
-        Credentials credentials =
-            Credentials.script("jraw_test", "PYbdv4F78eWb7WKCqsZwqQMHq", "vgMHmurocRkiPg", "nto5hITmgDZg9IvJI9UltlL_Ejc");
+        Credentials credentials = Credentials.script("<username>", "<password>", "<client ID>", "<client secret>");
 
         // Construct our NetworkAdapter
         UserAgent userAgent = new UserAgent("bot", "net.dean.jraw.example.script", Version.get(), "thatJavaNerd");
