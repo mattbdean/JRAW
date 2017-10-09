@@ -314,10 +314,13 @@ class RedditClient internal constructor(
     fun submission(id: String) = SubmissionReference(this, id)
 
     /**
-     * Creates a BarebonesPaginator.Builder that will iterate over the latest comments from all subreddits when built.
-     * This Paginator will be especially useful when used with the [Paginator.restart] method.
+     * Creates a BarebonesPaginator.Builder that will iterate over the latest comments from the given subreddits when
+     * built. If no subreddits are given, comments will be from any subreddit.
      */
-    fun latestComments() = BarebonesPaginator.Builder.create<Comment>(this, "/comments")
+    fun latestComments(vararg subreddits: String): BarebonesPaginator.Builder<Comment> {
+        val prefix = if (subreddits.isEmpty()) "" else "/r/" + subreddits.joinToString("+")
+        return BarebonesPaginator.Builder.create(this, "$prefix/comments")
+    }
 
     /**
      * Returns the name of the logged-in user

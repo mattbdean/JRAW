@@ -167,6 +167,13 @@ class RedditClientTest : Spek({
                 comments.next().should.have.size(limit)
             }
         }
+
+        it("should only include comments from the specified subreddits") {
+            val subreddits = listOf("java", "redditdev")
+            reddit.latestComments(*subreddits.toTypedArray()).build().next().forEach {
+                subreddits.should.contain(it.subreddit)
+            }
+        }
     }
 
     describe("happeningNow") {
