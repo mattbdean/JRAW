@@ -16,31 +16,32 @@ class EnumCreator(val endpoints: List<ParsedEndpoint>, val indent: Int = 4) {
                 javadoc("This is a dynamically generated enumeration of all reddit API endpoints.\n\n")
                 javadoc(
                     "For JRAW developers: this class should not be edited by hand. This class can be regenerated " +
-                        "through the `:meta:update` Gradle task.")
+                        "through the ${code(":meta:update")} Gradle task.")
 
                 // Dynamically add a enum value for each endpoint
                 for (e in endpoints) {
-                    // Not sure how to specify two parameters, this'll have to do for now
-                    case(enumName(e), "${e.method} ${e.path}".S) {
+                    case(enumName(e), "\$S, \$S, \$S", e.method, e.path, e.oauthScope) {
                         javadoc(javadocFor(e))
                     }
                 }
 
-                // Declare two private final fields "method" and "path"
+                // Declare three private final fields "method", "path", and "scope"
                 `private final field`(String::class, "method")
                 `private final field`(String::class, "path")
+                `private final field`(String::class, "scope")
 
-                // Create constructor which takes those two fields as parameters
-                `constructor`(`final param`(String::class, "identifier")) {
-                    statement("String[] parts = identifier.split(\" \")")
-                    statement("this.method = parts[0]")
-                    statement("this.path = parts[1]")
+                // Create constructor which takes those three fields as parameters
+                `constructor`(`final param`(String::class, "method"),
+                    `final param`(String::class, "path"),
+                    `final param`(String::class, "scope")) {
+                    statement("this.method = method")
+                    statement("this.path = path")
+                    statement("this.scope = scope")
                 }
-
 
                 // Create getters for the "path" and "method" fields
                 `public`(String::class, "getPath") {
-                    javadoc("Gets this Endpoint's path, e.g. `/api/comment`")
+                    javadoc("Gets this Endpoint's path, e.g. ${code("/api/comment")}")
                     `return`("this.path")
                 }
 
@@ -48,9 +49,13 @@ class EnumCreator(val endpoints: List<ParsedEndpoint>, val indent: Int = 4) {
                     javadoc("Gets this Endpoint's HTTP method (\"GET\", \"POST\", etc.)")
                     `return`("this.method")
                 }
+
+                `public`(String::class, "getScope") {
+                    javadoc("Gets the OAuth2 scope required to use this endpoint")
+                    `return`("this.scope")
+                }
             }
         }
-
 
     companion object {
         const val ENUM_NAME = "Endpoint"
