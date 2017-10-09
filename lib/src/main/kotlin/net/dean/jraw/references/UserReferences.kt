@@ -21,7 +21,6 @@ sealed class UserReference<out T : UserFlairReference>(reddit: RedditClient, val
         val body = reddit.request {
             it.path(if (isSelf) "/api/v1/me" else "/user/$username/about")
         }.body
-        println(body)
 
         // /api/v1/me returns an Account that isn't wrapped with the data/kind nodes
         if (isSelf)
