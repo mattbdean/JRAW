@@ -1,11 +1,13 @@
 package net.dean.jraw.test.integration
 
+import com.winterbe.expekt.should
 import net.dean.jraw.RedditClient
 import net.dean.jraw.models.Sorting
 import net.dean.jraw.models.Submission
 import net.dean.jraw.models.Subreddit
 import net.dean.jraw.test.TestConfig
 import org.jetbrains.spek.api.Spek
+import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
 import kotlin.reflect.KClass
 
@@ -48,6 +50,26 @@ class DeserializationTest : Spek({
             for (deserializeThing in testFunctions) {
                 deserializeThing(withoutUser)
             }
+        }
+    }
+
+    describe("Submission media") {
+        it("should handle Submissions with OEmbed media") {
+            val media = withUser.submission("764nn9").inspect().embeddedMedia
+            media.should.not.be.`null`
+            media?.type.should.not.equal("liveupdate")
+            media?.oEmbed.should.not.be.`null`
+        }
+
+        it("should handle Submissions for a live thread") {
+            val media = withUser.submission("72dg2e").inspect().embeddedMedia
+            media.should.not.be.`null`
+            media?.type.should.equal("liveupdate")
+            media?.liveThreadId.should.have.length.above(0)
+        }
+
+        it("should handle Submissions with no media") {
+            withUser.submission("92dd8").inspect().embeddedMedia.should.be.`null`
         }
     }
 })

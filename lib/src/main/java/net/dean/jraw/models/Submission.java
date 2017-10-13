@@ -51,6 +51,10 @@ public abstract class Submission implements PublicContribution<SubmissionReferen
     @Nullable
     @UnixTime public abstract Date getEdited();
 
+    /** Any external media picked up by reddit */
+    @Nullable
+    @Json(name = "secure_media") public abstract EmbeddedMedia getEmbeddedMedia();
+
     @NotNull
     @Override
     @Json(name = "name") public abstract String getFullName();

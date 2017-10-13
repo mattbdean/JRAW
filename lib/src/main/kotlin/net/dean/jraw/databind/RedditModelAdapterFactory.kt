@@ -61,7 +61,7 @@ class RedditModelAdapterFactory(
         if (rawType == Listing::class.java) {
             val childType = (type as ParameterizedType).actualTypeArguments.first()
             // Assume children are enveloped
-            val delegate = moshi.adapter<Any>(childType, Enveloped::class.java)
+            val delegate = moshi.adapter<Any>(childType, Enveloped::class.java).nullSafe()
             return ListingAdapter(delegate)
         }
 

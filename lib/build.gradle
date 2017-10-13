@@ -11,7 +11,7 @@ dependencies {
         exclude group: 'com.squareup.moshi'
     }
 
-    apt('com.github.rharter:auto-value-moshi:77d1d54285') {
+    apt('com.github.rharter:auto-value-moshi:4a4423b') {
         exclude group: 'com.squareup.moshi'
     }
     apt moshi
