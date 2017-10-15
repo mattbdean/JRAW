@@ -131,9 +131,9 @@ class DeferredPersistentStoreTest : Spek({
 class MockDeferredPersistentTokenStore(initialData: Map<String, PersistedAuthData>) :
     DeferredPersistentTokenStore<MockDeferredPersistentTokenStore>(initialData) {
 
-    var _persisted: MutableMap<String, PersistedAuthData?> = HashMap()
+    var _persisted: MutableMap<String, PersistedAuthData> = HashMap()
 
-    override fun doPersist(data: Map<String, PersistedAuthData?>): MockDeferredPersistentTokenStore {
+    override fun doPersist(data: Map<String, PersistedAuthData>): MockDeferredPersistentTokenStore {
         this._persisted = data.toMutableMap()
         return this
     }

@@ -47,7 +47,7 @@ class JsonFileTokenStore @JvmOverloads constructor(
     }
 
     @Throws(IOException::class)
-    override fun doPersist(data: Map<String, PersistedAuthData?>): JsonFileTokenStore {
+    override fun doPersist(data: Map<String, PersistedAuthData>): JsonFileTokenStore {
         // Make sure the file's directory exists
         if (!saveLocation.exists() && saveLocation.absoluteFile.parentFile != null) {
             val parent = saveLocation.absoluteFile.parentFile!!

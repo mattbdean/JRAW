@@ -59,7 +59,7 @@ abstract class DeferredPersistentTokenStore<T : DeferredPersistentTokenStore<T>>
      * Does the actual work for persisting data. The given data may contain null values depending on if the user asked
      * to keep insignificant values.
      */
-    protected abstract fun doPersist(data: Map<String, PersistedAuthData?>): T
+    protected abstract fun doPersist(data: Map<String, PersistedAuthData>): T
 
     /** Does the actual loading of the persisted data. Assign the new data to [memoryData]. */
     protected abstract fun doLoad(): T
