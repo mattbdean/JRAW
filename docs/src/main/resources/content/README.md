@@ -12,4 +12,4 @@ JRAW was designed to be *the* reddit API wrapper for the JVM. It offers a simpli
 
 If you're new to JRAW, you'll probably want to start off with the [quickstart](quickstart.md) or [basics](basics.md) page.
 
-If you have any questions or find a bug, don't hesitate to [open an issue](https://github.com/mattbdean/JRAW/issues).
+If you have any questions or find a bug, don't hesitate to [open an issue](https://github.com/mattbdean/JRAW/issues/new).
