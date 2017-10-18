@@ -3,6 +3,7 @@ package net.dean.jraw.test.integration
 import com.winterbe.expekt.should
 import net.dean.jraw.models.CommentSort
 import net.dean.jraw.models.KindConstants
+import net.dean.jraw.models.Sorting
 import net.dean.jraw.models.VoteDirection
 import net.dean.jraw.references.CommentsRequest
 import net.dean.jraw.references.SubmissionReference
@@ -22,16 +23,26 @@ class SubmissionReferenceTest : Spek({
 
     describe("upvote/downvote/unvote") {
         it("should have an effect on a model") {
+            // Grab a reference to the newest post on /r/jraw_testing2
+            val voteRef = reddit.subreddit("jraw_testing2")
+                .posts()
+                .sorting(Sorting.NEW)
+                .build()
+                .next()
+                .first()
+                .toReference(reddit)
+
             fun expectVote(dir: VoteDirection) {
-                ref.inspect().vote.should.equal(dir)
+                voteRef.inspect().vote.should.equal(dir)
             }
-            ref.upvote()
+
+            voteRef.upvote()
             expectVote(VoteDirection.UP)
 
-            ref.downvote()
+            voteRef.downvote()
             expectVote(VoteDirection.DOWN)
 
-            ref.unvote()
+            voteRef.unvote()
             expectVote(VoteDirection.NONE)
         }
     }

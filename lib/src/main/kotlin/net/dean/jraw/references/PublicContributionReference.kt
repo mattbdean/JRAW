@@ -33,6 +33,8 @@ abstract class PublicContributionReference internal constructor(reddit: RedditCl
      *
      * > Note: votes must be cast by humans. That is, API clients proxying a human's action one-for-one are OK, but bots
      *   deciding how to vote on content or amplifying a human's vote are not.
+     *
+     * reddit responds with an HTTP 400 if the post is too old to be voted on.
      */
     @EndpointImplementation(Endpoint.POST_VOTE)
     fun setVote(dir: VoteDirection) {
