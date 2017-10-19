@@ -7,12 +7,14 @@ import net.dean.jraw.JrawUtils
 import net.dean.jraw.models.PersistedAuthData
 import net.dean.jraw.oauth.JsonFileTokenStore
 import net.dean.jraw.test.createMockOAuthData
+import net.dean.jraw.test.expectException
 import net.dean.jraw.test.randomName
 import okio.Okio
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
 import java.io.File
+import java.io.FileNotFoundException
 import java.util.*
 
 class JsonFileTokenStoreTest : Spek({
@@ -60,21 +62,26 @@ class JsonFileTokenStoreTest : Spek({
     }
 
     describe("load") {
-        it("should do nothing if the file doesn't exist") {
+        it("should throw an error if the file doesn't exist") {
             val store = newStore(tempFile(createFile = false))
-            store.load().data().should.be.`empty`
+            expectException(FileNotFoundException::class) {
+                store.load()
+            }
         }
 
         it("should load data from a JSON file") {
             val store = newStore(tempFile(data))
-            store.load().data().should.equal(data)
+            store.load()
+            store.data().should.equal(data)
         }
 
         it("should handle null PersistedAuthData properties") {
             // Should be fine, just make sure nothing weird is going in with our Moshi configuration
             val dataWithNulls = PersistedAuthData.create(null, refreshToken)
-            newStore(tempFile(mapOf(username to dataWithNulls)))
-                .load()
+            val store = newStore(tempFile(mapOf(username to dataWithNulls)))
+            store.load()
+
+            store
                 .inspect(username)
                 .should.equal(dataWithNulls)
         }
@@ -83,7 +90,8 @@ class JsonFileTokenStoreTest : Spek({
     describe("indent") {
         it("should use an indent when specified") {
             val f = tempFile()
-            val store = newStore(f, data).indent(null).persist()
+            val store = newStore(f, data).indent(null)
+            store.persist()
 
             // We can't easily test to make sure that it's using the correct indent, but we can observe the change in
             // file size. If we increase the indent by 1 character every time we persist, we expect to see a constant
@@ -112,7 +120,9 @@ class JsonFileTokenStoreTest : Spek({
 
             val f = tempFile()
             newStore(f, data).persist()
-            newStore(f).load().data().should.equal(data)
+            val s = newStore(f)
+            s.load()
+            s.data().should.equal(data)
         }
     }
 })

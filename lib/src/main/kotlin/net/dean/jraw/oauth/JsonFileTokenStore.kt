@@ -29,7 +29,7 @@ import java.io.IOException
 class JsonFileTokenStore @JvmOverloads constructor(
     private val saveLocation: File,
     initialData: Map<String, PersistedAuthData> = mapOf()
-) : DeferredPersistentTokenStore<JsonFileTokenStore>(initialData) {
+) : DeferredPersistentTokenStore(initialData) {
     private val baseAdapter: JsonAdapter<Map<String, PersistedAuthData>> =
         JrawUtils.moshi.adapter<Map<String, PersistedAuthData>>(ADAPTER_TYPE)
 
@@ -47,7 +47,7 @@ class JsonFileTokenStore @JvmOverloads constructor(
     }
 
     @Throws(IOException::class)
-    override fun doPersist(data: Map<String, PersistedAuthData>): JsonFileTokenStore {
+    override fun doPersist(data: Map<String, PersistedAuthData>) {
         // Make sure the file's directory exists
         if (!saveLocation.exists() && saveLocation.absoluteFile.parentFile != null) {
             val parent = saveLocation.absoluteFile.parentFile!!
@@ -58,18 +58,15 @@ class JsonFileTokenStore @JvmOverloads constructor(
         val sink = Okio.buffer(Okio.sink(saveLocation))
         adapter.toJson(sink, memoryData)
         sink.close()
-        return this
     }
 
-    override fun doLoad(): JsonFileTokenStore {
+    override fun doLoad() {
         if (!saveLocation.exists()) {
             this.memoryData = mutableMapOf()
-            return this
         }
 
         val persisted = adapter.fromJson(Okio.buffer(Okio.source(saveLocation)))!!
         this.memoryData = persisted as MutableMap<String, PersistedAuthData>
-        return this
     }
 
     companion object {

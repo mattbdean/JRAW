@@ -48,9 +48,9 @@ class DeferredPersistentStoreTest : Spek({
         }
 
         it("shouldn't save usernames with expired data by default") {
-            val insignifcantData = mapOf(username to PersistedAuthData.create(oauthData.withExpiration(Date(0L)), null))
-            insignifcantData[username]!!.isSignificant.should.be.`false`
-            val store = newStore(insignifcantData)
+            val insignificantData = mapOf(username to PersistedAuthData.create(oauthData.withExpiration(Date(0L)), null))
+            insignificantData[username]!!.isSignificant.should.be.`false`
+            val store = newStore(insignificantData)
 
             store.persist()
             store._persisted.should.be.empty
@@ -58,7 +58,7 @@ class DeferredPersistentStoreTest : Spek({
 
         it("should persist expired data as null") {
             val store = newStore(mapOf(username to PersistedAuthData.create(oauthData.withExpiration(Date(0L)), refreshToken)))
-                .persist()
+            store.persist()
 
             store._persisted[username]!!.should.equal(PersistedAuthData.create(null, refreshToken))
         }
@@ -66,7 +66,9 @@ class DeferredPersistentStoreTest : Spek({
 
     describe("hasUnsaved") {
         it("should change based on whether there are unsaved changes") {
-            val store = newStore(data).persist()
+            val store = newStore(data)
+            store.persist()
+
             val name = store.usernames[0]
 
             val prev = store.fetchRefreshToken(name)!!
@@ -129,17 +131,15 @@ class DeferredPersistentStoreTest : Spek({
 })
 
 class MockDeferredPersistentTokenStore(initialData: Map<String, PersistedAuthData>) :
-    DeferredPersistentTokenStore<MockDeferredPersistentTokenStore>(initialData) {
+    DeferredPersistentTokenStore(initialData) {
 
     var _persisted: MutableMap<String, PersistedAuthData> = HashMap()
 
-    override fun doPersist(data: Map<String, PersistedAuthData>): MockDeferredPersistentTokenStore {
+    override fun doPersist(data: Map<String, PersistedAuthData>) {
         this._persisted = data.toMutableMap()
-        return this
     }
 
-    override fun doLoad(): MockDeferredPersistentTokenStore {
+    override fun doLoad() {
         this.memoryData = this._persisted.filterValuesNotNull().toMutableMap()
-        return this
     }
 }

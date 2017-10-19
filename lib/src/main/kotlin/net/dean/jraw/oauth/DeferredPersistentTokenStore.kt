@@ -15,7 +15,7 @@ import net.dean.jraw.models.PersistedAuthData
  * When first created, it might be necessary to load the persisted data into memory using [load]. Otherwise the
  * TokenStore could be missing out on some data.
  */
-abstract class DeferredPersistentTokenStore<T : DeferredPersistentTokenStore<T>> @JvmOverloads constructor(
+abstract class DeferredPersistentTokenStore @JvmOverloads constructor(
     initialData: Map<String, PersistedAuthData> = mapOf()
 ) : TokenStore {
     protected var memoryData: MutableMap<String, PersistedAuthData> = initialData.toMutableMap()
@@ -38,7 +38,7 @@ abstract class DeferredPersistentTokenStore<T : DeferredPersistentTokenStore<T>>
      * Persists the in-memory data to somewhere more permanent. Assume this is a blocking operation. Returns this
      * instance for chaining.
      */
-    fun persist(): T {
+    fun persist() {
         // Do less work in the long run
         val actualData = memoryData
             .mapValues { it.value.simplify() }
@@ -59,10 +59,10 @@ abstract class DeferredPersistentTokenStore<T : DeferredPersistentTokenStore<T>>
      * Does the actual work for persisting data. The given data may contain null values depending on if the user asked
      * to keep insignificant values.
      */
-    protected abstract fun doPersist(data: Map<String, PersistedAuthData>): T
+    protected abstract fun doPersist(data: Map<String, PersistedAuthData>)
 
     /** Does the actual loading of the persisted data. Assign the new data to [memoryData]. */
-    protected abstract fun doLoad(): T
+    protected abstract fun doLoad()
 
     /** Returns a copy of the data. For testing only. */
     internal fun data(): Map<String, PersistedAuthData> = HashMap(this.memoryData)
