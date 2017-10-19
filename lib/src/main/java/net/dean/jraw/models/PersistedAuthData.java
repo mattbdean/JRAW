@@ -5,6 +5,10 @@ import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * This class is used by {@link net.dean.jraw.oauth.DeferredPersistentTokenStore} implementations to persist and load
+ * an OAuthData/refresh token pair for a set of users.
+ */
 @AutoValue
 public abstract class PersistedAuthData {
     @Nullable

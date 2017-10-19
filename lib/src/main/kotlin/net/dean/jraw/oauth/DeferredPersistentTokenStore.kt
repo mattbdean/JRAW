@@ -18,7 +18,7 @@ import net.dean.jraw.models.PersistedAuthData
 abstract class DeferredPersistentTokenStore @JvmOverloads constructor(
     initialData: Map<String, PersistedAuthData> = mapOf()
 ) : TokenStore {
-    protected var memoryData: MutableMap<String, PersistedAuthData> = initialData.toMutableMap()
+    private var memoryData: MutableMap<String, PersistedAuthData> = initialData.toMutableMap()
     private var lastPersistedData: Map<String, PersistedAuthData>? = null
 
     /** If true, [persist] will automatically be called after the in-memory data is mutated. */
@@ -53,7 +53,9 @@ abstract class DeferredPersistentTokenStore @JvmOverloads constructor(
      * Loads the data from its persistent source. Overwrites any existing data in memory. Assume this is a blocking
      * operation. Returns this instance for chaining.
      */
-    fun load() = doLoad()
+    fun load() {
+        this.memoryData = doLoad().toMutableMap()
+    }
 
     /**
      * Does the actual work for persisting data. The given data may contain null values depending on if the user asked
@@ -61,8 +63,8 @@ abstract class DeferredPersistentTokenStore @JvmOverloads constructor(
      */
     protected abstract fun doPersist(data: Map<String, PersistedAuthData>)
 
-    /** Does the actual loading of the persisted data. Assign the new data to [memoryData]. */
-    protected abstract fun doLoad()
+    /** Does the actual loading of the persisted data. */
+    protected abstract fun doLoad(): Map<String, PersistedAuthData>
 
     /** Returns a copy of the data. For testing only. */
     internal fun data(): Map<String, PersistedAuthData> = HashMap(this.memoryData)

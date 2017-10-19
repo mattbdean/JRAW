@@ -139,7 +139,7 @@ class MockDeferredPersistentTokenStore(initialData: Map<String, PersistedAuthDat
         this._persisted = data.toMutableMap()
     }
 
-    override fun doLoad() {
-        this.memoryData = this._persisted.filterValuesNotNull().toMutableMap()
+    override fun doLoad(): Map<String, PersistedAuthData> {
+        return this._persisted.filterValuesNotNull().toMutableMap()
     }
 }

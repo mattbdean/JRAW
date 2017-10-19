@@ -6,6 +6,7 @@ import net.dean.jraw.JrawUtils
 import net.dean.jraw.models.PersistedAuthData
 import okio.Okio
 import java.io.File
+import java.io.FileNotFoundException
 import java.io.IOException
 
 /**
@@ -56,17 +57,15 @@ class JsonFileTokenStore @JvmOverloads constructor(
         }
 
         val sink = Okio.buffer(Okio.sink(saveLocation))
-        adapter.toJson(sink, memoryData)
+        adapter.toJson(sink, data)
         sink.close()
     }
 
-    override fun doLoad() {
-        if (!saveLocation.exists()) {
-            this.memoryData = mutableMapOf()
-        }
+    override fun doLoad(): Map<String, PersistedAuthData> {
+        if (!saveLocation.isFile)
+            throw FileNotFoundException("Not a file or doesn't exist: ${saveLocation.absolutePath}")
 
-        val persisted = adapter.fromJson(Okio.buffer(Okio.source(saveLocation)))!!
-        this.memoryData = persisted as MutableMap<String, PersistedAuthData>
+        return adapter.fromJson(Okio.buffer(Okio.source(saveLocation)))!!
     }
 
     companion object {
