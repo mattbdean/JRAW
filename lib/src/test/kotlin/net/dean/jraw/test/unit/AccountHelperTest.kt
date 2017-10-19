@@ -43,7 +43,7 @@ class AccountHelperTest : Spek({
 
     describe("switchToUserless") {
         it("should use unexpired OAuthData when available") {
-            tokenStore.storeCurrent(AuthManager.USERNAME_USERLESS, createMockOAuthData(false))
+            tokenStore.storeLatest(AuthManager.USERNAME_USERLESS, createMockOAuthData(false))
 
             val h = AccountHelper(NoopNetworkAdapter, creds, tokenStore, uuid)
             // Should not require an HTTP request
@@ -74,7 +74,7 @@ class AccountHelperTest : Spek({
         }
 
         it("should use an unexpired OAuthData when available") {
-            tokenStore.storeCurrent(username, createMockOAuthData())
+            tokenStore.storeLatest(username, createMockOAuthData())
             helper.trySwitchToUser(username).should.not.be.`null`
         }
 
@@ -96,7 +96,7 @@ class AccountHelperTest : Spek({
         }
 
         it("should update the helper's RedditClient reference on success") {
-            tokenStore.storeCurrent(username, createMockOAuthData())
+            tokenStore.storeLatest(username, createMockOAuthData())
             val r = helper.trySwitchToUser(username)!!
             (r === helper.reddit).should.be.`true`
             tokenStore.reset()

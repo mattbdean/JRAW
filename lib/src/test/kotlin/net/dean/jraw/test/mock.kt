@@ -105,7 +105,7 @@ data class MockHttpResponse(
 class InMemoryTokenStore : TokenStore {
     private val dataMap: MutableMap<String, OAuthData?> = HashMap()
     private val refreshMap: MutableMap<String, String?> = HashMap()
-    override fun storeCurrent(username: String, data: OAuthData) {
+    override fun storeLatest(username: String, data: OAuthData) {
         if (username == AuthManager.USERNAME_UNKOWN)
             throw IllegalArgumentException("Username was ${AuthManager.USERNAME_UNKOWN}")
         dataMap.put(username, data)
@@ -117,7 +117,7 @@ class InMemoryTokenStore : TokenStore {
         refreshMap.put(username, token)
     }
 
-    override fun fetchCurrent(username: String): OAuthData? {
+    override fun fetchLatest(username: String): OAuthData? {
         return dataMap[username]
     }
 
@@ -125,7 +125,7 @@ class InMemoryTokenStore : TokenStore {
         return refreshMap[username]
     }
 
-    override fun deleteCurrent(username: String) {
+    override fun deleteLatest(username: String) {
         dataMap.remove(username)
     }
 

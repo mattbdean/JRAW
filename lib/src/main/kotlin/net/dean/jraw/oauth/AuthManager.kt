@@ -109,7 +109,7 @@ class AuthManager(
             }
 
             if (tokenPersistenceStrategy == TokenPersistenceStrategy.ALL) {
-                tokenStore.storeCurrent(currentUsername(), newData)
+                tokenStore.storeLatest(currentUsername(), newData)
             }
 
             this._current = newData
@@ -137,7 +137,7 @@ class AuthManager(
     fun revokeAccessToken() {
         revokeToken("access_token", current?.accessToken)
         this._current = null
-        tokenStore.deleteCurrent(currentUsername())
+        tokenStore.deleteLatest(currentUsername())
     }
 
     /** Same as [revokeAccessToken], but for the refresh token. */

@@ -12,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 @AutoValue
 public abstract class PersistedAuthData {
     @Nullable
-    public abstract OAuthData getCurrent();
+    public abstract OAuthData getLatest();
 
     @Nullable
     public abstract String getRefreshToken();
@@ -30,7 +30,7 @@ public abstract class PersistedAuthData {
         if (!isSignificant())
             return null;
 
-        if (getCurrent() != null && getCurrent().isExpired())
+        if (getLatest() != null && getLatest().isExpired())
             return PersistedAuthData.create(null, getRefreshToken());
 
         return this;
@@ -41,7 +41,7 @@ public abstract class PersistedAuthData {
      * token.
      */
     public final boolean isSignificant() {
-        return (getCurrent() != null && !getCurrent().isExpired()) || getRefreshToken() != null;
+        return (getLatest() != null && !getLatest().isExpired()) || getRefreshToken() != null;
     }
 
     public static PersistedAuthData create(@Nullable OAuthData current, @Nullable String refreshToken) {

@@ -29,7 +29,7 @@ class DeferredPersistentStoreTest : Spek({
             store._persisted = data.toMutableMap()
             store.load()
 
-            store.fetchCurrent(username).should.equal(oauthData)
+            store.fetchLatest(username).should.equal(oauthData)
             store.fetchRefreshToken(username).should.equal(refreshToken)
         }
     }
@@ -117,14 +117,14 @@ class DeferredPersistentStoreTest : Spek({
         }
     }
 
-    describe("storeCurrent/storeRefreshToken") {
+    describe("storeLatest/storeRefreshToken") {
         it("should not accept data for a username of USERNAME_USERLESS") {
             val store = newStore()
             expectException(IllegalArgumentException::class) {
                 store.storeRefreshToken(AuthManager.USERNAME_UNKOWN, "")
             }
             expectException(IllegalArgumentException::class) {
-                store.storeCurrent(AuthManager.USERNAME_UNKOWN, createMockOAuthData())
+                store.storeLatest(AuthManager.USERNAME_UNKOWN, createMockOAuthData())
             }
         }
     }

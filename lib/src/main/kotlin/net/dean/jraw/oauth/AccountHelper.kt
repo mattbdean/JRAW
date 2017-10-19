@@ -78,7 +78,7 @@ class AccountHelper(
      * neither are available.
      */
     fun trySwitchToUser(username: String): RedditClient? {
-        val current = tokenStore.fetchCurrent(username)
+        val current = tokenStore.fetchLatest(username)
         if (current != null && !current.isExpired)
             return switch(RedditClient(http, current, creds, tokenStore, username))
 

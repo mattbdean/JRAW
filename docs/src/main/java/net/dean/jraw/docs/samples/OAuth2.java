@@ -116,9 +116,9 @@ final class OAuth2 {
         reddit = helper.getReddit();
 
         // We should have some data stored now!
-        assert tokenStore.fetchCurrent(username) != null;
+        assert tokenStore.fetchLatest(username) != null;
         assert reddit.getAuthManager().getAccessToken()
-            .equals(tokenStore.fetchCurrent(username).getAccessToken());
+            .equals(tokenStore.fetchLatest(username).getAccessToken());
 
         // Repeat this process whenever we have a new user
 

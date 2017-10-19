@@ -114,7 +114,7 @@ class AuthManagerTest : Spek({
             authManager.tokenPersistenceStrategy = TokenPersistenceStrategy.ALL
 
             // Make some baseline assertions
-            mockStore.fetchCurrent(username).should.be.`null`
+            mockStore.fetchLatest(username).should.be.`null`
             mockStore.fetchRefreshToken(username).should.be.`null`
 
             // This should trigger storing only the current OAuthData
@@ -122,13 +122,13 @@ class AuthManagerTest : Spek({
             authManager.update(data)
 
             // Make sure it was saved
-            mockStore.fetchCurrent(username).should.equal(data)
+            mockStore.fetchLatest(username).should.equal(data)
 
             mockStore.reset()
             // Including a refresh token in the OAuthData should trigger saving both the OAuthData and the refresh token
             data = createMockOAuthData(includeRefreshToken = true)
             authManager.update(data)
-            mockStore.fetchCurrent(username).should.equal(data)
+            mockStore.fetchLatest(username).should.equal(data)
             mockStore.fetchRefreshToken(username).should.equal(data.refreshToken)
         }
 
@@ -136,21 +136,21 @@ class AuthManagerTest : Spek({
             authManager.tokenPersistenceStrategy = TokenPersistenceStrategy.REFRESH_ONLY
 
             // Baseline
-            mockStore.fetchCurrent(username).should.be.`null`
+            mockStore.fetchLatest(username).should.be.`null`
             mockStore.fetchRefreshToken(username).should.be.`null`
 
             var data = createMockOAuthData(includeRefreshToken = false)
             authManager.update(data)
 
             // We're not saving OAuthData and there was no refresh token
-            mockStore.fetchCurrent(username).should.be.`null`
+            mockStore.fetchLatest(username).should.be.`null`
             mockStore.fetchRefreshToken(username).should.be.`null`
 
             data = createMockOAuthData(includeRefreshToken = true)
             authManager.update(data)
 
             // Should have saved only the refresh token
-            mockStore.fetchCurrent(username).should.be.`null`
+            mockStore.fetchLatest(username).should.be.`null`
             mockStore.fetchRefreshToken(username).should.equal(data.refreshToken)
         }
     }
@@ -205,7 +205,7 @@ class AuthManagerTest : Spek({
             mockAdapter.enqueue("{}")
             auth.revokeAccessToken()
             auth.current.should.be.`null`
-            auth.tokenStore.fetchCurrent(username).should.be.`null`
+            auth.tokenStore.fetchLatest(username).should.be.`null`
 
             // Again, not actual response
             mockAdapter.enqueue("{}")

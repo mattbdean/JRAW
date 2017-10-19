@@ -69,7 +69,7 @@ abstract class DeferredPersistentTokenStore @JvmOverloads constructor(
     /** Returns a copy of the data. For testing only. */
     internal fun data(): Map<String, PersistedAuthData> = HashMap(this.memoryData)
 
-    override final fun storeCurrent(username: String, data: OAuthData) {
+    override final fun storeLatest(username: String, data: OAuthData) {
         if (username == AuthManager.USERNAME_UNKOWN)
             throw IllegalArgumentException("Refusing to store data for unknown username")
         val stored = this.memoryData[username]
@@ -84,22 +84,22 @@ abstract class DeferredPersistentTokenStore @JvmOverloads constructor(
         if (username == AuthManager.USERNAME_UNKOWN)
             throw IllegalArgumentException("Refusing to store data for unknown username")
         val stored = this.memoryData[username]
-        val new = PersistedAuthData.create(stored?.current, token)
+        val new = PersistedAuthData.create(stored?.latest, token)
         this.memoryData[username] = new
 
         if (this.hasUnsaved() && autoPersist)
             persist()
     }
 
-    override final fun fetchCurrent(username: String): OAuthData? {
-        return memoryData[username]?.current
+    override final fun fetchLatest(username: String): OAuthData? {
+        return memoryData[username]?.latest
     }
 
     override final fun fetchRefreshToken(username: String): String? {
         return memoryData[username]?.refreshToken
     }
 
-    override fun deleteCurrent(username: String) {
+    override fun deleteLatest(username: String) {
         val saved = memoryData[username] ?: return
 
         if (saved.refreshToken == null) {
@@ -112,9 +112,9 @@ abstract class DeferredPersistentTokenStore @JvmOverloads constructor(
     override fun deleteRefreshToken(username: String) {
         val saved = memoryData[username] ?: return
 
-        if (saved.current == null)
+        if (saved.latest == null)
             memoryData.remove(username)
         else
-            memoryData[username] = PersistedAuthData.create(saved.current, null)
+            memoryData[username] = PersistedAuthData.create(saved.latest, null)
     }
 }
