@@ -109,4 +109,28 @@ class AccountHelper(
         _reddit = new
         return new
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as AccountHelper
+
+        if (http != other.http) return false
+        if (creds != other.creds) return false
+        if (tokenStore != other.tokenStore) return false
+        if (_reddit != other._reddit) return false
+        if (userlessCreds != other.userlessCreds) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = http.hashCode()
+        result = 31 * result + creds.hashCode()
+        result = 31 * result + tokenStore.hashCode()
+        result = 31 * result + (_reddit?.hashCode() ?: 0)
+        result = 31 * result + userlessCreds.hashCode()
+        return result
+    }
 }
