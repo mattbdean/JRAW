@@ -66,8 +66,8 @@ abstract class DeferredPersistentTokenStore @JvmOverloads constructor(
     /** Does the actual loading of the persisted data. */
     protected abstract fun doLoad(): Map<String, PersistedAuthData>
 
-    /** Returns a copy of the data. For testing only. */
-    internal fun data(): Map<String, PersistedAuthData> = HashMap(this.memoryData)
+    /** Returns a copy of the data currently in memory. */
+    fun data(): Map<String, PersistedAuthData> = HashMap(this.memoryData)
 
     override final fun storeLatest(username: String, data: OAuthData) {
         if (username == AuthManager.USERNAME_UNKOWN)
