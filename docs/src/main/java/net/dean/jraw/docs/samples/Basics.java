@@ -8,6 +8,7 @@ import net.dean.jraw.references.SubredditReference;
 
 import java.util.List;
 
+@SuppressWarnings("unused")
 final class Basics {
     @CodeSample
     void updateFlair(RedditClient redditClient) {

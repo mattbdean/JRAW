@@ -10,6 +10,7 @@ import net.dean.jraw.docs.CodeSample;
 import java.lang.reflect.Type;
 import java.util.Map;
 
+@SuppressWarnings("unused")
 final class Internals {
     @CodeSample
     void map(String jsonString) throws Exception {

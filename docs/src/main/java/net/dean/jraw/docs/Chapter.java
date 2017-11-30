@@ -3,8 +3,8 @@ package net.dean.jraw.docs;
 import org.jetbrains.annotations.Nullable;
 
 public final class Chapter {
-    private String file;
-    private String title;
+    private final String file;
+    private final String title;
 
     public Chapter(String file, @Nullable String title) {
         this.file = file;

@@ -9,6 +9,7 @@ import net.dean.jraw.pagination.Paginator;
 import java.util.Iterator;
 import java.util.List;
 
+@SuppressWarnings("unused")
 final class Pagination {
     private static RedditClient redditClient;
 
