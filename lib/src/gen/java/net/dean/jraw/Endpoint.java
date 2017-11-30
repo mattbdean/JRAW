@@ -86,6 +86,10 @@ public enum Endpoint {
     GET_USER_FLAIR("GET", "/api/user_flair", "flair"),
 
     /**
+     * Represents the endpoint {@code GET /api/user_flair_v2}. Requires OAuth scope 'flair'. See <a href="https://www.reddit.com/dev/api/oauth#GET_api_user_flair_v2">here</a> for more information */
+    GET_USER_FLAIR_V2("GET", "/api/user_flair_v2", "flair"),
+
+    /**
      * Represents the endpoint {@code GET /user/{username}/{where}}. Requires OAuth scope 'history'. See <a href="https://www.reddit.com/dev/api/oauth#GET_user_{username}_{where}">here</a> for more information */
     GET_USER_USERNAME_WHERE("GET", "/user/{username}/{where}", "history"),
 
@@ -198,6 +202,10 @@ public enum Endpoint {
     POST_FLAIR("POST", "/api/flair", "modflair"),
 
     /**
+     * Represents the endpoint {@code PATCH /api/flair_template_order}. Requires OAuth scope 'modflair'. See <a href="https://www.reddit.com/dev/api/oauth#PATCH_api_flair_template_order">here</a> for more information */
+    PATCH_FLAIR_TEMPLATE_ORDER("PATCH", "/api/flair_template_order", "modflair"),
+
+    /**
      * Represents the endpoint {@code POST /api/flairconfig}. Requires OAuth scope 'modflair'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_flairconfig">here</a> for more information */
     POST_FLAIRCONFIG("POST", "/api/flairconfig", "modflair"),
 
@@ -212,6 +220,10 @@ public enum Endpoint {
     /**
      * Represents the endpoint {@code POST /api/flairtemplate}. Requires OAuth scope 'modflair'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_flairtemplate">here</a> for more information */
     POST_FLAIRTEMPLATE("POST", "/api/flairtemplate", "modflair"),
+
+    /**
+     * Represents the endpoint {@code POST /api/flairtemplate_v2}. Requires OAuth scope 'modflair'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_flairtemplate_v2">here</a> for more information */
+    POST_FLAIRTEMPLATE_V2("POST", "/api/flairtemplate_v2", "modflair"),
 
     /**
      * Represents the endpoint {@code GET /about/log}. Requires OAuth scope 'modlog'. See <a href="https://www.reddit.com/dev/api/oauth#GET_about_log">here</a> for more information */
@@ -532,6 +544,10 @@ public enum Endpoint {
     /**
      * Represents the endpoint {@code GET /live/{thread}/discussions}. Requires OAuth scope 'read'. See <a href="https://www.reddit.com/dev/api/oauth#GET_live_{thread}_discussions">here</a> for more information */
     GET_LIVE_THREAD_DISCUSSIONS("GET", "/live/{thread}/discussions", "read"),
+
+    /**
+     * Represents the endpoint {@code GET /live/{thread}/updates/{update_id}}. Requires OAuth scope 'read'. See <a href="https://www.reddit.com/dev/api/oauth#GET_live_{thread}_updates_{update_id}">here</a> for more information */
+    GET_LIVE_THREAD_UPDATES_UPDATE_ID("GET", "/live/{thread}/updates/{update_id}", "read"),
 
     /**
      * Represents the endpoint {@code GET /new}. Requires OAuth scope 'read'. See <a href="https://www.reddit.com/dev/api/oauth#GET_new">here</a> for more information */

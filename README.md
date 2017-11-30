@@ -3,7 +3,7 @@
 [![travis-ci build status](https://img.shields.io/travis/mattbdean/JRAW.svg)](https://travis-ci.org/mattbdean/JRAW)
 [![Latest release](https://img.shields.io/github/release/mattbdean/JRAW.svg)](https://bintray.com/thatjavanerd/maven/JRAW/_latestVersion)
 [![Kotlin 1.1.51](https://img.shields.io/badge/Kotlin-1.1.51-blue.svg)](http://kotlinlang.org)
-[![API coverage](https://img.shields.io/badge/API_coverage-40%25-9C27B0.svg)](https://github.com/thatJavaNerd/JRAW/blob/kotlin/ENDPOINTS.md)
+[![API coverage](https://img.shields.io/badge/API_coverage-39%25-9C27B0.svg)](https://github.com/thatJavaNerd/JRAW/blob/master/ENDPOINTS.md)
 [![Codecov branch](https://img.shields.io/codecov/c/github/mattbdean/JRAW.svg)](https://codecov.io/gh/mattbdean/JRAW)
 
 > JRAW is currently being rewritten in [Kotlin](https://kotlinlang.org/) for v1.0.0 (see [#187](https://github.com/mattbdean/JRAW/issues/187)). If you'd like to try it out before the official release, please use [Jitpack](https://jitpack.io/#mattbdean/JRAW/master-SNAPSHOT).

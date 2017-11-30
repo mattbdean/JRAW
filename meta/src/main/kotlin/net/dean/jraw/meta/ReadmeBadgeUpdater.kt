@@ -23,5 +23,5 @@ object ReadmeBadgeUpdater {
 
     private fun url(percent: Int) =
         "[![API coverage](https://img.shields.io/badge/API_coverage-$percent%25-9C27B0.svg)]" +
-            "(https://github.com/thatJavaNerd/JRAW/blob/kotlin/ENDPOINTS.md)"
+            "(https://github.com/thatJavaNerd/JRAW/blob/master/ENDPOINTS.md)"
 }

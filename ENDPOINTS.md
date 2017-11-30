@@ -1,18 +1,18 @@
-<!--- Generated 2017-09-29 at 13:38:31 EDT. Use `./gradlew :meta:update` to update. DO NOT MODIFY DIRECTLY -->
+<!--- Generated 2017-11-30 at 00:30:23 EST. Use `./gradlew :meta:update` to update. DO NOT MODIFY DIRECTLY -->
 
 Endpoints
 =========
 
 This file contains a list of all the endpoints (regardless of if they have been implemented) that can be found at the [official reddit API docs](https://www.reddit.com/dev/api/oauth). To update this file, run `./gradlew :meta:update`
 
-So far, **71** endpoints (out of 176) have been implemented.
+So far, **71** endpoints (out of 180) have been implemented.
 
 (any scope)
 -----------
 
 | Method | Endpoint                                                                                     | Implementation                                                                                                                                                            |
 |:------:| -------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `POST` | [`/api/comment`](https://www.reddit.com/dev/api/oauth#POST_api_comment)                      | [`PublicContributionReference.reply()`](https://github.com/thatJavaNerd/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/PublicContributionReference.kt#L78) |
+| `POST` | [`/api/comment`](https://www.reddit.com/dev/api/oauth#POST_api_comment)                      | [`PublicContributionReference.reply()`](https://github.com/thatJavaNerd/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/PublicContributionReference.kt#L80) |
 | `POST` | [`/api/friend`](https://www.reddit.com/dev/api/oauth#POST_api_friend)                        | None                                                                                                                                                                      |
 | `GET`  | [`/api/needs_captcha`](https://www.reddit.com/dev/api/oauth#GET_api_needs_captcha)           | None                                                                                                                                                                      |
 | `POST` | [`/api/unfriend`](https://www.reddit.com/dev/api/oauth#POST_api_unfriend)                    | None                                                                                                                                                                      |
@@ -40,11 +40,11 @@ edit
 
 | Method | Endpoint                                                                                                        | Implementation                                                                                                                                                                   |
 |:------:| --------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `POST` | [`/api/del`](https://www.reddit.com/dev/api/oauth#POST_api_del)                                                 | [`PublicContributionReference.delete()`](https://github.com/thatJavaNerd/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/PublicContributionReference.kt#L95)       |
-| `POST` | [`/api/editusertext`](https://www.reddit.com/dev/api/oauth#POST_api_editusertext)                               | [`PublicContributionReference.edit()`](https://github.com/thatJavaNerd/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/PublicContributionReference.kt#L103)        |
+| `POST` | [`/api/del`](https://www.reddit.com/dev/api/oauth#POST_api_del)                                                 | [`PublicContributionReference.delete()`](https://github.com/thatJavaNerd/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/PublicContributionReference.kt#L97)       |
+| `POST` | [`/api/editusertext`](https://www.reddit.com/dev/api/oauth#POST_api_editusertext)                               | [`PublicContributionReference.edit()`](https://github.com/thatJavaNerd/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/PublicContributionReference.kt#L105)        |
 | `POST` | [`/api/live/{thread}/delete_update`](https://www.reddit.com/dev/api/oauth#POST_api_live_{thread}_delete_update) | [`LiveThreadReference.deleteUpdate()`](https://github.com/thatJavaNerd/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/LiveThreadReference.kt#L69)                 |
 | `POST` | [`/api/live/{thread}/strike_update`](https://www.reddit.com/dev/api/oauth#POST_api_live_{thread}_strike_update) | [`LiveThreadReference.strikeUpdate()`](https://github.com/thatJavaNerd/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/LiveThreadReference.kt#L64)                 |
-| `POST` | [`/api/sendreplies`](https://www.reddit.com/dev/api/oauth#POST_api_sendreplies)                                 | [`PublicContributionReference.sendReplies()`](https://github.com/thatJavaNerd/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/PublicContributionReference.kt#L115) |
+| `POST` | [`/api/sendreplies`](https://www.reddit.com/dev/api/oauth#POST_api_sendreplies)                                 | [`PublicContributionReference.sendReplies()`](https://github.com/thatJavaNerd/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/PublicContributionReference.kt#L117) |
 
 flair
 -----
@@ -56,6 +56,7 @@ flair
 | `POST` | [`/api/selectflair`](https://www.reddit.com/dev/api/oauth#POST_api_selectflair)         | [`FlairReference.updateTo()`](https://github.com/thatJavaNerd/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/FlairReference.kt#L30)                         |
 | `POST` | [`/api/setflairenabled`](https://www.reddit.com/dev/api/oauth#POST_api_setflairenabled) | [`SelfUserFlairReference.setFlairEnabled()`](https://github.com/thatJavaNerd/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/SelfUserFlairReference.kt#L146) |
 | `GET`  | [`/api/user_flair`](https://www.reddit.com/dev/api/oauth#GET_api_user_flair)            | [`SubredditReference.userFlairOptions()`](https://github.com/thatJavaNerd/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/SubredditReference.kt#L119)        |
+| `GET`  | [`/api/user_flair_v2`](https://www.reddit.com/dev/api/oauth#GET_api_user_flair_v2)      | None                                                                                                                                                                       |
 
 history
 -------
@@ -114,16 +115,18 @@ modcontributors
 modflair
 --------
 
-| Method | Endpoint                                                                                        | Implementation |
-|:------:| ----------------------------------------------------------------------------------------------- | -------------- |
-| `POST` | [`/api/clearflairtemplates`](https://www.reddit.com/dev/api/oauth#POST_api_clearflairtemplates) | None           |
-| `POST` | [`/api/deleteflair`](https://www.reddit.com/dev/api/oauth#POST_api_deleteflair)                 | None           |
-| `POST` | [`/api/deleteflairtemplate`](https://www.reddit.com/dev/api/oauth#POST_api_deleteflairtemplate) | None           |
-| `POST` | [`/api/flair`](https://www.reddit.com/dev/api/oauth#POST_api_flair)                             | None           |
-| `POST` | [`/api/flairconfig`](https://www.reddit.com/dev/api/oauth#POST_api_flairconfig)                 | None           |
-| `POST` | [`/api/flaircsv`](https://www.reddit.com/dev/api/oauth#POST_api_flaircsv)                       | None           |
-| `GET`  | [`/api/flairlist`](https://www.reddit.com/dev/api/oauth#GET_api_flairlist)                      | None           |
-| `POST` | [`/api/flairtemplate`](https://www.reddit.com/dev/api/oauth#POST_api_flairtemplate)             | None           |
+| Method  | Endpoint                                                                                           | Implementation |
+|:-------:| -------------------------------------------------------------------------------------------------- | -------------- |
+| `POST`  | [`/api/clearflairtemplates`](https://www.reddit.com/dev/api/oauth#POST_api_clearflairtemplates)    | None           |
+| `POST`  | [`/api/deleteflair`](https://www.reddit.com/dev/api/oauth#POST_api_deleteflair)                    | None           |
+| `POST`  | [`/api/deleteflairtemplate`](https://www.reddit.com/dev/api/oauth#POST_api_deleteflairtemplate)    | None           |
+| `POST`  | [`/api/flair`](https://www.reddit.com/dev/api/oauth#POST_api_flair)                                | None           |
+| `PATCH` | [`/api/flair_template_order`](https://www.reddit.com/dev/api/oauth#PATCH_api_flair_template_order) | None           |
+| `POST`  | [`/api/flairconfig`](https://www.reddit.com/dev/api/oauth#POST_api_flairconfig)                    | None           |
+| `POST`  | [`/api/flaircsv`](https://www.reddit.com/dev/api/oauth#POST_api_flaircsv)                          | None           |
+|  `GET`  | [`/api/flairlist`](https://www.reddit.com/dev/api/oauth#GET_api_flairlist)                         | None           |
+| `POST`  | [`/api/flairtemplate`](https://www.reddit.com/dev/api/oauth#POST_api_flairtemplate)                | None           |
+| `POST`  | [`/api/flairtemplate_v2`](https://www.reddit.com/dev/api/oauth#POST_api_flairtemplate_v2)          | None           |
 
 modlog
 ------
@@ -232,8 +235,8 @@ read
 
 | Method | Endpoint                                                                                                           | Implementation                                                                                                                                                          |
 |:------:| ------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `GET`  | [`/api/info`](https://www.reddit.com/dev/api/oauth#GET_api_info)                                                   | [`RedditClient.lookup()`](https://github.com/thatJavaNerd/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/RedditClient.kt#L326)                                      |
-| `GET`  | [`/api/live/happening_now`](https://www.reddit.com/dev/api/oauth#GET_api_live_happening_now)                       | [`RedditClient.happeningNow()`](https://github.com/thatJavaNerd/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/RedditClient.kt#L348)                                |
+| `GET`  | [`/api/info`](https://www.reddit.com/dev/api/oauth#GET_api_info)                                                   | [`RedditClient.lookup()`](https://github.com/thatJavaNerd/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/RedditClient.kt#L340)                                      |
+| `GET`  | [`/api/live/happening_now`](https://www.reddit.com/dev/api/oauth#GET_api_live_happening_now)                       | [`RedditClient.happeningNow()`](https://github.com/thatJavaNerd/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/RedditClient.kt#L362)                                |
 | `GET`  | [`/api/morechildren`](https://www.reddit.com/dev/api/oauth#GET_api_morechildren)                                   | [`CommentNode.loadMore()`](https://github.com/thatJavaNerd/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/tree/CommentNode.kt#L-1)                                  |
 | `GET`  | [`/api/multi/mine`](https://www.reddit.com/dev/api/oauth#GET_api_multi_mine)                                       | [`UserReference.listMultis()`](https://github.com/thatJavaNerd/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/UserReference.kt#L80)                      |
 | `GET`  | [`/api/multi/user/{username}`](https://www.reddit.com/dev/api/oauth#GET_api_multi_user_{username})                 | [`UserReference.listMultis()`](https://github.com/thatJavaNerd/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/UserReference.kt#L80)                      |
@@ -249,7 +252,7 @@ read
 | `GET`  | [`/new`](https://www.reddit.com/dev/api/oauth#GET_new)                                                             | [`SubredditReference.posts()`](https://github.com/thatJavaNerd/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/SubredditReference.kt#L31)                 |
 | `GET`  | [`/r/{subreddit}/about`](https://www.reddit.com/dev/api/oauth#GET_r_{subreddit}_about)                             | [`SubredditReference.about()`](https://github.com/thatJavaNerd/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/SubredditReference.kt#L22)                 |
 | `GET`  | [`/r/{subreddit}/about/rules`](https://www.reddit.com/dev/api/oauth#GET_r_{subreddit}_about_rules)                 | [`SubredditReference.rules()`](https://github.com/thatJavaNerd/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/SubredditReference.kt#L161)                |
-| `GET`  | [`/random`](https://www.reddit.com/dev/api/oauth#GET_random)                                                       | [`RedditClient.randomSubreddit()`](https://github.com/thatJavaNerd/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/RedditClient.kt#L297)                             |
+| `GET`  | [`/random`](https://www.reddit.com/dev/api/oauth#GET_random)                                                       | [`RedditClient.randomSubreddit()`](https://github.com/thatJavaNerd/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/RedditClient.kt#L308)                             |
 | `GET`  | [`/rising`](https://www.reddit.com/dev/api/oauth#GET_rising)                                                       | [`SubredditReference.posts()`](https://github.com/thatJavaNerd/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/SubredditReference.kt#L31)                 |
 | `GET`  | [`/user/{username}/about`](https://www.reddit.com/dev/api/oauth#GET_user_{username}_about)                         | [`UserReference.about()`](https://github.com/thatJavaNerd/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/UserReference.kt#L21)                           |
 | `GET`  | [`/users/{where}`](https://www.reddit.com/dev/api/oauth#GET_users_{where})                                         | [`RedditClient.userSubreddits()`](https://github.com/thatJavaNerd/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/RedditClient.kt#L249)                              |
@@ -266,6 +269,7 @@ read
 | `GET`  | [`/duplicates/{article}`](https://www.reddit.com/dev/api/oauth#GET_duplicates_{article})                           | None                                                                                                                                                                    |
 | `GET`  | [`/live/{thread}/contributors`](https://www.reddit.com/dev/api/oauth#GET_live_{thread}_contributors)               | None                                                                                                                                                                    |
 | `GET`  | [`/live/{thread}/discussions`](https://www.reddit.com/dev/api/oauth#GET_live_{thread}_discussions)                 | None                                                                                                                                                                    |
+| `GET`  | [`/live/{thread}/updates/{update_id}`](https://www.reddit.com/dev/api/oauth#GET_live_{thread}_updates_{update_id}) | None                                                                                                                                                                    |
 | `GET`  | [`/prefs/{where}`](https://www.reddit.com/dev/api/oauth#GET_prefs_{where})                                         | None                                                                                                                                                                    |
 | `GET`  | [`/search`](https://www.reddit.com/dev/api/oauth#GET_search)                                                       | None                                                                                                                                                                    |
 | `GET`  | [`/sidebar`](https://www.reddit.com/dev/api/oauth#GET_sidebar)                                                     | None                                                                                                                                                                    |
@@ -289,8 +293,8 @@ save
 
 | Method | Endpoint                                                                                 | Implementation                                                                                                                                                               |
 |:------:| ---------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `POST` | [`/api/save`](https://www.reddit.com/dev/api/oauth#POST_api_save)                        | [`PublicContributionReference.setSaved()`](https://github.com/thatJavaNerd/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/PublicContributionReference.kt#L65) |
-| `POST` | [`/api/unsave`](https://www.reddit.com/dev/api/oauth#POST_api_unsave)                    | [`PublicContributionReference.setSaved()`](https://github.com/thatJavaNerd/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/PublicContributionReference.kt#L65) |
+| `POST` | [`/api/save`](https://www.reddit.com/dev/api/oauth#POST_api_save)                        | [`PublicContributionReference.setSaved()`](https://github.com/thatJavaNerd/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/PublicContributionReference.kt#L67) |
+| `POST` | [`/api/unsave`](https://www.reddit.com/dev/api/oauth#POST_api_unsave)                    | [`PublicContributionReference.setSaved()`](https://github.com/thatJavaNerd/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/PublicContributionReference.kt#L67) |
 | `GET`  | [`/api/saved_categories`](https://www.reddit.com/dev/api/oauth#GET_api_saved_categories) | None                                                                                                                                                                         |
 | `POST` | [`/api/store_visits`](https://www.reddit.com/dev/api/oauth#POST_api_store_visits)        | None                                                                                                                                                                         |
 
@@ -325,7 +329,7 @@ vote
 
 | Method | Endpoint                                                          | Implementation                                                                                                                                                              |
 |:------:| ----------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `POST` | [`/api/vote`](https://www.reddit.com/dev/api/oauth#POST_api_vote) | [`PublicContributionReference.setVote()`](https://github.com/thatJavaNerd/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/PublicContributionReference.kt#L39) |
+| `POST` | [`/api/vote`](https://www.reddit.com/dev/api/oauth#POST_api_vote) | [`PublicContributionReference.setVote()`](https://github.com/thatJavaNerd/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/PublicContributionReference.kt#L41) |
 
 wikiedit
 --------
