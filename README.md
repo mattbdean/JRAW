@@ -8,6 +8,15 @@
 
 > JRAW is currently being rewritten in [Kotlin](https://kotlinlang.org/) for v1.0.0 (see [#187](https://github.com/mattbdean/JRAW/issues/187)). If you'd like to try it out before the official release, please use [Jitpack](https://jitpack.io/#mattbdean/JRAW/master-SNAPSHOT).
 
+```groovy
+repositories {
+    maven { url 'https://jitpack.io' }
+}
+dependencies {
+    implementation 'com.github.mattbdean.JRAW:lib:master-SNAPSHOT'
+}
+```
+
 ```java
 // Assuming we have a 'script' reddit app
 Credentials oauthCreds = Credentials.script(username, password, clientId, clientSecret);
