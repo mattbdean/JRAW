@@ -117,6 +117,16 @@ class DeferredPersistentStoreTest : Spek({
         }
     }
 
+    describe("clear") {
+        it("should remove all in-memory data") {
+            val store = newStore(initialData = mapOf("foo" to PersistedAuthData.create(createMockOAuthData(), null)))
+            store.data().should.have.size(1)
+
+            store.clear()
+            store.data().should.have.size(0)
+        }
+    }
+
     describe("storeLatest/storeRefreshToken") {
         it("should not accept data for a username of USERNAME_USERLESS") {
             val store = newStore()

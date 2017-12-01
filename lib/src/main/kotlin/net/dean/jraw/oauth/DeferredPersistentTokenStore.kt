@@ -58,6 +58,14 @@ abstract class DeferredPersistentTokenStore @JvmOverloads constructor(
     }
 
     /**
+     * Clears all data currently being held in memory. Does not affect data already persisted. To clear both in-memory
+     * data and store data, perform a [clear] follow by a [persist].
+     */
+    fun clear() {
+        this.memoryData.clear()
+    }
+
+    /**
      * Does the actual work for persisting data. The given data may contain null values depending on if the user asked
      * to keep insignificant values.
      */
