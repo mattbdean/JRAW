@@ -68,7 +68,11 @@ class DistinguishedStatusAdapter : NullAwareEnumAdapter<DistinguishedStatus>() {
     override val nullValue: DistinguishedStatus = DistinguishedStatus.NORMAL
 
     override fun read(reader: JsonReader): DistinguishedStatus {
-        return DistinguishedStatus.valueOf(reader.nextString().toUpperCase())
+        val value = reader.nextString()
+        return if (value == "gold-auto")
+            DistinguishedStatus.GOLD
+        else
+            DistinguishedStatus.valueOf(value.toUpperCase())
     }
 
     override fun write(writer: JsonWriter, value: DistinguishedStatus) {
