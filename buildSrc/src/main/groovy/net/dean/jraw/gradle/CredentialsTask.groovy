@@ -67,7 +67,7 @@ class CredentialsTask extends DefaultTask {
     }
 
     private AppInfo createApp(String username, String password, AppType type) {
-        def redirectUrl = "https://github.com/thatJavaNerd/JRAW"
+        def redirectUrl = "https://github.com/mattbdean/JRAW"
         def res = http.newCall(new Request.Builder()
             .url("https://www.reddit.com/api/updateapp")
             .addHeader("cookie", "reddit_session=${URLEncoder.encode(this.cookie, "UTF-8")}")
