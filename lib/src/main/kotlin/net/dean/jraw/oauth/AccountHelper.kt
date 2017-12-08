@@ -99,6 +99,22 @@ class AccountHelper(
         OAuthHelper.interactive(http, creds, tokenStore, onAuthenticated = { newClient -> switch(newClient) })
 
     /**
+     * Returns true if this AccountHelper has a RedditClient instance valid authentication data.
+     *
+     * More specifically, this method returns true if
+     *
+     *  1. There is a RedditClient instance
+     *  2. That instance's AuthManager does not need renewing or it can renew it
+     */
+    fun isAuthenticated(): Boolean {
+        // If _reddit is null, that means we haven't ever received a RedditClient
+        val authManager = _reddit?.authManager ?: return false
+
+        // If the access token isn't expired, we're fine. If it is, we're fine only if we can renew the access token.
+        return !authManager.needsRenewing() || authManager.canRenew()
+    }
+
+    /**
      * Does all the housekeeping required to clean up the old client, assigns the new client instance to [_reddit] and
      * returns it.
      */

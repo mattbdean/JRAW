@@ -138,6 +138,36 @@ class AccountHelperTest : Spek({
         }
     }
 
+    describe("isAuthenticated") {
+        it("should return false when there is no managed RedditClient") {
+            val helper = AccountHelper(mockAdapter, creds, tokenStore, uuid)
+
+            // No RedditClient instance yet
+            helper.isAuthenticated().should.be.`false`
+        }
+
+        it("should return true after switching to a user") {
+            val helper = AccountHelper(mockAdapter, creds, tokenStore, uuid)
+
+            // Store some unexpired mock OAuthData
+            tokenStore.storeLatest(username, createMockOAuthData())
+
+            // Since we have unexpired data, isAuthenticated() should return true
+            helper.switchToUser(username)
+            helper.isAuthenticated().should.be.`true`
+
+        }
+
+        it("should return true if there is no OAuthData but there is a refresh token") {
+            val helper = AccountHelper(mockAdapter, creds, tokenStore, uuid)
+            tokenStore.storeRefreshToken(username, "<refresh_token>")
+
+            // Having the refresh token will cause authManager.needsRenewing() to return true
+            helper.switchToUser(username)
+            helper.isAuthenticated().should.be.`true`
+        }
+    }
+
     afterEachTest {
         mockAdapter.reset()
     }
