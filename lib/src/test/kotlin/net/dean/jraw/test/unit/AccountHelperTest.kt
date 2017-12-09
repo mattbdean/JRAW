@@ -168,6 +168,28 @@ class AccountHelperTest : Spek({
         }
     }
 
+    describe("logout") {
+        it("should do nothing if there's no current client") {
+            val helper = AccountHelper(mockAdapter, creds, tokenStore, uuid)
+            helper.logout()
+        }
+
+        it("should logout and unmanage the current RedditClient") {
+            val helper = AccountHelper(mockAdapter, creds, tokenStore, uuid)
+            tokenStore.storeLatest(username, createMockOAuthData())
+            val reddit = helper.switchToUser(username)
+
+            reddit.loggedOut.should.be.`false`
+            helper.logout()
+            reddit.loggedOut.should.be.`true`
+
+            expectException(IllegalStateException::class) {
+                // helper._reddit should be null, helper.reddit should throw an Exception
+                helper.reddit
+            }
+        }
+    }
+
     afterEachTest {
         mockAdapter.reset()
     }

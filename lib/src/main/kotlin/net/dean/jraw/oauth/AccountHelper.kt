@@ -111,7 +111,20 @@ class AccountHelper(
         val authManager = _reddit?.authManager ?: return false
 
         // If the access token isn't expired, we're fine. If it is, we're fine only if we can renew the access token.
-        return !authManager.needsRenewing() || authManager.canRenew()
+        return !_reddit!!.loggedOut && (!authManager.needsRenewing() || authManager.canRenew())
+    }
+
+    /**
+     * If there is a managed RedditClient, sets its [loggedOut][RedditClient.loggedOut] property to true and stops
+     * managing that client. Note that all changes done here are purely local, the client's access tokens or refresh
+     * aren't touched.
+     *
+     * @see AuthManager.revokeAccessToken
+     */
+    fun logout() {
+        val r = _reddit ?: return
+        r.loggedOut = true
+        _reddit = null
     }
 
     /**

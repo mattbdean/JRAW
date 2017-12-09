@@ -76,6 +76,10 @@ class RedditClient internal constructor(
     /** The type of OAuth2 app used to authenticate this client */
     val authMethod: AuthMethod = creds.authMethod
 
+    /**
+     * If true, this client shouldn't be used any more. Any attempts to send requests while this is true will throw an
+     * IllegalStateException.
+     */
     internal var loggedOut: Boolean = false
 
     init {
