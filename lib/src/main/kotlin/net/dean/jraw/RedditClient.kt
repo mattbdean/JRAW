@@ -120,12 +120,22 @@ class RedditClient internal constructor(
         if (loggedOut)
             throw IllegalStateException("This client is logged out and should not be used anymore")
 
+        var req = r
+
         if (forceRenew || (autoRenew && authManager.needsRenewing() && authManager.canRenew())) {
             authManager.renew()
 
             // forceRenew is a one-time thing, usually used when given an OAuthData that only contains valid refresh
             // token and a made-up access token, expiration, etc.
             forceRenew = false
+
+            // The request was intended to be sent with the previous access token. Since we've renewed it, we have to
+            // modify that header.
+            val authHeader = r.headers.get("Authorization")
+            if (authHeader != null) {
+                val newHeaders = r.headers.newBuilder().set("Authorization", "bearer ${authManager.accessToken}").build()
+                req = HttpRequest(req.url, newHeaders, req.method, req.body, req.basicAuth)
+            }
         }
 
         // Only ratelimit on the first try
@@ -134,16 +144,16 @@ class RedditClient internal constructor(
 
         val res = if (logHttp) {
             // Log the request and response, returning 'res'
-            val tag = logger.request(r)
-            val res = http.execute(r)
+            val tag = logger.request(req)
+            val res = http.execute(req)
             logger.response(tag, res)
             res
         } else {
-            http.execute(r)
+            http.execute(req)
         }
 
         if (res.code in 500..599 && retryCount < retryLimit) {
-            return request(r, retryCount + 1)
+            return request(req, retryCount + 1)
         }
 
         val type = res.raw.body()?.contentType()

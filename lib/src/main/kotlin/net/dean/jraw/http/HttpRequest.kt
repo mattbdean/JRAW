@@ -25,7 +25,7 @@ import java.util.regex.Pattern
  * println(response.body)
  * ```
  */
-class HttpRequest private constructor(
+class HttpRequest internal constructor(
     val url: String,
     val headers: Headers,
     val method: String,
