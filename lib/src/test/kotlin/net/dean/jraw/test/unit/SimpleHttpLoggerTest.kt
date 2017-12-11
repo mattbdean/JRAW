@@ -129,6 +129,5 @@ class SimpleHttpLoggerTest : Spek({
         logAdapter.reset()
         mockAdapter.reset()
     }
-}) {
-}
+})
 

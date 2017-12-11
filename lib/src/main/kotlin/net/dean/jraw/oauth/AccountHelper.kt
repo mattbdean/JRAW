@@ -40,6 +40,8 @@ class AccountHelper(
 
     private var _reddit: RedditClient? = null
 
+    private var configure: (r: RedditClient) -> Unit = {}
+
     /** The most up-to-date RedditClient */
     val reddit: RedditClient
         get() = _reddit ?: throw IllegalStateException("No current authenticated client")
@@ -128,6 +130,28 @@ class AccountHelper(
     }
 
     /**
+     * Sets a function to be executed every time a new RedditClient is switched to. The provided function is called with
+     * the new client. [switchToUser], [switchToUserless], [switchToNewUser], and [trySwitchToUser] all trigger this
+     * function.
+     *
+     * Here's an example:
+     *
+     * ```kt
+     * accountHelper.onSwitch { redditClient -> println(redditClient) }
+     * accountHelper.switchToUserless()
+     * ```
+     *
+     * Output:
+     *
+     * ```kt
+     * RedditClient(username=<userless>)
+     * ```
+     */
+    fun onSwitch(configure: (r: RedditClient) -> Unit) {
+        this.configure = configure
+    }
+
+    /**
      * Does all the housekeeping required to clean up the old client, assigns the new client instance to [_reddit] and
      * returns it.
      */
@@ -135,6 +159,7 @@ class AccountHelper(
         _reddit?.loggedOut = true
 
         new.forceRenew = forceRenew
+        configure(new)
         _reddit = new
         return new
     }

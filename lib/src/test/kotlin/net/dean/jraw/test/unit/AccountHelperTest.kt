@@ -1,5 +1,6 @@
 package net.dean.jraw.test.unit
 
+import com.winterbe.expekt.expect
 import com.winterbe.expekt.should
 import net.dean.jraw.oauth.AccountHelper
 import net.dean.jraw.oauth.AuthManager
@@ -187,6 +188,19 @@ class AccountHelperTest : Spek({
                 // helper._reddit should be null, helper.reddit should throw an Exception
                 helper.reddit
             }
+        }
+    }
+
+    describe("onSwitch") {
+        it("should execute some code when the client is switched") {
+            var count = 0
+
+            val helper = AccountHelper(mockAdapter, creds, tokenStore, uuid)
+            helper.onSwitch { count++ }
+            tokenStore.storeLatest(username, createMockOAuthData())
+            helper.switchToUser(username)
+
+            expect(count).to.equal(1)
         }
     }
 
