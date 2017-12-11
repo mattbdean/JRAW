@@ -112,7 +112,20 @@ class DeferredPersistentStoreTest : Spek({
             store._persisted[username]?.refreshToken.should.be.`null`
             store.storeRefreshToken(username, "foo")
             store._persisted[username]?.refreshToken.should.equal("foo")
+        }
 
+        it("should persist changes immediately after deleting data") {
+            val store = newStore(data)
+            store.autoPersist = true
+            store.persist()
+
+            // Make sure deleteLatest persists
+            store.deleteLatest(username)
+            store._persisted[username].should.equal(PersistedAuthData.create(null, refreshToken))
+
+            // Make sure deleteRefreshToken persists
+            store.deleteRefreshToken(username)
+            store._persisted[username].should.be.`null`
         }
     }
 

@@ -94,7 +94,7 @@ abstract class DeferredPersistentTokenStore @JvmOverloads constructor(
         val new = PersistedAuthData.create(data, stored?.refreshToken)
         this.memoryData[username] = new
 
-        if (this.hasUnsaved() && autoPersist)
+        if (autoPersist && this.hasUnsaved())
             persist()
     }
 
@@ -105,7 +105,7 @@ abstract class DeferredPersistentTokenStore @JvmOverloads constructor(
         val new = PersistedAuthData.create(stored?.latest, token)
         this.memoryData[username] = new
 
-        if (this.hasUnsaved() && autoPersist)
+        if (autoPersist && this.hasUnsaved())
             persist()
     }
 
@@ -125,6 +125,9 @@ abstract class DeferredPersistentTokenStore @JvmOverloads constructor(
         } else {
             memoryData[username] = PersistedAuthData.create(null, saved.refreshToken)
         }
+
+        if (autoPersist && this.hasUnsaved())
+            persist()
     }
 
     override fun deleteRefreshToken(username: String) {
@@ -134,5 +137,8 @@ abstract class DeferredPersistentTokenStore @JvmOverloads constructor(
             memoryData.remove(username)
         else
             memoryData[username] = PersistedAuthData.create(saved.latest, null)
+
+        if (autoPersist && this.hasUnsaved())
+            persist()
     }
 }
