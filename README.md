@@ -13,7 +13,7 @@ repositories {
     maven { url 'https://jitpack.io' }
 }
 dependencies {
-    implementation 'com.github.mattbdean.JRAW:lib:master-SNAPSHOT'
+    implementation 'com.github.mattbdean:JRAW:master-SNAPSHOT'
 }
 ```
 
