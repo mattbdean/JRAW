@@ -19,7 +19,7 @@ import java.lang.reflect.Type
  * The data encapsulated in `payload` depends entirely on `type`. See [LiveWebSocketUpdate.getType] for more.
  */
 class LiveWebSocketUpdateAdapterFactory : JsonAdapter.Factory {
-    override fun create(type: Type?, annotations: MutableSet<out Annotation>?, moshi: Moshi?): JsonAdapter<*>? {
+    override fun create(type: Type, annotations: MutableSet<out Annotation>?, moshi: Moshi?): JsonAdapter<*>? {
         val raw = Types.getRawType(type)
         if (!LiveWebSocketUpdate::class.java.isAssignableFrom(raw)) return null
 
