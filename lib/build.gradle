@@ -56,7 +56,7 @@ dokka {
 
 task javadocJar(type: Jar, dependsOn: dokka) {
     classifier = 'javadoc'
-    from javadoc.destinationDir
+    from dokka.outputDirectory
     baseName = projectName
 }
 
