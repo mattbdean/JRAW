@@ -31,11 +31,11 @@ class RedditClientTest : Spek({
 
     describe("logHttp") {
         it("shouldn't log HTTP requests when false") {
-            val baos = ByteArrayOutputStream()
             val reddit = OAuthHelper.automatic(newOkHttpAdapter(), CredentialsUtil.script)
+            val adapter = InMemoryLogAdapter()
 
             // Give the RedditClient our logger
-            reddit.logger = SimpleHttpLogger(out = PrintStream(baos))
+            reddit.logger = SimpleHttpLogger(out = InMemoryLogAdapter())
             reddit.logHttp = false
 
             // Make a request, which would trigger writing to the BAOS if logHttp is being ignored
@@ -43,7 +43,7 @@ class RedditClientTest : Spek({
                 .url("https://httpbin.org/get")
                 .build())
 
-            baos.size().should.equal(0)
+            adapter.output().should.be.empty
         }
     }
 

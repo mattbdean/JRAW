@@ -1,5 +1,8 @@
 apply plugin: 'org.jetbrains.dokka'
 apply plugin: 'net.ltgt.apt-idea'
+apply plugin: 'maven'
+
+ext.projectName = 'JRAW'
 
 dependencies {
     compile "com.squareup.okhttp3:okhttp:$okhttpVersion"
@@ -50,3 +53,28 @@ dokka {
         suffix = '#L'
     }
 }
+
+task javadocJar(type: Jar, dependsOn: dokka) {
+    classifier = 'javadoc'
+    from dokka.outputDirectory
+    baseName = projectName
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+    baseName = projectName
+}
+
+jar {
+    baseName = projectName
+}
+
+// When JitPack builds, it runs the install task (from the maven plugin) to install all artifacts listed here to the
+// local repository. List the sources and Javadoc jar here to make it available to JitPack users.
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}
+
+task jars(dependsOn: [javadocJar, sourcesJar])

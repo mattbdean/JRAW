@@ -2,6 +2,7 @@ package net.dean.jraw.test.unit
 
 import com.winterbe.expekt.should
 import net.dean.jraw.filterValuesNotNull
+import net.dean.jraw.models.OAuthData
 import net.dean.jraw.models.PersistedAuthData
 import net.dean.jraw.oauth.AuthManager
 import net.dean.jraw.oauth.DeferredPersistentTokenStore
@@ -31,6 +32,28 @@ class DeferredPersistentStoreTest : Spek({
 
             store.fetchLatest(username).should.equal(oauthData)
             store.fetchRefreshToken(username).should.equal(refreshToken)
+        }
+
+        it("shouldn't load insignificant data") {
+            val store = newStore()
+            val expiredOAuthData = OAuthData.create(
+                // Access token, scope, and refresh token are irrelevant
+                "<access_token>",
+                listOf("scope1", "scope2"),
+                null,
+                // Make the expiration 1 ms in the past
+                Date(Date().time - 1)
+            )
+
+            // Make sure our logic is correct: a PersistedAuthData with (1) either no OAuthData or one that is expired
+            // and (2) no refresh token makes this auth data insignificant.
+            val insignificantAuthData = PersistedAuthData.create(expiredOAuthData, null)
+            insignificantAuthData.isSignificant.should.be.`false`
+            store._persisted = mutableMapOf(username to insignificantAuthData)
+
+            // load() shouldn't load any insignificant entries
+            store.load()
+            store.size().should.equal(0)
         }
     }
 
@@ -89,7 +112,20 @@ class DeferredPersistentStoreTest : Spek({
             store._persisted[username]?.refreshToken.should.be.`null`
             store.storeRefreshToken(username, "foo")
             store._persisted[username]?.refreshToken.should.equal("foo")
+        }
 
+        it("should persist changes immediately after deleting data") {
+            val store = newStore(data)
+            store.autoPersist = true
+            store.persist()
+
+            // Make sure deleteLatest persists
+            store.deleteLatest(username)
+            store._persisted[username].should.equal(PersistedAuthData.create(null, refreshToken))
+
+            // Make sure deleteRefreshToken persists
+            store.deleteRefreshToken(username)
+            store._persisted[username].should.be.`null`
         }
     }
 

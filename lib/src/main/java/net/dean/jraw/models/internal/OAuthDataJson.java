@@ -28,7 +28,7 @@ public abstract class OAuthDataJson {
     public final OAuthData toOAuthData() {
         return OAuthData.create(
             /*accessToken = */ getAccessToken(),
-            /*scopes = */ Arrays.asList(getScopeList().split(",")),
+            /*scopes = */ Arrays.asList(getScopeList().split(" ")),
             /*refreshToken = */ getRefreshToken(),
             /*expiration = */ new Date(new Date().getTime() + TimeUnit.MILLISECONDS.convert(getExpiresIn(), TimeUnit.SECONDS))
         );

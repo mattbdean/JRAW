@@ -1,5 +1,6 @@
 package net.dean.jraw.test.unit
 
+import com.winterbe.expekt.expect
 import com.winterbe.expekt.should
 import net.dean.jraw.oauth.AccountHelper
 import net.dean.jraw.oauth.AuthManager
@@ -135,6 +136,71 @@ class AccountHelperTest : Spek({
             val reddit = statefulHelper.onUserChallenge(mockedRedirectUrl)
             // The onAuthenticated callback should assign helper's client to the newly authenticated client
             (reddit === helper.reddit).should.be.`true`
+        }
+    }
+
+    describe("isAuthenticated") {
+        it("should return false when there is no managed RedditClient") {
+            val helper = AccountHelper(mockAdapter, creds, tokenStore, uuid)
+
+            // No RedditClient instance yet
+            helper.isAuthenticated().should.be.`false`
+        }
+
+        it("should return true after switching to a user") {
+            val helper = AccountHelper(mockAdapter, creds, tokenStore, uuid)
+
+            // Store some unexpired mock OAuthData
+            tokenStore.storeLatest(username, createMockOAuthData())
+
+            // Since we have unexpired data, isAuthenticated() should return true
+            helper.switchToUser(username)
+            helper.isAuthenticated().should.be.`true`
+
+        }
+
+        it("should return true if there is no OAuthData but there is a refresh token") {
+            val helper = AccountHelper(mockAdapter, creds, tokenStore, uuid)
+            tokenStore.storeRefreshToken(username, "<refresh_token>")
+
+            // Having the refresh token will cause authManager.needsRenewing() to return true
+            helper.switchToUser(username)
+            helper.isAuthenticated().should.be.`true`
+        }
+    }
+
+    describe("logout") {
+        it("should do nothing if there's no current client") {
+            val helper = AccountHelper(mockAdapter, creds, tokenStore, uuid)
+            helper.logout()
+        }
+
+        it("should logout and unmanage the current RedditClient") {
+            val helper = AccountHelper(mockAdapter, creds, tokenStore, uuid)
+            tokenStore.storeLatest(username, createMockOAuthData())
+            val reddit = helper.switchToUser(username)
+
+            reddit.loggedOut.should.be.`false`
+            helper.logout()
+            reddit.loggedOut.should.be.`true`
+
+            expectException(IllegalStateException::class) {
+                // helper._reddit should be null, helper.reddit should throw an Exception
+                helper.reddit
+            }
+        }
+    }
+
+    describe("onSwitch") {
+        it("should execute some code when the client is switched") {
+            var count = 0
+
+            val helper = AccountHelper(mockAdapter, creds, tokenStore, uuid)
+            helper.onSwitch { count++ }
+            tokenStore.storeLatest(username, createMockOAuthData())
+            helper.switchToUser(username)
+
+            expect(count).to.equal(1)
         }
     }
 

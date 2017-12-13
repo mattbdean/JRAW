@@ -29,8 +29,8 @@ import java.util.concurrent.atomic.AtomicInteger
 class SimpleHttpLogger @JvmOverloads constructor(
     /** The maximum amount of characters per line */
     val maxLineLength: Int = DEFAULT_LINE_LENGTH,
-    /** Where to print messages to */
-    val out: PrintStream = System.out
+    /** How to print messages */
+    val out: LogAdapter = PrintStreamLogAdapter(System.out)
 ) : HttpLogger {
     private val counter: AtomicInteger = AtomicInteger(1)
 
@@ -44,7 +44,7 @@ class SimpleHttpLogger @JvmOverloads constructor(
 
         val tag = "[$id ->]"
 
-        out.println(truncate("$tag ${r.method} ${r.url}", maxLineLength))
+        out.writeln(truncate("$tag ${r.method} ${r.url}", maxLineLength))
 
         val form = parseForm(r)
         if (!form.isEmpty()) {
@@ -63,7 +63,7 @@ class SimpleHttpLogger @JvmOverloads constructor(
         val body = res.body.replace("\n", "")
         val formattedTag = "[<- ${tag.requestId}]"
 
-        out.println(truncate("$formattedTag ${res.code} $contentType: '$body'", maxLineLength))
+        out.writeln(truncate("$formattedTag ${res.code} $contentType: '$body'", maxLineLength))
     }
 
     private fun formatContentType(res: Response): String {
@@ -93,7 +93,7 @@ class SimpleHttpLogger @JvmOverloads constructor(
         for ((k, v) in pairs) {
             val prefix = if (needsHeader) header else " ".repeat(header.length)
             if (needsHeader) needsHeader = false
-            out.println(truncate("$baseIndent $prefix $k=$v", maxLineLength))
+            out.writeln(truncate("$baseIndent $prefix $k=$v", maxLineLength))
         }
     }
 
@@ -105,12 +105,11 @@ class SimpleHttpLogger @JvmOverloads constructor(
 
         @JvmStatic
         private fun truncate(str: String, limit: Int): String {
-            return if (limit < 0)
-                return str
-            else if (str.length > limit)
-                str.substring(0, limit - ELLIPSIS.length) + ELLIPSIS
-            else
-                str
+            return when {
+                limit < 0 -> return str
+                str.length > limit -> str.substring(0, limit - ELLIPSIS.length) + ELLIPSIS
+                else -> str
+            }
         }
     }
 }

@@ -1,10 +1,7 @@
 package net.dean.jraw.test
 
 import net.dean.jraw.RedditClient
-import net.dean.jraw.http.HttpRequest
-import net.dean.jraw.http.HttpResponse
-import net.dean.jraw.http.NetworkAdapter
-import net.dean.jraw.http.UserAgent
+import net.dean.jraw.http.*
 import net.dean.jraw.models.OAuthData
 import net.dean.jraw.oauth.AuthManager
 import net.dean.jraw.oauth.AuthMethod
@@ -141,4 +138,16 @@ class InMemoryTokenStore : TokenStore {
     fun resetDataOnly() {
         dataMap.clear()
     }
+}
+
+class InMemoryLogAdapter : LogAdapter {
+    private val data: MutableList<String> = arrayListOf()
+
+    override fun writeln(data: String) {
+        this.data.add(data)
+    }
+
+    fun output() = ArrayList(data)
+    fun reset() { data.clear() }
+
 }

@@ -25,7 +25,7 @@ import java.util.regex.Pattern
  * println(response.body)
  * ```
  */
-class HttpRequest private constructor(
+class HttpRequest internal constructor(
     val url: String,
     val headers: Headers,
     val method: String,
@@ -42,7 +42,9 @@ class HttpRequest private constructor(
 
     companion object {
         /** This Pattern will match a URI parameter. For example, /api/{param1}/{param2}  */
-        private val PATH_PARAM_PATTERN = Pattern.compile("\\{(.*?)}")
+        // The second escape (for the '}') is required because Oracle's Pattern.compile implementation is different from
+        // Android's. Not having this escape will cause crashes on Android apps.
+        private val PATH_PARAM_PATTERN = Pattern.compile("\\{(.*?)\\}")
 
         private fun buildUrl(b: Builder): String {
             if (b.url != null) return b.url!!

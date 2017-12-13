@@ -2,7 +2,7 @@ import java.util.stream.Collectors
 import org.gradle.api.tasks.wrapper.Wrapper.DistributionType
 
 buildscript {
-    ext.kotlinVersion = '1.1.51'
+    ext.kotlinVersion = '1.2.0'
     ext.spekVersion = '1.1.5'
     ext.moshiVersion = '1.5.0'
     ext.autoValueVersion = '1.5'

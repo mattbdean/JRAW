@@ -41,7 +41,7 @@ object JrawUtils {
 
     @JvmStatic inline fun <reified T> adapter(): JsonAdapter<T> = moshi.adapter(T::class.java)
 
-    @JvmStatic inline fun <reified T> adapter(annotationType: Class<out Annotation>?): JsonAdapter<T> =
+    @JvmStatic inline fun <reified T> adapter(annotationType: Class<out Annotation>): JsonAdapter<T> =
         moshi.adapter(T::class.java, annotationType)
 
     /**

@@ -2,7 +2,7 @@
 
 [![travis-ci build status](https://img.shields.io/travis/mattbdean/JRAW.svg)](https://travis-ci.org/mattbdean/JRAW)
 [![Latest release](https://img.shields.io/github/release/mattbdean/JRAW.svg)](https://bintray.com/thatjavanerd/maven/JRAW/_latestVersion)
-[![Kotlin 1.1.51](https://img.shields.io/badge/Kotlin-1.1.51-blue.svg)](http://kotlinlang.org)
+[![Kotlin 1.2.0](https://img.shields.io/badge/Kotlin-1.2.0-blue.svg)](http://kotlinlang.org)
 [![API coverage](https://img.shields.io/badge/API_coverage-39%25-9C27B0.svg)](https://github.com/thatJavaNerd/JRAW/blob/master/ENDPOINTS.md)
 [![Codecov branch](https://img.shields.io/codecov/c/github/mattbdean/JRAW.svg)](https://codecov.io/gh/mattbdean/JRAW)
 
@@ -13,7 +13,7 @@ repositories {
     maven { url 'https://jitpack.io' }
 }
 dependencies {
-    implementation 'com.github.mattbdean.JRAW:lib:master-SNAPSHOT'
+    implementation 'com.github.mattbdean:JRAW:master-SNAPSHOT'
 }
 ```
 
@@ -30,6 +30,18 @@ RedditClient reddit = OAuthHelper.automatic(oauthCreds, new OkHttpNetworkAdapter
 // Get info about the user
 Account me = reddit.me().about();
 ```
+
+## Javadoc
+
+JRAW uses JitPack to host its Javadoc.
+
+```
+https://jitpack.io/com/github/mattbdean/JRAW/VERSION/javadoc/index.html
+```
+
+`VERSION` can be a specific commit hash (like [`d6843bf`](https://jitpack.io/com/github/mattbdean/JRAW/d6843bf/javadoc/index.html)), a tag (like [`v0.9.0`](https://jitpack.io/com/github/mattbdean/JRAW/v0.9.0/javadoc/index.html)), or the HEAD of a branch (like [`master-SNAPSHOT`](https://jitpack.io/com/github/mattbdean/JRAW/master-SNAPSHOT/javadoc/index.html)).
+
+JitPack produces Javadoc only when necessary, so the first time someone accesses the Javadoc for a specific build it may take a little bit.
 
 ## Contributing
 

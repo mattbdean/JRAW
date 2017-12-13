@@ -1,5 +1,7 @@
 package net.dean.jraw.docs
 
+import net.dean.jraw.Version
+
 class DocLinkGenerator {
     fun generate(name: String): String {
         val clazz = ProjectTypeFinder.from(name) ?:
@@ -12,7 +14,6 @@ class DocLinkGenerator {
     }
 
     companion object {
-        // TODO update when we actually update docs
-        private const val BASE = "#"
+        private val BASE = "https://jitpack.io/com/github/mattbdean/JRAW/v${Version.get()}/javadoc/"
     }
 }
