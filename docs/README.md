@@ -13,7 +13,7 @@ $ cd docs/build/docs && gitbook serve
 
 ## How it works
 
-The [`net.dean.jraw.docs.samples`](https://github.com/thatJavaNerd/JRAW/tree/kotlin/docs/src/main/java/net/dean/jraw/docs/samples) package contains classes with `@CodeSample` methods to be used in documentation. For example:
+The [`net.dean.jraw.docs.samples`](https://github.com/thatJavaNerd/JRAW/tree/master/docs/src/main/java/net/dean/jraw/docs/samples) package contains classes with `@CodeSample` methods to be used in documentation. For example:
 
 ```java
 final class Example {
@@ -87,7 +87,7 @@ but this is not:
 
 ## Adding a new chapter
 
-All chapters are arranged in [`toc.json`](https://github.com/mattbdean/JRAW/blob/kotlin/docs/src/main/resources/content/toc.json). This file specifies the table of contents for our book in JSON format. This is essentially an array of [`Chapter`](https://github.com/mattbdean/JRAW/blob/kotlin/docs/src/main/java/net/dean/jraw/docs/Chapter.java)s.
+All chapters are arranged in [`toc.json`](https://github.com/mattbdean/JRAW/blob/master/docs/src/main/resources/content/toc.json). This file specifies the table of contents for our book in JSON format. This is essentially an array of [`Chapter`](https://github.com/mattbdean/JRAW/blob/master/docs/src/main/java/net/dean/jraw/docs/Chapter.java)s.
 
 Say our `toc.json` looks like this:
 
@@ -98,7 +98,7 @@ Say our `toc.json` looks like this:
 ]
 ```
 
-- `file` is the basename of the markdown file relative to the content directory (which is [here](https://github.com/mattbdean/JRAW/tree/kotlin/docs/src/main/resources/content)).
+- `file` is the basename of the markdown file relative to the content directory (which is [here](https://github.com/mattbdean/JRAW/tree/master/docs/src/main/resources/content)).
 - `title` is the text displayed to the user in the sidebar. If it isn't specified, the capitalized version of `file` is used.
 
 To build the book, we compile `foo.md` and `bar.md` and copy them to the output destination. We also create a `SUMMARY.md` file that GitBooks uses to generate the sidebar. For this specific configuration, the built summary file looks like this:
@@ -112,7 +112,7 @@ To build the book, we compile `foo.md` and `bar.md` and copy them to the output 
 
 ## Why not include code samples directly?
 
-As the documentation grows and the library evolves, it will be difficult to manually check for syntax errors. This method forces us to keep all of our code samples up-to-date and syntactically valid.
+As the documentation grows and the library evolves, it will be difficult to manually check for syntax errors. This method forces us to keep all of our code samples up-to-date and syntactically valid. A code sample with a compile-time error will fail the CI build.
 
 ## Pushing to GitBook
 
