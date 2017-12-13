@@ -17,7 +17,9 @@ dependencies {
 }
 ```
 
-The full documentation is available [here](https://mattbdean.gitbooks.io/jraw), but here's a sneak peek:
+## Documentation
+
+The full documentation is available [on GitBooks](https://mattbdean.gitbooks.io/jraw), but here's a sneak peek:
 
 ```java
 // Assuming we have a 'script' reddit app
@@ -33,7 +35,7 @@ RedditClient reddit = OAuthHelper.automatic(oauthCreds, new OkHttpNetworkAdapter
 Account me = reddit.me().about();
 ```
 
-## Javadoc
+### Javadoc
 
 JRAW uses JitPack to host its Javadoc.
 
