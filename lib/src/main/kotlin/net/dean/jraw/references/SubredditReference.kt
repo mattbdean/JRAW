@@ -5,6 +5,7 @@ import net.dean.jraw.*
 import net.dean.jraw.models.*
 import net.dean.jraw.models.internal.GenericJsonResponse
 import net.dean.jraw.models.internal.SubmissionData
+import net.dean.jraw.pagination.BarebonesPaginator
 import net.dean.jraw.pagination.DefaultPaginator
 import net.dean.jraw.tree.RootCommentNode
 
@@ -29,6 +30,13 @@ class SubredditReference internal constructor(reddit: RedditClient, val subreddi
         type = MethodType.NON_BLOCKING_CALL
     )
     fun posts() = DefaultPaginator.Builder.create<Submission>(reddit, "/r/$subreddit", sortingAlsoInPath = true)
+
+    /**
+     * Creates a BarebonesPaginator.Builder that will iterate over the latest comments from this subreddit when built.
+     *
+     * @see RedditClient.latestComments
+     */
+    fun comments(): BarebonesPaginator.Builder<Comment> = reddit.latestComments(subreddit)
 
     /**
      * Gets a random submission from this subreddit. Although it is not marked with [EndpointImplementation], this
