@@ -17,12 +17,14 @@ dependencies {
 }
 ```
 
+The full documentation is available [here](https://mattbdean.gitbooks.io/jraw), but here's a sneak peek:
+
 ```java
 // Assuming we have a 'script' reddit app
 Credentials oauthCreds = Credentials.script(username, password, clientId, clientSecret);
 
 // Create a unique User-Agent for our bot
-UserAgent userAgent = new UserAgent("desktop", "my.cool.bot", "1.0.0", "myRedditUsername");
+UserAgent userAgent = new UserAgent("bot", "my.cool.bot", "1.0.0", "myRedditUsername");
 
 // Authenticate our client
 RedditClient reddit = OAuthHelper.automatic(oauthCreds, new OkHttpNetworkAdapter(userAgent));
@@ -78,5 +80,5 @@ $ ./gradlew test
 
 Tests are written with [Spek](http://spekframework.org/) and assertions are done with [Expekt](https://github.com/winterbe/expekt).
 
-
+In order to get the integration tests of the `docs` module to pass, you'll need [gitbook-cli](https://github.com/GitbookIO/gitbook-cli) installed globally. You shouldn't have to worry about this, as most of the contributions are likely to be towards the core library and not its accessory modules.
 
