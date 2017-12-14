@@ -74,7 +74,10 @@ abstract class AbstractCommentNode<out T : PublicContribution<*>> protected cons
 
     override fun replaceMore(reddit: RedditClient): List<ReplyCommentNode> {
         if (!hasMoreChildren()) return listOf()
-        return attach(requestMore(reddit))
+        val moreExpanded = requestMore(reddit)
+        // if not all children were loaded, MoreChildren will be attached later
+        this.moreChildren = null
+        return attach(moreExpanded)
     }
 
     /**
@@ -104,7 +107,7 @@ abstract class AbstractCommentNode<out T : PublicContribution<*>> protected cons
             }.deserialize()
 
             // IDs that weren't included in the request
-            val leftoverIds = more.childrenIds.takeLast(more.childrenIds.size - MORE_CHILDREN_LIMIT)
+            val leftoverIds = more.childrenIds.drop(MORE_CHILDREN_LIMIT)
 
             // The "things" node is an array of either comments or morechildren
             val things = json.json?.data?.get("things") as? List<*> ?:
@@ -167,6 +170,11 @@ abstract class AbstractCommentNode<out T : PublicContribution<*>> protected cons
                         settings = this.settings
                     )
 
+                    // Sometimes same nodes are added more than once
+                    // Instead of not processing the duplicates we remove the old ones
+                    // In order to not break the traversal algorithm
+                    currentRoot.replies.removeIf { it.subject == newNode.subject }
+
                     currentRoot.replies.add(newNode)
 
                     if (currentRoot.subject.fullName == root.subject.fullName)
@@ -205,6 +213,34 @@ abstract class AbstractCommentNode<out T : PublicContribution<*>> protected cons
             .map { it.subject as NestedIdentifiable }
     }
 
+    override fun loadFully(reddit: RedditClient) {
+        loadFully(reddit, NO_LIMIT, NO_LIMIT)
+    }
+
+    override fun loadFully(reddit: RedditClient, depthLimit: Int, requestLimit: Int) {
+        var requests = 0
+        if (depthLimit < NO_LIMIT || requestLimit < NO_LIMIT)
+            throw IllegalArgumentException("Expecting a number greater than or equal to -1, got " + if (requestLimit < NO_LIMIT) requestLimit else depthLimit)
+        // Load this node's comments first
+        while (hasMoreChildren()) {
+            replaceMore(reddit)
+            if (++requests > requestLimit && depthLimit != NO_LIMIT)
+                return
+        }
+
+        // Load the children's comments next
+        for (node in walkTree(TreeTraverser.Order.BREADTH_FIRST)) {
+            // Travel breadth first so we can accurately compare depths
+            if (depthLimit != NO_LIMIT && node.depth > depthLimit)
+                return
+            while (node.hasMoreChildren()) {
+                node.replaceMore(reddit)
+                if (++requests > requestLimit && depthLimit != NO_LIMIT)
+                    return
+            }
+        }
+    }
+
     override fun toString(): String {
         return "AbstractCommentNode(depth=$depth, body=${subject.body}, replies=List[${replies.size}])"
     }
@@ -214,5 +250,6 @@ abstract class AbstractCommentNode<out T : PublicContribution<*>> protected cons
         /** The upper limit to how many more comments can be requested at one time. Equal to 100. */
         const val MORE_CHILDREN_LIMIT = 100
         private val moreChildrenLock = Any()
+        const val NO_LIMIT = -1
     }
 }
