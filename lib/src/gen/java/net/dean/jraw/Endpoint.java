@@ -198,8 +198,8 @@ public enum Endpoint {
     POST_DELETEFLAIRTEMPLATE("POST", "/api/deleteflairtemplate", "modflair"),
 
     /**
-     * Represents the endpoint {@code POST /api/flair}. Requires OAuth scope 'modflair'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_flair">here</a> for more information */
-    POST_FLAIR("POST", "/api/flair", "modflair"),
+     * Represents the endpoint {@code POST /r/{subreddit}/api/flair}. Requires OAuth scope 'modflair'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_flair">here</a> for more information */
+    POST_FLAIR("POST", "/r/{subreddit}/api/flair", "modflair"),
 
     /**
      * Represents the endpoint {@code PATCH /api/flair_template_order}. Requires OAuth scope 'modflair'. See <a href="https://www.reddit.com/dev/api/oauth#PATCH_api_flair_template_order">here</a> for more information */

@@ -122,7 +122,7 @@ class SubredditReference internal constructor(reddit: RedditClient, val subreddi
      * Lists all possible flairs for users. Requires an authenticated user. Will return nothing if flair is disabled on
      * the subreddit, the user cannot set their own flair, or they are not a moderator that can set flair.
      *
-     * @see FlairReference.updateTo
+     * @see FlairReference.updateToTemplate
      */
     @EndpointImplementation(Endpoint.GET_USER_FLAIR)
     fun userFlairOptions(): List<Flair> = requestFlair("user")
@@ -131,7 +131,7 @@ class SubredditReference internal constructor(reddit: RedditClient, val subreddi
      * Lists all possible flairs for submissions to this subreddit. Requires an authenticated user. Will return nothing
      * if the user cannot set their own link flair and they are not a moderator that can set flair.
      *
-     * @see FlairReference.updateTo
+     * @see FlairReference.updateToTemplate
      */
     @EndpointImplementation(Endpoint.GET_LINK_FLAIR)
     fun linkFlairOptions(): List<Flair> = requestFlair("link")
