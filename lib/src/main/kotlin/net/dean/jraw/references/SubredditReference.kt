@@ -2,6 +2,7 @@ package net.dean.jraw.references
 
 import com.squareup.moshi.Types
 import net.dean.jraw.*
+import net.dean.jraw.http.HttpResponse
 import net.dean.jraw.models.*
 import net.dean.jraw.models.internal.GenericJsonResponse
 import net.dean.jraw.models.internal.SubmissionData
@@ -180,6 +181,20 @@ class SubredditReference internal constructor(reddit: RedditClient, val subreddi
             it.endpoint(Endpoint.GET_STYLESHEET)
                 .query(mapOf("r" to subreddit))
         }.body
+    }
+
+    /** Updates the stylesheet of a subreddit. */
+    @EndpointImplementation(Endpoint.POST_SUBREDDIT_STYLESHEET)
+    fun updateStylesheet(stylesheet: String, reason: String): HttpResponse {
+        return reddit.request {
+            it.endpoint(Endpoint.POST_SUBREDDIT_STYLESHEET, subreddit)
+                .post(mapOf(
+                    "api_type" to "json",
+                    "op" to "save",
+                    "reason" to reason,
+                    "stylesheet_contents" to stylesheet
+                ))
+        }
     }
 
     companion object {

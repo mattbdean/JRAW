@@ -158,8 +158,8 @@ public enum Endpoint {
     POST_SITE_ADMIN("POST", "/api/site_admin", "modconfig"),
 
     /**
-     * Represents the endpoint {@code POST /api/subreddit_stylesheet}. Requires OAuth scope 'modconfig'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_subreddit_stylesheet">here</a> for more information */
-    POST_SUBREDDIT_STYLESHEET("POST", "/api/subreddit_stylesheet", "modconfig"),
+     * Represents the endpoint {@code POST /r/{subreddit}/api/subreddit_stylesheet}. Requires OAuth scope 'modconfig'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_subreddit_stylesheet">here</a> for more information */
+    POST_SUBREDDIT_STYLESHEET("POST", "/r/{subreddit}/api/subreddit_stylesheet", "modconfig"),
 
     /**
      * Represents the endpoint {@code POST /api/upload_sr_img}. Requires OAuth scope 'modconfig'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_upload_sr_img">here</a> for more information */
