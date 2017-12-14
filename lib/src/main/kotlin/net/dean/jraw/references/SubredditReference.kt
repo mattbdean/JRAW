@@ -157,9 +157,9 @@ class SubredditReference internal constructor(reddit: RedditClient, val subreddi
     fun selfUserFlair() = reddit.me().flairOn(subreddit)
 
     /**
-     * Returns a SubmissionFlairReference for the given submission full name.
+     * Returns a SubmissionFlairReference for the given submission id (without the kind prefix).
      */
-    fun submissionFlair(fullName: String) = SubmissionFlairReference(reddit, subreddit, fullName)
+    fun submissionFlair(id: String) = SubmissionFlairReference(reddit, subreddit, id)
 
     /**
      * Returns the moderator-created rules for the subreddit. Users can report things in this subreddit using the String
