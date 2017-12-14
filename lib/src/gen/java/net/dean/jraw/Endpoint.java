@@ -66,16 +66,16 @@ public enum Endpoint {
     POST_SENDREPLIES("POST", "/api/sendreplies", "edit"),
 
     /**
-     * Represents the endpoint {@code POST /api/flairselector}. Requires OAuth scope 'flair'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_flairselector">here</a> for more information */
-    POST_FLAIRSELECTOR("POST", "/api/flairselector", "flair"),
+     * Represents the endpoint {@code POST /r/{subreddit}/api/flairselector}. Requires OAuth scope 'flair'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_flairselector">here</a> for more information */
+    POST_FLAIRSELECTOR("POST", "/r/{subreddit}/api/flairselector", "flair"),
 
     /**
      * Represents the endpoint {@code GET /api/link_flair}. Requires OAuth scope 'flair'. See <a href="https://www.reddit.com/dev/api/oauth#GET_api_link_flair">here</a> for more information */
     GET_LINK_FLAIR("GET", "/api/link_flair", "flair"),
 
     /**
-     * Represents the endpoint {@code POST /api/selectflair}. Requires OAuth scope 'flair'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_selectflair">here</a> for more information */
-    POST_SELECTFLAIR("POST", "/api/selectflair", "flair"),
+     * Represents the endpoint {@code POST /r/{subreddit}/api/selectflair}. Requires OAuth scope 'flair'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_selectflair">here</a> for more information */
+    POST_SELECTFLAIR("POST", "/r/{subreddit}/api/selectflair", "flair"),
 
     /**
      * Represents the endpoint {@code POST /api/setflairenabled}. Requires OAuth scope 'flair'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_setflairenabled">here</a> for more information */

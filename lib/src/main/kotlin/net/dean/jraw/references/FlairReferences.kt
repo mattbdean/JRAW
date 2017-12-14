@@ -76,7 +76,7 @@ sealed class FlairReference(
 class SubmissionFlairReference internal constructor(reddit: RedditClient, subreddit: String, subject: String) : FlairReference(reddit, subreddit, subject) {
     override fun updateTo(templateId: String, text: String?) {
         reddit.request {
-            it.path("/r/${JrawUtils.urlEncode(subreddit)}${Endpoint.POST_SELECTFLAIR.path}")
+            it.endpoint(Endpoint.POST_SELECTFLAIR, subreddit)
                 .post(mapOf(
                     "api_type" to "json",
                     "flair_template_id" to templateId,
@@ -108,7 +108,7 @@ sealed class UserFlairReference(
     @EndpointImplementation(Endpoint.POST_FLAIRSELECTOR)
     fun current(): CurrentFlair {
         val selector: FlairSelector = reddit.request {
-            it.path("/r/${JrawUtils.urlEncode(subreddit)}${Endpoint.POST_FLAIRSELECTOR.path}")
+            it.endpoint(Endpoint.POST_FLAIRSELECTOR, subreddit)
                 .post(mapOf(
                     "name" to subject
                 ))
@@ -119,7 +119,7 @@ sealed class UserFlairReference(
 
     override fun updateTo(templateId: String, text: String?) {
         reddit.request {
-            it.path("/r/${JrawUtils.urlEncode(subreddit)}${Endpoint.POST_SELECTFLAIR.path}")
+            it.endpoint(Endpoint.POST_SELECTFLAIR, subreddit)
                 .post(mapOf(
                     "api_type" to "json",
                     "flair_template_id" to templateId,
