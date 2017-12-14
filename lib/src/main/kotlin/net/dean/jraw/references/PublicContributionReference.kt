@@ -3,6 +3,7 @@ package net.dean.jraw.references
 import net.dean.jraw.*
 import net.dean.jraw.databind.Enveloped
 import net.dean.jraw.models.Comment
+import net.dean.jraw.models.DistinguishedStatus
 import net.dean.jraw.models.VoteDirection
 import net.dean.jraw.models.internal.GenericJsonResponse
 
@@ -119,6 +120,27 @@ abstract class PublicContributionReference internal constructor(reddit: RedditCl
                 .post(mapOf(
                     "id" to fullName,
                     "state" to sendReplies.toString()
+                ))
+        }
+    }
+
+    @EndpointImplementation(Endpoint.POST_DISTINGUISH)
+    fun distinguish(how: DistinguishedStatus, sticky: Boolean) {
+        val howOption = when(how) {
+            DistinguishedStatus.NORMAL -> "no"
+            DistinguishedStatus.MODERATOR -> "yes"
+            DistinguishedStatus.ADMIN -> "admin"
+            DistinguishedStatus.SPECIAL -> "special"
+            DistinguishedStatus.GOLD -> throw IllegalArgumentException("Cannot distinguish a contribution with gold")
+        }
+
+        reddit.request {
+            it.endpoint(Endpoint.POST_DISTINGUISH)
+                .post(mapOf(
+                    "api_type" to "json",
+                    "how" to howOption,
+                    "id" to fullName,
+                    "sticky" to sticky.toString()
                 ))
         }
     }
