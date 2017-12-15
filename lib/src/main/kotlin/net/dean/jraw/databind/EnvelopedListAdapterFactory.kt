@@ -8,6 +8,7 @@ import java.lang.reflect.Type
  * This class specifically handles List<T> properties annotated with [Enveloped].
  */
 class EnvelopedListAdapterFactory : JsonAdapter.Factory {
+    /** @inheritDoc */
     override fun create(type: Type, annotations: MutableSet<out Annotation>, moshi: Moshi): JsonAdapter<*>? {
         // Make sure we have the @Enveloped annotation
         Types.nextAnnotations(annotations, Enveloped::class.java) ?: return null
@@ -23,9 +24,10 @@ class EnvelopedListAdapterFactory : JsonAdapter.Factory {
         return EnvelopedListAdapter(delegate)
     }
 
+    /** */
     companion object {
         // Probably a better way to do this
-        @JvmStatic val NAME = List::class.java.name!!
+        @JvmStatic private val NAME = List::class.java.name!!
     }
 
     private class EnvelopedListAdapter(private val delegate: JsonAdapter<Any>) : JsonAdapter<List<*>>() {

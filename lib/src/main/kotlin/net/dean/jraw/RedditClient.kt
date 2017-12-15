@@ -281,7 +281,7 @@ class RedditClient internal constructor(
     fun subreddit(name: String) = SubredditReference(this, name)
 
     /**
-     * Creates a [Paginator.Builder] for more than one subreddit.
+     * Creates a [net.dean.jraw.pagination.Paginator.Builder] for more than one subreddit.
      *
      * For example, to fetch 50 posts from /r/pics and /r/funny:
      *
@@ -369,8 +369,23 @@ class RedditClient internal constructor(
         }.deserializeWith(adapter)
     }
 
+    /**
+     * Creates a reference to a live thread with the given ID.
+     *
+     * To create a live thread, use [SelfUserReference.createLiveThread]:
+     *
+     * ```kt
+     * val ref: LiveThreadReference = redditClient.me().createLiveThread(LiveThread.Builder()
+     *     ...
+     *     .build())
+     * ```
+     */
     fun liveThread(id: String) = LiveThreadReference(this, id)
 
+    /**
+     * Returns the live thread currently being featured by reddit, or null if there is none. On the website, this
+     * appears above all posts on the front page.
+     */
     @EndpointImplementation(Endpoint.GET_LIVE_HAPPENING_NOW)
     fun happeningNow(): LiveThread? {
         val res = request {
@@ -383,10 +398,12 @@ class RedditClient internal constructor(
         return res.deserialize()
     }
 
+    /** @inheritDoc */
     override fun toString(): String {
         return "RedditClient(username=${authManager.currentUsername()})"
     }
 
+    /** Defines some static properties */
     companion object {
         /** Amount of requests per second reddit allows for OAuth2 apps (equal to 1) */
         const val RATE_LIMIT = 1L

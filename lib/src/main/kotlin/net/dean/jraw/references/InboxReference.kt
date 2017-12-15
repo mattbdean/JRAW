@@ -4,6 +4,9 @@ import net.dean.jraw.*
 import net.dean.jraw.models.Message
 import net.dean.jraw.pagination.BarebonesPaginator
 
+/**
+ * Reference to the user's inbox. Requires an authenticated user to use.
+ */
 class InboxReference internal constructor(reddit: RedditClient) : AbstractReference(reddit) {
     /**
      * Creates a [BarebonesPaginator.Builder] to view messages.
@@ -22,8 +25,31 @@ class InboxReference internal constructor(reddit: RedditClient) : AbstractRefere
         return BarebonesPaginator.Builder.create(reddit, "/message/${JrawUtils.urlEncode(where)}")
     }
 
+    /**
+     * Sends a private message (PM) to another user from the currently authenticated user.
+     *
+     * @param dest The receiver of this message. Should be a username (like 'spez') or a subreddit WITH the "/r/"
+     * prefix, e.g. '/r/redditdev'. If sent to a subreddit, the moderators of that subreddit will receive it in their
+     * modmail.
+     * @param subject Subject line, similar to an email
+     * @param body Markdown-formatted text
+     */
     fun compose(dest: String, subject: String, body: String) = compose(null, dest, subject, body)
 
+    /**
+     * Sends a private message (PM) to another user or the moderators of a subreddit.
+     *
+     * @param fromSubreddit If specified, will attempt to send the message as a moderator of the subreddit. If null, the
+     * message will be sent as the authenticated user. If specified, the authenticated user must be a moderator of that
+     * subreddit for this to work. Do not specify the "/r/" prefix. For example, if a moderator of /r/redditdev wanted
+     * to send a PM, [fromSubreddit] would be "redditdev". If they wanted to send the message as themselves, they would
+     * leave this null (or use the other overload of this method)
+     * @param dest The receiver of this message. Should be a username (like 'spez') or a subreddit WITH the "/r/"
+     * prefix, e.g. '/r/redditdev'. If sent to a subreddit, the moderators of that subreddit will receive it in their
+     * modmail.
+     * @param subject Subject line, similar to an email
+     * @param body Markdown-formatted text
+     */
     @EndpointImplementation(Endpoint.POST_COMPOSE)
     fun compose(fromSubreddit: String?, dest: String, subject: String, body: String) {
         val args = mutableMapOf(
@@ -41,6 +67,9 @@ class InboxReference internal constructor(reddit: RedditClient) : AbstractRefere
         }
     }
 
+    /**
+     * Marks or unmarks the messages with the specified fullnames as read.
+     */
     @EndpointImplementation(Endpoint.POST_READ_MESSAGE, Endpoint.POST_UNREAD_MESSAGE)
     fun markRead(read: Boolean, firstFullName: String, vararg otherFullNames: String) {
         reddit.request {
@@ -49,6 +78,7 @@ class InboxReference internal constructor(reddit: RedditClient) : AbstractRefere
         }
     }
 
+    /** Marks all unread messages as read */
     @EndpointImplementation(Endpoint.POST_READ_ALL_MESSAGES)
     fun markAllRead() {
         reddit.request {

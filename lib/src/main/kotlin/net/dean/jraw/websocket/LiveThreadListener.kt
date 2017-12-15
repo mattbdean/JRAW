@@ -12,12 +12,15 @@ import okio.ByteString
 abstract class LiveThreadListener : WebSocketListener() {
     private val adapter = JrawUtils.adapter<LiveWebSocketUpdate>()
 
+    /** Called when an update from a live thread was successfully received and parsed */
     abstract fun onUpdate(update: LiveWebSocketUpdate)
 
+    /** */
     override fun onMessage(webSocket: WebSocket?, bytes: ByteString?) {
         onMessage(webSocket, bytes?.utf8())
     }
 
+    /** */
     override fun onMessage(webSocket: WebSocket?, text: String?) {
         if (text == null) return
         val update = adapter.fromJson(text)!!

@@ -18,7 +18,9 @@ import java.util.*
  * Script apps and those using application-only authentication do not need a refresh token.
  */
 class AuthManager(
+    /** Used to send HTTP requests */
     private val http: NetworkAdapter,
+    /** Used to construct HTTP requests */
     private val credentials: Credentials
 ) {
     /** The most current OAuthData for this app as understood by this client. */
@@ -179,6 +181,7 @@ class AuthManager(
             currentUsername ?: USERNAME_UNKOWN
         }
 
+    /** */
     companion object {
         /** Equal to "`<userless>`" */
         const val USERNAME_USERLESS = "<userless>"

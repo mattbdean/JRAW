@@ -12,6 +12,12 @@ import net.dean.jraw.models.internal.LabeledMultiDescription
 import net.dean.jraw.models.internal.SubredditElement
 import net.dean.jraw.pagination.DefaultPaginator
 
+/**
+ * A reference to a multireddit
+ *
+ * @property username The user that this multireddit belongs to
+ * @property multiredditName
+ */
 class MultiredditReference internal constructor(reddit: RedditClient, val username: String, val multiredditName: String) :
     AbstractReference(reddit) {
 
@@ -105,7 +111,7 @@ class MultiredditReference internal constructor(reddit: RedditClient, val userna
     }
 
     /**
-     * Returns a [MultiredditPatch.SubredditElement] for the given subreddit belonging to this multireddit. Honestly
+     * Returns a [SubredditElement] for the given subreddit belonging to this multireddit. Honestly
      * this is a pretty useless method since right now it just returns what you already know.
      */
     @EndpointImplementation(Endpoint.GET_MULTI_MULTIPATH_R_SRNAME)
@@ -138,9 +144,11 @@ class MultiredditReference internal constructor(reddit: RedditClient, val userna
         }
     }
 
+    /** Returns a Paginator Builder to iterate over posts in this multireddit */
     fun posts(): DefaultPaginator.Builder<Submission> =
         DefaultPaginator.Builder.create(reddit, multiPath, sortingAlsoInPath = true)
 
+    /** */
     companion object {
         @JvmStatic private fun multiPath(username: String, multiName: String) =
             "user/${urlEncode(username)}/m/${urlEncode(multiName)}"

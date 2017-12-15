@@ -2,6 +2,11 @@ package net.dean.jraw.tree
 
 import java.util.*
 
+/**
+ * Very simple TreeTraverser implementation that returns a List
+ *
+ * @property root The node to use as the base of the tree from which all other nodes stem from.
+ */
 class IterativeTreeTraverser(val root: CommentNode<*>) : TreeTraverser {
     override fun traverse(order: TreeTraverser.Order): List<CommentNode<*>> {
         return when (order) {

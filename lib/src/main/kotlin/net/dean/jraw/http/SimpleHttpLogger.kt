@@ -97,6 +97,7 @@ class SimpleHttpLogger @JvmOverloads constructor(
         }
     }
 
+    /** */
     companion object {
         internal val ELLIPSIS = "(...)"
         private val NO_CONTENT_TYPE = "<no content type>"

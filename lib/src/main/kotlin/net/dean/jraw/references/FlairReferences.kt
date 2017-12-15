@@ -13,6 +13,7 @@ import net.dean.jraw.models.internal.FlairSelector
  */
 sealed class FlairReference(
     reddit: RedditClient,
+    /** The subreddit the flair is located in */
     val subreddit: String,
     /** The name of a user or the full name of a submission */
     val subject: String
@@ -54,10 +55,12 @@ sealed class FlairReference(
     @EndpointImplementation(Endpoint.POST_SELECTFLAIR)
     abstract fun updateTo(templateId: String, text: String?)
 
+    /** */
     override fun toString(): String {
         return "FlairReference(subreddit='$subreddit', subject='$subject')"
     }
 
+    /** */
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is FlairReference) return false
@@ -65,6 +68,7 @@ sealed class FlairReference(
         return subreddit == other.subreddit && subject == other.subject
     }
 
+    /** */
     override fun hashCode(): Int {
         var result = super.hashCode()
         result = 31 * result + subreddit.hashCode()
@@ -73,6 +77,7 @@ sealed class FlairReference(
     }
 }
 
+/** A reference to the flair of a submission in a particular subreddit */
 class SubmissionFlairReference internal constructor(reddit: RedditClient, subreddit: String, subject: String) : FlairReference(reddit, subreddit, subject) {
     override fun updateTo(templateId: String, text: String?) {
         reddit.request {
@@ -86,6 +91,7 @@ class SubmissionFlairReference internal constructor(reddit: RedditClient, subred
         }
     }
 
+    /** Creates a Reference to the subject submission */
     fun submission() = reddit.submission(subject)
 }
 

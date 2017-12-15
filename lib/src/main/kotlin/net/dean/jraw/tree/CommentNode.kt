@@ -17,7 +17,7 @@ import java.io.PrintStream
  *
  * At the root of every comment tree there is a single root node, which represents the submission the comments belong
  * to. This node will have a depth of 0 and its children will be top-level replies to the submission. Although this node
- * is technically part of the tree, it will not be included when iterating the nodes with [traverser].
+ * is technically part of the tree, it will not be included when iterating the nodes with [walkTree].
  *
  * For example, take this tree structure:
  *
@@ -33,7 +33,8 @@ import java.io.PrintStream
  *
  * Node `z` represents the root node (submission) with a depth of 0. Node `a` is a top level reply to that submission
  * with a depth of 1. Nodes `f`, `g` and `h`, and `i` have a depth of 3. This tree can be traversed using several
- * different methods: Pre-order (`abcfghdi`), post-order (`bfghcida`), and breadth-first (`abcdfghi`).
+ * different methods: Pre-order (`abcfghdi`), post-order (`bfghcida`), and breadth-first (`abcdfghi`). For reference,
+ * reddit uses pre-order traversal to display comments on the website.
  *
  * Note that although this class implements Iterable, the provided Iterator will only iterate through direct
  * children. To walk the entire tree, use [walkTree].

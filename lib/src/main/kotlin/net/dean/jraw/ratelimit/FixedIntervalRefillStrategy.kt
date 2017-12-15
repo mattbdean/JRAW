@@ -5,12 +5,18 @@ import java.util.concurrent.TimeUnit
 /**
  * Refills a permit bucket at a fixed, configurable interval
  */
-class FixedIntervalRefillStrategy(
+class FixedIntervalRefillStrategy internal constructor(
     /** How many permits to add to the bucket every time one `unit` goes by */
     val permitsPerPeriod: Long,
     unit: TimeUnit,
-    val timeAdapter: TimeAdapter = SystemTimeAdapter()
+    private val timeAdapter: TimeAdapter
 ) : RefillStrategy {
+    /**
+     * @param permitsPerPeriod The amount of permits issued per one unit of time
+     * @param unit The unit of time used by [permitsPerPeriod]
+     */
+    constructor(permitsPerPeriod: Long, unit: TimeUnit) : this(permitsPerPeriod, unit, SystemTimeAdapter())
+
     private val durationNanos = unit.toNanos(permitsPerPeriod)
     private var lastRefillTime: Long
     private var nextRefillTime: Long

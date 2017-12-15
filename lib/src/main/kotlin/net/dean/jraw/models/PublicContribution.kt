@@ -4,6 +4,9 @@ import net.dean.jraw.references.PublicContributionReference
 import net.dean.jraw.references.Referenceable
 import java.util.*
 
+/**
+ * A contribution from a user to a subreddit (like a submission or a comment)
+ */
 interface PublicContribution<out T: PublicContributionReference> :
     Created, Distinguishable, Gildable, Identifiable, Votable, Referenceable<T> {
 

@@ -12,6 +12,7 @@ import net.dean.jraw.models.VoteDirection
  * handling that special case where the value is null and delegates the reset of the work to [read] and [write].
  */
 sealed class NullAwareEnumAdapter<T : Enum<T>> : JsonAdapter<T>() {
+    /** @inheritDoc */
     override final fun fromJson(reader: JsonReader): T {
         if (reader.peek() == JsonReader.Token.NULL) {
             reader.nextNull<T>()
@@ -21,6 +22,7 @@ sealed class NullAwareEnumAdapter<T : Enum<T>> : JsonAdapter<T>() {
         return read(reader)
     }
 
+    /** @inheritDoc */
     override final fun toJson(writer: JsonWriter, value: T?) {
         if (value == nullValue) {
             writer.nullValue()

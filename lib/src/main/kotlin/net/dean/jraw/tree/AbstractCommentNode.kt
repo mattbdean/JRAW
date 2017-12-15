@@ -9,6 +9,9 @@ import net.dean.jraw.models.internal.GenericJsonResponse
 import net.dean.jraw.references.CommentsRequest
 import java.io.PrintStream
 
+/**
+ * This class is the base implementation for all CommentNodes
+ */
 abstract class AbstractCommentNode<out T : PublicContribution<*>> protected constructor(
     override val depth: Int,
     override var moreChildren: MoreChildren?,
@@ -17,6 +20,9 @@ abstract class AbstractCommentNode<out T : PublicContribution<*>> protected cons
 ) : CommentNode<T> {
     override val replies: MutableList<CommentNode<Comment>> = mutableListOf()
 
+    /**
+     * Initializes [moreChildren] and [replies].
+     */
     protected fun initReplies(replies: List<NestedIdentifiable>) {
         val (comments, allMoreChildren) = replies.partition { it is Comment }
         if (allMoreChildren.size > 1)
@@ -36,6 +42,7 @@ abstract class AbstractCommentNode<out T : PublicContribution<*>> protected cons
 
     override fun hasMoreChildren(): Boolean = moreChildren != null
 
+    /** */
     override fun iterator(): Iterator<CommentNode<Comment>> = replies.iterator()
 
     override fun totalSize(): Int {
@@ -205,11 +212,12 @@ abstract class AbstractCommentNode<out T : PublicContribution<*>> protected cons
             .map { it.subject as NestedIdentifiable }
     }
 
+    /** */
     override fun toString(): String {
         return "AbstractCommentNode(depth=$depth, body=${subject.body}, replies=List[${replies.size}])"
     }
 
-
+    /** */
     companion object {
         /** The upper limit to how many more comments can be requested at one time. Equal to 100. */
         const val MORE_CHILDREN_LIMIT = 100

@@ -5,6 +5,8 @@ package net.dean.jraw.http
  * for more.
  */
 data class BasicAuthData(
+    /** Plaintext username */
     val username: String,
+    /** Plaintext password */
     val password: String
 )

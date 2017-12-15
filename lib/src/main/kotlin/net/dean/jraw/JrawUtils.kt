@@ -14,6 +14,7 @@ import java.util.*
  * A set of utility methods and properties used throughout the project
  */
 object JrawUtils {
+    /** A Moshi instance configured with all the proper JsonAdapter(Factory) instances to handle all JRAW types. */
     @JvmField val moshi: Moshi = Moshi.Builder()
         .add(UnixDateAdapterFactory())
         .add(RepliesAdapterFactory())
@@ -21,6 +22,7 @@ object JrawUtils {
         .add(EnvelopedListAdapterFactory())
         .add(RedditModelAdapterFactory(mapOf(
             KindConstants.COMMENT to Comment::class.java,
+            KindConstants.ACCOUNT to Account::class.java,
             KindConstants.SUBMISSION to Submission::class.java,
             KindConstants.SUBREDDIT to Subreddit::class.java,
             KindConstants.TROPHY to Trophy::class.java,
@@ -39,8 +41,12 @@ object JrawUtils {
         .add(LiveWebSocketUpdateAdapterFactory())
         .build()
 
+    /** Creates a JsonAdapter for an implied type. Convenience function using reified generics. */
     @JvmStatic inline fun <reified T> adapter(): JsonAdapter<T> = moshi.adapter(T::class.java)
 
+    /**
+     * Creates a JsonAdapter for an implied type with the given annotation. Convenience function using reified generics.
+     */
     @JvmStatic inline fun <reified T> adapter(annotationType: Class<out Annotation>): JsonAdapter<T> =
         moshi.adapter(T::class.java, annotationType)
 

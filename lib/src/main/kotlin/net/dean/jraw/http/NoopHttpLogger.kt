@@ -11,6 +11,7 @@ class NoopHttpLogger : HttpLogger {
     override fun response(tag: HttpLogger.Tag, res: HttpResponse) {
     }
 
+    /** */
     companion object {
         @JvmField internal val TAG = HttpLogger.Tag(-1, Date(0L))
     }

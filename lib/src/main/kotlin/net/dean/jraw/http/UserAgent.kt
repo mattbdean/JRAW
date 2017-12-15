@@ -18,8 +18,11 @@ package net.dean.jraw.http
  *   buggy/broken versions of your app.
  * - **NEVER lie about your user-agent.** This includes spoofing popular browsers and spoofing other
  *         bots. We will ban liars with extreme prejudice.
+ *
+ * @property value The string value that will ultimately be used
  */
 data class UserAgent(val value: String) {
+    /** Constructs a UserAgent based on reddit's recommendations */
     constructor(platform: String, appId: String, version: String, redditUsername: String) : this(
         "$platform:$appId:$version (by /u/$redditUsername)"
     )

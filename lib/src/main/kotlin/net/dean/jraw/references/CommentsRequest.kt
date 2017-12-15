@@ -37,6 +37,7 @@ data class CommentsRequest(
 ) {
     private constructor(b: Builder): this(b.focus, b.context, b.depth, b.limit, b.sort)
 
+    /** Builder pattern implementation for the [CommentsRequest] class */
     class Builder {
         internal var focus: String? = null
         internal var context: Int? = null
@@ -44,15 +45,26 @@ data class CommentsRequest(
         internal var sort: CommentSort = DEFAULT_COMMENT_SORT
         internal var limit: Int? = null
 
+        /** See [CommentsRequest.focus] */
         fun focus(commentId: String?): Builder { this.focus = commentId; return this }
+
+        /** See [CommentsRequest.context] */
         fun context(context: Int?): Builder { this.context = context; return this }
+
+        /** See [CommentsRequest.depth] */
         fun depth(depth: Int?): Builder { this.depth = depth; return this }
+
+        /** See [CommentsRequest.sort] */
         fun sort(sort: CommentSort): Builder { this.sort = sort; return this }
+
+        /** See [CommentsRequest.limit] */
         fun limit(limit: Int?): Builder { this.limit = limit; return this }
 
+        /** Creates a CommentsRequest object */
         fun build() = CommentsRequest(this)
     }
 
+    /** */
     companion object {
         /** The default CommentSort used by both reddit and this class. Equal to [CommentSort.CONFIDENCE] */
         @JvmField val DEFAULT_COMMENT_SORT = CommentSort.CONFIDENCE

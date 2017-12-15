@@ -39,7 +39,10 @@ interface HttpLogger {
 
     /** @see HttpLogger.request */
     data class Tag(
+        /** The unique ID of the request */
         val requestId: Int,
+
+        /** The moment that the request was sent */
         val sent: Date = Date()
     )
 }

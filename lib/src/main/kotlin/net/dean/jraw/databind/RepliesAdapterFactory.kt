@@ -7,7 +7,7 @@ import net.dean.jraw.models.NestedIdentifiable
 import java.lang.reflect.Type
 
 /**
- * This class exists to solve an issue due to a legacy codebase.
+ * This class exists to solve an issue due to reddit's legacy codebase.
  *
  * The JSON structure for a comment may look something like this:
  *
@@ -34,6 +34,7 @@ import java.lang.reflect.Type
  * @author Matthew Dean
  */
 class RepliesAdapterFactory : JsonAdapter.Factory {
+    /** @inhertiDoc */
     override fun create(type: Type, annotations: MutableSet<out Annotation>, moshi: Moshi): JsonAdapter<*>? {
         if (type != TYPE)
             return null
@@ -58,6 +59,7 @@ class RepliesAdapterFactory : JsonAdapter.Factory {
         }
     }
 
+    /** */
     companion object {
         @JvmStatic private val TYPE = Types.newParameterizedType(Listing::class.java, NestedIdentifiable::class.java)
     }

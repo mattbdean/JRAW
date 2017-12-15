@@ -6,7 +6,9 @@ import okhttp3.*
  * [NetworkAdapter] implementation backed by Square's fantastic [OkHttp](https://square.github.io/okhttp/)
  */
 class OkHttpNetworkAdapter @JvmOverloads constructor(
+    /** The value of the User-Agent header sent with every request */
     override var userAgent: UserAgent,
+    /** A customized OkHttpClient instance. Defaults to a default client. */
     private val http: OkHttpClient = OkHttpClient()
 ) : NetworkAdapter {
 
