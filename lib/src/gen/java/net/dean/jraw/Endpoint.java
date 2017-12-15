@@ -74,6 +74,10 @@ public enum Endpoint {
     GET_LINK_FLAIR("GET", "/api/link_flair", "flair"),
 
     /**
+     * Represents the endpoint {@code GET /api/link_flair_v2}. Requires OAuth scope 'flair'. See <a href="https://www.reddit.com/dev/api/oauth#GET_api_link_flair_v2">here</a> for more information */
+    GET_LINK_FLAIR_V2("GET", "/api/link_flair_v2", "flair"),
+
+    /**
      * Represents the endpoint {@code POST /api/selectflair}. Requires OAuth scope 'flair'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_selectflair">here</a> for more information */
     POST_SELECTFLAIR("POST", "/api/selectflair", "flair"),
 
@@ -118,6 +122,10 @@ public enum Endpoint {
     POST_LIVE_THREAD_EDIT("POST", "/api/live/{thread}/edit", "livemanage"),
 
     /**
+     * Represents the endpoint {@code POST /api/live/{thread}/hide_discussion}. Requires OAuth scope 'livemanage'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_live_{thread}_hide_discussion">here</a> for more information */
+    POST_LIVE_THREAD_HIDE_DISCUSSION("POST", "/api/live/{thread}/hide_discussion", "livemanage"),
+
+    /**
      * Represents the endpoint {@code POST /api/live/{thread}/invite_contributor}. Requires OAuth scope 'livemanage'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_live_{thread}_invite_contributor">here</a> for more information */
     POST_LIVE_THREAD_INVITE_CONTRIBUTOR("POST", "/api/live/{thread}/invite_contributor", "livemanage"),
 
@@ -136,6 +144,10 @@ public enum Endpoint {
     /**
      * Represents the endpoint {@code POST /api/live/{thread}/set_contributor_permissions}. Requires OAuth scope 'livemanage'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_live_{thread}_set_contributor_permissions">here</a> for more information */
     POST_LIVE_THREAD_SET_CONTRIBUTOR_PERMISSIONS("POST", "/api/live/{thread}/set_contributor_permissions", "livemanage"),
+
+    /**
+     * Represents the endpoint {@code POST /api/live/{thread}/unhide_discussion}. Requires OAuth scope 'livemanage'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_live_{thread}_unhide_discussion">here</a> for more information */
+    POST_LIVE_THREAD_UNHIDE_DISCUSSION("POST", "/api/live/{thread}/unhide_discussion", "livemanage"),
 
     /**
      * Represents the endpoint {@code POST /api/delete_sr_banner}. Requires OAuth scope 'modconfig'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_delete_sr_banner">here</a> for more information */
