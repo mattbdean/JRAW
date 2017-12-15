@@ -190,17 +190,17 @@ class CommentNodeTest : Spek({
         it("should do nothing when MoreChildren is null") {
             simpleTree.moreChildren.should.be.`null`
 
-            val original = simpleTree.walkTree()
+            val original = simpleTree.walkTree().toList()
 
             // Use a mock RedditClient so we can assert no network requests are sent
             val fakeReddit = newMockRedditClient(NoopNetworkAdapter)
             simpleTree.replaceMore(fakeReddit)
-            simpleTree.walkTree().should.equal(original)
+            simpleTree.walkTree().toList().should.equal(original)
         }
 
         it("should alter the tree when called") {
             val tree = reddit.submission("92dd8").comments()
-            val prevFlatTree = tree.walkTree()
+            val prevFlatTree = tree.walkTree().toList()
             // Create a copy of the data
             val prevMoreChildren = tree.moreChildren!!.copy()
             val prevSize = tree.totalSize()
