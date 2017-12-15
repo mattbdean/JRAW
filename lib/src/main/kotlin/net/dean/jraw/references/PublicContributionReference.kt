@@ -146,7 +146,7 @@ abstract class PublicContributionReference internal constructor(reddit: RedditCl
     }
 
     @EndpointImplementation(Endpoint.POST_REMOVE)
-    fun remove(spam: Boolean = false) {
+    fun remove(spam: Boolean) {
         reddit.request {
             it.endpoint(Endpoint.POST_REMOVE)
                 .post(mapOf(
@@ -155,4 +155,6 @@ abstract class PublicContributionReference internal constructor(reddit: RedditCl
                 ))
         }
     }
+
+    fun remove() = remove(false)
 }

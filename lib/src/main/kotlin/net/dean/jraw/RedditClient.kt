@@ -364,7 +364,7 @@ class RedditClient internal constructor(
         val type = Types.newParameterizedType(Listing::class.java, Any::class.java)
         val adapter = JrawUtils.moshi.adapter<Listing<Any>>(type, Enveloped::class.java)
         return request {
-            it.endpoint(Endpoint.GET_INFO)
+            it.endpoint(Endpoint.GET_INFO, null)
                 .query(mapOf("id" to fullNames.joinToString(",")))
         }.deserializeWith(adapter)
     }

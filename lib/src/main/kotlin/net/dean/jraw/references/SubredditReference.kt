@@ -21,7 +21,7 @@ class SubredditReference internal constructor(reddit: RedditClient, val subreddi
      * Returns a [Subreddit] instance for this reference
      */
     @EndpointImplementation(Endpoint.GET_SUBREDDIT_ABOUT)
-    fun about(): Subreddit = reddit.request { it.path("/r/$subreddit/about") }.deserializeEnveloped()
+    fun about(): Subreddit = reddit.request { it.endpoint(Endpoint.GET_SUBREDDIT_ABOUT, subreddit) }.deserializeEnveloped()
 
     /**
      * Creates a new [DefaultPaginator.Builder] to iterate over this subreddit's posts. Not a blocking call.
@@ -40,13 +40,13 @@ class SubredditReference internal constructor(reddit: RedditClient, val subreddi
     fun comments(): BarebonesPaginator.Builder<Comment> = reddit.latestComments(subreddit)
 
     /**
-     * Gets a random submission from this subreddit. Although it is not marked with [EndpointImplementation], this
-     * method executes a network request.
+     * Gets a random submission from this subreddit.
      *
      * @see RedditClient.randomSubreddit
      */
+    @EndpointImplementation(Endpoint.GET_RANDOM)
     fun randomSubmission(): RootCommentNode {
-        val data: SubmissionData = reddit.request { it.path("/r/${JrawUtils.urlEncode(subreddit)}/random") }.deserialize()
+        val data: SubmissionData = reddit.request { it.endpoint(Endpoint.GET_RANDOM, subreddit) }.deserialize()
         return RootCommentNode(data.submissions[0], data.comments, settings = null)
     }
 
@@ -88,7 +88,7 @@ class SubredditReference internal constructor(reddit: RedditClient, val subreddi
     @EndpointImplementation(Endpoint.GET_SUBMIT_TEXT)
     fun submitText(): String {
         return reddit.request {
-            it.path("/r/{subreddit}/api/submit_text", subreddit)
+            it.endpoint(Endpoint.GET_SUBMIT_TEXT, subreddit)
         }.deserialize<Map<String, String>>().getOrElse("submit_text") {
             throw IllegalArgumentException("Unexpected response: no `submit_text` key")
         }
@@ -168,7 +168,7 @@ class SubredditReference internal constructor(reddit: RedditClient, val subreddi
     @EndpointImplementation(Endpoint.GET_SUBREDDIT_ABOUT_RULES)
     fun rules(): Ruleset {
         return reddit.request {
-            it.path("/r/$subreddit/about/rules")
+            it.endpoint(Endpoint.GET_SUBREDDIT_ABOUT_RULES, subreddit)
         }.deserialize()
     }
 
@@ -178,8 +178,7 @@ class SubredditReference internal constructor(reddit: RedditClient, val subreddi
     @EndpointImplementation(Endpoint.GET_STYLESHEET)
     fun stylesheet(): String {
         return reddit.request {
-            it.endpoint(Endpoint.GET_STYLESHEET)
-                .query(mapOf("r" to subreddit))
+            it.endpoint(Endpoint.GET_STYLESHEET, subreddit)
         }.body
     }
 

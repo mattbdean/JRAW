@@ -2,6 +2,7 @@ package net.dean.jraw.meta
 
 import javassist.ClassPool
 import net.dean.jraw.EndpointImplementation
+import net.dean.jraw.meta.MarkdownOverviewCreator.markdownPath
 import org.reflections.Reflections
 import org.reflections.scanners.MethodAnnotationsScanner
 import org.reflections.util.ClasspathHelper
@@ -34,7 +35,7 @@ object EndpointAnalyzer {
     fun getFor(e: ParsedEndpoint): EndpointMeta? {
         val method = implementations.firstOrNull {
             val other = it.getAnnotation(EndpointImplementation::class.java).endpoints
-            other.find { it.method == e.method && it.path == e.path } != null
+            other.find { it.method == e.method && it.path == markdownPath(e) } != null
         } ?: return null
 
 

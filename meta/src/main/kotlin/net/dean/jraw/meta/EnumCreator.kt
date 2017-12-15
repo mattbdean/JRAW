@@ -1,6 +1,7 @@
 package net.dean.jraw.meta
 
 import com.grosner.kpoet.*
+import com.squareup.javapoet.ClassName
 import java.io.File
 
 class EnumCreator(val endpoints: List<ParsedEndpoint>, val indent: Int = 4) {
@@ -9,7 +10,11 @@ class EnumCreator(val endpoints: List<ParsedEndpoint>, val indent: Int = 4) {
 
     private fun createJavaFile() =
         // Create the file definition belonging to package net.dean.jraw and configuring the indent using spaces
-        javaFile(PACKAGE, { indent(" ".repeat(indent)); skipJavaLangImports(true) }) {
+        javaFile(PACKAGE, {
+            indent(" ".repeat(indent))
+            skipJavaLangImports(true)
+            `import static`(ClassName.get(PACKAGE, ENUM_NAME, INNER_CLASS_NAME), SUBREDDIT_PREFIX_CONSTANT_NAME)
+        }) {
             // public enum Endpoint
             enum(ENUM_NAME) { modifiers(public)
                 // Add Javadoc to the enum
@@ -20,10 +25,15 @@ class EnumCreator(val endpoints: List<ParsedEndpoint>, val indent: Int = 4) {
 
                 // Dynamically add a enum value for each endpoint
                 for (e in endpoints) {
-                    case(enumName(e), "\$S, \$S, \$S", e.method, e.path, e.oauthScope) {
+                    case(enumName(e), "\$S, \$L, \$S", e.method, enumPath(e), e.oauthScope) {
                         javadoc(javadocFor(e))
                     }
                 }
+
+                // Declare the inner static class with the 'optional subreddit' constant
+                addType(`public class`(INNER_CLASS_NAME) { modifiers(static)
+                    `public static final field`(String::class, SUBREDDIT_PREFIX_CONSTANT_NAME, { this.`=`(SUBREDDIT_PREFIX_CONSTANT_VALUE.S) })
+                })
 
                 // Declare three private final fields "method", "path", and "scope"
                 `private final field`(String::class, "method")
@@ -60,6 +70,9 @@ class EnumCreator(val endpoints: List<ParsedEndpoint>, val indent: Int = 4) {
     companion object {
         const val ENUM_NAME = "Endpoint"
         const val PACKAGE = "net.dean.jraw"
+        const val INNER_CLASS_NAME = "Constant"
+        const val SUBREDDIT_PREFIX_CONSTANT_NAME = "OPTIONAL_SUBREDDIT"
+        const val SUBREDDIT_PREFIX_CONSTANT_VALUE = "[/r/{subreddit}]"
         @JvmField val RELATIVE_OUTPUT_FILE = PACKAGE.replace('.', File.separatorChar) + "/$ENUM_NAME.java"
 
         private val stripPrefixes = listOf("/api/v1/", "/api/", "/")
@@ -80,6 +93,12 @@ class EnumCreator(val endpoints: List<ParsedEndpoint>, val indent: Int = 4) {
                 .replace("{", "")
                 .replace("}", "")
         }
+
+        private fun enumPath(e: ParsedEndpoint) =
+            if (e.subredditPrefix)
+                "$SUBREDDIT_PREFIX_CONSTANT_NAME + ${e.path.S}"
+            else
+                e.path.S
 
         private fun javadocFor(e: ParsedEndpoint): String =
             "Represents the endpoint ${code(e.method + " " + e.path)}. Requires OAuth scope '${e.oauthScope}'. See " +

@@ -1,5 +1,7 @@
 package net.dean.jraw;
 
+import static net.dean.jraw.Endpoint.Constant.OPTIONAL_SUBREDDIT;
+
 /**
  * This is a dynamically generated enumeration of all reddit API endpoints.
  *
@@ -11,7 +13,7 @@ public enum Endpoint {
 
     /**
      * Represents the endpoint {@code POST /api/friend}. Requires OAuth scope 'any'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_friend">here</a> for more information */
-    POST_FRIEND("POST", "/api/friend", "any"),
+    POST_FRIEND("POST", OPTIONAL_SUBREDDIT + "/api/friend", "any"),
 
     /**
      * Represents the endpoint {@code GET /api/needs_captcha}. Requires OAuth scope 'any'. See <a href="https://www.reddit.com/dev/api/oauth#GET_api_needs_captcha">here</a> for more information */
@@ -19,7 +21,7 @@ public enum Endpoint {
 
     /**
      * Represents the endpoint {@code POST /api/unfriend}. Requires OAuth scope 'any'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_unfriend">here</a> for more information */
-    POST_UNFRIEND("POST", "/api/unfriend", "any"),
+    POST_UNFRIEND("POST", OPTIONAL_SUBREDDIT + "/api/unfriend", "any"),
 
     /**
      * Represents the endpoint {@code GET /api/username_available}. Requires OAuth scope 'any'. See <a href="https://www.reddit.com/dev/api/oauth#GET_api_username_available">here</a> for more information */
@@ -66,28 +68,32 @@ public enum Endpoint {
     POST_SENDREPLIES("POST", "/api/sendreplies", "edit"),
 
     /**
-     * Represents the endpoint {@code POST /r/{subreddit}/api/flairselector}. Requires OAuth scope 'flair'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_flairselector">here</a> for more information */
-    POST_FLAIRSELECTOR("POST", "/r/{subreddit}/api/flairselector", "flair"),
+     * Represents the endpoint {@code POST /api/flairselector}. Requires OAuth scope 'flair'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_flairselector">here</a> for more information */
+    POST_FLAIRSELECTOR("POST", OPTIONAL_SUBREDDIT + "/api/flairselector", "flair"),
 
     /**
      * Represents the endpoint {@code GET /api/link_flair}. Requires OAuth scope 'flair'. See <a href="https://www.reddit.com/dev/api/oauth#GET_api_link_flair">here</a> for more information */
-    GET_LINK_FLAIR("GET", "/api/link_flair", "flair"),
+    GET_LINK_FLAIR("GET", OPTIONAL_SUBREDDIT + "/api/link_flair", "flair"),
 
     /**
-     * Represents the endpoint {@code POST /r/{subreddit}/api/selectflair}. Requires OAuth scope 'flair'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_selectflair">here</a> for more information */
-    POST_SELECTFLAIR("POST", "/r/{subreddit}/api/selectflair", "flair"),
+     * Represents the endpoint {@code GET /api/link_flair_v2}. Requires OAuth scope 'flair'. See <a href="https://www.reddit.com/dev/api/oauth#GET_api_link_flair_v2">here</a> for more information */
+    GET_LINK_FLAIR_V2("GET", OPTIONAL_SUBREDDIT + "/api/link_flair_v2", "flair"),
+
+    /**
+     * Represents the endpoint {@code POST /api/selectflair}. Requires OAuth scope 'flair'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_selectflair">here</a> for more information */
+    POST_SELECTFLAIR("POST", OPTIONAL_SUBREDDIT + "/api/selectflair", "flair"),
 
     /**
      * Represents the endpoint {@code POST /api/setflairenabled}. Requires OAuth scope 'flair'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_setflairenabled">here</a> for more information */
-    POST_SETFLAIRENABLED("POST", "/api/setflairenabled", "flair"),
+    POST_SETFLAIRENABLED("POST", OPTIONAL_SUBREDDIT + "/api/setflairenabled", "flair"),
 
     /**
      * Represents the endpoint {@code GET /api/user_flair}. Requires OAuth scope 'flair'. See <a href="https://www.reddit.com/dev/api/oauth#GET_api_user_flair">here</a> for more information */
-    GET_USER_FLAIR("GET", "/api/user_flair", "flair"),
+    GET_USER_FLAIR("GET", OPTIONAL_SUBREDDIT + "/api/user_flair", "flair"),
 
     /**
      * Represents the endpoint {@code GET /api/user_flair_v2}. Requires OAuth scope 'flair'. See <a href="https://www.reddit.com/dev/api/oauth#GET_api_user_flair_v2">here</a> for more information */
-    GET_USER_FLAIR_V2("GET", "/api/user_flair_v2", "flair"),
+    GET_USER_FLAIR_V2("GET", OPTIONAL_SUBREDDIT + "/api/user_flair_v2", "flair"),
 
     /**
      * Represents the endpoint {@code GET /user/{username}/{where}}. Requires OAuth scope 'history'. See <a href="https://www.reddit.com/dev/api/oauth#GET_user_{username}_{where}">here</a> for more information */
@@ -118,6 +124,10 @@ public enum Endpoint {
     POST_LIVE_THREAD_EDIT("POST", "/api/live/{thread}/edit", "livemanage"),
 
     /**
+     * Represents the endpoint {@code POST /api/live/{thread}/hide_discussion}. Requires OAuth scope 'livemanage'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_live_{thread}_hide_discussion">here</a> for more information */
+    POST_LIVE_THREAD_HIDE_DISCUSSION("POST", "/api/live/{thread}/hide_discussion", "livemanage"),
+
+    /**
      * Represents the endpoint {@code POST /api/live/{thread}/invite_contributor}. Requires OAuth scope 'livemanage'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_live_{thread}_invite_contributor">here</a> for more information */
     POST_LIVE_THREAD_INVITE_CONTRIBUTOR("POST", "/api/live/{thread}/invite_contributor", "livemanage"),
 
@@ -138,32 +148,36 @@ public enum Endpoint {
     POST_LIVE_THREAD_SET_CONTRIBUTOR_PERMISSIONS("POST", "/api/live/{thread}/set_contributor_permissions", "livemanage"),
 
     /**
+     * Represents the endpoint {@code POST /api/live/{thread}/unhide_discussion}. Requires OAuth scope 'livemanage'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_live_{thread}_unhide_discussion">here</a> for more information */
+    POST_LIVE_THREAD_UNHIDE_DISCUSSION("POST", "/api/live/{thread}/unhide_discussion", "livemanage"),
+
+    /**
      * Represents the endpoint {@code POST /api/delete_sr_banner}. Requires OAuth scope 'modconfig'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_delete_sr_banner">here</a> for more information */
-    POST_DELETE_SR_BANNER("POST", "/api/delete_sr_banner", "modconfig"),
+    POST_DELETE_SR_BANNER("POST", OPTIONAL_SUBREDDIT + "/api/delete_sr_banner", "modconfig"),
 
     /**
      * Represents the endpoint {@code POST /api/delete_sr_header}. Requires OAuth scope 'modconfig'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_delete_sr_header">here</a> for more information */
-    POST_DELETE_SR_HEADER("POST", "/api/delete_sr_header", "modconfig"),
+    POST_DELETE_SR_HEADER("POST", OPTIONAL_SUBREDDIT + "/api/delete_sr_header", "modconfig"),
 
     /**
      * Represents the endpoint {@code POST /api/delete_sr_icon}. Requires OAuth scope 'modconfig'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_delete_sr_icon">here</a> for more information */
-    POST_DELETE_SR_ICON("POST", "/api/delete_sr_icon", "modconfig"),
+    POST_DELETE_SR_ICON("POST", OPTIONAL_SUBREDDIT + "/api/delete_sr_icon", "modconfig"),
 
     /**
      * Represents the endpoint {@code POST /api/delete_sr_img}. Requires OAuth scope 'modconfig'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_delete_sr_img">here</a> for more information */
-    POST_DELETE_SR_IMG("POST", "/api/delete_sr_img", "modconfig"),
+    POST_DELETE_SR_IMG("POST", OPTIONAL_SUBREDDIT + "/api/delete_sr_img", "modconfig"),
 
     /**
      * Represents the endpoint {@code POST /api/site_admin}. Requires OAuth scope 'modconfig'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_site_admin">here</a> for more information */
     POST_SITE_ADMIN("POST", "/api/site_admin", "modconfig"),
 
     /**
-     * Represents the endpoint {@code POST /r/{subreddit}/api/subreddit_stylesheet}. Requires OAuth scope 'modconfig'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_subreddit_stylesheet">here</a> for more information */
-    POST_SUBREDDIT_STYLESHEET("POST", "/r/{subreddit}/api/subreddit_stylesheet", "modconfig"),
+     * Represents the endpoint {@code POST /api/subreddit_stylesheet}. Requires OAuth scope 'modconfig'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_subreddit_stylesheet">here</a> for more information */
+    POST_SUBREDDIT_STYLESHEET("POST", OPTIONAL_SUBREDDIT + "/api/subreddit_stylesheet", "modconfig"),
 
     /**
      * Represents the endpoint {@code POST /api/upload_sr_img}. Requires OAuth scope 'modconfig'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_upload_sr_img">here</a> for more information */
-    POST_UPLOAD_SR_IMG("POST", "/api/upload_sr_img", "modconfig"),
+    POST_UPLOAD_SR_IMG("POST", OPTIONAL_SUBREDDIT + "/api/upload_sr_img", "modconfig"),
 
     /**
      * Represents the endpoint {@code GET /r/{subreddit}/about/edit}. Requires OAuth scope 'modconfig'. See <a href="https://www.reddit.com/dev/api/oauth#GET_r_{subreddit}_about_edit">here</a> for more information */
@@ -175,7 +189,7 @@ public enum Endpoint {
 
     /**
      * Represents the endpoint {@code GET /stylesheet}. Requires OAuth scope 'modconfig'. See <a href="https://www.reddit.com/dev/api/oauth#GET_stylesheet">here</a> for more information */
-    GET_STYLESHEET("GET", "/stylesheet", "modconfig"),
+    GET_STYLESHEET("GET", OPTIONAL_SUBREDDIT + "/stylesheet", "modconfig"),
 
     /**
      * Represents the endpoint {@code POST /api/mute_message_author}. Requires OAuth scope 'modcontributors'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_mute_message_author">here</a> for more information */
@@ -187,47 +201,47 @@ public enum Endpoint {
 
     /**
      * Represents the endpoint {@code POST /api/clearflairtemplates}. Requires OAuth scope 'modflair'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_clearflairtemplates">here</a> for more information */
-    POST_CLEARFLAIRTEMPLATES("POST", "/api/clearflairtemplates", "modflair"),
+    POST_CLEARFLAIRTEMPLATES("POST", OPTIONAL_SUBREDDIT + "/api/clearflairtemplates", "modflair"),
 
     /**
      * Represents the endpoint {@code POST /api/deleteflair}. Requires OAuth scope 'modflair'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_deleteflair">here</a> for more information */
-    POST_DELETEFLAIR("POST", "/api/deleteflair", "modflair"),
+    POST_DELETEFLAIR("POST", OPTIONAL_SUBREDDIT + "/api/deleteflair", "modflair"),
 
     /**
      * Represents the endpoint {@code POST /api/deleteflairtemplate}. Requires OAuth scope 'modflair'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_deleteflairtemplate">here</a> for more information */
-    POST_DELETEFLAIRTEMPLATE("POST", "/api/deleteflairtemplate", "modflair"),
+    POST_DELETEFLAIRTEMPLATE("POST", OPTIONAL_SUBREDDIT + "/api/deleteflairtemplate", "modflair"),
 
     /**
-     * Represents the endpoint {@code POST /r/{subreddit}/api/flair}. Requires OAuth scope 'modflair'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_flair">here</a> for more information */
-    POST_FLAIR("POST", "/r/{subreddit}/api/flair", "modflair"),
+     * Represents the endpoint {@code POST /api/flair}. Requires OAuth scope 'modflair'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_flair">here</a> for more information */
+    POST_FLAIR("POST", OPTIONAL_SUBREDDIT + "/api/flair", "modflair"),
 
     /**
      * Represents the endpoint {@code PATCH /api/flair_template_order}. Requires OAuth scope 'modflair'. See <a href="https://www.reddit.com/dev/api/oauth#PATCH_api_flair_template_order">here</a> for more information */
-    PATCH_FLAIR_TEMPLATE_ORDER("PATCH", "/api/flair_template_order", "modflair"),
+    PATCH_FLAIR_TEMPLATE_ORDER("PATCH", OPTIONAL_SUBREDDIT + "/api/flair_template_order", "modflair"),
 
     /**
      * Represents the endpoint {@code POST /api/flairconfig}. Requires OAuth scope 'modflair'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_flairconfig">here</a> for more information */
-    POST_FLAIRCONFIG("POST", "/api/flairconfig", "modflair"),
+    POST_FLAIRCONFIG("POST", OPTIONAL_SUBREDDIT + "/api/flairconfig", "modflair"),
 
     /**
      * Represents the endpoint {@code POST /api/flaircsv}. Requires OAuth scope 'modflair'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_flaircsv">here</a> for more information */
-    POST_FLAIRCSV("POST", "/api/flaircsv", "modflair"),
+    POST_FLAIRCSV("POST", OPTIONAL_SUBREDDIT + "/api/flaircsv", "modflair"),
 
     /**
      * Represents the endpoint {@code GET /api/flairlist}. Requires OAuth scope 'modflair'. See <a href="https://www.reddit.com/dev/api/oauth#GET_api_flairlist">here</a> for more information */
-    GET_FLAIRLIST("GET", "/api/flairlist", "modflair"),
+    GET_FLAIRLIST("GET", OPTIONAL_SUBREDDIT + "/api/flairlist", "modflair"),
 
     /**
      * Represents the endpoint {@code POST /api/flairtemplate}. Requires OAuth scope 'modflair'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_flairtemplate">here</a> for more information */
-    POST_FLAIRTEMPLATE("POST", "/api/flairtemplate", "modflair"),
+    POST_FLAIRTEMPLATE("POST", OPTIONAL_SUBREDDIT + "/api/flairtemplate", "modflair"),
 
     /**
      * Represents the endpoint {@code POST /api/flairtemplate_v2}. Requires OAuth scope 'modflair'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_flairtemplate_v2">here</a> for more information */
-    POST_FLAIRTEMPLATE_V2("POST", "/api/flairtemplate_v2", "modflair"),
+    POST_FLAIRTEMPLATE_V2("POST", OPTIONAL_SUBREDDIT + "/api/flairtemplate_v2", "modflair"),
 
     /**
      * Represents the endpoint {@code GET /about/log}. Requires OAuth scope 'modlog'. See <a href="https://www.reddit.com/dev/api/oauth#GET_about_log">here</a> for more information */
-    GET_ABOUT_LOG("GET", "/about/log", "modlog"),
+    GET_ABOUT_LOG("GET", OPTIONAL_SUBREDDIT + "/about/log", "modlog"),
 
     /**
      * Represents the endpoint {@code POST /api/mod/bulk_read}. Requires OAuth scope 'modmail'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_mod_bulk_read">here</a> for more information */
@@ -295,7 +309,7 @@ public enum Endpoint {
 
     /**
      * Represents the endpoint {@code POST /api/setpermissions}. Requires OAuth scope 'modothers'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_setpermissions">here</a> for more information */
-    POST_SETPERMISSIONS("POST", "/api/setpermissions", "modothers"),
+    POST_SETPERMISSIONS("POST", OPTIONAL_SUBREDDIT + "/api/setpermissions", "modothers"),
 
     /**
      * Represents the endpoint {@code POST /api/approve}. Requires OAuth scope 'modposts'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_approve">here</a> for more information */
@@ -355,7 +369,7 @@ public enum Endpoint {
 
     /**
      * Represents the endpoint {@code POST /api/accept_moderator_invite}. Requires OAuth scope 'modself'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_accept_moderator_invite">here</a> for more information */
-    POST_ACCEPT_MODERATOR_INVITE("POST", "/api/accept_moderator_invite", "modself"),
+    POST_ACCEPT_MODERATOR_INVITE("POST", OPTIONAL_SUBREDDIT + "/api/accept_moderator_invite", "modself"),
 
     /**
      * Represents the endpoint {@code POST /api/leavecontributor}. Requires OAuth scope 'modself'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_leavecontributor">here</a> for more information */
@@ -367,23 +381,23 @@ public enum Endpoint {
 
     /**
      * Represents the endpoint {@code POST /api/wiki/alloweditor/{act}}. Requires OAuth scope 'modwiki'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_wiki_alloweditor_{act}">here</a> for more information */
-    POST_WIKI_ALLOWEDITOR_ACT("POST", "/api/wiki/alloweditor/{act}", "modwiki"),
+    POST_WIKI_ALLOWEDITOR_ACT("POST", OPTIONAL_SUBREDDIT + "/api/wiki/alloweditor/{act}", "modwiki"),
 
     /**
      * Represents the endpoint {@code POST /api/wiki/hide}. Requires OAuth scope 'modwiki'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_wiki_hide">here</a> for more information */
-    POST_WIKI_HIDE("POST", "/api/wiki/hide", "modwiki"),
+    POST_WIKI_HIDE("POST", OPTIONAL_SUBREDDIT + "/api/wiki/hide", "modwiki"),
 
     /**
      * Represents the endpoint {@code POST /api/wiki/revert}. Requires OAuth scope 'modwiki'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_wiki_revert">here</a> for more information */
-    POST_WIKI_REVERT("POST", "/api/wiki/revert", "modwiki"),
+    POST_WIKI_REVERT("POST", OPTIONAL_SUBREDDIT + "/api/wiki/revert", "modwiki"),
 
     /**
      * Represents the endpoint {@code GET /wiki/settings/{page}}. Requires OAuth scope 'modwiki'. See <a href="https://www.reddit.com/dev/api/oauth#GET_wiki_settings_{page}">here</a> for more information */
-    GET_WIKI_SETTINGS_PAGE("GET", "/wiki/settings/{page}", "modwiki"),
+    GET_WIKI_SETTINGS_PAGE("GET", OPTIONAL_SUBREDDIT + "/wiki/settings/{page}", "modwiki"),
 
     /**
      * Represents the endpoint {@code POST /wiki/settings/{page}}. Requires OAuth scope 'modwiki'. See <a href="https://www.reddit.com/dev/api/oauth#POST_wiki_settings_{page}">here</a> for more information */
-    POST_WIKI_SETTINGS_PAGE("POST", "/wiki/settings/{page}", "modwiki"),
+    POST_WIKI_SETTINGS_PAGE("POST", OPTIONAL_SUBREDDIT + "/wiki/settings/{page}", "modwiki"),
 
     /**
      * Represents the endpoint {@code GET /api/v1/me/friends/{username}}. Requires OAuth scope 'mysubreddits'. See <a href="https://www.reddit.com/dev/api/oauth#GET_api_v1_me_friends_{username}">here</a> for more information */
@@ -443,15 +457,15 @@ public enum Endpoint {
 
     /**
      * Represents the endpoint {@code GET /about/{location}}. Requires OAuth scope 'read'. See <a href="https://www.reddit.com/dev/api/oauth#GET_about_{location}">here</a> for more information */
-    GET_ABOUT_LOCATION("GET", "/about/{location}", "read"),
+    GET_ABOUT_LOCATION("GET", OPTIONAL_SUBREDDIT + "/about/{location}", "read"),
 
     /**
      * Represents the endpoint {@code GET /about/{where}}. Requires OAuth scope 'read'. See <a href="https://www.reddit.com/dev/api/oauth#GET_about_{where}">here</a> for more information */
-    GET_ABOUT_WHERE("GET", "/about/{where}", "read"),
+    GET_ABOUT_WHERE("GET", OPTIONAL_SUBREDDIT + "/about/{where}", "read"),
 
     /**
      * Represents the endpoint {@code GET /api/info}. Requires OAuth scope 'read'. See <a href="https://www.reddit.com/dev/api/oauth#GET_api_info">here</a> for more information */
-    GET_INFO("GET", "/api/info", "read"),
+    GET_INFO("GET", OPTIONAL_SUBREDDIT + "/api/info", "read"),
 
     /**
      * Represents the endpoint {@code GET /api/live/by_id/{names}}. Requires OAuth scope 'read'. See <a href="https://www.reddit.com/dev/api/oauth#GET_api_live_by_id_{names}">here</a> for more information */
@@ -519,7 +533,7 @@ public enum Endpoint {
 
     /**
      * Represents the endpoint {@code GET /comments/{article}}. Requires OAuth scope 'read'. See <a href="https://www.reddit.com/dev/api/oauth#GET_comments_{article}">here</a> for more information */
-    GET_COMMENTS_ARTICLE("GET", "/comments/{article}", "read"),
+    GET_COMMENTS_ARTICLE("GET", OPTIONAL_SUBREDDIT + "/comments/{article}", "read"),
 
     /**
      * Represents the endpoint {@code GET /duplicates/{article}}. Requires OAuth scope 'read'. See <a href="https://www.reddit.com/dev/api/oauth#GET_duplicates_{article}">here</a> for more information */
@@ -527,7 +541,7 @@ public enum Endpoint {
 
     /**
      * Represents the endpoint {@code GET /hot}. Requires OAuth scope 'read'. See <a href="https://www.reddit.com/dev/api/oauth#GET_hot">here</a> for more information */
-    GET_HOT("GET", "/hot", "read"),
+    GET_HOT("GET", OPTIONAL_SUBREDDIT + "/hot", "read"),
 
     /**
      * Represents the endpoint {@code GET /live/{thread}}. Requires OAuth scope 'read'. See <a href="https://www.reddit.com/dev/api/oauth#GET_live_{thread}">here</a> for more information */
@@ -551,7 +565,7 @@ public enum Endpoint {
 
     /**
      * Represents the endpoint {@code GET /new}. Requires OAuth scope 'read'. See <a href="https://www.reddit.com/dev/api/oauth#GET_new">here</a> for more information */
-    GET_NEW("GET", "/new", "read"),
+    GET_NEW("GET", OPTIONAL_SUBREDDIT + "/new", "read"),
 
     /**
      * Represents the endpoint {@code GET /prefs/{where}}. Requires OAuth scope 'read'. See <a href="https://www.reddit.com/dev/api/oauth#GET_prefs_{where}">here</a> for more information */
@@ -567,23 +581,23 @@ public enum Endpoint {
 
     /**
      * Represents the endpoint {@code GET /random}. Requires OAuth scope 'read'. See <a href="https://www.reddit.com/dev/api/oauth#GET_random">here</a> for more information */
-    GET_RANDOM("GET", "/random", "read"),
+    GET_RANDOM("GET", OPTIONAL_SUBREDDIT + "/random", "read"),
 
     /**
      * Represents the endpoint {@code GET /rising}. Requires OAuth scope 'read'. See <a href="https://www.reddit.com/dev/api/oauth#GET_rising">here</a> for more information */
-    GET_RISING("GET", "/rising", "read"),
+    GET_RISING("GET", OPTIONAL_SUBREDDIT + "/rising", "read"),
 
     /**
      * Represents the endpoint {@code GET /search}. Requires OAuth scope 'read'. See <a href="https://www.reddit.com/dev/api/oauth#GET_search">here</a> for more information */
-    GET_SEARCH("GET", "/search", "read"),
+    GET_SEARCH("GET", OPTIONAL_SUBREDDIT + "/search", "read"),
 
     /**
      * Represents the endpoint {@code GET /sidebar}. Requires OAuth scope 'read'. See <a href="https://www.reddit.com/dev/api/oauth#GET_sidebar">here</a> for more information */
-    GET_SIDEBAR("GET", "/sidebar", "read"),
+    GET_SIDEBAR("GET", OPTIONAL_SUBREDDIT + "/sidebar", "read"),
 
     /**
      * Represents the endpoint {@code GET /sticky}. Requires OAuth scope 'read'. See <a href="https://www.reddit.com/dev/api/oauth#GET_sticky">here</a> for more information */
-    GET_STICKY("GET", "/sticky", "read"),
+    GET_STICKY("GET", OPTIONAL_SUBREDDIT + "/sticky", "read"),
 
     /**
      * Represents the endpoint {@code GET /subreddits/search}. Requires OAuth scope 'read'. See <a href="https://www.reddit.com/dev/api/oauth#GET_subreddits_search">here</a> for more information */
@@ -603,7 +617,7 @@ public enum Endpoint {
 
     /**
      * Represents the endpoint {@code GET /{sort}}. Requires OAuth scope 'read'. See <a href="https://www.reddit.com/dev/api/oauth#GET_{sort}">here</a> for more information */
-    GET_SORT("GET", "/{sort}", "read"),
+    GET_SORT("GET", OPTIONAL_SUBREDDIT + "/{sort}", "read"),
 
     /**
      * Represents the endpoint {@code POST /api/hide}. Requires OAuth scope 'report'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_hide">here</a> for more information */
@@ -655,7 +669,7 @@ public enum Endpoint {
 
     /**
      * Represents the endpoint {@code GET /api/submit_text}. Requires OAuth scope 'submit'. See <a href="https://www.reddit.com/dev/api/oauth#GET_api_submit_text">here</a> for more information */
-    GET_SUBMIT_TEXT("GET", "/api/submit_text", "submit"),
+    GET_SUBMIT_TEXT("GET", OPTIONAL_SUBREDDIT + "/api/submit_text", "submit"),
 
     /**
      * Represents the endpoint {@code POST /api/multi/copy}. Requires OAuth scope 'subscribe'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_multi_copy">here</a> for more information */
@@ -703,27 +717,27 @@ public enum Endpoint {
 
     /**
      * Represents the endpoint {@code POST /api/wiki/edit}. Requires OAuth scope 'wikiedit'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_wiki_edit">here</a> for more information */
-    POST_WIKI_EDIT("POST", "/api/wiki/edit", "wikiedit"),
+    POST_WIKI_EDIT("POST", OPTIONAL_SUBREDDIT + "/api/wiki/edit", "wikiedit"),
 
     /**
      * Represents the endpoint {@code GET /wiki/discussions/{page}}. Requires OAuth scope 'wikiread'. See <a href="https://www.reddit.com/dev/api/oauth#GET_wiki_discussions_{page}">here</a> for more information */
-    GET_WIKI_DISCUSSIONS_PAGE("GET", "/wiki/discussions/{page}", "wikiread"),
+    GET_WIKI_DISCUSSIONS_PAGE("GET", OPTIONAL_SUBREDDIT + "/wiki/discussions/{page}", "wikiread"),
 
     /**
      * Represents the endpoint {@code GET /wiki/pages}. Requires OAuth scope 'wikiread'. See <a href="https://www.reddit.com/dev/api/oauth#GET_wiki_pages">here</a> for more information */
-    GET_WIKI_PAGES("GET", "/wiki/pages", "wikiread"),
+    GET_WIKI_PAGES("GET", OPTIONAL_SUBREDDIT + "/wiki/pages", "wikiread"),
 
     /**
      * Represents the endpoint {@code GET /wiki/revisions}. Requires OAuth scope 'wikiread'. See <a href="https://www.reddit.com/dev/api/oauth#GET_wiki_revisions">here</a> for more information */
-    GET_WIKI_REVISIONS("GET", "/wiki/revisions", "wikiread"),
+    GET_WIKI_REVISIONS("GET", OPTIONAL_SUBREDDIT + "/wiki/revisions", "wikiread"),
 
     /**
      * Represents the endpoint {@code GET /wiki/revisions/{page}}. Requires OAuth scope 'wikiread'. See <a href="https://www.reddit.com/dev/api/oauth#GET_wiki_revisions_{page}">here</a> for more information */
-    GET_WIKI_REVISIONS_PAGE("GET", "/wiki/revisions/{page}", "wikiread"),
+    GET_WIKI_REVISIONS_PAGE("GET", OPTIONAL_SUBREDDIT + "/wiki/revisions/{page}", "wikiread"),
 
     /**
      * Represents the endpoint {@code GET /wiki/{page}}. Requires OAuth scope 'wikiread'. See <a href="https://www.reddit.com/dev/api/oauth#GET_wiki_{page}">here</a> for more information */
-    GET_WIKI_PAGE("GET", "/wiki/{page}", "wikiread");
+    GET_WIKI_PAGE("GET", OPTIONAL_SUBREDDIT + "/wiki/{page}", "wikiread");
 
     private final String method;
 
@@ -753,5 +767,9 @@ public enum Endpoint {
      * Gets the OAuth2 scope required to use this endpoint */
     public String getScope() {
         return this.scope;
+    }
+
+    public static class Constant {
+        public static final String OPTIONAL_SUBREDDIT = "[/r/{subreddit}]";
     }
 }

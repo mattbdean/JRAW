@@ -176,9 +176,8 @@ class SelfUserFlairReference internal constructor(reddit: RedditClient, subreddi
     @EndpointImplementation(Endpoint.POST_SETFLAIRENABLED)
     fun setFlairEnabled(enabled: Boolean) {
         reddit.request {
-            it.endpoint(Endpoint.POST_SETFLAIRENABLED)
+            it.endpoint(Endpoint.POST_SETFLAIRENABLED, subreddit)
                 .post(mapOf(
-                    "r" to subreddit,
                     "api_type" to "json",
                     "flair_enabled" to enabled.toString()
                 ))
