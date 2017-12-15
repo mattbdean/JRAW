@@ -78,3 +78,9 @@ artifacts {
 }
 
 task jars(dependsOn: [javadocJar, sourcesJar])
+
+kotlin {
+    experimental {
+        coroutines "enable"
+    }
+}

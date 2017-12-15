@@ -73,10 +73,10 @@ interface CommentNode<out T : PublicContribution<*>> : Iterable<CommentNode<*>> 
     fun hasMoreChildren(): Boolean
 
     /**
-     * Organizes this comment tree into a List whose order is determined by the given [TreeTraverser.Order]. For example,
+     * Organizes this comment tree into a List whose order is determined by the given [TreeTraverser.TreeTraversalOrder]. For example,
      * reddit uses pre-order traversal to generate the website's comments section.
      */
-    fun walkTree(order: TreeTraverser.Order = TreeTraverser.Order.PRE_ORDER): List<CommentNode<*>>
+    fun walkTree(order: TreeTraversalOrder = TreeTraversalOrder.PRE_ORDER): Sequence<CommentNode<*>>
 
     /**
      * Prints out a brief overview of this CommentNode and its children to the given PrintStream (defaults to stdout).

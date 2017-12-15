@@ -47,12 +47,12 @@ abstract class AbstractCommentNode<out T : PublicContribution<*>> protected cons
 
     override fun totalSize(): Int {
         // walkTree() goes through this node and all child nodes, but we only care about child nodes
-        return walkTree().size - 1
+        return walkTree().count() - 1
     }
 
     override fun visualize(out: PrintStream) {
         val relativeRootDepth = depth
-        for (node in walkTree(TreeTraverser.Order.PRE_ORDER)) {
+        for (node in walkTree(TreeTraversalOrder.PRE_ORDER)) {
             val subj = node.subject
             val indent = "  ".repeat(node.depth - relativeRootDepth)
 
@@ -62,8 +62,8 @@ abstract class AbstractCommentNode<out T : PublicContribution<*>> protected cons
         }
     }
 
-    override fun walkTree(order: TreeTraverser.Order): List<CommentNode<*>> =
-        IterativeTreeTraverser(this).traverse(order)
+    override fun walkTree(order: TreeTraversalOrder): Sequence<CommentNode<*>> =
+        TreeTraverser.traverse(this, order)
 
     override fun loadMore(reddit: RedditClient): FakeRootCommentNode<T> {
         if (moreChildren == null)
@@ -202,7 +202,7 @@ abstract class AbstractCommentNode<out T : PublicContribution<*>> protected cons
             .comments(CommentsRequest(focus = subject.id, sort = settings.sort))
 
         return root
-            .walkTree(TreeTraverser.Order.PRE_ORDER)
+            .walkTree(TreeTraversalOrder.PRE_ORDER)
             // When we specify `focus` in CommentsRequest, reddit only returns that comment and its children. The
             // submission is technically the "root" of the whole tree, but its only child will be a node for the
             // "focus" comment. We only care about the children of the focus comment, so drop the first node
@@ -210,6 +210,7 @@ abstract class AbstractCommentNode<out T : PublicContribution<*>> protected cons
             .drop(2)
             // Map everything to the subject
             .map { it.subject as NestedIdentifiable }
+            .toList()
     }
 
     /** */
