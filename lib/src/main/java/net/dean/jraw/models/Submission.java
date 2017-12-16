@@ -79,6 +79,10 @@ public abstract class Submission implements PublicContribution<SubmissionReferen
     @Nullable
     @Json(name = "link_flair_text") public abstract String getLinkFlairText();
 
+    /** CSS class of the flair displayed next to the submission, if any */
+    @Nullable
+    @Json(name = "link_flair_css_class") public abstract String getLinkFlairCssClass();
+
     /** If the moderators/admins have prevented creating new comments on this submission */
     public abstract boolean isLocked();
 

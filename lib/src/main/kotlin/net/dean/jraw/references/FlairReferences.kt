@@ -82,6 +82,7 @@ sealed class FlairReference(
 }
 
 class SubmissionFlairReference internal constructor(reddit: RedditClient, subreddit: String, subject: String) : FlairReference(reddit, subreddit, subject) {
+
     override fun updateToTemplate(templateId: String, text: String?) {
         reddit.request {
             it.endpoint(Endpoint.POST_SELECTFLAIR, subreddit)
