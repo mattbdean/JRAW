@@ -25,6 +25,19 @@ class WikiReference internal constructor(reddit: RedditClient, val subreddit: St
         }.deserializeEnveloped()
     }
 
+    /** Updates a given wiki page */
+    @EndpointImplementation(Endpoint.POST_WIKI_EDIT)
+    fun update(page: String, content: String, reason: String = "") {
+        reddit.request {
+            it.endpoint(Endpoint.POST_WIKI_EDIT, subreddit)
+                .post(mapOf(
+                    "content" to content,
+                    "page" to page,
+                    "reason" to reason
+                ))
+        }
+    }
+
     /** Returns a Paginator.Builder that iterates through all revisions of all wiki pages */
     @EndpointImplementation(Endpoint.GET_WIKI_REVISIONS, type = MethodType.NON_BLOCKING_CALL)
     fun revisions(): BarebonesPaginator.Builder<WikiRevision> =

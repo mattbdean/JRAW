@@ -131,7 +131,7 @@ abstract class PublicContributionReference internal constructor(reddit: RedditCl
             DistinguishedStatus.MODERATOR -> "yes"
             DistinguishedStatus.ADMIN -> "admin"
             DistinguishedStatus.SPECIAL -> "special"
-            DistinguishedStatus.GOLD -> throw IllegalArgumentException("Cannot distinguish a contribution with gold")
+            DistinguishedStatus.GOLD -> throw IllegalArgumentException("Cannot manually distinguish a contribution with a gold distinguish status")
         }
 
         reddit.request {
