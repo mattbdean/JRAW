@@ -51,6 +51,11 @@ public abstract class Comment implements PublicContribution<CommentReference>, N
     @Override
     @Json(name = "name") public abstract String getFullName();
 
+    /** Comment body is never null */
+    @NotNull
+    @Override
+    public abstract String getBody();
+
     @Enveloped
     public abstract Listing<NestedIdentifiable> getReplies();
 
