@@ -1,10 +1,7 @@
 package net.dean.jraw.test.integration
 
 import com.winterbe.expekt.should
-import net.dean.jraw.models.CommentSort
-import net.dean.jraw.models.KindConstants
-import net.dean.jraw.models.Sorting
-import net.dean.jraw.models.VoteDirection
+import net.dean.jraw.models.*
 import net.dean.jraw.references.CommentsRequest
 import net.dean.jraw.references.SubmissionReference
 import net.dean.jraw.test.SharedObjects
@@ -26,7 +23,7 @@ class SubmissionReferenceTest : Spek({
             // Grab a reference to the newest post on /r/jraw_testing2
             val voteRef = reddit.subreddit("jraw_testing2")
                 .posts()
-                .sorting(Sorting.NEW)
+                .sorting(SubredditSort.NEW)
                 .build()
                 .next()
                 .first()

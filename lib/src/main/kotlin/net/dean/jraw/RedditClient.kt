@@ -263,7 +263,7 @@ class RedditClient internal constructor(
     fun userSubreddits(where: String) = BarebonesPaginator.Builder.create<Subreddit>(this, "/users/${JrawUtils.urlEncode(where)}")
 
     /** Creates a [DefaultPaginator.Builder] to iterate posts on the front page */
-    fun frontPage() = DefaultPaginator.Builder.create<Submission>(this, baseUrl = "", sortingAlsoInPath = true)
+    fun frontPage() = DefaultPaginator.Builder.create<Submission, SubredditSort>(this, baseUrl = "", sortingAlsoInPath = true)
 
     /**
      * Creates a [SubredditReference]

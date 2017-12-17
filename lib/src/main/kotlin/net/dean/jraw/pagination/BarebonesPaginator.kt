@@ -12,7 +12,7 @@ open class BarebonesPaginator<T> private constructor(
     baseUrl: String,
     limit: Int,
     clazz: Class<T>
-) : Paginator<T, Paginator.Builder<T>>(reddit, baseUrl, limit, clazz) {
+) : Paginator<T>(reddit, baseUrl, limit, clazz) {
 
     override fun createNextRequest(): HttpRequest {
         val args = mutableMapOf("limit" to limit.toString())
@@ -24,9 +24,6 @@ open class BarebonesPaginator<T> private constructor(
             .query(args)
             .build()
     }
-
-    override fun newBuilder() = Builder(reddit, baseUrl, clazz)
-        .limit(limit)
 
     class Builder<T>(reddit: RedditClient, baseUrl: String, clazz: Class<T>) :
         Paginator.Builder<T>(reddit, baseUrl, clazz) {

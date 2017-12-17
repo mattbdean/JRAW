@@ -6,15 +6,13 @@ import net.dean.jraw.JrawUtils
 import net.dean.jraw.RedditClient
 import net.dean.jraw.databind.Enveloped
 import net.dean.jraw.http.HttpRequest
-import net.dean.jraw.models.Listing
-import net.dean.jraw.models.Sorting
-import net.dean.jraw.models.TimePeriod
+import net.dean.jraw.models.*
 
-abstract class Paginator<T, out B : Paginator.Builder<T>> protected constructor(
+abstract class Paginator<T> protected constructor(
     val reddit: RedditClient,
     baseUrl: String,
     val limit: Int,
-    protected val clazz: Class<T>
+    clazz: Class<T>
 ) : RedditIterable<T> {
     // Internal, modifiable properties
     private var _current: Listing<T>? = null
@@ -69,9 +67,6 @@ abstract class Paginator<T, out B : Paginator.Builder<T>> protected constructor(
 
     override fun accumulateMerged(maxPages: Int): List<T> = accumulate(maxPages).flatten()
 
-    /** Constructs a new [Builder] with the current pagination settings */
-    abstract fun newBuilder(): B
-
     /** Creates an HTTP request to fetch the next page of data, if any. */
     abstract protected fun createNextRequest(): HttpRequest
 
@@ -83,7 +78,7 @@ abstract class Paginator<T, out B : Paginator.Builder<T>> protected constructor(
         val baseUrl: String,
         protected val clazz: Class<T>
     ) {
-        abstract fun build(): Paginator<T, Builder<T>>
+        abstract fun build(): Paginator<T>
     }
 
     companion object {
@@ -96,7 +91,7 @@ abstract class Paginator<T, out B : Paginator.Builder<T>> protected constructor(
         /** reddit returns 25 items when no limit parameter is passed */
         const val DEFAULT_LIMIT = 25
 
-        @JvmField val DEFAULT_SORTING = Sorting.NEW
+        @JvmField val DEFAULT_SORTING: Sorting = GeneralSort.NEW
         @JvmField val DEFAULT_TIME_PERIOD = TimePeriod.DAY
     }
 }

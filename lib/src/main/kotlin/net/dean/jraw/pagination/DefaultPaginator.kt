@@ -13,7 +13,7 @@ open class DefaultPaginator<T> private constructor(
     val sorting: Sorting,
     limit: Int,
     clazz: Class<T>
-) : Paginator<T, Paginator.Builder<T>>(reddit, baseUrl, limit, clazz) {
+) : Paginator<T>(reddit, baseUrl, limit, clazz) {
 
     override fun createNextRequest(): HttpRequest {
         val sortingString = sorting.name.toLowerCase()
@@ -36,13 +36,9 @@ open class DefaultPaginator<T> private constructor(
             .build()
     }
 
-    override fun newBuilder() = Builder(reddit, baseUrl, sortingAlsoInPath, clazz)
-        .sorting(sorting)
-        .timePeriod(timePeriod)
-        .limit(limit)
-
-    open class Builder<T>(
-        reddit: RedditClient, baseUrl: String,
+    open class Builder<T, S : Sorting>(
+        reddit: RedditClient,
+        baseUrl: String,
 
         /**
          * If true, the sorting will be included as a query parameter instead of a path parameter. Most endpoints
@@ -55,17 +51,17 @@ open class DefaultPaginator<T> private constructor(
     ) : Paginator.Builder<T>(reddit, baseUrl, clazz) {
         protected var limit: Int = Paginator.DEFAULT_LIMIT
         protected var timePeriod: TimePeriod = Paginator.DEFAULT_TIME_PERIOD
-        protected var sorting = Paginator.DEFAULT_SORTING
+        protected var sorting: S? = null
 
-        fun limit(limit: Int): Builder<T> { this.limit = limit; return this }
-        fun sorting(sorting: Sorting): Builder<T> { this.sorting = sorting; return this }
-        fun timePeriod(timePeriod: TimePeriod): Builder<T> { this.timePeriod = timePeriod; return this }
+        fun limit(limit: Int): Builder<T, S> { this.limit = limit; return this }
+        fun sorting(sorting: S): Builder<T, S> { this.sorting = sorting; return this }
+        fun timePeriod(timePeriod: TimePeriod): Builder<T, S> { this.timePeriod = timePeriod; return this }
 
         override fun build(): DefaultPaginator<T> =
-            DefaultPaginator(reddit, baseUrl, sortingAlsoInPath, timePeriod, sorting, limit, clazz)
+            DefaultPaginator(reddit, baseUrl, sortingAlsoInPath, timePeriod, sorting ?: Paginator.DEFAULT_SORTING, limit, clazz)
 
         companion object {
-            inline fun <reified T> create(reddit: RedditClient, baseUrl: String, sortingAlsoInPath: Boolean = false): Builder<T> {
+            inline fun <reified T, S : Sorting> create(reddit: RedditClient, baseUrl: String, sortingAlsoInPath: Boolean = false): Builder<T, S> {
                 return Builder(reddit, baseUrl, sortingAlsoInPath, T::class.java)
             }
         }

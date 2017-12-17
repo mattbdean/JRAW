@@ -30,7 +30,7 @@ class SubredditReference internal constructor(reddit: RedditClient, val subreddi
         Endpoint.GET_HOT, Endpoint.GET_NEW, Endpoint.GET_RISING, Endpoint.GET_SORT,
         type = MethodType.NON_BLOCKING_CALL
     )
-    fun posts() = DefaultPaginator.Builder.create<Submission>(reddit, "/r/$subreddit", sortingAlsoInPath = true)
+    fun posts() = DefaultPaginator.Builder.create<Submission, SubredditSort>(reddit, "/r/$subreddit", sortingAlsoInPath = true)
 
     /**
      * Creates a BarebonesPaginator.Builder that will iterate over the latest comments from this subreddit when built.
