@@ -40,6 +40,13 @@ class SubredditReference internal constructor(reddit: RedditClient, val subreddi
     fun comments(): BarebonesPaginator.Builder<Comment> = reddit.latestComments(subreddit)
 
     /**
+     * Creates a BarebonesPaginator.Builder that will iterate over the gilded contributions in this subreddit when built.
+     *
+     * @see RedditClient.gildedContributions
+     */
+    fun gilded(): BarebonesPaginator.Builder<PublicContribution<*>> = reddit.gildedContributions(subreddit)
+
+    /**
      * Gets a random submission from this subreddit.
      *
      * @see RedditClient.randomSubreddit

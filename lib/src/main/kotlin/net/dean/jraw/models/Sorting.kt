@@ -5,7 +5,6 @@ package net.dean.jraw.models
  */
 enum class Sorting constructor(val requiresTimePeriod: Boolean = false) {
     HOT,
-    GILDED,
     NEW,
     RISING,
     CONTROVERSIAL(true),
