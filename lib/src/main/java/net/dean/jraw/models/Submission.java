@@ -146,6 +146,9 @@ public abstract class Submission implements PublicContribution<SubmissionReferen
     @NotNull
     @Json(name = "likes") public abstract VoteDirection getVote();
 
+    /** The number of comments posted in this post. Includes removed comments. */
+    @Json(name = "num_comments") public abstract Integer getCommentCount();
+
     @NotNull
     @Override
     public SubmissionReference toReference(@NotNull RedditClient reddit) {

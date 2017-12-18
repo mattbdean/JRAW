@@ -10,6 +10,7 @@ import net.dean.jraw.pagination.BarebonesPaginator
 import net.dean.jraw.pagination.DefaultPaginator
 import net.dean.jraw.pagination.SearchPaginator
 import net.dean.jraw.tree.RootCommentNode
+import java.net.URLEncoder
 
 /**
  * Allows the user to perform API actions against a subreddit
@@ -207,6 +208,25 @@ class SubredditReference internal constructor(reddit: RedditClient, val subreddi
                     "op" to "save",
                     "reason" to reason,
                     "stylesheet_contents" to stylesheet
+                ))
+        }
+    }
+
+    /** Returns a listing of currently set flairs on the subreddit (both custom and template-based ones)
+     *  Requires mod priveleges on the subreddit.
+     */
+    @EndpointImplementation(Endpoint.GET_FLAIRLIST)
+    fun flairList() = BarebonesPaginator.Builder.create<SimpleFlairInfo>(reddit, "/r/$subreddit/api/flairlist")
+
+    /** Updates users flairs on the subreddit in bulk (up to 100 rows, the rest are ignored by Reddit).
+    *   Requires mod priveleges on the subreddit.
+    */
+    @EndpointImplementation(Endpoint.POST_FLAIRCSV)
+    fun patchFlairList(patch: List<SimpleFlairInfo>) {
+        reddit.request {
+            it.path("/r/$subreddit/api/flaircsv")
+                .post(mapOf(
+                    "flair_csv" to (patch.joinToString(separator = URLEncoder.encode("\n", "UTF-8")) { it.toCsvLine() })
                 ))
         }
     }
