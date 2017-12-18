@@ -8,6 +8,7 @@ import net.dean.jraw.models.internal.RedditExceptionStub
 import net.dean.jraw.oauth.*
 import net.dean.jraw.pagination.BarebonesPaginator
 import net.dean.jraw.pagination.DefaultPaginator
+import net.dean.jraw.pagination.SearchPaginator
 import net.dean.jraw.ratelimit.LeakyBucketRateLimiter
 import net.dean.jraw.ratelimit.RateLimiter
 import net.dean.jraw.references.*
@@ -264,6 +265,9 @@ class RedditClient internal constructor(
 
     /** Creates a [DefaultPaginator.Builder] to iterate posts on the front page */
     fun frontPage() = DefaultPaginator.Builder.create<Submission, SubredditSort>(this, baseUrl = "", sortingAlsoInPath = true)
+
+    /** Creates a SearchPaginator.Builder to search for submissions in every subreddit */
+    fun search(): SearchPaginator.Builder = SearchPaginator.everywhere(this)
 
     /**
      * Creates a [SubredditReference]

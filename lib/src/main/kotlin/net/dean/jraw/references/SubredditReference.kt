@@ -8,6 +8,7 @@ import net.dean.jraw.models.internal.GenericJsonResponse
 import net.dean.jraw.models.internal.SubmissionData
 import net.dean.jraw.pagination.BarebonesPaginator
 import net.dean.jraw.pagination.DefaultPaginator
+import net.dean.jraw.pagination.SearchPaginator
 import net.dean.jraw.tree.RootCommentNode
 
 /**
@@ -45,6 +46,13 @@ class SubredditReference internal constructor(reddit: RedditClient, val subreddi
      * @see RedditClient.gildedContributions
      */
     fun gilded(): BarebonesPaginator.Builder<PublicContribution<*>> = reddit.gildedContributions(subreddit)
+
+    /**
+     * Creates a SearchPaginator.Builder to search for submissions in this subreddit.
+     *
+     * @see SearchPaginator.inSubreddits
+     */
+    fun search(): SearchPaginator.Builder = SearchPaginator.inSubreddits(reddit, subreddit)
 
     /**
      * Gets a random submission from this subreddit.

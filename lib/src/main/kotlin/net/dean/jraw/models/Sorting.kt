@@ -3,7 +3,7 @@ package net.dean.jraw.models
 /**
  * Represents how the reddit API chooses what it returns in a Paginator
  */
-public interface Sorting {
+interface Sorting {
     val requiresTimePeriod: Boolean
     val name: String
 }
@@ -25,4 +25,8 @@ enum class UserHistorySort(override val requiresTimePeriod: Boolean = false) : S
     NEW,
     CONTROVERSIAL(true),
     TOP(true);
+}
+
+enum class SearchSort(override val requiresTimePeriod: Boolean = true) : Sorting {
+    RELEVANCE, HOT, TOP, NEW, COMMENTS;
 }
