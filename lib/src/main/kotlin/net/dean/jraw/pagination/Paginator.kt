@@ -25,7 +25,7 @@ abstract class Paginator<T> protected constructor(
     }
 
     // Make sure we don't have a trailing slash
-    val baseUrl = if (baseUrl.trim().endsWith("/")) baseUrl.trim().substring(0, baseUrl.trim().length - 2) else baseUrl
+    val baseUrl = baseUrl.removeSuffix("/")
 
     // Publicly available property is simply an unmodifiable alias to the private properties
     override val current: Listing<T>?
