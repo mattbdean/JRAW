@@ -66,6 +66,17 @@ public abstract class Comment implements PublicContribution<CommentReference>, N
     @NotNull
     @Json(name = "link_id") public abstract String getSubmissionFullName();
 
+    /** Gets the title of the parent link, or null if this comment is not being displayed outside of its own thread. */
+    @Nullable
+    @Json(name = "link_title") public abstract String getSubmissionTitle();
+
+    /**
+     * Gets the url of the parent submission (or submission permalink for self-posts), or null if this comment
+     * is not being displayed outside of its own thread.
+     */
+    @Nullable
+    @Json(name = "link_url") public abstract String getUrl();
+
     @NotNull
     @Override
     @Json(name = "subreddit_id") public abstract String getSubredditFullName();

@@ -2,6 +2,7 @@ package net.dean.jraw.references
 
 import net.dean.jraw.*
 import net.dean.jraw.databind.Enveloped
+import net.dean.jraw.http.HttpResponse
 import net.dean.jraw.models.Comment
 import net.dean.jraw.models.DistinguishedStatus
 import net.dean.jraw.models.VoteDirection
@@ -146,8 +147,8 @@ abstract class PublicContributionReference internal constructor(reddit: RedditCl
     }
 
     @EndpointImplementation(Endpoint.POST_REMOVE)
-    fun remove(spam: Boolean) {
-        reddit.request {
+    fun remove(spam: Boolean): HttpResponse {
+        return reddit.request {
             it.endpoint(Endpoint.POST_REMOVE)
                 .post(mapOf(
                     "id" to fullName,
