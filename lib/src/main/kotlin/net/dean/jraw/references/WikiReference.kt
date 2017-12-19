@@ -32,7 +32,7 @@ class WikiReference internal constructor(reddit: RedditClient, val subreddit: St
 
     /** Updates a given wiki page */
     @EndpointImplementation(Endpoint.POST_WIKI_EDIT)
-    fun update(page: String, content: String, reason: String = "") {
+    fun update(page: String, content: String, reason: String) {
         reddit.request {
             it.endpoint(Endpoint.POST_WIKI_EDIT, subreddit)
                 .post(mapOf(
