@@ -326,10 +326,31 @@ class RedditClient internal constructor(
     fun randomSubreddit() = subreddit("random")
 
     /**
+     * Creates a PublicContributionReference (either SubmissionReference or CommentReference).
+     * The expected input is provided in format KIND_ID (e.g. t3_6afe8u or t1_2bad4u)
+     */
+    fun publicContribution(fullname: String): PublicContributionReference {
+        val parts = fullname.split('_')
+        if (parts.size != 2)
+            throw IllegalArgumentException("Fullname doesn't match the pattern KIND_ID")
+        return when (parts[0]) {
+            KindConstants.COMMENT -> comment(parts[1])
+            KindConstants.SUBMISSION -> submission(parts[1])
+            else -> throw IllegalArgumentException("Provided kind '${parts[0]}' is not a public contribution")
+        }
+    }
+
+    /**
      * Creates a SubmissionReference. Note that `id` is NOT a full name (like `t3_6afe8u`), but rather an ID
      * (like `6afe8u`)
      */
     fun submission(id: String) = SubmissionReference(this, id)
+
+    /**
+     * Creates a CommentReference. Note that `id` is NOT a full name (like `t1_6afe8u`), but rather an ID
+     * (like `6afe8u`)
+     */
+    fun comment(id: String) = CommentReference(this, id)
 
     /**
      * Creates a BarebonesPaginator.Builder that will iterate over the latest comments from the given subreddits when
