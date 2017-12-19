@@ -7,5 +7,6 @@ package net.dean.jraw.ratelimit
  * [SystemTimeAdapter].
  */
 interface TimeAdapter {
+    /** Returns the amount of nanoseconds this program has been running */
     fun nanoTime(): Long
 }

@@ -8,6 +8,11 @@ import net.dean.jraw.models.WikiRevision
 import net.dean.jraw.models.internal.RedditModelEnvelope
 import net.dean.jraw.pagination.BarebonesPaginator
 
+/**
+ * A WikiReference is a reference to a specific subreddit's wiki.
+ *
+ * @property subreddit The name of the subreddit without the "/r/" prefix.
+ */
 class WikiReference internal constructor(reddit: RedditClient, val subreddit: String) : AbstractReference(reddit) {
     /** Fetches the names of all accessible wiki pages. */
     @EndpointImplementation(Endpoint.GET_WIKI_PAGES)
@@ -53,6 +58,7 @@ class WikiReference internal constructor(reddit: RedditClient, val subreddit: St
     fun discussionsAbout(page: String): BarebonesPaginator.Builder<Submission> =
         BarebonesPaginator.Builder.create(reddit, "/r/$subreddit/wiki/discussions/$page")
 
+    /** */
     companion object {
         // RedditModelEnvelope<List<String>>
         private val pagesType = Types.newParameterizedType(RedditModelEnvelope::class.java,

@@ -19,6 +19,12 @@ import java.util.*
  * authentication.
  */
 object OAuthHelper {
+    /**
+     * Authenticates a client without user approval. This is only applicable to scripts apps and those using userless
+     * mode. This is possible because reddit implicitly grants access to the app to the account that created the script,
+     * and userless mode by definition has no user to authenticate. The NetworkAdapter, Credentials, and TokenStore are
+     * eventually given to the RedditClient.
+     */
     @JvmStatic @JvmOverloads fun automatic(http: NetworkAdapter, creds: Credentials, tokenStore: TokenStore = NoopTokenStore()): RedditClient {
         return when {
             creds.authMethod.isUserless ->
@@ -29,6 +35,10 @@ object OAuthHelper {
         }
     }
 
+    /**
+     * Starts the authentication process for an installed or web app. Like with [automatic], the NetworkAdapter,
+     * Credentials, and TokenStore are eventually given to the RedditClient after authentication.
+     */
     @JvmStatic @JvmOverloads fun interactive(http: NetworkAdapter, creds: Credentials, tokenStore: TokenStore = NoopTokenStore()) =
         interactive(http, creds, tokenStore, onAuthenticated = {})
 

@@ -8,6 +8,8 @@ import okhttp3.Response
 
 /**
  * This class wraps OkHttp's `Response` class to provide some convenience methods and properties
+ *
+ * @property raw The OkHttp Response object
  */
 data class HttpResponse(val raw: Response) {
     /** The request that was responsible for creating this response */
@@ -35,10 +37,14 @@ data class HttpResponse(val raw: Response) {
         return deserializeWith(JrawUtils.adapter())
     }
 
+    /**
+     * Does the same thing as [deserialize], but applies the [Enveloped] annotation.
+     */
     inline fun <reified T> deserializeEnveloped(): T {
-        return deserializeWith(JrawUtils.moshi.adapter<T>(T::class.java, Enveloped::class.java))
+        return deserializeWith(JrawUtils.adapter(Enveloped::class.java))
     }
 
+    /** Deserializes the response body with the given adapter */
     fun <T> deserializeWith(adapter: JsonAdapter<T>): T {
         return adapter.fromJson(body)!!
     }

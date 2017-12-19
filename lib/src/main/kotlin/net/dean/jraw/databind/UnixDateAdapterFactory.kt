@@ -5,7 +5,11 @@ import java.lang.reflect.Type
 import java.util.*
 import java.util.concurrent.TimeUnit
 
+/**
+ * This factory produces JsonAdapters that handle properties annotated with [UnixTime].
+ */
 class UnixDateAdapterFactory : JsonAdapter.Factory {
+    /** @inheritDoc */
     override fun create(type: Type, annotations: MutableSet<out Annotation>, moshi: Moshi?): JsonAdapter<*>? {
         Types.nextAnnotations(annotations, UnixTime::class.java) ?: return null
         val precision = (annotations.first { it is UnixTime } as UnixTime).precision

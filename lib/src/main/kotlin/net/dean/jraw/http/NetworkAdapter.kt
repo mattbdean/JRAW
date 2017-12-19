@@ -9,6 +9,7 @@ import okhttp3.WebSocketListener
  * Since this project is tightly bound to OkHttp, this interface exists primarily for testing.
  */
 interface NetworkAdapter {
+    /** The value of the User-Agent header that should be sent with every request */
     var userAgent: UserAgent
 
     /** Executes the HTTP request represended by the given data */

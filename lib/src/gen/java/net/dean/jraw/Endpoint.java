@@ -80,6 +80,10 @@ public enum Endpoint {
     GET_LINK_FLAIR_V2("GET", OPTIONAL_SUBREDDIT + "/api/link_flair_v2", "flair"),
 
     /**
+     * Represents the endpoint {@code GET /api/link_flair_v2}. Requires OAuth scope 'flair'. See <a href="https://www.reddit.com/dev/api/oauth#GET_api_link_flair_v2">here</a> for more information */
+    GET_LINK_FLAIR_V2("GET", "/api/link_flair_v2", "flair"),
+
+    /**
      * Represents the endpoint {@code POST /api/selectflair}. Requires OAuth scope 'flair'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_selectflair">here</a> for more information */
     POST_SELECTFLAIR("POST", OPTIONAL_SUBREDDIT + "/api/selectflair", "flair"),
 

@@ -1,5 +1,6 @@
 package net.dean.jraw.models
 
+/** A model is identifiable if it has a full name (like "t1_abc123") and an ID (like "abc123") */
 interface Identifiable {
     /**
      * The full name of the model. Essentially equivalent to joining the kind prefix (e.g. "t1" for comments) with

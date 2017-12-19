@@ -13,10 +13,16 @@ import net.dean.jraw.models.internal.GenericJsonResponse
  *
  * Provides methods for [upvoting][upvote], [downvoting][downvote], and [removing the current vote][unvote], and also
  * one method for [manually setting the vote direction by enum value][setVote].
+ *
+ * @property id The base 36 ID of the model.
  */
 abstract class PublicContributionReference internal constructor(reddit: RedditClient, val id: String, kindPrefix: String) :
     AbstractReference(reddit) {
 
+    /**
+     * The full name of the subject. Takes the form "${kindPrefix}_$id", where ${kindPrefix} is a value specified in
+     * [net.dean.jraw.models.KindConstants].
+     */
     val fullName = "${kindPrefix}_$id"
 
     /** Equivalent to `setVote(VoteDirection.UP)` */
@@ -94,6 +100,7 @@ abstract class PublicContributionReference internal constructor(reddit: RedditCl
         return JrawUtils.adapter<Comment>(Enveloped::class.java).fromJsonValue(comment)!!
     }
 
+    /** Attempts to delete the model. The authenticated user must have created the model for this call to succeed. */
     @EndpointImplementation(Endpoint.POST_DEL)
     fun delete() {
         reddit.request {
@@ -102,6 +109,7 @@ abstract class PublicContributionReference internal constructor(reddit: RedditCl
         }
     }
 
+    /** Sets the text body of this model to the specified Markdown string. Only valid for text posts and comments. */
     @EndpointImplementation(Endpoint.POST_EDITUSERTEXT)
     fun edit(text: String) {
         reddit.request {
@@ -114,6 +122,7 @@ abstract class PublicContributionReference internal constructor(reddit: RedditCl
         }
     }
 
+    /** Enables or disables sending direct replies to this model to the user's inbox */
     @EndpointImplementation(Endpoint.POST_SENDREPLIES)
     fun sendReplies(sendReplies: Boolean) {
         reddit.request {

@@ -14,9 +14,16 @@ import net.dean.jraw.pagination.DefaultPaginator
 import okhttp3.MediaType
 import okhttp3.RequestBody
 
+/**
+ * A user reference is exactly what you think it is, a reference to a user.
+ *
+ * @property username The name of the users account (note: note the ID or the full name)
+ */
 sealed class UserReference<out T : UserFlairReference>(reddit: RedditClient, val username: String) : AbstractReference(reddit) {
+    /** True if and only if this UserReference is a [SelfUserReference] */
     abstract val isSelf: Boolean
 
+    /** Fetches basic information about this user */
     @EndpointImplementation(Endpoint.GET_ME, Endpoint.GET_USER_USERNAME_ABOUT)
     fun about(): Account {
         val body = reddit.request {
@@ -29,6 +36,7 @@ sealed class UserReference<out T : UserFlairReference>(reddit: RedditClient, val
         return JrawUtils.adapter<Account>(Enveloped::class.java).fromJson(body)!!
     }
 
+    /** Fetches any trophies the user has achieved */
     @EndpointImplementation(Endpoint.GET_ME_TROPHIES, Endpoint.GET_USER_USERNAME_TROPHIES)
     fun trophies(): List<Trophy> {
         return reddit.request {
@@ -40,7 +48,7 @@ sealed class UserReference<out T : UserFlairReference>(reddit: RedditClient, val
     }
 
     /**
-     * Creates a new [Paginator.Builder] which can iterate over a user's public history.
+     * Creates a new [net.dean.jraw.pagination.Paginator.Builder] which can iterate over a user's public history.
      *
      * Possible `where` values:
      *
@@ -99,6 +107,7 @@ sealed class UserReference<out T : UserFlairReference>(reddit: RedditClient, val
     abstract fun flairOn(subreddit: String): T
 }
 
+/** A reference to the currently authenticated user */
 class SelfUserReference(reddit: RedditClient) : UserReference<SelfUserFlairReference>(reddit, reddit.requireAuthenticatedUser()) {
     override val isSelf = true
 
@@ -107,6 +116,7 @@ class SelfUserReference(reddit: RedditClient) : UserReference<SelfUserFlairRefer
         JrawUtils.moshi.adapter<Map<String, Any>>(type)
     }
 
+    /** Creates an InboxReference */
     fun inbox() = InboxReference(reddit)
 
     /**
@@ -204,6 +214,11 @@ class SelfUserReference(reddit: RedditClient) : UserReference<SelfUserFlairRefer
     override fun flairOn(subreddit: String): SelfUserFlairReference = SelfUserFlairReference(reddit, subreddit)
 }
 
+/**
+ * A reference to user that is not the currently authenticated user. Note that it's still technically possible to create
+ * an OtherUserReference for the currently authenticated user, but it won't be nearly as useful as creating a
+ * [SelfUserReference] instead.
+ */
 class OtherUserReference(reddit: RedditClient, username: String) : UserReference<OtherUserFlairReference>(reddit, username) {
     override val isSelf = false
 

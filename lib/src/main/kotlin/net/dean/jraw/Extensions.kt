@@ -1,3 +1,5 @@
+@file:JvmName("Extensions")
+
 package net.dean.jraw
 
 internal fun <K, V> Map<K, V?>.filterValuesNotNull(): Map<K, V> {

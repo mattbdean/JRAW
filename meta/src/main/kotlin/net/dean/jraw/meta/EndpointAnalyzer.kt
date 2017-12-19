@@ -41,7 +41,7 @@ object EndpointAnalyzer {
 
         return EndpointMeta(
             implementation = method,
-            sourceUrl = "https://github.com/thatJavaNerd/JRAW/tree/master/lib/src/main/kotlin/" +
+            sourceUrl = "https://github.com/mattbdean/JRAW/tree/master/lib/src/main/kotlin/" +
                 method.declaringClass.name.replace(".", "/") + ".kt#L" + lineNumber(method)
         )
     }

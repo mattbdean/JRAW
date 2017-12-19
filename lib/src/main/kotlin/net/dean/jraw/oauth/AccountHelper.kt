@@ -28,9 +28,16 @@ import java.util.*
  * retrieve OAuthData and refresh tokens for seamless transitions from one account to the next.
  */
 class AccountHelper(
+    /** Passed on to eventually create RedditClients */
     private val http: NetworkAdapter,
+
+    /** Passed on to eventually create RedditClients */
     private val creds: Credentials,
+
+    /** Passed on to eventually create RedditClients */
     private val tokenStore: TokenStore,
+
+    /** An identifier unique to each device */
     deviceId: UUID
 ) {
     init {
@@ -164,6 +171,7 @@ class AccountHelper(
         return new
     }
 
+    /** */
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
@@ -179,6 +187,7 @@ class AccountHelper(
         return true
     }
 
+    /** */
     override fun hashCode(): Int {
         var result = http.hashCode()
         result = 31 * result + creds.hashCode()

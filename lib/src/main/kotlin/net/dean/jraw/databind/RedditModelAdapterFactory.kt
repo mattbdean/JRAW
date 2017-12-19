@@ -51,6 +51,7 @@ class RedditModelAdapterFactory(
      */
     private val registry: Map<String, Class<*>>
 ) : JsonAdapter.Factory {
+    /** @inheritDoc */
     override fun create(type: Type, annotations: Set<Annotation>, moshi: Moshi): JsonAdapter<*>? {
         // Require @Enveloped
         val delegateAnnotations = Types.nextAnnotations(annotations, Enveloped::class.java) ?: return null
@@ -232,6 +233,7 @@ class RedditModelAdapterFactory(
         }
     }
 
+    /** */
     companion object {
         private inline fun <reified T> expectType(obj: Any?, name: String): T {
             if (obj == null)

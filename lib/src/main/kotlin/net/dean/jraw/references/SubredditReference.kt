@@ -16,6 +16,8 @@ import java.net.URLEncoder
  * Allows the user to perform API actions against a subreddit
  *
  * @constructor Creates a new SubredditReference for the given subreddit. Do not include the "/r/" prefix (e.g. "pics")
+ *
+ * @property subreddit The name of the subreddit without the "/r/" prefix.
  */
 class SubredditReference internal constructor(reddit: RedditClient, val subreddit: String) : AbstractReference(reddit) {
 
@@ -116,6 +118,7 @@ class SubredditReference internal constructor(reddit: RedditClient, val subreddi
     /** Alias to `setSubscribed(false)` */
     fun unsubscribe() = setSubscribed(false)
 
+    /** Subscribes or unsubscribes to this subreddit. Requires an authenticated user. */
     @EndpointImplementation(Endpoint.POST_SUBSCRIBE)
     fun setSubscribed(subscribe: Boolean) {
         val body = mutableMapOf(
@@ -188,6 +191,7 @@ class SubredditReference internal constructor(reddit: RedditClient, val subreddi
         }.deserialize()
     }
 
+    /** Returns a reference to the subreddit's wiki */
     fun wiki() = WikiReference(reddit, subreddit)
 
     /** Fetches the stylesheet of a subreddit. Returned value is CSS. */
@@ -231,6 +235,7 @@ class SubredditReference internal constructor(reddit: RedditClient, val subreddi
         }
     }
 
+    /** */
     companion object {
         private val listOfFlairsType = Types.newParameterizedType(List::class.java, Flair::class.java)
     }

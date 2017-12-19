@@ -28,6 +28,7 @@ import java.io.IOException
  * @see DeferredPersistentTokenStore
  */
 class JsonFileTokenStore @JvmOverloads constructor(
+    /** Where the persisted data is to be saved to/loaded from */
     private val saveLocation: File,
     initialData: Map<String, PersistedAuthData> = mapOf()
 ) : DeferredPersistentTokenStore(initialData) {
@@ -68,6 +69,7 @@ class JsonFileTokenStore @JvmOverloads constructor(
         return adapter.fromJson(Okio.buffer(Okio.source(saveLocation)))!!
     }
 
+    /** */
     companion object {
         private val ADAPTER_TYPE =
             Types.newParameterizedType(Map::class.java, String::class.java, PersistedAuthData::class.java)

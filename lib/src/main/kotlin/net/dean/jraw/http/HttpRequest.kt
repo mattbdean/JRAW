@@ -12,7 +12,7 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 /**
- * Models an HTTP request. Instances are created using the [builder pattern][Builder]
+ * An immutable representation of an HTTP request. Instances are created using the [builder pattern][Builder]
  *
  * ```
  * val request = HttpRequest.Builder()
@@ -26,10 +26,19 @@ import java.util.regex.Pattern
  * ```
  */
 class HttpRequest internal constructor(
+    /** A fully-qualified URL */
     val url: String,
+
+    /** Any additional/custom headers to send */
     val headers: Headers,
+
+    /** HTTP method (GET, POST, etc.) */
     val method: String,
+
+    /** Request payload */
     val body: RequestBody?,
+
+    /** If present, the request will be sent using HTTP Basic Authentication */
     internal val basicAuth: BasicAuthData?
 ) {
     private constructor(b: Builder) : this(
@@ -40,6 +49,7 @@ class HttpRequest internal constructor(
         basicAuth = b.basicAuth
     )
 
+    /** */
     companion object {
         /** This Pattern will match a URI parameter. For example, /api/{param1}/{param2}  */
         // The second escape (for the '}') is required because Oracle's Pattern.compile implementation is different from
@@ -111,6 +121,7 @@ class HttpRequest internal constructor(
         }
     }
 
+    /** Builder pattern for HttpRequest */
     class Builder {
         internal var method: String = "GET"
         internal var headers: Headers.Builder = Headers.Builder()
@@ -131,6 +142,8 @@ class HttpRequest internal constructor(
             this.body = body
             return this
         }
+
+        /** Sets the HTTP method. The given map will be sent as `application/x-www-form-urlencoded` data. */
         fun method(method: String, body: Map<String, String>): Builder {
             this.method = method
             val formBodyBuilder = FormBody.Builder()
@@ -140,15 +153,34 @@ class HttpRequest internal constructor(
             return this
         }
 
+        /** Send a GET */
         fun get() = method("GET")
+
+        /** Send a DELETE */
         fun delete() = method("DELETE")
+
+        /** Send a POST with the given form data */
         fun post(body: Map<String, String>) = method("POST", body)
+
+        /** Send a POST with the given request body */
         fun post(body: RequestBody) = method("POST", body)
+
+        /** Send a PUT with the given form data */
         fun put(body: Map<String, String>) = method("PUT", body)
+
+        /** Send a PUT with the given request body */
         fun put(body: RequestBody) = method("PUT", body)
+
+        /** Send a PATCH with the given form data */
         fun patch(body: Map<String, String>) = method("PATCH", body)
+
+        /** Send a PATCH with the given request body */
         fun patch(body: RequestBody) = method("PATCH", body)
 
+        /**
+         * Set the URL. If specified, this will be used over any other property that specifies part of a URL
+         * (e.g. [path] or [query])
+         */
         fun url(url: String): Builder { this.url = url; return this }
 
         /** Sets a header */
@@ -198,8 +230,10 @@ class HttpRequest internal constructor(
             return this
         }
 
+        /** Sets the query section of the URL. */
         fun query(query: Map<String, String>): Builder { this.query = query; return this }
 
+        /** Creates an HttpRequest from this builder */
         fun build() = HttpRequest(this)
     }
 }

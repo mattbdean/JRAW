@@ -9,6 +9,9 @@ import net.dean.jraw.models.internal.GenericJsonResponse
 import net.dean.jraw.references.CommentsRequest
 import java.io.PrintStream
 
+/**
+ * This class is the base implementation for all CommentNodes
+ */
 abstract class AbstractCommentNode<out T : PublicContribution<*>> protected constructor(
     override val depth: Int,
     override var moreChildren: MoreChildren?,
@@ -17,6 +20,9 @@ abstract class AbstractCommentNode<out T : PublicContribution<*>> protected cons
 ) : CommentNode<T> {
     override val replies: MutableList<CommentNode<Comment>> = mutableListOf()
 
+    /**
+     * Initializes [moreChildren] and [replies].
+     */
     protected fun initReplies(replies: List<NestedIdentifiable>) {
         val (comments, allMoreChildren) = replies.partition { it is Comment }
         if (allMoreChildren.size > 1)
@@ -36,16 +42,17 @@ abstract class AbstractCommentNode<out T : PublicContribution<*>> protected cons
 
     override fun hasMoreChildren(): Boolean = moreChildren != null
 
+    /** */
     override fun iterator(): Iterator<CommentNode<Comment>> = replies.iterator()
 
     override fun totalSize(): Int {
         // walkTree() goes through this node and all child nodes, but we only care about child nodes
-        return walkTree().size - 1
+        return walkTree().count() - 1
     }
 
     override fun visualize(out: PrintStream) {
         val relativeRootDepth = depth
-        for (node in walkTree(TreeTraverser.Order.PRE_ORDER)) {
+        for (node in walkTree(TreeTraversalOrder.PRE_ORDER)) {
             val subj = node.subject
             val indent = "  ".repeat(node.depth - relativeRootDepth)
 
@@ -55,8 +62,8 @@ abstract class AbstractCommentNode<out T : PublicContribution<*>> protected cons
         }
     }
 
-    override fun walkTree(order: TreeTraverser.Order): List<CommentNode<*>> =
-        IterativeTreeTraverser(this).traverse(order)
+    override fun walkTree(order: TreeTraversalOrder): Sequence<CommentNode<*>> =
+        TreeTraverser.traverse(this, order)
 
     override fun loadMore(reddit: RedditClient): FakeRootCommentNode<T> {
         if (moreChildren == null)
@@ -203,7 +210,7 @@ abstract class AbstractCommentNode<out T : PublicContribution<*>> protected cons
             .comments(CommentsRequest(focus = subject.id, sort = settings.sort))
 
         return root
-            .walkTree(TreeTraverser.Order.PRE_ORDER)
+            .walkTree(TreeTraversalOrder.PRE_ORDER)
             // When we specify `focus` in CommentsRequest, reddit only returns that comment and its children. The
             // submission is technically the "root" of the whole tree, but its only child will be a node for the
             // "focus" comment. We only care about the children of the focus comment, so drop the first node
@@ -211,8 +218,10 @@ abstract class AbstractCommentNode<out T : PublicContribution<*>> protected cons
             .drop(2)
             // Map everything to the subject
             .map { it.subject as NestedIdentifiable }
+            .toList()
     }
 
+    /** */
     override fun loadFully(reddit: RedditClient) {
         loadFully(reddit, NO_LIMIT, NO_LIMIT)
     }
@@ -229,7 +238,7 @@ abstract class AbstractCommentNode<out T : PublicContribution<*>> protected cons
         }
 
         // Load the children's comments next
-        for (node in walkTree(TreeTraverser.Order.BREADTH_FIRST)) {
+        for (node in walkTree(TreeTraversalOrder.BREADTH_FIRST)) {
             // Travel breadth first so we can accurately compare depths
             if (depthLimit != NO_LIMIT && node.depth > depthLimit)
                 return
@@ -245,7 +254,7 @@ abstract class AbstractCommentNode<out T : PublicContribution<*>> protected cons
         return "AbstractCommentNode(depth=$depth, body=${subject.body}, replies=List[${replies.size}])"
     }
 
-
+    /** */
     companion object {
         /** The upper limit to how many more comments can be requested at one time. Equal to 100. */
         const val MORE_CHILDREN_LIMIT = 100

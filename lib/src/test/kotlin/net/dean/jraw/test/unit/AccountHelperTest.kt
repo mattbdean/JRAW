@@ -124,7 +124,7 @@ class AccountHelperTest : Spek({
             val helper = AccountHelper(mockAdapter, creds, tokenStore, uuid)
 
             val statefulHelper = helper.switchToNewUser()
-            val url = HttpUrl.parse(statefulHelper.getAuthorizationUrl(scopes = "foo"))!!
+            val url = HttpUrl.parse(statefulHelper.getAuthorizationUrl(scopes = *arrayOf("foo")))!!
             val state = url.queryParameter("state")!!
 
             val mockedRedirectUrl = "https://google.com/?state=$state&code=mocked_code"

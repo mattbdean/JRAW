@@ -11,7 +11,15 @@ import net.dean.jraw.pagination.BarebonesPaginator
 import net.dean.jraw.websocket.ReadOnlyWebSocketHelper
 import okhttp3.WebSocketListener
 
+/**
+ * A reference to a [live thread](https://www.reddit.com/live)
+ *
+ * See [here](https://mattbdean.gitbooks.io/jraw/content/live_threads.html) for more.
+ *
+ * @property id
+ */
 class LiveThreadReference internal constructor(reddit: RedditClient, val id: String) : AbstractReference(reddit) {
+    /** Fetches basic information about this live thread */
     @EndpointImplementation(Endpoint.GET_LIVE_THREAD_ABOUT)
     fun about(): LiveThread {
         return reddit.request {
@@ -26,6 +34,7 @@ class LiveThreadReference internal constructor(reddit: RedditClient, val id: Str
     fun latestUpdates(): BarebonesPaginator.Builder<LiveUpdate> =
         BarebonesPaginator.Builder.create(reddit, "/live/${JrawUtils.urlEncode(id)}")
 
+    /** Connects to the live thread via its WebSocket for updates as soon as they're received */
     fun liveUpdates(listener: WebSocketListener): ReadOnlyWebSocketHelper {
         val url = about().websocketUrl ?: throw IllegalStateException("Live thread is not live")
         return ReadOnlyWebSocketHelper(reddit.websocket(url, listener))

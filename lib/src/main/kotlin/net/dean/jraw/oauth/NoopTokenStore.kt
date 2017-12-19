@@ -2,6 +2,7 @@ package net.dean.jraw.oauth
 
 import net.dean.jraw.models.OAuthData
 
+/** A TokenStore that does nothing */
 class NoopTokenStore : TokenStore {
     override fun storeLatest(username: String, data: OAuthData) {}
     override fun storeRefreshToken(username: String, token: String) {}

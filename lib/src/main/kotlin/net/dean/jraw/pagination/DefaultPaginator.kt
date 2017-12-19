@@ -5,11 +5,21 @@ import net.dean.jraw.http.HttpRequest
 import net.dean.jraw.models.Sorting
 import net.dean.jraw.models.TimePeriod
 
+/**
+ * This Paginator is for paginated API endpoints that support not only limits, but sortings and time periods
+ * (e.g. /top).
+ */
 open class DefaultPaginator<T> private constructor(
     reddit: RedditClient,
     baseUrl: String,
-    val sortingAlsoInPath: Boolean,
+
+    /** See [Builder.sortingAlsoInPath] */
+    private val sortingAlsoInPath: Boolean,
+
+    /** See [Builder.timePeriod] */
     val timePeriod: TimePeriod,
+
+    /** See [Builder.sorting] */
     val sorting: Sorting,
     limit: Int,
     clazz: Class<T>
@@ -36,6 +46,7 @@ open class DefaultPaginator<T> private constructor(
             .build()
     }
 
+    /** Builder pattern for this class */
     open class Builder<T, S : Sorting>(
         reddit: RedditClient,
         baseUrl: String,
@@ -46,21 +57,26 @@ open class DefaultPaginator<T> private constructor(
          * other endpoints 404 when given a path like this, in which case the sorting will need to be specified via
          * query parameter only
          */
-        protected var sortingAlsoInPath: Boolean = false,
+        private var sortingAlsoInPath: Boolean = false,
         clazz: Class<T>
     ) : Paginator.Builder<T>(reddit, baseUrl, clazz) {
-        protected var limit: Int = Paginator.DEFAULT_LIMIT
-        protected var timePeriod: TimePeriod = Paginator.DEFAULT_TIME_PERIOD
-        protected var sorting: S? = null
+        private var limit: Int = Paginator.DEFAULT_LIMIT
+        private var timePeriod: TimePeriod = Paginator.DEFAULT_TIME_PERIOD
+        private var sorting: S? = null
 
+        /** Sets the limit */
         fun limit(limit: Int): Builder<T, S> { this.limit = limit; return this }
+        /** Sets the sorting */
         fun sorting(sorting: S): Builder<T, S> { this.sorting = sorting; return this }
+        /** Sets the time period */
         fun timePeriod(timePeriod: TimePeriod): Builder<T, S> { this.timePeriod = timePeriod; return this }
 
         override fun build(): DefaultPaginator<T> =
             DefaultPaginator(reddit, baseUrl, sortingAlsoInPath, timePeriod, sorting ?: Paginator.DEFAULT_SORTING, limit, clazz)
 
+        /** */
         companion object {
+            /** Convenience factory function using reified generics */
             inline fun <reified T, S : Sorting> create(reddit: RedditClient, baseUrl: String, sortingAlsoInPath: Boolean = false): Builder<T, S> {
                 return Builder(reddit, baseUrl, sortingAlsoInPath, T::class.java)
             }

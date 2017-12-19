@@ -9,5 +9,7 @@ package net.dean.jraw
 annotation class EndpointImplementation(
     /** A list of endpoints this method handles */
     vararg val endpoints: Endpoint,
+
+    /** What kind of call this method will be performing. Defaults to [MethodType.NON_BLOCKING_CALL]. */
     val type: MethodType = MethodType.BLOCKING_CALL
 )

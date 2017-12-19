@@ -8,10 +8,7 @@ import net.dean.jraw.test.NoopNetworkAdapter
 import net.dean.jraw.test.TestConfig.reddit
 import net.dean.jraw.test.expectException
 import net.dean.jraw.test.newMockRedditClient
-import net.dean.jraw.tree.AbstractCommentNode
-import net.dean.jraw.tree.CommentNode
-import net.dean.jraw.tree.RootCommentNode
-import net.dean.jraw.tree.TreeTraverser
+import net.dean.jraw.tree.*
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
@@ -73,13 +70,10 @@ class CommentNodeTest : Spek({
         return values
     }
 
-    fun <T : CommentNode<*>> List<T>.mapToBody(): List<String?> {
-        return map { it.subject.body }
-    }
+    fun <T : CommentNode<*>> List<T>.mapToBody() = map { it.subject.body }
+    fun <T : CommentNode<*>> Sequence<T>.mapToBody() = map { it.subject.body }.toList()
 
-    fun MoreChildren.copy(): MoreChildren {
-        return MoreChildren.create(fullName, id, parentFullName, childrenIds)
-    }
+    fun MoreChildren.copy(): MoreChildren = MoreChildren.create(fullName, id, parentFullName, childrenIds)
 
     it("should provide an Iterator that iterates over direct children") {
         a.iterator()
@@ -90,25 +84,25 @@ class CommentNodeTest : Spek({
 
     describe("walkTree") {
         it("should correctly iterate pre-order") {
-            a.walkTree(TreeTraverser.Order.PRE_ORDER)
+            a.walkTree(TreeTraversalOrder.PRE_ORDER)
                 .mapToBody()
                 .should.equal("a b c f g h d i".split(" "))
         }
 
         it("should correctly iterate post-order") {
-            a.walkTree(TreeTraverser.Order.POST_ORDER)
+            a.walkTree(TreeTraversalOrder.POST_ORDER)
                 .mapToBody()
                 .should.equal("b f g h c i d a".split(" "))
         }
 
         it("should correctly iterate breadth-first") {
-            a.walkTree(TreeTraverser.Order.BREADTH_FIRST)
+            a.walkTree(TreeTraversalOrder.BREADTH_FIRST)
                 .mapToBody()
                 .should.equal("a b c d f g h i".split(" "))
         }
 
         it("should default to pre-order") {
-            a.walkTree().mapToBody().should.equal(a.walkTree(TreeTraverser.Order.PRE_ORDER).mapToBody())
+            a.walkTree().mapToBody().should.equal(a.walkTree(TreeTraversalOrder.PRE_ORDER).mapToBody())
         }
     }
 
@@ -182,8 +176,8 @@ class CommentNodeTest : Spek({
             val flatTree = fakeRoot.walkTree()
 
             // The first element in the flat tree should represent the original comment
-            flatTree[0].subject.fullName.should.equal(threadContinuation.subject.fullName)
-            flatTree[0].depth.should.equal(threadContinuation.depth)
+            flatTree.first().subject.fullName.should.equal(threadContinuation.subject.fullName)
+            flatTree.first().depth.should.equal(threadContinuation.depth)
 
             // All nodes after the first should be children (directly or indirectly)
             for (node in flatTree.drop(1)) {
@@ -196,17 +190,17 @@ class CommentNodeTest : Spek({
         it("should do nothing when MoreChildren is null") {
             simpleTree.moreChildren.should.be.`null`
 
-            val original = simpleTree.walkTree()
+            val original = simpleTree.walkTree().toList()
 
             // Use a mock RedditClient so we can assert no network requests are sent
             val fakeReddit = newMockRedditClient(NoopNetworkAdapter)
             simpleTree.replaceMore(fakeReddit)
-            simpleTree.walkTree().should.equal(original)
+            simpleTree.walkTree().toList().should.equal(original)
         }
 
         it("should alter the tree when called") {
             val tree = reddit.submission("92dd8").comments()
-            val prevFlatTree = tree.walkTree()
+            val prevFlatTree = tree.walkTree().toList()
             // Create a copy of the data
             val prevMoreChildren = tree.moreChildren!!.copy()
             val prevSize = tree.totalSize()

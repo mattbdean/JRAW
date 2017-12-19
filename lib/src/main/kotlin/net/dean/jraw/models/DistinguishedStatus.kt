@@ -1,5 +1,6 @@
 package net.dean.jraw.models
 
+/** A list of possible statuses an account can have */
 enum class DistinguishedStatus {
     /** Represents a normal user */
     NORMAL,
