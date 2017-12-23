@@ -131,7 +131,7 @@ abstract class Paginator<T> protected constructor(
         const val DEFAULT_LIMIT = 25
 
         /** The sorting reddit uses when none is specified */
-        @JvmField val DEFAULT_SORTING: Sorting = GeneralSort.NEW
+        @JvmField val DEFAULT_SORTING: Sorting = GeneralSort.HOT
 
         /** The time period reddit uses when none is specified */
         @JvmField val DEFAULT_TIME_PERIOD = TimePeriod.DAY
