@@ -72,7 +72,10 @@ open class SearchPaginator private constructor(
         private val baseUrlSuffix = "/search"
 
         fun inSubreddits(reddit: RedditClient, vararg subreddits: String): Builder {
-            val prefix = if (subreddits.isEmpty()) "" else subreddits.joinToString(prefix = "/r/", separator = "+")
+            if (subreddits.isEmpty())
+                return everywhere(reddit)
+
+            val prefix = subreddits.joinToString(prefix = "/r/", separator = "+")
             return Builder(reddit, prefix + baseUrlSuffix)
         }
 
