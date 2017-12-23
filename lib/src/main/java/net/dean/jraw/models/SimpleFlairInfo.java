@@ -20,7 +20,6 @@ import java.util.List;
  * @see <a href="https://www.reddit.com/dev/api/#POST_api_flaircsv">Reddit API - POST /api/flaircsv</a>
  */
 @AutoValue
-@RedditModel(enveloped = false)
 public abstract class SimpleFlairInfo {
 
     /** Username */

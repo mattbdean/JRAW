@@ -167,21 +167,6 @@ class RedditModelAdapterFactory(
                         // "data"
                         listing = readListing(reader)
                     }
-                    2 -> {
-                        // "users"
-                        val children: MutableList<Any> = ArrayList()
-
-                        reader.beginArray()
-                        while (reader.hasNext())
-                            children.add(childrenDelegate.fromJson(reader)!!)
-                        reader.endArray()
-                        var next: String? = null
-                        if (reader.hasNext() && reader.nextName() == "next") {
-                            next = if (reader.peek() == JsonReader.Token.NULL) reader.nextNull() else reader.nextString()
-                        }
-
-                        listing = Listing.create(next, children)
-                    }
                     -1 -> {
                         // Unknown, skip it
                         reader.nextName()
@@ -228,7 +213,7 @@ class RedditModelAdapterFactory(
         }
 
         companion object {
-            private val envelopeOptions = JsonReader.Options.of("kind", "data", "users")
+            private val envelopeOptions = JsonReader.Options.of("kind", "data")
             private val listingOptions = JsonReader.Options.of("after", "children")
         }
     }
