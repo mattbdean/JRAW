@@ -362,8 +362,12 @@ class RedditClient internal constructor(
     }
 
     /**
-     * Creates a BarebonesPaginator.Builder that will iterate over gilded contributions in the given subreddits when
-     * built. If no subreddits are given, contributions will be from any subreddit.
+     * Creates a [BarebonesPaginator.Builder] that will iterate over gilded public
+     * contributions (i.e. posts and comments) in the given subreddits when built.
+     *
+     * If no subreddits are given, contributions will be from logged-in user's frontpage subreddits.
+     *
+     * @see PublicContribution
      */
     fun gildedContributions(vararg subreddits: String): BarebonesPaginator.Builder<PublicContribution<*>> {
         val prefix = if (subreddits.isEmpty()) "" else "/r/" + subreddits.joinToString("+")

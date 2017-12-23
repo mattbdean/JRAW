@@ -17,6 +17,7 @@ import java.util.List;
  *
  * @see net.dean.jraw.references.SubredditReference#flairList()
  * @see net.dean.jraw.references.SubredditReference#patchFlairList(List<SimpleFlairInfo>)
+ * @see <a href="https://www.reddit.com/dev/api/#POST_api_flaircsv">Reddit API - POST /api/flaircsv</a>
  */
 @AutoValue
 @RedditModel(enveloped = false)
