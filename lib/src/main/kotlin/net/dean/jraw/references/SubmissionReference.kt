@@ -49,7 +49,8 @@ class SubmissionReference internal constructor(reddit: RedditClient, id: String)
 
         val data: SubmissionData = reddit.request {
             it.endpoint(Endpoint.GET_COMMENTS_ARTICLE, null, id)
-                .query(query) }.deserialize()
+                .query(query)
+        }.deserialize()
         return RootCommentNode(data.submissions[0], data.comments, settings)
     }
 

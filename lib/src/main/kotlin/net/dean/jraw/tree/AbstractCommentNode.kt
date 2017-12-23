@@ -177,9 +177,8 @@ abstract class AbstractCommentNode<out T : PublicContribution<*>> protected cons
                         settings = this.settings
                     )
 
-                    // Sometimes same nodes are added more than once
-                    // Instead of not processing the duplicates we remove the old ones
-                    // In order to not break the traversal algorithm
+                    // Sometimes same nodes are added more than once. Instead of not processing the duplicates we remove
+                    // the old ones in order to not break the traversal algorithm
                     currentRoot.replies.removeIf { it.subject == newNode.subject }
 
                     currentRoot.replies.add(newNode)

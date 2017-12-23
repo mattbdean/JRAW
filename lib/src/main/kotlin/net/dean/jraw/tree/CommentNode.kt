@@ -73,7 +73,7 @@ interface CommentNode<out T : PublicContribution<*>> : Iterable<CommentNode<*>> 
     fun hasMoreChildren(): Boolean
 
     /**
-     * Organizes this comment tree into a List whose order is determined by the given [TreeTraverser.TreeTraversalOrder]. For example,
+     * Organizes this comment tree into a Sequence whose order is determined by the given [TreeTraversalOrder]. For example,
      * reddit uses pre-order traversal to generate the website's comments section.
      */
     fun walkTree(order: TreeTraversalOrder = TreeTraversalOrder.PRE_ORDER): Sequence<CommentNode<*>>
@@ -102,7 +102,7 @@ interface CommentNode<out T : PublicContribution<*>> : Iterable<CommentNode<*>> 
     /**
      * Fully expands the comment tree below this node. This can be a very expensive call depending on how large the
      * thread is, as every [MoreChildren] requires its own HTTP request. It is therefore advised to use
-     * [loadFully] (RedditClient, int, int) instead to restrict the number of HTTP requests sent.
+     * overloaded [loadFully] with depthLimit and/or requestLimit instead to restrict the number of HTTP requests sent.
      */
     fun loadFully(reddit: RedditClient)
 
