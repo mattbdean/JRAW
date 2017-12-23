@@ -326,8 +326,12 @@ class RedditClient internal constructor(
     fun randomSubreddit() = subreddit("random")
 
     /**
-     * Creates a PublicContributionReference (either SubmissionReference or CommentReference).
-     * The expected input is provided in format KIND_ID (e.g. t3_6afe8u or t1_2bad4u)
+     * Creates either [SubmissionReference] or [CommentReference] depending on provided fullname.
+     * Fullname format is defined as ${kind}_${id} (e.g. t3_6afe8u or t1_2bad4u).
+     *
+     * @see KindConstants
+     * @throws IllegalArgumentException if the provided fullname doesn't match that format or the
+     * prefix is not one of [KindConstants.COMMENT] or [KindConstants.SUBREDDIT]
      */
     fun publicContribution(fullname: String): PublicContributionReference {
         val parts = fullname.split('_')
