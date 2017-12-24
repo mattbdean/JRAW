@@ -330,8 +330,8 @@ class RedditClient internal constructor(
      * Fullname format is defined as ${kind}_${id} (e.g. t3_6afe8u or t1_2bad4u).
      *
      * @see KindConstants
-     * @throws IllegalArgumentException if the provided fullname doesn't match that format or the
-     * prefix is not one of [KindConstants.COMMENT] or [KindConstants.SUBREDDIT]
+     * @throws IllegalArgumentException if the provided fullname doesn't match that format or the prefix is not
+     * one of [KindConstants.COMMENT] or [KindConstants.SUBREDDIT]
      */
     fun publicContribution(fullname: String): PublicContributionReference {
         val parts = fullname.split('_')
@@ -366,8 +366,8 @@ class RedditClient internal constructor(
     }
 
     /**
-     * Creates a [BarebonesPaginator.Builder] that will iterate over gilded public
-     * contributions (i.e. posts and comments) in the given subreddits when built.
+     * Creates a [BarebonesPaginator.Builder] that will iterate over gilded public contributions (i.e. posts and
+     * comments) in the given subreddits when built.
      *
      * If no subreddits are given, contributions will be from logged-in user's frontpage subreddits.
      *

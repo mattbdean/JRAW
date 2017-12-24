@@ -10,8 +10,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 /**
- * SimpleFlairInfo contains basic information about user's flair
- * on a subreddit: username, flair css class, flair text.
+ * SimpleFlairInfo contains basic information about user's flair on a subreddit: username, flair css class, flair text.
  *
  * Used by endpoints with `modflair` scope (require moderator priveleges).
  *
