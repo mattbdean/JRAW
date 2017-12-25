@@ -7,6 +7,7 @@ import net.dean.jraw.databind.Enveloped
 import net.dean.jraw.models.*
 import net.dean.jraw.models.internal.GenericJsonResponse
 import net.dean.jraw.references.CommentsRequest
+import net.dean.jraw.tree.CommentNode.Companion.NO_LIMIT
 import java.io.PrintStream
 
 /**
@@ -220,11 +221,6 @@ abstract class AbstractCommentNode<out T : PublicContribution<*>> protected cons
             .toList()
     }
 
-    /** */
-    override fun loadFully(reddit: RedditClient) {
-        loadFully(reddit, NO_LIMIT, NO_LIMIT)
-    }
-
     override fun loadFully(reddit: RedditClient, depthLimit: Int, requestLimit: Int) {
         var requests = 0
         if (depthLimit < NO_LIMIT || requestLimit < NO_LIMIT)
@@ -258,6 +254,5 @@ abstract class AbstractCommentNode<out T : PublicContribution<*>> protected cons
         /** The upper limit to how many more comments can be requested at one time. Equal to 100. */
         const val MORE_CHILDREN_LIMIT = 100
         private val moreChildrenLock = Any()
-        const val NO_LIMIT = -1
     }
 }

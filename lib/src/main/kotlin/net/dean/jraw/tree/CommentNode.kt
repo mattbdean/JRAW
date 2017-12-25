@@ -100,13 +100,6 @@ interface CommentNode<out T : PublicContribution<*>> : Iterable<CommentNode<*>> 
     fun replaceMore(reddit: RedditClient): List<CommentNode<*>>
 
     /**
-     * Fully expands the comment tree below this node. This can be a very expensive call depending on how large the
-     * thread is, as every [MoreChildren] requires its own HTTP request. It is therefore advised to use
-     * overloaded [loadFully] with depthLimit and/or requestLimit instead to restrict the number of HTTP requests sent.
-     */
-    fun loadFully(reddit: RedditClient)
-
-    /**
      * Fully expands the comment tree below this node by finding all [MoreChildren] objects belonging to and below
      * this node and loading them into the tree using [replaceMore]. Be aware that without
      * setting a depth or request limit this may be a very costly operation, requiring potentially hundreds of requests
@@ -116,6 +109,9 @@ interface CommentNode<out T : PublicContribution<*>> : Iterable<CommentNode<*>> 
      * @param requestLimit The maximum amount of requests to send. There will be one request for every MoreChildren
      * object found. A value of [-1] will disable the limit.
      */
-    fun loadFully(reddit: RedditClient, depthLimit: Int, requestLimit: Int)
+    fun loadFully(reddit: RedditClient, depthLimit: Int = NO_LIMIT, requestLimit: Int = NO_LIMIT)
 
+    companion object {
+        const val NO_LIMIT = -1
+    }
 }
