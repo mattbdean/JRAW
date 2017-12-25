@@ -20,14 +20,8 @@ sealed class FlairReference(
     /** Returns a reference to the subreddit where this flair is being observed/modified */
     fun subreddit(): SubredditReference = reddit.subreddit(subreddit)
 
-    /** Removes the current flair for the subject. Equivalent to `update("", null)`. */
+    /** Removes the current flair for the subject. Equivalent to `updateToTemplate("", null)`. */
     fun remove() = updateToTemplate(templateId = "")
-
-    /**
-     * Updates the flair to the given template ID. If the flair template is editable, the default text will be used. See
-     * the other `updateTo` for more.
-     */
-    fun updateToTemplate(templateId: String) = updateToTemplate(templateId, null)
 
     /**
      * Sets the flair to appear next to the username or submission in question. Pass an empty string for `templateId` or
@@ -52,16 +46,14 @@ sealed class FlairReference(
      * @see SubredditReference.userFlairOptions
      */
     @EndpointImplementation(Endpoint.POST_SELECTFLAIR)
-    abstract fun updateToTemplate(templateId: String, text: String?)
+    abstract fun updateToTemplate(templateId: String, text: String = "")
 
     /**
      * Similar to [updateToTemplate] but sets the CSS class directly instead of using a template.
      * The authenticated user must be a moderator of the [subreddit].
      */
     @EndpointImplementation(Endpoint.POST_FLAIR)
-    abstract fun updateToCssClass(cssClass: String, text: String?)
-
-    fun updateToCssClass(cssClass: String) = updateToCssClass(cssClass, null)
+    abstract fun updateToCssClass(cssClass: String, text: String = "")
 
     /** */
     override fun toString(): String {
@@ -88,26 +80,26 @@ sealed class FlairReference(
 /** A reference to the flair of a submission in a particular subreddit */
 class SubmissionFlairReference internal constructor(reddit: RedditClient, subreddit: String, subject: String) : FlairReference(reddit, subreddit, subject) {
 
-    override fun updateToTemplate(templateId: String, text: String?) {
+    override fun updateToTemplate(templateId: String, text: String) {
         reddit.request {
             it.endpoint(Endpoint.POST_SELECTFLAIR, subreddit)
                 .post(mapOf(
                     "api_type" to "json",
                     "flair_template_id" to templateId,
                     "link" to KindConstants.SUBMISSION + "_" + subject,
-                    "text" to (text ?: "")
+                    "text" to text
                 ))
         }
     }
 
-    override fun updateToCssClass(cssClass: String, text: String?) {
+    override fun updateToCssClass(cssClass: String, text: String) {
         reddit.request {
             it.endpoint(Endpoint.POST_FLAIR, subreddit)
                 .post(mapOf(
                     "api_type" to "json",
                     "css_class" to cssClass,
                     "link" to KindConstants.SUBMISSION + "_" + subject,
-                    "text" to (text ?: "")
+                    "text" to text
                 ))
         }
     }
@@ -144,26 +136,26 @@ sealed class UserFlairReference(
         return selector.current
     }
 
-    override fun updateToTemplate(templateId: String, text: String?) {
+    override fun updateToTemplate(templateId: String, text: String) {
         reddit.request {
             it.endpoint(Endpoint.POST_SELECTFLAIR, subreddit)
                 .post(mapOf(
                     "api_type" to "json",
                     "flair_template_id" to templateId,
                     "name" to subject,
-                    "text" to (text ?: "")
+                    "text" to text
                 ))
         }
     }
 
-    override fun updateToCssClass(cssClass: String, text: String?) {
+    override fun updateToCssClass(cssClass: String, text: String) {
         reddit.request {
             it.endpoint(Endpoint.POST_FLAIR, subreddit)
                 .post(mapOf(
                     "api_type" to "json",
                     "css_class" to cssClass,
                     "name" to subject,
-                    "text" to (text ?: "")
+                    "text" to text
                 ))
         }
     }

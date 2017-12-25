@@ -23,7 +23,7 @@ final class Basics {
             Flair newFlair = userFlairOptions.get(0);
 
             // Update the flair on the website
-            subreddit.selfUserFlair().updateToTemplate(newFlair.getId());
+            subreddit.selfUserFlair().updateToTemplate(newFlair.getId(), "");
         }
     }
 
