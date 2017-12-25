@@ -20,7 +20,7 @@ sealed class FlairReference(
     /** Returns a reference to the subreddit where this flair is being observed/modified */
     fun subreddit(): SubredditReference = reddit.subreddit(subreddit)
 
-    /** Removes the current flair for the subject. Equivalent to `updateToTemplate("", null)`. */
+    /** Removes the current flair for the subject. Equivalent to `updateToTemplate("")`. */
     fun remove() = updateToTemplate(templateId = "")
 
     /**

@@ -12,6 +12,7 @@ import net.dean.jraw.test.ignoreRateLimit
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
+import org.jetbrains.spek.api.dsl.on
 import java.util.*
 
 class SubmissionReferenceTest : Spek({
@@ -58,11 +59,11 @@ class SubmissionReferenceTest : Spek({
         }
     }
 
-    // TODO create the submission first since reddit does not ratelimit comments to submissions made by the user that
-    //      created the thread
     describe("reply") {
+        assume({ SharedObjects.submittedSelfPost != null }, description = "should have a self-post created") {}
+
         it("should return the newly created Comment") {
-            val submissionId = "6ib8fx"
+            val submissionId = SharedObjects.submittedSelfPost!!.id
             val text = "Comment made at ${Date()}"
             ignoreRateLimit {
                 val comment = reddit.submission(submissionId).reply(text)
@@ -75,6 +76,32 @@ class SubmissionReferenceTest : Spek({
     describe("edit") {
         assume({ SharedObjects.submittedSelfPost != null }, description = "should update the self-post text") {
             SharedObjects.submittedSelfPost!!.edit("Updated at ${Date()}")
+        }
+    }
+
+    describe("remove") {
+        assume({ SharedObjects.submittedSelfPost != null }, description = "should have a self-post created") {}
+
+        on("submission removal") {
+            SharedObjects.submittedSelfPost!!.remove()
+
+            it("should have an effect on a model") {
+                SharedObjects.submittedSelfPost!!.inspect().isRemoved.should.be.`true`
+            }
+        }
+    }
+
+    describe("approve") {
+        assume({ SharedObjects.submittedSelfPost != null }, description = "should have a self-post created and removed") {
+            SharedObjects.submittedSelfPost!!.inspect().isRemoved.should.be.`true`
+        }
+
+        on("submission approval") {
+            SharedObjects.submittedSelfPost!!.approve()
+
+            it("should have an effect on a model") {
+                SharedObjects.submittedSelfPost!!.inspect().isRemoved.should.be.`false`
+            }
         }
     }
 

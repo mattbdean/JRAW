@@ -223,8 +223,8 @@ class SubredditReference internal constructor(reddit: RedditClient, val subreddi
     fun flairList() = BarebonesPaginator.Builder.create<SimpleFlairInfo>(reddit, "/r/$subreddit/api/flairlist")
 
     /** Updates users flairs on the subreddit in bulk (up to 100 rows, the rest are ignored by Reddit).
-    *   Requires mod priveleges on the subreddit.
-    */
+     *  Requires mod priveleges on the subreddit.
+     */
     @EndpointImplementation(Endpoint.POST_FLAIRCSV)
     fun patchFlairList(patch: List<SimpleFlairInfo>) {
         reddit.request {

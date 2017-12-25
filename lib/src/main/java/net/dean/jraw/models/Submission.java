@@ -142,6 +142,11 @@ public abstract class Submission implements PublicContribution<SubmissionReferen
      */
     public abstract boolean isVisited();
 
+    /**
+     * If the submission has been removed by the moderators or got caught in the spam-filter.
+     */
+    public abstract boolean isRemoved();
+
     @Override
     @NotNull
     @Json(name = "likes") public abstract VoteDirection getVote();

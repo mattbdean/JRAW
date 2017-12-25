@@ -155,8 +155,16 @@ abstract class PublicContributionReference internal constructor(reddit: RedditCl
         }
     }
 
+    /**
+     * Remove the contribution as a subreddit moderator. Requires mod priveleges on the subreddit of the contribution.
+     *
+     * @param spam Whether spam is the reason for the removal. Trains the subreddit spamfilter to be critical of
+     * similar contributions in the future
+     *
+     * See [What is the difference between spam and remove buttons on reported posts?](https://www.reddit.com/r/modhelp/comments/3vp76c/whats_the_difference_between_spam_and_remove_on/)
+     */
     @EndpointImplementation(Endpoint.POST_REMOVE)
-    fun remove(spam: Boolean) {
+    @JvmOverloads fun remove(spam: Boolean = false) {
         reddit.request {
             it.endpoint(Endpoint.POST_REMOVE)
                 .post(mapOf(
@@ -166,5 +174,16 @@ abstract class PublicContributionReference internal constructor(reddit: RedditCl
         }
     }
 
-    fun remove() = remove(false)
+    /**
+     * Approve the contribution as a subreddit moderator. Requires mod priveleges on the subreddit of the contribution.
+     */
+    @EndpointImplementation(Endpoint.POST_APPROVE)
+    fun approve() {
+        reddit.request {
+            it.endpoint(Endpoint.POST_APPROVE)
+                .post(mapOf(
+                    "id" to fullName
+                ))
+        }
+    }
 }
