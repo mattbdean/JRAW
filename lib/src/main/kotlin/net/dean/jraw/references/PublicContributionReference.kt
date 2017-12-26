@@ -134,6 +134,18 @@ abstract class PublicContributionReference internal constructor(reddit: RedditCl
         }
     }
 
+    /**
+     * Distinguish a comment or submission author with a sigil. Logged in user must have the priveleges to use the
+     * supplied [DistinguishedStatus], i.e. moderator priveleges for [DistinguishedStatus.MODERATOR] and admin
+     * priveleges for [DistinguishedStatus.ADMIN] and so on.
+     *
+     * @param sticky Flag for comments, which will stick the distingushed comment to the top of all comments threads.
+     * If a comment is marked sticky, it will override any other stickied comment for that post (as only one comment may
+     * be stickied at a time.) Only top-level comments may be stickied. Requires moderator privileges. Can only be used
+     * with [DistinguishedStatus.MODERATOR] or [DistinguishedStatus.ADMIN].
+     *
+     * See [Reddit API documentation](https://www.reddit.com/dev/api/#POST_api_distinguish)
+     */
     @EndpointImplementation(Endpoint.POST_DISTINGUISH)
     fun distinguish(how: DistinguishedStatus, sticky: Boolean) {
         val howOption = when(how) {
@@ -143,6 +155,10 @@ abstract class PublicContributionReference internal constructor(reddit: RedditCl
             DistinguishedStatus.SPECIAL -> "special"
             DistinguishedStatus.GOLD -> throw IllegalArgumentException("Cannot manually distinguish a contribution with a gold distinguish status")
         }
+        if (sticky && this is SubmissionReference)
+            throw IllegalArgumentException("Flag 'sticky' can only be set for comments, not submissions")
+        if (sticky && how == DistinguishedStatus.NORMAL)
+            throw IllegalArgumentException("Cannot use flag 'sticky' with DistinguishedStatus.NORMAL")
 
         reddit.request {
             it.endpoint(Endpoint.POST_DISTINGUISH)

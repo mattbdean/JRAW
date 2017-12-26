@@ -4,11 +4,8 @@ import com.winterbe.expekt.should
 import net.dean.jraw.models.*
 import net.dean.jraw.references.CommentsRequest
 import net.dean.jraw.references.SubmissionReference
-import net.dean.jraw.test.SharedObjects
+import net.dean.jraw.test.*
 import net.dean.jraw.test.TestConfig.reddit
-import net.dean.jraw.test.assume
-import net.dean.jraw.test.expectDescendingScore
-import net.dean.jraw.test.ignoreRateLimit
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
@@ -101,6 +98,24 @@ class SubmissionReferenceTest : Spek({
 
             it("should have an effect on a model") {
                 SharedObjects.submittedSelfPost!!.inspect().isRemoved.should.be.`false`
+            }
+        }
+    }
+
+    describe("distinguish") {
+        assume({ SharedObjects.submittedSelfPost != null }, description = "should have a self-post created and not distinguished") {
+            SharedObjects.submittedSelfPost!!.inspect().distinguished.should.equal(DistinguishedStatus.NORMAL)
+        }
+        it("should distinguish the shared submission") {
+            SharedObjects.submittedSelfPost!!.distinguish(DistinguishedStatus.MODERATOR, false)
+        }
+        it("should have an effect on the model") {
+            SharedObjects.submittedSelfPost!!.inspect().distinguished.should.equal(DistinguishedStatus.MODERATOR)
+        }
+
+        it("should fail preemptively when trying to sticky submission") {
+            expectException(IllegalArgumentException::class) {
+                SharedObjects.submittedSelfPost!!.distinguish(DistinguishedStatus.MODERATOR, true)
             }
         }
     }
