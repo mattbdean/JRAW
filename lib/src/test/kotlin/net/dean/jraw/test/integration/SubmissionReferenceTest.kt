@@ -65,7 +65,7 @@ class SubmissionReferenceTest : Spek({
     //      created the thread
     describe("reply") {
         it("should return the newly created Comment") {
-            val submissionId = "6ib8fx"
+            val submissionId = "7mao7y"
             val text = "Comment made at ${Date()}"
             ignoreRateLimit {
                 val comment = reddit.submission(submissionId).reply(text)
