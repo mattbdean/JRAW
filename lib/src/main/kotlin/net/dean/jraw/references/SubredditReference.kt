@@ -202,10 +202,15 @@ class SubredditReference internal constructor(reddit: RedditClient, val subreddi
         }.body
     }
 
-    /** Updates the stylesheet of a subreddit. */
+    /**
+     * Updates the stylesheet of a subreddit. Requires mod priveleges on the subreddit.
+     *
+     * @param stylesheet New stylesheet of the subreddit, completely replaces the pre-existing one
+     * @param reason Reason for the update to be displayed in the stylesheet change history
+     * */
     @EndpointImplementation(Endpoint.POST_SUBREDDIT_STYLESHEET)
-    fun updateStylesheet(stylesheet: String, reason: String): HttpResponse {
-        return reddit.request {
+    fun updateStylesheet(stylesheet: String, reason: String) {
+        reddit.request {
             it.endpoint(Endpoint.POST_SUBREDDIT_STYLESHEET, subreddit)
                 .post(mapOf(
                     "api_type" to "json",

@@ -21,6 +21,7 @@ import java.util.*
 object SharedObjects {
     // should be a subreddit with moderator rights
     val submittedSelfPostSubreddit = "jraw_testing2"
+
     val submittedSelfPost: SubmissionReference? by lazyRateLimited {
         reddit
             .subreddit(submittedSelfPostSubreddit)

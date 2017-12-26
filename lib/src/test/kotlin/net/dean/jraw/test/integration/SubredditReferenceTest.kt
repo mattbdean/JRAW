@@ -74,9 +74,19 @@ class SubredditReferenceTest : Spek({
         }
     }
 
-    describe("stylesheet") {
+    describe("getStylesheet") {
         it("should return text") {
             reddit.subreddit("RocketLeague").stylesheet().should.have.length.above(0)
+        }
+    }
+
+    describe("updateStylesheet") {
+        val moddedSubreddit = reddit.subreddit("jraw_testing2")
+        val newStylesheet = "#test${Random().nextInt()}{color:red}"
+
+        it("should update the modded subreddit stylesheet") {
+            moddedSubreddit.updateStylesheet(newStylesheet, "JRAW integration test")
+            moddedSubreddit.stylesheet().should.equal(newStylesheet)
         }
     }
 })
