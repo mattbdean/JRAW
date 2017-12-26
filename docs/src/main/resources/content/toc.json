@@ -3,6 +3,7 @@
     { "file": "quickstart" },
     { "file": "basics", "title": "The Basics" },
     { "file": "oauth2", "title": "OAuth2" },
+    { "file": "android" },
     { "file": "pagination" },
     { "file": "live_threads", "title": "Live Threads" },
     { "file": "ratelimiting" },
