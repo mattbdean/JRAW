@@ -4,8 +4,12 @@ import com.grosner.kpoet.*
 import java.io.File
 
 class EnumCreator(val endpoints: List<ParsedEndpoint>, val indent: Int = 4) {
-    fun writeTo(out: File) = createJavaFile().writeTo(out)
-    fun writeTo(out: Appendable) = createJavaFile().writeTo(out)
+    fun writeTo(out: File): File       { createJavaFile().writeTo(out); return absoluteOutput(out) }
+    fun writeTo(out: Appendable): File { createJavaFile().writeTo(out); return File(".") }
+
+    private fun absoluteOutput(srcRoot: File): File {
+        return File(srcRoot, RELATIVE_OUTPUT_FILE)
+    }
 
     private fun createJavaFile() =
         // Create the file definition belonging to package net.dean.jraw and configuring the indent using spaces
@@ -88,7 +92,7 @@ class EnumCreator(val endpoints: List<ParsedEndpoint>, val indent: Int = 4) {
         private fun link(displayText: String, url: String) =
             "<a href=\"$url\">$displayText</a>"
 
-        private fun code(text: String) =
+        fun code(text: String) =
             "{@code $text}"
     }
 }

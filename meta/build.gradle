@@ -26,7 +26,8 @@ task update(type: JavaExec, dependsOn: classes) {
     args = [
         "--enum", generatedJavaDir,
         "--md-overview", file("../ENDPOINTS.md").absolutePath,
-        "--readme-badge", file("../README.md").absolutePath
+        "--readme-badge", file("../README.md").absolutePath,
+        "--version", generatedJavaDir.absolutePath + ";" + project.version
     ]
 }
 
