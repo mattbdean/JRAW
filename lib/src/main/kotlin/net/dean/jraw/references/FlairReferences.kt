@@ -21,7 +21,7 @@ sealed class FlairReference(
     fun subreddit(): SubredditReference = reddit.subreddit(subreddit)
 
     /** Removes the current flair for the subject. Equivalent to `updateToTemplate("")`. */
-    fun remove() = updateToTemplate(templateId = "")
+    fun remove() = updateToTemplate(templateId = "", text = "")
 
     /**
      * Sets the flair to appear next to the username or submission in question. Pass an empty string for `templateId` or
@@ -46,14 +46,14 @@ sealed class FlairReference(
      * @see SubredditReference.userFlairOptions
      */
     @EndpointImplementation(Endpoint.POST_SELECTFLAIR)
-    abstract fun updateToTemplate(templateId: String, text: String = "")
+    abstract fun updateToTemplate(templateId: String, text: String)
 
     /**
      * Similar to [updateToTemplate] but sets the CSS class directly instead of using a template.
      * The authenticated user must be a moderator of the [subreddit].
      */
     @EndpointImplementation(Endpoint.POST_FLAIR)
-    abstract fun updateToCssClass(cssClass: String, text: String = "")
+    abstract fun updateToCssClass(cssClass: String, text: String)
 
     /** */
     override fun toString(): String {
