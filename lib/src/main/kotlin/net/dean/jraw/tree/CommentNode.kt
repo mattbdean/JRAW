@@ -111,6 +111,13 @@ interface CommentNode<out T : PublicContribution<*>> : Iterable<CommentNode<*>> 
      */
     fun loadFully(reddit: RedditClient, depthLimit: Int = NO_LIMIT, requestLimit: Int = NO_LIMIT)
 
+    /**
+    * Fully expands the comment tree below this node. This can be a very expensive call depending on how large the
+    * thread is, as every [MoreChildren] requires its own HTTP request. It is therefore advised to use
+    * overloaded [loadFully] with depthLimit and/or requestLimit instead to restrict the number of HTTP requests sent.
+    */
+    fun loadFully(reddit: RedditClient) = loadFully(reddit, NO_LIMIT, NO_LIMIT)
+
     companion object {
         const val NO_LIMIT = -1
     }
