@@ -39,6 +39,8 @@ JRAW handles steps 1, 3, and 4 for you. It's your job to show the user the autho
 
 If your app is using userless mode, you can use automatic authentication instead!
 
+See the [Android](android.md) page for more.
+
 ## Renewing an Access Token
 
 Access tokens are what enables us to send requests to `oauth.reddit.com` successfully. These expire one hour after they were requested. JRAW is capable of refreshing access tokens automatically if it has the right data.

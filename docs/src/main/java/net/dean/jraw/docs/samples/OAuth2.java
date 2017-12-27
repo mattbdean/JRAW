@@ -32,15 +32,15 @@ final class OAuth2 {
         // This class mirrors the Android WebView API fairly closely
         final MockWebView browser = new MockWebView();
 
-        // 2. Show the user the authorization URL
-        browser.loadUrl(authUrl);
-
         // Listen for pages starting to load
         browser.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageStarted(String url) {
                 // 3. Listen for the final redirect URL.
                 if (helper.isFinalRedirectUrl(url)) {
+                    // No need to continue loading, we've already got all the required information
+                    browser.stopLoading();
+
                     // 4. Verify the data and request our tokens. Note that onUserChallenge
                     // performs an HTTP request so Android apps will have to use an AsyncTask
                     // or Observable.
@@ -51,6 +51,10 @@ final class OAuth2 {
                 }
             }
         });
+
+        // 2. Show the user the authorization URL. This has to go after setWebViewClient because
+        // otherwise it'll open up the default browser instead of loading data in the WebView.
+        browser.loadUrl(authUrl);
     }
 
     @CodeSample
@@ -141,6 +145,7 @@ final class OAuth2 {
     private static final class MockWebView {
         void loadUrl(String url) {}
         void setWebViewClient(WebViewClient listener) {}
+        void stopLoading() {}
     }
 
     private interface WebViewClient {

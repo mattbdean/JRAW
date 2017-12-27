@@ -62,11 +62,10 @@ class SubmissionReferenceTest : Spek({
         it("should return the newly created Comment") {
             val submissionId = SharedObjects.submittedSelfPost!!.id
             val text = "Comment made at ${Date()}"
-            ignoreRateLimit {
-                val comment = reddit.submission(submissionId).reply(text)
-                comment.body.should.equal(text)
-                comment.submissionFullName.should.equal(KindConstants.SUBMISSION + "_$submissionId")
-            }
+
+            val comment = reddit.submission(submissionId).reply(text)
+            comment.body.should.equal(text)
+            comment.submissionFullName.should.equal(KindConstants.SUBMISSION + "_$submissionId")
         }
     }
 

@@ -7,7 +7,7 @@ object ReadmeBadgeUpdater {
         val implemented = allEndpoints.filter { EndpointAnalyzer.getFor(it) != null }
         val percent = Math.round((implemented.size.toFloat() / allEndpoints.size.toFloat()) * 100)
 
-        var replaced: Boolean = false
+        var replaced = false
 
         readme.writeText(readme.readLines().map {
             if (it.startsWith("[![API coverage]")) {
