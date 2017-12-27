@@ -67,4 +67,35 @@ class HttpRequestTest: Spek({
         // endpoint() doesn't change the HTTP method
         r.method.should.equal("GET")
     }
+
+    it("endpoint with subreddit sets the url correctly") {
+        val r = HttpRequest.Builder()
+            .endpoint(Endpoint.GET_HOT, "pics")
+            .build()
+
+        r.url.should.equal("https://oauth.reddit.com/r/pics/hot")
+    }
+
+    it("endpoint with no subreddit sets the url correctly") {
+        val r = HttpRequest.Builder()
+            .endpoint(Endpoint.GET_HOT, null)
+            .build()
+
+        r.url.should.equal("https://oauth.reddit.com/hot")
+    }
+
+    it("endpoint throws exception on null parameter") {
+        expectException(IllegalArgumentException::class) {
+            HttpRequest.Builder()
+                .endpoint(Endpoint.GET_COMMENTS_ARTICLE, "pics", null)
+        }
+    }
+
+    it("builder throws exception if optional subreddit `null` is not supplied") {
+        expectException(IllegalArgumentException::class) {
+            HttpRequest.Builder()
+                .endpoint(Endpoint.GET_HOT)
+                .build()
+        }
+    }
 })

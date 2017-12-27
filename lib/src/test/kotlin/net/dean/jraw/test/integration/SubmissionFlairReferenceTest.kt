@@ -23,7 +23,7 @@ class SubmissionFlairReferenceTest : Spek({
     describe("updateTo") {
         assume({ SharedObjects.submittedSelfPost != null }, "should update the flair for a given submission") {
             val template = flairOptions.first()
-            ref.updateToTemplate(template.id)
+            ref.updateToTemplate(template.id, "")
             ref.submission().inspect().linkFlairText.should.equal(template.text)
         }
 

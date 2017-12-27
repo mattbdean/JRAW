@@ -46,7 +46,7 @@ class SelfUserFlairReferenceTest : Spek({
     describe("updateTo") {
         it("should update the flair") {
             val newFlair = flairOptions.first()
-            flairRef.updateToTemplate(newFlair.id)
+            flairRef.updateToTemplate(newFlair.id, "")
             flairRef.current().id.should.equal(newFlair.id)
         }
 
@@ -65,7 +65,7 @@ class SelfUserFlairReferenceTest : Spek({
         it("should remove the flair") {
             if (!flairRef.current().isPresent)
                 // Make sure we have some flair set already
-                flairRef.updateToTemplate(flairOptions.first().id)
+                flairRef.updateToTemplate(flairOptions.first().id, "")
 
             flairRef.current().isPresent.should.be.`true`
             flairRef.remove()
