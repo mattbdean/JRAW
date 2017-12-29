@@ -1,5 +1,9 @@
+import net.dean.jraw.gradle.GitbookPush
+import net.dean.jraw.gradle.VersionCommitTask
+
 apply plugin: 'org.jetbrains.dokka'
 apply plugin: 'net.ltgt.apt-idea'
+apply plugin: 'com.jfrog.bintray'
 apply plugin: 'maven'
 
 ext.projectName = 'JRAW'
@@ -71,13 +75,56 @@ jar {
 }
 
 // When JitPack builds, it runs the install task (from the maven plugin) to install all artifacts listed here to the
-// local repository. List the sources and Javadoc jar here to make it available to JitPack users.
+// local repository. List the sources and Javadoc jar here to make it available to JitPack users. The bintrayUpload task
+// also uses this to find which jars to upload on release.
 artifacts {
     archives sourcesJar
     archives javadocJar
 }
 
-task jars(dependsOn: [javadocJar, sourcesJar])
+bintray {
+    user = hasProperty("bintrayUser") ? bintrayUser : null
+    key = hasProperty("bintrayKey") ? bintrayKey : null
+    pkg {
+        repo = 'maven'
+        name = projectName
+        licenses = ['MIT']
+        vcsUrl = 'https://github.com/mattbdean/JRAW.git'
+        issueTrackerUrl = 'https://github.com/mattbdean/JRAW/issues'
+        githubRepo = 'mattbdean/JRAW'
+
+        version {
+            name = "v${project.version}"
+            released = new Date()
+            vcsTag = "v${project.version}"
+        }
+    }
+
+    // Upload sources, Javadoc, and the compiled jars
+    configurations = ['archives']
+}
+
+// Pushes any new changes to GitBook and creates a version tag for the new version
+task pushReleaseDocs(type: GitbookPush, dependsOn: [':docs:buildSite']) {
+    username hasProperty("gitbookUsername") ? gitbookUsername : null
+    password hasProperty("gitbookPassword") ? gitbookPassword : null
+    repository "https://git.gitbook.com/mattbdean/jraw.git"
+    compiledBookDir rootProject.project('docs').file("build/docs").absoluteFile
+    createVersionTag true
+}
+
+// Creates the commit for a new version of the library. Also updates metadata files
+task createVersionTask(type: VersionCommitTask, dependsOn: [':meta:update'])
+
+// The real power of this task comes from its dependencies
+task release(dependsOn: [clean, check, createVersionTask, pushReleaseDocs, bintrayUpload])
+
+if (!hasProperty("authorizeRelease") || property("authorizeRelease") != project.version) {
+    // Disable the release tasks unless authorizeRelease contains the correct string
+    def val = hasProperty("authorizeRelease") ? property("authorizeRelease") : "(missing)"
+    [release, createVersionTask, pushReleaseDocs, bintrayUpload]*.enabled = false
+    println("Release disabled, expected property 'authorizeRelease' to equal ${project.version}, was ${val}")
+}
 
 kotlin {
     experimental {

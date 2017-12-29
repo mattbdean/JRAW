@@ -17,7 +17,9 @@ import java.nio.file.Files
  * 1. Identify the latest JRAW commit
  * 2. Clone the repository to a temporary directory
  * 3. Copy all files from `compiledBookDir` to the cloned repo
- * 4. If there are any changes, commit and push
+ * 4. If there are any changes, create a commit for it
+ * 5. If createVersionTag is true, creates a tag for the project's version
+ * 6. If steps 4 or 5 produced anything, push to remote
  */
 class GitbookPush extends DefaultTask {
     /** Username to use when cloning the repository. */
@@ -32,25 +34,38 @@ class GitbookPush extends DefaultTask {
     /** The directory where the compiled book is located */
     File compiledBookDir
 
+    /** If true, creates a tag signifying the creation of a new JRAW version */
+    boolean createVersionTag = false
+
     private Git git
 
     @TaskAction
-    void push() {
+    void pushToRemote() {
         String shortName = getLatestCommit().name().substring(0, 8)
         String commitMessage = "Update documentation from commit ${shortName}\n\n" +
             "See https://github.com/mattbdean/JRAW/commit/${shortName}"
 
-        this.git = cloneRepo()
+        this.git = GitbookHelper.clone(repository, username, password)
+        log("Cloned repository $repository to ${git.repository.directory.absolutePath}")
+
         // git.repository.directory is the ".git" dir, we want the actual source root
         copyBook(git.repository.directory.parentFile)
 
-        if (!hasNewContent()) {
+        def hasNew = hasNewContent()
+
+        if (!hasNew && !createVersionTag) {
             // nothing to do, skip immediately to cleanup
             log("No new content, skipping")
             throw new StopActionException()
         }
 
-        commitAndPush(commitMessage)
+        if (createVersionTag)
+            GitbookHelper.createTag(git, "v${project.version}")
+
+        if (hasNew)
+            commit(commitMessage)
+
+        push()
     }
 
     @TaskAction
@@ -66,17 +81,6 @@ class GitbookPush extends DefaultTask {
             .first()
     }
 
-    private Git cloneRepo() {
-        File tempDir = File.createTempDir("jraw_tmp_", "_docs")
-        def git = Git.cloneRepository()
-            .setURI(repository)
-            .setCredentialsProvider(new UsernamePasswordCredentialsProvider(username, password))
-            .setDirectory(tempDir)
-            .call()
-        log("Cloned repository $repository to ${git.repository.directory.absolutePath}")
-        return git
-    }
-
     private void copyBook(File dest) {
         // Recursively copy all files from the compiled book directory to the given destination
         Files.walkFileTree(compiledBookDir.toPath(), new CopyDirVisitor(compiledBookDir.toPath(), dest.toPath()))
@@ -87,7 +91,7 @@ class GitbookPush extends DefaultTask {
         return !this.git.status().call().clean
     }
 
-    private void commitAndPush(String commitMessage) {
+    private void commit(String commitMessage) {
         this.git.add()
             .addFilepattern(".")
             .call()
@@ -96,7 +100,9 @@ class GitbookPush extends DefaultTask {
             .setMessage(commitMessage)
             .call()
         log("Created commit with message '$commitMessage'")
+    }
 
+    private void push() {
         this.git.push()
             .setCredentialsProvider(new UsernamePasswordCredentialsProvider(username, password))
             .call()

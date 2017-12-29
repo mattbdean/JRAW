@@ -88,3 +88,40 @@ Tests are written with [Spek](http://spekframework.org/) and assertions are done
 
 In order to get the integration tests of the `docs` module to pass, you'll need [gitbook-cli](https://github.com/GitbookIO/gitbook-cli) installed globally. You shouldn't have to worry about this, as most of the contributions are likely to be towards the core library and not its accessory modules.
 
+## Releasing
+
+Define these variables in `gradle.properties`:
+
+```properties
+# Go to gitbook.com -> Account Settings -> Applications/Tokens to get an API key
+gitbookUsername=<gitbook username>
+gitbookPassword=<gitbook API key or password>
+
+# Go to bintray.com -> Edit Profile -> API Key to get your account's API key
+bintrayUser=<bintray username>
+bintrayKey=<bintray API key>
+
+# If this property doesn't match the target release, all release-related tasks
+# will be disabled
+authorizeRelease=<version to release>
+```
+
+Update the version in the root [build.gradle](https://github.com/mattbdean/JRAW/blob/master/build.gradle) and then run the `:lib:release` task to perform a release.
+
+```
+$ ./gradlew release --no-daemon --console plain
+```
+
+This task will:
+
+ 1. Clean everything and run `:lib`'s tests
+ 2. Run `:meta:update` (see [here](https://github.com/mattbdean/JRAW/tree/master/meta) for what this does)
+ 3. Creates a commit for the version. This commit must be pushed manually later.
+ 4. Updates the GitBook site and creates a new tag in the Git repo.
+ 5. Uploads artifacts (sources, Javadoc, and compiled) to [Bintray](https://bintray.com/thatjavanerd/maven/JRAW)
+
+After running the task:
+
+ 1. Push the newly-created commit
+ 2. Create a [GitHub release](https://github.com/mattbdean/JRAW/releases/new) targeting that commit. Attach all jars generated in `lib/build/libs`.
+ 3. Publish the uploaded jars on [Bintray](https://bintray.com/thatjavanerd/maven/JRAW)
