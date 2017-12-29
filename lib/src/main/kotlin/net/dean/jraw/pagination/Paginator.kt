@@ -6,6 +6,7 @@ import net.dean.jraw.JrawUtils
 import net.dean.jraw.RedditClient
 import net.dean.jraw.databind.Enveloped
 import net.dean.jraw.http.HttpRequest
+import net.dean.jraw.models.GeneralSort
 import net.dean.jraw.models.Listing
 import net.dean.jraw.models.Sorting
 import net.dean.jraw.models.TimePeriod
@@ -14,7 +15,7 @@ import net.dean.jraw.models.TimePeriod
  * A Paginator is used to iterate over API endpoints that return a Listing. Paginator uses the builder pattern and once
  * built, its settings cannot be modified.
  */
-abstract class Paginator<T, out B : Paginator.Builder<T>> protected constructor(
+abstract class Paginator<T> protected constructor(
     /** The client to use to request data */
     val reddit: RedditClient,
 
@@ -32,7 +33,7 @@ abstract class Paginator<T, out B : Paginator.Builder<T>> protected constructor(
     val limit: Int,
 
     /** The type of data that is contained in each Listing */
-    protected val clazz: Class<T>
+    clazz: Class<T>
 ) : RedditIterable<T> {
     // Internal, modifiable properties
     private var _current: Listing<T>? = null
@@ -47,8 +48,7 @@ abstract class Paginator<T, out B : Paginator.Builder<T>> protected constructor(
         adapter = JrawUtils.moshi.adapter(type, Enveloped::class.java)
 
         // Make sure we don't have a trailing slash
-        val path = baseUrl.trim()
-        this.baseUrl = if (path.endsWith("/")) path.substring(0, path.length - 2) else path
+        this.baseUrl = baseUrl.removeSuffix("/")
     }
 
     // Publicly available property is simply an unmodifiable alias to the private properties
@@ -96,9 +96,6 @@ abstract class Paginator<T, out B : Paginator.Builder<T>> protected constructor(
 
     override fun accumulateMerged(maxPages: Int): List<T> = accumulate(maxPages).flatten()
 
-    /** Constructs a new [Builder] with the current pagination settings */
-    abstract fun newBuilder(): B
-
     /** Creates an HTTP request to fetch the next page of data, if any. */
     abstract protected fun createNextRequest(): HttpRequest
 
@@ -119,7 +116,7 @@ abstract class Paginator<T, out B : Paginator.Builder<T>> protected constructor(
         protected val clazz: Class<T>
     ) {
         /** Creates a new Paginator */
-        abstract fun build(): Paginator<T, Builder<T>>
+        abstract fun build(): Paginator<T>
     }
 
     /** */
@@ -134,7 +131,7 @@ abstract class Paginator<T, out B : Paginator.Builder<T>> protected constructor(
         const val DEFAULT_LIMIT = 25
 
         /** The sorting reddit uses when none is specified */
-        @JvmField val DEFAULT_SORTING = Sorting.NEW
+        @JvmField val DEFAULT_SORTING: Sorting = GeneralSort.HOT
 
         /** The time period reddit uses when none is specified */
         @JvmField val DEFAULT_TIME_PERIOD = TimePeriod.DAY

@@ -52,7 +52,7 @@ object MarkdownOverviewCreator {
                 for (e in sorted) {
                     table.addRow(
                         Code(e.method),
-                        Link(Code(e.path), e.redditDocLink),
+                        Link(Code(markdownPath(e)), e.redditDocLink),
                         implString(e))
                 }
 
@@ -62,6 +62,8 @@ object MarkdownOverviewCreator {
             toString()
         }
     }
+
+    internal fun markdownPath(e: ParsedEndpoint) = (if (e.subredditPrefix) "[/r/{subreddit}]" else "") + e.path
 
     fun StringBuilder.heading(text: String, level: Int = 1) = block(Heading(text, level))
 

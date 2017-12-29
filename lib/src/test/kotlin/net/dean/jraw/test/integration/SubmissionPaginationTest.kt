@@ -1,7 +1,7 @@
 package net.dean.jraw.test.integration
 
 import com.winterbe.expekt.should
-import net.dean.jraw.models.Sorting
+import net.dean.jraw.models.SubredditSort
 import net.dean.jraw.models.TimePeriod
 import net.dean.jraw.pagination.Paginator
 import net.dean.jraw.test.TestConfig.reddit
@@ -16,14 +16,14 @@ class SubmissionPaginationTest : Spek({
             // Just make sure deserialization it doesn't fail for now
             val builder = reddit.subreddit("pics").posts()
                 .limit(Paginator.RECOMMENDED_MAX_LIMIT)
-                .sorting(Sorting.TOP)
+                .sorting(SubredditSort.TOP)
                 .timePeriod(TimePeriod.ALL)
 
             builder.baseUrl.should.equal("/r/pics")
 
             val ref = builder.build()
             ref.limit.should.equal(Paginator.RECOMMENDED_MAX_LIMIT)
-            ref.sorting.should.equal(Sorting.TOP)
+            ref.sorting.should.equal(SubredditSort.TOP)
             ref.timePeriod.should.equal(TimePeriod.ALL)
         }
     }
@@ -60,7 +60,7 @@ class SubmissionPaginationTest : Spek({
             val limit = 10
 
             val sub = reddit.subreddit("pics").posts()
-                .sorting(Sorting.TOP)
+                .sorting(SubredditSort.TOP)
                 .timePeriod(TimePeriod.ALL)
                 .limit(limit)
                 .build()
@@ -92,18 +92,4 @@ class SubmissionPaginationTest : Spek({
 
     }
 
-    describe("newBuilder()") {
-        it("should create a Builder with the same settings as the original Reference") {
-            val ref = reddit.subreddit("foo").posts()
-                .limit(5)
-                .sorting(Sorting.CONTROVERSIAL)
-                .timePeriod(TimePeriod.ALL)
-                .build()
-
-            val new = ref.newBuilder().build()
-            new.limit.should.equal(5)
-            new.sorting.should.equal(Sorting.CONTROVERSIAL)
-            new.timePeriod.should.equal(TimePeriod.ALL)
-        }
-    }
 })

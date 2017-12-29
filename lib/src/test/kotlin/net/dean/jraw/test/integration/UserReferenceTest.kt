@@ -3,7 +3,7 @@ package net.dean.jraw.test.integration
 import com.winterbe.expekt.should
 import net.dean.jraw.ApiException
 import net.dean.jraw.models.MultiredditPatch
-import net.dean.jraw.models.Sorting
+import net.dean.jraw.models.UserHistorySort
 import net.dean.jraw.models.TimePeriod
 import net.dean.jraw.references.UserReference
 import net.dean.jraw.test.CredentialsUtil
@@ -51,7 +51,7 @@ class UserReferenceTest : Spek({
                 .limit(5)
 
             if (where in sortable)
-                builder = builder.sorting(Sorting.TOP)
+                builder = builder.sorting(UserHistorySort.TOP)
                 .timePeriod(TimePeriod.ALL)
 
             val models = builder.build().next()

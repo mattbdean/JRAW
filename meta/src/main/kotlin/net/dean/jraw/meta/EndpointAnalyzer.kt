@@ -2,7 +2,7 @@ package net.dean.jraw.meta
 
 import javassist.ClassPool
 import net.dean.jraw.EndpointImplementation
-import org.reflections.Reflections
+import net.dean.jraw.meta.MarkdownOverviewCreator.markdownPath
 import org.reflections.scanners.MethodAnnotationsScanner
 import org.reflections.util.ClasspathHelper
 import org.reflections.util.ConfigurationBuilder
@@ -11,14 +11,11 @@ import java.lang.reflect.Method
 /**
  * Singleton that creates instances of [EndpointMeta] using reflection and bytecode manipulation libraries Reflections
  * and javassist.
- *
- * Note that [EndpointImplementation] methods **may not have default parameters** because of the way the Reflections
- * library works.
  */
 object EndpointAnalyzer {
     /** A lazily-initialized set of methods that implement [EndpointImplementation] */
     private val implementations: Set<Method> by lazy {
-        val reflections = Reflections(ConfigurationBuilder()
+        val reflections = KotlinReflections(ConfigurationBuilder()
             .setUrls(ClasspathHelper.forPackage("net.dean.jraw"))
             .setScanners(MethodAnnotationsScanner()))
 
@@ -34,7 +31,7 @@ object EndpointAnalyzer {
     fun getFor(e: ParsedEndpoint): EndpointMeta? {
         val method = implementations.firstOrNull {
             val other = it.getAnnotation(EndpointImplementation::class.java).endpoints
-            other.find { it.method == e.method && it.path == e.path } != null
+            other.find { it.method == e.method && it.path == markdownPath(e) } != null
         } ?: return null
 
 

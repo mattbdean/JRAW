@@ -6,7 +6,7 @@ import net.dean.jraw.http.NetworkAdapter;
 import net.dean.jraw.http.OkHttpNetworkAdapter;
 import net.dean.jraw.http.UserAgent;
 import net.dean.jraw.models.Listing;
-import net.dean.jraw.models.Sorting;
+import net.dean.jraw.models.SubredditSort;
 import net.dean.jraw.models.Submission;
 import net.dean.jraw.models.TimePeriod;
 import net.dean.jraw.oauth.Credentials;
@@ -29,7 +29,7 @@ public final class ScriptExample {
         // Browse through the top posts of the last month, requesting as much data as possible per request
         DefaultPaginator<Submission> paginator = reddit.frontPage()
             .limit(Paginator.RECOMMENDED_MAX_LIMIT)
-            .sorting(Sorting.TOP)
+            .sorting(SubredditSort.TOP)
             .timePeriod(TimePeriod.MONTH)
             .build();
 

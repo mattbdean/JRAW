@@ -1,20 +1,15 @@
 package net.dean.jraw.test.integration
 
 import com.winterbe.expekt.should
-import net.dean.jraw.models.CommentSort
-import net.dean.jraw.models.KindConstants
-import net.dean.jraw.models.Sorting
-import net.dean.jraw.models.VoteDirection
+import net.dean.jraw.models.*
 import net.dean.jraw.references.CommentsRequest
 import net.dean.jraw.references.SubmissionReference
-import net.dean.jraw.test.SharedObjects
+import net.dean.jraw.test.*
 import net.dean.jraw.test.TestConfig.reddit
-import net.dean.jraw.test.assume
-import net.dean.jraw.test.expectDescendingScore
-import net.dean.jraw.test.ignoreRateLimit
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
+import org.jetbrains.spek.api.dsl.on
 import java.util.*
 
 class SubmissionReferenceTest : Spek({
@@ -26,7 +21,7 @@ class SubmissionReferenceTest : Spek({
             // Grab a reference to the newest post on /r/jraw_testing2
             val voteRef = reddit.subreddit("jraw_testing2")
                 .posts()
-                .sorting(Sorting.NEW)
+                .sorting(SubredditSort.NEW)
                 .build()
                 .next()
                 .first()
@@ -61,23 +56,66 @@ class SubmissionReferenceTest : Spek({
         }
     }
 
-    // TODO create the submission first since reddit does not ratelimit comments to submissions made by the user that
-    //      created the thread
     describe("reply") {
+        assume({ SharedObjects.submittedSelfPost != null }, description = "should have a self-post created") {}
+
         it("should return the newly created Comment") {
-            val submissionId = "7mao7y"
+            val submissionId = SharedObjects.submittedSelfPost!!.id
             val text = "Comment made at ${Date()}"
-            ignoreRateLimit {
-                val comment = reddit.submission(submissionId).reply(text)
-                comment.body.should.equal(text)
-                comment.submissionFullName.should.equal(KindConstants.SUBMISSION + "_$submissionId")
-            }
+
+            val comment = reddit.submission(submissionId).reply(text)
+            comment.body.should.equal(text)
+            comment.submissionFullName.should.equal(KindConstants.SUBMISSION + "_$submissionId")
         }
     }
 
     describe("edit") {
         assume({ SharedObjects.submittedSelfPost != null }, description = "should update the self-post text") {
             SharedObjects.submittedSelfPost!!.edit("Updated at ${Date()}")
+        }
+    }
+
+    describe("remove") {
+        assume({ SharedObjects.submittedSelfPost != null }, description = "should have a self-post created") {}
+
+        on("submission removal") {
+            SharedObjects.submittedSelfPost!!.remove()
+
+            it("should have an effect on a model") {
+                SharedObjects.submittedSelfPost!!.inspect().isRemoved.should.be.`true`
+            }
+        }
+    }
+
+    describe("approve") {
+        assume({ SharedObjects.submittedSelfPost != null }, description = "should have a self-post created and removed") {
+            SharedObjects.submittedSelfPost!!.inspect().isRemoved.should.be.`true`
+        }
+
+        on("submission approval") {
+            SharedObjects.submittedSelfPost!!.approve()
+
+            it("should have an effect on a model") {
+                SharedObjects.submittedSelfPost!!.inspect().isRemoved.should.be.`false`
+            }
+        }
+    }
+
+    describe("distinguish") {
+        assume({ SharedObjects.submittedSelfPost != null }, description = "should have a self-post created and not distinguished") {
+            SharedObjects.submittedSelfPost!!.inspect().distinguished.should.equal(DistinguishedStatus.NORMAL)
+        }
+        it("should distinguish the shared submission") {
+            SharedObjects.submittedSelfPost!!.distinguish(DistinguishedStatus.MODERATOR, false)
+        }
+        it("should have an effect on the model") {
+            SharedObjects.submittedSelfPost!!.inspect().distinguished.should.equal(DistinguishedStatus.MODERATOR)
+        }
+
+        it("should fail preemptively when trying to sticky submission") {
+            expectException(IllegalArgumentException::class) {
+                SharedObjects.submittedSelfPost!!.distinguish(DistinguishedStatus.MODERATOR, true)
+            }
         }
     }
 

@@ -2,7 +2,7 @@ package net.dean.jraw.test.integration
 
 import com.winterbe.expekt.should
 import net.dean.jraw.RedditClient
-import net.dean.jraw.models.Sorting
+import net.dean.jraw.models.SubredditSort
 import net.dean.jraw.models.Submission
 import net.dean.jraw.models.Subreddit
 import net.dean.jraw.test.TestConfig
@@ -18,7 +18,7 @@ typealias DeserializeTest = (RedditClient) -> List<Any>
  * without a user because some properties only exist in a specific state.
  */
 class DeserializationTest : Spek({
-    fun subredditPosts(reddit: RedditClient, sr: String) = reddit.subreddit(sr).posts().sorting(Sorting.HOT).build().next()
+    fun subredditPosts(reddit: RedditClient, sr: String) = reddit.subreddit(sr).posts().sorting(SubredditSort.HOT).build().next()
     // Map a an array of functions that uses Moshi to deserialize JSON into an instance of that class
     val testCases = mapOf<KClass<*>, Array<DeserializeTest>>(
         Subreddit::class to arrayOf<DeserializeTest>(

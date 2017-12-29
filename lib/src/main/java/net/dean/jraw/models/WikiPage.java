@@ -14,7 +14,8 @@ import java.util.Date;
 @RedditModel
 @AutoValue
 public abstract class WikiPage {
-    abstract boolean getMayRevise();
+
+    @Json(name = "may_revise") abstract boolean getMayRevise();
 
     /** True if there is an authenticated user and that user has the privileges to edit this wiki page */
     public final boolean mayRevise() {

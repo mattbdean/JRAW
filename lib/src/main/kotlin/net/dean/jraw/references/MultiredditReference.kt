@@ -8,6 +8,7 @@ import net.dean.jraw.RedditClient
 import net.dean.jraw.models.Multireddit
 import net.dean.jraw.models.MultiredditPatch
 import net.dean.jraw.models.Submission
+import net.dean.jraw.models.SubredditSort
 import net.dean.jraw.models.internal.LabeledMultiDescription
 import net.dean.jraw.models.internal.SubredditElement
 import net.dean.jraw.pagination.DefaultPaginator
@@ -145,7 +146,7 @@ class MultiredditReference internal constructor(reddit: RedditClient, val userna
     }
 
     /** Returns a Paginator Builder to iterate over posts in this multireddit */
-    fun posts(): DefaultPaginator.Builder<Submission> =
+    fun posts(): DefaultPaginator.Builder<Submission, SubredditSort> =
         DefaultPaginator.Builder.create(reddit, multiPath, sortingAlsoInPath = true)
 
     /** */

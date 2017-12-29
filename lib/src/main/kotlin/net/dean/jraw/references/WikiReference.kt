@@ -17,7 +17,7 @@ class WikiReference internal constructor(reddit: RedditClient, val subreddit: St
     /** Fetches the names of all accessible wiki pages. */
     @EndpointImplementation(Endpoint.GET_WIKI_PAGES)
     fun pages(): List<String> {
-        val res = reddit.request { it.path("/r/${JrawUtils.urlEncode(subreddit)}/wiki/pages") }
+        val res = reddit.request { it.endpoint(Endpoint.GET_WIKI_PAGES, subreddit) }
         val adapter = JrawUtils.moshi.adapter<RedditModelEnvelope<List<String>>>(pagesType)
         return res.deserializeWith(adapter).data
     }
@@ -26,8 +26,21 @@ class WikiReference internal constructor(reddit: RedditClient, val subreddit: St
     @EndpointImplementation(Endpoint.GET_WIKI_PAGE)
     fun page(name: String): WikiPage {
         return reddit.request {
-            it.path("/r/${JrawUtils.urlEncode(subreddit)}/wiki/${JrawUtils.urlEncode(name)}")
+            it.endpoint(Endpoint.GET_WIKI_PAGE, subreddit, name)
         }.deserializeEnveloped()
+    }
+
+    /** Updates a given wiki page */
+    @EndpointImplementation(Endpoint.POST_WIKI_EDIT)
+    fun update(page: String, content: String, reason: String) {
+        reddit.request {
+            it.endpoint(Endpoint.POST_WIKI_EDIT, subreddit)
+                .post(mapOf(
+                    "content" to content,
+                    "page" to page,
+                    "reason" to reason
+                ))
+        }
     }
 
     /** Returns a Paginator.Builder that iterates through all revisions of all wiki pages */

@@ -2,7 +2,9 @@ package net.dean.jraw.references
 
 import net.dean.jraw.*
 import net.dean.jraw.databind.Enveloped
+import net.dean.jraw.http.HttpResponse
 import net.dean.jraw.models.Comment
+import net.dean.jraw.models.DistinguishedStatus
 import net.dean.jraw.models.VoteDirection
 import net.dean.jraw.models.internal.GenericJsonResponse
 
@@ -128,6 +130,75 @@ abstract class PublicContributionReference internal constructor(reddit: RedditCl
                 .post(mapOf(
                     "id" to fullName,
                     "state" to sendReplies.toString()
+                ))
+        }
+    }
+
+    /**
+     * Distinguish a comment or submission author with a sigil. Logged in user must have the priveleges to use the
+     * supplied [DistinguishedStatus], i.e. moderator priveleges for [DistinguishedStatus.MODERATOR] and admin
+     * priveleges for [DistinguishedStatus.ADMIN] and so on.
+     *
+     * @param sticky Flag for comments, which will stick the distingushed comment to the top of all comments threads.
+     * If a comment is marked sticky, it will override any other stickied comment for that post (as only one comment may
+     * be stickied at a time.) Only top-level comments may be stickied. Requires moderator privileges. Can only be used
+     * with [DistinguishedStatus.MODERATOR] or [DistinguishedStatus.ADMIN].
+     *
+     * See [Reddit API documentation](https://www.reddit.com/dev/api/#POST_api_distinguish)
+     */
+    @EndpointImplementation(Endpoint.POST_DISTINGUISH)
+    fun distinguish(how: DistinguishedStatus, sticky: Boolean) {
+        val howOption = when(how) {
+            DistinguishedStatus.NORMAL -> "no"
+            DistinguishedStatus.MODERATOR -> "yes"
+            DistinguishedStatus.ADMIN -> "admin"
+            DistinguishedStatus.SPECIAL -> "special"
+            DistinguishedStatus.GOLD -> throw IllegalArgumentException("Cannot manually distinguish a contribution with a gold distinguish status")
+        }
+        if (sticky && this is SubmissionReference)
+            throw IllegalArgumentException("Flag 'sticky' can only be set for comments, not submissions")
+        if (sticky && how == DistinguishedStatus.NORMAL)
+            throw IllegalArgumentException("Cannot use flag 'sticky' with DistinguishedStatus.NORMAL")
+
+        reddit.request {
+            it.endpoint(Endpoint.POST_DISTINGUISH)
+                .post(mapOf(
+                    "api_type" to "json",
+                    "how" to howOption,
+                    "id" to fullName,
+                    "sticky" to sticky.toString()
+                ))
+        }
+    }
+
+    /**
+     * Remove the contribution as a subreddit moderator. Requires mod priveleges on the subreddit of the contribution.
+     *
+     * @param spam Whether spam is the reason for the removal. Trains the subreddit spamfilter to be critical of
+     * similar contributions in the future
+     *
+     * See [What is the difference between spam and remove buttons on reported posts?](https://www.reddit.com/r/modhelp/comments/3vp76c/whats_the_difference_between_spam_and_remove_on/)
+     */
+    @EndpointImplementation(Endpoint.POST_REMOVE)
+    @JvmOverloads fun remove(spam: Boolean = false) {
+        reddit.request {
+            it.endpoint(Endpoint.POST_REMOVE)
+                .post(mapOf(
+                    "id" to fullName,
+                    "spam" to spam.toString()
+                ))
+        }
+    }
+
+    /**
+     * Approve the contribution as a subreddit moderator. Requires mod priveleges on the subreddit of the contribution.
+     */
+    @EndpointImplementation(Endpoint.POST_APPROVE)
+    fun approve() {
+        reddit.request {
+            it.endpoint(Endpoint.POST_APPROVE)
+                .post(mapOf(
+                    "id" to fullName
                 ))
         }
     }

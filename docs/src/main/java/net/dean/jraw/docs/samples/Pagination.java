@@ -3,6 +3,7 @@ package net.dean.jraw.docs.samples;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.docs.CodeSample;
 import net.dean.jraw.models.*;
+import net.dean.jraw.pagination.BarebonesPaginator;
 import net.dean.jraw.pagination.DefaultPaginator;
 import net.dean.jraw.pagination.Paginator;
 
@@ -15,7 +16,7 @@ final class Pagination {
 
     @CodeSample
     void simple() {
-        DefaultPaginator.Builder<Submission> paginatorBuilder = redditClient.frontPage();
+        DefaultPaginator.Builder<Submission, SubredditSort> paginatorBuilder = redditClient.frontPage();
         DefaultPaginator<Submission> paginator = paginatorBuilder.build();
 
         Listing<Submission> firstPage = paginator.next();
@@ -27,7 +28,7 @@ final class Pagination {
     void usingAllOptions() {
         DefaultPaginator<Submission> paginator = redditClient.frontPage()
             .limit(50) // 50 posts per page
-            .sorting(Sorting.TOP) // top posts
+            .sorting(SubredditSort.TOP) // top posts
             .timePeriod(TimePeriod.ALL) // of all time
             .build();
 
@@ -68,7 +69,7 @@ final class Pagination {
 
     @CodeSample
     void accumulateMerged() {
-        DefaultPaginator<Subreddit> paginator = redditClient
+        BarebonesPaginator<Subreddit> paginator = redditClient
             .me()
             .subreddits("subscriber")
             // Send as few requests as possible by requesting as much data as possible

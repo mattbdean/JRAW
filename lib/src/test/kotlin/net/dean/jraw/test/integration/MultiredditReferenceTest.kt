@@ -3,7 +3,7 @@ package net.dean.jraw.test.integration
 import com.winterbe.expekt.should
 import net.dean.jraw.ApiException
 import net.dean.jraw.models.MultiredditPatch
-import net.dean.jraw.models.Sorting
+import net.dean.jraw.models.SubredditSort
 import net.dean.jraw.models.TimePeriod
 import net.dean.jraw.references.MultiredditReference
 import net.dean.jraw.test.TestConfig.reddit
@@ -79,7 +79,7 @@ class MultiredditReferenceTest : Spek({
             undeletedRefs.add(ref)
 
             val posts = ref.posts()
-                .sorting(Sorting.TOP)
+                .sorting(SubredditSort.TOP)
                 .timePeriod(TimePeriod.HOUR)
                 .limit(10)
                 .build()

@@ -2,6 +2,7 @@ package net.dean.jraw.meta.test
 
 import com.winterbe.expekt.should
 import net.dean.jraw.meta.EnumCreator
+import net.dean.jraw.meta.EnumCreator.Companion.SUBREDDIT_PREFIX_CONSTANT_NAME
 import net.dean.jraw.meta.ParsedEndpoint
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.it
@@ -34,7 +35,7 @@ class EnumCreatorTest : Spek({
 
         identifiers.should.have.size(endpoints.size)
         identifiers[0].should.equal("""GET_FOO_BAR("GET", "/api/v1/foo/{bar}", "fooscope"),""")
-        identifiers[1].should.equal("""POST_FOO_BAR("POST", "/api/v1/foo/{bar}", "fooscope");""")
+        identifiers[1].should.equal("""POST_FOO_BAR("POST", $SUBREDDIT_PREFIX_CONSTANT_NAME + "/api/v1/foo/{bar}", "fooscope");""")
     }
 
     it("should generate compilable code") {

@@ -8,6 +8,7 @@ import net.dean.jraw.models.internal.RedditExceptionStub
 import net.dean.jraw.oauth.*
 import net.dean.jraw.pagination.BarebonesPaginator
 import net.dean.jraw.pagination.DefaultPaginator
+import net.dean.jraw.pagination.SearchPaginator
 import net.dean.jraw.ratelimit.LeakyBucketRateLimiter
 import net.dean.jraw.ratelimit.RateLimiter
 import net.dean.jraw.references.*
@@ -263,7 +264,10 @@ class RedditClient internal constructor(
     fun userSubreddits(where: String) = BarebonesPaginator.Builder.create<Subreddit>(this, "/users/${JrawUtils.urlEncode(where)}")
 
     /** Creates a [DefaultPaginator.Builder] to iterate posts on the front page */
-    fun frontPage() = DefaultPaginator.Builder.create<Submission>(this, baseUrl = "", sortingAlsoInPath = true)
+    fun frontPage() = DefaultPaginator.Builder.create<Submission, SubredditSort>(this, baseUrl = "", sortingAlsoInPath = true)
+
+    /** Creates a SearchPaginator.Builder to search for submissions in every subreddit */
+    fun search(): SearchPaginator.Builder = SearchPaginator.everywhere(this)
 
     /**
      * Creates a [SubredditReference]
@@ -322,10 +326,35 @@ class RedditClient internal constructor(
     fun randomSubreddit() = subreddit("random")
 
     /**
+     * Creates either [SubmissionReference] or [CommentReference] depending on provided fullname.
+     * Fullname format is defined as ${kind}_${id} (e.g. t3_6afe8u or t1_2bad4u).
+     *
+     * @see KindConstants
+     * @throws IllegalArgumentException if the provided fullname doesn't match that format or the prefix is not
+     * one of [KindConstants.COMMENT] or [KindConstants.SUBREDDIT]
+     */
+    fun publicContribution(fullname: String): PublicContributionReference {
+        val parts = fullname.split('_')
+        if (parts.size != 2)
+            throw IllegalArgumentException("Fullname doesn't match the pattern KIND_ID")
+        return when (parts[0]) {
+            KindConstants.COMMENT -> comment(parts[1])
+            KindConstants.SUBMISSION -> submission(parts[1])
+            else -> throw IllegalArgumentException("Provided kind '${parts[0]}' is not a public contribution")
+        }
+    }
+
+    /**
      * Creates a SubmissionReference. Note that `id` is NOT a full name (like `t3_6afe8u`), but rather an ID
      * (like `6afe8u`)
      */
     fun submission(id: String) = SubmissionReference(this, id)
+
+    /**
+     * Creates a CommentReference. Note that `id` is NOT a full name (like `t1_6afe8u`), but rather an ID
+     * (like `6afe8u`)
+     */
+    fun comment(id: String) = CommentReference(this, id)
 
     /**
      * Creates a BarebonesPaginator.Builder that will iterate over the latest comments from the given subreddits when
@@ -334,6 +363,19 @@ class RedditClient internal constructor(
     fun latestComments(vararg subreddits: String): BarebonesPaginator.Builder<Comment> {
         val prefix = if (subreddits.isEmpty()) "" else "/r/" + subreddits.joinToString("+")
         return BarebonesPaginator.Builder.create(this, "$prefix/comments")
+    }
+
+    /**
+     * Creates a [BarebonesPaginator.Builder] that will iterate over gilded public contributions (i.e. posts and
+     * comments) in the given subreddits when built.
+     *
+     * If no subreddits are given, contributions will be from logged-in user's frontpage subreddits.
+     *
+     * @see PublicContribution
+     */
+    fun gildedContributions(vararg subreddits: String): BarebonesPaginator.Builder<PublicContribution<*>> {
+        val prefix = if (subreddits.isEmpty()) "" else "/r/" + subreddits.joinToString("+")
+        return BarebonesPaginator.Builder.create(this, "$prefix/gilded")
     }
 
     /**
@@ -364,7 +406,7 @@ class RedditClient internal constructor(
         val type = Types.newParameterizedType(Listing::class.java, Any::class.java)
         val adapter = JrawUtils.moshi.adapter<Listing<Any>>(type, Enveloped::class.java)
         return request {
-            it.endpoint(Endpoint.GET_INFO)
+            it.endpoint(Endpoint.GET_INFO, null)
                 .query(mapOf("id" to fullNames.joinToString(",")))
         }.deserializeWith(adapter)
     }

@@ -2,7 +2,6 @@ package net.dean.jraw.references
 
 import net.dean.jraw.Endpoint
 import net.dean.jraw.EndpointImplementation
-import net.dean.jraw.JrawUtils
 import net.dean.jraw.RedditClient
 import net.dean.jraw.models.CurrentFlair
 import net.dean.jraw.models.KindConstants
@@ -21,14 +20,8 @@ sealed class FlairReference(
     /** Returns a reference to the subreddit where this flair is being observed/modified */
     fun subreddit(): SubredditReference = reddit.subreddit(subreddit)
 
-    /** Removes the current flair for the subject. Equivalent to `update("", null)`. */
-    fun remove() = updateTo(templateId = "")
-
-    /**
-     * Updates the flair to the given template ID. If the flair template is editable, the default text will be used. See
-     * the other `updateTo` for more.
-     */
-    fun updateTo(templateId: String) = updateTo(templateId, null)
+    /** Removes the current flair for the subject. Equivalent to `updateToTemplate("")`. */
+    fun remove() = updateToTemplate(templateId = "", text = "")
 
     /**
      * Sets the flair to appear next to the username or submission in question. Pass an empty string for `templateId` or
@@ -53,7 +46,14 @@ sealed class FlairReference(
      * @see SubredditReference.userFlairOptions
      */
     @EndpointImplementation(Endpoint.POST_SELECTFLAIR)
-    abstract fun updateTo(templateId: String, text: String?)
+    abstract fun updateToTemplate(templateId: String, text: String)
+
+    /**
+     * Similar to [updateToTemplate] but sets the CSS class directly instead of using a template.
+     * The authenticated user must be a moderator of the [subreddit].
+     */
+    @EndpointImplementation(Endpoint.POST_FLAIR)
+    abstract fun updateToCssClass(cssClass: String, text: String)
 
     /** */
     override fun toString(): String {
@@ -79,14 +79,27 @@ sealed class FlairReference(
 
 /** A reference to the flair of a submission in a particular subreddit */
 class SubmissionFlairReference internal constructor(reddit: RedditClient, subreddit: String, subject: String) : FlairReference(reddit, subreddit, subject) {
-    override fun updateTo(templateId: String, text: String?) {
+
+    override fun updateToTemplate(templateId: String, text: String) {
         reddit.request {
-            it.path("/r/${JrawUtils.urlEncode(subreddit)}${Endpoint.POST_SELECTFLAIR.path}")
+            it.endpoint(Endpoint.POST_SELECTFLAIR, subreddit)
                 .post(mapOf(
                     "api_type" to "json",
                     "flair_template_id" to templateId,
                     "link" to KindConstants.SUBMISSION + "_" + subject,
-                    "text" to (text ?: "")
+                    "text" to text
+                ))
+        }
+    }
+
+    override fun updateToCssClass(cssClass: String, text: String) {
+        reddit.request {
+            it.endpoint(Endpoint.POST_FLAIR, subreddit)
+                .post(mapOf(
+                    "api_type" to "json",
+                    "css_class" to cssClass,
+                    "link" to KindConstants.SUBMISSION + "_" + subject,
+                    "text" to text
                 ))
         }
     }
@@ -114,7 +127,7 @@ sealed class UserFlairReference(
     @EndpointImplementation(Endpoint.POST_FLAIRSELECTOR)
     fun current(): CurrentFlair {
         val selector: FlairSelector = reddit.request {
-            it.path("/r/${JrawUtils.urlEncode(subreddit)}${Endpoint.POST_FLAIRSELECTOR.path}")
+            it.endpoint(Endpoint.POST_FLAIRSELECTOR, subreddit)
                 .post(mapOf(
                     "name" to subject
                 ))
@@ -123,14 +136,26 @@ sealed class UserFlairReference(
         return selector.current
     }
 
-    override fun updateTo(templateId: String, text: String?) {
+    override fun updateToTemplate(templateId: String, text: String) {
         reddit.request {
-            it.path("/r/${JrawUtils.urlEncode(subreddit)}${Endpoint.POST_SELECTFLAIR.path}")
+            it.endpoint(Endpoint.POST_SELECTFLAIR, subreddit)
                 .post(mapOf(
                     "api_type" to "json",
                     "flair_template_id" to templateId,
                     "name" to subject,
-                    "text" to (text ?: "")
+                    "text" to text
+                ))
+        }
+    }
+
+    override fun updateToCssClass(cssClass: String, text: String) {
+        reddit.request {
+            it.endpoint(Endpoint.POST_FLAIR, subreddit)
+                .post(mapOf(
+                    "api_type" to "json",
+                    "css_class" to cssClass,
+                    "name" to subject,
+                    "text" to text
                 ))
         }
     }
@@ -150,9 +175,8 @@ class SelfUserFlairReference internal constructor(reddit: RedditClient, subreddi
     @EndpointImplementation(Endpoint.POST_SETFLAIRENABLED)
     fun setFlairEnabled(enabled: Boolean) {
         reddit.request {
-            it.endpoint(Endpoint.POST_SETFLAIRENABLED)
+            it.endpoint(Endpoint.POST_SETFLAIRENABLED, subreddit)
                 .post(mapOf(
-                    "r" to subreddit,
                     "api_type" to "json",
                     "flair_enabled" to enabled.toString()
                 ))

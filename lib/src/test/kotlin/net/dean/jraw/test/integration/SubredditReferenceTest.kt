@@ -2,6 +2,7 @@ package net.dean.jraw.test.integration
 
 import com.winterbe.expekt.should
 import net.dean.jraw.ApiException
+import net.dean.jraw.models.SimpleFlairInfo
 import net.dean.jraw.models.SubmissionKind
 import net.dean.jraw.test.SharedObjects
 import net.dean.jraw.test.TestConfig.reddit
@@ -74,9 +75,42 @@ class SubredditReferenceTest : Spek({
         }
     }
 
-    describe("stylesheet") {
+    describe("getStylesheet") {
         it("should return text") {
             reddit.subreddit("RocketLeague").stylesheet().should.have.length.above(0)
+        }
+    }
+
+    val moddedSubreddit = reddit.subreddit("jraw_testing2")
+    describe("updateStylesheet") {
+        val newStylesheet = "#test${Random().nextInt()}{color:red}"
+
+        it("should update the modded subreddit stylesheet") {
+            moddedSubreddit.updateStylesheet(newStylesheet, "JRAW integration test")
+            moddedSubreddit.stylesheet().should.equal(newStylesheet)
+        }
+    }
+
+    describe("flairList") {
+        it("should be able to access modded subreddit flair list") {
+            moddedSubreddit.flairList().build().accumulateMerged(-1).toList()
+        }
+    }
+
+    fun randomString() = "test${Random().nextInt()}"
+    val flairList = listOf(
+        SimpleFlairInfo.create("_vargas_", randomString(), randomString()),
+        SimpleFlairInfo.create(reddit.me().username, randomString(), randomString())
+    )
+    describe("patchFlairList") {
+        it("should update the modded subreddit flair list") {
+            moddedSubreddit.patchFlairList(flairList)
+        }
+        it("should have an effect on subreddit flair list") {
+            val updatedFlairList = moddedSubreddit.flairList().build().accumulateMerged(-1)
+
+            for(simpleFlairInfo in flairList)
+                updatedFlairList.should.contain(simpleFlairInfo)
         }
     }
 })

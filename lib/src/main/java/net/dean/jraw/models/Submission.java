@@ -79,6 +79,10 @@ public abstract class Submission implements PublicContribution<SubmissionReferen
     @Nullable
     @Json(name = "link_flair_text") public abstract String getLinkFlairText();
 
+    /** CSS class of the flair displayed next to the submission, if any */
+    @Nullable
+    @Json(name = "link_flair_css_class") public abstract String getLinkFlairCssClass();
+
     /** If the moderators/admins have prevented creating new comments on this submission */
     public abstract boolean isLocked();
 
@@ -138,9 +142,17 @@ public abstract class Submission implements PublicContribution<SubmissionReferen
      */
     public abstract boolean isVisited();
 
+    /**
+     * If the submission has been removed by the moderators or got caught in the spam-filter.
+     */
+    public abstract boolean isRemoved();
+
     @Override
     @NotNull
     @Json(name = "likes") public abstract VoteDirection getVote();
+
+    /** The number of comments posted in this post. Includes removed comments. */
+    @Json(name = "num_comments") public abstract Integer getCommentCount();
 
     @NotNull
     @Override

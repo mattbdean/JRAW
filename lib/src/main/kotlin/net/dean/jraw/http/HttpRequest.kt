@@ -201,9 +201,18 @@ class HttpRequest internal constructor(
          * Sets this Builder's path to the given Endpoint's path and changes the host to `oauth.reddit.com`. This method
          * does not change the HTTP method.
          */
-        fun endpoint(e: Endpoint, vararg pathParams: String): Builder {
+        fun endpoint(e: Endpoint, vararg pathParams: String?): Builder {
             this.host = "oauth.reddit.com"
-            return path(e.path, *pathParams)
+            return if (e.path.startsWith(Endpoint.Constant.OPTIONAL_SUBREDDIT)) {
+                if (pathParams.isEmpty())
+                    throw IllegalArgumentException("Expected at least one path argument for endpoint with optional subreddit")
+                val optionalPath = pathParams[0]?.let { "/r/${JrawUtils.urlEncode(it)}" } ?: ""
+                val requiredPath = e.path.substringAfter(Endpoint.Constant.OPTIONAL_SUBREDDIT)
+                val requiredPathParams = pathParams.drop(1).toTypedArray().requireNoNulls()
+                path(optionalPath + requiredPath, *requiredPathParams)
+            } else {
+                path(e.path, *pathParams.requireNoNulls())
+            }
         }
 
         /**

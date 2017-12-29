@@ -19,6 +19,7 @@ public abstract class Message implements Created, Distinguishable, Identifiable,
     @Json(name = "first_message_name") public abstract String getFirstMessage();
 
     /** The name of the user that created this message */
+    @Nullable
     public abstract String getAuthor();
 
     /** The markdown-formatted message content */

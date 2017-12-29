@@ -20,7 +20,7 @@ final class Cookbook {
     void iterateFrontPage() {
         // frontPage() returns a Paginator.Builder
         DefaultPaginator<Submission> frontPage = redditClient.frontPage()
-            .sorting(Sorting.TOP)
+            .sorting(SubredditSort.TOP)
             .timePeriod(TimePeriod.DAY)
             .limit(30)
             .build();
@@ -50,7 +50,7 @@ final class Cookbook {
     @CodeSample
     void userSubscriptions() {
         // Make sure we have a logged-in user or this call will fail!
-        DefaultPaginator<Subreddit> paginator = redditClient.me().subreddits("subscriber")
+        BarebonesPaginator<Subreddit> paginator = redditClient.me().subreddits("subscriber")
             // Request as many items as possible
             .limit(Paginator.RECOMMENDED_MAX_LIMIT)
             .build();

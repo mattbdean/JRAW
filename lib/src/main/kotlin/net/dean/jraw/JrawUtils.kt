@@ -19,6 +19,7 @@ object JrawUtils {
         .add(UnixDateAdapterFactory())
         .add(RepliesAdapterFactory())
         .add(SubmissionDataAdapterFactory())
+        .add(SimpleFlairInfoListingAdapterFactory())
         .add(EnvelopedListAdapterFactory())
         .add(RedditModelAdapterFactory(mapOf(
             KindConstants.COMMENT to Comment::class.java,

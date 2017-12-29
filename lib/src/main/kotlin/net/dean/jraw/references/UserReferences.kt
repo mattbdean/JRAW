@@ -9,6 +9,7 @@ import net.dean.jraw.models.*
 import net.dean.jraw.models.internal.GenericJsonResponse
 import net.dean.jraw.models.internal.RedditModelEnvelope
 import net.dean.jraw.models.internal.TrophyList
+import net.dean.jraw.pagination.BarebonesPaginator
 import net.dean.jraw.pagination.DefaultPaginator
 import okhttp3.MediaType
 import okhttp3.RequestBody
@@ -66,7 +67,7 @@ sealed class UserReference<out T : UserFlairReference>(reddit: RedditClient, val
      * Only `overview`, `submitted`, and `comments` are sortable.
      */
     @EndpointImplementation(Endpoint.GET_USER_USERNAME_WHERE, type = MethodType.NON_BLOCKING_CALL)
-    fun history(where: String): DefaultPaginator.Builder<PublicContribution<*>> {
+    fun history(where: String): DefaultPaginator.Builder<PublicContribution<*>, UserHistorySort> {
         // Encode URLs to prevent accidental malformed URLs
         return DefaultPaginator.Builder.create(reddit, "/user/${urlEncode(username)}/${urlEncode(where)}",
             sortingAlsoInPath = false)
@@ -186,8 +187,8 @@ class SelfUserReference(reddit: RedditClient) : UserReference<SelfUserFlairRefer
      * - `subscriber`
      */
     @EndpointImplementation(Endpoint.GET_SUBREDDITS_MINE_WHERE, type = MethodType.NON_BLOCKING_CALL)
-    fun subreddits(where: String): DefaultPaginator.Builder<Subreddit> {
-        return DefaultPaginator.Builder.create(reddit, "/subreddits/mine/${JrawUtils.urlEncode(where)}")
+    fun subreddits(where: String): BarebonesPaginator.Builder<Subreddit> {
+        return BarebonesPaginator.Builder.create(reddit, "/subreddits/mine/${JrawUtils.urlEncode(where)}")
     }
 
     /**

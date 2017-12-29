@@ -16,5 +16,8 @@ enum class DistinguishedStatus {
      * [here](http://www.reddit.com/r/bestof/comments/175prt/alilarter_connects_with_a_user_who_has_a/c82tlns) for an
      * example.
      */
-    SPECIAL;
+    SPECIAL,
+
+    /** Represents an automated message notifying user that they have been gifted Reddit gold */
+    GOLD;
 }

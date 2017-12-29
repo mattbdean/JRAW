@@ -16,7 +16,7 @@ import java.util.Date;
 
 @AutoValue
 @RedditModel
-public abstract class Comment implements PublicContribution, NestedIdentifiable {
+public abstract class Comment implements PublicContribution<CommentReference>, NestedIdentifiable {
     public abstract boolean isArchived();
 
     @Override
@@ -51,6 +51,11 @@ public abstract class Comment implements PublicContribution, NestedIdentifiable 
     @Override
     @Json(name = "name") public abstract String getFullName();
 
+    /** Comment body is never null */
+    @NotNull
+    @Override
+    public abstract String getBody();
+
     @Enveloped
     public abstract Listing<NestedIdentifiable> getReplies();
 
@@ -60,6 +65,17 @@ public abstract class Comment implements PublicContribution, NestedIdentifiable 
 
     @NotNull
     @Json(name = "link_id") public abstract String getSubmissionFullName();
+
+    /** Gets the title of the parent link, or null if this comment is not being displayed outside of its own thread. */
+    @Nullable
+    @Json(name = "link_title") public abstract String getSubmissionTitle();
+
+    /**
+     * Gets the url of the parent submission (or submission permalink for self-posts), or null if this comment
+     * is not being displayed outside of its own thread.
+     */
+    @Nullable
+    @Json(name = "link_url") public abstract String getUrl();
 
     @NotNull
     @Override

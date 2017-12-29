@@ -2,11 +2,15 @@ package net.dean.jraw.references
 
 import com.squareup.moshi.Types
 import net.dean.jraw.*
+import net.dean.jraw.http.HttpResponse
 import net.dean.jraw.models.*
 import net.dean.jraw.models.internal.GenericJsonResponse
 import net.dean.jraw.models.internal.SubmissionData
+import net.dean.jraw.pagination.BarebonesPaginator
 import net.dean.jraw.pagination.DefaultPaginator
+import net.dean.jraw.pagination.SearchPaginator
 import net.dean.jraw.tree.RootCommentNode
+import java.net.URLEncoder
 
 /**
  * Allows the user to perform API actions against a subreddit
@@ -21,7 +25,7 @@ class SubredditReference internal constructor(reddit: RedditClient, val subreddi
      * Returns a [Subreddit] instance for this reference
      */
     @EndpointImplementation(Endpoint.GET_SUBREDDIT_ABOUT)
-    fun about(): Subreddit = reddit.request { it.path("/r/$subreddit/about") }.deserializeEnveloped()
+    fun about(): Subreddit = reddit.request { it.endpoint(Endpoint.GET_SUBREDDIT_ABOUT, subreddit) }.deserializeEnveloped()
 
     /**
      * Creates a new [DefaultPaginator.Builder] to iterate over this subreddit's posts. Not a blocking call.
@@ -30,16 +34,37 @@ class SubredditReference internal constructor(reddit: RedditClient, val subreddi
         Endpoint.GET_HOT, Endpoint.GET_NEW, Endpoint.GET_RISING, Endpoint.GET_SORT,
         type = MethodType.NON_BLOCKING_CALL
     )
-    fun posts() = DefaultPaginator.Builder.create<Submission>(reddit, "/r/$subreddit", sortingAlsoInPath = true)
+    fun posts() = DefaultPaginator.Builder.create<Submission, SubredditSort>(reddit, "/r/$subreddit", sortingAlsoInPath = true)
 
     /**
-     * Gets a random submission from this subreddit. Although it is not marked with [EndpointImplementation], this
-     * method executes a network request.
+     * Creates a BarebonesPaginator.Builder that will iterate over the latest comments from this subreddit when built.
+     *
+     * @see RedditClient.latestComments
+     */
+    fun comments(): BarebonesPaginator.Builder<Comment> = reddit.latestComments(subreddit)
+
+    /**
+     * Creates a BarebonesPaginator.Builder that will iterate over the gilded contributions in this subreddit when built.
+     *
+     * @see RedditClient.gildedContributions
+     */
+    fun gilded(): BarebonesPaginator.Builder<PublicContribution<*>> = reddit.gildedContributions(subreddit)
+
+    /**
+     * Creates a SearchPaginator.Builder to search for submissions in this subreddit.
+     *
+     * @see SearchPaginator.inSubreddits
+     */
+    fun search(): SearchPaginator.Builder = SearchPaginator.inSubreddits(reddit, subreddit)
+
+    /**
+     * Gets a random submission from this subreddit.
      *
      * @see RedditClient.randomSubreddit
      */
+    @EndpointImplementation(Endpoint.GET_RANDOM)
     fun randomSubmission(): RootCommentNode {
-        val data: SubmissionData = reddit.request { it.path("/r/${JrawUtils.urlEncode(subreddit)}/random") }.deserialize()
+        val data: SubmissionData = reddit.request { it.endpoint(Endpoint.GET_RANDOM, subreddit) }.deserialize()
         return RootCommentNode(data.submissions[0], data.comments, settings = null)
     }
 
@@ -81,7 +106,7 @@ class SubredditReference internal constructor(reddit: RedditClient, val subreddi
     @EndpointImplementation(Endpoint.GET_SUBMIT_TEXT)
     fun submitText(): String {
         return reddit.request {
-            it.path("/r/{subreddit}/api/submit_text", subreddit)
+            it.endpoint(Endpoint.GET_SUBMIT_TEXT, subreddit)
         }.deserialize<Map<String, String>>().getOrElse("submit_text") {
             throw IllegalArgumentException("Unexpected response: no `submit_text` key")
         }
@@ -116,7 +141,7 @@ class SubredditReference internal constructor(reddit: RedditClient, val subreddi
      * Lists all possible flairs for users. Requires an authenticated user. Will return nothing if flair is disabled on
      * the subreddit, the user cannot set their own flair, or they are not a moderator that can set flair.
      *
-     * @see FlairReference.updateTo
+     * @see FlairReference.updateToTemplate
      */
     @EndpointImplementation(Endpoint.GET_USER_FLAIR)
     fun userFlairOptions(): List<Flair> = requestFlair("user")
@@ -125,7 +150,7 @@ class SubredditReference internal constructor(reddit: RedditClient, val subreddi
      * Lists all possible flairs for submissions to this subreddit. Requires an authenticated user. Will return nothing
      * if the user cannot set their own link flair and they are not a moderator that can set flair.
      *
-     * @see FlairReference.updateTo
+     * @see FlairReference.updateToTemplate
      */
     @EndpointImplementation(Endpoint.GET_LINK_FLAIR)
     fun linkFlairOptions(): List<Flair> = requestFlair("link")
@@ -151,9 +176,9 @@ class SubredditReference internal constructor(reddit: RedditClient, val subreddi
     fun selfUserFlair() = reddit.me().flairOn(subreddit)
 
     /**
-     * Returns a SubmissionFlairReference for the given submission full name.
+     * Returns a SubmissionFlairReference for the given submission id (without the kind prefix).
      */
-    fun submissionFlair(fullName: String) = SubmissionFlairReference(reddit, subreddit, fullName)
+    fun submissionFlair(id: String) = SubmissionFlairReference(reddit, subreddit, id)
 
     /**
      * Returns the moderator-created rules for the subreddit. Users can report things in this subreddit using the String
@@ -162,7 +187,7 @@ class SubredditReference internal constructor(reddit: RedditClient, val subreddi
     @EndpointImplementation(Endpoint.GET_SUBREDDIT_ABOUT_RULES)
     fun rules(): Ruleset {
         return reddit.request {
-            it.path("/r/$subreddit/about/rules")
+            it.endpoint(Endpoint.GET_SUBREDDIT_ABOUT_RULES, subreddit)
         }.deserialize()
     }
 
@@ -173,9 +198,46 @@ class SubredditReference internal constructor(reddit: RedditClient, val subreddi
     @EndpointImplementation(Endpoint.GET_STYLESHEET)
     fun stylesheet(): String {
         return reddit.request {
-            it.endpoint(Endpoint.GET_STYLESHEET)
-                .query(mapOf("r" to subreddit))
+            it.endpoint(Endpoint.GET_STYLESHEET, subreddit)
         }.body
+    }
+
+    /**
+     * Updates the stylesheet of a subreddit. Requires mod priveleges on the subreddit.
+     *
+     * @param stylesheet New stylesheet of the subreddit, completely replaces the pre-existing one
+     * @param reason Reason for the update to be displayed in the stylesheet change history
+     * */
+    @EndpointImplementation(Endpoint.POST_SUBREDDIT_STYLESHEET)
+    fun updateStylesheet(stylesheet: String, reason: String) {
+        reddit.request {
+            it.endpoint(Endpoint.POST_SUBREDDIT_STYLESHEET, subreddit)
+                .post(mapOf(
+                    "api_type" to "json",
+                    "op" to "save",
+                    "reason" to reason,
+                    "stylesheet_contents" to stylesheet
+                ))
+        }
+    }
+
+    /** Returns a listing of currently set flairs on the subreddit (both custom and template-based ones)
+     *  Requires mod priveleges on the subreddit.
+     */
+    @EndpointImplementation(Endpoint.GET_FLAIRLIST)
+    fun flairList() = BarebonesPaginator.Builder.create<SimpleFlairInfo>(reddit, "/r/$subreddit/api/flairlist")
+
+    /** Updates users flairs on the subreddit in bulk (up to 100 rows, the rest are ignored by Reddit).
+     *  Requires mod priveleges on the subreddit.
+     */
+    @EndpointImplementation(Endpoint.POST_FLAIRCSV)
+    fun patchFlairList(patch: List<SimpleFlairInfo>) {
+        reddit.request {
+            it.path("/r/$subreddit/api/flaircsv")
+                .post(mapOf(
+                    "flair_csv" to (patch.joinToString(separator = URLEncoder.encode("\n", "UTF-8")) { it.toCsvLine() })
+                ))
+        }
     }
 
     /** */
