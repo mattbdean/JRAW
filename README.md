@@ -47,6 +47,10 @@ https://jitpack.io/com/github/mattbdean/JRAW/VERSION/javadoc/index.html
 
 JitPack produces Javadoc only when necessary, so the first time someone accesses the Javadoc for a specific build it may take a little bit.
 
+## Android
+
+JRAW doesn't target Android specifically, but there is an [extension library](https://github.com/mattbdean/JRAW-Android) that solves some quality of life issues. Also be sure to check out the [example app](https://github.com/mattbdean/JRAW-Android/tree/master/example-app) that shows how to get users logged in.
+
 ## Contributing
 
 To get started you'll need to create two [reddit OAuth2 apps](https://www.reddit.com/prefs/apps), one script and one installed.
