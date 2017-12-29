@@ -11,9 +11,11 @@ repositories {
     maven { url "https://jitpack.io" }
 }
 dependencies {
-    implementation "com.github.mattbdean:JRAW-Android:master-SNAPSHOT"
+    implementation "com.github.mattbdean:JRAW-Android:${version}"
 }
 ```
+
+`${version}` can be a tag (like `v1.0.0`), a specific commit (like `9390529`), or a branch (like `master-SNAPSHOT`).
 
 Before using this library it is highly recommended that you first read the [OAuth2 page](oauth2.md).
 
