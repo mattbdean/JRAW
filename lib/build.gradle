@@ -30,7 +30,7 @@ dependencies {
     }
 
     testCompile "com.squareup.okhttp3:mockwebserver:$okhttpVersion"
-    testCompile 'net.sourceforge.htmlunit:htmlunit:2.27'
+    testCompile 'net.sourceforge.htmlunit:htmlunit:2.29'
     testCompile "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
 }
 
