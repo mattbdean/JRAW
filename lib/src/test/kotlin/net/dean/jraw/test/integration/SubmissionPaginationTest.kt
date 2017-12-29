@@ -32,6 +32,10 @@ class SubmissionPaginationTest : Spek({
         it("should update the current page and current listing") {
             val limit = 10
             val ref = reddit.subreddit("pics").posts()
+                // Sorting by NEW never returns stickied posts, which don't count towards the limit. If we specified HOT
+                // instead (which is used by default), setting a limit of 10 could yield up to 12 submissions (since
+                // there are allowed to be 2 stickied submissions at a time).
+                .sorting(SubredditSort.NEW)
                 .limit(limit)
                 .build()
 
@@ -76,6 +80,8 @@ class SubmissionPaginationTest : Spek({
         val limit = 5
         val maxPages = 5
         val pag = reddit.subreddit("pics").posts()
+            // See comment in the describe block for 'next()' about why this is necessary
+            .sorting(SubredditSort.NEW)
             .limit(limit)
             .build()
 
