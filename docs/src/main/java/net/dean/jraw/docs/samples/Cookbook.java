@@ -8,8 +8,11 @@ import net.dean.jraw.pagination.DefaultPaginator;
 import net.dean.jraw.pagination.Paginator;
 import net.dean.jraw.references.InboxReference;
 import net.dean.jraw.references.MultiredditReference;
+import net.dean.jraw.tree.CommentNode;
+import net.dean.jraw.tree.RootCommentNode;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 @SuppressWarnings("unused")
@@ -151,5 +154,33 @@ final class Cookbook {
     void trophies() {
         List<Trophy> mine = redditClient.me().trophies();
         List<Trophy> someoneElses = redditClient.user("Shitty_Watercolour").trophies();
+    }
+
+    @CodeSample
+    void setAndRemoveFlair() {
+        List<Flair> userFlairOptions = redditClient.subreddit("RocketLeague").userFlairOptions();
+        redditClient.subreddit("RocketLeague")
+            .selfUserFlair()
+            .updateToTemplate(userFlairOptions.get(0).getId(), "");
+    }
+
+    @CodeSample
+    void traverseCommentTree() {
+        // Request the comments of some submission. comments() takes more parameters where you
+        // can customize things like comment sorting and only returning a specific comment
+        // thread.
+        RootCommentNode root = redditClient.submission("92dd8").comments();
+
+        // walkTree() returns a Kotlin Sequence. Since we're using Java, we're going to have to
+        // turn it into an Iterator to get any use out of it.
+        Iterator<CommentNode<PublicContribution<?>>> it = root.walkTree().iterator();
+
+        while (it.hasNext()) {
+            // A PublicContribution is either a Submission or a Comment.
+            PublicContribution<?> thing = it.next().getSubject();
+
+            // Do something with each Submission/Comment
+            System.out.println(thing.getBody());
+        }
     }
 }

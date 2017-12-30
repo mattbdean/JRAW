@@ -4,11 +4,11 @@ import net.dean.jraw.Endpoint
 import net.dean.jraw.JrawUtils
 import net.dean.jraw.RedditClient
 import net.dean.jraw.databind.Enveloped
+import net.dean.jraw.http.LogAdapter
 import net.dean.jraw.models.*
 import net.dean.jraw.models.internal.GenericJsonResponse
 import net.dean.jraw.references.CommentsRequest
 import net.dean.jraw.tree.CommentNode.Companion.NO_LIMIT
-import java.io.PrintStream
 
 /**
  * This class is the base implementation for all CommentNodes
@@ -51,7 +51,7 @@ abstract class AbstractCommentNode<out T : PublicContribution<*>> protected cons
         return walkTree().count() - 1
     }
 
-    override fun visualize(out: PrintStream) {
+    override fun visualize(out: LogAdapter) {
         val relativeRootDepth = depth
         for (node in walkTree(TreeTraversalOrder.PRE_ORDER)) {
             val subj = node.subject
@@ -59,7 +59,7 @@ abstract class AbstractCommentNode<out T : PublicContribution<*>> protected cons
 
             // Use the submission URL if it's not a self post, otherwise just use the comment/submission body
             val body = if (subj is Submission && !subj.isSelfPost) subj.url else subj.body?.replace("\n", "\\n")
-            out.println(indent + "${subj.author} (${subj.score}↑): $body")
+            out.writeln(indent + "${subj.author} (${subj.score}↑): $body")
         }
     }
 

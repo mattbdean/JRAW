@@ -33,12 +33,15 @@ data class LiveThreadPatch(
         "title" to title
     ).filterValuesNotNull()
 
-    /** Builder pattern for [LiveThreadPatch] */
-    class Builder {
-        internal var description: String? = null
-        internal var nsfw: Boolean? = null
-        internal var resources: String? = null
-        internal var title: String? = null
+    /**
+     * Builder pattern for [LiveThreadPatch]. Specify a LiveThread instance to have the relevant data copied to this
+     * Builder.
+     */
+    class Builder @JvmOverloads constructor(other: LiveThread? = null) {
+        internal var description: String? = other?.description
+        internal var nsfw: Boolean? = other?.isNsfw
+        internal var resources: String? = other?.resources
+        internal var title: String? = other?.title
 
         /** Sets the description */
         fun description(description: String?): Builder { this.description = description; return this }

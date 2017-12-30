@@ -3,10 +3,11 @@ package net.dean.jraw.tree
 import net.dean.jraw.Endpoint
 import net.dean.jraw.EndpointImplementation
 import net.dean.jraw.RedditClient
+import net.dean.jraw.http.LogAdapter
+import net.dean.jraw.http.PrintStreamLogAdapter
 import net.dean.jraw.models.Comment
 import net.dean.jraw.models.MoreChildren
 import net.dean.jraw.models.PublicContribution
-import java.io.PrintStream
 
 /**
  * This class represents one comment in a comment tree.
@@ -73,15 +74,24 @@ interface CommentNode<out T : PublicContribution<*>> : Iterable<CommentNode<*>> 
     fun hasMoreChildren(): Boolean
 
     /**
+     * Walks the comment tree using pre-order traversal. This is how reddit generates the comment section on the
+     * website.
+     */
+    fun walkTree() = walkTree(TreeTraversalOrder.PRE_ORDER)
+
+    /**
      * Organizes this comment tree into a Sequence whose order is determined by the given [TreeTraversalOrder]. For example,
      * reddit uses pre-order traversal to generate the website's comments section.
      */
-    fun walkTree(order: TreeTraversalOrder = TreeTraversalOrder.PRE_ORDER): Sequence<CommentNode<*>>
+    fun walkTree(order: TreeTraversalOrder = TreeTraversalOrder.PRE_ORDER): Sequence<CommentNode<PublicContribution<*>>>
+
+    /** Prints out a brief overview of this CommentNode and its children to stdout */
+    fun visualize() = visualize(PrintStreamLogAdapter())
 
     /**
      * Prints out a brief overview of this CommentNode and its children to the given PrintStream (defaults to stdout).
      */
-    fun visualize(out: PrintStream = System.out)
+    fun visualize(out: LogAdapter = PrintStreamLogAdapter())
 
     /** Returns the amount of direct and indirect children this node has. */
     fun totalSize(): Int

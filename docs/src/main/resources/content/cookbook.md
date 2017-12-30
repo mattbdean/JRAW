@@ -32,19 +32,17 @@ See also [[@UserReference]], [[@SelfUserReference]], [[@OtherUserReference]]
 
 See also [[@FlairReference]], [[@SubmissionFlairReference]], [[@UserFlairReference]], [[@SelfUserFlairReference]], and [[@OtherUserFlairReference]]
 
-TODO
+{{ Cookbook.setAndRemoveFlair }}
 
 ## Links and comments
 
-TODO
+### Comment tree traversal
 
-## Listings
-
-TODO
+{{ Cookbook.traverseCommentTree }}
 
 ## Live threads
 
-TODO
+Live threads are covered [here](live_threads.md).
 
 ## Private messages
 
@@ -65,10 +63,6 @@ Inbox functionality requires a logged-in user
 ### Send a private message as a subreddit moderator
 
 {{ Cookbook.sendPrivateMessageAsModerator }}
-
-## Misc
-
-TODO
 
 ## Moderation/modmail
 
