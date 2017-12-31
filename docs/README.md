@@ -1,8 +1,12 @@
 # JRAW Documentation
 
-This is a meta-project dedicated to generating Markdown files to be hosted on [GitBook](https://mattbdean.gitbooks.io/jraw), which will be available with the release of JRAW [v1.0.0](https://github.com/mattbdean/JRAW/milestone/3).
+This is a meta-project dedicated to generating Markdown files to be hosted on [GitBook](https://mattbdean.gitbooks.io/jraw).
 
 The integration tests require [gitbook-cli](https://github.com/GitbookIO/gitbook-cli) to be installed globally.
+
+```
+$ npm install --global gitbook-cli
+```
 
 ## TL;DR
 

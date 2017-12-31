@@ -41,10 +41,6 @@ class GitbookPush extends DefaultTask {
 
     @TaskAction
     void pushToRemote() {
-        String shortName = getLatestCommit().name().substring(0, 8)
-        String commitMessage = "Update documentation from commit ${shortName}\n\n" +
-            "See https://github.com/mattbdean/JRAW/commit/${shortName}"
-
         this.git = GitbookHelper.clone(repository, username, password)
         log("Cloned repository $repository to ${git.repository.directory.absolutePath}")
 
@@ -63,13 +59,9 @@ class GitbookPush extends DefaultTask {
             GitbookHelper.createTag(git, "v${project.version}")
 
         if (hasNew)
-            commit(commitMessage)
+            commit(commitMessage(this.createVersionTag))
 
         push()
-    }
-
-    @TaskAction
-    void cleanUp() {
         this.git.repository.directory.deleteDir()
     }
 
@@ -79,6 +71,16 @@ class GitbookPush extends DefaultTask {
             .setMaxCount(1)
             .call()
             .first()
+    }
+
+    private String commitMessage(boolean createVersionTag) {
+        if (createVersionTag) {
+            return "Update documentation for version v${project.version}"
+        } else {
+            String shortName = getLatestCommit().name().substring(0, 8)
+            return "Update documentation from commit ${shortName}\n\n" +
+                "See https://github.com/mattbdean/JRAW/commit/${shortName}"
+        }
     }
 
     private void copyBook(File dest) {

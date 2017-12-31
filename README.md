@@ -6,14 +6,12 @@
 [![API coverage](https://img.shields.io/badge/API_coverage-44%25-9C27B0.svg)](https://github.com/thatJavaNerd/JRAW/blob/master/ENDPOINTS.md)
 [![Codecov branch](https://img.shields.io/codecov/c/github/mattbdean/JRAW.svg)](https://codecov.io/gh/mattbdean/JRAW)
 
-> JRAW is currently being rewritten in [Kotlin](https://kotlinlang.org/) for v1.0.0 (see [#187](https://github.com/mattbdean/JRAW/issues/187)). If you'd like to try it out before the official release, please use [Jitpack](https://jitpack.io/#mattbdean/JRAW/master-SNAPSHOT).
-
 ```groovy
 repositories {
-    maven { url 'https://jitpack.io' }
+    jcenter()
 }
 dependencies {
-    implementation 'com.github.mattbdean:JRAW:master-SNAPSHOT'
+    implementation "net.dean.jraw:JRAW:$jrawVersion"
 }
 ```
 
@@ -43,7 +41,7 @@ JRAW uses JitPack to host its Javadoc.
 https://jitpack.io/com/github/mattbdean/JRAW/VERSION/javadoc/index.html
 ```
 
-`VERSION` can be a specific commit hash (like [`d6843bf`](https://jitpack.io/com/github/mattbdean/JRAW/d6843bf/javadoc/index.html)), a tag (like [`v0.9.0`](https://jitpack.io/com/github/mattbdean/JRAW/v0.9.0/javadoc/index.html)), or the HEAD of a branch (like [`master-SNAPSHOT`](https://jitpack.io/com/github/mattbdean/JRAW/master-SNAPSHOT/javadoc/index.html)).
+`VERSION` can be a specific commit hash (like [`d6843bf`](https://jitpack.io/com/github/mattbdean/JRAW/d6843bf/javadoc/index.html)), a tag (like [`v1.0.0`](https://jitpack.io/com/github/mattbdean/JRAW/v1.0.0/javadoc/index.html)), or the HEAD of a branch (like [`master-SNAPSHOT`](https://jitpack.io/com/github/mattbdean/JRAW/master-SNAPSHOT/javadoc/index.html)).
 
 JitPack produces Javadoc only when necessary, so the first time someone accesses the Javadoc for a specific build it may take a little bit.
 

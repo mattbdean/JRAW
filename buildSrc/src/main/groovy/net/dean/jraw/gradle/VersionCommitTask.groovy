@@ -19,7 +19,7 @@ class VersionCommitTask extends DefaultTask {
 
         this.git.commit()
             .setAuthor("Matthew Dean", "deanmatthew16@gmail.com")
-            .setMessage("Create version ${project.version}")
+            .setMessage("Create version v${project.version}")
             .setAllowEmpty(false)
             .call()
     }

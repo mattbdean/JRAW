@@ -11,9 +11,10 @@ ext.projectName = 'JRAW'
 dependencies {
     compile "com.squareup.okhttp3:okhttp:$okhttpVersion"
 
-    // TODO: Use jitpack for Moshi until square/moshi#349 and #350 are merged to handle deeply nested objects
+    // TODO: Use Moshi fork until square/moshi#349 and #350 are merged to handle deeply nested objects:
+    // https://bintray.com/thatjavanerd/maven/moshi-deeply-nested
 //    compile "com.squareup.moshi:moshi:$moshiVersion"
-    def moshi = "com.github.mattbdean.moshi:moshi:349-deeply-nested-value-reader-SNAPSHOT"
+    def moshi = 'net.dean.jraw:moshi-deeply-nested:1.0.0'
     compile(moshi) {
         exclude group: 'com.squareup.moshi'
     }
@@ -83,8 +84,8 @@ artifacts {
 }
 
 bintray {
-    user = hasProperty("bintrayUser") ? bintrayUser : null
-    key = hasProperty("bintrayKey") ? bintrayKey : null
+    user = project.hasProperty("bintrayUser") ? bintrayUser : null
+    key = project.hasProperty("bintrayKey") ? bintrayKey : null
     pkg {
         repo = 'maven'
         name = projectName
@@ -94,7 +95,7 @@ bintray {
         githubRepo = 'mattbdean/JRAW'
 
         version {
-            name = "v${project.version}"
+            name = project.version
             released = new Date()
             vcsTag = "v${project.version}"
         }
@@ -106,8 +107,8 @@ bintray {
 
 // Pushes any new changes to GitBook and creates a version tag for the new version
 task pushReleaseDocs(type: GitbookPush, dependsOn: [':docs:buildSite']) {
-    username hasProperty("gitbookUsername") ? gitbookUsername : null
-    password hasProperty("gitbookPassword") ? gitbookPassword : null
+    username project.hasProperty("gitbookUsername") ? gitbookUsername : null
+    password project.hasProperty("gitbookPassword") ? gitbookPassword : null
     repository "https://git.gitbook.com/mattbdean/jraw.git"
     compiledBookDir rootProject.project('docs').file("build/docs").absoluteFile
     createVersionTag true
