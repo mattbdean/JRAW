@@ -13,6 +13,9 @@
         "edit-link": {
             "base": "https://github.com/mattbdean/JRAW/tree/master/docs/src/main/resources/content",
             "label": "Edit This Page"
+        },
+        "versions": {
+            "type": "tags"
         }
     }
 }
