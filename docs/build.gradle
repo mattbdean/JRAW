@@ -27,8 +27,8 @@ task buildSite(type: JavaExec, dependsOn: classes) {
 
 task pushSite(type: GitbookPush, dependsOn: buildSite) {
     // Allow credentials to be read from environmental variables. Mostly used by Travis
-    def gbUsername = System.getenv("GITBOOK_USERNAME") ?: hasProperty("gitbookUsername") ? gitbookUsername : null
-    def gbPassword = System.getenv("GITBOOK_PASSWORD") ?: hasProperty("gitbookPassword") ? gitbookPassword : null
+    def gbUsername = System.getenv("GITBOOK_USERNAME") ?: project.hasProperty("gitbookUsername") ? gitbookUsername : null
+    def gbPassword = System.getenv("GITBOOK_PASSWORD") ?: project.hasProperty("gitbookPassword") ? gitbookPassword : null
     onlyIf { gbUsername != null && gbPassword != null }
 
     username gbUsername
