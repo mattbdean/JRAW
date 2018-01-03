@@ -8,14 +8,14 @@ Include the dependency:
 
 ```groovy
 repositories {
-    maven { url "https://jitpack.io" }
+    jcenter()
 }
 dependencies {
-    implementation "com.github.mattbdean:JRAW-Android:${version}"
+    implementation "net.dean.jraw:JRAW-Android:${jrawVersion}"
 }
 ```
 
-`${version}` can be a tag (like `v1.0.0`), a specific commit (like `9390529`), or a branch (like `master-SNAPSHOT`).
+`${jrawVersion}` should be the current version of JRAW that your app uses
 
 Before using this library it is highly recommended that you first read the [OAuth2 page](oauth2.md).
 
