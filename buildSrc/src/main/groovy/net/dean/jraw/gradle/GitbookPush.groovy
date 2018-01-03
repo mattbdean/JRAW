@@ -62,7 +62,8 @@ class GitbookPush extends DefaultTask {
             commit(commitMessage(this.createVersionTag))
 
         push()
-        this.git.repository.directory.deleteDir()
+        // directory refers to .git, we want to delete the whole repo
+        this.git.repository.directory.parentFile.deleteDir()
     }
 
     private RevCommit getLatestCommit() {
@@ -107,7 +108,7 @@ class GitbookPush extends DefaultTask {
     private void push() {
         this.git.push()
             .setCredentialsProvider(new UsernamePasswordCredentialsProvider(username, password))
-            .setPushTags()
+            .setPushAll()
             .call()
         log("Pushed to remote")
     }
