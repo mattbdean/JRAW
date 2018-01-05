@@ -11,7 +11,7 @@ package net.dean.jraw.http
  * and your username as contact information, in the following format:
  * `<platform>:<app ID>:<version string> (by /u/<reddit username>)`
  *
- * - Example: {@code android:com.example.myredditapp:v1.2.3 (by /u/kemitche)}
+ * - Example: `android:com.example.myredditapp:v1.2.3 (by /u/kemitche)`
  * - Many default User-Agents (like "Python/urllib" or "Java") are drastically limited to encourage unique and
  *   descriptive user-agent strings.
  * - Including the version number and updating it as your build your application allows us to safely block old

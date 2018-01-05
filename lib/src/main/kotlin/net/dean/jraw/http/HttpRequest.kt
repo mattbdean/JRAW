@@ -217,8 +217,8 @@ class HttpRequest internal constructor(
 
         /**
          * Sets the URL's path. For example, "/mattbdean/JRAW." Positional path parameters are supported, so if
-         * {@code path} was "/api/{resource}" and {@code params} was a one-element array consisting of "foo", then the
-         * resulting path would be "/api/foo."
+         * `path` was "/api/{resource}" and `params` was a one-element array consisting of "foo", then the resulting
+         * path would be "/api/foo."
          *
          * @param path The path. If null, "/" will be used.
          * @param pathParams Optional positional path parameters. These will be automatically URL-encoded.
