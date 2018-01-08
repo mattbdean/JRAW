@@ -37,7 +37,7 @@ final class Cookbook {
     @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
     @CodeSample
     void imagesFromMultipleSubreddits() {
-        DefaultPaginator<Submission> earthPorn = redditClient.subreddits("EarthPorn", "spaceporn").build();
+        DefaultPaginator<Submission> earthPorn = redditClient.subreddits("EarthPorn", "spaceporn").posts().build();
 
         List<String> images = new ArrayList<String>();
         for (Submission s : earthPorn.next()) {

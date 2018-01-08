@@ -285,20 +285,21 @@ class RedditClient internal constructor(
     fun subreddit(name: String) = SubredditReference(this, name)
 
     /**
-     * Creates a [net.dean.jraw.pagination.Paginator.Builder] for more than one subreddit.
-     *
-     * For example, to fetch 50 posts from /r/pics and /r/funny:
-     *
-     * ```kotlin
-     * val paginator = redditClient.subreddits("pics", "funny").limit(50).build()
-     * val posts = paginator.next()
-     * ```
+     * Creates a [SubredditReference] to a "compound subreddit." This reference will be limited in some ways (for
+     * example, you can't submit a post to a compound subreddit).
      *
      * This works by using a useful little-known trick. You can view multiple subreddits at one time by joining them
      * together with a `+`, like "/r/redditdev+programming+kotlin"
+     *
+     * Here's how to fetch 50 posts from /r/pics and /r/funny as a quick example:
+     *
+     * ```kotlin
+     * val paginator = redditClient.subreddits("pics", "funny").posts().limit(50).build()
+     * val posts = paginator.next()
+     * ```
      */
     fun subreddits(first: String, second: String, vararg others: String) =
-        SubredditReference(this, arrayOf(first, second, *others).joinToString("+")).posts()
+        SubredditReference(this, arrayOf(first, second, *others).joinToString("+"))
 
     /**
      * Tests if the client has the ability to access the given API endpoint. This method always returns true for script

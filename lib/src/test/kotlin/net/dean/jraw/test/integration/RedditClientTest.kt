@@ -12,8 +12,6 @@ import net.dean.jraw.test.TestConfig.reddit
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
-import java.io.ByteArrayOutputStream
-import java.io.PrintStream
 import java.util.*
 import kotlin.properties.Delegates
 
@@ -117,7 +115,7 @@ class RedditClientTest : Spek({
 
     describe("subreddits") {
         it("should create a Paginator.Builder that iterates multiple subreddits") {
-            reddit.subreddits("pics", "funny", "videos").limit(Paginator.RECOMMENDED_MAX_LIMIT).build().next()
+            reddit.subreddits("pics", "funny", "videos").posts().limit(Paginator.RECOMMENDED_MAX_LIMIT).build().next()
                 .map { it.subreddit } // Transform each post to its subreddit
                 .distinct() // Leave only unique values
                 .sorted() // Sort the subreddits in ABC order
