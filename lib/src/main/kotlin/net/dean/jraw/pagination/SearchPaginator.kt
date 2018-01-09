@@ -23,7 +23,7 @@ class SearchPaginator private constructor(
 ) : Paginator<Submission>(reddit, baseUrl, limit, Submission::class.java) {
 
     @EndpointImplementation(Endpoint.GET_SEARCH)
-    override fun createNextRequest(): HttpRequest {
+    override fun createNextRequest(): HttpRequest.Builder {
         val args: MutableMap<String, String> = mutableMapOf(
             "limit" to limit.toString(radix = 10),
             "q" to query,
@@ -41,7 +41,6 @@ class SearchPaginator private constructor(
         return reddit.requestStub()
             .path(baseUrl)
             .query(args)
-            .build()
     }
 
     open class Builder(

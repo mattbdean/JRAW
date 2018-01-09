@@ -14,7 +14,7 @@ open class BarebonesPaginator<T> private constructor(
     clazz: Class<T>
 ) : Paginator<T>(reddit, baseUrl, limit, clazz) {
 
-    override fun createNextRequest(): HttpRequest {
+    override fun createNextRequest(): HttpRequest.Builder {
         val args = mutableMapOf("limit" to limit.toString())
         if (current?.nextName != null)
             args.put("after", current!!.nextName!!)
@@ -22,7 +22,6 @@ open class BarebonesPaginator<T> private constructor(
         return reddit.requestStub()
             .path(baseUrl)
             .query(args)
-            .build()
     }
 
     /** Builder pattern for this class */

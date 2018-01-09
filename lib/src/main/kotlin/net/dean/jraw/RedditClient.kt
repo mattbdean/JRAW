@@ -9,6 +9,7 @@ import net.dean.jraw.oauth.*
 import net.dean.jraw.pagination.BarebonesPaginator
 import net.dean.jraw.pagination.DefaultPaginator
 import net.dean.jraw.pagination.SearchPaginator
+import net.dean.jraw.pagination.SubredditSearchPaginator
 import net.dean.jraw.ratelimit.LeakyBucketRateLimiter
 import net.dean.jraw.ratelimit.RateLimiter
 import net.dean.jraw.references.*
@@ -268,6 +269,16 @@ class RedditClient internal constructor(
 
     /** Creates a SearchPaginator.Builder to search for submissions in every subreddit */
     fun search(): SearchPaginator.Builder = SearchPaginator.everywhere(this)
+
+    /**
+     * Allows searching reddit for various communities. Recommended sorting here is "relevance," which is also the
+     * default.
+     *
+     * Note that this is different from [search], which searches for submissions compared to this method, which searches
+     * for subreddits.
+     */
+    @EndpointImplementation(Endpoint.GET_SUBREDDITS_SEARCH)
+    fun searchSubreddits(): SubredditSearchPaginator.Builder = SubredditSearchPaginator.Builder(this)
 
     /**
      * Creates a [SubredditReference]

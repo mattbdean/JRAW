@@ -4,12 +4,13 @@ import net.dean.jraw.RedditClient
 import net.dean.jraw.http.HttpRequest
 import net.dean.jraw.models.Sorting
 import net.dean.jraw.models.TimePeriod
+import net.dean.jraw.pagination.DefaultPaginator.Builder
 
 /**
  * This Paginator is for paginated API endpoints that support not only limits, but sortings and time periods
  * (e.g. /top).
  */
-open class DefaultPaginator<T> private constructor(
+open class DefaultPaginator<T> protected constructor(
     reddit: RedditClient,
     baseUrl: String,
 
@@ -25,7 +26,7 @@ open class DefaultPaginator<T> private constructor(
     clazz: Class<T>
 ) : Paginator<T>(reddit, baseUrl, limit, clazz) {
 
-    override fun createNextRequest(): HttpRequest {
+    override fun createNextRequest(): HttpRequest.Builder {
         val sortingString = sorting.name.toLowerCase()
         val args: MutableMap<String, String> = mutableMapOf(
             "limit" to limit.toString(radix = 10),
@@ -43,7 +44,6 @@ open class DefaultPaginator<T> private constructor(
         return reddit.requestStub()
             .path(path)
             .query(args)
-            .build()
     }
 
     /** Builder pattern for this class */

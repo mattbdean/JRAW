@@ -1,11 +1,14 @@
 package net.dean.jraw.test.integration
 
 import com.winterbe.expekt.should
+import net.dean.jraw.ApiException
 import net.dean.jraw.RedditClient
-import net.dean.jraw.models.SubredditSort
 import net.dean.jraw.models.Submission
 import net.dean.jraw.models.Subreddit
+import net.dean.jraw.models.SubredditSort
+import net.dean.jraw.pagination.Paginator
 import net.dean.jraw.test.TestConfig
+import net.dean.jraw.test.expectException
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
@@ -70,6 +73,33 @@ class DeserializationTest : Spek({
 
         it("should handle Submissions with no media") {
             withUser.submission("92dd8").inspect().embeddedMedia.should.be.`null`
+        }
+    }
+
+    describe("Private subreddits") {
+        it("should deserialize without an error") {
+            val sr = withUser.subreddit("PCMRCSSBeta")
+
+            val err = expectException(ApiException::class) {
+                // This should be a private
+                sr.about()
+            }
+
+            // reddit throws a 403 when a subreddit is inaccessible
+            err.code.should.equal("403")
+
+            // Instead of querying for the subreddit directly (with about()), we can use search for it using the
+            // subreddit search
+            val subs = withUser.searchSubreddits()
+                .query(sr.subreddit)
+                // In practice there's usually only 1 result, but include this anyway to be safe
+                .limit(Paginator.RECOMMENDED_MAX_LIMIT)
+                .build()
+                .next()
+
+            // If there was a problem with deserialization, it would have been thrown by the call above. Make sure we
+            // actually deserialized it here:
+            subs.find { it.name == sr.subreddit }.should.not.be.`null`
         }
     }
 })

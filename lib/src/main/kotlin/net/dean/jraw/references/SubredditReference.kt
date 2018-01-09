@@ -2,7 +2,6 @@ package net.dean.jraw.references
 
 import com.squareup.moshi.Types
 import net.dean.jraw.*
-import net.dean.jraw.http.HttpResponse
 import net.dean.jraw.models.*
 import net.dean.jraw.models.internal.GenericJsonResponse
 import net.dean.jraw.models.internal.SubmissionData
@@ -22,7 +21,8 @@ import java.net.URLEncoder
 class SubredditReference internal constructor(reddit: RedditClient, val subreddit: String) : AbstractReference(reddit) {
 
     /**
-     * Returns a [Subreddit] instance for this reference
+     * Returns a [Subreddit] instance for this reference. Throws an ApiException if private or otherwise inaccessible by
+     * the current user (if any).
      */
     @EndpointImplementation(Endpoint.GET_SUBREDDIT_ABOUT)
     fun about(): Subreddit = reddit.request { it.endpoint(Endpoint.GET_SUBREDDIT_ABOUT, subreddit) }.deserializeEnveloped()

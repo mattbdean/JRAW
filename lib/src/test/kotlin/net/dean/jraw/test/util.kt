@@ -19,7 +19,9 @@ import java.security.SecureRandom
 import java.util.*
 import kotlin.reflect.KClass
 
-fun <T : Exception> expectException(clazz: KClass<T>, doWork: () -> Unit) {
+fun <T : Exception> expectException(clazz: KClass<T>, doWork: () -> Unit): T {
+    val err: T
+
     val message = "Should have thrown ${clazz.qualifiedName}"
     try {
         doWork()
@@ -30,7 +32,12 @@ fun <T : Exception> expectException(clazz: KClass<T>, doWork: () -> Unit) {
         // Make sure we got the right kind of Exception
         if (e::class != clazz)
             throw IllegalStateException("Expecting function to throw ${clazz.qualifiedName}, instead threw ${e::class.qualifiedName}", e)
+
+        @Suppress("UNCHECKED_CAST")
+        err = e as T
     }
+
+    return err
 }
 
 fun newOkHttpAdapter() = OkHttpNetworkAdapter(userAgent)
