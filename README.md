@@ -86,6 +86,16 @@ Tests are written with [Spek](http://spekframework.org/) and assertions are done
 
 In order to get the integration tests of the `docs` module to pass, you'll need [gitbook-cli](https://github.com/GitbookIO/gitbook-cli) installed globally. You shouldn't have to worry about this, as most of the contributions are likely to be towards the core library and not its accessory modules.
 
+### Code Style
+
+Kotlin code follows the [official conventions](https://kotlinlang.org/docs/reference/coding-conventions.html) provided by JetBrains (with a few exceptions).
+
+A few hard and fast rules:
+
+ - UTF-8 everywhere
+ - 4 spaces for indentation
+ - 120 line length
+
 ## Releasing
 
 Define these variables in `gradle.properties`:
