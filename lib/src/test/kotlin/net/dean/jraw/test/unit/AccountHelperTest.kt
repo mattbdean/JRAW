@@ -50,6 +50,9 @@ class AccountHelperTest : Spek({
             // Should not require an HTTP request
             val reddit = h.switchToUserless()
             reddit.authManager.currentUsername().should.equal(AuthManager.USERNAME_USERLESS)
+
+            // Make sure it was given the userless Credentials
+            reddit.authMethod.isUserless.should.be.`true`
             reddit.should.be.of.identity(h.reddit)
         }
 
@@ -68,6 +71,11 @@ class AccountHelperTest : Spek({
 
         beforeEachTest {
             helper = AccountHelper(NoopNetworkAdapter, creds, tokenStore, uuid)
+        }
+
+        it("should report a non-userless AuthMethod when switched to successfully") {
+            tokenStore.storeLatest(username, createMockOAuthData())
+            helper.trySwitchToUser(username)?.authMethod.should.equal(AuthMethod.APP)
         }
 
         it("should return null when there is no data to use") {
@@ -90,7 +98,7 @@ class AccountHelperTest : Spek({
             // When only a refresh token is available AccountHelper gives the RedditClient a "fake" OAuthData instance
             // that's already expired with a valid refresh token
             r.authManager.current.should.not.be.`null`
-            r.authManager.current!!.isExpired().should.be.`true`
+            r.authManager.current!!.isExpired.should.be.`true`
 
             // Make sure the AccountHelper forces the client to renew its access token on the first request
             r.forceRenew.should.be.`true`

@@ -65,9 +65,11 @@ class AccountHelper(
      * required if there is no unexpired OAuthData for userless mode.
      */
     fun switchToUserless(): RedditClient {
-        val seamless = trySwitchToUser(AuthManager.USERNAME_USERLESS)
+        val seamless = trySwitchToUser(AuthManager.USERNAME_USERLESS, creds = userlessCreds)
         if (seamless != null)
-            return switch(seamless)
+            // If trySwitchToUser returns a non-null value it will have already switched the current client to the
+            // returned value
+            return seamless
 
         return switch(OAuthHelper.automatic(http, userlessCreds, tokenStore))
     }
@@ -86,7 +88,9 @@ class AccountHelper(
      * Tries to create a new RedditClient based on already-stored refresh token or unexpired OAuthData. Returns null if
      * neither are available.
      */
-    fun trySwitchToUser(username: String): RedditClient? {
+    fun trySwitchToUser(username: String) = trySwitchToUser(username, creds)
+
+    private fun trySwitchToUser(username: String, creds: Credentials = this.creds): RedditClient? {
         val current = tokenStore.fetchLatest(username)
         if (current != null && !current.isExpired)
             return switch(RedditClient(http, current, creds, tokenStore, username))
