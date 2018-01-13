@@ -3,6 +3,7 @@ package net.dean.jraw.test.integration
 import com.winterbe.expekt.should
 import net.dean.jraw.models.CurrentFlair
 import net.dean.jraw.models.Flair
+import net.dean.jraw.test.CredentialsUtil.moderationSubreddit
 import net.dean.jraw.test.TestConfig.reddit
 import net.dean.jraw.test.TestConfig.redditUserless
 import net.dean.jraw.test.expectException
@@ -11,7 +12,7 @@ import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
 
 class SelfUserFlairReferenceTest : Spek({
-    val sr = reddit.subreddit("jraw_testing2")
+    val sr = reddit.subreddit(moderationSubreddit)
     val flairRef = sr.selfUserFlair()
 
     val flairOptions: List<Flair> by lazy {

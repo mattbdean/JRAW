@@ -30,11 +30,27 @@ class CredentialsTask extends DefaultTask {
         def password = prompt("Testing user password:")
         login(username, password)
 
-        println("\nPut this in lib/src/test/resources/credentials.json:\n")
-        prettyPrint([
+
+        def sub
+        try {
+            // Any user can create an OAuth2 app, but not every user can create a testing subreddit. We don't want to
+            // discard the created apps just because we can't create a subreddit. Handle problems that occur here
+            // individually.
+            sub = createSubreddit()
+        } catch (e) {
+            System.err.println("Unable to create a subreddit:")
+            sub = "<unable to create testing subreddit>"
+            e.printStackTrace()
+        }
+
+        def data = [
             'app': createApp(username, password, AppType.INSTALLED),
-            'script': createApp(username, password, AppType.SCRIPT)
-        ])
+            'script': createApp(username, password, AppType.SCRIPT),
+            'moderationSubreddit': sub
+        ]
+
+        println("\nPut this in lib/src/test/resources/credentials.json:\n")
+        prettyPrint(data)
     }
 
     private void login(String username, String password) {
@@ -46,11 +62,11 @@ class CredentialsTask extends DefaultTask {
             .addPathSegments("api/login/$username")
             .build())
             .post(formBody([
-            "op": "login",
-            "user": username,
-            "passwd": password,
-            "api_type": "json"
-        ]))
+                "op": "login",
+                "user": username,
+                "passwd": password,
+                "api_type": "json"
+            ]))
             .build()
         ).execute()
         JsonNode json = jsonHelper.readTree(res.body().byteStream()).get("json")
@@ -72,13 +88,13 @@ class CredentialsTask extends DefaultTask {
             .url("https://www.reddit.com/api/updateapp")
             .addHeader("cookie", "reddit_session=${URLEncoder.encode(this.cookie, "UTF-8")}")
             .post(formBody([
-            "uh": modhash,
-            "name": "JRAW test - ${type.name().toLowerCase()} - ${randomString().substring(0, 5)}",
-            "app_type": type.name().toLowerCase(),
-            "description": "This app was automatically created for you by a JRAW script",
-            "about_url": "https://github.com/thatJavaNerd/JRAW",
-            "redirect_uri": redirectUrl
-        ]))
+                "uh": modhash,
+                "name": "JRAW test - ${type.name().toLowerCase()} - ${randomString().substring(0, 5)}",
+                "app_type": type.name().toLowerCase(),
+                "description": "This app was automatically created for you by a JRAW script",
+                "about_url": "https://github.com/thatJavaNerd/JRAW",
+                "redirect_uri": redirectUrl
+            ]))
             .build()
         ).execute()
 
@@ -117,6 +133,38 @@ class CredentialsTask extends DefaultTask {
             default:
                 throw new IllegalArgumentException("Unknown type $type")
         }
+    }
+
+    private String createSubreddit() {
+        def id = randomString().substring(0, 10)
+        def name = "jraw_test_" + id
+        def res = http.newCall(new Request.Builder()
+            .url("https://www.reddit.com/api/site_admin")
+            .addHeader("cookie", "reddit_session=" + URLEncoder.encode(cookie, "UTF-8"))
+            .post(formBody([
+                "name": name,
+                "title": name,
+                "public_description": "Automatically created to test JRAW",
+                "description": "Automatically created to test JRAW",
+                "lang": "en",
+                "type": "public",
+                "link_type": "any",
+                "wikimode": "disabled",
+                "uh": modhash,
+                "api_type": "json",
+            ]))
+            .build()).execute()
+
+        def json = jsonHelper.readTree(res.body().byteStream())
+
+        // Try to handle API errors
+        if (json.has("json") && json.get("json").has("errors")) {
+            def errors = json.get("json").get("errors")
+            if (errors.isArray() && errors.size() > 0)
+                throw new RuntimeException("Could not create subreddit: " + errors.get(0))
+        }
+
+        return name
     }
 
     /** Uses Jackson to pretty print the given value to the standard output */

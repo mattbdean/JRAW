@@ -18,6 +18,9 @@ dependencies {
     compile(moshi) {
         exclude group: 'com.squareup.moshi'
     }
+    testCompile('com.squareup.moshi:moshi-kotlin:1.5.0') {
+        exclude group: 'com.squareup.moshi'
+    }
 
     apt('com.ryanharter.auto.value:auto-value-moshi:0.4.5') {
         exclude group: 'com.squareup.moshi'

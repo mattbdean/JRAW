@@ -2,6 +2,7 @@ package net.dean.jraw.test.integration
 
 import com.winterbe.expekt.should
 import net.dean.jraw.models.WikiPage
+import net.dean.jraw.test.CredentialsUtil.moderationSubreddit
 import net.dean.jraw.test.TestConfig.reddit
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
@@ -48,7 +49,7 @@ class WikiReferenceTest : Spek({
         }
     }
 
-    val moddedSubreddit = "jraw_testing2"
+    val moddedSubreddit = moderationSubreddit
     val moddedWiki = reddit.subreddit(moddedSubreddit).wiki()
     describe("updatePage") {
         val page = "jraw_testing_page"

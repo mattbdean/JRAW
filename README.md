@@ -51,13 +51,15 @@ JRAW doesn't target Android specifically, but there is an [extension library](ht
 
 ## Contributing
 
-To get started you'll need to create two [reddit OAuth2 apps](https://www.reddit.com/prefs/apps), one script and one installed.
+To get started you'll need to create two [reddit OAuth2 apps](https://www.reddit.com/prefs/apps), one script and one installed, and then create a subreddit.
 
 To have this done automatically for you, run this command:
 
 ```sh
 $ ./gradlew :meta:credentials --no-daemon --console plain
 ```
+
+Your testing account should have at least 100 karma, otherwise you'll run into issues when trying to create a subreddit.
 
 `lib/src/test/resources/credentials.json`:
 
@@ -72,7 +74,8 @@ $ ./gradlew :meta:credentials --no-daemon --console plain
     "app": {
         "clientId": "...",
         "redirectUrl": "..."
-    }
+    },
+    "moderationSubreddit": "..."
 }
 ```
 

@@ -2,7 +2,8 @@ package net.dean.jraw.test
 
 data class TestingCredentials(
     val script: ScriptStub,
-    val app: AppStub
+    val app: AppStub,
+    val moderationSubreddit: String
 )
 
 data class ScriptStub(

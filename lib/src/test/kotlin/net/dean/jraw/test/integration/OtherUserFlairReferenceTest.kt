@@ -1,6 +1,7 @@
 package net.dean.jraw.test.integration
 
 import com.winterbe.expekt.should
+import net.dean.jraw.test.CredentialsUtil.moderationSubreddit
 import net.dean.jraw.test.TestConfig.reddit
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
@@ -8,7 +9,7 @@ import org.jetbrains.spek.api.dsl.it
 import java.util.*
 
 class OtherUserFlairReferenceTest : Spek ({
-    val moddedSubreddit = "jraw_testing2"
+    val moddedSubreddit = moderationSubreddit
     val otherUser = reddit.user("_vargas_")
 
     describe("otherUserFlairUpdate") {

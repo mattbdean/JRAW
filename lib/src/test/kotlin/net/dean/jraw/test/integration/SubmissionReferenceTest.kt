@@ -4,8 +4,12 @@ import com.winterbe.expekt.should
 import net.dean.jraw.models.*
 import net.dean.jraw.references.CommentsRequest
 import net.dean.jraw.references.SubmissionReference
-import net.dean.jraw.test.*
+import net.dean.jraw.test.CredentialsUtil.moderationSubreddit
+import net.dean.jraw.test.SharedObjects
 import net.dean.jraw.test.TestConfig.reddit
+import net.dean.jraw.test.assume
+import net.dean.jraw.test.expectDescendingScore
+import net.dean.jraw.test.expectException
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
@@ -19,7 +23,7 @@ class SubmissionReferenceTest : Spek({
     describe("upvote/downvote/unvote") {
         it("should have an effect on a model") {
             // Grab a reference to the newest post on /r/jraw_testing2
-            val voteRef = reddit.subreddit("jraw_testing2")
+            val voteRef = reddit.subreddit(moderationSubreddit)
                 .posts()
                 .sorting(SubredditSort.NEW)
                 .build()

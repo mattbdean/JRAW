@@ -1,6 +1,7 @@
 package net.dean.jraw.test
 
-import net.dean.jraw.JrawUtils
+import com.squareup.moshi.KotlinJsonAdapterFactory
+import com.squareup.moshi.Moshi
 import net.dean.jraw.oauth.Credentials
 import okio.Okio
 import java.util.*
@@ -9,12 +10,14 @@ object CredentialsUtil {
     val script: Credentials
     val app: Credentials
     val applicationOnly: Credentials
+    val moderationSubreddit: String
 
     init {
         val creds = getCredentials()
         val (script, app) = creds.script to creds.app
         this.script = Credentials.script(script.username, script.password, script.clientId, script.clientSecret)
         this.app = Credentials.installedApp(app.clientId, app.redirectUrl)
+        this.moderationSubreddit = creds.moderationSubreddit
         this.applicationOnly = Credentials.userless(script.clientId, script.clientSecret, UUID.randomUUID())
     }
 
@@ -25,16 +28,17 @@ object CredentialsUtil {
         if (isTravis()) getTravisCredentials() else getLocalCredentials()
 
     private fun getTravisCredentials(): TestingCredentials = TestingCredentials(
-        ScriptStub(
+        script = ScriptStub(
             username = getenv("SCRIPT_USERNAME"),
             password = getenv("SCRIPT_PASSWORD"),
             clientSecret = getenv("SCRIPT_CLIENT_SECRET"),
             clientId = getenv("SCRIPT_CLIENT_ID")
         ),
-        AppStub(
+        app = AppStub(
             clientId = getenv("APP_CLIENT_ID"),
             redirectUrl = getenv("APP_REDIRECT_URL")
-        )
+        ),
+        moderationSubreddit = "jraw_testing2"
     )
 
     private fun getLocalCredentialStream() = CredentialsUtil::class.java.getResourceAsStream("/credentials.json") ?:
@@ -43,14 +47,11 @@ object CredentialsUtil {
     private fun getLocalCredentials(): TestingCredentials {
         try {
             val source = Okio.buffer(Okio.source(getLocalCredentialStream()))
-            return JrawUtils.moshi.adapter<TestingCredentials>(TestingCredentials::class.java).fromJson(source)!!
+            return Moshi.Builder()
+                .add(KotlinJsonAdapterFactory())
+                .build()
+                .adapter<TestingCredentials>(TestingCredentials::class.java).fromJson(source)!!
         } catch (e: Exception) {
-//            // If there's an error in CredentialsUtil's init block, a NoClassDefFoundError will be thrown instead of the
-//            // real cause, this error right here. Make sure the user knows about it.
-//            if (e is MissingKotlinParameterException) {
-//                System.err.println("credentials.json: missing property '${e.parameter.name}'")
-//            } else {
-//            }
             System.err.println("${e.javaClass.name}: ${e.message}")
             throw e
         }

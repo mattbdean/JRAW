@@ -3,6 +3,7 @@ package net.dean.jraw.test
 import net.dean.jraw.RateLimitException
 import net.dean.jraw.models.SubmissionKind
 import net.dean.jraw.references.SubmissionReference
+import net.dean.jraw.test.CredentialsUtil.moderationSubreddit
 import net.dean.jraw.test.TestConfig.reddit
 import java.util.*
 
@@ -20,7 +21,7 @@ import java.util.*
  */
 object SharedObjects {
     // should be a subreddit with moderator rights
-    val submittedSelfPostSubreddit = "jraw_testing2"
+    val submittedSelfPostSubreddit = moderationSubreddit
 
     val submittedSelfPost: SubmissionReference? by lazyRateLimited {
         reddit

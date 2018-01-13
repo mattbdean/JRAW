@@ -4,6 +4,7 @@ import com.winterbe.expekt.should
 import net.dean.jraw.ApiException
 import net.dean.jraw.models.SimpleFlairInfo
 import net.dean.jraw.models.SubmissionKind
+import net.dean.jraw.test.CredentialsUtil.moderationSubreddit
 import net.dean.jraw.test.SharedObjects
 import net.dean.jraw.test.TestConfig.reddit
 import net.dean.jraw.test.TestConfig.redditUserless
@@ -18,7 +19,7 @@ import java.util.*
 class SubredditReferenceTest : Spek({
     describe("submit") {
         val now = Date()
-        val ref = reddit.subreddit("jraw_testing2")
+        val ref = reddit.subreddit(moderationSubreddit)
 
         // submittedSelfPost is a lazily-initiated object that is created by attempting to submit a self post. All we
         // have to do is access it.
@@ -49,7 +50,7 @@ class SubredditReferenceTest : Spek({
     }
 
     describe("userFlairOptions/linkFlairOptions") {
-        val srName = "jraw_testing2"
+        val srName = moderationSubreddit
 
         it("should throw an ApiException when there is no active user") {
             expectException(ApiException::class) {
@@ -69,7 +70,7 @@ class SubredditReferenceTest : Spek({
 
     describe("rules") {
         it("should return a Ruleset") {
-            val rules = reddit.subreddit("jraw_testing2").rules()
+            val rules = reddit.subreddit(moderationSubreddit).rules()
             rules.subredditRules.should.have.size.above(0)
             rules.siteRules.should.have.size.above(0)
         }
@@ -81,7 +82,7 @@ class SubredditReferenceTest : Spek({
         }
     }
 
-    val moddedSubreddit = reddit.subreddit("jraw_testing2")
+    val moddedSubreddit = reddit.subreddit(moderationSubreddit)
     describe("updateStylesheet") {
         val newStylesheet = "#test${Random().nextInt()}{color:red}"
 
