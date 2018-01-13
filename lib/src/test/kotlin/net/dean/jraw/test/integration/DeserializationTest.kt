@@ -102,4 +102,13 @@ class DeserializationTest : Spek({
             subs.find { it.name == sr.subreddit }.should.not.be.`null`
         }
     }
+
+    describe("Comments") {
+        it("should deserialize without an error") {
+            fun test(r: RedditClient) = r.subreddit("all").comments().limit(100).build().next()
+
+            test(withUser)
+            test(withoutUser)
+        }
+    }
 })

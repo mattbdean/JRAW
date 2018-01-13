@@ -209,6 +209,8 @@ public abstract class Subreddit implements Created, Identifiable, Referenceable<
         @Json(name = "restricted") RESTRICTED,
         /** Only users with reddit gold can post */
         @Json(name = "gold_restricted") GOLD_RESTRICTED,
-        @Json(name = "archived") ARCHIVED
+        @Json(name = "archived") ARCHIVED,
+        /** This subreddit is actually a user's profile page */
+        @Json(name = "user") USER
     }
 }
