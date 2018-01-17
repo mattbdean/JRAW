@@ -148,7 +148,7 @@ class HttpRequest internal constructor(
             this.method = method
             val formBodyBuilder = FormBody.Builder()
             for ((k, v) in body)
-                formBodyBuilder.addEncoded(k, v)
+                formBodyBuilder.add(k, v)
             this.body = formBodyBuilder.build()
             return this
         }

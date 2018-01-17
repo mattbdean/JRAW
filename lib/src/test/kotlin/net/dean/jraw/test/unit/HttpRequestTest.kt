@@ -4,8 +4,12 @@ import com.winterbe.expekt.should
 import net.dean.jraw.Endpoint
 import net.dean.jraw.http.HttpRequest
 import net.dean.jraw.test.expectException
+import okio.Buffer
+import okio.Okio
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.it
+import java.io.ByteArrayOutputStream
+import java.io.PrintStream
 
 class HttpRequestTest: Spek({
     it("should let us use url() only") {
@@ -97,5 +101,27 @@ class HttpRequestTest: Spek({
                 .endpoint(Endpoint.GET_HOT)
                 .build()
         }
+    }
+
+    it("should not strip special characters from form body when adding via map") {
+        // See #220 for why this test exists
+        val r = HttpRequest.Builder()
+            .url("https://foo.bar")
+            .post(mapOf(
+                "withTabs" to "a\tb",
+                "withNewLines" to "a\nb",
+                "withPluses" to "a+b",
+                "withSpaces" to "a b"
+            ))
+            .build()
+
+        // Write the form body to a UTF-8 string
+        val out = ByteArrayOutputStream()
+        val sink = Okio.buffer(Okio.sink(out))
+        r.body!!.writeTo(sink)
+        sink.flush()
+
+        // \n == %0A, \t == %09, + == %2B, ' ' (space) == %20
+        out.toString("UTF-8").should.equal("withTabs=a%09b&withNewLines=a%0Ab&withPluses=a%2Bb&withSpaces=a%20b")
     }
 })
