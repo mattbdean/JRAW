@@ -54,6 +54,7 @@ dokka {
     impliedPlatforms = ['JVM']
     reportNotDocumented = true
     outputFormat = 'javadoc'
+    includes = ['packages.md']
 
     linkMapping {
         dir = file('src/main/kotlin')
