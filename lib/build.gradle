@@ -63,6 +63,11 @@ dokka {
     }
 }
 
+// Don't build in Travis to reduce spam. Remove when dokka 0.9.16 comes out.
+if (System.getenv("TRAVIS")) {
+    dokka.enabled = false
+}
+
 task javadocJar(type: Jar, dependsOn: dokka) {
     classifier = 'javadoc'
     from dokka.outputDirectory
