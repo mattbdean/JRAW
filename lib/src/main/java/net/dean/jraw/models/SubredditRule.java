@@ -7,10 +7,11 @@ import com.squareup.moshi.Moshi;
 import net.dean.jraw.databind.UnixTime;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
 import java.util.Date;
 
 @AutoValue
-public abstract class SubredditRule implements Created {
+public abstract class SubredditRule implements Created, Serializable {
     /** "link" if the rule only applies to submissions, "comment" for only comments, and "all" for both. */
     public abstract String getKind();
 

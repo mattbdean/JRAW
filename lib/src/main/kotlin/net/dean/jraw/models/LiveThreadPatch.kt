@@ -1,6 +1,7 @@
 package net.dean.jraw.models
 
 import net.dean.jraw.filterValuesNotNull
+import java.io.Serializable
 
 /**
  * Immutable data class used when creating or updating a live thread
@@ -17,7 +18,7 @@ data class LiveThreadPatch(
 
     /** Thread title */
     val title: String? = null
-) {
+): Serializable {
     private constructor(b: Builder) : this(
         description = b.description,
         nsfw = b.nsfw,

@@ -4,9 +4,9 @@ import com.google.auto.value.AutoValue;
 import com.squareup.moshi.Json;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
-import net.dean.jraw.databind.RedditModel;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -19,7 +19,7 @@ import java.util.List;
  * @see <a href="https://www.reddit.com/dev/api/#POST_api_flaircsv">Reddit API - POST /api/flaircsv</a>
  */
 @AutoValue
-public abstract class SimpleFlairInfo {
+public abstract class SimpleFlairInfo implements Serializable {
 
     /** Username */
     public abstract String getUser();

@@ -12,11 +12,12 @@ import net.dean.jraw.references.UserReference;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.Serializable;
 import java.util.Date;
 
 @AutoValue
 @RedditModel
-public abstract class Account implements Created, Referenceable<UserReference<?>> {
+public abstract class Account implements Created, Referenceable<UserReference<?>>, Serializable {
     /** The amount of Karma this user has acquired through comment */
     @Json(name = "comment_karma") public abstract int getCommentKarma();
 

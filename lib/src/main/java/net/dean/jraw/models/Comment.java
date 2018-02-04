@@ -12,11 +12,12 @@ import net.dean.jraw.references.CommentReference;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.Serializable;
 import java.util.Date;
 
 @AutoValue
 @RedditModel
-public abstract class Comment implements PublicContribution<CommentReference>, NestedIdentifiable {
+public abstract class Comment implements PublicContribution<CommentReference>, NestedIdentifiable, Serializable {
     public abstract boolean isArchived();
 
     @Override

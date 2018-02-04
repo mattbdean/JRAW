@@ -8,12 +8,13 @@ import net.dean.jraw.databind.RedditModel;
 import net.dean.jraw.databind.UnixTime;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 @AutoValue
 @RedditModel
-public abstract class LiveUpdate implements Created, Identifiable {
+public abstract class LiveUpdate implements Created, Identifiable, Serializable {
     public abstract String getAuthor();
     public abstract String getBody();
 
@@ -38,7 +39,7 @@ public abstract class LiveUpdate implements Created, Identifiable {
 
     /** Embedded media inside of a live update. */
     @AutoValue
-    public static abstract class Embed {
+    public static abstract class Embed implements Serializable {
         public abstract String getUrl();
         public abstract int getWidth();
         public abstract int getHeight();

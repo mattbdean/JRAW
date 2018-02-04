@@ -13,13 +13,14 @@ import net.dean.jraw.references.Referenceable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @AutoValue
 @RedditModel
-public abstract class Multireddit implements Created, Referenceable<MultiredditReference> {
+public abstract class Multireddit implements Created, Referenceable<MultiredditReference>, Serializable {
     private List<String> subreddits;
 
     /** If the currently logged-in user can edit this multireddit */

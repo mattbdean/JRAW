@@ -6,11 +6,12 @@ import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
 @AutoValue
-public abstract class LiveWebSocketUpdate {
+public abstract class LiveWebSocketUpdate implements Serializable {
     /**
      * <ul>
      *     <li> {@code update} — a new update has been posted in the thread. the payload is a {@link LiveUpdate}.
@@ -31,7 +32,7 @@ public abstract class LiveWebSocketUpdate {
     }
 
     @AutoValue
-    public static abstract class Settings {
+    public static abstract class Settings implements Serializable {
         public abstract String getDescription();
         public abstract String getTitle();
         public abstract boolean isNsfw();
@@ -43,7 +44,7 @@ public abstract class LiveWebSocketUpdate {
     }
 
     @AutoValue
-    public static abstract class EmbedsReady {
+    public static abstract class EmbedsReady implements Serializable {
         /** Basic information about each of the embedded links present in the update */
         @Json(name = "media_embeds") public abstract List<LiveUpdate.Embed> getEmbeds();
 
@@ -84,7 +85,7 @@ public abstract class LiveWebSocketUpdate {
     }
 
     @AutoValue
-    public static abstract class Activity {
+    public static abstract class Activity implements Serializable {
         public abstract int getUsersActive();
         public abstract boolean isFuzzed();
 

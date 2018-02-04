@@ -6,8 +6,10 @@ import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.Serializable;
+
 @AutoValue
-public abstract class EmbeddedMedia {
+public abstract class EmbeddedMedia implements Serializable {
     /** This is generally the OEmbed provider. Can also be the string {@code liveupdate} for a live reddit thread */
     public abstract String getType();
 
@@ -39,7 +41,7 @@ public abstract class EmbeddedMedia {
      * them optional. See [here](https://oembed.com/) for more.
      */
     @AutoValue
-    public static abstract class OEmbed {
+    public static abstract class OEmbed implements Serializable {
         /**
          * One of "photo", "video", "link", or "rich". See
          * [section 2.3.4.1 to 2.3.4.4 of the OEmbed standard](https://oembed.com) for more.

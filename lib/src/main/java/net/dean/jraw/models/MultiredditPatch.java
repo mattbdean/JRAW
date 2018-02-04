@@ -7,12 +7,13 @@ import com.squareup.moshi.Moshi;
 import net.dean.jraw.models.internal.SubredditElement;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 @AutoValue
-public abstract class MultiredditPatch {
+public abstract class MultiredditPatch implements Serializable {
     @Nullable
     @Json(name = "description_md") public abstract String getDescription();
 

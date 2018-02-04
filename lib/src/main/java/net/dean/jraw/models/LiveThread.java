@@ -12,11 +12,12 @@ import net.dean.jraw.references.Referenceable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.Serializable;
 import java.util.Date;
 
 @AutoValue
 @RedditModel
-public abstract class LiveThread implements Created, Identifiable, Referenceable<LiveThreadReference> {
+public abstract class LiveThread implements Created, Identifiable, Referenceable<LiveThreadReference>, Serializable {
     @NotNull
     @Override
     @Json(name = "created_utc") @UnixTime public abstract Date getCreated();

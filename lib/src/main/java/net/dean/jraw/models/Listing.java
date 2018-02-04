@@ -8,6 +8,7 @@ import net.dean.jraw.databind.Enveloped;
 import net.dean.jraw.databind.RedditModel;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +22,7 @@ import java.util.List;
  */
 @AutoValue
 @RedditModel
-public abstract class Listing<T> extends DelegatedList<T> {
+public abstract class Listing<T> extends DelegatedList<T> implements Serializable {
     /** Gets the fullname of the model at the top of the next page, if it exists */
     @Json(name = "after")
     @Nullable

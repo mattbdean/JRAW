@@ -6,12 +6,13 @@ import com.squareup.moshi.Moshi;
 import net.dean.jraw.databind.UnixTime;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @AutoValue
-public abstract class OAuthData {
+public abstract class OAuthData implements Serializable {
     /** A token that can be sent with an Authorization header to access oauth.reddit.com */
     public abstract String getAccessToken();
 

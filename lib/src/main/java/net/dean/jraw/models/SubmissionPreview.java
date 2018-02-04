@@ -4,10 +4,11 @@ import com.google.auto.value.AutoValue;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 
+import java.io.Serializable;
 import java.util.List;
 
 @AutoValue
-public abstract class SubmissionPreview {
+public abstract class SubmissionPreview implements Serializable {
     public abstract List<ImageSet> getImages();
     public abstract boolean isEnabled();
 
@@ -20,7 +21,7 @@ public abstract class SubmissionPreview {
     }
 
     @AutoValue
-    public static abstract class ImageSet {
+    public static abstract class ImageSet implements Serializable {
         public abstract Variation getSource();
         public abstract List<Variation> getResolutions();
         public abstract String getId();
@@ -35,7 +36,7 @@ public abstract class SubmissionPreview {
     }
 
     @AutoValue
-    public static abstract class Variation {
+    public static abstract class Variation implements Serializable {
         public abstract String getUrl();
         public abstract int getWidth();
         public abstract int getHeight();

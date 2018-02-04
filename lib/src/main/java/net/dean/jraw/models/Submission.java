@@ -11,11 +11,12 @@ import net.dean.jraw.references.SubmissionReference;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.Serializable;
 import java.util.Date;
 
 @AutoValue
 @RedditModel
-public abstract class Submission implements PublicContribution<SubmissionReference> {
+public abstract class Submission implements PublicContribution<SubmissionReference>, Serializable {
     @Override
     @Json(name = "author") public abstract String getAuthor();
 

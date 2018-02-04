@@ -9,11 +9,12 @@ import net.dean.jraw.databind.UnixTime;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.Serializable;
 import java.util.Date;
 
 @AutoValue
 @RedditModel
-public abstract class Message implements Created, Distinguishable, Identifiable, Votable {
+public abstract class Message implements Created, Distinguishable, Identifiable, Votable, Serializable {
     /** The full name of the message that kicked off this private message thread, or null if this message isn't a PM */
     @Nullable
     @Json(name = "first_message_name") public abstract String getFirstMessage();

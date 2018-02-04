@@ -9,11 +9,12 @@ import net.dean.jraw.databind.RedditModel;
 import net.dean.jraw.databind.UnixTime;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.Serializable;
 import java.util.Date;
 
 @RedditModel
 @AutoValue
-public abstract class WikiPage {
+public abstract class WikiPage implements Serializable {
 
     @Json(name = "may_revise") abstract boolean getMayRevise();
 

@@ -8,11 +8,12 @@ import net.dean.jraw.databind.RedditModel;
 import net.dean.jraw.databind.UnixTime;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.Serializable;
 import java.util.Date;
 
 @AutoValue
 @RedditModel(enveloped = false)
-public abstract class WikiRevision {
+public abstract class WikiRevision implements Serializable {
     @UnixTime public abstract Date getTimestamp();
     @Nullable public abstract String getReason();
     @Nullable @Enveloped public abstract Account getAuthor();

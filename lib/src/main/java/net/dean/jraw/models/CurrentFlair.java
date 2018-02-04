@@ -6,8 +6,10 @@ import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.Serializable;
+
 @AutoValue
-public abstract class CurrentFlair {
+public abstract class CurrentFlair implements Serializable {
     @Nullable
     @Json(name = "flair_css_class") public abstract String getCssClass();
 

@@ -5,10 +5,11 @@ import com.squareup.moshi.Json;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 
+import java.io.Serializable;
 import java.util.List;
 
 @AutoValue
-public abstract class Ruleset {
+public abstract class Ruleset implements Serializable {
     /** Rules that apply to a specific subreddit */
     @Json(name = "rules") public abstract List<SubredditRule> getSubredditRules();
 

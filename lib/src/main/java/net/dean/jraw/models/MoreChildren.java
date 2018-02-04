@@ -7,6 +7,7 @@ import com.squareup.moshi.Moshi;
 import net.dean.jraw.databind.RedditModel;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -19,7 +20,7 @@ import java.util.List;
  */
 @AutoValue
 @RedditModel
-public abstract class MoreChildren implements NestedIdentifiable {
+public abstract class MoreChildren implements NestedIdentifiable, Serializable {
     @Override
     @NotNull
     @Json(name = "name") public abstract String getFullName();

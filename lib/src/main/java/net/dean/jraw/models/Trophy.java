@@ -8,9 +8,11 @@ import net.dean.jraw.databind.RedditModel;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.Serializable;
+
 @AutoValue
 @RedditModel
-public abstract class Trophy implements Identifiable {
+public abstract class Trophy implements Identifiable, Serializable {
     /** A succinct description of how/when/why the user got this award */
     @Nullable
     public abstract String getDescription();

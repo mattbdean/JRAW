@@ -12,6 +12,7 @@ import net.dean.jraw.references.SubredditReference;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -26,7 +27,7 @@ import java.util.Date;
  */
 @AutoValue
 @RedditModel
-public abstract class Subreddit implements Created, Identifiable, Referenceable<SubredditReference> {
+public abstract class Subreddit implements Created, Identifiable, Referenceable<SubredditReference>, Serializable {
     /**
      * How many accounts are active on this subreddit at one time. If {@link #isAccountsActiveFuzzed()}, this will not
      * be exact.

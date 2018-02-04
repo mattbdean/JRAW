@@ -2,12 +2,13 @@ package net.dean.jraw.models;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-public abstract class DelegatedList<T> implements List<T> {
+public abstract class DelegatedList<T> implements List<T>, Serializable {
     protected abstract List<T> getDelegatedList();
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

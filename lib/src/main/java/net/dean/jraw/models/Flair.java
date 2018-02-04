@@ -5,8 +5,10 @@ import com.squareup.moshi.Json;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 
+import java.io.Serializable;
+
 @AutoValue
-public abstract class Flair {
+public abstract class Flair implements Serializable {
     public abstract String getText();
 
     @Json(name = "text_editable") public abstract boolean isTextEditable();
