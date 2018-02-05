@@ -13,6 +13,7 @@ import net.dean.jraw.pagination.SubredditSearchPaginator
 import net.dean.jraw.ratelimit.LeakyBucketRateLimiter
 import net.dean.jraw.ratelimit.RateLimiter
 import net.dean.jraw.references.*
+import okhttp3.HttpUrl
 import okhttp3.WebSocket
 import okhttp3.WebSocketListener
 import java.util.concurrent.TimeUnit
@@ -133,11 +134,28 @@ class RedditClient internal constructor(
 
             // The request was intended to be sent with the previous access token. Since we've renewed it, we have to
             // modify that header.
-            val authHeader = r.headers.get("Authorization")
+            val authHeader = req.headers.get("Authorization")
             if (authHeader != null) {
-                val newHeaders = r.headers.newBuilder().set("Authorization", "bearer ${authManager.accessToken}").build()
-                req = HttpRequest(req.url, newHeaders, req.method, req.body, req.basicAuth)
+                val newHeaders = req.headers.newBuilder().set("Authorization", "bearer ${authManager.accessToken}").build()
+                req = HttpRequest(req.url, newHeaders, req.method, req.body, req.basicAuth, req.rawJson)
             }
+        }
+
+        // Add the raw_json=1 query parameter if requested
+        if (req.rawJson) {
+            val url = HttpUrl.parse(req.url)!!
+            // Make sure we specify a value for raw_json exactly once
+
+            var newUrl = url.newBuilder()
+
+            if (url.queryParameterValues("raw_json") != listOf("1")) {
+                // Make sure to remove all previously specified values of raw_json if more than one existed or given a
+                // different value.
+                newUrl = newUrl.removeAllQueryParameters("raw_json")
+                    .addQueryParameter("raw_json", "1")
+            }
+
+            req = HttpRequest(newUrl.build().toString(), req.headers, req.method, req.body, req.basicAuth, req.rawJson)
         }
 
         // Only ratelimit on the first try

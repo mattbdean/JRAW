@@ -124,4 +124,19 @@ class HttpRequestTest: Spek({
         // \n == %0A, \t == %09, + == %2B, ' ' (space) == %20
         out.toString("UTF-8").should.equal("withTabs=a%09b&withNewLines=a%0Ab&withPluses=a%2Bb&withSpaces=a%20b")
     }
+
+    it("should include rawJson by default") {
+        val r = HttpRequest.Builder()
+            .url("https://foo.bar")
+            .build()
+
+        r.rawJson.should.be.`true`
+
+        val r2 = HttpRequest.Builder()
+            .url("https://foo.bar")
+            .rawJson(false)
+            .build()
+
+        r2.rawJson.should.be.`false`
+    }
 })

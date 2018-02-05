@@ -39,14 +39,18 @@ class HttpRequest internal constructor(
     val body: RequestBody?,
 
     /** If present, the request will be sent using HTTP Basic Authentication */
-    internal val basicAuth: BasicAuthData?
+    internal val basicAuth: BasicAuthData?,
+
+    /** If being sent with a RedditClient, will request that reddit does not encode special HTML characters */
+    val rawJson: Boolean = true
 ) {
     private constructor(b: Builder) : this(
         url = buildUrl(b),
         headers = b.headers.build(),
         method = b.method,
         body = b.body,
-        basicAuth = b.basicAuth
+        basicAuth = b.basicAuth,
+        rawJson = b.rawJson
     )
 
     /** */
@@ -135,6 +139,8 @@ class HttpRequest internal constructor(
         internal var pathParams = listOf<String>()
         internal var query: Map<String, String> = mapOf()
         internal var basicAuth: BasicAuthData? = null
+
+        internal var rawJson = true
 
         /** Sets the HTTP method (GET, POST, PUT, etc.). Defaults to GET. Case insensitive. */
         fun method(method: String, body: RequestBody? = null): Builder {
@@ -232,6 +238,9 @@ class HttpRequest internal constructor(
 
         /** Sets the query section of the URL. */
         fun query(query: Map<String, String>): Builder { this.query = query; return this }
+
+        /** When used with a RedditClient, requests that reddit not escape HTML entities. True by default. */
+        fun rawJson(rawJson: Boolean): Builder { this.rawJson = rawJson; return this }
 
         /** Creates an HttpRequest from this builder */
         fun build() = HttpRequest(this)

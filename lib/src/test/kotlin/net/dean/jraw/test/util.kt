@@ -8,8 +8,7 @@ import net.dean.jraw.models.OAuthData
 import net.dean.jraw.models.Votable
 import net.dean.jraw.pagination.Paginator
 import net.dean.jraw.test.TestConfig.userAgent
-import okhttp3.WebSocket
-import okhttp3.WebSocketListener
+import okhttp3.*
 import org.jetbrains.spek.api.dsl.SpecBody
 import org.jetbrains.spek.api.dsl.TestBody
 import org.jetbrains.spek.api.dsl.it
@@ -124,5 +123,30 @@ object NoopNetworkAdapter : NetworkAdapter {
 
     override fun connect(url: String, listener: WebSocketListener): WebSocket {
         throw NotImplementedError("NoopNetworkAdapter cannot open WebSocket connections")
+    }
+}
+
+/**
+ * A SpyNetworkAdapter keeps track of all the requests that it gets sent. It always returns 200 OK
+ */
+class SpyNetworkAdapter : NetworkAdapter {
+    override var userAgent: UserAgent = UserAgent("n/a")
+    val history: MutableList<HttpRequest> = mutableListOf()
+
+    override fun execute(r: HttpRequest): HttpResponse {
+        history.add(r)
+        return HttpResponse(Response.Builder()
+            .request(Request.Builder()
+                .url("https://foo.bae")
+                .build())
+            .body(ResponseBody.create(MediaType.parse("text/plain"), "Response from SpyNetworkAdapter"))
+            .protocol(Protocol.HTTP_1_1)
+            .code(200)
+            .message("OK")
+            .build())
+    }
+
+    override fun connect(url: String, listener: WebSocketListener): WebSocket {
+        throw NotImplementedError()
     }
 }

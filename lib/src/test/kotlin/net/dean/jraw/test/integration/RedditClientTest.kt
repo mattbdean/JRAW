@@ -1,6 +1,7 @@
 package net.dean.jraw.test.integration
 
 import com.winterbe.expekt.should
+import net.dean.jraw.RedditClient
 import net.dean.jraw.http.HttpRequest
 import net.dean.jraw.http.NetworkException
 import net.dean.jraw.http.SimpleHttpLogger
@@ -9,6 +10,7 @@ import net.dean.jraw.oauth.OAuthHelper
 import net.dean.jraw.pagination.Paginator
 import net.dean.jraw.test.*
 import net.dean.jraw.test.TestConfig.reddit
+import okhttp3.HttpUrl
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
@@ -42,6 +44,46 @@ class RedditClientTest : Spek({
                 .build())
 
             adapter.output().should.be.empty
+        }
+    }
+
+    describe("request") {
+        describe("rawJson") {
+            lateinit var adapter: SpyNetworkAdapter
+            lateinit var reddit: RedditClient
+
+            beforeEachTest {
+                adapter = SpyNetworkAdapter()
+                reddit = newMockRedditClient(adapter)
+            }
+
+            it("should not add raw_json=1 to the query when rawJson is false") {
+                reddit.request(HttpRequest.Builder()
+                    .url("https://foo.bar")
+                    .rawJson(false)
+                    .build())
+
+                val url = HttpUrl.parse(adapter.history.first().url)!!
+                url.queryParameterNames().should.not.contain("raw_json")
+            }
+
+            it("should add raw_json=1 to the query when rawJson is true") {
+                reddit.request(HttpRequest.Builder()
+                    .url("https://foo.bar")
+                    .build())
+
+                val url = HttpUrl.parse(adapter.history.first().url)!!
+                url.queryParameterValues("raw_json").should.equal(listOf("1"))
+            }
+
+            it("should not add raw_json=1 to the query when it's already present") {
+                reddit.request(HttpRequest.Builder()
+                    .url("https://foo.bar/?raw_json=1")
+                    .build())
+
+                val url = HttpUrl.parse(adapter.history.first().url)!!
+                url.queryParameterValues("raw_json").should.equal(listOf("1"))
+            }
         }
     }
 
