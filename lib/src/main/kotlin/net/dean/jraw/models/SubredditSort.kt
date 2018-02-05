@@ -4,6 +4,9 @@ enum class SubredditSort(override val requiresTimePeriod: Boolean = false) : Sor
     /** Popular posts, takes into account score, age, and other factors. */
     HOT,
 
+    /** Supposed to replace [HOT]. Uses a new algorithm to "keep the home feed fresh." */
+    BEST,
+
     /** New posts */
     NEW,
 
