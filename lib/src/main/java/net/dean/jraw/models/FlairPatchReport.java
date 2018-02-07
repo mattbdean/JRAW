@@ -4,10 +4,11 @@ import com.google.auto.value.AutoValue;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 
+import java.io.Serializable;
 import java.util.Map;
 
 @AutoValue
-public abstract class FlairPatchReport {
+public abstract class FlairPatchReport implements Serializable {
     /** A summary of the action the API took. For example, "skipped," or "added flair for user _vargas_" */
     public abstract String getStatus();
 

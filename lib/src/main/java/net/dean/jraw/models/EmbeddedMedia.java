@@ -8,9 +8,18 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
 
+/**
+ * Some media that is viewable inline when browsing reddit through the website. There are generally two shapes this
+ * class can take. When the media is from an external source, {@link #getOEmbed()} and {@link #getType()} will both be
+ * non-null. When the media is hosted by reddit, {@link #getRedditVideo()} will be non-null.
+ */
 @AutoValue
 public abstract class EmbeddedMedia implements Serializable {
-    /** This is generally the OEmbed provider. Can also be the string {@code liveupdate} for a live reddit thread */
+    /**
+     * This is generally the OEmbed provider. Can also be the string {@code liveupdate} for a live reddit thread. Null
+     * when {@link #getRedditVideo() is not}
+     */
+    @Nullable
     public abstract String getType();
 
     @Nullable
@@ -20,16 +29,19 @@ public abstract class EmbeddedMedia implements Serializable {
     @Nullable
     @Json(name = "event_id") public abstract String getLiveThreadId();
 
+    @Nullable
+    @Json(name = "reddit_video") public abstract RedditVideo getRedditVideo();
+
     public static EmbeddedMedia create(String type, OEmbed newOEmbed) {
-        return create(type, newOEmbed, null);
+        return create(type, newOEmbed, null, null);
     }
 
     public static EmbeddedMedia create(String liveThreadId) {
-        return create("liveupdate", null, liveThreadId);
+        return create("liveupdate", null, liveThreadId, null);
     }
 
-    public static EmbeddedMedia create(String newType, OEmbed newOEmbed, String newLiveThreadId) {
-        return new AutoValue_EmbeddedMedia(newType, newOEmbed, newLiveThreadId);
+    public static EmbeddedMedia create(String newType, OEmbed newOEmbed, String newLiveThreadId, RedditVideo vid) {
+        return new AutoValue_EmbeddedMedia(newType, newOEmbed, newLiveThreadId, vid);
     }
 
     public static JsonAdapter<EmbeddedMedia> jsonAdapter(Moshi moshi) {
@@ -105,6 +117,31 @@ public abstract class EmbeddedMedia implements Serializable {
 
         public static JsonAdapter<OEmbed> jsonAdapter(Moshi moshi) {
             return new AutoValue_EmbeddedMedia_OEmbed.MoshiJsonAdapter(moshi);
+        }
+    }
+
+    @AutoValue
+    public static abstract class RedditVideo implements Serializable {
+        @Json(name = "fallback_url")
+        public abstract String getFallbackUrl();
+
+        public abstract int getHeight();
+        public abstract int getWidth();
+
+        @Json(name = "scrubber_media_url")
+        public abstract String getScrubberMediaUrl();
+
+        @Json(name = "dash_url")
+        public abstract String getDashUrl();
+
+        /** Length of the video in seconds */
+        public abstract int getDuration();
+
+        @Json(name = "hls_url")
+        public abstract String getHlsUrl();
+
+        public static JsonAdapter<RedditVideo> jsonAdapter(Moshi moshi) {
+            return new AutoValue_EmbeddedMedia_RedditVideo.MoshiJsonAdapter(moshi);
         }
     }
 }

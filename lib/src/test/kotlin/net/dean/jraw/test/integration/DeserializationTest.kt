@@ -74,6 +74,16 @@ class DeserializationTest : Spek({
         it("should handle Submissions with no media") {
             withUser.submission("92dd8").inspect().embeddedMedia.should.be.`null`
         }
+
+        it("should handle Submissions with reddit video as the media") {
+            val media = withUser.submission("7vw9l1").inspect().embeddedMedia
+            media.should.not.be.`null`
+
+            media?.type.should.be.`null`
+            media?.oEmbed.should.be.`null`
+
+            media?.redditVideo.should.not.be.`null`
+        }
     }
 
     describe("Private subreddits") {
