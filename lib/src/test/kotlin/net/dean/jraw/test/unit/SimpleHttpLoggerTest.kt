@@ -3,7 +3,6 @@ package net.dean.jraw.test.unit
 import com.winterbe.expekt.should
 import net.dean.jraw.RedditClient
 import net.dean.jraw.http.HttpRequest
-import net.dean.jraw.http.LogAdapter
 import net.dean.jraw.http.SimpleHttpLogger
 import net.dean.jraw.test.InMemoryLogAdapter
 import net.dean.jraw.test.MockNetworkAdapter
@@ -11,7 +10,6 @@ import net.dean.jraw.test.expectException
 import net.dean.jraw.test.newMockRedditClient
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.it
-import java.io.PrintStream
 import kotlin.properties.Delegates
 
 class SimpleHttpLoggerTest : Spek({
@@ -33,6 +31,7 @@ class SimpleHttpLoggerTest : Spek({
         val res = """{"foo":"bar"}"""
         mockAdapter.enqueue(res)
         reddit.request(HttpRequest.Builder()
+            .rawJson(false)
             .url(url)
             .build())
         logAdapter.output().should.equal(listOf(

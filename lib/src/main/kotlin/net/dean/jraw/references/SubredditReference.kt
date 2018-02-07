@@ -9,7 +9,6 @@ import net.dean.jraw.pagination.BarebonesPaginator
 import net.dean.jraw.pagination.DefaultPaginator
 import net.dean.jraw.pagination.SearchPaginator
 import net.dean.jraw.tree.RootCommentNode
-import java.net.URLEncoder
 
 /**
  * Allows the user to perform API actions against a subreddit
@@ -227,17 +226,22 @@ class SubredditReference internal constructor(reddit: RedditClient, val subreddi
     @EndpointImplementation(Endpoint.GET_FLAIRLIST)
     fun flairList() = BarebonesPaginator.Builder.create<SimpleFlairInfo>(reddit, "/r/$subreddit/api/flairlist")
 
-    /** Updates users flairs on the subreddit in bulk (up to 100 rows, the rest are ignored by Reddit).
-     *  Requires mod priveleges on the subreddit.
+    /**
+     * Updates users flairs on the subreddit in bulk (up to 100 rows, the rest are ignored by Reddit).
+     * Requires mod privileges on the subreddit. If the CSS class and text are empty/null for a particular user, that
+     * user's flair is cleared.
+     *
+     * Note that even if this call succeeds, reddit may still have rejected one or more of the changes. Make sure to
+     * check the [FlairPatchReport]s that this method returns.
      */
     @EndpointImplementation(Endpoint.POST_FLAIRCSV)
-    fun patchFlairList(patch: List<SimpleFlairInfo>) {
-        reddit.request {
+    fun patchFlairList(patch: List<SimpleFlairInfo>): List<FlairPatchReport> {
+        return reddit.request {
             it.path("/r/$subreddit/api/flaircsv")
                 .post(mapOf(
-                    "flair_csv" to (patch.joinToString(separator = URLEncoder.encode("\n", "UTF-8")) { it.toCsvLine() })
+                    "flair_csv" to (patch.joinToString(separator = "\n") { it.toCsvLine() })
                 ))
-        }
+        }.deserializeWith(JrawUtils.moshi.adapter(Types.newParameterizedType(List::class.java, FlairPatchReport::class.java)))
     }
 
     /** */

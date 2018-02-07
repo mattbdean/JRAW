@@ -101,13 +101,15 @@ class SubredditReferenceTest : Spek({
     fun randomString() = "test${Random().nextInt()}"
     val flairList = listOf(
         SimpleFlairInfo.create("_vargas_", randomString(), randomString()),
-        SimpleFlairInfo.create(reddit.me().username, randomString(), randomString())
+        SimpleFlairInfo.create(reddit.authManager.currentUsername(), randomString(), randomString())
     )
     describe("patchFlairList") {
         it("should update the modded subreddit flair list") {
-            moddedSubreddit.patchFlairList(flairList)
-        }
-        it("should have an effect on subreddit flair list") {
+            val result = moddedSubreddit.patchFlairList(flairList)
+            for (report in result) {
+                report.isOk.should.be.`true`
+            }
+
             val updatedFlairList = moddedSubreddit.flairList().build().accumulateMerged(-1)
 
             for(simpleFlairInfo in flairList)
