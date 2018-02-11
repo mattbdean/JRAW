@@ -24,7 +24,7 @@ class LeakyBucketRateLimiter(
 
     /** How the bucket will get refilled */
     val refillStrategy: RefillStrategy
-) : RateLimiter {
+) : AbstractRateLimiter() {
 
     /** Creates an instance using a [FixedIntervalRefillStrategy]. */
     constructor(capacity: Long, permitsPerPeriod: Long, unit: TimeUnit) : this(
@@ -38,15 +38,6 @@ class LeakyBucketRateLimiter(
     init {
         if (capacity <= 0) throw IllegalArgumentException("expecting a permit capacity > 0")
         if (initialPermits > capacity) throw IllegalArgumentException("initialPermits cannot be higher than capacity")
-    }
-
-    override fun acquire(permits: Long) {
-        while (true) {
-            if (tryAcquire(permits)) break
-
-            // Sleep for the smallest unit of time possible so we allow other threads to run
-            suspend(1, TimeUnit.NANOSECONDS)
-        }
     }
 
     override fun tryAcquire(permits: Long): Boolean {
@@ -67,32 +58,6 @@ class LeakyBucketRateLimiter(
     override fun refill(permits: Long) {
         val newPermits = Math.min(capacity, Math.max(0, permits))
         size = Math.max(0, Math.min(size + newPermits, capacity))
-    }
-
-    /**
-     * Adapted (read: copied) from Guava's Uninterruptibles.sleepUninterruptibly()
-     */
-    private fun suspend(sleepFor: Long, unit: TimeUnit) {
-        var interrupted = false
-        try {
-            var remainingNanos = unit.toNanos(sleepFor)
-            val end = System.nanoTime() + remainingNanos
-            while (true) {
-                try {
-                    // TimeUnit.suspend() treats negative timeouts just like zero.
-                    TimeUnit.NANOSECONDS.sleep(remainingNanos)
-                    return
-                } catch (e: InterruptedException) {
-                    interrupted = true
-                    remainingNanos = end - System.nanoTime()
-                }
-
-            }
-        } finally {
-            if (interrupted) {
-                Thread.currentThread().interrupt()
-            }
-        }
     }
 }
 
