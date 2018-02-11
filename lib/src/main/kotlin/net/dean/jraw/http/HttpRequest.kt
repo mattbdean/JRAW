@@ -53,6 +53,8 @@ class HttpRequest internal constructor(
         rawJson = b.rawJson
     )
 
+
+
     /** */
     companion object {
         /** This Pattern will match a URI parameter. For example, /api/{param1}/{param2}  */
@@ -244,5 +246,9 @@ class HttpRequest internal constructor(
 
         /** Creates an HttpRequest from this builder */
         fun build() = HttpRequest(this)
+    }
+
+    override fun toString(): String {
+        return "HttpRequest(url='$url', headers=$headers, method='$method', body=$body, basicAuth=$basicAuth, rawJson=$rawJson)"
     }
 }
