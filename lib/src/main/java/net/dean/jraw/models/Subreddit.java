@@ -38,6 +38,9 @@ public abstract class Subreddit implements Created, Identifiable, Referenceable<
     /** If reddit is hiding the true number of active accounts and giving a value that is "close enough" instead. */
     @Json(name = "accounts_active_fuzzed") public abstract boolean isAccountsActiveFuzzed();
 
+    /** A full URL pointing to the subreddit's banner or an empty string if there is none */
+    @Json(name = "banner_img") public abstract String getBannerImage();
+
     @Json(name = "comment_score_hide_mins")
     @Nullable
     abstract Integer getCommentScoreHideMinsNullable();
