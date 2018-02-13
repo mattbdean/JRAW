@@ -134,11 +134,7 @@ class RedditClient internal constructor(
 
             // The request was intended to be sent with the previous access token. Since we've renewed it, we have to
             // modify that header.
-            val authHeader = req.headers.get("Authorization")
-            if (authHeader != null) {
-                val newHeaders = req.headers.newBuilder().set("Authorization", "bearer ${authManager.accessToken}").build()
-                req = HttpRequest(req.url, newHeaders, req.method, req.body, req.basicAuth, req.rawJson)
-            }
+            req = req.newBuilder().header("Authorization", "bearer ${authManager.accessToken}").build()
         }
 
         // Add the raw_json=1 query parameter if requested
@@ -155,7 +151,7 @@ class RedditClient internal constructor(
                     .addQueryParameter("raw_json", "1")
             }
 
-            req = HttpRequest(newUrl.build().toString(), req.headers, req.method, req.body, req.basicAuth, req.rawJson)
+            req = req.newBuilder().url(newUrl.build()).build()
         }
 
         // Only ratelimit on the first try

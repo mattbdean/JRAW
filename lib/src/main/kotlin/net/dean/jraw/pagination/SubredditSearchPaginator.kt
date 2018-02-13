@@ -23,14 +23,11 @@ class SubredditSearchPaginator private constructor(b: Builder) : DefaultPaginato
 
     override fun createNextRequest(): HttpRequest.Builder {
         // Pretty much everything can be reused from DefaultPaginator
-        val base = super.createNextRequest()
+        val base = super.createNextRequest().build()
 
         // Add the 'q' query parameter
-        val newQuery = base.query.toMutableMap()
-        newQuery.put("q", this.query)
-
-        return base
-            .query(newQuery)
+        return base.newBuilder()
+            .url(base.parsedUrl.newBuilder().setQueryParameter("q", query).build())
     }
 
     /** Builder pattern implementation */

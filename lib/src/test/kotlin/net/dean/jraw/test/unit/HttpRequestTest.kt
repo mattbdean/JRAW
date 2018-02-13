@@ -4,16 +4,14 @@ import com.winterbe.expekt.should
 import net.dean.jraw.Endpoint
 import net.dean.jraw.http.HttpRequest
 import net.dean.jraw.test.expectException
-import okio.Buffer
 import okio.Okio
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.it
 import java.io.ByteArrayOutputStream
-import java.io.PrintStream
 
 class HttpRequestTest: Spek({
     it("should let us use url() only") {
-        val url = "https://google.com"
+        val url = "https://google.com/"
         HttpRequest.Builder()
             .get()
             .url(url)
@@ -31,7 +29,7 @@ class HttpRequestTest: Spek({
     }
 
     it("should throw an error if we leave the host out") {
-        expectException(IllegalArgumentException::class) {
+        expectException(IllegalStateException::class) {
             HttpRequest.Builder()
                 .path("/foo")
                 .build()
