@@ -15,7 +15,7 @@ class SubredditTest : Spek({
             pics.name.should.equal("pics")
 
             // Make sure the Date serialization treats this as seconds instead of milliseconds
-            // See /r/pics.json --> created_utc
+            // See /r/pics/about.json --> created_utc
             pics.created.should.be.above(Date(1201132800))
         }
     }
