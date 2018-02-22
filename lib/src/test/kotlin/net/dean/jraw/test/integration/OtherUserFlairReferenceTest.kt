@@ -16,10 +16,8 @@ class OtherUserFlairReferenceTest : Spek ({
         val newCssClass = "jrawTestCssClass${Random().nextInt()}"
         val newText = "jrawTestText${Random().nextInt()}"
 
-        it("should update the other user flair") {
+        it("should have an effect on the model") {
             otherUser.flairOn(moddedSubreddit).updateToCssClass(newCssClass, newText)
-        }
-        it("should have an effect on his model") {
             val updatedFlair = otherUser.flairOn(moddedSubreddit).current()
             updatedFlair.cssClass.should.equal(newCssClass)
             updatedFlair.text.should.equal(newText)
