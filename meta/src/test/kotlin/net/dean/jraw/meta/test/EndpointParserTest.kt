@@ -24,13 +24,13 @@ class EndpointParserTest : Spek({
                 METHODS.should.contain(method)
 
                 // http://regexr.com/3g4ad
-                path.should.match(Regex("(/[a-z{}_0-9]+)+"))
+                path.should.match(Regex("(/[a-z{}_0-9.]+)+"))
 
                 // http://regexr.com/3g4a7
                 oauthScope.should.match(Regex("[a-z]+"))
 
                 // http://regexr.com/3g4ap
-                redditDocLink.should.match(Regex("https://www\\.reddit\\.com/dev/api/oauth#[A-Z]+_[0-9a-z_{}:]+"))
+                redditDocLink.should.match(Regex("https://www\\.reddit\\.com/dev/api/oauth#[A-Z]+_[0-9a-z_{}:.]+"))
             }
         }
 
