@@ -508,6 +508,10 @@ public enum Endpoint {
     GET_RECOMMEND_SR_SRNAMES("GET", "/api/recommend/sr/{srnames}", "read"),
 
     /**
+     * Represents the endpoint {@code GET /api/search_reddit_names}. Requires OAuth scope 'read'. See <a href="https://www.reddit.com/dev/api/oauth#GET_api_search_reddit_names">here</a> for more information */
+    GET_SEARCH_REDDIT_NAMES("GET", "/api/search_reddit_names", "read"),
+
+    /**
      * Represents the endpoint {@code POST /api/search_reddit_names}. Requires OAuth scope 'read'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_search_reddit_names">here</a> for more information */
     POST_SEARCH_REDDIT_NAMES("POST", "/api/search_reddit_names", "read"),
 
@@ -520,12 +524,24 @@ public enum Endpoint {
     GET_SUBREDDIT_AUTOCOMPLETE("GET", "/api/subreddit_autocomplete", "read"),
 
     /**
+     * Represents the endpoint {@code GET /api/subreddit_autocomplete_v2}. Requires OAuth scope 'read'. See <a href="https://www.reddit.com/dev/api/oauth#GET_api_subreddit_autocomplete_v2">here</a> for more information */
+    GET_SUBREDDIT_AUTOCOMPLETE_V2("GET", "/api/subreddit_autocomplete_v2", "read"),
+
+    /**
      * Represents the endpoint {@code GET /api/subreddits_by_topic}. Requires OAuth scope 'read'. See <a href="https://www.reddit.com/dev/api/oauth#GET_api_subreddits_by_topic">here</a> for more information */
     GET_SUBREDDITS_BY_TOPIC("GET", "/api/subreddits_by_topic", "read"),
 
     /**
      * Represents the endpoint {@code GET /api/v1/user/{username}/trophies}. Requires OAuth scope 'read'. See <a href="https://www.reddit.com/dev/api/oauth#GET_api_v1_user_{username}_trophies">here</a> for more information */
     GET_USER_USERNAME_TROPHIES("GET", "/api/v1/user/{username}/trophies", "read"),
+
+    /**
+     * Represents the endpoint {@code GET /api/v1/{subreddit}/emojis/all}. Requires OAuth scope 'read'. See <a href="https://www.reddit.com/dev/api/oauth#GET_api_v1_{subreddit}_emojis_all">here</a> for more information */
+    GET_SUBREDDIT_EMOJIS_ALL("GET", "/api/v1/{subreddit}/emojis/all", "read"),
+
+    /**
+     * Represents the endpoint {@code GET /best}. Requires OAuth scope 'read'. See <a href="https://www.reddit.com/dev/api/oauth#GET_best">here</a> for more information */
+    GET_BEST("GET", "/best", "read"),
 
     /**
      * Represents the endpoint {@code GET /by_id/{names}}. Requires OAuth scope 'read'. See <a href="https://www.reddit.com/dev/api/oauth#GET_by_id_{names}">here</a> for more information */
@@ -654,6 +670,18 @@ public enum Endpoint {
     /**
      * Represents the endpoint {@code POST /api/unsave}. Requires OAuth scope 'save'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_unsave">here</a> for more information */
     POST_UNSAVE("POST", "/api/unsave", "save"),
+
+    /**
+     * Represents the endpoint {@code POST /api/v1/{subreddit}/emoji.json}. Requires OAuth scope 'structuredstyles'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_v1_{subreddit}_emoji.json">here</a> for more information */
+    POST_SUBREDDIT_EMOJI("POST", "/api/v1/{subreddit}/emoji.json", "structuredstyles"),
+
+    /**
+     * Represents the endpoint {@code DELETE /api/v1/{subreddit}/emoji/{emoji_name}}. Requires OAuth scope 'structuredstyles'. See <a href="https://www.reddit.com/dev/api/oauth#DELETE_api_v1_{subreddit}_emoji_{emoji_name}">here</a> for more information */
+    DELETE_SUBREDDIT_EMOJI_EMOJI_NAME("DELETE", "/api/v1/{subreddit}/emoji/{emoji_name}", "structuredstyles"),
+
+    /**
+     * Represents the endpoint {@code POST /api/v1/{subreddit}/emoji_asset_upload_s3.json}. Requires OAuth scope 'structuredstyles'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_v1_{subreddit}_emoji_asset_upload_s3.json">here</a> for more information */
+    POST_SUBREDDIT_EMOJI_ASSET_UPLOAD_S3("POST", "/api/v1/{subreddit}/emoji_asset_upload_s3.json", "structuredstyles"),
 
     /**
      * Represents the endpoint {@code POST /api/live/create}. Requires OAuth scope 'submit'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_live_create">here</a> for more information */

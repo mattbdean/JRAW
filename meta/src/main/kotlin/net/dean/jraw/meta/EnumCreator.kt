@@ -87,7 +87,7 @@ class EnumCreator(val endpoints: List<ParsedEndpoint>, val indent: Int = 4) {
             stripPrefixes
                 .asSequence()
                 .filter { name.startsWith(it) }
-                .forEach { name = name.substring(it.length) }
+                .forEach { name = name.substring(it.length).removeSuffix(".json") }
 
             if (name.startsWith("r/{subreddit}"))
                 name = "subreddit" + name.substring("r/{subreddit}".length)

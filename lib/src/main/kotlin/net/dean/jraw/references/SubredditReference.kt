@@ -30,7 +30,7 @@ class SubredditReference internal constructor(reddit: RedditClient, val subreddi
      * Creates a new [DefaultPaginator.Builder] to iterate over this subreddit's posts. Not a blocking call.
      */
     @EndpointImplementation(
-        Endpoint.GET_HOT, Endpoint.GET_NEW, Endpoint.GET_RISING, Endpoint.GET_SORT,
+        Endpoint.GET_HOT, Endpoint.GET_NEW, Endpoint.GET_RISING, Endpoint.GET_SORT, Endpoint.GET_BEST,
         type = MethodType.NON_BLOCKING_CALL
     )
     fun posts() = DefaultPaginator.Builder.create<Submission, SubredditSort>(reddit, "/r/$subreddit", sortingAlsoInPath = true)
