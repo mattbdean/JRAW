@@ -1,9 +1,7 @@
 package net.dean.jraw.references
 
-import com.sun.org.apache.xpath.internal.operations.Bool
 import net.dean.jraw.*
 import net.dean.jraw.databind.Enveloped
-import net.dean.jraw.http.HttpResponse
 import net.dean.jraw.models.Comment
 import net.dean.jraw.models.DistinguishedStatus
 import net.dean.jraw.models.VoteDirection
