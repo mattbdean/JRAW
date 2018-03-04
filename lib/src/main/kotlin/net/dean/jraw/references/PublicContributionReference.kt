@@ -1,5 +1,6 @@
 package net.dean.jraw.references
 
+import com.sun.org.apache.xpath.internal.operations.Bool
 import net.dean.jraw.*
 import net.dean.jraw.databind.Enveloped
 import net.dean.jraw.http.HttpResponse
@@ -135,11 +136,11 @@ abstract class PublicContributionReference internal constructor(reddit: RedditCl
     }
 
     /**
-     * Distinguish a comment or submission author with a sigil. Logged in user must have the priveleges to use the
-     * supplied [DistinguishedStatus], i.e. moderator priveleges for [DistinguishedStatus.MODERATOR] and admin
-     * priveleges for [DistinguishedStatus.ADMIN] and so on.
+     * Distinguish a comment or submission author with a sigil. Logged in user must have the privileges to use the
+     * supplied [DistinguishedStatus], i.e. moderator privileges for [DistinguishedStatus.MODERATOR] and admin
+     * privileges for [DistinguishedStatus.ADMIN] and so on.
      *
-     * @param sticky Flag for comments, which will stick the distingushed comment to the top of all comments threads.
+     * @param sticky Flag for comments, which will stick the distinguished comment to the top of all comments threads.
      * If a comment is marked sticky, it will override any other stickied comment for that post (as only one comment may
      * be stickied at a time.) Only top-level comments may be stickied. Requires moderator privileges. Can only be used
      * with [DistinguishedStatus.MODERATOR] or [DistinguishedStatus.ADMIN].
@@ -153,7 +154,8 @@ abstract class PublicContributionReference internal constructor(reddit: RedditCl
             DistinguishedStatus.MODERATOR -> "yes"
             DistinguishedStatus.ADMIN -> "admin"
             DistinguishedStatus.SPECIAL -> "special"
-            DistinguishedStatus.GOLD -> throw IllegalArgumentException("Cannot manually distinguish a contribution with a gold distinguish status")
+            DistinguishedStatus.GOLD -> throw IllegalArgumentException(
+                "Cannot manually distinguish a contribution with a gold distinguish status")
         }
         if (sticky && this is SubmissionReference)
             throw IllegalArgumentException("Flag 'sticky' can only be set for comments, not submissions")
@@ -172,7 +174,7 @@ abstract class PublicContributionReference internal constructor(reddit: RedditCl
     }
 
     /**
-     * Remove the contribution as a subreddit moderator. Requires mod priveleges on the subreddit of the contribution.
+     * Remove the contribution as a subreddit moderator. Requires mod privileges on the subreddit of the contribution.
      *
      * @param spam Whether spam is the reason for the removal. Trains the subreddit spamfilter to be critical of
      * similar contributions in the future
@@ -191,7 +193,7 @@ abstract class PublicContributionReference internal constructor(reddit: RedditCl
     }
 
     /**
-     * Approve the contribution as a subreddit moderator. Requires mod priveleges on the subreddit of the contribution.
+     * Approve the contribution as a subreddit moderator. Requires mod privileges on the subreddit of the contribution.
      */
     @EndpointImplementation(Endpoint.POST_APPROVE)
     fun approve() {
@@ -199,6 +201,51 @@ abstract class PublicContributionReference internal constructor(reddit: RedditCl
             it.endpoint(Endpoint.POST_APPROVE)
                 .post(mapOf(
                     "id" to fullName
+                ))
+        }
+    }
+
+    /**
+     * Sets the [spoilerStatus] of a post using the official Reddit spoiler flair.
+     *
+     * TODO - Requires mod privileges for the subreddit that contains the post.
+     */
+    @EndpointImplementation(Endpoint.POST_SPOILER, Endpoint.POST_UNSPOILER)
+    fun setPostSpoiler(spoilerStatus: Boolean) {
+        val endpoint = if (spoilerStatus) Endpoint.POST_SPOILER else Endpoint.POST_UNSPOILER
+        reddit.request {
+            it.endpoint(endpoint)
+                .post(mapOf(
+                    "id" to fullName
+                ))
+        }
+    }
+
+    /**
+     * Set or unset the announcement [state] of a post in its subreddit.
+     * Reddit provides 2 allowable announcement "slots" for a subreddit, often referred to as sticky posts.
+     *
+     * The [num] argument is optional, an integer between 1 and 3, and only used when stickying a post.
+     * It allows specifying a particular "slot" to sticky the post into,
+     * and if there is already a post stickied in that slot it will be replaced.
+     * If there is no post in the specified slot to replace, or num is None, the bottom-most slot will be used.
+     *
+     * Setting [toProfile] will sticky the post to an authenticated user's profile page.
+     * This is only used with new profile pages, not supported for legacy profiles.
+     *
+     * TODO - Requires mod privileges for the subreddit that contains the post.
+     */
+    @EndpointImplementation(Endpoint.POST_SET_SUBREDDIT_STICKY)
+    fun stickyPost(state: Boolean, num : String = "", toProfile: Boolean = false) {
+        if (state && num.toInt() > 3)
+            throw IllegalArgumentException("$num is more than the allowable announcement slots")
+        reddit.request {
+            it.endpoint(Endpoint.POST_SET_SUBREDDIT_STICKY)
+                .post(mapOf(
+                    "id" to fullName,
+                    "num" to num,
+                    "state" to state.toString(),
+                    "to_profile" to toProfile.toString()
                 ))
         }
     }
