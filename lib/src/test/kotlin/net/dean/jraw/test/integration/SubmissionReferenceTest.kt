@@ -196,33 +196,31 @@ class SubmissionReferenceTest : Spek({
     }
 
     describe("set spoiler") {
-        assume({ SharedObjects.submittedSelfPost != null }, description = "should have a self post created") {
-            it("should set/unset the post spoiler flair") {
-                ref.setPostSpoiler(true)
-                ref.inspect().isSpoiler.should.be.`true`
-                ref.setPostSpoiler(false)
-                ref.inspect().isSpoiler.should.be.`false`
-            }
+        assume({ SharedObjects.submittedSelfPost != null }, description = "should have a self post created") {}
+        it("should set/unset the post spoiler flair") {
+            SharedObjects.submittedSelfPost!!.setPostSpoiler(true)
+            SharedObjects.submittedSelfPost!!.inspect().isSpoiler.should.be.`true`
+            SharedObjects.submittedSelfPost!!.setPostSpoiler(false)
+            SharedObjects.submittedSelfPost!!.inspect().isSpoiler.should.be.`false`
         }
     }
 
     describe("sticky post submission") {
-        assume({ SharedObjects.submittedSelfPost != null }, description = "should have a self post created") {
-            it("should sticky a post into one of the allotted announcement slots") {
-                ref.stickyPost(true)
-                ref.inspect().isStickied.should.be.`true`
-            }
+        assume({ SharedObjects.submittedSelfPost != null }, description = "should have a self post created") {}
+        it("should sticky a post into one of the allotted announcement slots") {
+            SharedObjects.submittedSelfPost!!.stickyPost(true)
+            SharedObjects.submittedSelfPost!!.inspect().isStickied.should.be.`true`
+        }
 
-            it("should fail trying to sticky a post to a nonexistent announcement slot") {
-                expectException(IllegalArgumentException::class) {
-                    ref.stickyPost(true, "4")
-                }
+        it("should fail trying to sticky a post to a nonexistent announcement slot") {
+            expectException(IllegalArgumentException::class) {
+                SharedObjects.submittedSelfPost!!.stickyPost(true, 4)
             }
+        }
 
-            it("should remove the announcement status of the post") {
-                ref.stickyPost(false)
-                ref.inspect().isStickied.should.be.`false`
-            }
+        it("should remove the announcement status of the post") {
+            SharedObjects.submittedSelfPost!!.stickyPost(false)
+            SharedObjects.submittedSelfPost!!.inspect().isStickied.should.be.`false`
         }
     }
 })

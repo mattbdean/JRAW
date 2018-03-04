@@ -236,17 +236,30 @@ abstract class PublicContributionReference internal constructor(reddit: RedditCl
      * TODO - Requires mod privileges for the subreddit that contains the post.
      */
     @EndpointImplementation(Endpoint.POST_SET_SUBREDDIT_STICKY)
-    fun stickyPost(state: Boolean, num : String = "", toProfile: Boolean = false) {
-        if (state && num.toInt() > 3)
+    fun stickyPost(state: Boolean, num : Int = -1, toProfile: Boolean = false) {
+        if (state && num > 3)
             throw IllegalArgumentException("$num is more than the allowable announcement slots")
-        reddit.request {
-            it.endpoint(Endpoint.POST_SET_SUBREDDIT_STICKY)
-                .post(mapOf(
-                    "id" to fullName,
-                    "num" to num,
-                    "state" to state.toString(),
-                    "to_profile" to toProfile.toString()
-                ))
+
+        if (num != -1) {
+            reddit.request {
+                it.endpoint(Endpoint.POST_SET_SUBREDDIT_STICKY)
+                    .post(mapOf(
+                        "id" to fullName,
+                        "num" to num.toString(),
+                        "state" to state.toString(),
+                        "to_profile" to toProfile.toString()
+                    ))
+            }
+        } else {
+            // Leave the optional num value out
+            reddit.request {
+                it.endpoint(Endpoint.POST_SET_SUBREDDIT_STICKY)
+                    .post(mapOf(
+                        "id" to fullName,
+                        "state" to state.toString(),
+                        "to_profile" to toProfile.toString()
+                    ))
+            }
         }
     }
 }
