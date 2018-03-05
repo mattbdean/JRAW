@@ -196,31 +196,27 @@ class SubmissionReferenceTest : Spek({
     }
 
     describe("set spoiler") {
-        assume({ SharedObjects.submittedSelfPost != null }, description = "should have a self post created") {}
-        it("should set/unset the post spoiler flair") {
-            SharedObjects.submittedSelfPost!!.setPostSpoiler(true)
-            SharedObjects.submittedSelfPost!!.inspect().isSpoiler.should.be.`true`
-            SharedObjects.submittedSelfPost!!.setPostSpoiler(false)
-            SharedObjects.submittedSelfPost!!.inspect().isSpoiler.should.be.`false`
+        assume({ SharedObjects.submittedSelfPost != null }, description = "should have a self post created") {
+            it("should set/unset the post spoiler flair") {
+                SharedObjects.submittedSelfPost!!.flagAsSpoiiler(true)
+                SharedObjects.submittedSelfPost!!.inspect().isSpoiler.should.be.`true`
+                SharedObjects.submittedSelfPost!!.flagAsSpoiiler(false)
+                SharedObjects.submittedSelfPost!!.inspect().isSpoiler.should.be.`false`
+            }
         }
     }
 
     describe("sticky post submission") {
-        assume({ SharedObjects.submittedSelfPost != null }, description = "should have a self post created") {}
-        it("should sticky a post into one of the allotted announcement slots") {
-            SharedObjects.submittedSelfPost!!.stickyPost(true)
-            SharedObjects.submittedSelfPost!!.inspect().isStickied.should.be.`true`
-        }
-
-        it("should fail trying to sticky a post to a nonexistent announcement slot") {
-            expectException(IllegalArgumentException::class) {
-                SharedObjects.submittedSelfPost!!.stickyPost(true, 4)
+        assume({ SharedObjects.submittedSelfPost != null }, description = "should have a self post created") {
+            it("should sticky a post into one of the allotted announcement slots") {
+                SharedObjects.submittedSelfPost!!.stickyPost(true)
+                SharedObjects.submittedSelfPost!!.inspect().isStickied.should.be.`true`
             }
-        }
 
-        it("should remove the announcement status of the post") {
-            SharedObjects.submittedSelfPost!!.stickyPost(false)
-            SharedObjects.submittedSelfPost!!.inspect().isStickied.should.be.`false`
+            it("should remove the announcement status of the post") {
+                SharedObjects.submittedSelfPost!!.stickyPost(false)
+                SharedObjects.submittedSelfPost!!.inspect().isStickied.should.be.`false`
+            }
         }
     }
 })
