@@ -588,6 +588,10 @@ public enum Endpoint {
     GET_PREFS_WHERE("GET", "/prefs/{where}", "read"),
 
     /**
+     * Represents the endpoint {@code GET /profiles/search}. Requires OAuth scope 'read'. See <a href="https://www.reddit.com/dev/api/oauth#GET_profiles_search">here</a> for more information */
+    GET_PROFILES_SEARCH("GET", "/profiles/search", "read"),
+
+    /**
      * Represents the endpoint {@code GET /r/{subreddit}/about}. Requires OAuth scope 'read'. See <a href="https://www.reddit.com/dev/api/oauth#GET_r_{subreddit}_about">here</a> for more information */
     GET_SUBREDDIT_ABOUT("GET", "/r/{subreddit}/about", "read"),
 

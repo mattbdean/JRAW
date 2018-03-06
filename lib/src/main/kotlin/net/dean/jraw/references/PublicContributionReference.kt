@@ -135,11 +135,11 @@ abstract class PublicContributionReference internal constructor(reddit: RedditCl
     }
 
     /**
-     * Distinguish a comment or submission author with a sigil. Logged in user must have the priveleges to use the
-     * supplied [DistinguishedStatus], i.e. moderator priveleges for [DistinguishedStatus.MODERATOR] and admin
-     * priveleges for [DistinguishedStatus.ADMIN] and so on.
+     * Distinguish a comment or submission author with a sigil. Logged in user must have the privileges to use the
+     * supplied [DistinguishedStatus], i.e. moderator privileges for [DistinguishedStatus.MODERATOR] and admin
+     * privileges for [DistinguishedStatus.ADMIN] and so on.
      *
-     * @param sticky Flag for comments, which will stick the distingushed comment to the top of all comments threads.
+     * @param sticky Flag for comments, which will stick the distinguished comment to the top of all comments threads.
      * If a comment is marked sticky, it will override any other stickied comment for that post (as only one comment may
      * be stickied at a time.) Only top-level comments may be stickied. Requires moderator privileges. Can only be used
      * with [DistinguishedStatus.MODERATOR] or [DistinguishedStatus.ADMIN].
@@ -153,7 +153,8 @@ abstract class PublicContributionReference internal constructor(reddit: RedditCl
             DistinguishedStatus.MODERATOR -> "yes"
             DistinguishedStatus.ADMIN -> "admin"
             DistinguishedStatus.SPECIAL -> "special"
-            DistinguishedStatus.GOLD -> throw IllegalArgumentException("Cannot manually distinguish a contribution with a gold distinguish status")
+            DistinguishedStatus.GOLD -> throw IllegalArgumentException(
+                "Cannot manually distinguish a contribution with a gold distinguish status")
         }
         if (sticky && this is SubmissionReference)
             throw IllegalArgumentException("Flag 'sticky' can only be set for comments, not submissions")
@@ -172,7 +173,7 @@ abstract class PublicContributionReference internal constructor(reddit: RedditCl
     }
 
     /**
-     * Remove the contribution as a subreddit moderator. Requires mod priveleges on the subreddit of the contribution.
+     * Remove the contribution as a subreddit moderator. Requires mod privileges on the subreddit of the contribution.
      *
      * @param spam Whether spam is the reason for the removal. Trains the subreddit spamfilter to be critical of
      * similar contributions in the future
@@ -191,7 +192,7 @@ abstract class PublicContributionReference internal constructor(reddit: RedditCl
     }
 
     /**
-     * Approve the contribution as a subreddit moderator. Requires mod priveleges on the subreddit of the contribution.
+     * Approve the contribution as a subreddit moderator. Requires mod privileges on the subreddit of the contribution.
      */
     @EndpointImplementation(Endpoint.POST_APPROVE)
     fun approve() {

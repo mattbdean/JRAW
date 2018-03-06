@@ -123,6 +123,26 @@ class SubmissionReferenceTest : Spek({
         }
     }
 
+    describe("set spoiler") {
+        assume({ SharedObjects.submittedSelfPost != null }, description = "should have a self post created") {
+            val post = SharedObjects.submittedSelfPost!!
+            post.flagAsSpoiler(true)
+            post.inspect().isSpoiler.should.be.`true`
+            post.flagAsSpoiler(false)
+            post.inspect().isSpoiler.should.be.`false`
+        }
+    }
+
+    describe("sticky post submission") {
+        assume({ SharedObjects.submittedSelfPost != null }, description = "should have a self post created") {
+            val post = SharedObjects.submittedSelfPost!!
+            post.stickyPost(true)
+            post.inspect().isStickied.should.be.`true`
+            post.stickyPost(false)
+            post.inspect().isStickied.should.be.`false`
+        }
+    }
+
     // This test must go last, since deleting the post will make it uneditable
     describe("delete") {
         assume({ SharedObjects.submittedSelfPost != null }, "should delete the submission") {
