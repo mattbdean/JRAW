@@ -1,11 +1,11 @@
-<!--- Generated 2018-02-23 at 09:53:12 EST. Use `./gradlew :meta:update` to update. DO NOT MODIFY DIRECTLY -->
+<!--- Generated 2018-03-05 at 21:54:35 EST. Use `./gradlew :meta:update` to update. DO NOT MODIFY DIRECTLY -->
 
 Endpoints
 =========
 
 This file contains a list of all the endpoints (regardless of if they have been implemented) that can be found at the [official reddit API docs](https://www.reddit.com/dev/api/oauth). To update this file, run `./gradlew :meta:update`
 
-So far, **82** endpoints (out of 190) have been implemented.
+So far, **85** endpoints (out of 191) have been implemented.
 
 (any scope)
 -----------
@@ -172,20 +172,20 @@ modposts
 
 | Method | Endpoint                                                                                          | Implementation                                                                                                                                                                |
 |:------:| ------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `POST` | [`/api/approve`](https://www.reddit.com/dev/api/oauth#POST_api_approve)                           | [`PublicContributionReference.approve()`](https://github.com/mattbdean/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/PublicContributionReference.kt#L198)     |
+| `POST` | [`/api/approve`](https://www.reddit.com/dev/api/oauth#POST_api_approve)                           | [`PublicContributionReference.approve()`](https://github.com/mattbdean/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/PublicContributionReference.kt#L199)     |
 | `POST` | [`/api/distinguish`](https://www.reddit.com/dev/api/oauth#POST_api_distinguish)                   | [`PublicContributionReference.distinguish()`](https://github.com/mattbdean/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/PublicContributionReference.kt#L151) |
-| `POST` | [`/api/remove`](https://www.reddit.com/dev/api/oauth#POST_api_remove)                             | [`PublicContributionReference.remove()`](https://github.com/mattbdean/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/PublicContributionReference.kt#L184)      |
+| `POST` | [`/api/remove`](https://www.reddit.com/dev/api/oauth#POST_api_remove)                             | [`PublicContributionReference.remove()`](https://github.com/mattbdean/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/PublicContributionReference.kt#L185)      |
+| `POST` | [`/api/set_subreddit_sticky`](https://www.reddit.com/dev/api/oauth#POST_api_set_subreddit_sticky) | [`SubmissionReference.stickyPost()`](https://github.com/mattbdean/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/SubmissionReference.kt#L114)                  |
+| `POST` | [`/api/spoiler`](https://www.reddit.com/dev/api/oauth#POST_api_spoiler)                           | [`SubmissionReference.flagAsSpoiler()`](https://github.com/mattbdean/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/SubmissionReference.kt#L91)                |
+| `POST` | [`/api/unspoiler`](https://www.reddit.com/dev/api/oauth#POST_api_unspoiler)                       | [`SubmissionReference.flagAsSpoiler()`](https://github.com/mattbdean/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/SubmissionReference.kt#L91)                |
 | `POST` | [`/api/ignore_reports`](https://www.reddit.com/dev/api/oauth#POST_api_ignore_reports)             | None                                                                                                                                                                          |
 | `POST` | [`/api/lock`](https://www.reddit.com/dev/api/oauth#POST_api_lock)                                 | None                                                                                                                                                                          |
 | `POST` | [`/api/marknsfw`](https://www.reddit.com/dev/api/oauth#POST_api_marknsfw)                         | None                                                                                                                                                                          |
 | `POST` | [`/api/set_contest_mode`](https://www.reddit.com/dev/api/oauth#POST_api_set_contest_mode)         | None                                                                                                                                                                          |
-| `POST` | [`/api/set_subreddit_sticky`](https://www.reddit.com/dev/api/oauth#POST_api_set_subreddit_sticky) | None                                                                                                                                                                          |
 | `POST` | [`/api/set_suggested_sort`](https://www.reddit.com/dev/api/oauth#POST_api_set_suggested_sort)     | None                                                                                                                                                                          |
-| `POST` | [`/api/spoiler`](https://www.reddit.com/dev/api/oauth#POST_api_spoiler)                           | None                                                                                                                                                                          |
 | `POST` | [`/api/unignore_reports`](https://www.reddit.com/dev/api/oauth#POST_api_unignore_reports)         | None                                                                                                                                                                          |
 | `POST` | [`/api/unlock`](https://www.reddit.com/dev/api/oauth#POST_api_unlock)                             | None                                                                                                                                                                          |
 | `POST` | [`/api/unmarknsfw`](https://www.reddit.com/dev/api/oauth#POST_api_unmarknsfw)                     | None                                                                                                                                                                          |
-| `POST` | [`/api/unspoiler`](https://www.reddit.com/dev/api/oauth#POST_api_unspoiler)                       | None                                                                                                                                                                          |
 
 modself
 -------
@@ -280,6 +280,7 @@ read
 | `GET`  | [`/live/{thread}/discussions`](https://www.reddit.com/dev/api/oauth#GET_live_{thread}_discussions)                 | None                                                                                                                                                                 |
 | `GET`  | [`/live/{thread}/updates/{update_id}`](https://www.reddit.com/dev/api/oauth#GET_live_{thread}_updates_{update_id}) | None                                                                                                                                                                 |
 | `GET`  | [`/prefs/{where}`](https://www.reddit.com/dev/api/oauth#GET_prefs_{where})                                         | None                                                                                                                                                                 |
+| `GET`  | [`/profiles/search`](https://www.reddit.com/dev/api/oauth#GET_profiles_search)                                     | None                                                                                                                                                                 |
 | `GET`  | [`[/r/{subreddit}]/sidebar`](https://www.reddit.com/dev/api/oauth#GET_sidebar)                                     | None                                                                                                                                                                 |
 | `GET`  | [`[/r/{subreddit}]/sticky`](https://www.reddit.com/dev/api/oauth#GET_sticky)                                       | None                                                                                                                                                                 |
 | `GET`  | [`/subreddits/{where}`](https://www.reddit.com/dev/api/oauth#GET_subreddits_{where})                               | None                                                                                                                                                                 |
