@@ -80,7 +80,7 @@ public abstract class EmbeddedMedia implements Serializable {
 
         /** The suggested length in seconds to hold this resource in cache */
         @Nullable
-        @Json(name = "cache_age") public abstract Integer getCacheAge();
+        @Json(name = "cache_age") public abstract Long getCacheAge();
 
         @Nullable
         @Json(name = "thumbnail_url") public abstract String getThumbnailUrl();
