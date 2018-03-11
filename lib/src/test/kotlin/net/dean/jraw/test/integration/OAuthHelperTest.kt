@@ -2,13 +2,11 @@ package net.dean.jraw.test.integration
 
 import com.winterbe.expekt.should
 import net.dean.jraw.Endpoint
+import net.dean.jraw.oauth.AuthMethod
 import net.dean.jraw.oauth.Credentials
 import net.dean.jraw.oauth.OAuthHelper
 import net.dean.jraw.oauth.StatefulAuthHelper
-import net.dean.jraw.test.CredentialsUtil
-import net.dean.jraw.test.ensureAuthenticated
-import net.dean.jraw.test.expectException
-import net.dean.jraw.test.newOkHttpAdapter
+import net.dean.jraw.test.*
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
@@ -61,6 +59,9 @@ class OAuthHelperTest: Spek({
     describe("interactive") {
         it("should return a fresh StatefulAuthHelper") {
             OAuthHelper.interactive(newOkHttpAdapter(), CredentialsUtil.app).authStatus
+                .should.equal(StatefulAuthHelper.Status.INIT)
+
+            OAuthHelper.interactive(newOkHttpAdapter(), createMockCredentials(AuthMethod.WEBAPP)).authStatus
                 .should.equal(StatefulAuthHelper.Status.INIT)
         }
 

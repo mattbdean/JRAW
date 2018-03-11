@@ -6,7 +6,6 @@ import net.dean.jraw.http.NetworkAdapter
 import net.dean.jraw.http.NetworkException
 import net.dean.jraw.models.OAuthData
 import net.dean.jraw.models.internal.OAuthDataJson
-import java.util.*
 
 /**
  * This class helps create authenticated RedditClient instances.
@@ -45,11 +44,11 @@ object OAuthHelper {
     @JvmStatic internal fun interactive(http: NetworkAdapter, creds: Credentials,
                                              tokenStore: TokenStore = NoopTokenStore(),
                                              onAuthenticated: (r: RedditClient) -> Unit = {}): StatefulAuthHelper {
-        return when (creds.authMethod) {
-            AuthMethod.APP -> StatefulAuthHelper(http, creds, tokenStore, onAuthenticated)
-            AuthMethod.WEBAPP -> TODO("Web apps aren't supported yet")
-            else -> throw IllegalArgumentException("AuthMethod ${creds.authMethod} should use automatic authentication")
+        if (creds.authMethod != AuthMethod.APP && creds.authMethod != AuthMethod.WEBAPP) {
+            throw IllegalArgumentException("AuthMethod ${creds.authMethod} should use automatic authentication")
         }
+
+        return StatefulAuthHelper(http, creds, tokenStore, onAuthenticated)
     }
 
     @JvmStatic internal fun scriptOAuthData(http: NetworkAdapter, creds: Credentials): OAuthData {
