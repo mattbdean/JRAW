@@ -2,12 +2,12 @@ import java.util.stream.Collectors
 import org.gradle.api.tasks.wrapper.Wrapper.DistributionType
 
 buildscript {
-    ext.kotlinVersion = '1.2.10'
+    ext.kotlinVersion = '1.2.21'
     ext.spekVersion = '1.1.5'
     ext.moshiVersion = '1.5.0'
-    ext.autoValueVersion = '1.5.3'
-    ext.dokkaVersion = '0.9.15'
-    ext.okhttpVersion = '3.9.1'
+    ext.autoValueVersion = '1.5.4'
+    ext.dokkaVersion = '0.9.16'
+    ext.okhttpVersion = '3.10.0'
 
     repositories {
         jcenter()
