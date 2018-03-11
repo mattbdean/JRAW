@@ -53,6 +53,17 @@ class RedditModelAdapterFactoryTest : Spek({
         val adapter = envelopedAdapter<Listing<NonEnvelopedChild>>(listingType(NonEnvelopedChild::class))
         adapter.fromJson(nonEnvelopedListingJson).should.equal(nonEnvelopedListingValue)
     }
+
+    it("should be able to serialize/deserialize a Listing without loss of meaning") {
+        val adapter = envelopedAdapter<Listing<Child>>(listingType(Child::class))
+        // Parse the JSON from our in-code string
+        val round1 = adapter.fromJson(listingJson)
+
+        // Serialize and immediately deserialize the object to see if it stayed the same
+        val round2 = adapter.fromJson(adapter.toJson(round1))
+
+        round1.should.equal(round2)
+    }
 })
 
 @Language("JSON") private val childJson = """{ "kind": "child", "data": { "a": "foo" } }"""

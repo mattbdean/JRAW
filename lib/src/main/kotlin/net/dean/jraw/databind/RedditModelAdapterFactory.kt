@@ -209,7 +209,29 @@ class RedditModelAdapterFactory(
         }
 
         override fun toJson(writer: JsonWriter, value: Listing<Any>?) {
-            TODO("not implemented")
+            if (value == null) {
+                writer.nullValue()
+                return
+            }
+
+            writer.beginObject()
+            writer.name("kind")
+            writer.value(KindConstants.LISTING)
+            writer.name("data")
+            writeListing(writer, value)
+            writer.endObject()
+        }
+
+        private fun writeListing(writer: JsonWriter, value: Listing<Any>) {
+            writer.beginObject()
+            writer.name("after")
+            writer.value(value.nextName)
+            writer.name("children")
+            writer.beginArray()
+            for (child in value.children)
+                childrenDelegate.toJson(writer, child)
+            writer.endArray()
+            writer.endObject()
         }
 
         companion object {
