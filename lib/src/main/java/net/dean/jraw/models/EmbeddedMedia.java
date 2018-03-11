@@ -109,7 +109,7 @@ public abstract class EmbeddedMedia implements Serializable {
 
         public static OEmbed create(String newType, String newVersion, String newTitle, String newAuthorName,
                                     String newAuthorUrl, String newProviderName, String newProviderUrl,
-                                    Integer newCacheAge, String newThumbnailUrl, Integer newThumbnailWidth,
+                                    Long newCacheAge, String newThumbnailUrl, Integer newThumbnailWidth,
                                     Integer newThumbnailHeight, String newUrl, Integer newWidth, Integer newHeight,
                                     String newEmbedHtml) {
             return new AutoValue_EmbeddedMedia_OEmbed(newType, newVersion, newTitle, newAuthorName, newAuthorUrl, newProviderName, newProviderUrl, newCacheAge, newThumbnailUrl, newThumbnailWidth, newThumbnailHeight, newUrl, newWidth, newHeight, newEmbedHtml);
