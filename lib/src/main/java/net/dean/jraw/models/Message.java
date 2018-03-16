@@ -58,6 +58,10 @@ public abstract class Message implements Created, Distinguishable, Identifiable,
     /** The subject line of the private message, or the string "`comment reply`" for comments. */
     public abstract String getSubject();
 
+    @NotNull
+    @Override
+    public String getUniqueId() { return getFullName(); }
+
     /**
      * The name of the subreddit where this comment or username mention was created, or null if this message isn't a
      * comment or username mention

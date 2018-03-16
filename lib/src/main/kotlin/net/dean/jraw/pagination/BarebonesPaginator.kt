@@ -2,12 +2,13 @@ package net.dean.jraw.pagination
 
 import net.dean.jraw.RedditClient
 import net.dean.jraw.http.HttpRequest
+import net.dean.jraw.models.UniquelyIdentifiable
 
 /**
  * This class, like its name suggests, supports fewer query modifiers compared to other Paginators. Only the limit can
  * be set.
  */
-open class BarebonesPaginator<T> private constructor(
+open class BarebonesPaginator<T : UniquelyIdentifiable> private constructor(
     reddit: RedditClient,
     baseUrl: String,
     limit: Int,
@@ -25,7 +26,7 @@ open class BarebonesPaginator<T> private constructor(
     }
 
     /** Builder pattern for this class */
-    class Builder<T>(reddit: RedditClient, baseUrl: String, clazz: Class<T>) :
+    class Builder<T : UniquelyIdentifiable>(reddit: RedditClient, baseUrl: String, clazz: Class<T>) :
         Paginator.Builder<T>(reddit, baseUrl, clazz) {
 
         /** How many items to request at once */
@@ -40,7 +41,7 @@ open class BarebonesPaginator<T> private constructor(
         /** */
         companion object {
             /** Convenience factory function using reified generics */
-            inline fun <reified T> create(reddit: RedditClient, baseUrl: String): Builder<T> {
+            inline fun <reified T : UniquelyIdentifiable> create(reddit: RedditClient, baseUrl: String): Builder<T> {
                 return Builder(reddit, baseUrl, T::class.java)
             }
         }

@@ -35,6 +35,9 @@ public abstract class MoreChildren implements NestedIdentifiable, Serializable {
 
     @Json(name = "children") public abstract List<String> getChildrenIds();
 
+    @NotNull
+    @Override public String getUniqueId() { return getFullName(); }
+
     /**
      * Returns true if this MoreChildren object represents a thread continuation. On the website, thread continuations
      * are illustrated with "continue this thread →". Thread continuations are only seen when the depth of a CommentNode

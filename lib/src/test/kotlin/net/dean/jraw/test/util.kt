@@ -5,6 +5,7 @@ import net.dean.jraw.RateLimitException
 import net.dean.jraw.RedditClient
 import net.dean.jraw.http.*
 import net.dean.jraw.models.OAuthData
+import net.dean.jraw.models.UniquelyIdentifiable
 import net.dean.jraw.models.Votable
 import net.dean.jraw.pagination.Paginator
 import net.dean.jraw.test.TestConfig.userAgent
@@ -84,7 +85,7 @@ fun <T> expectDescendingScore(objects: List<T>, allowedMistakes: Int = 0) {
     }
 }
 
-fun <T> testPaginator(p: Paginator.Builder<T>, mustHaveContent: Boolean = true): List<List<T>> {
+fun <T : UniquelyIdentifiable> testPaginator(p: Paginator.Builder<T>, mustHaveContent: Boolean = true): List<List<T>> {
     // Primarily just make sure that requests don't fail
     val lists = p.build().accumulate(maxPages = 2)
 

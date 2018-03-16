@@ -33,6 +33,10 @@ public abstract class LiveUpdate implements Created, Identifiable, Serializable 
      */
     public abstract boolean isStricken();
 
+    @NotNull
+    @Override
+    public String getUniqueId() { return getFullName(); }
+
     public static JsonAdapter<LiveUpdate> jsonAdapter(Moshi moshi) {
         return new AutoValue_LiveUpdate.MoshiJsonAdapter(moshi);
     }

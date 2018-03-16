@@ -88,6 +88,9 @@ public abstract class Comment implements PublicContribution<CommentReference>, N
     @Json(name = "score_hidden") public abstract boolean isScoreHidden();
 
     @NotNull
+    @Override public String getUniqueId() { return getFullName(); }
+
+    @NotNull
     @Override
     @Json(name = "likes") public abstract VoteDirection getVote();
 

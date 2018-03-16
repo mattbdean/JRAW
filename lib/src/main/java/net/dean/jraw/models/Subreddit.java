@@ -138,6 +138,10 @@ public abstract class Subreddit implements Created, Identifiable, Referenceable<
     /** The title of the tab when visiting this subreddit on a web browser */
     public abstract String getTitle();
 
+    @NotNull
+    @Override
+    public String getUniqueId() { return getFullName(); }
+
     /** The URL to access this subreddit relative to reddit.com. For example, "/r/pics" */
     public abstract String getUrl();
 

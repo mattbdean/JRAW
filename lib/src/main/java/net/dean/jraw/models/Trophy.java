@@ -40,6 +40,10 @@ public abstract class Trophy implements Identifiable, Serializable {
     /** The 70x70 icon for this Trophy */
     @Json(name = "icon_70") public abstract String getIcon70();
 
+    @NotNull
+    @Override
+    public String getUniqueId() { return getFullName(); }
+
     public static JsonAdapter<Trophy> jsonAdapter(Moshi moshi) {
         return new AutoValue_Trophy.MoshiJsonAdapter(moshi);
     }
