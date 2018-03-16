@@ -94,8 +94,6 @@ abstract class Paginator<T : UniquelyIdentifiable> protected constructor(
 
     override fun accumulateMerged(maxPages: Int): List<T> = accumulate(maxPages).flatten()
 
-    override fun stream(backoff: BackoffStrategy): Stream<T> = Stream(this, backoff)
-
     /** Creates an HTTP request to fetch the next page of data, if any. */
     protected abstract fun createNextRequest(): HttpRequest.Builder
 

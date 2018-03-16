@@ -39,5 +39,5 @@ interface RedditIterable<T : UniquelyIdentifiable> : Iterable<Listing<T>> {
     fun stream() = stream(ConstantBackoffStrategy())
 
     /** Returns a Stream for this data */
-    fun stream(backoff: BackoffStrategy): Stream<T>
+    fun stream(backoff: BackoffStrategy): Stream<T> = Stream(this, backoff)
 }
