@@ -71,12 +71,18 @@ public abstract class Subreddit implements Created, Identifiable, Referenceable<
     /** Name without the "/r/" prefix: "pics", "funny", etc. */
     @Json(name = "display_name") public abstract String getName();
 
+    /**
+     * @deprecated Use {@link #isNsfw()} instead.
+     */
     @Nullable
-    @Json(name = "over_18")
+    @Json(name = "over18")
+    @Deprecated()
     public abstract Boolean getNsfw();
 
-    @Json(name = "over_18")
-    public final boolean isNsfw() { return getNsfw() != null && getNsfw(); }
+    @Json(name = "over18")
+    public final boolean isNsfw() {
+        //noinspection deprecation
+        return getNsfw() != null && getNsfw(); }
 
     /**
      * Markdown-formatted text used when this subreddit comes up in searches.
