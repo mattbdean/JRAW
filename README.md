@@ -27,7 +27,7 @@ Credentials oauthCreds = Credentials.script(username, password, clientId, client
 UserAgent userAgent = new UserAgent("bot", "my.cool.bot", "1.0.0", "myRedditUsername");
 
 // Authenticate our client
-RedditClient reddit = OAuthHelper.automatic(oauthCreds, new OkHttpNetworkAdapter(userAgent));
+RedditClient reddit = OAuthHelper.automatic(new OkHttpNetworkAdapter(userAgent), oauthCreds);
 
 // Get info about the user
 Account me = reddit.me().about();
