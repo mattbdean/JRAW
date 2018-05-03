@@ -7,6 +7,7 @@ import com.squareup.moshi.Moshi;
 import net.dean.jraw.databind.RedditModel;
 import net.dean.jraw.databind.UnixTime;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -41,8 +42,8 @@ public abstract class LiveUpdate implements Created, Identifiable, Serializable 
     @AutoValue
     public static abstract class Embed implements Serializable {
         public abstract String getUrl();
-        public abstract int getWidth();
-        public abstract int getHeight();
+        public @Nullable abstract Integer getWidth();
+        public @Nullable abstract Integer getHeight();
 
         public static JsonAdapter<Embed> jsonAdapter(Moshi moshi) {
             return new AutoValue_LiveUpdate_Embed.MoshiJsonAdapter(moshi);
