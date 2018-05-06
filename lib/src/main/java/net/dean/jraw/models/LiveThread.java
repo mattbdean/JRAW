@@ -52,6 +52,10 @@ public abstract class LiveThread implements Created, Identifiable, Referenceable
 
     @NotNull
     @Override
+    public String getUniqueId() { return getFullName(); }
+
+    @NotNull
+    @Override
     public LiveThreadReference toReference(@NotNull RedditClient reddit) {
         return reddit.liveThread(getId());
     }

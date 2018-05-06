@@ -4,13 +4,14 @@ import net.dean.jraw.RedditClient
 import net.dean.jraw.http.HttpRequest
 import net.dean.jraw.models.Sorting
 import net.dean.jraw.models.TimePeriod
+import net.dean.jraw.models.UniquelyIdentifiable
 import net.dean.jraw.pagination.DefaultPaginator.Builder
 
 /**
  * This Paginator is for paginated API endpoints that support not only limits, but sortings and time periods
  * (e.g. /top).
  */
-open class DefaultPaginator<T> protected constructor(
+open class DefaultPaginator<T : UniquelyIdentifiable> protected constructor(
     reddit: RedditClient,
     baseUrl: String,
 
@@ -47,7 +48,7 @@ open class DefaultPaginator<T> protected constructor(
     }
 
     /** Builder pattern for this class */
-    open class Builder<T, S : Sorting>(
+    open class Builder<T : UniquelyIdentifiable, S : Sorting>(
         reddit: RedditClient,
         baseUrl: String,
 
@@ -77,7 +78,11 @@ open class DefaultPaginator<T> protected constructor(
         /** */
         companion object {
             /** Convenience factory function using reified generics */
-            inline fun <reified T, S : Sorting> create(reddit: RedditClient, baseUrl: String, sortingAlsoInPath: Boolean = false): Builder<T, S> {
+            inline fun <reified T : UniquelyIdentifiable, S : Sorting> create(
+                reddit: RedditClient,
+                baseUrl: String,
+                sortingAlsoInPath: Boolean = false
+            ): Builder<T, S> {
                 return Builder(reddit, baseUrl, sortingAlsoInPath, T::class.java)
             }
         }

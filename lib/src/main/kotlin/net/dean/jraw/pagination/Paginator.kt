@@ -6,17 +6,14 @@ import net.dean.jraw.JrawUtils
 import net.dean.jraw.RedditClient
 import net.dean.jraw.databind.Enveloped
 import net.dean.jraw.http.HttpRequest
-import net.dean.jraw.models.GeneralSort
-import net.dean.jraw.models.Listing
-import net.dean.jraw.models.Sorting
-import net.dean.jraw.models.TimePeriod
+import net.dean.jraw.models.*
 import net.dean.jraw.pagination.Paginator.Companion.RECOMMENDED_MAX_LIMIT
 
 /**
  * A Paginator is used to iterate over API endpoints that return a Listing. Paginator uses the builder pattern and once
  * built, its settings cannot be modified.
  */
-abstract class Paginator<T> protected constructor(
+abstract class Paginator<T : UniquelyIdentifiable> protected constructor(
     /** The client to use to request data */
     val reddit: RedditClient,
 
@@ -98,12 +95,12 @@ abstract class Paginator<T> protected constructor(
     override fun accumulateMerged(maxPages: Int): List<T> = accumulate(maxPages).flatten()
 
     /** Creates an HTTP request to fetch the next page of data, if any. */
-    abstract protected fun createNextRequest(): HttpRequest.Builder
+    protected abstract fun createNextRequest(): HttpRequest.Builder
 
     /**
      * Base for all Paginator.Builder subclasses
      */
-    abstract class Builder<T>(
+    abstract class Builder<T : UniquelyIdentifiable>(
         /** The RedditClient used to send requests */
         val reddit: RedditClient,
 

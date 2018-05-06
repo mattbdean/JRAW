@@ -4,6 +4,7 @@ import com.google.auto.value.AutoValue;
 import com.squareup.moshi.Json;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.Serializable;
@@ -19,7 +20,7 @@ import java.util.List;
  * @see <a href="https://www.reddit.com/dev/api/#POST_api_flaircsv">Reddit API - POST /api/flaircsv</a>
  */
 @AutoValue
-public abstract class SimpleFlairInfo implements Serializable {
+public abstract class SimpleFlairInfo implements Serializable, UniquelyIdentifiable {
 
     /** Username */
     public abstract String getUser();
@@ -31,6 +32,12 @@ public abstract class SimpleFlairInfo implements Serializable {
     /** Text displayed on the flair, if any */
     @Nullable
     @Json(name = "flair_text") public abstract String getText();
+
+    @NotNull
+    @Override
+    public String getUniqueId() {
+        return String.valueOf(hashCode());
+    }
 
     /**
      * Convert this object into a single line in a CSV line used for setting user flairs in bulk.

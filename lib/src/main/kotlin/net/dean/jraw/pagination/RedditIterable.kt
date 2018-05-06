@@ -1,11 +1,12 @@
 package net.dean.jraw.pagination
 
 import net.dean.jraw.models.Listing
+import net.dean.jraw.models.UniquelyIdentifiable
 
 /**
  * A standard interface for interacting with paginated data provided by the reddit API.
  */
-interface RedditIterable<T> : Iterable<Listing<T>> {
+interface RedditIterable<T : UniquelyIdentifiable> : Iterable<Listing<T>> {
     /** The most recently fetched Listing, or null if no work has been done yet. */
     val current: Listing<T>?
 
@@ -33,4 +34,10 @@ interface RedditIterable<T> : Iterable<Listing<T>> {
 
     /** Does the same thing as [accumulate], but merges all Listing children into one List */
     fun accumulateMerged(maxPages: Int): List<T>
+
+    /** Returns a Stream for this data using a [ConstantBackoffStrategy] using the default settings */
+    fun stream() = stream(ConstantBackoffStrategy())
+
+    /** Returns a Stream for this data */
+    fun stream(backoff: BackoffStrategy): Stream<T> = Stream(this, backoff)
 }

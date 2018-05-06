@@ -17,7 +17,7 @@ import java.util.Date;
 
 @AutoValue
 @RedditModel
-public abstract class Account implements Created, Referenceable<UserReference<?>>, Serializable {
+public abstract class Account implements Created, Referenceable<UserReference<?>>, Serializable, UniquelyIdentifiable {
     /** The amount of Karma this user has acquired through comment */
     @Json(name = "comment_karma") public abstract int getCommentKarma();
 
@@ -48,6 +48,9 @@ public abstract class Account implements Created, Referenceable<UserReference<?>
     @Json(name = "name") public abstract String getName();
 
     // TODO: a lot more properties for logged-in users (see /api/v1/me)
+
+    @NotNull
+    @Override public String getUniqueId() { return getName(); }
 
     @NotNull
     @Override
