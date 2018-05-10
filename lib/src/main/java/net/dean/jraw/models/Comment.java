@@ -25,6 +25,7 @@ public abstract class Comment implements PublicContribution<CommentReference>, N
     public abstract String getAuthor();
 
     @Nullable
+    @Json(name = "author_flair_text")
     public abstract String getAuthorFlairText();
 
     @Override
