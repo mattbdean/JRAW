@@ -18,9 +18,6 @@ class SubredditSearchPaginatorTest : Spek({
 
         // This should be the default
         p.sorting.should.equal(SubredditSearchSort.RELEVANCE)
-
-        // There are at least 10 subreddits with "test" in the name or public description, the search should pick up on that
-        p.next().forEach { (it.name + "\n" + it.publicDescription).toLowerCase().should.contain(query) }
     }
 
     it("should return subreddits with the most activity when requested") {
