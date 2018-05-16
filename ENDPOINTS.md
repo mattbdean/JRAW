@@ -1,11 +1,11 @@
-<!--- Generated 2018-03-05 at 21:54:35 EST. Use `./gradlew :meta:update` to update. DO NOT MODIFY DIRECTLY -->
+<!--- Generated 2018-05-16 at 16:09:15 EDT. Use `./gradlew :meta:update` to update. DO NOT MODIFY DIRECTLY -->
 
 Endpoints
 =========
 
 This file contains a list of all the endpoints (regardless of if they have been implemented) that can be found at the [official reddit API docs](https://www.reddit.com/dev/api/oauth). To update this file, run `./gradlew :meta:update`
 
-So far, **85** endpoints (out of 191) have been implemented.
+So far, **86** endpoints (out of 196) have been implemented.
 
 (any scope)
 -----------
@@ -238,8 +238,8 @@ read
 
 | Method | Endpoint                                                                                                           | Implementation                                                                                                                                                       |
 |:------:| ------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `GET`  | [`[/r/{subreddit}]/api/info`](https://www.reddit.com/dev/api/oauth#GET_api_info)                                   | [`RedditClient.lookup()`](https://github.com/mattbdean/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/RedditClient.kt#L422)                                      |
-| `GET`  | [`/api/live/happening_now`](https://www.reddit.com/dev/api/oauth#GET_api_live_happening_now)                       | [`RedditClient.happeningNow()`](https://github.com/mattbdean/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/RedditClient.kt#L459)                                |
+| `GET`  | [`[/r/{subreddit}]/api/info`](https://www.reddit.com/dev/api/oauth#GET_api_info)                                   | [`RedditClient.lookup()`](https://github.com/mattbdean/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/RedditClient.kt#L451)                                      |
+| `GET`  | [`/api/live/happening_now`](https://www.reddit.com/dev/api/oauth#GET_api_live_happening_now)                       | [`RedditClient.happeningNow()`](https://github.com/mattbdean/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/RedditClient.kt#L488)                                |
 | `GET`  | [`/api/morechildren`](https://www.reddit.com/dev/api/oauth#GET_api_morechildren)                                   | [`CommentNode.loadMore()`](https://github.com/mattbdean/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/tree/CommentNode.kt#L-1)                                  |
 | `GET`  | [`/api/multi/mine`](https://www.reddit.com/dev/api/oauth#GET_api_multi_mine)                                       | [`UserReference.listMultis()`](https://github.com/mattbdean/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/UserReference.kt#L89)                      |
 | `GET`  | [`/api/multi/user/{username}`](https://www.reddit.com/dev/api/oauth#GET_api_multi_user_{username})                 | [`UserReference.listMultis()`](https://github.com/mattbdean/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/UserReference.kt#L89)                      |
@@ -247,6 +247,7 @@ read
 | `GET`  | [`/api/multi/{multipath}/description`](https://www.reddit.com/dev/api/oauth#GET_api_multi_{multipath}_description) | [`MultiredditReference.description()`](https://github.com/mattbdean/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/MultiredditReference.kt#L55)       |
 | `PUT`  | [`/api/multi/{multipath}/description`](https://www.reddit.com/dev/api/oauth#PUT_api_multi_{multipath}_description) | [`MultiredditReference.updateDescription()`](https://github.com/mattbdean/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/MultiredditReference.kt#L64) |
 | `GET`  | [`/api/multi/{multipath}/r/{srname}`](https://www.reddit.com/dev/api/oauth#GET_api_multi_{multipath}_r_{srname})   | [`MultiredditReference.subredditInfo()`](https://github.com/mattbdean/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/MultiredditReference.kt#L120)    |
+| `POST` | [`/api/search_subreddits`](https://www.reddit.com/dev/api/oauth#POST_api_search_subreddits)                        | [`RedditClient.searchSubredditsByName()`](https://github.com/mattbdean/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/RedditClient.kt#L306)                      |
 | `GET`  | [`/api/v1/user/{username}/trophies`](https://www.reddit.com/dev/api/oauth#GET_api_v1_user_{username}_trophies)     | [`UserReference.trophies()`](https://github.com/mattbdean/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/UserReference.kt#L42)                        |
 | `GET`  | [`/best`](https://www.reddit.com/dev/api/oauth#GET_best)                                                           | [`SubredditReference.posts()`](https://github.com/mattbdean/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/SubredditReference.kt#L36)                 |
 | `GET`  | [`[/r/{subreddit}]/comments/{article}`](https://www.reddit.com/dev/api/oauth#GET_comments_{article})               | [`SubmissionReference.comments()`](https://github.com/mattbdean/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/SubmissionReference.kt#L28)            |
@@ -256,12 +257,12 @@ read
 | `GET`  | [`[/r/{subreddit}]/new`](https://www.reddit.com/dev/api/oauth#GET_new)                                             | [`SubredditReference.posts()`](https://github.com/mattbdean/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/SubredditReference.kt#L36)                 |
 | `GET`  | [`/r/{subreddit}/about`](https://www.reddit.com/dev/api/oauth#GET_r_{subreddit}_about)                             | [`SubredditReference.about()`](https://github.com/mattbdean/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/SubredditReference.kt#L27)                 |
 | `GET`  | [`/r/{subreddit}/about/rules`](https://www.reddit.com/dev/api/oauth#GET_r_{subreddit}_about_rules)                 | [`SubredditReference.rules()`](https://github.com/mattbdean/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/SubredditReference.kt#L188)                |
-| `GET`  | [`[/r/{subreddit}]/random`](https://www.reddit.com/dev/api/oauth#GET_random)                                       | [`RedditClient.randomSubreddit()`](https://github.com/mattbdean/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/RedditClient.kt#L352)                             |
+| `GET`  | [`[/r/{subreddit}]/random`](https://www.reddit.com/dev/api/oauth#GET_random)                                       | [`RedditClient.randomSubreddit()`](https://github.com/mattbdean/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/RedditClient.kt#L381)                             |
 | `GET`  | [`[/r/{subreddit}]/rising`](https://www.reddit.com/dev/api/oauth#GET_rising)                                       | [`SubredditReference.posts()`](https://github.com/mattbdean/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/SubredditReference.kt#L36)                 |
 | `GET`  | [`[/r/{subreddit}]/search`](https://www.reddit.com/dev/api/oauth#GET_search)                                       | [`SearchPaginator.createNextRequest()`](https://github.com/mattbdean/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/pagination/SearchPaginator.kt#L27)           |
-| `GET`  | [`/subreddits/search`](https://www.reddit.com/dev/api/oauth#GET_subreddits_search)                                 | [`RedditClient.searchSubreddits()`](https://github.com/mattbdean/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/RedditClient.kt#L295)                            |
+| `GET`  | [`/subreddits/search`](https://www.reddit.com/dev/api/oauth#GET_subreddits_search)                                 | [`RedditClient.searchSubreddits()`](https://github.com/mattbdean/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/RedditClient.kt#L297)                            |
 | `GET`  | [`/user/{username}/about`](https://www.reddit.com/dev/api/oauth#GET_user_{username}_about)                         | [`UserReference.about()`](https://github.com/mattbdean/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/UserReference.kt#L29)                           |
-| `GET`  | [`/users/{where}`](https://www.reddit.com/dev/api/oauth#GET_users_{where})                                         | [`RedditClient.userSubreddits()`](https://github.com/mattbdean/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/RedditClient.kt#L279)                              |
+| `GET`  | [`/users/{where}`](https://www.reddit.com/dev/api/oauth#GET_users_{where})                                         | [`RedditClient.userSubreddits()`](https://github.com/mattbdean/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/RedditClient.kt#L280)                              |
 | `GET`  | [`[/r/{subreddit}]/{sort}`](https://www.reddit.com/dev/api/oauth#GET_{sort})                                       | [`SubredditReference.posts()`](https://github.com/mattbdean/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/SubredditReference.kt#L36)                 |
 | `GET`  | [`[/r/{subreddit}]/about/{location}`](https://www.reddit.com/dev/api/oauth#GET_about_{location})                   | None                                                                                                                                                                 |
 | `GET`  | [`[/r/{subreddit}]/about/{where}`](https://www.reddit.com/dev/api/oauth#GET_about_{where})                         | None                                                                                                                                                                 |
@@ -269,10 +270,8 @@ read
 | `GET`  | [`/api/recommend/sr/{srnames}`](https://www.reddit.com/dev/api/oauth#GET_api_recommend_sr_{srnames})               | None                                                                                                                                                                 |
 | `GET`  | [`/api/search_reddit_names`](https://www.reddit.com/dev/api/oauth#GET_api_search_reddit_names)                     | None                                                                                                                                                                 |
 | `POST` | [`/api/search_reddit_names`](https://www.reddit.com/dev/api/oauth#POST_api_search_reddit_names)                    | None                                                                                                                                                                 |
-| `POST` | [`/api/search_subreddits`](https://www.reddit.com/dev/api/oauth#POST_api_search_subreddits)                        | None                                                                                                                                                                 |
 | `GET`  | [`/api/subreddit_autocomplete`](https://www.reddit.com/dev/api/oauth#GET_api_subreddit_autocomplete)               | None                                                                                                                                                                 |
 | `GET`  | [`/api/subreddit_autocomplete_v2`](https://www.reddit.com/dev/api/oauth#GET_api_subreddit_autocomplete_v2)         | None                                                                                                                                                                 |
-| `GET`  | [`/api/subreddits_by_topic`](https://www.reddit.com/dev/api/oauth#GET_api_subreddits_by_topic)                     | None                                                                                                                                                                 |
 | `GET`  | [`/api/v1/{subreddit}/emojis/all`](https://www.reddit.com/dev/api/oauth#GET_api_v1_{subreddit}_emojis_all)         | None                                                                                                                                                                 |
 | `GET`  | [`/by_id/{names}`](https://www.reddit.com/dev/api/oauth#GET_by_id_{names})                                         | None                                                                                                                                                                 |
 | `GET`  | [`/duplicates/{article}`](https://www.reddit.com/dev/api/oauth#GET_duplicates_{article})                           | None                                                                                                                                                                 |
@@ -314,6 +313,12 @@ structuredstyles
 |  `POST`  | [`/api/v1/{subreddit}/emoji.json`](https://www.reddit.com/dev/api/oauth#POST_api_v1_{subreddit}_emoji.json)                                 | None           |
 | `DELETE` | [`/api/v1/{subreddit}/emoji/{emoji_name}`](https://www.reddit.com/dev/api/oauth#DELETE_api_v1_{subreddit}_emoji_{emoji_name})               | None           |
 |  `POST`  | [`/api/v1/{subreddit}/emoji_asset_upload_s3.json`](https://www.reddit.com/dev/api/oauth#POST_api_v1_{subreddit}_emoji_asset_upload_s3.json) | None           |
+|  `POST`  | [`/api/widget`](https://www.reddit.com/dev/api/oauth#POST_api_widget)                                                                       | None           |
+| `DELETE` | [`/api/widget/{widget_id}`](https://www.reddit.com/dev/api/oauth#DELETE_api_widget_{widget_id})                                             | None           |
+|  `PUT`   | [`/api/widget/{widget_id}`](https://www.reddit.com/dev/api/oauth#PUT_api_widget_{widget_id})                                                | None           |
+|  `POST`  | [`/api/widget_image_upload_s3`](https://www.reddit.com/dev/api/oauth#POST_api_widget_image_upload_s3)                                       | None           |
+| `PATCH`  | [`/api/widget_order/{section}`](https://www.reddit.com/dev/api/oauth#PATCH_api_widget_order_{section})                                      | None           |
+|  `GET`   | [`/api/widgets`](https://www.reddit.com/dev/api/oauth#GET_api_widgets)                                                                      | None           |
 
 submit
 ------

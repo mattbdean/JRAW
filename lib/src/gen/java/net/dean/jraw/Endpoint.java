@@ -528,10 +528,6 @@ public enum Endpoint {
     GET_SUBREDDIT_AUTOCOMPLETE_V2("GET", "/api/subreddit_autocomplete_v2", "read"),
 
     /**
-     * Represents the endpoint {@code GET /api/subreddits_by_topic}. Requires OAuth scope 'read'. See <a href="https://www.reddit.com/dev/api/oauth#GET_api_subreddits_by_topic">here</a> for more information */
-    GET_SUBREDDITS_BY_TOPIC("GET", "/api/subreddits_by_topic", "read"),
-
-    /**
      * Represents the endpoint {@code GET /api/v1/user/{username}/trophies}. Requires OAuth scope 'read'. See <a href="https://www.reddit.com/dev/api/oauth#GET_api_v1_user_{username}_trophies">here</a> for more information */
     GET_USER_USERNAME_TROPHIES("GET", "/api/v1/user/{username}/trophies", "read"),
 
@@ -686,6 +682,30 @@ public enum Endpoint {
     /**
      * Represents the endpoint {@code POST /api/v1/{subreddit}/emoji_asset_upload_s3.json}. Requires OAuth scope 'structuredstyles'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_v1_{subreddit}_emoji_asset_upload_s3.json">here</a> for more information */
     POST_SUBREDDIT_EMOJI_ASSET_UPLOAD_S3("POST", "/api/v1/{subreddit}/emoji_asset_upload_s3.json", "structuredstyles"),
+
+    /**
+     * Represents the endpoint {@code POST /api/widget}. Requires OAuth scope 'structuredstyles'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_widget">here</a> for more information */
+    POST_WIDGET("POST", "/api/widget", "structuredstyles"),
+
+    /**
+     * Represents the endpoint {@code DELETE /api/widget/{widget_id}}. Requires OAuth scope 'structuredstyles'. See <a href="https://www.reddit.com/dev/api/oauth#DELETE_api_widget_{widget_id}">here</a> for more information */
+    DELETE_WIDGET_WIDGET_ID("DELETE", "/api/widget/{widget_id}", "structuredstyles"),
+
+    /**
+     * Represents the endpoint {@code PUT /api/widget/{widget_id}}. Requires OAuth scope 'structuredstyles'. See <a href="https://www.reddit.com/dev/api/oauth#PUT_api_widget_{widget_id}">here</a> for more information */
+    PUT_WIDGET_WIDGET_ID("PUT", "/api/widget/{widget_id}", "structuredstyles"),
+
+    /**
+     * Represents the endpoint {@code POST /api/widget_image_upload_s3}. Requires OAuth scope 'structuredstyles'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_widget_image_upload_s3">here</a> for more information */
+    POST_WIDGET_IMAGE_UPLOAD_S3("POST", "/api/widget_image_upload_s3", "structuredstyles"),
+
+    /**
+     * Represents the endpoint {@code PATCH /api/widget_order/{section}}. Requires OAuth scope 'structuredstyles'. See <a href="https://www.reddit.com/dev/api/oauth#PATCH_api_widget_order_{section}">here</a> for more information */
+    PATCH_WIDGET_ORDER_SECTION("PATCH", "/api/widget_order/{section}", "structuredstyles"),
+
+    /**
+     * Represents the endpoint {@code GET /api/widgets}. Requires OAuth scope 'structuredstyles'. See <a href="https://www.reddit.com/dev/api/oauth#GET_api_widgets">here</a> for more information */
+    GET_WIDGETS("GET", "/api/widgets", "structuredstyles"),
 
     /**
      * Represents the endpoint {@code POST /api/live/create}. Requires OAuth scope 'submit'. See <a href="https://www.reddit.com/dev/api/oauth#POST_api_live_create">here</a> for more information */

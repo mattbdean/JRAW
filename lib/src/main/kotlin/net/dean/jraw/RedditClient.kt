@@ -5,6 +5,7 @@ import net.dean.jraw.databind.Enveloped
 import net.dean.jraw.http.*
 import net.dean.jraw.models.*
 import net.dean.jraw.models.internal.RedditExceptionStub
+import net.dean.jraw.models.internal.SubredditSearchResultContainer
 import net.dean.jraw.oauth.*
 import net.dean.jraw.pagination.BarebonesPaginator
 import net.dean.jraw.pagination.DefaultPaginator
@@ -289,10 +290,38 @@ class RedditClient internal constructor(
      * default.
      *
      * Note that this is different from [search], which searches for submissions compared to this method, which searches
-     * for subreddits.
+     * for subreddits. This is also different from [searchSubredditsByName] since this returns a Paginator and the other
+     * returns a simple list.
      */
     @EndpointImplementation(Endpoint.GET_SUBREDDITS_SEARCH)
     fun searchSubreddits(): SubredditSearchPaginator.Builder = SubredditSearchPaginator.Builder(this)
+
+    /**
+     * Convenience function equivalent to
+     *
+     * ```kt
+     * searchSubredditsByName(new SubredditSearchQuery(queryString))
+     * ```
+     */
+    fun searchSubredditsByName(query: String) = searchSubredditsByName(SubredditSearchQuery(query))
+
+    /**
+     * Searches for subreddits by name alone. A more general search for subreddits can be done using [searchSubreddits].
+     */
+    @EndpointImplementation(Endpoint.POST_SEARCH_SUBREDDITS)
+    fun searchSubredditsByName(query: SubredditSearchQuery): List<SubredditSearchResult> {
+        val container = request {
+            it.endpoint(Endpoint.POST_SEARCH_SUBREDDITS)
+                .post(mapOf(
+                    "query" to query.query,
+                    "exact" to query.exact?.toString(),
+                    "include_over_18" to query.includeNsfw?.toString(),
+                    "include_unadvertisable" to query.includeUnadvertisable?.toString()
+                ).filterValuesNotNull())
+        }.deserialize<SubredditSearchResultContainer>()
+
+        return container.subreddits
+    }
 
     /**
      * Creates a [SubredditReference]

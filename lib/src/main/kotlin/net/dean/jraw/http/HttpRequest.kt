@@ -177,7 +177,9 @@ class HttpRequest internal constructor(
         }
 
         /** Sets the query section of the URL. */
-        @Deprecated("Prefer url(okhttp3.HttpUrl) instead. See also HttpUrl.Builder.addQueryParameter")
+        @Deprecated(
+            "Prefer url(okhttp3.HttpUrl) instead. See also HttpUrl.Builder.addQueryParameter and the " +
+            "HttpUrl.Builder.addQueryParameters extension function.")
         fun query(query: Map<String, String>): Builder {
             for ((k, v) in query) {
                 url.addQueryParameter(k, v)

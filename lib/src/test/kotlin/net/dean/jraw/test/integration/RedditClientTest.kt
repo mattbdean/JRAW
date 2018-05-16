@@ -234,4 +234,14 @@ class RedditClientTest : Spek({
             }
         }
     }
+
+    describe("searchSubredditsByName") {
+        it("should return a list of results") {
+            reddit.searchSubredditsByName("tech").should.not.be.empty
+        }
+
+        it("should return 0 or 1 result when 'exact' is true") {
+            reddit.searchSubredditsByName(SubredditSearchQuery(query = "RocketLeague", exact = true)).should.have.size(1)
+        }
+    }
 })
