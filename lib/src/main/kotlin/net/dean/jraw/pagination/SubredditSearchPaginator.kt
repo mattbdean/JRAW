@@ -27,7 +27,7 @@ class SubredditSearchPaginator private constructor(b: Builder) : DefaultPaginato
 
         // Add the 'q' query parameter
         return base.newBuilder()
-            .url(base.parsedUrl.newBuilder().setQueryParameter("q", query).build())
+            .configureUrl { it.setQueryParameter("q", query) }
     }
 
     /** Builder pattern implementation */

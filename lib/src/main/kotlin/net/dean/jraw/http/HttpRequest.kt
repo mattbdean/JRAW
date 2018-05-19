@@ -108,6 +108,14 @@ class HttpRequest internal constructor(
         fun patch(body: RequestBody) = method("PATCH", body)
 
         /**
+         * Convenience function that applies the changes made to the HttpUrl.Builder by the function passed.
+         */
+        fun configureUrl(modify: (url: HttpUrl.Builder) -> HttpUrl.Builder): Builder {
+            this.url = modify(this.url)
+            return this
+        }
+
+        /**
          * Sets the URL to send the request to. Overwrites any previous methods that alter the URL, such as [query],
          * [host], and [secure].
          */
@@ -138,7 +146,6 @@ class HttpRequest internal constructor(
         fun secure(flag: Boolean = true): Builder { this.url.scheme("http" + if (flag) "s" else ""); return this }
 
         /** Sets the hostname (e.g. "google.com" or "oauth.reddit.com") */
-        @Deprecated("Prefer url(okhttp3.HttpUrl) instead. See also HttpUrl.Builder.host()")
         fun host(host: String): Builder { this.url.host(host); return this }
 
         /**
@@ -168,8 +175,6 @@ class HttpRequest internal constructor(
          * @param pathParams Optional positional path parameters. These will be automatically URL-encoded.
          * @return This Builder
          */
-        @Deprecated("Prefer url(okhttp3.HttpUrl) instead. See also HttpUrl.Builder.encodedPath. This method will " +
-            "become private in the next release")
         fun path(path: String, vararg pathParams: String): Builder {
             val realPath = if (path.startsWith("/")) path else "/" + path
             url.encodedPath(substitutePathParameters(realPath, pathParams.toList()))
@@ -177,9 +182,6 @@ class HttpRequest internal constructor(
         }
 
         /** Sets the query section of the URL. */
-        @Deprecated(
-            "Prefer url(okhttp3.HttpUrl) instead. See also HttpUrl.Builder.addQueryParameter and the " +
-            "HttpUrl.Builder.addQueryParameters extension function.")
         fun query(query: Map<String, String>): Builder {
             for ((k, v) in query) {
                 url.addQueryParameter(k, v)
