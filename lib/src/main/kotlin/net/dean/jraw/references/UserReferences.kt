@@ -17,7 +17,7 @@ import okhttp3.RequestBody
 /**
  * A user reference is exactly what you think it is, a reference to a user.
  *
- * @property username The name of the users account (note: note the ID or the full name)
+ * @property username The name of the users account (note: not the ID or the full name)
  */
 sealed class UserReference<out T : UserFlairReference>(reddit: RedditClient, val username: String) : AbstractReference(reddit) {
     /** True if and only if this UserReference is a [SelfUserReference] */
