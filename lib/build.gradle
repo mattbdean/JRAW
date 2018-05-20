@@ -11,13 +11,8 @@ ext.projectName = 'JRAW'
 dependencies {
     compile "com.squareup.okhttp3:okhttp:$okhttpVersion"
 
-    // TODO: Use Moshi fork until square/moshi#349 and #350 are merged to handle deeply nested objects:
-    // https://bintray.com/thatjavanerd/maven/moshi-deeply-nested
-//    compile "com.squareup.moshi:moshi:$moshiVersion"
-    def moshi = 'net.dean.jraw:moshi-deeply-nested:1.0.0'
-    compile(moshi) {
-        exclude group: 'com.squareup.moshi'
-    }
+    def moshi = "com.squareup.moshi:moshi:$moshiVersion"
+    compile moshi
     testCompile('com.squareup.moshi:moshi-kotlin:1.5.0') {
         exclude group: 'com.squareup.moshi'
     }
@@ -53,7 +48,7 @@ dokka {
     moduleName = 'jraw'
     jdkVersion = 7
     impliedPlatforms = ['JVM']
-    reportNotDocumented = true
+    reportUndocumented = true
     outputFormat = 'javadoc'
     includes = ['packages.md']
 
