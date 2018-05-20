@@ -142,7 +142,6 @@ class HttpRequest internal constructor(
         fun basicAuth(creds: BasicAuthData?): Builder { this.basicAuth = creds; return this }
 
         /** Sets the URL's scheme to "https" if true, otherwise "http." Defaults to "https." */
-        @Deprecated("Prefer url(okhttp3.HttpUrl) instead. See also HttpUrl.Builder.scheme()")
         fun secure(flag: Boolean = true): Builder { this.url.scheme("http" + if (flag) "s" else ""); return this }
 
         /** Sets the hostname (e.g. "google.com" or "oauth.reddit.com") */
