@@ -1,10 +1,12 @@
 package net.dean.jraw.test
 
+import com.gargoylesoftware.htmlunit.Page
 import com.gargoylesoftware.htmlunit.WebClient
 import com.gargoylesoftware.htmlunit.html.HtmlButton
 import com.gargoylesoftware.htmlunit.html.HtmlElement
 import com.gargoylesoftware.htmlunit.html.HtmlInput
 import com.gargoylesoftware.htmlunit.html.HtmlPage
+import com.squareup.moshi.Moshi
 import com.winterbe.expekt.should
 import net.dean.jraw.RedditClient
 import net.dean.jraw.oauth.OAuthHelper
@@ -40,13 +42,18 @@ fun doBrowserLogin(vararg scopes: String = arrayOf("identity")): Pair<StatefulAu
 
     // First we're gonna log in with the testing user credentials
     val loginPage = client.getPage<HtmlPage>(url)
-    val loginForm = loginPage.forms.first { it.id == "login-form" }
-    loginForm.getInputByName<HtmlInput>("user").valueAttribute = CredentialsUtil.script.username
-    loginForm.getInputByName<HtmlInput>("passwd").valueAttribute = CredentialsUtil.script.password
+    val loginForm = loginPage.forms.first { it.actionAttribute.endsWith("/login") }
+    loginForm.getInputByName<HtmlInput>("username").valueAttribute = CredentialsUtil.script.username
+    loginForm.getInputByName<HtmlInput>("password").valueAttribute = CredentialsUtil.script.password
 
-    // Submit the form so we get redirected to the page where we can authorize our app
-    val authorizePage: HtmlPage = findChild<HtmlButton>(loginForm, "button", "type" to "submit").click()
-    return helper to authorizePage
+    // reddit responds with a JSON object whose only key is "dest", whose value is a URL
+    val page: Page = findChild<HtmlButton>(loginForm, "button", "type" to "submit").click()
+    val adapter = moshi.adapter<LoginResponse>(LoginResponse::class.java)
+    val response = adapter.fromJson(page.webResponse.contentAsString)!!
+
+    // Open the page we were given
+    val authPage = client.getPage<HtmlPage>(response.dest)
+    return helper to authPage
 }
 
 fun emulateBrowserAuth(vararg scopes: String = arrayOf("identity")): RedditClient {
@@ -67,3 +74,7 @@ fun <E : HtmlElement> findChild(parent: HtmlElement, elName: String, attribute: 
 
     return elements[0]
 }
+
+private data class LoginResponse(val dest: String)
+
+private val moshi = Moshi.Builder().build()

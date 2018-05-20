@@ -1,11 +1,13 @@
 package net.dean.jraw.models
 
+import java.io.Serializable
+
 data class SubredditSearchQuery @JvmOverloads constructor(
     val query: String,
     val exact: Boolean? = null,
     val includeNsfw: Boolean? = null,
     val includeUnadvertisable: Boolean? = null
-) {
+) : Serializable {
     class Builder(internal val query: String) {
         private var exact: Boolean? = null
         private var includeNsfw: Boolean? = null

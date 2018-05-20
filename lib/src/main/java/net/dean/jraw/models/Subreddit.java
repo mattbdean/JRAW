@@ -59,8 +59,10 @@ public abstract class Subreddit implements Created, Identifiable, Referenceable<
     @Override
     @Json(name = "created_utc") @UnixTime public abstract Date getCreated();
 
+    /** Whether or not the subreddit hides ads, or null if unknown. */
     @Json(name = "hide_ads")
-    public abstract boolean isHidingAds();
+    @Nullable
+    public abstract Boolean getHideAds();
 
     @NotNull
     @Override

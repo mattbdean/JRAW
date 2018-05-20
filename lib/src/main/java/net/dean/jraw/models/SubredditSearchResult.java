@@ -5,8 +5,10 @@ import com.squareup.moshi.Json;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 
+import java.io.Serializable;
+
 @AutoValue
-public abstract class SubredditSearchResult {
+public abstract class SubredditSearchResult implements Serializable {
     /** The approximate number of active users right now */
     @Json(name = "active_user_count") public abstract int getActiveUserCount();
 

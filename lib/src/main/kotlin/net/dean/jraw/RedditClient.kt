@@ -299,7 +299,7 @@ class RedditClient internal constructor(
     /**
      * Convenience function equivalent to
      *
-     * ```kt
+     * ```java
      * searchSubredditsByName(new SubredditSearchQuery(queryString))
      * ```
      */
