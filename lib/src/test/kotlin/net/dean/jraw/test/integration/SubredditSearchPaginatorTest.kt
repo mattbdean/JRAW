@@ -41,7 +41,10 @@ class SubredditSearchPaginatorTest : Spek({
         // Create a Map using sortings as keys and averageSubs as values
         val mappedResults = sortings.zip(averageSubs).toMap()
 
+        val allowedError = 1.0
+
         // We would expect that subreddits with a higher activity would have (on average) a higher amount of subscribers
-        mappedResults[SubredditSearchSort.ACTIVITY].should.be.above(mappedResults[SubredditSearchSort.RELEVANCE]!!)
+        (mappedResults[SubredditSearchSort.ACTIVITY]!! + allowedError)
+            .should.be.above(mappedResults[SubredditSearchSort.RELEVANCE]!!)
     }
 })
