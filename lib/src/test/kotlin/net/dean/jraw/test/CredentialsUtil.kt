@@ -1,7 +1,7 @@
 package net.dean.jraw.test
 
-import com.squareup.moshi.KotlinJsonAdapterFactory
 import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import net.dean.jraw.oauth.Credentials
 import okio.Okio
 import java.util.*
@@ -22,7 +22,7 @@ object CredentialsUtil {
     }
 
     private fun isTravis() =
-        System.getenv("TRAVIS") != null && System.getenv("TRAVIS").toBoolean()
+        System.getenv("TRAVIS") != null && System.getenv("TRAVIS")!!.toBoolean()
 
     private fun getCredentials(): TestingCredentials =
         if (isTravis()) getTravisCredentials() else getLocalCredentials()

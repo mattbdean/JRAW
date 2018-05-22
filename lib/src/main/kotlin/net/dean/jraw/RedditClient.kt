@@ -177,7 +177,9 @@ class RedditClient internal constructor(
 
         // Try to find any API errors embedded in the JSON document
         if (type != null && type.type() == "application" && type.subtype() == "json") {
-            val stub = if (res.body == "") null else JrawUtils.adapter<RedditExceptionStub<*>>().fromJson(res.body)
+            // Make the adapter lenient so we're not required to read the entire body
+            val adapter = JrawUtils.adapter<RedditExceptionStub<*>>().lenient()
+            val stub = if (res.body == "") null else adapter.fromJson(res.body)
 
             // Reddit has some legacy endpoints that return 200 OK even though the JSON contains errors
             if (stub != null) {
