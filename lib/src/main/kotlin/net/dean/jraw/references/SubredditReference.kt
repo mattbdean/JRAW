@@ -220,8 +220,9 @@ class SubredditReference internal constructor(reddit: RedditClient, val subreddi
         }
     }
 
-    /** Returns a listing of currently set flairs on the subreddit (both custom and template-based ones)
-     *  Requires mod priveleges on the subreddit.
+    /**
+     * Returns a listing of currently set flairs on the subreddit (both custom and template-based ones)
+     * Requires mod priveleges on the subreddit.
      */
     @EndpointImplementation(Endpoint.GET_FLAIRLIST)
     fun flairList() = BarebonesPaginator.Builder.create<SimpleFlairInfo>(reddit, "/r/$subreddit/api/flairlist")

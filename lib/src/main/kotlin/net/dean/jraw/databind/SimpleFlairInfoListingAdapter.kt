@@ -59,6 +59,8 @@ class SimpleFlairInfoListingAdapterFactory : JsonAdapter.Factory {
             if (reader.hasNext() && reader.nextName() == "next")
                 next = if (reader.peek() == JsonReader.Token.NULL) reader.nextNull() else reader.nextString()
 
+            reader.endObject()
+
             return Listing.create(next, children)
         }
     }
