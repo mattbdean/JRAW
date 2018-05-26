@@ -5,6 +5,7 @@ import com.squareup.moshi.Types
 import net.dean.jraw.*
 import net.dean.jraw.JrawUtils.urlEncode
 import net.dean.jraw.databind.Enveloped
+import net.dean.jraw.http.NetworkException
 import net.dean.jraw.models.*
 import net.dean.jraw.models.internal.GenericJsonResponse
 import net.dean.jraw.models.internal.RedditModelEnvelope
@@ -23,8 +24,11 @@ sealed class UserReference<out T : UserFlairReference>(reddit: RedditClient, val
     /** True if and only if this UserReference is a [SelfUserReference] */
     abstract val isSelf: Boolean
 
-    /** Fetches basic information about this user */
-    @EndpointImplementation(Endpoint.GET_ME, Endpoint.GET_USER_USERNAME_ABOUT)
+    /**
+     * Fetches basic information about this user.
+     */
+    @Throws(SuspendedAccountException::class)
+    @Deprecated("Prefer query() for better handling of non-existent/suspended accounts", ReplaceWith("query()"))
     fun about(): Account {
         val body = reddit.request {
             it.path(if (isSelf) "/api/v1/me" else "/user/$username/about")
@@ -33,7 +37,28 @@ sealed class UserReference<out T : UserFlairReference>(reddit: RedditClient, val
         // /api/v1/me returns an Account that isn't wrapped with the data/kind nodes
         if (isSelf)
             return JrawUtils.adapter<Account>().fromJson(body)!!
-        return JrawUtils.adapter<Account>(Enveloped::class.java).fromJson(body)!!
+        try {
+            return JrawUtils.adapter<Account>(Enveloped::class.java).fromJson(body)!!
+        } catch (npe: NullPointerException) {
+            throw SuspendedAccountException(username)
+        }
+    }
+
+    /**
+     * Gets information about this account.
+     */
+    @EndpointImplementation(Endpoint.GET_ME, Endpoint.GET_USER_USERNAME_ABOUT)
+    fun query(): AccountQuery {
+        return try {
+            AccountQuery.create(username, AccountStatus.EXISTS, about())
+        } catch (e: ApiException) {
+            if (e.cause is NetworkException && e.cause.res.code != 404)
+                throw e
+            else
+                AccountQuery.create(username, AccountStatus.NON_EXISTENT)
+        } catch (e: SuspendedAccountException) {
+            AccountQuery.create(username, AccountStatus.SUSPENDED)
+        }
     }
 
     /** Fetches any trophies the user has achieved */

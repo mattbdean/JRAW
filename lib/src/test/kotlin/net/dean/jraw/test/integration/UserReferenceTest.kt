@@ -2,9 +2,10 @@ package net.dean.jraw.test.integration
 
 import com.winterbe.expekt.should
 import net.dean.jraw.ApiException
+import net.dean.jraw.models.AccountStatus
 import net.dean.jraw.models.MultiredditPatch
-import net.dean.jraw.models.UserHistorySort
 import net.dean.jraw.models.TimePeriod
+import net.dean.jraw.models.UserHistorySort
 import net.dean.jraw.references.UserReference
 import net.dean.jraw.test.CredentialsUtil
 import net.dean.jraw.test.TestConfig.reddit
@@ -24,6 +25,30 @@ class UserReferenceTest : Spek({
 
             val name = "_vargas_"
             reddit.user(name).about().name.should.equal(name)
+        }
+    }
+
+    describe("query") {
+        it("should return a status of EXISTS on an account that exists") {
+            val query = reddit.me().query()
+            query.name.should.equal(reddit.requireAuthenticatedUser())
+            query.account.should.not.be.`null`
+            query.status.should.equal(AccountStatus.EXISTS)
+        }
+
+        it("should return a status of NON_EXISTENT on an account name that has never been used") {
+            val name = randomName()
+            val query = reddit.user(name).query()
+            query.name.should.equal(name)
+            query.account.should.be.`null`
+            query.status.should.equal(AccountStatus.NON_EXISTENT)
+        }
+
+        it("should return a status of SUSPENDED on a suspended account") {
+            val query = reddit.user("TheFlintASteel").query()
+            query.name.should.equal("TheFlintASteel")
+            query.account.should.be.`null`
+            query.status.should.equal(AccountStatus.SUSPENDED)
         }
     }
 

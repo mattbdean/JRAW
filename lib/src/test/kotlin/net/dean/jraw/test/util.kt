@@ -66,7 +66,7 @@ fun OAuthData.withExpiration(d: Date) = OAuthData.create(accessToken, scopes, re
 
 val rand = SecureRandom()
 fun randomName(length: Int = 10): String {
-    return "jraw_test_" + BigInteger(130, rand).toString(32).substring(0..length - 1)
+    return "jraw_test_" + BigInteger(130, rand).toString(32).substring(0 until length)
 }
 
 fun <T> expectDescendingScore(objects: List<T>, allowedMistakes: Int = 0) {
