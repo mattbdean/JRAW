@@ -109,6 +109,7 @@ class GitbookPush extends DefaultTask {
         this.git.push()
             .setCredentialsProvider(new UsernamePasswordCredentialsProvider(username, password))
             .setPushAll()
+            .setPushTags()
             .call()
         log("Pushed to remote")
     }
