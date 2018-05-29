@@ -7,7 +7,6 @@ import net.dean.jraw.Endpoint
 import net.dean.jraw.oauth.OAuthException
 import net.dean.jraw.test.*
 import org.jetbrains.spek.api.Spek
-import org.jetbrains.spek.api.dsl.it
 import org.jetbrains.spek.api.dsl.xit
 
 class StatefulAuthHelperTest : Spek({
@@ -31,7 +30,7 @@ class StatefulAuthHelperTest : Spek({
         manager.refreshToken.should.equal(refreshToken)
     }
 
-    it("should throw an OAuthException when the user hits the 'decline' button instead") {
+    xit("should throw an OAuthException when the user hits the 'decline' button instead") {
         val (helper, authorizePage) = doBrowserLogin()
         val redirectPage: HtmlPage = findChild<HtmlInput>(authorizePage.body, "input", "value" to "Decline").click()
 
