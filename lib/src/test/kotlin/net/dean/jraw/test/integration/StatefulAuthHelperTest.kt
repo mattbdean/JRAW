@@ -8,9 +8,11 @@ import net.dean.jraw.oauth.OAuthException
 import net.dean.jraw.test.*
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.it
+import org.jetbrains.spek.api.dsl.xit
 
 class StatefulAuthHelperTest : Spek({
-    it("should provide helpers to point the user in the right direction") {
+    // TODO inconsistent test b/c of emulateBrowserAuth()
+    xit("should provide helpers to point the user in the right direction") {
         val reddit = emulateBrowserAuth("identity")
         ensureAuthenticated(reddit)
         // GET /api/v1/me requires the identity scope
