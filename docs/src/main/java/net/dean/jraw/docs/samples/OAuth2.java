@@ -47,7 +47,7 @@ final class OAuth2 {
                     RedditClient reddit = helper.onUserChallenge(url);
 
                     // We now have access to an authenticated RedditClient! Test it out:
-                    Account me = reddit.me().about();
+                    Account me = reddit.me().query().getAccount();
                 }
             }
         });
