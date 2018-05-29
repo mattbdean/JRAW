@@ -1,4 +1,4 @@
-<!--- Generated 2018-05-29 at 09:25:43 EDT. Use `./gradlew :meta:update` to update. DO NOT MODIFY DIRECTLY -->
+<!--- Generated 2018-05-29 at 10:22:01 EDT. Use `./gradlew :meta:update` to update. DO NOT MODIFY DIRECTLY -->
 
 Endpoints
 =========
@@ -12,7 +12,7 @@ So far, **86** endpoints (out of 196) have been implemented.
 
 | Method | Endpoint                                                                                     | Implementation                                                                                                                                       |
 |:------:| -------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `POST` | [`/api/comment`](https://www.reddit.com/dev/api/oauth#POST_api_comment)                      | [`ReplyableReference.reply()`](https://github.com/mattbdean/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/ReplyableReference.kt#L11) |
+| `POST` | [`/api/comment`](https://www.reddit.com/dev/api/oauth#POST_api_comment)                      | [`ReplyableReference.reply()`](https://github.com/mattbdean/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/ReplyableReference.kt#L14) |
 | `POST` | [`[/r/{subreddit}]/api/friend`](https://www.reddit.com/dev/api/oauth#POST_api_friend)        | None                                                                                                                                                 |
 | `GET`  | [`/api/needs_captcha`](https://www.reddit.com/dev/api/oauth#GET_api_needs_captcha)           | None                                                                                                                                                 |
 | `POST` | [`[/r/{subreddit}]/api/unfriend`](https://www.reddit.com/dev/api/oauth#POST_api_unfriend)    | None                                                                                                                                                 |
