@@ -6,6 +6,7 @@ import net.dean.jraw.test.randomName
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
+import java.util.*
 
 class InboxReferenceTest : Spek({
     val inbox = reddit.me().inbox()
@@ -46,6 +47,18 @@ class InboxReferenceTest : Spek({
         it("should mark all messages as read") {
             // Again, there's no way we can really test this without involving another testing user
             inbox.markAllRead()
+        }
+    }
+
+    describe("replyTo") {
+        it("should reply to a PM") {
+            // Send a message to ourselves
+            inbox.compose(reddit.requireAuthenticatedUser(), "Test PM", Date().toString())
+            // Find that message
+            val message = inbox.iterate("messages").build().next().first { it.author == reddit.requireAuthenticatedUser() }
+
+            val reply = inbox.replyTo(message.fullName, "Test PM reply at ${Date()}")
+            reply.isComment.should.be.`false`
         }
     }
 })

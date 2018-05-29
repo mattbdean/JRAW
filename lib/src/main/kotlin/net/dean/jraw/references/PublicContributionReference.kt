@@ -2,11 +2,9 @@ package net.dean.jraw.references
 
 import net.dean.jraw.*
 import net.dean.jraw.databind.Enveloped
-import net.dean.jraw.http.HttpResponse
 import net.dean.jraw.models.Comment
 import net.dean.jraw.models.DistinguishedStatus
 import net.dean.jraw.models.VoteDirection
-import net.dean.jraw.models.internal.GenericJsonResponse
 
 /**
  * Base class for References that can be publicly voted upon and saved (in essence, Submissions and Comments).
@@ -17,7 +15,7 @@ import net.dean.jraw.models.internal.GenericJsonResponse
  * @property id The base 36 ID of the model.
  */
 abstract class PublicContributionReference internal constructor(reddit: RedditClient, val id: String, kindPrefix: String) :
-    AbstractReference(reddit) {
+    ReplyableReference(reddit) {
 
     /**
      * The full name of the subject. Takes the form "${kindPrefix}_$id", where ${kindPrefix} is a value specified in
@@ -83,20 +81,8 @@ abstract class PublicContributionReference internal constructor(reddit: RedditCl
      * @throws net.dean.jraw.ApiException Most commonly for ratelimiting.
      */
     @Throws(ApiException::class)
-    @EndpointImplementation(Endpoint.POST_COMMENT)
     fun reply(text: String): Comment {
-        val res = reddit.request {
-            it.endpoint(Endpoint.POST_COMMENT)
-                .post(mapOf(
-                    "api_type" to "json",
-                    "text" to text,
-                    "thing_id" to fullName
-                ))
-        }.deserialize<GenericJsonResponse>()
-
-        val comment = (res.json?.data?.get("things") as? List<*>)?.get(0) ?:
-            throw IllegalArgumentException("Unexpected JSON structure")
-
+        val comment = reply(fullName, text).first()
         return JrawUtils.adapter<Comment>(Enveloped::class.java).fromJsonValue(comment)!!
     }
 

@@ -1,13 +1,14 @@
 package net.dean.jraw.references
 
 import net.dean.jraw.*
+import net.dean.jraw.databind.Enveloped
 import net.dean.jraw.models.Message
 import net.dean.jraw.pagination.BarebonesPaginator
 
 /**
  * Reference to the user's inbox. Requires an authenticated user to use.
  */
-class InboxReference internal constructor(reddit: RedditClient) : AbstractReference(reddit) {
+class InboxReference internal constructor(reddit: RedditClient) : ReplyableReference(reddit) {
     /**
      * Creates a [BarebonesPaginator.Builder] to view messages.
      *
@@ -65,6 +66,16 @@ class InboxReference internal constructor(reddit: RedditClient) : AbstractRefere
             it.endpoint(Endpoint.POST_COMPOSE)
                 .post(args)
         }
+    }
+
+    /**
+     * Replies to a private message and returns the newly-created Message.
+     *
+     * @param parentFullName The full name of the private message to respond to. Should be something like "t4_XXXXXX"
+     */
+    fun replyTo(parentFullName: String, text: String): Message {
+        val message = reply(parentFullName, text).first()
+        return JrawUtils.adapter<Message>(Enveloped::class.java).fromJsonValue(message)!!
     }
 
     /**
