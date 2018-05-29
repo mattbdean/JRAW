@@ -1,6 +1,6 @@
 # The Basics
 
-JRAW was written with one thing in mind: simplicity. The programmer should be able to describe what they want to do quickly and intuitively without having to worry about sending HTTP requests and parsing JSON. If you'd like to know exactly how this is done, check out the [internals page](internals.md).
+JRAW was written with one thing in mind: simplicity. The programmer should be able to describe what they want to do quickly and intuitively without having to worry about sending HTTP requests and parsing JSON. If you'd like to know exactly how this is done, check out the [internals page](internals.md). 
 
 The fluent API is built on References. A [[@Reference]] is a cheap to create, immutable, abstract pointer to a reddit resource that may or may not exist. All References are created from RedditClients or other References.
 
