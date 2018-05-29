@@ -3,12 +3,14 @@ package net.dean.jraw.models;
 import com.google.auto.value.AutoValue;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.Serializable;
+
 /**
  * The main function of an AccountQuery is to store the status of an account. If an account exists and is not suspended,
  * then the {@link Account} object can be used normally.
  */
 @AutoValue
-public abstract class AccountQuery {
+public abstract class AccountQuery implements Serializable {
     /** The reddit username being queried */
     public abstract String getName();
 
