@@ -67,9 +67,12 @@ class RedditModelAdapterFactory(
             return ListingAdapter(delegate)
         }
 
-        val isRedditModel = rawType.isAnnotationPresent(RedditModel::class.java)
+        // If a class is marked with @RedditModel, then we can deserialize that type directly. Otherwise we have to
+        // assume that this type is a superclass of a class marked with @RedditModel and must be deserialized
+        // dynamically.
+        val staticDeserialization = rawType.isAnnotationPresent(RedditModel::class.java)
 
-        return if (isRedditModel) {
+        return if (staticDeserialization) {
             // Static JsonAdapter
             val enveloped = rawType.getAnnotation(RedditModel::class.java).enveloped
             return if (enveloped) {
@@ -85,7 +88,7 @@ class RedditModelAdapterFactory(
             }
         } else {
             // Dynamic JsonAdapter
-            DynamicNonGenericModelAdapter(registry, moshi, rawType)
+            DynamicAdapter(registry, moshi, rawType)
         }
     }
 
@@ -96,10 +99,10 @@ class RedditModelAdapterFactory(
      * @param expectedKind If non-null, asserts that the value of the "kind" property is equal to this. Only applies to
      * deserialization.
      */
-    private class StaticAdapter(
+    internal class StaticAdapter(
         private val registry: Map<String, Class<*>>,
         private val delegate: JsonAdapter<RedditModelEnvelope<*>>,
-        private val expectedKind: String? = null
+        internal val expectedKind: String? = null
     ) : JsonAdapter<Any>() {
         override fun toJson(writer: JsonWriter, value: Any?) {
             if (value == null) {
@@ -136,33 +139,21 @@ class RedditModelAdapterFactory(
         }
     }
 
-    private abstract class DynamicAdapter<T>(
-        protected val registry: Map<String, Class<*>>,
-        protected val moshi: Moshi,
-        protected val upperBound: Class<*>
-    ) : JsonAdapter<T>() {
-        override fun toJson(writer: JsonWriter?, value: T?) {
+    internal class DynamicAdapter(
+        private val registry: Map<String, Class<*>>,
+        private val moshi: Moshi,
+        internal val upperBound: Class<*>
+    ) : JsonAdapter<Any>() {
+
+        override fun toJson(writer: JsonWriter?, value: Any?) {
             throw UnsupportedOperationException("Serializing dynamic models aren't supported right now")
         }
 
-        /**
-         * Asserts that the given object is not null and the same class or a subclass of [upperBound]. Returns the value
-         * after the check.
-         */
-        protected fun ensureInBounds(obj: Any?): Any {
-            if (!upperBound.isAssignableFrom(obj!!.javaClass))
-                throw IllegalArgumentException("Expected ${upperBound.name} to be assignable from $obj")
-            return obj
-        }
-    }
+        override fun fromJson(reader: JsonReader): Any {
+            val path = reader.path
 
-    private class DynamicNonGenericModelAdapter(registry: Map<String, Class<*>>, moshi: Moshi, upperBound: Class<*>) :
-        DynamicAdapter<Any>(registry, moshi, upperBound) {
-
-        override fun fromJson(reader: JsonReader): Any? {
-            val json = expectType<Map<String, Any>>(reader.readJsonValue(), "<root>")
-
-            val kind = expectType<String>(json["kind"], "kind")
+            val json = expectType<Map<String, Any>>(reader.readJsonValue(), path)
+            val kind = expectType<String>(json["kind"], "$path.kind")
 
             val clazz = registry[kind] ?:
                 throw IllegalArgumentException("No registered class for kind '$kind'")
@@ -172,22 +163,38 @@ class RedditModelAdapterFactory(
             val result = adapter.fromJsonValue(json)!!
             return ensureInBounds(result.data)
         }
+
+        /**
+         * Asserts that the given object is not null and the same class or a subclass of [upperBound]. Returns the value
+         * after the check.
+         */
+        private fun ensureInBounds(obj: Any?): Any {
+            if (!upperBound.isAssignableFrom(obj!!.javaClass))
+                throw IllegalArgumentException("Expected ${upperBound.name} to be assignable from $obj")
+            return obj
+        }
     }
 
-    private class ListingAdapter(val childrenDelegate: JsonAdapter<Any>) : JsonAdapter<Listing<Any>>() {
-        override fun fromJson(reader: JsonReader): Listing<Any>? {
+    internal class ListingAdapter(private val childrenDelegate: JsonAdapter<Any>) : JsonAdapter<Listing<Any>>() {
+        override fun fromJson(reader: JsonReader): Listing<Any> {
+            val path = reader.path
+
             // Assume that the JSON is enveloped, we have to strip that away and then parse the listing
             reader.beginObject()
+
             var listing: Listing<Any>? = null
             while (reader.hasNext()) {
                 when (reader.selectName(envelopeOptions)) {
                     0 -> {
                         // "kind"
-                        if (reader.nextString() != KindConstants.LISTING)
-                            throw IllegalArgumentException("Expecting kind to be listing at ${reader.path}")
+                        val kind = reader.nextString()
+                        if (kind != KindConstants.LISTING)
+                            throw IllegalArgumentException("Expected '${KindConstants.LISTING}' at ${reader.path}, got '$kind'")
                     }
                     1 -> {
                         // "data"
+                        if (reader.peek() == JsonReader.Token.NULL)
+                            throw JsonDataException("Expected a non-null value at $path.data")
                         listing = readListing(reader)
                     }
                     -1 -> {
@@ -199,7 +206,7 @@ class RedditModelAdapterFactory(
             }
             reader.endObject()
 
-            return listing
+            return listing ?: throw JsonDataException("Expected a value at $path.data")
         }
 
         private fun readListing(reader: JsonReader): Listing<Any> {
@@ -265,11 +272,11 @@ class RedditModelAdapterFactory(
 
     /** */
     companion object {
-        private inline fun <reified T> expectType(obj: Any?, name: String): T {
+        private inline fun <reified T> expectType(obj: Any?, path: String): T {
             if (obj == null)
-                throw IllegalArgumentException("Expected $name to be non-null")
+                throw JsonDataException("Expected value at '$path' to be non-null")
             return obj as? T ?:
-                throw IllegalArgumentException("Expected $name to be a ${T::class.java.name}, was ${obj::class.java.name}")
+                throw JsonDataException("Expected value at '$path' to be a ${T::class.java.name}, was ${obj::class.java.name}")
         }
     }
 }

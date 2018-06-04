@@ -3,10 +3,10 @@ package net.dean.jraw.test.models;
 import net.dean.jraw.databind.RedditModel;
 
 @RedditModel(enveloped = false)
-public final class NonEnvelopedChild {
+public final class NonEnvelopedModel {
     public final String a;
 
-    public NonEnvelopedChild(String a) {
+    public NonEnvelopedModel(String a) {
         this.a = a;
     }
 
@@ -15,7 +15,7 @@ public final class NonEnvelopedChild {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        NonEnvelopedChild that = (NonEnvelopedChild) o;
+        NonEnvelopedModel that = (NonEnvelopedModel) o;
 
         return a != null ? a.equals(that.a) : that.a == null;
     }
@@ -27,7 +27,7 @@ public final class NonEnvelopedChild {
 
     @Override
     public String toString() {
-        return "NonEnvelopedChild{" +
+        return "NonEnvelopedModel{" +
             "a='" + a + '\'' +
             '}';
     }
