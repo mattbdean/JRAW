@@ -1,7 +1,9 @@
 package net.dean.jraw.test.integration
 
+import com.squareup.moshi.JsonDataException
 import com.winterbe.expekt.should
 import net.dean.jraw.ApiException
+import net.dean.jraw.NoSuchSubredditException
 import net.dean.jraw.models.SimpleFlairInfo
 import net.dean.jraw.models.SubmissionKind
 import net.dean.jraw.test.CredentialsUtil.moderationSubreddit
@@ -30,6 +32,22 @@ class SubredditReferenceTest : Spek({
                 val postRef = ref.submit(SubmissionKind.LINK, "test link post", "http://example.com/${now.time}", sendReplies = false)
                 postRef.inspect().subreddit.should.equal(ref.subreddit)
             }
+        }
+    }
+
+    describe("about") {
+        it("should work fine when given a sub that exists") {
+            reddit.subreddit("pics").about()
+        }
+
+        it("should throw a NoSuchSubredditException when querying a non-existent subreddit") {
+            val sr = "fdafdasfdasfa"
+            val ex = expectException(NoSuchSubredditException::class) {
+                reddit.subreddit(sr).about()
+            }
+
+            ex.subreddit.should.equal(sr)
+            ex.cause.should.be.an.instanceof(JsonDataException::class.java)
         }
     }
 

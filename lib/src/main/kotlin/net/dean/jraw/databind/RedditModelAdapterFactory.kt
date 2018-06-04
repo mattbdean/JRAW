@@ -3,6 +3,7 @@ package net.dean.jraw.databind
 import com.squareup.moshi.*
 import net.dean.jraw.models.KindConstants
 import net.dean.jraw.models.Listing
+import net.dean.jraw.models.Subreddit
 import net.dean.jraw.models.internal.RedditModelEnvelope
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
@@ -74,7 +75,11 @@ class RedditModelAdapterFactory(
             return if (enveloped) {
                 val actualType = Types.newParameterizedType(RedditModelEnvelope::class.java, type)
                 val delegate = moshi.adapter<RedditModelEnvelope<*>>(actualType).nullSafe()
-                StaticAdapter(registry, delegate)
+
+                // A call to /r/{subreddit}/about can return a Listing if the subreddit doesn't exist. Other types are
+                // probably fine, so we don't need to take the performance hit when deserialzing them
+                val expectedKind = if (type == Subreddit::class.java) KindConstants.SUBREDDIT else null
+                StaticAdapter(registry, delegate, expectedKind)
             } else {
                 moshi.nextAdapter<Any>(this, type, delegateAnnotations).nullSafe()
             }
@@ -87,10 +92,14 @@ class RedditModelAdapterFactory(
     /**
      * Statically (normally) deserializes some JSON value into a concrete class. All generic types must be resolved
      * beforehand.
+     *
+     * @param expectedKind If non-null, asserts that the value of the "kind" property is equal to this. Only applies to
+     * deserialization.
      */
     private class StaticAdapter(
         private val registry: Map<String, Class<*>>,
-        private val delegate: JsonAdapter<RedditModelEnvelope<*>>
+        private val delegate: JsonAdapter<RedditModelEnvelope<*>>,
+        private val expectedKind: String? = null
     ) : JsonAdapter<Any>() {
         override fun toJson(writer: JsonWriter, value: Any?) {
             if (value == null) {
@@ -109,7 +118,21 @@ class RedditModelAdapterFactory(
         }
 
         override fun fromJson(reader: JsonReader): Any? {
-            return delegate.fromJson(reader)?.data ?: return null
+            val envelope = if (expectedKind != null) {
+                val path = reader.path
+                val properties = reader.readJsonValue() as? Map<*, *> ?:
+                    throw JsonDataException("Expected an object at $path")
+                val kind = properties["kind"] ?:
+                    throw JsonDataException("Expected a value at $path.kind")
+                if (kind != expectedKind)
+                    throw JsonDataException("Expected value at $path.kind to equal '$expectedKind', was ('$kind')")
+
+                delegate.fromJsonValue(properties)
+            } else {
+                delegate.fromJson(reader)
+            }
+
+            return envelope?.data
         }
     }
 

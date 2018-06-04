@@ -1,5 +1,6 @@
 package net.dean.jraw.references
 
+import com.squareup.moshi.JsonDataException
 import com.squareup.moshi.Types
 import net.dean.jraw.*
 import net.dean.jraw.models.*
@@ -20,11 +21,19 @@ import net.dean.jraw.tree.RootCommentNode
 class SubredditReference internal constructor(reddit: RedditClient, val subreddit: String) : AbstractReference(reddit) {
 
     /**
-     * Returns a [Subreddit] instance for this reference. Throws an ApiException if private or otherwise inaccessible by
-     * the current user (if any).
+     * Returns a [Subreddit] instance for this reference.
+     *
+     * @throws ApiException if private.
+     * @throws NoSuchSubredditException if it doesn't exist in the first place
      */
     @EndpointImplementation(Endpoint.GET_SUBREDDIT_ABOUT)
-    fun about(): Subreddit = reddit.request { it.endpoint(Endpoint.GET_SUBREDDIT_ABOUT, subreddit) }.deserializeEnveloped()
+    fun about(): Subreddit = try {
+        reddit.request { it.endpoint(Endpoint.GET_SUBREDDIT_ABOUT, subreddit) }.deserializeEnveloped()
+    } catch (e: JsonDataException) {
+        // Querying subreddits that don't exist doesn't 404 like a rational API, but 200's with an empty Listing as its
+        // body. Don't ask me why. Trying to deserialize this as a Subreddit causes a JsonDataException.
+        throw NoSuchSubredditException(subreddit, e)
+    }
 
     /**
      * Creates a new [DefaultPaginator.Builder] to iterate over this subreddit's posts. Not a blocking call.
