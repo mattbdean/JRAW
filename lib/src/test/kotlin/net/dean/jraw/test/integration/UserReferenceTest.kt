@@ -16,6 +16,7 @@ import net.dean.jraw.test.randomName
 import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
+import org.jetbrains.spek.api.dsl.xit
 
 class UserReferenceTest : Spek({
     describe("about") {
@@ -44,7 +45,8 @@ class UserReferenceTest : Spek({
             query.status.should.equal(AccountStatus.NON_EXISTENT)
         }
 
-        it("should return a status of SUSPENDED on a suspended account") {
+        xit("should return a status of SUSPENDED on a suspended account") {
+            // TODO(mattbdean) this guy is no longer suspended so skip until we can find another suspended account
             val query = reddit.user("TheFlintASteel").query()
             query.name.should.equal("TheFlintASteel")
             query.account.should.be.`null`
