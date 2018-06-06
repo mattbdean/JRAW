@@ -59,6 +59,11 @@ class SubredditReference internal constructor(reddit: RedditClient, val subreddi
     fun gilded(): BarebonesPaginator.Builder<PublicContribution<*>> = reddit.gildedContributions(subreddit)
 
     /**
+     * Read/write/update emoji on this subreddit. If the user is not a moderator, they'll only be able to read.
+     */
+    fun emoji() = EmojiReference(reddit, subreddit)
+
+    /**
      * Creates a SearchPaginator.Builder to search for submissions in this subreddit.
      *
      * @see SearchPaginator.inSubreddits
