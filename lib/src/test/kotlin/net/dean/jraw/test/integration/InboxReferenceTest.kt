@@ -24,6 +24,17 @@ class InboxReferenceTest : Spek({
         }
     }
 
+    describe("fetch") {
+        it("should return a Message when the ID is valid") {
+            val id = inbox.iterate("messages").build().next().first().id
+            inbox.fetch(id).should.not.be.`null`
+        }
+
+        it("should return null when the Message with that ID doesn\'t exist") {
+            inbox.fetch("fdafdafdsaffdsa").should.be.`null`
+        }
+    }
+
     describe("compose/markRead/delete") {
         it("should be able to send a message") {
             val body = "random ID: ${randomName()}"

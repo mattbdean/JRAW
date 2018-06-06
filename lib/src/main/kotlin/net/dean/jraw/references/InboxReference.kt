@@ -1,7 +1,9 @@
 package net.dean.jraw.references
 
+import com.squareup.moshi.Types
 import net.dean.jraw.*
 import net.dean.jraw.databind.Enveloped
+import net.dean.jraw.models.Listing
 import net.dean.jraw.models.Message
 import net.dean.jraw.pagination.BarebonesPaginator
 
@@ -65,6 +67,30 @@ class InboxReference internal constructor(reddit: RedditClient) : ReplyableRefer
         reddit.request {
             it.endpoint(Endpoint.POST_COMPOSE)
                 .post(args)
+        }
+    }
+
+    /**
+     * Attempts to find a specific message by its ID. Must be the ID of a private message. Other items that appear in
+     * the inbox (comment replies, username mentions, etc.) are not applicable to this method.
+     *
+     * Returns null if there is no such private message in the inbox.
+     */
+    fun fetch(id: String): Message? {
+        // This endpoint returns a Listing of one message if the ID exists, or a Listing of the first page of the user's
+        // messages if it doesn't
+        val listing: Listing<Message> = reddit.request {
+            it.path("/message/messages/{id}", id)
+        }.deserializeWith(JrawUtils.moshi.adapter(Types.newParameterizedType(Listing::class.java, Message::class.java), Enveloped::class.java))
+
+        return if (listing.children.size == 1) {
+            // Make sure the ID's match. It's possible that there's only one item in the listing because the user only
+            // has 1 private message
+            val message = listing.children.first()
+            if (message.id == id) message else null
+        } else {
+            // Returned more than one message which means a message with the given ID doesn't exist
+            null
         }
     }
 
