@@ -179,6 +179,13 @@ class RedditModelAdapterFactory(
         override fun fromJson(reader: JsonReader): Listing<Any> {
             val path = reader.path
 
+            // Some very smart person at reddit decided the best way to represent an empty array was with an empty
+            // string value. See: Message.replies and Comment.replies
+            if (reader.peek() == JsonReader.Token.STRING) {
+                reader.nextString()
+                return Listing.empty()
+            }
+
             // Assume that the JSON is enveloped, we have to strip that away and then parse the listing
             reader.beginObject()
 

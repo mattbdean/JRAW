@@ -17,7 +17,6 @@ object JrawUtils {
     /** A Moshi instance configured with all the proper JsonAdapter(Factory) instances to handle all JRAW types. */
     @JvmField val moshi: Moshi = Moshi.Builder()
         .add(UnixDateAdapterFactory())
-        .add(RepliesAdapterFactory())
         .add(SubmissionDataAdapterFactory())
         .add(SimpleFlairInfoListingAdapterFactory())
         .add(EnvelopedListAdapterFactory())

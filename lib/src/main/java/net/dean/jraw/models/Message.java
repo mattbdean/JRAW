@@ -4,6 +4,7 @@ import com.google.auto.value.AutoValue;
 import com.squareup.moshi.Json;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
+import net.dean.jraw.databind.Enveloped;
 import net.dean.jraw.databind.RedditModel;
 import net.dean.jraw.databind.UnixTime;
 import org.jetbrains.annotations.NotNull;
@@ -28,6 +29,10 @@ public abstract class Message implements Created, Distinguishable, Identifiable,
 
     /** If this message is for a comment, the permalink to said comment with the query "{@code ?context=3}"  */
     public abstract String getContext();
+
+    @Nullable
+    @Enveloped
+    public abstract Listing<Message> getReplies();
 
     @NotNull
     @Override
