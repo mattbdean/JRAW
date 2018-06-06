@@ -92,8 +92,7 @@ class AuthManager(
     fun canRenew(): Boolean {
         // Script apps and userless apps can simply request a new token since the user doesn't have to authorize it.
         // Otherwise, we need a refresh token.
-        return if (credentials.authMethod == AuthMethod.SCRIPT ||
-            credentials.authMethod.isUserless) {
+        return if (credentials.authMethod == AuthMethod.SCRIPT || credentials.authMethod.isUserless) {
             true
         } else {
             _refreshToken != null

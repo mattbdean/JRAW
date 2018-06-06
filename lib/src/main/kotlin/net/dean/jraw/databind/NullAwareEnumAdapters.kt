@@ -13,7 +13,7 @@ import net.dean.jraw.models.VoteDirection
  */
 sealed class NullAwareEnumAdapter<T : Enum<T>> : JsonAdapter<T>() {
     /** @inheritDoc */
-    override final fun fromJson(reader: JsonReader): T {
+    final override fun fromJson(reader: JsonReader): T {
         if (reader.peek() == JsonReader.Token.NULL) {
             reader.nextNull<T>()
             return nullValue
@@ -23,7 +23,7 @@ sealed class NullAwareEnumAdapter<T : Enum<T>> : JsonAdapter<T>() {
     }
 
     /** @inheritDoc */
-    override final fun toJson(writer: JsonWriter, value: T?) {
+    final override fun toJson(writer: JsonWriter, value: T?) {
         if (value == nullValue) {
             writer.nullValue()
         } else {

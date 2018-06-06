@@ -87,7 +87,7 @@ abstract class DeferredPersistentTokenStore @JvmOverloads constructor(
     /** Returns a copy of the data currently in memory. */
     fun data(): Map<String, PersistedAuthData> = HashMap(this.memoryData)
 
-    override final fun storeLatest(username: String, data: OAuthData) {
+    final override fun storeLatest(username: String, data: OAuthData) {
         if (username == AuthManager.USERNAME_UNKOWN)
             throw IllegalArgumentException("Refusing to store data for unknown username")
         val stored = this.memoryData[username]
@@ -98,7 +98,7 @@ abstract class DeferredPersistentTokenStore @JvmOverloads constructor(
             persist()
     }
 
-    override final fun storeRefreshToken(username: String, token: String) {
+    final override fun storeRefreshToken(username: String, token: String) {
         if (username == AuthManager.USERNAME_UNKOWN)
             throw IllegalArgumentException("Refusing to store data for unknown username")
         val stored = this.memoryData[username]
@@ -109,11 +109,11 @@ abstract class DeferredPersistentTokenStore @JvmOverloads constructor(
             persist()
     }
 
-    override final fun fetchLatest(username: String): OAuthData? {
+    final override fun fetchLatest(username: String): OAuthData? {
         return memoryData[username]?.latest
     }
 
-    override final fun fetchRefreshToken(username: String): String? {
+    final override fun fetchRefreshToken(username: String): String? {
         return memoryData[username]?.refreshToken
     }
 
