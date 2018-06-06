@@ -29,20 +29,7 @@ sealed class UserReference<out T : UserFlairReference>(reddit: RedditClient, val
      */
     @Throws(SuspendedAccountException::class)
     @Deprecated("Prefer query() for better handling of non-existent/suspended accounts", ReplaceWith("query()"))
-    fun about(): Account {
-        val body = reddit.request {
-            it.path(if (isSelf) "/api/v1/me" else "/user/$username/about")
-        }.body
-
-        // /api/v1/me returns an Account that isn't wrapped with the data/kind nodes
-        if (isSelf)
-            return JrawUtils.adapter<Account>().fromJson(body)!!
-        try {
-            return JrawUtils.adapter<Account>(Enveloped::class.java).fromJson(body)!!
-        } catch (npe: NullPointerException) {
-            throw SuspendedAccountException(username)
-        }
-    }
+    fun about(): Account = fetchAccount()
 
     /**
      * Gets information about this account.
@@ -50,7 +37,7 @@ sealed class UserReference<out T : UserFlairReference>(reddit: RedditClient, val
     @EndpointImplementation(Endpoint.GET_ME, Endpoint.GET_USER_USERNAME_ABOUT)
     fun query(): AccountQuery {
         return try {
-            AccountQuery.create(username, AccountStatus.EXISTS, about())
+            AccountQuery.create(username, AccountStatus.EXISTS, fetchAccount())
         } catch (e: ApiException) {
             if (e.cause is NetworkException && e.cause.res.code != 404)
                 throw e
@@ -130,6 +117,21 @@ sealed class UserReference<out T : UserFlairReference>(reddit: RedditClient, val
      * the authenticated must be a moderator of the given subreddit to access anything specific to this user.
      */
     abstract fun flairOn(subreddit: String): T
+
+    private fun fetchAccount(): Account {
+        val body = reddit.request {
+            it.path(if (isSelf) "/api/v1/me" else "/user/$username/about")
+        }.body
+
+        // /api/v1/me returns an Account that isn't wrapped with the data/kind nodes
+        if (isSelf)
+            return JrawUtils.adapter<Account>().fromJson(body)!!
+        try {
+            return JrawUtils.adapter<Account>(Enveloped::class.java).fromJson(body)!!
+        } catch (npe: NullPointerException) {
+            throw SuspendedAccountException(username)
+        }
+    }
 }
 
 /** A reference to the currently authenticated user */
