@@ -1,11 +1,11 @@
-<!--- Generated 2018-06-07 at 11:58:59 EDT. Use `./gradlew :meta:update` to update. DO NOT MODIFY DIRECTLY -->
+<!--- Generated 2018-06-07 at 12:03:27 EDT. Use `./gradlew :meta:update` to update. DO NOT MODIFY DIRECTLY -->
 
 Endpoints
 =========
 
 This file contains a list of all the endpoints (regardless of if they have been implemented) that can be found at the [official reddit API docs](https://www.reddit.com/dev/api/oauth). To update this file, run `./gradlew :meta:update`
 
-So far, **89** endpoints (out of 196) have been implemented.
+So far, **90** endpoints (out of 196) have been implemented.
 
 (any scope)
 -----------
@@ -249,6 +249,7 @@ read
 | `GET`  | [`/api/multi/{multipath}/r/{srname}`](https://www.reddit.com/dev/api/oauth#GET_api_multi_{multipath}_r_{srname})   | [`MultiredditReference.subredditInfo()`](https://github.com/mattbdean/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/MultiredditReference.kt#L120)    |
 | `POST` | [`/api/search_subreddits`](https://www.reddit.com/dev/api/oauth#POST_api_search_subreddits)                        | [`RedditClient.searchSubredditsByName()`](https://github.com/mattbdean/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/RedditClient.kt#L308)                      |
 | `GET`  | [`/api/v1/user/{username}/trophies`](https://www.reddit.com/dev/api/oauth#GET_api_v1_user_{username}_trophies)     | [`UserReference.trophies()`](https://github.com/mattbdean/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/UserReference.kt#L54)                        |
+| `GET`  | [`/api/v1/{subreddit}/emojis/all`](https://www.reddit.com/dev/api/oauth#GET_api_v1_{subreddit}_emojis_all)         | [`EmojiReference.list()`](https://github.com/mattbdean/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/EmojiReference.kt#L27)                          |
 | `GET`  | [`/best`](https://www.reddit.com/dev/api/oauth#GET_best)                                                           | [`SubredditReference.posts()`](https://github.com/mattbdean/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/SubredditReference.kt#L45)                 |
 | `GET`  | [`[/r/{subreddit}]/comments/{article}`](https://www.reddit.com/dev/api/oauth#GET_comments_{article})               | [`SubmissionReference.comments()`](https://github.com/mattbdean/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/SubmissionReference.kt#L28)            |
 | `GET`  | [`[/r/{subreddit}]/hot`](https://www.reddit.com/dev/api/oauth#GET_hot)                                             | [`SubredditReference.posts()`](https://github.com/mattbdean/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/SubredditReference.kt#L45)                 |
@@ -272,7 +273,6 @@ read
 | `POST` | [`/api/search_reddit_names`](https://www.reddit.com/dev/api/oauth#POST_api_search_reddit_names)                    | None                                                                                                                                                                 |
 | `GET`  | [`/api/subreddit_autocomplete`](https://www.reddit.com/dev/api/oauth#GET_api_subreddit_autocomplete)               | None                                                                                                                                                                 |
 | `GET`  | [`/api/subreddit_autocomplete_v2`](https://www.reddit.com/dev/api/oauth#GET_api_subreddit_autocomplete_v2)         | None                                                                                                                                                                 |
-| `GET`  | [`/api/v1/{subreddit}/emojis/all`](https://www.reddit.com/dev/api/oauth#GET_api_v1_{subreddit}_emojis_all)         | None                                                                                                                                                                 |
 | `GET`  | [`/by_id/{names}`](https://www.reddit.com/dev/api/oauth#GET_by_id_{names})                                         | None                                                                                                                                                                 |
 | `GET`  | [`/duplicates/{article}`](https://www.reddit.com/dev/api/oauth#GET_duplicates_{article})                           | None                                                                                                                                                                 |
 | `GET`  | [`/live/{thread}/contributors`](https://www.reddit.com/dev/api/oauth#GET_live_{thread}_contributors)               | None                                                                                                                                                                 |
@@ -310,9 +310,9 @@ structuredstyles
 
 |  Method  | Endpoint                                                                                                                                    | Implementation                                                                                                                                 |
 |:--------:| ------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-|  `POST`  | [`/api/v1/{subreddit}/emoji.json`](https://www.reddit.com/dev/api/oauth#POST_api_v1_{subreddit}_emoji.json)                                 | [`EmojiReference.upload()`](https://github.com/mattbdean/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/EmojiReference.kt#L42)  |
-| `DELETE` | [`/api/v1/{subreddit}/emoji/{emoji_name}`](https://www.reddit.com/dev/api/oauth#DELETE_api_v1_{subreddit}_emoji_{emoji_name})               | [`EmojiReference.delete()`](https://github.com/mattbdean/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/EmojiReference.kt#L114) |
-|  `POST`  | [`/api/v1/{subreddit}/emoji_asset_upload_s3.json`](https://www.reddit.com/dev/api/oauth#POST_api_v1_{subreddit}_emoji_asset_upload_s3.json) | [`EmojiReference.upload()`](https://github.com/mattbdean/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/EmojiReference.kt#L42)  |
+|  `POST`  | [`/api/v1/{subreddit}/emoji.json`](https://www.reddit.com/dev/api/oauth#POST_api_v1_{subreddit}_emoji.json)                                 | [`EmojiReference.upload()`](https://github.com/mattbdean/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/EmojiReference.kt#L43)  |
+| `DELETE` | [`/api/v1/{subreddit}/emoji/{emoji_name}`](https://www.reddit.com/dev/api/oauth#DELETE_api_v1_{subreddit}_emoji_{emoji_name})               | [`EmojiReference.delete()`](https://github.com/mattbdean/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/EmojiReference.kt#L115) |
+|  `POST`  | [`/api/v1/{subreddit}/emoji_asset_upload_s3.json`](https://www.reddit.com/dev/api/oauth#POST_api_v1_{subreddit}_emoji_asset_upload_s3.json) | [`EmojiReference.upload()`](https://github.com/mattbdean/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/EmojiReference.kt#L43)  |
 |  `POST`  | [`/api/widget`](https://www.reddit.com/dev/api/oauth#POST_api_widget)                                                                       | None                                                                                                                                           |
 | `DELETE` | [`/api/widget/{widget_id}`](https://www.reddit.com/dev/api/oauth#DELETE_api_widget_{widget_id})                                             | None                                                                                                                                           |
 |  `PUT`   | [`/api/widget/{widget_id}`](https://www.reddit.com/dev/api/oauth#PUT_api_widget_{widget_id})                                                | None                                                                                                                                           |

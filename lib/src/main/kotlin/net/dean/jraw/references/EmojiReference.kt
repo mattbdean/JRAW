@@ -22,6 +22,7 @@ class EmojiReference(reddit: RedditClient, val subreddit: String) : AbstractRefe
     /**
      * Lists all emojis available for use in this subreddit
      */
+    @EndpointImplementation(Endpoint.GET_SUBREDDIT_EMOJIS_ALL)
     fun list(): List<Emoji> {
         return reddit.request {
             it.endpoint(Endpoint.GET_SUBREDDIT_EMOJIS_ALL, subreddit)
