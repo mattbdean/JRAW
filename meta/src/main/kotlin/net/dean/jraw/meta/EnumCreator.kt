@@ -4,7 +4,7 @@ import com.grosner.kpoet.*
 import com.squareup.javapoet.ClassName
 import java.io.File
 
-class EnumCreator(val endpoints: List<ParsedEndpoint>, val indent: Int = 4) {
+class EnumCreator(private val overview: EndpointOverview, private val indent: Int = 4) {
     fun writeTo(out: File): File       { createJavaFile().writeTo(out); return absoluteOutput(out) }
     fun writeTo(out: Appendable): File { createJavaFile().writeTo(out); return File(".") }
 
@@ -28,7 +28,7 @@ class EnumCreator(val endpoints: List<ParsedEndpoint>, val indent: Int = 4) {
                         "through the ${code(":meta:update")} Gradle task.")
 
                 // Dynamically add a enum value for each endpoint
-                for (e in endpoints) {
+                for (e in overview.endpoints) {
                     case(enumName(e), "\$S, \$L, \$S", e.method, enumPath(e), e.oauthScope) {
                         javadoc(javadocFor(e))
                     }
@@ -81,7 +81,7 @@ class EnumCreator(val endpoints: List<ParsedEndpoint>, val indent: Int = 4) {
 
         private val stripPrefixes = listOf("/api/v1/", "/api/", "/")
 
-        private fun enumName(e: ParsedEndpoint): String {
+        private fun enumName(e: EndpointMeta): String {
             var name = e.path
 
             stripPrefixes
@@ -98,13 +98,13 @@ class EnumCreator(val endpoints: List<ParsedEndpoint>, val indent: Int = 4) {
                 .replace("}", "")
         }
 
-        private fun enumPath(e: ParsedEndpoint) =
+        private fun enumPath(e: EndpointMeta) =
             if (e.subredditPrefix)
                 "$SUBREDDIT_PREFIX_CONSTANT_NAME + ${e.path.S}"
             else
                 e.path.S
 
-        private fun javadocFor(e: ParsedEndpoint): String =
+        private fun javadocFor(e: EndpointMeta): String =
             "Represents the endpoint ${code(e.method + " " + e.path)}. Requires OAuth scope '${e.oauthScope}'. See " +
                 link("here", e.redditDocLink) + " for more information"
 

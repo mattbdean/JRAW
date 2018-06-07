@@ -1,30 +1,30 @@
-<!--- Generated 2018-06-07 at 13:03:57 EDT. Use `./gradlew :meta:update` to update. DO NOT MODIFY DIRECTLY -->
+<!--- Generated 2018-06-07 at 19:30:28 EDT. Use `./gradlew :meta:update` to update. DO NOT MODIFY DIRECTLY -->
 
 Endpoints
 =========
 
 This file contains a list of all the endpoints (regardless of if they have been implemented) that can be found at the [official reddit API docs](https://www.reddit.com/dev/api/oauth). To update this file, run `./gradlew :meta:update`
 
-So far, API completion is at **45.92%**. 90 out of 196 have been implemented.
+So far, API completion is at **48.91%**. 90 out of 184 endpoints (ignoring 6 endpoints not planned) have been implemented 
 
 (any scope)
 -----------
 
-16.67% completion (1 complete, 5 incomplete)
+25.00% completion (1 implemented, 4 planned, and 1 not planned)
 
 | Method | Endpoint                                                                                     | Implementation                                                                                                                                       |
 |:------:| -------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `POST` | [`/api/comment`](https://www.reddit.com/dev/api/oauth#POST_api_comment)                      | [`ReplyableReference.reply()`](https://github.com/mattbdean/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/ReplyableReference.kt#L14) |
 | `POST` | [`[/r/{subreddit}]/api/friend`](https://www.reddit.com/dev/api/oauth#POST_api_friend)        | None                                                                                                                                                 |
-| `GET`  | [`/api/needs_captcha`](https://www.reddit.com/dev/api/oauth#GET_api_needs_captcha)           | None                                                                                                                                                 |
 | `POST` | [`[/r/{subreddit}]/api/unfriend`](https://www.reddit.com/dev/api/oauth#POST_api_unfriend)    | None                                                                                                                                                 |
 | `GET`  | [`/api/username_available`](https://www.reddit.com/dev/api/oauth#GET_api_username_available) | None                                                                                                                                                 |
 | `GET`  | [`/api/v1/scopes`](https://www.reddit.com/dev/api/oauth#GET_api_v1_scopes)                   | None                                                                                                                                                 |
+| `GET`  | [`/api/needs_captcha`](https://www.reddit.com/dev/api/oauth#GET_api_needs_captcha)           | Not planned                                                                                                                                          |
 
 account
 -------
 
-50.00% completion (1 complete, 1 incomplete)
+50.00% completion (1 implemented, 1 planned, and 0 not planned)
 
 | Method  | Endpoint                                                                         | Implementation                                                                                                                                           |
 |:-------:| -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -34,7 +34,7 @@ account
 creddits
 --------
 
-0.00% completion (0 complete, 2 incomplete)
+0.00% completion (0 implemented, 2 planned, and 0 not planned)
 
 | Method | Endpoint                                                                                                | Implementation |
 |:------:| ------------------------------------------------------------------------------------------------------- | -------------- |
@@ -44,7 +44,7 @@ creddits
 edit
 ----
 
-100.00% completion (5 complete, 0 incomplete)
+100.00% completion (5 implemented, 0 planned, and 0 not planned)
 
 | Method | Endpoint                                                                                                        | Implementation                                                                                                                                                                |
 |:------:| --------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -57,7 +57,7 @@ edit
 flair
 -----
 
-71.43% completion (5 complete, 2 incomplete)
+71.43% completion (5 implemented, 2 planned, and 0 not planned)
 
 | Method | Endpoint                                                                                                | Implementation                                                                                                                                                          |
 |:------:| ------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -72,7 +72,7 @@ flair
 history
 -------
 
-100.00% completion (1 complete, 0 incomplete)
+100.00% completion (1 implemented, 0 planned, and 0 not planned)
 
 | Method | Endpoint                                                                                       | Implementation                                                                                                                               |
 |:------:| ---------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -81,7 +81,7 @@ history
 identity
 --------
 
-100.00% completion (3 complete, 0 incomplete)
+100.00% completion (3 implemented, 0 planned, and 0 not planned)
 
 | Method | Endpoint                                                                             | Implementation                                                                                                                                      |
 |:------:| ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -92,7 +92,7 @@ identity
 livemanage
 ----------
 
-20.00% completion (2 complete, 8 incomplete)
+20.00% completion (2 implemented, 8 planned, and 0 not planned)
 
 | Method | Endpoint                                                                                                                                    | Implementation                                                                                                                                         |
 |:------:| ------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -110,7 +110,7 @@ livemanage
 modconfig
 ---------
 
-20.00% completion (2 complete, 8 incomplete)
+20.00% completion (2 implemented, 8 planned, and 0 not planned)
 
 | Method | Endpoint                                                                                                          | Implementation                                                                                                                                                   |
 |:------:| ----------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -128,7 +128,7 @@ modconfig
 modcontributors
 ---------------
 
-0.00% completion (0 complete, 2 incomplete)
+0.00% completion (0 implemented, 2 planned, and 0 not planned)
 
 | Method | Endpoint                                                                                            | Implementation |
 |:------:| --------------------------------------------------------------------------------------------------- | -------------- |
@@ -138,7 +138,7 @@ modcontributors
 modflair
 --------
 
-30.00% completion (3 complete, 7 incomplete)
+30.00% completion (3 implemented, 7 planned, and 0 not planned)
 
 | Method  | Endpoint                                                                                                           | Implementation                                                                                                                                                 |
 |:-------:| ------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -156,7 +156,7 @@ modflair
 modlog
 ------
 
-0.00% completion (0 complete, 1 incomplete)
+0.00% completion (0 implemented, 1 planned, and 0 not planned)
 
 | Method | Endpoint                                                                           | Implementation |
 |:------:| ---------------------------------------------------------------------------------- | -------------- |
@@ -165,7 +165,7 @@ modlog
 modmail
 -------
 
-0.00% completion (0 complete, 16 incomplete)
+0.00% completion (0 implemented, 16 planned, and 0 not planned)
 
 |  Method  | Endpoint                                                                                                                                             | Implementation |
 |:--------:| ---------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- |
@@ -189,7 +189,7 @@ modmail
 modothers
 ---------
 
-0.00% completion (0 complete, 1 incomplete)
+0.00% completion (0 implemented, 1 planned, and 0 not planned)
 
 | Method | Endpoint                                                                                              | Implementation |
 |:------:| ----------------------------------------------------------------------------------------------------- | -------------- |
@@ -198,7 +198,7 @@ modothers
 modposts
 --------
 
-42.86% completion (6 complete, 8 incomplete)
+42.86% completion (6 implemented, 8 planned, and 0 not planned)
 
 | Method | Endpoint                                                                                          | Implementation                                                                                                                                                                |
 |:------:| ------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -220,7 +220,7 @@ modposts
 modself
 -------
 
-0.00% completion (0 complete, 3 incomplete)
+0.00% completion (0 implemented, 3 planned, and 0 not planned)
 
 | Method | Endpoint                                                                                                                | Implementation |
 |:------:| ----------------------------------------------------------------------------------------------------------------------- | -------------- |
@@ -231,7 +231,7 @@ modself
 modwiki
 -------
 
-0.00% completion (0 complete, 5 incomplete)
+0.00% completion (0 implemented, 5 planned, and 0 not planned)
 
 | Method | Endpoint                                                                                                              | Implementation |
 |:------:| --------------------------------------------------------------------------------------------------------------------- | -------------- |
@@ -244,7 +244,7 @@ modwiki
 mysubreddits
 ------------
 
-66.67% completion (2 complete, 1 incomplete)
+66.67% completion (2 implemented, 1 planned, and 0 not planned)
 
 | Method | Endpoint                                                                                                 | Implementation                                                                                                                                           |
 |:------:| -------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -255,7 +255,7 @@ mysubreddits
 privatemessages
 ---------------
 
-54.55% completion (6 complete, 5 incomplete)
+66.67% completion (6 implemented, 4 planned, and 1 not planned)
 
 | Method | Endpoint                                                                                                 | Implementation                                                                                                                                      |
 |:------:| -------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -269,12 +269,12 @@ privatemessages
 | `POST` | [`/api/collapse_message`](https://www.reddit.com/dev/api/oauth#POST_api_collapse_message)                | None                                                                                                                                                |
 | `POST` | [`/api/unblock_subreddit`](https://www.reddit.com/dev/api/oauth#POST_api_unblock_subreddit)              | None                                                                                                                                                |
 | `POST` | [`/api/uncollapse_message`](https://www.reddit.com/dev/api/oauth#POST_api_uncollapse_message)            | None                                                                                                                                                |
-| `GET`  | [`/api/user_data_by_account_ids`](https://www.reddit.com/dev/api/oauth#GET_api_user_data_by_account_ids) | None                                                                                                                                                |
+| `GET`  | [`/api/user_data_by_account_ids`](https://www.reddit.com/dev/api/oauth#GET_api_user_data_by_account_ids) | Not planned                                                                                                                                         |
 
 read
 ----
 
-60.00% completion (27 complete, 18 incomplete)
+65.85% completion (27 implemented, 16 planned, and 2 not planned)
 
 | Method | Endpoint                                                                                                           | Implementation                                                                                                                                                       |
 |:------:| ------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -309,8 +309,6 @@ read
 | `GET`  | [`[/r/{subreddit}]/about/{where}`](https://www.reddit.com/dev/api/oauth#GET_about_{where})                         | None                                                                                                                                                                 |
 | `GET`  | [`/api/live/by_id/{names}`](https://www.reddit.com/dev/api/oauth#GET_api_live_by_id_{names})                       | None                                                                                                                                                                 |
 | `GET`  | [`/api/recommend/sr/{srnames}`](https://www.reddit.com/dev/api/oauth#GET_api_recommend_sr_{srnames})               | None                                                                                                                                                                 |
-| `GET`  | [`/api/search_reddit_names`](https://www.reddit.com/dev/api/oauth#GET_api_search_reddit_names)                     | None                                                                                                                                                                 |
-| `POST` | [`/api/search_reddit_names`](https://www.reddit.com/dev/api/oauth#POST_api_search_reddit_names)                    | None                                                                                                                                                                 |
 | `GET`  | [`/api/subreddit_autocomplete`](https://www.reddit.com/dev/api/oauth#GET_api_subreddit_autocomplete)               | None                                                                                                                                                                 |
 | `GET`  | [`/api/subreddit_autocomplete_v2`](https://www.reddit.com/dev/api/oauth#GET_api_subreddit_autocomplete_v2)         | None                                                                                                                                                                 |
 | `GET`  | [`/by_id/{names}`](https://www.reddit.com/dev/api/oauth#GET_by_id_{names})                                         | None                                                                                                                                                                 |
@@ -323,11 +321,13 @@ read
 | `GET`  | [`[/r/{subreddit}]/sidebar`](https://www.reddit.com/dev/api/oauth#GET_sidebar)                                     | None                                                                                                                                                                 |
 | `GET`  | [`[/r/{subreddit}]/sticky`](https://www.reddit.com/dev/api/oauth#GET_sticky)                                       | None                                                                                                                                                                 |
 | `GET`  | [`/subreddits/{where}`](https://www.reddit.com/dev/api/oauth#GET_subreddits_{where})                               | None                                                                                                                                                                 |
+| `GET`  | [`/api/search_reddit_names`](https://www.reddit.com/dev/api/oauth#GET_api_search_reddit_names)                     | Not planned                                                                                                                                                          |
+| `POST` | [`/api/search_reddit_names`](https://www.reddit.com/dev/api/oauth#POST_api_search_reddit_names)                    | Not planned                                                                                                                                                          |
 
 report
 ------
 
-40.00% completion (2 complete, 3 incomplete)
+66.67% completion (2 implemented, 2 planned, and 1 not planned)
 
 | Method | Endpoint                                                                                          | Implementation                                                                                                                                             |
 |:------:| ------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -335,24 +335,24 @@ report
 | `POST` | [`/api/unhide`](https://www.reddit.com/dev/api/oauth#POST_api_unhide)                             | [`SubmissionReference.setHidden()`](https://github.com/mattbdean/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/SubmissionReference.kt#L78) |
 | `POST` | [`/api/live/{thread}/report`](https://www.reddit.com/dev/api/oauth#POST_api_live_{thread}_report) | None                                                                                                                                                       |
 | `POST` | [`/api/report`](https://www.reddit.com/dev/api/oauth#POST_api_report)                             | None                                                                                                                                                       |
-| `POST` | [`/api/report_user`](https://www.reddit.com/dev/api/oauth#POST_api_report_user)                   | None                                                                                                                                                       |
+| `POST` | [`/api/report_user`](https://www.reddit.com/dev/api/oauth#POST_api_report_user)                   | Not planned                                                                                                                                                |
 
 save
 ----
 
-50.00% completion (2 complete, 2 incomplete)
+100.00% completion (2 implemented, 1 planned, and 1 not planned)
 
 | Method | Endpoint                                                                                 | Implementation                                                                                                                                                            |
 |:------:| ---------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `POST` | [`/api/save`](https://www.reddit.com/dev/api/oauth#POST_api_save)                        | [`PublicContributionReference.setSaved()`](https://github.com/mattbdean/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/PublicContributionReference.kt#L73) |
 | `POST` | [`/api/unsave`](https://www.reddit.com/dev/api/oauth#POST_api_unsave)                    | [`PublicContributionReference.setSaved()`](https://github.com/mattbdean/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/PublicContributionReference.kt#L73) |
 | `GET`  | [`/api/saved_categories`](https://www.reddit.com/dev/api/oauth#GET_api_saved_categories) | None                                                                                                                                                                      |
-| `POST` | [`/api/store_visits`](https://www.reddit.com/dev/api/oauth#POST_api_store_visits)        | None                                                                                                                                                                      |
+| `POST` | [`/api/store_visits`](https://www.reddit.com/dev/api/oauth#POST_api_store_visits)        | Not planned                                                                                                                                                               |
 
 structuredstyles
 ----------------
 
-33.33% completion (3 complete, 6 incomplete)
+33.33% completion (3 implemented, 6 planned, and 0 not planned)
 
 |  Method  | Endpoint                                                                                                                                    | Implementation                                                                                                                                 |
 |:--------:| ------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -369,7 +369,7 @@ structuredstyles
 submit
 ------
 
-100.00% completion (4 complete, 0 incomplete)
+100.00% completion (4 implemented, 0 planned, and 0 not planned)
 
 | Method | Endpoint                                                                                          | Implementation                                                                                                                                                 |
 |:------:| ------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -381,7 +381,7 @@ submit
 subscribe
 ---------
 
-80.00% completion (8 complete, 2 incomplete)
+80.00% completion (8 implemented, 2 planned, and 0 not planned)
 
 |  Method  | Endpoint                                                                                                            | Implementation                                                                                                                                                      |
 |:--------:| ------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -399,7 +399,7 @@ subscribe
 vote
 ----
 
-100.00% completion (1 complete, 0 incomplete)
+100.00% completion (1 implemented, 0 planned, and 0 not planned)
 
 | Method | Endpoint                                                          | Implementation                                                                                                                                                           |
 |:------:| ----------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -408,7 +408,7 @@ vote
 wikiedit
 --------
 
-100.00% completion (1 complete, 0 incomplete)
+100.00% completion (1 implemented, 0 planned, and 0 not planned)
 
 | Method | Endpoint                                                                                    | Implementation                                                                                                                              |
 |:------:| ------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -417,7 +417,7 @@ wikiedit
 wikiread
 --------
 
-100.00% completion (5 complete, 0 incomplete)
+100.00% completion (5 implemented, 0 planned, and 0 not planned)
 
 | Method | Endpoint                                                                                                       | Implementation                                                                                                                                        |
 |:------:| -------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |

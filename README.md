@@ -3,7 +3,7 @@
 [![travis-ci build status](https://img.shields.io/travis/mattbdean/JRAW.svg)](https://travis-ci.org/mattbdean/JRAW)
 [![Latest release](https://img.shields.io/github/release/mattbdean/JRAW.svg)](https://bintray.com/thatjavanerd/maven/JRAW/_latestVersion)
 [![Kotlin 1.2.41](https://img.shields.io/badge/Kotlin-1.2.41-blue.svg)](http://kotlinlang.org)
-[![API coverage](https://img.shields.io/badge/API_coverage-46%25-9C27B0.svg)](https://github.com/thatJavaNerd/JRAW/blob/master/ENDPOINTS.md)
+[![API coverage](https://img.shields.io/badge/API_coverage-49%25-9C27B0.svg)](https://github.com/thatJavaNerd/JRAW/blob/master/ENDPOINTS.md)
 [![Codecov branch](https://img.shields.io/codecov/c/github/mattbdean/JRAW.svg)](https://codecov.io/gh/mattbdean/JRAW)
 
 ```groovy

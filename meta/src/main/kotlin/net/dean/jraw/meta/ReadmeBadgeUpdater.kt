@@ -3,25 +3,22 @@ package net.dean.jraw.meta
 import java.io.File
 
 object ReadmeBadgeUpdater {
-    fun update(allEndpoints: List<ParsedEndpoint>, readme: File): Boolean {
-        val implemented = allEndpoints.filter { EndpointAnalyzer.getFor(it) != null }
-        val percent = Math.round((implemented.size.toFloat() / allEndpoints.size.toFloat()) * 100)
-
+    fun update(overview: EndpointOverview, readme: File): Boolean {
         var replaced = false
 
-        readme.writeText(readme.readLines().map {
+        readme.writeText(readme.readLines().joinToString("\n") {
             if (it.startsWith("[![API coverage]")) {
                 replaced = true
-                url(percent)
+                url(overview.completionPercentage(decimals = 0))
             } else {
                 it
             }
-        }.joinToString("\n") + '\n') // add a newline at the end of the file
+        } + '\n') // add a newline at the end of the file
 
         return replaced
     }
 
-    private fun url(percent: Int) =
+    private fun url(percent: String) =
         "[![API coverage](https://img.shields.io/badge/API_coverage-$percent%25-9C27B0.svg)]" +
             "(https://github.com/thatJavaNerd/JRAW/blob/master/ENDPOINTS.md)"
 }

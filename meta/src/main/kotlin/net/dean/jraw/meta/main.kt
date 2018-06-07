@@ -2,11 +2,11 @@ package net.dean.jraw.meta
 import java.io.File
 
 /**
- * This entry point carries out tasks on files based on some [ParsedEndpoint] objects. Every argument expects a file, so if we
+ * This entry point carries out tasks on files based on an [EndpointOverview]. Every argument expects a file, so if we
  * run this program with the command line arguments `--foo /path/to/directory`, it will execute a pre-defined task
- * called "foo" providing it with a list of [ParsedEndpoint]s parsed from [https://www.reddit.com/dev/api/oauth]
+ * called "foo" providing it with a [EndpointOverview] parsed from [https://www.reddit.com/dev/api/oauth]
  *
- * @see EndpointParser
+ * @see EndpointAnalyzer
  */
 fun main(args: Array<String>) {
     val opts = parseArgsArray(args)
@@ -14,7 +14,7 @@ fun main(args: Array<String>) {
     var failed = 0
 
     if (tasks.isNotEmpty()) {
-        val endpoints = EndpointParser().fetch()
+        val endpoints = EndpointAnalyzer(notPlannedEndpoints()).fetch()
 
         tasks.forEach {
             // Print to stdout if successful, otherwise print to stderr
@@ -22,7 +22,7 @@ fun main(args: Array<String>) {
                 val message = it(endpoints, opts[it.argKey]!!)
                 println("${it.name}: $message")
             } catch (e: Exception) {
-                System.err.println("${it.name}: ${e.message}")
+                e.printStackTrace()
                 failed++
             }
         }
@@ -57,11 +57,10 @@ val tasks: List<Task> = listOf(
 )
 
 /**
- * Represents some work to be done with a list of Endpoints and a file system path. Tasks can be invoked in three ways:
+ * Represents some work to be done with a list of Endpoints and a file system path. Tasks should be invoked just like
+ * a normal method:
  *
- * ```
- * task.doWork(...)
- * task.invoke(...)
+ * ```kt
  * task(...)
  * ```
  */
@@ -72,13 +71,13 @@ data class Task(
      * Does some work with the parsed Endpoints. The List<String> is any additional arguments supplied specifically to
      * the task
      */
-    val doWork: (List<ParsedEndpoint>, List<String>) -> String)
+    private val doWork: (EndpointOverview, List<String>) -> String)
 {
     /** Including this key in the command line triggers this task to run. See [main] for more. */
     val argKey: String = "--$name"
 
     // Propagate parameters to `doWork`
-    operator fun invoke(endpoints: List<ParsedEndpoint>, args: List<String>): String = doWork(endpoints, args)
+    operator fun invoke(endpoints: EndpointOverview, args: List<String>): String = doWork(endpoints, args)
 }
 
 /**
@@ -104,6 +103,18 @@ fun filterArguments(opts: Map<String, List<String>>): List<Task> {
     return enabledTasks
 }
 
+fun notPlannedEndpoints(): List<Pair<String, String>> {
+    val lines = EndpointAnalyzer::class.java.getResourceAsStream("/not_planned.txt").bufferedReader().readLines()
+    return lines.filterNot { it.startsWith("#") || it.isBlank() }
+        .map { it.trim().split(" ") }
+        .map {
+            if (it.size == 2)
+                it[0] to it[1]
+            else
+                throw IllegalArgumentException("Expected '${it.joinToString(" ")}' to include exactly one space")
+        }
+}
+
 /**
  * Parses the `args` array provided by a JVM program's main method into a Map usable by this program. If `args` does not
  * have an even size, the process is terminated via [fail]
@@ -115,7 +126,7 @@ fun parseArgsArray(args: Array<String>): Map<String, List<String>> {
 
     val map = HashMap<String, List<String>>()
     for (i in 0 until (args.size / 2)) {
-        map.put(args[i * 2], args[(i * 2) + 1].split(";"))
+        map[args[i * 2]] = args[(i * 2) + 1].split(";")
     }
 
     return map
