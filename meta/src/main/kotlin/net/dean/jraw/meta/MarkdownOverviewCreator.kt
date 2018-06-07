@@ -30,11 +30,20 @@ object MarkdownOverviewCreator {
             )
 
             // Summary
-            block("So far, **${countImplemented(allEndpoints)}** endpoints (out of ${allEndpoints.size}) have been implemented.")
+            val totalImplemented = allEndpoints
+                .map { EndpointAnalyzer.getFor(it) }
+                .count { it != null }
+
+            block("So far, API completion is at **${percentage(totalImplemented, allEndpoints.size)}%**. " +
+                "$totalImplemented out of ${allEndpoints.size} endpoints have been implemented.")
 
             val grouped = allEndpoints.groupBy { it.oauthScope }
             for ((scope, endpoints) in grouped) {
                 heading(if (scope == "any") "(any scope)" else scope, 2)
+
+                val (complete, incomplete) = endpoints.partition { EndpointAnalyzer.getFor(it) != null }
+                val percentage = percentage(complete.size, endpoints.size)
+                block("$percentage% completion (${complete.size} complete, ${incomplete.size} incomplete)")
 
                 val table = Table.Builder()
                     .withAlignments(Table.ALIGN_CENTER, Table.ALIGN_LEFT, Table.ALIGN_LEFT)
@@ -65,19 +74,19 @@ object MarkdownOverviewCreator {
 
     internal fun markdownPath(e: ParsedEndpoint) = (if (e.subredditPrefix) "[/r/{subreddit}]" else "") + e.path
 
-    fun StringBuilder.heading(text: String, level: Int = 1) = block(Heading(text, level))
+    private fun StringBuilder.heading(text: String, level: Int = 1) = block(Heading(text, level))
 
-    fun StringBuilder.block(obj: Any) {
+    private fun StringBuilder.block(obj: Any) {
         append(obj)
         append("\n\n")
     }
+
+    private fun percentage(part: Int, total: Int) =
+        String.format("%.2f", (part.toDouble() / total.toDouble()) * 100)
 
     private fun implString(e: ParsedEndpoint): String {
         val meta = EndpointAnalyzer.getFor(e) ?: return "None"
         val method = meta.implementation
         return Link(Code("${method.declaringClass.simpleName}.${method.name}()"), meta.sourceUrl).toString()
     }
-
-    private fun countImplemented(list: List<ParsedEndpoint>) =
-        list.map { EndpointAnalyzer.getFor(it) }.count { it != null }
 }

@@ -1,14 +1,16 @@
-<!--- Generated 2018-06-07 at 12:03:27 EDT. Use `./gradlew :meta:update` to update. DO NOT MODIFY DIRECTLY -->
+<!--- Generated 2018-06-07 at 13:03:57 EDT. Use `./gradlew :meta:update` to update. DO NOT MODIFY DIRECTLY -->
 
 Endpoints
 =========
 
 This file contains a list of all the endpoints (regardless of if they have been implemented) that can be found at the [official reddit API docs](https://www.reddit.com/dev/api/oauth). To update this file, run `./gradlew :meta:update`
 
-So far, **90** endpoints (out of 196) have been implemented.
+So far, API completion is at **45.92%**. 90 out of 196 have been implemented.
 
 (any scope)
 -----------
+
+16.67% completion (1 complete, 5 incomplete)
 
 | Method | Endpoint                                                                                     | Implementation                                                                                                                                       |
 |:------:| -------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -22,6 +24,8 @@ So far, **90** endpoints (out of 196) have been implemented.
 account
 -------
 
+50.00% completion (1 complete, 1 incomplete)
+
 | Method  | Endpoint                                                                         | Implementation                                                                                                                                           |
 |:-------:| -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `PATCH` | [`/api/v1/me/prefs`](https://www.reddit.com/dev/api/oauth#PATCH_api_v1_me_prefs) | [`SelfUserReference.patchPrefs()`](https://github.com/mattbdean/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/SelfUserReference.kt#L203) |
@@ -30,6 +34,8 @@ account
 creddits
 --------
 
+0.00% completion (0 complete, 2 incomplete)
+
 | Method | Endpoint                                                                                                | Implementation |
 |:------:| ------------------------------------------------------------------------------------------------------- | -------------- |
 | `POST` | [`/api/v1/gold/gild/{fullname}`](https://www.reddit.com/dev/api/oauth#POST_api_v1_gold_gild_{fullname}) | None           |
@@ -37,6 +43,8 @@ creddits
 
 edit
 ----
+
+100.00% completion (5 complete, 0 incomplete)
 
 | Method | Endpoint                                                                                                        | Implementation                                                                                                                                                                |
 |:------:| --------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -48,6 +56,8 @@ edit
 
 flair
 -----
+
+71.43% completion (5 complete, 2 incomplete)
 
 | Method | Endpoint                                                                                                | Implementation                                                                                                                                                          |
 |:------:| ------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -62,12 +72,16 @@ flair
 history
 -------
 
+100.00% completion (1 complete, 0 incomplete)
+
 | Method | Endpoint                                                                                       | Implementation                                                                                                                               |
 |:------:| ---------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
 | `GET`  | [`/user/{username}/{where}`](https://www.reddit.com/dev/api/oauth#GET_user_{username}_{where}) | [`UserReference.history()`](https://github.com/mattbdean/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/UserReference.kt#L84) |
 
 identity
 --------
+
+100.00% completion (3 complete, 0 incomplete)
 
 | Method | Endpoint                                                                             | Implementation                                                                                                                                      |
 |:------:| ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -77,6 +91,8 @@ identity
 
 livemanage
 ----------
+
+20.00% completion (2 complete, 8 incomplete)
 
 | Method | Endpoint                                                                                                                                    | Implementation                                                                                                                                         |
 |:------:| ------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -94,6 +110,8 @@ livemanage
 modconfig
 ---------
 
+20.00% completion (2 complete, 8 incomplete)
+
 | Method | Endpoint                                                                                                          | Implementation                                                                                                                                                   |
 |:------:| ----------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `POST` | [`[/r/{subreddit}]/api/subreddit_stylesheet`](https://www.reddit.com/dev/api/oauth#POST_api_subreddit_stylesheet) | [`SubredditReference.updateStylesheet()`](https://github.com/mattbdean/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/SubredditReference.kt#L226) |
@@ -110,6 +128,8 @@ modconfig
 modcontributors
 ---------------
 
+0.00% completion (0 complete, 2 incomplete)
+
 | Method | Endpoint                                                                                            | Implementation |
 |:------:| --------------------------------------------------------------------------------------------------- | -------------- |
 | `POST` | [`/api/mute_message_author`](https://www.reddit.com/dev/api/oauth#POST_api_mute_message_author)     | None           |
@@ -117,6 +137,8 @@ modcontributors
 
 modflair
 --------
+
+30.00% completion (3 complete, 7 incomplete)
 
 | Method  | Endpoint                                                                                                           | Implementation                                                                                                                                                 |
 |:-------:| ------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -134,12 +156,16 @@ modflair
 modlog
 ------
 
+0.00% completion (0 complete, 1 incomplete)
+
 | Method | Endpoint                                                                           | Implementation |
 |:------:| ---------------------------------------------------------------------------------- | -------------- |
 | `GET`  | [`[/r/{subreddit}]/about/log`](https://www.reddit.com/dev/api/oauth#GET_about_log) | None           |
 
 modmail
 -------
+
+0.00% completion (0 complete, 16 incomplete)
 
 |  Method  | Endpoint                                                                                                                                             | Implementation |
 |:--------:| ---------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- |
@@ -163,12 +189,16 @@ modmail
 modothers
 ---------
 
+0.00% completion (0 complete, 1 incomplete)
+
 | Method | Endpoint                                                                                              | Implementation |
 |:------:| ----------------------------------------------------------------------------------------------------- | -------------- |
 | `POST` | [`[/r/{subreddit}]/api/setpermissions`](https://www.reddit.com/dev/api/oauth#POST_api_setpermissions) | None           |
 
 modposts
 --------
+
+42.86% completion (6 complete, 8 incomplete)
 
 | Method | Endpoint                                                                                          | Implementation                                                                                                                                                                |
 |:------:| ------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -190,6 +220,8 @@ modposts
 modself
 -------
 
+0.00% completion (0 complete, 3 incomplete)
+
 | Method | Endpoint                                                                                                                | Implementation |
 |:------:| ----------------------------------------------------------------------------------------------------------------------- | -------------- |
 | `POST` | [`[/r/{subreddit}]/api/accept_moderator_invite`](https://www.reddit.com/dev/api/oauth#POST_api_accept_moderator_invite) | None           |
@@ -198,6 +230,8 @@ modself
 
 modwiki
 -------
+
+0.00% completion (0 complete, 5 incomplete)
 
 | Method | Endpoint                                                                                                              | Implementation |
 |:------:| --------------------------------------------------------------------------------------------------------------------- | -------------- |
@@ -210,6 +244,8 @@ modwiki
 mysubreddits
 ------------
 
+66.67% completion (2 complete, 1 incomplete)
+
 | Method | Endpoint                                                                                                 | Implementation                                                                                                                                           |
 |:------:| -------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `GET`  | [`/api/v1/me/karma`](https://www.reddit.com/dev/api/oauth#GET_api_v1_me_karma)                           | [`SelfUserReference.karma()`](https://github.com/mattbdean/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/SelfUserReference.kt#L226)      |
@@ -218,6 +254,8 @@ mysubreddits
 
 privatemessages
 ---------------
+
+54.55% completion (6 complete, 5 incomplete)
 
 | Method | Endpoint                                                                                                 | Implementation                                                                                                                                      |
 |:------:| -------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -235,6 +273,8 @@ privatemessages
 
 read
 ----
+
+60.00% completion (27 complete, 18 incomplete)
 
 | Method | Endpoint                                                                                                           | Implementation                                                                                                                                                       |
 |:------:| ------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -287,6 +327,8 @@ read
 report
 ------
 
+40.00% completion (2 complete, 3 incomplete)
+
 | Method | Endpoint                                                                                          | Implementation                                                                                                                                             |
 |:------:| ------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `POST` | [`/api/hide`](https://www.reddit.com/dev/api/oauth#POST_api_hide)                                 | [`SubmissionReference.setHidden()`](https://github.com/mattbdean/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/SubmissionReference.kt#L78) |
@@ -298,6 +340,8 @@ report
 save
 ----
 
+50.00% completion (2 complete, 2 incomplete)
+
 | Method | Endpoint                                                                                 | Implementation                                                                                                                                                            |
 |:------:| ---------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `POST` | [`/api/save`](https://www.reddit.com/dev/api/oauth#POST_api_save)                        | [`PublicContributionReference.setSaved()`](https://github.com/mattbdean/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/PublicContributionReference.kt#L73) |
@@ -307,6 +351,8 @@ save
 
 structuredstyles
 ----------------
+
+33.33% completion (3 complete, 6 incomplete)
 
 |  Method  | Endpoint                                                                                                                                    | Implementation                                                                                                                                 |
 |:--------:| ------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -323,6 +369,8 @@ structuredstyles
 submit
 ------
 
+100.00% completion (4 complete, 0 incomplete)
+
 | Method | Endpoint                                                                                          | Implementation                                                                                                                                                 |
 |:------:| ------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `POST` | [`/api/live/create`](https://www.reddit.com/dev/api/oauth#POST_api_live_create)                   | [`SelfUserReference.createLiveThread()`](https://github.com/mattbdean/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/SelfUserReference.kt#L170) |
@@ -332,6 +380,8 @@ submit
 
 subscribe
 ---------
+
+80.00% completion (8 complete, 2 incomplete)
 
 |  Method  | Endpoint                                                                                                            | Implementation                                                                                                                                                      |
 |:--------:| ------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -349,6 +399,8 @@ subscribe
 vote
 ----
 
+100.00% completion (1 complete, 0 incomplete)
+
 | Method | Endpoint                                                          | Implementation                                                                                                                                                           |
 |:------:| ----------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `POST` | [`/api/vote`](https://www.reddit.com/dev/api/oauth#POST_api_vote) | [`PublicContributionReference.setVote()`](https://github.com/mattbdean/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/PublicContributionReference.kt#L47) |
@@ -356,12 +408,16 @@ vote
 wikiedit
 --------
 
+100.00% completion (1 complete, 0 incomplete)
+
 | Method | Endpoint                                                                                    | Implementation                                                                                                                              |
 |:------:| ------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
 | `POST` | [`[/r/{subreddit}]/api/wiki/edit`](https://www.reddit.com/dev/api/oauth#POST_api_wiki_edit) | [`WikiReference.update()`](https://github.com/mattbdean/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/WikiReference.kt#L36) |
 
 wikiread
 --------
+
+100.00% completion (5 complete, 0 incomplete)
 
 | Method | Endpoint                                                                                                       | Implementation                                                                                                                                        |
 |:------:| -------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
