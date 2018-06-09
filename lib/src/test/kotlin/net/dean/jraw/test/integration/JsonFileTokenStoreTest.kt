@@ -14,7 +14,7 @@ import org.jetbrains.spek.api.Spek
 import org.jetbrains.spek.api.dsl.describe
 import org.jetbrains.spek.api.dsl.it
 import java.io.File
-import java.io.FileNotFoundException
+import java.io.IOException
 import java.util.*
 
 class JsonFileTokenStoreTest : Spek({
@@ -38,6 +38,7 @@ class JsonFileTokenStoreTest : Spek({
         return tmp
     }
 
+    @Suppress("DEPRECATION")
     fun newStore(f: File, initialData: Map<String, PersistedAuthData> = mapOf()) = JsonFileTokenStore(f, initialData)
 
     val oauthData = createMockOAuthData()
@@ -48,6 +49,7 @@ class JsonFileTokenStoreTest : Spek({
     describe("persist") {
         it("should save the data as parsable JSON") {
             val f = tempFile()
+            @Suppress("DEPRECATION")
             val store = JsonFileTokenStore(f, data)
             f.length().should.equal(0L)
 
@@ -62,11 +64,18 @@ class JsonFileTokenStoreTest : Spek({
     }
 
     describe("load") {
-        it("should throw an error if the file doesn't exist") {
+        it("should have no data if the file doesn't exist") {
             val store = newStore(tempFile(createFile = false))
-            expectException(FileNotFoundException::class) {
+            store.load()
+            store.data().should.have.size(0)
+        }
+
+        it("should throw an error if the File refers to a directory") {
+            val store = newStore(File("."))
+            val ex = expectException(IOException::class) {
                 store.load()
             }
+            ex.message.should.equal("Not a file: ${File(".").absolutePath}")
         }
 
         it("should load data from a JSON file") {

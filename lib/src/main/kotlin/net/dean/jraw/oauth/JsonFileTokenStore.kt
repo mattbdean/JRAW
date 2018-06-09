@@ -6,17 +6,13 @@ import net.dean.jraw.JrawUtils
 import net.dean.jraw.models.PersistedAuthData
 import okio.Okio
 import java.io.File
-import java.io.FileNotFoundException
 import java.io.IOException
 
 /**
  * This class stores its data in a file encoded as JSON. It uses Moshi to persist and load data from that file.
  *
  * ```kt
- * val tokenStore = JsonFileTokenStore(someFile)
- *
- * // Read the already stored data from the file
- * tokenStore.load()
+ * val tokenStore = JsonFileTokenStore.create(someFile)
  *
  * // Make some changes (this is probably done by AuthManager)
  * tokenStore.storeRefreshToken("username", "foobar")
@@ -27,7 +23,10 @@ import java.io.IOException
  *
  * @see DeferredPersistentTokenStore
  */
-class JsonFileTokenStore @JvmOverloads constructor(
+class JsonFileTokenStore
+@JvmOverloads
+@Deprecated("Use JsonFileTokenStore.create() instead", replaceWith = ReplaceWith("JsonFileTokenStore.create(saveLocation, initialData)"))
+constructor(
     /** Where the persisted data is to be saved to/loaded from */
     private val saveLocation: File,
     initialData: Map<String, PersistedAuthData> = mapOf()
@@ -62,16 +61,29 @@ class JsonFileTokenStore @JvmOverloads constructor(
         sink.close()
     }
 
+    @Throws(IOException::class)
     override fun doLoad(): Map<String, PersistedAuthData> {
-        if (!saveLocation.isFile)
-            throw FileNotFoundException("Not a file or doesn't exist: ${saveLocation.absolutePath}")
-
-        return adapter.fromJson(Okio.buffer(Okio.source(saveLocation)))!!
+        return if (saveLocation.exists() && !saveLocation.isFile)
+            throw IOException("Not a file: ${saveLocation.absolutePath}")
+        else if (!saveLocation.exists())
+            return mapOf()
+        else adapter.fromJson(Okio.buffer(Okio.source(saveLocation)))!!
     }
 
     /** */
     companion object {
         private val ADAPTER_TYPE =
             Types.newParameterizedType(Map::class.java, String::class.java, PersistedAuthData::class.java)
+
+        /**
+         * Creates a new JsonFileTokenStore and load whatever data is stored at saveLocation, if that file exists. This
+         * will perform I/O and should be considered a blocking call.
+         */
+        @JvmStatic @JvmOverloads fun create(saveLocation: File, initialData: Map<String, PersistedAuthData> = mapOf()): JsonFileTokenStore {
+            @Suppress("DEPRECATION")
+            val store = JsonFileTokenStore(saveLocation, initialData)
+            store.load()
+            return store
+        }
     }
 }
