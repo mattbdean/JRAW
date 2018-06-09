@@ -32,8 +32,11 @@ class EmojiReferenceTest : Spek({
             // Sanity check
             testEmoji.isFile.should.be.`true`
 
-            // Upload the Emoji
+            // Upload the emoji
             ref.upload(testEmoji, emojiName)
+
+            // Give reddit some time to work
+            Thread.sleep(3000)
 
             // Make sure it's here
             val uploadedEmoji = findEmoji()!!
