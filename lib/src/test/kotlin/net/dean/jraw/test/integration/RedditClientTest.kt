@@ -198,6 +198,20 @@ class RedditClientTest : Spek({
         }
     }
 
+    describe("recommendedSubreddits") {
+        it("should return an empty list when given no subreddit names") {
+            // Make sure no HTTP requests are sent
+            val client = newMockRedditClient(NoopNetworkAdapter)
+            client.recommendedSubreddits(listOf()).should.be.empty
+        }
+
+        it("should provide recommendations based off of a few subreddits") {
+            val seed = listOf("programming", "androiddev", "kotlin")
+            val recommended = reddit.recommendedSubreddits(seed)
+            recommended.should.not.be.empty
+        }
+    }
+
     describe("latestComments") {
         it("should iterate over the latest comments") {
             val limit = 50

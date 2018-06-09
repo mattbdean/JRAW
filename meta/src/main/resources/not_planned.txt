@@ -17,3 +17,6 @@ POST /api/report_user
 
 # Requires reddit gold
 POST /api/store_visits
+
+# Had some issues with this in the past, don't know if it still has problems
+GET /api/live/by_id/{names}

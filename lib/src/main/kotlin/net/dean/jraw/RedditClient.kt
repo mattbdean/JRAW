@@ -5,6 +5,7 @@ import net.dean.jraw.databind.Enveloped
 import net.dean.jraw.http.*
 import net.dean.jraw.models.*
 import net.dean.jraw.models.internal.RedditExceptionStub
+import net.dean.jraw.models.internal.SubredditName
 import net.dean.jraw.models.internal.SubredditSearchResultContainer
 import net.dean.jraw.oauth.*
 import net.dean.jraw.pagination.BarebonesPaginator
@@ -480,6 +481,24 @@ class RedditClient internal constructor(
      * ```
      */
     fun liveThread(id: String) = LiveThreadReference(this, id)
+
+    @JvmOverloads
+    @EndpointImplementation(Endpoint.GET_RECOMMEND_SR_SRNAMES)
+    fun recommendedSubreddits(subs: List<String>, includeNsfw: Boolean? = null): List<String> {
+        if (subs.isEmpty())
+            return listOf()
+
+        val query = mutableMapOf<String, String>()
+        if (includeNsfw != null)
+            query["over_18"] = includeNsfw.toString()
+
+        val names: List<SubredditName> = request {
+            it.path("/api/recommend/sr/${subs.joinToString(",") { JrawUtils.urlEncode(it) }}")
+                .query(query)
+        }.deserializeWith(JrawUtils.moshi.adapter(Types.newParameterizedType(List::class.java, SubredditName::class.java)))
+
+        return names.map { it.name }
+    }
 
     /**
      * Returns the live thread currently being featured by reddit, or null if there is none. On the website, this

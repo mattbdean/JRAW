@@ -1,11 +1,11 @@
-<!--- Generated 2018-06-07 at 19:30:28 EDT. Use `./gradlew :meta:update` to update. DO NOT MODIFY DIRECTLY -->
+<!--- Generated 2018-06-09 at 11:52:24 EDT. Use `./gradlew :meta:update` to update. DO NOT MODIFY DIRECTLY -->
 
 Endpoints
 =========
 
 This file contains a list of all the endpoints (regardless of if they have been implemented) that can be found at the [official reddit API docs](https://www.reddit.com/dev/api/oauth). To update this file, run `./gradlew :meta:update`
 
-So far, API completion is at **48.91%**. 90 out of 184 endpoints (ignoring 6 endpoints not planned) have been implemented 
+So far, API completion is at **49.45%**. 90 out of 182 endpoints (ignoring 7 endpoints not planned) have been implemented 
 
 (any scope)
 -----------
@@ -274,7 +274,7 @@ privatemessages
 read
 ----
 
-65.85% completion (27 implemented, 16 planned, and 2 not planned)
+69.23% completion (27 implemented, 15 planned, and 3 not planned)
 
 | Method | Endpoint                                                                                                           | Implementation                                                                                                                                                       |
 |:------:| ------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -307,7 +307,6 @@ read
 | `GET`  | [`[/r/{subreddit}]/{sort}`](https://www.reddit.com/dev/api/oauth#GET_{sort})                                       | [`SubredditReference.posts()`](https://github.com/mattbdean/JRAW/tree/master/lib/src/main/kotlin/net/dean/jraw/references/SubredditReference.kt#L45)                 |
 | `GET`  | [`[/r/{subreddit}]/about/{location}`](https://www.reddit.com/dev/api/oauth#GET_about_{location})                   | None                                                                                                                                                                 |
 | `GET`  | [`[/r/{subreddit}]/about/{where}`](https://www.reddit.com/dev/api/oauth#GET_about_{where})                         | None                                                                                                                                                                 |
-| `GET`  | [`/api/live/by_id/{names}`](https://www.reddit.com/dev/api/oauth#GET_api_live_by_id_{names})                       | None                                                                                                                                                                 |
 | `GET`  | [`/api/recommend/sr/{srnames}`](https://www.reddit.com/dev/api/oauth#GET_api_recommend_sr_{srnames})               | None                                                                                                                                                                 |
 | `GET`  | [`/api/subreddit_autocomplete`](https://www.reddit.com/dev/api/oauth#GET_api_subreddit_autocomplete)               | None                                                                                                                                                                 |
 | `GET`  | [`/api/subreddit_autocomplete_v2`](https://www.reddit.com/dev/api/oauth#GET_api_subreddit_autocomplete_v2)         | None                                                                                                                                                                 |
@@ -321,6 +320,7 @@ read
 | `GET`  | [`[/r/{subreddit}]/sidebar`](https://www.reddit.com/dev/api/oauth#GET_sidebar)                                     | None                                                                                                                                                                 |
 | `GET`  | [`[/r/{subreddit}]/sticky`](https://www.reddit.com/dev/api/oauth#GET_sticky)                                       | None                                                                                                                                                                 |
 | `GET`  | [`/subreddits/{where}`](https://www.reddit.com/dev/api/oauth#GET_subreddits_{where})                               | None                                                                                                                                                                 |
+| `GET`  | [`/api/live/by_id/{names}`](https://www.reddit.com/dev/api/oauth#GET_api_live_by_id_{names})                       | Not planned                                                                                                                                                          |
 | `GET`  | [`/api/search_reddit_names`](https://www.reddit.com/dev/api/oauth#GET_api_search_reddit_names)                     | Not planned                                                                                                                                                          |
 | `POST` | [`/api/search_reddit_names`](https://www.reddit.com/dev/api/oauth#POST_api_search_reddit_names)                    | Not planned                                                                                                                                                          |
 
