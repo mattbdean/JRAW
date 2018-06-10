@@ -8,7 +8,7 @@ import net.dean.jraw.models.UniquelyIdentifiable
  * This class, like its name suggests, supports fewer query modifiers compared to other Paginators. Only the limit can
  * be set.
  */
-open class BarebonesPaginator<T : UniquelyIdentifiable> private constructor(
+open class BarebonesPaginator<T : UniquelyIdentifiable> internal constructor(
     reddit: RedditClient,
     baseUrl: String,
     limit: Int,

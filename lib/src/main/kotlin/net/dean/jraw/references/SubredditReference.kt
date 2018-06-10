@@ -64,6 +64,11 @@ class SubredditReference internal constructor(reddit: RedditClient, val subreddi
     fun emoji() = EmojiReference(reddit, subreddit)
 
     /**
+     * Returns a reference that allows access to subreddit moderator tools and actions
+     */
+    fun moderate() = ModerationReference(reddit, subreddit)
+
+    /**
      * Creates a SearchPaginator.Builder to search for submissions in this subreddit.
      *
      * @see SearchPaginator.inSubreddits

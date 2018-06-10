@@ -46,4 +46,7 @@ object KindConstants {
 
     /** A [WikiPage] */
     const val WIKI_PAGE = "wikipage"
+
+    /** A [ModAction] */
+    const val MODACTION = "modaction"
 }

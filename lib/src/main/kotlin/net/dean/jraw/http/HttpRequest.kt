@@ -180,7 +180,7 @@ class HttpRequest internal constructor(
             return this
         }
 
-        /** Sets the query section of the URL. */
+        /** Adds keys and values to the query section of the URL. */
         fun query(query: Map<String, String>): Builder {
             for ((k, v) in query) {
                 url.addQueryParameter(k, v)

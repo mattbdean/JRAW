@@ -33,7 +33,8 @@ object JrawUtils {
             KindConstants.LIVE_UPDATE to LiveUpdate::class.java,
             KindConstants.MORE_CHILDREN to MoreChildren::class.java,
             KindConstants.MESSAGE to Message::class.java,
-            KindConstants.WIKI_PAGE to WikiPage::class.java
+            KindConstants.WIKI_PAGE to WikiPage::class.java,
+            KindConstants.MODACTION to ModAction::class.java
         )))
         .add(ModelAdapterFactory.create())
         .add(DistinguishedStatus::class.java, DistinguishedStatusAdapter())
