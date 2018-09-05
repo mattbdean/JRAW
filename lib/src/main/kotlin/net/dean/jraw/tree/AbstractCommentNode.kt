@@ -228,7 +228,7 @@ abstract class AbstractCommentNode<out T : PublicContribution<*>> protected cons
         // Load this node's comments first
         while (hasMoreChildren()) {
             replaceMore(reddit)
-            if (++requests > requestLimit && depthLimit != NO_LIMIT)
+            if (++requests > requestLimit && requestLimit != NO_LIMIT)
                 return
         }
 
@@ -239,7 +239,7 @@ abstract class AbstractCommentNode<out T : PublicContribution<*>> protected cons
                 return
             while (node.hasMoreChildren()) {
                 node.replaceMore(reddit)
-                if (++requests > requestLimit && depthLimit != NO_LIMIT)
+                if (++requests > requestLimit && requestLimit != NO_LIMIT)
                     return
             }
         }
