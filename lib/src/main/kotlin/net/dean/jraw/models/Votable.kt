@@ -9,4 +9,8 @@ interface Votable {
 
     /** Upvotes minus downvotes */
     val score: Int
+
+    /** Upvotes & downvotes */
+    val ups: Int
+    val downs: Int
 }
