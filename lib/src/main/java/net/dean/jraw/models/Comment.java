@@ -95,6 +95,11 @@ public abstract class Comment implements PublicContribution<CommentReference>, N
     @Override
     @Json(name = "likes") public abstract VoteDirection getVote();
 
+    /** Number of Silver, Gold and Platinum coins */
+    @NotNull
+    @Override
+    @Json(name = "gildings") public abstract Gildings getGildings();
+
     @NotNull
     @Override
     public CommentReference toReference(@NotNull RedditClient reddit) {
