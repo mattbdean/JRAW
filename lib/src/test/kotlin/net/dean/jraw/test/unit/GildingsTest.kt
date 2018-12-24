@@ -15,12 +15,12 @@ import org.jetbrains.spek.api.dsl.it
 
 class GildingsTest : Spek({
 
-    describe("test new submission gildings, they should not be null") {
+    describe("submission gildings") {
 
         val ref = TestConfig.reddit.subreddit("iama").posts()
             .limit(Paginator.RECOMMENDED_MAX_LIMIT)
             .sorting(SubredditSort.TOP)
-            .timePeriod(TimePeriod.ALL)
+            .timePeriod(TimePeriod.MONTH)
             .build()
 
         it("should have gildings") {
@@ -43,17 +43,15 @@ class GildingsTest : Spek({
     }
 
 
-    describe("test new comment gildings, they should not be null") {
+    describe("comment gildings") {
 
         val ref = TestConfig.reddit.subreddit("iama").posts()
-            .limit(Paginator.RECOMMENDED_MAX_LIMIT)
             .sorting(SubredditSort.TOP)
-            .timePeriod(TimePeriod.ALL)
+            .timePeriod(TimePeriod.MONTH)
+            .limit(3)
             .build()
 
-        val subs = ref.next()
-        val submission = subs[0]
-
+        val submission = ref.next()[0]
         val comments = submission.toReference(TestConfig.reddit).comments()
 
         it("should have gildings") {
@@ -61,7 +59,7 @@ class GildingsTest : Spek({
             val sequence = comments.walkTree().take(20)
             sequence.forEach {
 
-                if((it !is RootCommentNode)) {
+                if(it !is RootCommentNode) {
                     val comment = it.subject as? Comment
 
                     comment.should.not.be.`null`
