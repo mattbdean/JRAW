@@ -59,7 +59,7 @@ class GildingsTest : Spek({
             val sequence = comments.walkTree().take(20)
             sequence.forEach {
 
-                if(it !is RootCommentNode) {
+                if (it !is RootCommentNode) {
                     val comment = it.subject as? Comment
 
                     comment.should.not.be.`null`
