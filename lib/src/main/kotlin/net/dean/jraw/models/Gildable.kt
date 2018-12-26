@@ -9,4 +9,7 @@ interface Gildable {
 
     /** How many times this model has received reddit Gold */
     val gilded: Short
+
+    /** New Guildings */
+    val gildings: Gildings
 }

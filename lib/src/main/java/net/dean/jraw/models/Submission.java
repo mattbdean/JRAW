@@ -63,6 +63,11 @@ public abstract class Submission implements PublicContribution<SubmissionReferen
     @Override
     @Json(name = "gilded") public abstract short getGilded();
 
+    /** Number of Silver, Gold and Platinum coins */
+    @NotNull
+    @Override
+    @Json(name = "gildings") public abstract Gildings getGildings();
+
     /** If the current user has hidden the post */
     public abstract boolean isHidden();
 
