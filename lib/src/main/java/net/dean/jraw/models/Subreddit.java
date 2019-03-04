@@ -103,6 +103,23 @@ public abstract class Subreddit implements Created, Identifiable, Referenceable<
     abstract Boolean getQuarantined();
 
     /**
+     * A full URL pointing to the subreddit's icon, an empty string if there is none, or null if the subreddit is
+     * not viewable (private, quarantined, etc.)
+     */
+	@Nullable
+	@Json(name = "icon_img") public abstract String getIconImage();
+	
+    /**
+     * A full URL pointing to the subreddit's header, an empty string if there is none, or null if the subreddit is
+     * not viewable (private, quarantined, etc.)
+     */
+	@Nullable
+	@Json(name = "header_img") public abstract String getHeaderImage();
+	
+    /** A full URL of subreddit. For example, "https://reddit.com/r/pics". */
+    public final String getFullUrl() { return "https://reddit.com" + getUrl(); }
+
+    /**
      * If this subreddit has been quarantined. See
      * <a href="https://reddit.zendesk.com/hc/en-us/articles/205701245-Quarantined-Subreddits">here</a> for more.
      */
