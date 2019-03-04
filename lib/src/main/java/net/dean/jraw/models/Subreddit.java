@@ -68,6 +68,18 @@ public abstract class Subreddit implements Created, Identifiable, Referenceable<
     @Override
     @Json(name = "name") public abstract String getFullName();
 
+    /** Returns url of icon of subreddit, an empty string if there is none, or null if the subreddit is
+     * not viewable (private, quarantined, etc.)
+     */
+    @Nullable
+    @Json(name = "icon_img") public abstract String getIconImage();
+
+    /** Returns url of header of subreddit, an empty string if there is none, or null if the subreddit is
+     * not viewable (private, quarantined, etc.)
+     */
+    @Nullable
+    @Json(name = "header_img") public abstract String getHeaderImage();    
+
     /** The color that makes up the subreddit's main theme. Mainly used on the mobile site. */
     @Nullable
     @Json(name = "key_color")
@@ -155,6 +167,9 @@ public abstract class Subreddit implements Created, Identifiable, Referenceable<
 
     /** The URL to access this subreddit relative to reddit.com. For example, "/r/pics" */
     public abstract String getUrl();
+
+    /** Full URL of this subreddit. For example, "https://reddit.com/r/pics" */
+    public abstract String getFullUrl() { return "https://reddit.com" + getUrl(); }
 
     @Nullable
     @Json(name = "user_is_muted") abstract Boolean getUserIsMuted();
