@@ -28,11 +28,6 @@ repositories {
     jcenter()
 }
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '4.7'
-    distributionType = org.gradle.api.tasks.wrapper.Wrapper.DistributionType.ALL
-}
-
 subprojects {
     apply plugin: 'org.junit.platform.gradle.plugin'
     apply plugin: 'kotlin'
