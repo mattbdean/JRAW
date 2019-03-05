@@ -42,8 +42,30 @@ public abstract class Subreddit implements Created, Identifiable, Referenceable<
      * A full URL pointing to the subreddit's banner, an empty string if there is none, or null if the subreddit is
      * not viewable (private, quarantined, etc.)
      */
+    
     @Nullable
     @Json(name = "banner_img") public abstract String getBannerImage();
+    
+    /**
+     * A full URL pointing to the subreddit's icon, an empty string if there is none, or null if the subreddit is
+     * not viewable (private, quarantined, etc.)
+     */    
+    
+    @Nullable	
+	@Json(name = "icon_img") public abstract String getIconImage();
+
+    /**	
+     * A full URL pointing to the subreddit's header, an empty string if there is none, or null if the subreddit is	
+     * not viewable (private, quarantined, etc.)	
+     */
+	
+	@Nullable	
+	@Json(name = "header_img") public abstract String getHeaderImage();	
+		
+    /** A full URL of subreddit. For example, "https://reddit.com/r/pics". */
+	
+    public final String getFullUrl() { return "https://reddit.com" + getUrl(); }
+    
 
     @Json(name = "comment_score_hide_mins")
     @Nullable
