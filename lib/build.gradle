@@ -17,11 +17,11 @@ dependencies {
         exclude group: 'com.squareup.moshi'
     }
 
-    apt('com.ryanharter.auto.value:auto-value-moshi:0.4.5') {
+    annotationProcessor('com.ryanharter.auto.value:auto-value-moshi:0.4.5') {
         exclude group: 'com.squareup.moshi'
     }
-    apt moshi
-    apt "com.google.auto.value:auto-value:$autoValueVersion"
+    annotationProcessor moshi
+    annotationProcessor "com.google.auto.value:auto-value:$autoValueVersion"
 
     compileOnly "com.google.auto.value:auto-value:$autoValueVersion"
     compileOnly('com.ryanharter.auto.value:auto-value-moshi-annotations:0.4.5') {
@@ -29,9 +29,9 @@ dependencies {
     }
 
     testCompile "com.squareup.okhttp3:mockwebserver:$okhttpVersion"
-    testCompile 'net.sourceforge.htmlunit:htmlunit:2.29'
+    testCompile 'net.sourceforge.htmlunit:htmlunit:2.34.1'
     testCompile "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
-    testCompile 'org.reflections:reflections:0.9.10'
+    testCompile 'org.reflections:reflections:0.9.11'
 }
 
 sourceSets {
@@ -57,11 +57,6 @@ dokka {
         url = 'https://github.com/mattbdean/JRAW/tree/master/lib/src/main/kotlin'
         suffix = '#L'
     }
-}
-
-// Don't build in Travis to reduce spam. Remove when dokka 0.9.16 comes out.
-if (System.getenv("TRAVIS")) {
-    dokka.enabled = false
 }
 
 task javadocJar(type: Jar, dependsOn: dokka) {
