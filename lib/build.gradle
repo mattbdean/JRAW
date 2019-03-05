@@ -46,7 +46,7 @@ sourceSets {
 
 dokka {
     moduleName = 'jraw'
-    jdkVersion = 7
+    jdkVersion = 8
     impliedPlatforms = ['JVM']
     reportUndocumented = true
     outputFormat = 'javadoc'
