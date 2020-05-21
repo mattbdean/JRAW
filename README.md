@@ -15,6 +15,14 @@ dependencies {
 }
 ```
 
+```
+<dependency>
+    <groupId>net.dean.jraw</groupId>
+    <artifactId>JRAW</artifactId>
+    <version>${jraw.version}</version>
+</dependency>
+```
+
 ## Documentation
 
 The full documentation is available [on GitBooks](https://mattbdean.gitbooks.io/jraw), but here's a sneak peek:
