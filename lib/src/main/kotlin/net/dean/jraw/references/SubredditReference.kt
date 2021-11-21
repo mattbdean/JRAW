@@ -89,8 +89,16 @@ class SubredditReference internal constructor(reddit: RedditClient, val subreddi
     /**
      * Submits content to this subreddit
      *
-     * @param kind Is this a self post (text) or a link post?
-     * @param content If `kind` is [SubmissionKind.SELF], the Markdown-formatted body, else a URL.
+     * The value of the post body is interpreted based on the post type. It will be interpreted according
+     * to the [SubmissionKind]. For each submission type the value of the content parameter will be interpreted as:
+     * <ul>
+     *  <li><b>[SubmissionKind.SELF]</b>: Markdown formatted body</li>
+     *  <li><b>[SubmissionKind.LINK]</b>: A URL</li>
+     *  <li><b>[SubmissionKind.CROSSPOST]</b>: A full name of another post</li>
+     * </ul>
+     *
+     * @param kind Is this a self post (text), link post, or cross post?
+     * @param content One of markdown formatted text, URL, or post full name
      * @param sendReplies If direct replies to the submission should be sent to the user's inbox
      */
     @EndpointImplementation(Endpoint.POST_SUBMIT)
@@ -105,7 +113,12 @@ class SubredditReference internal constructor(reddit: RedditClient, val subreddi
             "title" to title
         )
 
-        args[if (kind == SubmissionKind.SELF) "text" else "url"] = content
+        when (kind) {
+            SubmissionKind.SELF -> args["text"] = content
+            SubmissionKind.LINK -> args["url"] = content
+            SubmissionKind.CROSSPOST -> args["crosspost_fullname"] = content
+            else -> throw RuntimeException("Unknown SubmissionKind $kind")
+        }
 
         val res = reddit.request {
             it.endpoint(Endpoint.POST_SUBMIT)
